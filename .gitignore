@@ -6,6 +6,8 @@
 Homestead.json
 Homestead.yaml
 .env
+/htaccess
+/bak
 
 # Build and Release Folders
 bin/
