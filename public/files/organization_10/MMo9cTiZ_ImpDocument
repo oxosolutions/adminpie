@@ -1,0 +1,57 @@
+
+0) database Normalization 
+http://mikehillyer.com/articles/an-introduction-to-database-normalization/
+
+
+
+1)Create package
+
+https://devdojo.com/blog/tutorials/how-to-create-a-laravel-package
+	permisson enable
+
+	1) sudo chmod -r 777 /var/www/html
+
+
+2)merged files
+
+
+cd to root cat file1 file2 >>mergedfiles
+
+
+https://apps.ubuntu.com/cat/applications/saucy/meld/
+
+2) Custom helper 
+
+
+http://www.tutorials.kode-blog.com/laravel-5-custom-helper
+
+http://itsolutionstuff.com/post/how-to-create-custom-helper-in-laravel-5example.html
+
+3) date time filter
+
+4)convert  SQL to Migration 
+
+mysql -u username -p database_name < file.sql
+http://adolfocuadros.com/sql_to_laravel/
+
+run by command
+ mysql -u local -p local webapp_api < /var/www/html/smaart-angular/public/sql/designations.sql
+
+
+ mysql -u local -p local webapp_api -e "select * from departments" -B > mytable.tsv
+
+
+mysql -u local -p local webapp_api -e "select * from departments" -B >/home/oxo/Desktop/operatios/doc/mytable.csv
+
+head -q -n 1 /home/data/19child.csv > /home/data/output.csv
+
+REStart mysql 
+
+
+To Start Apache: sudo /etc/init.d/apache2 start.
+To Stop Apache: sudo /etc/init.d/apache2 stop.
+To Restart Apache: sudo /etc/init.d/apache restart. MySQL:
+To Start MySQL: sudo start mysql. or. sudo service mysql start. ...
+To Stop MySQL: sudo stop mysql. or. sudo service mysql stop. ...
+To Restart MySQL: sudo restart mysql. or.
+
