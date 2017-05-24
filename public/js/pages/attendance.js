@@ -1,0 +1,28 @@
+$(document).ready(function(){
+	$('.add-new').off().click(function(e){
+		e.preventDefault();
+		$('.add-new-wrapper').toggleClass('active'); 
+	});
+	$(document).on('mouseover','.emp_id',function(){
+		$(this).parent().find('.popup').removeClass('hidden');
+	});
+	$(document).on('mouseout','.emp_id',function(){
+		$(this).parent().find('.popup').addClass('hidden');
+	});
+	$('#month , #week ,#days').hide();
+	$('.monthly').click(function(){
+		$('#month').show();
+		$('#week').hide();
+		$('#days').hide();
+	});
+	$('.weekly').click(function(){
+		$('#month').hide();
+		$('#week').show();
+		$('#days').hide();
+	});	
+	$('.daily').click(function(){
+		$('#month').hide();
+		$('#week').hide();
+		$('#days').show();
+	});	
+});
