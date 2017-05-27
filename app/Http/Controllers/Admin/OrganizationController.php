@@ -25,7 +25,10 @@ class OrganizationController extends Controller
 	public function listOrg()
 	{
 		$org_list = ORG::select(['id','name'])->get();
-		return View::make('admin.organization.list', ['org_list'=>$org_list]);
+        $plugins = [
+                'js' => ['custom'=>['list']]
+        ];
+		return View::make('admin.organization.list', ['org_list'=>$org_list,'plugins'=>$plugins]);
 	}
 	public function index()
 	{
@@ -57,17 +60,35 @@ class OrganizationController extends Controller
 
 	public function create(){
 
-		// Artisan::call('make:migration:schema',[
-  //                               '--model'=>false,
-  //                               'name'=>'create_global_form_builder_meta',
-  //                               '--schema'=>'key:string, value:string, type:string,  deleted_at:datetime:nullable'
-  //                           ]);
-
-  //       Artisan::call('migrate');
+	// Artisan::call('make:migration:schema',[
+ //                                '--model'=>false,
+ //                                'name'=>'create_global_modules',
+ //                                '--schema'=>'name:string, route_data:text:nullable, status:integer:default(1)'
+ //                            ]);
+        // `permisson_id`, `route`, `route_for`, `route_name`
+    // Artisan::call('make:migration:schema',[
+    //                             '--model'=>false,
+    //                             'name'=>'create_global_module_routes',
+    //                             '--schema'=>'module_id:integer, route:string, route_for:string, route_name:string, status:integer:default(1)'
+    //                         ]);
+ //    Artisan::call('make:migration:schema',[
+ //                                '--model'=>false,
+ //                                'name'=>'create_global_form_sections',
+ //                                '--schema'=>'section_name:string, section_description:string:nullable, status:integer:default(1)'
+ //                            ]);
+ //     Artisan::call('make:migration:schema',[
+ //                                '--model'=>false,
+ //                                'name'=>'create_global_form_fields',
+ //                                '--schema'=>'form_id:integer, section_id:integer,  label:string:nullable, type:string, field_data:text:nullable'
+ //                            ]);
+     // Artisan::call('migrate');
 
 		return view('admin.organization.create');
 	}
-
+    public function edit(){
+        return view('admin.organization.edit');
+   
+    }
 	public function save(Request $request)
 	{
 		$org_count = ORG::where('name',$request->name)->count();
@@ -100,7 +121,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_role_permissons',
-                                '--schema'=>'role_id:integer, permisson_id:integer, status:integer:default(1)'
+                                '--schema'=>'role_id:integer, module_id:integer, read:tinyInteger:null, write:tinyInteger:null, delete:tinyInteger:null, other:tinyInteger:null, status:integer:default(1)'
                             ]);
 
 		Artisan::call('make:migration:schema',[

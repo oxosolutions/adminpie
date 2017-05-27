@@ -239,6 +239,7 @@
 .none{
 	display: none
 }
+
 </style>
 	<script type="text/javascript">
 	

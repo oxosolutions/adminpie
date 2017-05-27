@@ -128,7 +128,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-               <li>
+                <li>
                     <a href="{{Route('list.employee')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-address-card red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -245,6 +245,16 @@
                     </span>
                     <span class="side-bar-text">
                         Forms
+                    </span>
+                    </a>
+                </li>  
+                <li>
+                    <a href="{{Route('list.role')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Roles
                     </span>
                     </a>
                 </li>  

@@ -17,9 +17,13 @@ $(document).ready(function(){
 		$('input[name=priority]').prop('checked',false);
 	});
 
-	$(document).on('click','.add-details',function(){
-		$(this).find('.todo-details').slideToggle();
 
+	$(document).on('click','.project-title',function(){
+		$(this).parents('.add-details').find('.todo-details').slideToggle();
+		$('.edit-todo').parents('.todo_list').find('.todo-name').css({'border-bottom':'none'});
+		$('.edit-todo').parents('.todo_list').find('.todo-desc').css({'border-bottom':'none'});
+		$(this).parents('.add-details').find('.save-todo , .edit-priority').hide();
+		$(this).parents('.add-details').find('.priority-badge').show();
 	});
 	$(document).on('click','input[name=priority]',function(){
 		$('#all').prop('checked',false);
@@ -74,6 +78,15 @@ $(document).ready(function(){
 			});
 	});
 
+	$(document).on('click','.edit-todo',function(){
+		$(this).parents('.add-details').find('.todo-details').slideDown();
+		$(this).parents('.todo_list').find('.todo-name').css({'border-bottom':'1px solid #9e9e9e'}).attr('contenteditable',true);
+		$(this).parents('.todo_list').find('.todo-desc').css({'border-bottom':'1px solid #9e9e9e'}).attr('contenteditable',true);
+		$('.save-todo').show();
+		$(this).parents('.add-details').find('.save-todo , .edit-priority').show();
+		$(this).parents('.add-details').find('.priority-badge').hide();
+
+	});
 	//hide remove button
 	$('.fa-close').hide();
 
@@ -103,7 +116,7 @@ $(document).ready(function(){
 	});
 
 	// append div of new data
-	// $('.priority-error').hide();
+	$('.priority-error').hide();
 	$(document).on('keydown','.todo-names',function(e){
 		if(e.keyCode == 13){
 			if($('.select-dropdown').val() == 'Select Priority'){
@@ -134,6 +147,24 @@ $(document).ready(function(){
 	});
 	//add todo to database
 			
+	$(document).on('click','.save-todo',function(){
+		var prefix = $(this).parents('.todo_list');
+			var data = 	{
+						id 			: prefix.find('.todo_id').val(),
+						title 		: prefix.find('.todo-name').html(),
+						description	: prefix.find('.todo-desc').html(),
+						priority 	: prefix.find('.select-dropdown').val(),
+						_token		: prefix.find('.shift_token').val()
+					};
 
+		$.ajax({
+			url 	: route()+'/project/todo/edit',
+			type	: 'POST',
+			data 	: data,
+			success : function(res){
+
+			}
+		});
+	});
 
 });

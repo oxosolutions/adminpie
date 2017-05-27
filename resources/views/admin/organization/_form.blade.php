@@ -18,7 +18,7 @@
     box-shadow: 0 1px 0 0 #26a69a;
   }
 </style>
-<div class="card">
+<div class="card" style="margin-top: 0px;">
   <div class="card-content">
       <div class="form-group">
         <label class="col-lg-2 control-label">Organization Title</label>

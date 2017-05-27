@@ -5,16 +5,44 @@
 		Route::group(['prefix'=>'admin','namespace'=>'Admin'], function(){
 
 			Route::group(['middleware' => 'auth.admin'], function(){
+//Module route
+				Route::get('/module/create',['as'=>'create.module' , 'uses'=>'ModuleController@create']);
+				Route::post('/module/save',['as'=>'save.module' , 'uses'=>'ModuleController@save']);
+				Route::get('/module/edit/{id}',['as'=>'edit.module' , 'uses'=>'ModuleController@edit']);
+				Route::post('/module/update/{id}',['as'=>'update.module' , 'uses'=>'ModuleController@update']);
+				Route::get('/module/delete/{id}',['as'=>'delete.module' , 'uses'=>'ModuleController@delete']);
+				Route::get('/modules',['as'=>'list.module' , 'uses'=>'ModuleController@list']);
+				Route::get('module/add_route_row',['as'=>'route_row.module' , 'uses'=>'ModuleController@add_route_row']);
+
+
+//Module route end
+				Route::group(['prefix'=>'users','namespace'=>'users'],function(){
+					//Users
+
+					Route::get('/', 			['as'=>'users','uses'=>'UsersController@index']);
+					Route::get('/users/create', 	['as'=>'create.users','uses'=>'UsersController@create']);
+					Route::post('/users/store',		['as'=>'store.user','uses'=>'UsersController@store']);
+					Route::get('/users/edit/{id}',	['as'=>'edit.user','uses'=>'UsersController@edit']);
+					Route::get('/user/{id}',		['as'=>'info.user','uses'=>'UsersController@user_info']);
+	 				Route::post('/user_meta',		['as'=>'save.user_meta','uses'=>'UsersController@user_meta']);
+	 				Route::post('/user/update',		['as'=>'update.user','uses'=>'UsersController@update']);
+				});
+
 				Route::get('/',						['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
 				Route::get('/organization/create',	['as'=>'create.organization','uses'=>'OrganizationController@create']);
 				Route::post('/organization/save',	['as'=>'save.organization','uses'=>'OrganizationController@save']);
 				Route::get('/organization/list',	['as'=>'list.organization','uses'=>'OrganizationController@listOrg']);
 				Route::get('/organization/delete/{id}',	['as'=>'delete.organization','uses'=>'OrganizationController@delete']);
+				Route::get('/organization/edit/{id}',	['as'=>'edit.organization','uses'=>'OrganizationController@edit']);
 				//Form Builder Route
+				Route::get('/forms',['as'=>'list.form','uses'=>'FormBuilderController@formsList']);
+				Route::get('/form/{slug}/sections',['as'=>'form.sections','uses'=>'FormBuilderController@sections']);
 				Route::get('/form/create',['as'=>'create.form','uses'=>'FormBuilderController@index']);
 				Route::get('/form/row',['as'=>'form.row','uses'=>'FormBuilderController@addRow']);
 				Route::post('/form/store',['as'=>'form.store','uses'=>'FormBuilderController@store']);
 				Route::get('/form/field',['as'=>'form.field','uses'=>'FormBuilderController@formFields']);
+				Route::get('/form/edit/{id}',['as'=>'form.edit','uses'=>'FormBuilderController@editForm']);
+				Route::get('/form/update/{id}',['as'=>'form.udpate','uses'=>'FormBuilderController@updateForm']);
 
 			});
 			
@@ -36,6 +64,7 @@
 
 			Route::group(['middleware' => 'auth.org'], function(){
 
+
 				Route::get('/',['as'=>'organization.dashboard','uses'=>'DashboardController@index']);
 				//Pages 
 					Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@list' ]);
@@ -54,6 +83,15 @@
 				//Employee				
 
 				Route::group(['prefix'=>'hrm','namespace' => 'hrm'],function(){
+
+			//ROLE PERMISSON ROUTE
+				// Route::get('role/create',['as'=>'create.role', 'uses'=>'UserRoleController@create']);
+				Route::get('roles',['as'=>'list.role', 'uses'=>'UserRoleController@list']);
+				Route::post('role/save',['as'=>'role.store', 'uses'=>'UserRoleController@save']);
+				Route::get('role/assign/{id}',['as'=>'role.assign', 'uses'=>'UserRoleController@assign']);
+				Route::post('role_permisson_save',['as'=>'save.role_permisson', 'uses'=>'UserRoleController@role_permisson_save']);
+				
+			//END ROLE PERMISSON ROUTE
 					//employee
 						Route::get('employees', 				['as' => 'list.employee' , 'uses' => 'EmployeeController@index']);
 						Route::post('employee/save', 			['as' => 'store.employee' , 'uses' => 'EmployeeController@save']);

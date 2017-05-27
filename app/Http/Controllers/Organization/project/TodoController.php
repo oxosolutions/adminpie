@@ -25,9 +25,7 @@ class TodoController extends Controller
 
         return view('organization.project._todo_list',['model'=>$model])->render();
 	}
-	public function edit(Request $request)
-	{
-		$id = $request->id;
+	private function edit_status($id){
 		$model = TD::where('id',$id)->first();
 		if($model->status == (int)'1'){
 			TD::where('id',$id)->update(['status'=> (int)'0']);
@@ -35,6 +33,24 @@ class TodoController extends Controller
 			TD::where('id',$id)->update(['status'=> (int)'1']);
 		}
 	}
+	public function edit(Request $request)
+	{
+		$id = $request->id;
+		if (count($request->all()) == 2) {
+			$this->edit_status($id);
+			return 'true';
+		}else{
+
+			$data =[
+						'title' => $request->title,
+						'description' => $request->description,
+						'priority' => $request->priority
+					];
+				TD::where('id',$id)->update($data);
+				return 'true';
+		}
+	}
+	
 	public function delete(Request $request){
 		// dd($request->id);
 		$id = $request->id;

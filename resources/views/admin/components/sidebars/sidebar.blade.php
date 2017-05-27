@@ -16,7 +16,7 @@
         <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
-                    <i class="fa fa-sitemap blue center-align side-bar-icon-bg white-text" style=""></i>
+                    <i class="fa fa-sitemap orange center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text">
                     Organizations
@@ -29,10 +29,10 @@
                 <li>
                     <a href="{{route('list.organization')}}">
                         <span class="side-bar-icon">
-                            <i class="fa fa-th red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-list grey darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            List
+                            All Organizations
                         </span>
                     </a>
                 </li>
@@ -40,10 +40,10 @@
                 <li>
                     <a href="{{route('create.organization')}}">
                         <span class="side-bar-icon">
-                            <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-plus cyan darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            create
+                            Add New Organization
                         </span>
                     </a>
                 </li>
@@ -52,10 +52,10 @@
         <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
-                    <i class="fa fa-file green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
+                    <i class="fa fa-file-text red darken-1 center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text">
-                    Form Builder
+                    Forms
                 </span>
                 <span class="arrow">
                     <i class="fa fa-chevron-right" ></i>
@@ -63,26 +63,36 @@
             </a>
             <ul class="side-bar-submenu " >
                <li>
-                    <a href="{{Route('create.form')}}">
+                    <a href="{{Route('list.form')}}">
                     <span class="side-bar-icon">
-                        <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
-                        create
+                        All Forms
+                    </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{Route('create.form')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-plus green darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Add New Form
                     </span>
                     </a>
                 </li>
             </ul>
         </li>
         <li class="root">
-            <a href="javascript:;">
+            <a href="{{Route('list.module')}}">
                 <span class="side-bar-icon">
-                    <i class="fa fa-cogs green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
+                    <i class="fa fa-cogs teal darken-1 center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text">
                     Settings
                 </span>
-{{--                 <span class="arrow">
+{{--<span class="arrow">
                     <i class="fa fa-chevron-right" ></i>
                 </span>
  --}}            
@@ -102,17 +112,18 @@
             </a>
             <ul class="side-bar-submenu" >
                <li>
-                    <a href="{{Route('create.form')}}">
+                    <a href="#">
                     <span class="side-bar-icon">
                         <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
-                        List
+                        All Users
                     </span>
                     </a>
                 </li>
             </ul>
         </li>
+        <li><p class="footer">&copy; {{ date("Y") }} <a href="oxosolutions.com" target="_blank">OXO Solutions</a> <br>All rights reserved.</p></li>
     </ul>
 </div>
 <style type="text/css">
@@ -157,5 +168,15 @@
     }
     #slide-out ul li:last-child:after {
         display: none;
+    }
+    .footer{
+        z-index: 9999;
+        background: #2D323E;
+        text-align: center;
+        color: white;
+        font-size: 14px;
+        width: 230px;
+        bottom: 0px;
+        position: absolute;
     }
 </style>
