@@ -11,7 +11,7 @@
 				Route::get('/module/edit/{id}',['as'=>'edit.module' , 'uses'=>'ModuleController@edit']);
 				Route::post('/module/update/{id}',['as'=>'update.module' , 'uses'=>'ModuleController@update']);
 				Route::get('/module/delete/{id}',['as'=>'delete.module' , 'uses'=>'ModuleController@delete']);
-				Route::get('/modules',['as'=>'list.module' , 'uses'=>'ModuleController@list']);
+				Route::get('/modules',['as'=>'list.module' , 'uses'=>'ModuleController@listModule']);
 				Route::get('module/add_route_row',['as'=>'route_row.module' , 'uses'=>'ModuleController@add_route_row']);
 
 
@@ -67,14 +67,14 @@
 
 				Route::get('/',['as'=>'organization.dashboard','uses'=>'DashboardController@index']);
 				//Pages 
-					Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@list' ]);
+					Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@listPage' ]);
 					Route::get('/page/{id}',	['as'=>'edit.pages' , 'uses'=>'PagesController@edit' ]);
 					Route::post('/page/save',	['as'=>'store.page' , 'uses'=>'PagesController@save' ]);
 					Route::post('/page/update',	['as'=>'update.page' , 'uses'=>'PagesController@update' ]);
 
 				//TEAM MANAGEMENT ROUTES
 
-					Route::get('teams',				['as'=>'list.team' , 'uses'=>'ManageTeamController@list']);
+					Route::get('teams',				['as'=>'list.team' , 'uses'=>'ManageTeamController@listTeam']);
 					Route::get('team/{id}',			['as'=>'info.team' , 'uses'=>'ManageTeamController@info']);
 					Route::post('team/save',		['as'=>'save.team' , 'uses'=>'ManageTeamController@save']);
 					Route::post('team_info/save',	['as'=>'save.team_info' , 'uses'=>'ManageTeamController@save_info']);
@@ -86,7 +86,7 @@
 
 			//ROLE PERMISSON ROUTE
 				// Route::get('role/create',['as'=>'create.role', 'uses'=>'UserRoleController@create']);
-				Route::get('roles',['as'=>'list.role', 'uses'=>'UserRoleController@list']);
+				Route::get('roles',['as'=>'list.role', 'uses'=>'UserRoleController@listRole']);
 				Route::post('role/save',['as'=>'role.store', 'uses'=>'UserRoleController@save']);
 				Route::get('role/assign/{id}',['as'=>'role.assign', 'uses'=>'UserRoleController@assign']);
 				Route::post('role_permisson_save',['as'=>'save.role_permisson', 'uses'=>'UserRoleController@role_permisson_save']);
@@ -121,8 +121,8 @@
 						Route::get('leaves-categories',	['as' => 'leaves_categories' , 'uses' => 'LeavesController@leave_categories']);
 					//attendance ajax
 
-				Route::get('/attendance/list',				['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
-				Route::post('/attendance/list',				['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
+				Route::get('/attendance/list', ['as' => 'ajax.list.attendance' , 'uses' =>'AttendanceController@ajax']);
+			//	Route::post('/attendance/list',				['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
 
 
 					//attendance
@@ -139,7 +139,7 @@
 
 					//holidays
 						Route::post('/holiday_save',		['as' => 'store.holiday' , 'uses' => 'HolidayController@save']);
-						Route::get('/holidays',				['as' => 'list.holidays' , 'uses' => 'HolidayController@list']);
+						Route::get('/holidays',				['as' => 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
 						Route::get('/holidays/edit/{id}',	['as' => 'edit.holiday' , 'uses' => 'HolidayController@edit']);
 						Route::post('/holiday/update',		['as' => 'update.holiday' , 'uses' => 'HolidayController@update']);
 
@@ -199,6 +199,12 @@
 
 				Route::group(['prefix'=>'projects','namespace' => 'project'],function(){
 					//project
+						//notes
+						Route::get('project/notes/list',	['as'=>'list.notes','uses'=>'NotesController@listNotes']);
+						Route::get('project/notes/{id}',	['as'=>'notes.project','uses'=>'NotesController@index']);
+						Route::post('project/notes/save',	['as'=>'save.notes','uses'=>'NotesController@createNotes']);
+						Route::post('project/notes/edit',	['as'=>'edit.notes','uses'=>'NotesController@edit']);
+						// end notes
 						Route::get('categories',['as'=>'categories.project','uses'=>'ProjectController@categories']);
 						Route::post('category/save',		['as'=>'save.category','uses'=>'ProjectController@saveCategory']);
 						Route::post('category/update',		['as'=>'update.category','uses'=>'ProjectController@updateCategory']);
@@ -216,9 +222,9 @@
 						Route::get('project/credentials/{id}',	['as'=>'credentials.project','uses'=>'ProjectController@credentials']);
 						Route::get('project/activities/{id}',	['as'=>'activities.project','uses'=>'ProjectController@activities']);
 						Route::get('project/calender/{id}',	['as'=>'calender.project','uses'=>'ProjectController@calender']);
-						Route::get('project/notes/{id}',	['as'=>'notes.project','uses'=>'ProjectController@notes']);
+						
 						Route::get('project/documentation/{id}',	['as'=>'documentation.project','uses'=>'ProjectController@documentation']);
-						Route::get('/project/todo/list',	['as'=>'list.todo','uses'=>'TodoController@list']);
+						Route::get('/project/todo/list',	['as'=>'list.todo','uses'=>'TodoController@listTodo']);
 						Route::get('project/todo/{id}',	['as'=>'todo.project','uses'=>'ProjectController@todo']);
 						Route::post('/project/todo/create',	['as'=>'create.todo','uses'=>'TodoController@create']);
 						
@@ -228,7 +234,7 @@
 						Route::get('project/test',function(){
 							return view('organization.project.test');
 						});
-						Route::get('/',['as'=>'list.project','uses'=>'ProjectController@list']);
+						Route::get('/',['as'=>'list.project','uses'=>'ProjectController@listProject']);
 						
 						//tasks
 						Route::get('tasks',['as'=> 'tasks','uses' => 'ProjectController@tasks']);

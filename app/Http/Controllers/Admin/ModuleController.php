@@ -9,7 +9,7 @@ use App\Model\Admin\GlobalModuleRoute as Route;
 
 class ModuleController extends Controller
 {
-    public function list()
+    public function listModule()
     {
     	$model  = Module::with('route')->get();
     	//dump($model);

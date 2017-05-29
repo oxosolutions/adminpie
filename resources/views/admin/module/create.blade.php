@@ -28,11 +28,15 @@ echo $sel;
   {
 
    // $("#content").clone().appendTo("#apnd");
+   var res="";
     $.ajax({
       url:route()+"/module/add_route_row",
       type:'GET',
       success: function(res){
-        $("#apnd").append(res);
+                //alert(res);
+        data  = $("#apnd").html();
+        $("#apnd").html('');
+        $("#apnd").html(data + res);
         $(".selects").material_select();  
       }
     });

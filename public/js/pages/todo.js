@@ -162,7 +162,8 @@ $(document).ready(function(){
 			type	: 'POST',
 			data 	: data,
 			success : function(res){
-
+				console.log(res);
+				Materialize.toast('Setting successfully save',4000);
 			}
 		});
 	});

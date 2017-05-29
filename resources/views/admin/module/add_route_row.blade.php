@@ -32,6 +32,7 @@
            <input type="text" name="route_name[]">
           </div>
         </div>
+        
         <div class="col l1 remove_row">
           <i class="fa fa-minus"></i>
         </div>

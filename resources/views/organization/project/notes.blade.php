@@ -52,62 +52,7 @@
 					</div>
 				</div>
 				<div class="list" id="notes">
-					<ul>
-					    <li>
-					      <a href="#">
-					        <h2><i class="fa fa-thumb-tack" aria-hidden="true"></i><span>Title #1</h2>
-					        <p>Text Content #1</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #2</h2>
-					        <p>Text Content #2</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #3</h2>
-					        <p>Text Content #3</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #4</h2>
-					        <p>Text Content #4</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #5</h2>
-					        <p>Text Content #5</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #6</h2>
-					        <p>Text Content #6</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #2</h2>
-					        <p>Text Content #2</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #7</h2>
-					        <p>Text Content #7</p>
-					      </a>
-					    </li>
-					    <li>
-					      <a href="#">
-					        <h2>Title #8</h2>
-					        <p>Text Content #8</p>
-					      </a>
-					    </li>
-					  </ul>
+					
 				</div>
 			</div>
 
@@ -115,28 +60,17 @@
 				<a id="add_new" href="#" class="btn add-new display-form-button" >
 					Add Note
 				</a>
-				<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-					
-
-						<div class="row no-margin-bottom" id="notes">
-							<ul>
-								<li>
-								    <a href="#">
-								        <h2><input type="text" name="" placeholder="Title "></h2>
-								        <p><input type="text" name="" placeholder="Details "></p>
-								    </a>
-							    </li>
-							</ul>
-							
-
-							<div class="col s12 m6 l12 aione-field-wrapper">
-								<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Note
-									<i class="material-icons right">save</i>
-								</button>
-							</div>
+				<div id="add_new_wrapper" class="add-new-wrapper add-form " style="background-color: #ffc;">
+					<div class="row no-margin-bottom" id="notes">	  
+				    	<input type="hidden" name="_token" value="{{csrf_token()}}">
+				        <input type="text" name="title" placeholder="Title ">
+				        <textarea id="textarea1" class="materialize-textarea" style="border: 1px solid rgb(161, 161, 161);"></textarea>
+						<div class="col s12 m6 l12 aione-field-wrapper">
+							<button class="btn waves-effect blue save-note" type="submit">Save Note
+								<i class="material-icons right">save</i>
+							</button>
 						</div>
-					
-
+					</div>
 				</div>
 				<div class="card-panel shadow mt-22" >
 					clients
@@ -159,6 +93,9 @@
 		});
 </script>
 <style type="text/css">
+	.materialize-textarea:focus{
+		border-bottom: 1px solid #a1a1a1 !important;
+	}
 	 #notes ul,li{
 	  list-style:none;
 	}

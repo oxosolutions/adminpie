@@ -45,7 +45,7 @@ class ProjectController extends Controller
 
     }
 
-    public function list()
+    public function listProject()
     {
         $categories =  CAT::all();
         $clients = $this->client->get_client();
@@ -245,9 +245,7 @@ class ProjectController extends Controller
     public function calender(){
          return view('organization.project.calender');   
     }
-    public function notes(){
-         return view('organization.project.notes');   
-    }
+   
     public function documentation(){
         return view('organization.project.documentation');
     }

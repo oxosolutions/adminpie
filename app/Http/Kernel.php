@@ -34,6 +34,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,           
+            // \Illuminate\Routing\Middleware\CheckRole::class,           
         ],
 
         'api' => [
@@ -60,6 +61,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'guest.admin' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
         'guest.org' => \App\Http\Middleware\RedirectIfOrganizationAuthenticated::class,
+        // 'role' => \App\Http\Middleware\CheckRole::class,
     ];
 
 }

@@ -19,7 +19,7 @@ class TodoController extends Controller
         $model = TD::all();
         return view('organization.project._todo_list',['model'=>$model])->render();
 	}
-	public function list()
+	public function listTodo()
 	{
 		$model = TD::all();
 
@@ -32,13 +32,14 @@ class TodoController extends Controller
 		}else{
 			TD::where('id',$id)->update(['status'=> (int)'1']);
 		}
+		return 'true';
 	}
 	public function edit(Request $request)
 	{
 		$id = $request->id;
 		if (count($request->all()) == 2) {
 			$this->edit_status($id);
-			return 'true';
+			
 		}else{
 
 			$data =[
@@ -56,23 +57,6 @@ class TodoController extends Controller
 		$id = $request->id;
 		TD::where('id',$id)->delete();
 	}
-	// public function filterData(Request $request)
-	// {
-	// 	dd($request->all());
-	// 	$data[] = '';
-
-	// 	if($request->value == "all"){
-	// 		$model = TD::all();
-	// 	}elseif($request->value == "completed"){
-	// 		$model = TD::where('status',(int)'0')->get();
-	// 	}elseif($request->value == "in-completed"){
-	// 		$model = TD::where('status',(int)'1')->get();
-	// 	}elseif($request->value == $request->value){
-	// 		$model = TD::where('priority',$request->value)->get();
-	// 	}
-
-	// 		return view('organization.project._todo_list',['model'=>$model])->render();
-	// }
 	public function filterData(Request $request)
 	{
 		$data[] = '';

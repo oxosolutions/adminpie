@@ -23,7 +23,7 @@
                         </span>
                     </a>
                 </li>
-                <li>
+               {{--  <li>
                     <a href="{{route('list.products')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-th red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -112,7 +112,7 @@
                             Front Store
                         </span>
                     </a>
-                </li>
+                </li> --}}
             </ul>
         </li>
         <li class="root">
@@ -208,7 +208,7 @@
                     </span>
                     </a>
                 </li>
-                <li>
+{{--                 <li>
                     <a href="javascript:;">
                     <span class="side-bar-icon">
                         <i class="fa fa-user-plus teal darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -248,16 +248,7 @@
                     </span>
                     </a>
                 </li>  
-                <li>
-                    <a href="{{Route('list.role')}}">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Roles
-                    </span>
-                    </a>
-                </li>  
+ --}}                
             </ul>
         </li>
         <li class="root">
@@ -352,7 +343,7 @@
                         </span>
                     </a>
                 </li>
-                <li>
+            {{--     <li>
                     <span class="side-bar-icon">
                         <i class="fa fa-thumb-tack red darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
@@ -375,10 +366,10 @@
                     <span class="side-bar-text">
                         Media
                     </span>
-                </li>
+                </li> --}}
             </ul>
         </li>
-        <li class="root">
+       {{--  <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-support red center-align side-bar-icon-bg white-text" style=""></i>
@@ -432,7 +423,7 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> --}}
         <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
@@ -456,6 +447,16 @@
                         </span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{Route('list.role')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Roles
+                    </span>
+                    </a>
+                </li>  
             </ul>
         </li>
         <li class="root">

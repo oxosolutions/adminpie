@@ -16,11 +16,6 @@ use DB;
 
 class OrganizationController extends Controller
 {
-	// protected $org_repo;
-	// public function __construct(OrganizationRepositoryContract $org_repo)
-	// {
-	// 	$this->org_repo =  $org_repo;
-	// }
 
 	public function listOrg()
 	{
@@ -106,7 +101,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_users',
-                                '--schema'=>'name:string, email:string:unique, password:string, api_token:char(60), remember_token:string, user_type:string, status:integer:default(0)'
+                                '--schema'=>'name:string, email:string:unique, password:string, api_token:char(60), remember_token:string, user_type:string, role_id:integer:nullable, status:integer:default(0)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -290,10 +285,15 @@ class OrganizationController extends Controller
                                 '--schema'=>'project_id:integer, title:string, description:text:nullable, assign_to:string:nullable, priority:string:default("low"), end_date:dateTime:nullable, status:integer:default(0)'
                             ]);
 //ORGANIZATION TODOS
-		Artisan::call('make:migration:schema',[
-								'--model'=>false,
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
                                 'name'=>'create_'.$org->id.'_project_todos',
                                 '--schema'=>'project_id:integer, title:string, description:text:nullable, start:dateTime:nullable, end:dateTime:nullable, priority:string:default("low"), status:integer:default(1)'
+                            ]);
+		Artisan::call('make:migration:schema',[
+								'--model'=>false,
+                                'name'=>'create_'.$org->id.'_project_notes',
+                                '--schema'=>'project_id:integer, title:string, description:text:nullable, status:integer:default(1)'
                             ]);
 //ORGANIZATION METAS
 		Artisan::call('make:migration:schema',[

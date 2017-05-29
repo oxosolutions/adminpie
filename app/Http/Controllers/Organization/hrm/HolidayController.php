@@ -14,11 +14,11 @@ class HolidayController extends Controller
     	$holiday = new Holiday();
     	$holiday->fill($request->all());
     	$holiday->save();
-    	return redirect()->route('list.holiday');
+    	return redirect()->route('list.holidays');
 
 
     }
-    public function list()
+    public function listHoliday()
     {
     	$data = Holiday::orderBy('id','desc')->get();
 

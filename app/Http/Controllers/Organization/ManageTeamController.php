@@ -13,7 +13,7 @@ class ManageTeamController extends Controller
     {
 
     }
-    Public function list()
+    Public function listTeam()
     {
         $plugins = [
                         'js' => ['select2']

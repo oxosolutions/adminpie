@@ -19,7 +19,7 @@ class PagesController extends Controller
         $page->save();
         return redirect()->route('list.pages');
     }
-    public function list()
+    public function listPage()
     {
       $pages =   Page::orderBy('id','desc')->get();
       return view('organization.pages.list_pages',['pages'=>$pages]);

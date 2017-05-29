@@ -26,11 +26,11 @@
 					<div class="col s3 m3 l3">
 						<span class="blue white-text ph-10 priority-badge">{{$value->priority}}</span>
 						<span id="select-priority " class="edit-priority" style="display: none">
-						@php $list_values = ['Low' => 'Low' ;'Medium' => 'Medium' ;'High' => 'High' ]; @endphp
+						@php $list_values = ['Low' => 'Low' ,'Medium' => 'Medium' ,'High' => 'High' ]; @endphp
 							<select >
-								<option disabled >Select Priority</option>
-								@foreach($list_values as $key => $value)
-									<option value="Low">{{$value}}</option>
+								{{-- <option disabled >Select Priority</option> --}}
+								@foreach($list_values as $key => $list)
+									<option {{($list == $value->priority)?"selected":""}} value="{{$key}}">{{$list}}</option>
 								@endforeach
 						    </select>
 
