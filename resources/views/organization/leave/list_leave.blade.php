@@ -2,52 +2,7 @@
 @section('content')
 	
 <style type="text/css">
-/*	.arrow_sort{
-		line-height: 43px;
-		width: 43px;
-		text-align: center;
-		border: 1px solid #e8e8e8;
-		border-radius: 2px;
-		font-size: 18px
-	}
-	.alpha-sort a{
-		color: black
-	}
-	.modal::-webkit-scrollbar {
-	    width: 6px;
-	}
-	.modal::-webkit-scrollbar-track {
-	    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	}
-	.modal{
-		max-height: 59% !important
-	}
-	.modal::-webkit-scrollbar-thumb {
- 		 background-color: darkgrey;
- 	 	 outline: 1px solid slategrey;
-	}
-	.chips .input{
-		width: 100% !important;
-	}
-	textarea{
-		background-color: #ffffff;
-		border:1px solid #e8e8e8;
-		padding: 0px;
-		text-indent: 1em;
-		
-	}
-	.dropdown-content > li{
-		background-color: white
-	}
-	.form-horizontal input{
-		margin-right: 5px
-	}
-	.no-margin-bottom > .aione-field-wrapper{
-		margin-right: 10px
-	}
-	.aione-field-wrapper button{
-		float: right;
-	}*/
+
 </style>
 <div class="fade-background">
 </div>
@@ -107,8 +62,8 @@
 
 					<div class="row valign-wrapper no-margin-bottom">
 						<div class="col l1 s2 center-align project-image-wrapper">
-							<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title="Popover title" data-content="TEST">
-							{{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
+							<a href="#" data-toggle="popover" title="Popover title" data-content="TEST">
+							
 							<div class="defualt-logo">
 								{{ucwords(substr($val->name, 0, 1))}}
 							</div>
@@ -168,13 +123,7 @@
 		</div>
 
 		<div class="col s12 m12 l3 pl-7">
-			{{-- <a id="add_new" class="add-new" href="#">
-				<div class="card shadow hoverable light-blue darken-2 no-margin-top">	
-					<div class="card-content center-align p-10">
-				      <span class="card-title activator white-text text-darken-2 no-margin-bottom"><i class="material-icons">add_circle_outline</i>Leave</span>
-				    </div>
-				</div>
-			</a> --}}
+			
 			<a id="add_new" href="#" class="btn add-new display-form-button" >
 				Add Leave
 			</a>

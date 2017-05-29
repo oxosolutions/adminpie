@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     public function index(){
     	$model = [
-    				'organization' => [
+    				'organizations' => [
     										'count' 	=> GLOR::count(),
     										'list' 		=> GLOR::all(),
     									],
@@ -25,7 +25,7 @@ class DashboardController extends Controller
     										'list'		=> FBuild::all(),
     									]
     			];
-    			
+
     	return view('admin.dashboard.index')->with('model',$model);
     }
 }

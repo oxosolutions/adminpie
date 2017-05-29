@@ -19,7 +19,7 @@
 				Route::group(['prefix'=>'users','namespace'=>'users'],function(){
 					//Users
 
-					Route::get('/', 			['as'=>'users','uses'=>'UsersController@index']);
+					Route::get('/', 			['as'=>'list.users','uses'=>'UsersController@index']);
 					Route::get('/users/create', 	['as'=>'create.users','uses'=>'UsersController@create']);
 					Route::post('/users/store',		['as'=>'store.user','uses'=>'UsersController@store']);
 					Route::get('/users/edit/{id}',	['as'=>'edit.user','uses'=>'UsersController@edit']);
@@ -31,7 +31,7 @@
 				Route::get('/',						['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
 				Route::get('/organization/create',	['as'=>'create.organization','uses'=>'OrganizationController@create']);
 				Route::post('/organization/save',	['as'=>'save.organization','uses'=>'OrganizationController@save']);
-				Route::get('/organization/list',	['as'=>'list.organization','uses'=>'OrganizationController@listOrg']);
+				Route::get('/organization/list',	['as'=>'list.organizations','uses'=>'OrganizationController@listOrg']);
 				Route::get('/organization/delete/{id}',	['as'=>'delete.organization','uses'=>'OrganizationController@delete']);
 				Route::get('/organization/edit/{id}',	['as'=>'edit.organization','uses'=>'OrganizationController@edit']);
 				//Form Builder Route

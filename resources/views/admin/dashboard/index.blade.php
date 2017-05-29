@@ -10,9 +10,9 @@
 			<div class="col l3 pr-7">
 				<div class="card shadow" style="margin-top: 0px;">
 					<div class="row center-align aione-widget-header" ><h5 style="margin: 0px">{{ucfirst($key)}}</h5></div>
-					<div class="row center-align aione-widget-content" >{{$value['users']}}</div>
+					<div class="row center-align aione-widget-content" >{{$value['count']}}</div>
 					<div class="row center-align aione-widget-footer" >
-						<a href="" class="btn" style="background-color: #005A8B">All Organizations</a>
+						<a href="{{route('list.'.$key)}}" class="btn" style="background-color: #005A8B">All {{$key}}</a>
 					</div>
 				</div>
 			</div>
