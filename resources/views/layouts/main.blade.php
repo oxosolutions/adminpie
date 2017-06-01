@@ -39,6 +39,7 @@
         <div class="page-content">
             @yield('content')    
         </div>
+        @include('admin.components._footer2')
     </div>
 </body>
 	@include('components._footer')

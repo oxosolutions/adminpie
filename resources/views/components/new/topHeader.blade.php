@@ -6,12 +6,23 @@
             </div>
         </div>
     </div>
-    <div class="col s3 m8 l1 left-align white-text" id="clock">
-            
-    </div>
-    <div class="col l6 s9 m7 right-align valign-wrapper">
-        
-        <div class="col s6 m8 l12 white-text">
+    
+    <div class="col l7 s9 m7 " >
+        <div class="col right-align" style="float: right;">           
+            <a class="dropdown-button1" href="javascript:;" data-activates="dropdown">
+                <img class="circle profile-image responsive-img" src="{{asset('assets/images/user.png')}}" style="margin:9px 14px 1px 0px ">
+            </a>  
+            <ul class="dropdown-list" style="position: absolute;">
+                {{-- <li><a href="#">Profile</a></li>
+                <li><a href="#">Settings</a></li>
+                <li><a href="#">Help</a></li> --}}
+                <li class="divider"></li>
+                <li><a href="{{route('admin.logout')}}" class="waves-effect waves-white btn-flat col l12 center-align">Logout</a></li>
+
+            </ul>
+        </div>
+       
+        <div class="col white-text truncate" style="float: right;padding: 0px 10px;line-height: 45px;max-width: 300px">
             <strong>Welcome : </strong>
               @if(Auth::guard('admin')->check())
                 {{Auth::guard('admin')->user()->name}}
@@ -20,34 +31,44 @@
               @endif
         </div>  
 
-        <div class="col s3 m4 l2 right-align">           
-            <a class="dropdown-button" href="#" data-activates="dropdown">
-                <img class="circle profile-image responsive-img" src="{{asset('assets/images/user.png')}}" style="margin:9px 14px 1px 0px ">
-            </a>  
-            <ul id="dropdown" class="dropdown-content" style="display: block;">
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Help</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Logout</a></li>
-            </ul>
+        <div class="col left-align white-text" id="clock"  style="float:right;line-height: 45px">
+            
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function(){
-    $('#dropdown').hide();
-    $('.dropdown-button').click(function(){
-        $('#dropdown').toggle();
+    $('.dropdown-list').hide();
+    $('.dropdown-button1').click(function(){
+        $('.dropdown-list').toggle();
     });
 });
 </script>
 <style type="text/css">
     #dropdown{
-    width: 156px !important;
-    top: 58px !important;
-    right: 12px !important;
-    opacity: 1;
-}
+        width: 156px !important;
+        top: 58px !important;
+        right: 12px !important;
+        opacity: 1;
+    }
+    .dropdown-list{
+        margin-top: -0px;
+        position: absolute;
+        background: #fff;
+        display: block;
+        width: 130px;
+        box-shadow: -1px 5px 13px #e8e8e8;
+        margin-left: -100px;
+        text-align: left;
+    }
+   /* .dropdown-list > li > a{
+       padding:20px;
+    }*/
+    .dropdown-list li:hover{
+        background-color: #e8e8e8;
+    }
+    .divider{
+        padding: 0px !important;
+    }
 </style>

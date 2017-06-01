@@ -41,7 +41,7 @@ class LoginController extends Controller
     }
 
     public function showLoginForm(){
-        Session::put('organization_id',10);
+        Session::put('organization_id',50);
         return view('organization.login.login');
     }
 

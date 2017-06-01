@@ -7,6 +7,7 @@ use Session;
 
 class UsersRole extends Model
 {	
+   protected $fillable = [ 'name', 'description', 'status'];
 
    public function __construct()
    {	
@@ -19,5 +20,9 @@ class UsersRole extends Model
    {
    		return $this->hasMany('App\Model\Organization\RolePermisson','role_id','id');
    }
-   protected $fillable = [ 'name', 'description', 'status'];
+   public function role_widget()
+   {
+      return $this->hasMany('App\Model\Organization\WidegetPermisson','role_id','id');
+   }
+
 }

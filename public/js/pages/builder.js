@@ -1,4 +1,12 @@
 $(function(){
+	// $.ajax({
+	// 	url:route()+'/field/lists',
+	// 	type:"GET",
+	// 	success:function(res){
+	// 		console.log(res);
+	// 		$('.form-rows').html(res);
+	// 	}
+	// });
 
 	$('.add-row').click(function(){
 		$.ajax({
@@ -25,6 +33,7 @@ $(function(){
 		$(this).parents('.form-row').next('.fields-list').slideToggle(300);
 	});
 	$('body').on('click', '.add_field_option', function(){
+		console.log('working');
 		$.ajax({
 			type:'GET',
 			url: route()+'/form/field',
@@ -34,7 +43,7 @@ $(function(){
 			}
 
 		});
-		//field_choices
+		//field_choices 
 	});
 
 	$('body').on('click', '.remove_key', function(){
@@ -42,6 +51,7 @@ $(function(){
 	});
 
 	$('body').on('change','.field_type', function(){
+		console.log('Working')
 		var fieldType = $(this).val();
 		if(fieldType.trim() != ''){
 			if($.inArray(fieldType,['select', 'multi_select', 'checkbox', 'radio']) != -1){

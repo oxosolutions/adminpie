@@ -33,6 +33,11 @@ class GlobalModule extends Model
 		return $this->hasMany('App\Model\Admin\GlobalModuleRoute','module_id','id');
 	}
 
+    public function module_role_permisson()
+    {
+        return $this->hasMany('App\Model\Organization\RolePermisson','module_id','id');
+    }
+
 
 	// public function permisson()
 	// {

@@ -17,5 +17,9 @@ public function __construct()
 	       $this->table = Session::get('organization_id').'_role_permissons';
 	   	}
    }
+public function permisson_module()
+{
+	return $this->belongsTo('App\Model\Admin\GlobalModule','module_id');
+}
 
 }

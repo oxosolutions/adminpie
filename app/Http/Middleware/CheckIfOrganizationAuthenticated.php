@@ -17,7 +17,7 @@ class CheckIfOrganizationAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        Session::put('organization_id',10);
+        Session::put('organization_id',50);
         $auth = Auth::guard('org');
         if (!$auth->check()) {
             return redirect('/login');

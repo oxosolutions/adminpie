@@ -6,6 +6,43 @@
 </div>
 
 
+<div class="card"  style="margin: 0px">
+{!! Form::open(['route'=>'save.widget_permission'])!!}
+
+    <ul style="margin: 0px">
+        <li>
+           <div class="row" style="background-color: #24425C;padding: 15px 10px;color: white;font-weight: bold">
+               <div class="col l4">Widgets</div>
+               <div class="col l2 center-align">Permisson</div>
+           </div> 
+        </li>
+      @foreach($widget as $widgetKey =>$widgetVal)
+
+        <li>
+            <div class="row" style="padding: 15px 10px">
+              <div class="col l5">
+                {{$widgetVal->title}}
+              </div>
+              <div class="col l7">
+              <input type="hidden" name="widget[{{$widgetVal->id}}][role_id]" value="{{$role_data[0]['id']}}">
+              <input type="hidden" name="widget[{{$widgetVal->id}}][widget_id]" value="{{$widgetVal->id}}" >
+              @if(!empty($role_widget_data[$widgetVal->id]['permisson']) && $role_widget_data[$widgetVal->id]['permisson']=='on' )
+                  <input checked="checked" name='widget[{{$widgetVal->id}}][permisson]' type="checkbox" class="filled-in" id="filled-in-box_{{$loop->iteration}}"  />
+                  <label for="filled-in-box_{{$loop->iteration}}"></label>
+              @else
+                <input name='widget[{{$widgetVal->id}}][permisson]' type="checkbox" class="filled-in" id="filled-in-box_{{$loop->iteration}}"  />
+                <label for="filled-in-box_{{$loop->iteration}}"></label>
+              @endif
+              </div> 
+            </div>
+        </li>
+      @endforeach
+  </ul>
+    {!! Form::submit('Save Role Permisson', ['class' => 'btn btn-primary']) !!}
+ {!!Form::close() !!}
+
+ </div>
+
 <div class="card" id="assign_role" style="margin: 0px">
 {!! Form::open(['route'=>'save.role_permisson'])!!}
   

@@ -16,6 +16,7 @@ class CreateGlobalOrganizations extends Migration
         Schema::create('global_organizations', function(Blueprint $table){
             $table->increments('id');
             $table->string('name');
+            $table->text('description');
             $table->string('email');
             $table->string('created_by');
             $table->timestamps();

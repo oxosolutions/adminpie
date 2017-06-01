@@ -11,13 +11,13 @@
 	<div class="row">
 		<div class="col s12 m12 l9 pr-7" >
 			<div class="row no-margin-bottom">
-				<div class="col s12 m6 l7  pr-7" >
-					
+				<div class="col s12 m12 l6  pr-7 tab-mt-10" >
+					<!-- <input class="search aione-field" placeholder="Search" /> -->
 					<nav>
 					    <div class="nav-wrapper">
 					      	<form>
 						        <div class="input-field">
-						          	<input id="search" class="search-employee" type="search" required style="background-color: #ffffff">
+						          	<input id="search" type="search" required style="background-color: #ffffff">
 						          	<label class="label-icon" for="search" style=""><i class="material-icons icon-search" >search</i></label>
 						          	<i class="material-icons icon-close">close</i>
 						        </div>
@@ -25,7 +25,7 @@
 					    </div>
 					</nav>
 				</div>
-				<div class="col s12 m6 l3  aione-field-wrapper pl-7">
+				<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10">
 					<div class="row aione-sort" style="">
 						<select class="col  browser-default aione-field" >
 							<option value="" disabled selected>Sort By</option>
@@ -37,8 +37,8 @@
 						</div>
 					</div>
 				</div>
-				
-				<div class="col l2 pl-7 right-float  hide-on-med-and-down">
+
+				<div class="col s6 m6 l3 pl-7 right-float tab-mt-10 tab-pl-10">
 					<div class="row aione-switch-view">
 						<ul class="right  views m-0" >
 							<li class="inline-block" sty><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
@@ -128,7 +128,7 @@
 				Add Leave
 			</a>
 			
-			<div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2  create-fields">
+			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 				{!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 					<div class="row no-margin-bottom">
@@ -177,7 +177,7 @@
 .add-new-wrapper.active{
 	display:block;
 }
-.add-new-wrapper:after{
+/*.add-new-wrapper:after{
     content: "";
     position: absolute;
     bottom: -16px;
@@ -185,7 +185,7 @@
     border-right: 12px solid transparent;
     border-left: 12px solid transparent;
     border-top: 16px solid #0288d1;
-}
+}*/
 .modal-dialog{
 	margin: 0px !important;
 	width: 100%;
@@ -226,6 +226,11 @@
 		$('.add-new').off().click(function(e){
 			e.preventDefault();
 			$('.add-new-wrapper').toggleClass('active'); 
+			$('.fade-background').fadeToggle(300);
+		});
+		$('.fade-background').click(function(){
+			$('.fade-background').fadeToggle(300);
+			$('.add-new-wrapper').toggleClass('active');
 		});
 
 		$(document).on('blur', '.edit-fields',function(e){

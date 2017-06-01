@@ -1,53 +1,51 @@
 @extends('layouts.main')
 @section('content')
-
-<div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2 p-20 ml-10 mr-10 mb-20">
-	<div class="row no-margin-bottom">
-		{!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
-		<div class="col s12 m2 l3 aione-field-wrapper">
-			<div class="form-group">
-				{!!Form::select('user_type[]',App\Model\Organization\UsersType::userTypes(), null, ['class'=>'select2','style'=>'display:block','multiple'=>'multiple','data-placeholder'=>'Select User type'])!!}
-			</div>
-		</div>
-		<div class="col s12 m3 l3 aione-field-wrapper">
-			<div class="form-group">
-				{!! Form::text('name', null, array('required','class'=>'form-control','placeholder'=>'Enter your name')) !!}
-			</div>
-		</div>
-		<div class="col s12 m3 l3 aione-field-wrapper">
-			<div class="form-group">					
-				 {!! Form::text('email', null, array('required','class'=>'form-control','placeholder'=>'Your e-mail address')) !!}
-			</div>
-		</div>
-		<div class="col s12 m3 l3 aione-field-wrapper">
-			 {!! Form::password('password', array('required','class'=>'form-control','placeholder'=>'Enter password')) !!}
-		</div>
-		<div class="col s12 m3 l3 aione-field-wrapper right-align pt-10">
-			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" name="action">Save User
-				<i class="material-icons right">save</i>
-			</button>
-		</div>
-		{!! Form::close() !!}
-	</div>
+	
+<div class="fade-background">
 </div>
- 
 <div id="projects" class="projects list-view">
-	<div class="row" id="find-project">
-		<div class="col s12 m12 l9">
+	<div class="row">
+		<div class="col s12 m9 l9 pr-7" >
 			<div class="row no-margin-bottom">
-				<div class="col s12 m8 l8 no-padding-left aione-field-wrapper">
-					<input class="search  aione-field" placeholder="Search" />
+				<div class="col s12 m12 l6  pr-7 tab-mt-10" >
+					<!-- <input class="search aione-field" placeholder="Search" /> -->
+					<nav>
+					    <div class="nav-wrapper">
+					      	<form>
+						        <div class="input-field">
+						          	<input id="search" type="search" required style="background-color: #ffffff">
+						          	<label class="label-icon" for="search" style=""><i class="material-icons icon-search" >search</i></label>
+						          	<i class="material-icons icon-close">close</i>
+						        </div>
+					      	</form>
+					    </div>
+					</nav>
 				</div>
-				<div class="col s6 m2 l2 aione-field-wrapper">
-					<select class="browser-default aione-field">
-						<option value="" disabled selected>Sort By</option>
-						<option value="1">Name</option>
-						<option value="2">Date</option>
-					</select>
+				<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10">
+					<div class="row aione-sort" style="">
+						<select class="col  browser-default aione-field" >
+							<option value="" disabled selected>Sort By</option>
+							<option value="1">Name</option>
+							<option value="2">Date</option>
+						</select>
+						<div class="col alpha-sort" style="width: 25%;padding-left:7px;">
+							<a href="javascript:;" class="sort" ><i class="fa fa-sort-alpha-asc arrow_sort white" ></i></a>
+						</div>
+					</div>
 				</div>
-				<div class="col s6 m2 l2 no-padding-right aione-field-wrapper">
-					<div class="alpha-sort">
-						<a href="javascript:;" data-sort="project-titlename"><i class="fa fa-sort-alpha-asc arrow_sort white"></i></a>
+
+				<div class="col s6 m6 l3 pl-7 right-float tab-mt-10 tab-pl-10">
+					<div class="row aione-switch-view">
+						<ul class="right  views m-0" >
+							<li class="inline-block" sty><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
+							
+							
+
+							<li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
+
+
+							<li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
+						</ul>
 					</div>
 				</div>
 			</div>
@@ -100,70 +98,47 @@
 			@endforeach
 			</div>
 		</div>
-		<div class="col s12 m12 l3">
 
-			<a id="add_new" class="add-new" href="#">
-				<div class="card shadow light-blue darken-2 no-margin-top">	
-					<div class="card-content center-align p-10">
-				      <span class="card-title activator white-text text-darken-2 no-margin-bottom"><i class="material-icons">add_circle_outline</i> Add New User</span>
-				    </div>
-				</div>
+		<div class="col s12 m3 l3 pl-7" >
+			<a id="add_new" href="#" class="btn add-new display-form-button" >
+				Add New User
 			</a>
+			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
+				{!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
+					<div class="col s12 m2 l3 aione-field-wrapper">
+						<div class="form-group">
+							{!!Form::select('user_type[]',App\Model\Organization\UsersType::userTypes(), null, ['class'=>'select2','style'=>'display:block','multiple'=>'multiple','data-placeholder'=>'Select User type'])!!}
+						</div>
+					</div>
+					<div class="col s12 m3 l3 aione-field-wrapper">
+						<div class="form-group">
+							{!! Form::text('name', null, array('required','class'=>'form-control','placeholder'=>'Enter your name')) !!}
+						</div>
+					</div>
+					<div class="col s12 m3 l3 aione-field-wrapper">
+						<div class="form-group">					
+							 {!! Form::text('email', null, array('required','class'=>'form-control','placeholder'=>'Your e-mail address')) !!}
+						</div>
+					</div>
+					<div class="col s12 m3 l3 aione-field-wrapper">
+						 {!! Form::password('password', array('required','class'=>'form-control','placeholder'=>'Enter password')) !!}
+					</div>
+					<div class="col s12 m3 l3 aione-field-wrapper right-align pt-10">
+						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" name="action">Save User
+							<i class="material-icons right">save</i>
+						</button>
+					</div>
+					{!! Form::close() !!}
 
-			
-			<div class="card shadow">	
-				<div class="card-content">
-			      <span class="card-title activator blue-text text-darken-2">Clients<i class="material-icons">priority_high</i></span>
-			      <div class="divider"></div>
-			      <p class="p-20">
-			      </p>
-			    </div>
 			</div>
-			<div class="card shadow">	
-				<div class="card-content">
-			      <span class="card-title activator blue-text text-darken-2">Categories<i class="material-icons">priority_high</i></span>
-			      <div class="divider"></div>
-			      <p class="p-20">
-			      </p>
-			    </div>
+			<div class="card-panel shadow mt-22" >
+				clients
 			</div>
-
-			<div class="card shadow">	
-				<div class="card-content">
-			      <span class="card-title activator blue-text text-darken-2">Tags<i class="material-icons">priority_high</i></span>
-			      <div class="divider"></div>
-			      <p class="p-20">
-			      	
-			      	<div class="chip">Custom Design <i class="close material-icons">close</i></div>
-			      	<div class="chip">Logo <i class="close material-icons">close</i></div>
-			      	<div class="chip">Amritsar <i class="close material-icons">close</i></div>
-			      	<div class="chip">Restaurant<i class="close material-icons">close</i></div>
-			      	<div class="chip">India<i class="close material-icons">close</i></div>
-			      	<div class="chip">Custom<i class="close material-icons">close</i></div>
-			      </p>
-			    </div>
-			</div>
-
 		</div>
 	</div>
 </div>
 
-<script type="text/javascript">
 
-
-
-
-	$('.add-new').click(function(e){
-		e.preventDefault();
-		$('.add-new-wrapper').toggleClass('active'); 
-	});
-    var options = {
-	  valueNames: [ 'project-name']
-	};
-
-	var userList = new List('find-project', options);
-	 
-</script>
 
 @endsection
 

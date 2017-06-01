@@ -44,19 +44,19 @@ input{
 				Create Surrvey
 			</div>
 			<div>
-            <table class="bordered centered" style="background-color: transparent;">
-                <thead>
-                  <tr class=" " style="background-color: #24425C;color: white">
-                    <th style="width: 100px;">Field Order</th>
-                    <th class="left-align">Field Label</th>
-                    <th>Field Name </th>
-                    <th>Field Type</th>
-                  </tr>
-                </thead>
-                <tbody class="form-rows">
+            <div class="bordered centered" style="background-color: transparent;">
+                <div>
+                  <div class=" " style="background-color: #24425C;color: white">
+                    <div style="width: 100px;">Field Order</div>
+                    <div class="left-align">Field Label</div>
+                    <div>Field Name </div>
+                    <div>Field Type</div>
+                  </div>
+                </div>
+                <div class="form-rows">
                   
-                </tbody>
-            </table>
+                </div>
+            </div>
 			</div>
 			<div>
 				<p>No fields. Click the + Add Field button to create your first field. </p>

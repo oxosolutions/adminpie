@@ -8,7 +8,7 @@ use App\Model\Organization\Employee as EMP;
 use App\Model\Organization\Designation As DES;
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\User;
-
+use Session;
 class EmployeeController extends Controller
 {
     protected $user;
@@ -29,6 +29,7 @@ class EmployeeController extends Controller
     }
 
     public function getEmployeeList(Request $request){
+        
         if($request->has('order')){
             $order = $request->order;
         }else{

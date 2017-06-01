@@ -30,7 +30,7 @@
                 <ul class="aione-breadcrumb">
                     @foreach($string as $key => $crumb)
                         @if($crumb != "" || $crumb != null)
-                            <li><a href="{{$crumb}}">{{ucfirst($crumb)}}</a>  </li>
+                            <li><a href="{{$crumb}}">{{ucfirst($crumb)}} </a>  </li>
                         @endif
                      @endforeach
                 </ul>
@@ -39,6 +39,7 @@
         <div class="page-content">
             @yield('content')    
         </div>
+        @include('admin.components._footer2')
     </div>
 </body>
 	@include('admin.components._footer')

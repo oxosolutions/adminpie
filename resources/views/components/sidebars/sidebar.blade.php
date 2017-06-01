@@ -1,6 +1,18 @@
 <div class="row">
     <ul id="slide-out" class="side-nav fixed hrm">
         <li class="root">
+            <a href="{{Route('organization.dashboard')}}">
+                <span class="side-bar-icon">
+                    <i class="fa fa-tachometer blue center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text">
+                    Dashboard
+                </span>
+               
+            </a>
+            
+        </li>
+        <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-tachometer blue center-align side-bar-icon-bg white-text" style=""></i>
@@ -438,7 +450,7 @@
             </a>
             <ul class="side-bar-submenu " >
                <li>
-                    <a href="{{route('users')}}">
+                    <a href="{{route('list.user')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>

@@ -1,6 +1,6 @@
 @extends('admin.layouts.main')
 @section('content')
-	<div class="fade-background">
+<div class="fade-background">
 
 </div>
 <div id="projects" class="projects list-view">
@@ -50,33 +50,58 @@
 				</div>
 			</div>
 			<div class="list" id="list">
+			@php
+				$index = 2;
+			@endphp
 				@foreach($model as $key => $form)
 					<div class="card-panel shadow white z-depth-1 hoverable project"  >
 
 						<div class="row valign-wrapper no-margin-bottom">
 							<div class="col l1 s2 center-align project-image-wrapper">
-								<a href="javascript:void(0)" data-toggle="popover" title=" asha" data-content="TEST">
+								<a href="javascript:void(0)" data-toggle="popover" title="Click here to view details" data-content="TEST">
 								<div class="defualt-logo">
-									F
+									{{ucfirst($form->form_title[0])}}
 								</div>
 								</a>
 							</div>
 							
 							<div class="col l11 s10 editable " >
 								<div class="row m-0 valign-wrapper">
-									<div class="col s8 m8 l8">
+									<div class="col  l6">
 										<input type="hidden" value="1212" class="shift_id" >
 										<input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
 										
-										<a href="" data-toggle="popover" title="{{$form->form_name}}" data-content="TEST" >
+										<a href="" data-toggle="popover" title="click here to edit the section name" data-content="TEST" >
 											<h5 class="project-title black-text flow-text truncate line-height-35">
-												<span class="project-name shift_name font-size-14" contenteditable="true" >{{$form->form_name}}</span>
+												<span class="project-name shift_name font-size-14" contenteditable="true" >{{$form->form_title}}</span>
 											</h5>
 										</a>
 									</div>
 									
-									<div class="col s4 m4 l4 right-align">
-										Edit
+									<div class="col l6 right-align">
+										<div class="row valign-wrapper">
+											<div class="col l4">
+												{{$form->form_slug}}
+											</div>
+											<div class="col l4">
+												<span class="blue white-text" style="padding: 2px 4px">{{count($form->section)}}</span>
+											</div>
+											<div class="col l4">
+											
+												 <a class='dropdown-button btn blue' href='#' data-activates='d{{$index}}'>Actions</a>
+
+												 
+												  <ul id='d{{$index}}' class='dropdown-content'>
+												    <li><a href="{{route('delete.form',[$form->id])}}">Delete</a></li>
+												    <li><a href="{{route('list.sections',[$form->form_slug])}}">Sections</a></li>
+												    
+												  </ul>
+											</div>
+
+										</div>
+										@php
+											$index++;
+										@endphp									
 									</div>
 								</div>
 							</div>

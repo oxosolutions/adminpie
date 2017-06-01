@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Admin\GlobalModule as Module;
+use App\Model\Admin\GlobalWidget as Widget;
+use App\Model\Organization\WidegetPermisson as WidgetPermisson;
 
 
 class UserRoleController extends Controller
@@ -28,11 +30,13 @@ class UserRoleController extends Controller
     }
     public function assign($id)
     {
-        $role_data = Role::with('permisson')->where('id',$id)->get();
+        $widget = Widget::all();
+        $role_data = Role::with(['permisson','role_widget'])->where('id',$id)->get();
+        $role_widget_data = collect($role_data[0]['role_widget'])->keyBy('widget_id')->toArray();
         $data = collect($role_data[0]['permisson']);
         $role_data_keys_module_id = $data->keyBy('module_id')->toArray();
         $module_data = Module::with('route')->get();
-    	return view('organization.role_permisson.permisson', ['role_data'=>$role_data, 'role_data_keys_module_id'=> $role_data_keys_module_id, 'module_data'=>$module_data ]);
+    	return view('organization.role_permisson.permisson', ['role_data'=>$role_data, 'role_data_keys_module_id'=> $role_data_keys_module_id, 'module_data'=>$module_data ,'widget'=>$widget, 'role_widget_data'=> $role_widget_data ]);
     }
 
     protected function check_permisson($value)
@@ -76,6 +80,35 @@ class UserRoleController extends Controller
                 $permisson->save();
             }
         }
-        return redirect()->route('list.role');
+        return redirect()->route('role.assign',['id'=>$value['role_id']]);
+
+        // return redirect()->route('list.role');
     }
+    protected function check_widget($value)
+    {
+        if(!empty($value['permisson']) && isset($value['permisson']))
+            {
+                $value['permisson'] = $value['permisson'];
+            }else{
+                $value['permisson'] = NULL;
+            }
+        return $value;
+    }
+    public function widget_permission_save(Request $request){
+        foreach ($request['widget'] as $key => $value) {
+           $check =  WidgetPermisson::where(['widget_id'=>$value['widget_id'], 'role_id'=>$value['role_id']]);
+           if($check->count()>0)
+           {
+                $check->update($this->check_widget($value));
+           }else{
+            $wpermisson  = new WidgetPermisson();
+            $wpermisson->role_id = $value['role_id'];
+            $wpermisson->widget_id = $value['widget_id'];
+            $wpermisson->permisson = $this->check_widget($value);
+            $wpermisson->save();
+                 }
+        }
+        return redirect()->route('role.assign',['id'=>$value['role_id']]);
+
+     }
 }

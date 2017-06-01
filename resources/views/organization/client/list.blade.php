@@ -52,17 +52,16 @@
 			</div>
 			<div class="list" id="list">
 
-			@if(!empty($all_data))
-				@foreach($all_data as $key => $val)
+		
 
 				<div class="card-panel shadow white z-depth-1 hoverable project"  >
 
 					<div class="row valign-wrapper no-margin-bottom">
 						<div class="col l1 s2 center-align project-image-wrapper">
-							<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title=" {{$val->name}}" data-content="TEST">
-							{{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
+							<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title="Click ti view details" data-content="TEST">
+							
 							<div class="defualt-logo">
-								{{ucwords(substr($val->name, 0, 1))}}
+								C
 							</div>
 							</a>
 						</div>
@@ -70,12 +69,12 @@
 						<div class="col l11 s10 editable " >
 							<div class="row m-0 valign-wrapper">
 								<div class="col s8 m8 l8">
-									<input type="hidden" value="{{$val->id}}" class="shift_id" >
+									<input type="hidden" value="" class="shift_id" >
 									<input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
 									
-									<a href="#" data-toggle="popover" title="Popover title" data-content="TEST" >
+									<a href="#" data-toggle="popover" title="Click to edit the Client detail" data-content="TEST" >
 										<h5 class="project-title black-text flow-text truncate line-height-35">
-											<span class="project-name shift_name font-size-14" contenteditable="true" > {{$val->name}}</span>
+											<span class="project-name shift_name font-size-14" contenteditable="true" > client 1</span>
 										</h5>
 									</a>
 								</div>
@@ -100,36 +99,41 @@
 					</div>
 						
 				</div>
-				@endforeach
-			@endif
+				
 			</div>
 		</div>
 
 		<div class="col s12 m3 l3 pl-7" >
-			{{-- <a id="add_new" href="#" class="btn add-new display-form-button" >
-				Add 
+			<a id="add_new" href="#" class="btn add-new display-form-button" >
+				Add Client
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 				{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 					<div class="row no-margin-bottom">
 						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Designation Title" />
+							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Name" />
 						</div>
+						<div class="col s12 m2 l12 aione-field-wrapper">
+							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Contact No." />
+						</div>
+						<div class="col s12 m2 l12 aione-field-wrapper">
+							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Address" />
+						</div>
+						<div class="col s12 m2 l12 aione-field-wrapper">
+							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Designation Title" />
+						</div>	
 						
 
-						<div class="col s12 m6 l12 aione-field-wrapper">
-							<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Designation
-								<i class="material-icons right">save</i>
+						<div class="col s12 m6 l12 aione-field-wrapper center-align">
+							<button class="btn blue" type="submit">Save Client
 							</button>
 						</div>
 					</div>
 				{!!Form::close()!!}
 
 			</div>
-			<div class="card-panel shadow mt-22" >
-				clients
-			</div> --}}
+			
 		</div>
 	</div>
 </div>

@@ -1,7 +1,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
-	<title>OCRM | OXO Solutions</title>
+	<title>Admin Panel | Admin Pie | OXO Solutions</title>
 
 	<!-- Global stylesheets -->
 	

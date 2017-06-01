@@ -1,4 +1,4 @@
-<style type="text/css">
+{{-- <style type="text/css">
   .textarea{
     background-color: transparent;
     border: none;
@@ -46,3 +46,65 @@
       </div>
     </div>
   </div>
+ --}}
+<div>  
+    <div class="row">
+        <h5 style="margin-top: 0px">Add new Organization</h5>
+    </div>
+    <div class="row">
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Organization Title
+           </div>
+           <div class="col l9">
+               {{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ">
+ --}}               {!! Form::text('name',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Organization Description
+           </div>
+           <div class="col l9">
+              {{--  <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
+               {!! Form::textarea('description',null,['rows' => '5' ,'class' => 'materialize-textarea', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Email
+           </div>
+           <div class="col l9">
+              {{--  <input type="email" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+               {!! Form::email('email',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']) !!} 
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Password
+           </div>
+           <div class="col l9">
+               {{-- <input type="password" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+                {!! Form::password('password',['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']) !!}
+           </div>
+        </div>
+       
+    </div>
+</div>
+<style type="text/css">
+    .h-30{
+        height: 30px;
+    }
+
+    .pv-10{
+        padding:10px 0px
+    }
+    .aione-setting-field:focus{
+        border-bottom: 1px solid #a8a8a8 !important;
+        box-shadow: none !important;
+    }
+    textarea{
+        border-bottom: 1px solid #a8a8a8 !important;
+        box-shadow: none !important;
+    }
+</style>

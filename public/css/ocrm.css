@@ -395,7 +395,7 @@ padding:0px;
 }
 .side-nav{
     background-color: #2D323E;
-    height: 610px;
+    height: 95%;
     width:230px !important;
 }
 .side-nav.mini{
@@ -584,7 +584,7 @@ padding:0px;
         z-index:999;width: 100%;margin-top: 4px;background-color: #0288D1;position: relative;
     }
     .add-form{
-        z-index:999;background-color:#fff;border-bottom: 3px solid #0288D1;border-right: 1px solid #0288D1;border-left: 1px solid #0288D1;padding:10px;    position: relative;
+        z-index:999;background-color:#fff;border-bottom: 3px solid #0288D1;border-right: 1px solid #0288D1;border-left: 1px solid #0288D1;padding:10px;    position: relative;;
 
     }
     .mt-22{

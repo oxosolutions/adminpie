@@ -27,7 +27,7 @@
             </a>
             <ul class="side-bar-submenu">
                 <li>
-                    <a href="{{route('list.organization')}}">
+                    <a href="{{route('list.organizations')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-list grey darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
@@ -63,7 +63,7 @@
             </a>
             <ul class="side-bar-submenu " >
                <li>
-                    <a href="{{Route('list.form')}}">
+                    <a href="{{Route('list.forms')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
@@ -85,21 +85,103 @@
             </ul>
         </li>
         <li class="root">
-            <a href="{{Route('list.module')}}">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
+                    <i class="fa fa-square-o red darken-1 center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text">
+                    Modules
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu " >
+               <li>
+                    <a href="{{Route('list.module')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        All Modules
+                    </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{Route('create.module')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-plus green darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Add New Module
+                    </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="root">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
+                    <i class="fa fa-square-o cyan darken-1 center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text">
+                    Widgets
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu " >
+               <li>
+                    <a href="{{Route('index.widget')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        All Widgets
+                    </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{Route('create.widget')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-plus green darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Add New Widgets
+                    </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="root">
+            <a href="#">
                 <span class="side-bar-icon">
                     <i class="fa fa-cogs teal darken-1 center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text">
                     Settings
                 </span>
-{{--<span class="arrow">
+                <span class="arrow">
                     <i class="fa fa-chevron-right" ></i>
                 </span>
- --}}            
+             
             </a>
+            <ul class="side-bar-submenu" >
+               <li>
+                    <a href="{{Route('list.settings')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        General
+                    </span>
+                    </a>
+                </li>
+            </ul>
         </li>
         <li class="root">
-            <a href="javascript:;">
+            <a href="#">
                 <span class="side-bar-icon">
                     <i class="fa fa-users green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
@@ -112,7 +194,7 @@
             </a>
             <ul class="side-bar-submenu" >
                <li>
-                    <a href="#">
+                    <a href="{{Route('admin_users')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
@@ -123,14 +205,18 @@
                 </li>
             </ul>
         </li>
-        <li><p class="footer">&copy; {{ date("Y") }} <a href="oxosolutions.com" target="_blank">OXO Solutions</a> <br>All rights reserved.</p></li>
+         
     </ul>
+    
+      
+    
 </div>
+
 <style type="text/css">
     #slide-out ul {
         margin: 0px 0px 0px 20px;
         list-style: none;
-        line-height: 2em;
+        line-height: : 2em;
         font-family: Arial;
     }
     #slide-out ul li {
@@ -169,14 +255,5 @@
     #slide-out ul li:last-child:after {
         display: none;
     }
-    .footer{
-        z-index: 9999;
-        background: #2D323E;
-        text-align: center;
-        color: white;
-        font-size: 14px;
-        width: 230px;
-        bottom: 0px;
-        position: absolute;
-    }
+    
 </style>

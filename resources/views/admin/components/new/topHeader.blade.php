@@ -9,7 +9,7 @@
     
     <div class="col l7 s9 m7 " >
         <div class="col right-align" style="float: right;">           
-            <a class="dropdown-button" href="javascript:;" data-activates="dropdown">
+            <a class="dropdown-button1" href="javascript:;" data-activates="dropdown">
                 <img class="circle profile-image responsive-img" src="{{asset('assets/images/user.png')}}" style="margin:9px 14px 1px 0px ">
             </a>  
             <ul class="dropdown-list" style="position: absolute;">
@@ -17,7 +17,8 @@
                 <li><a href="#">Settings</a></li>
                 <li><a href="#">Help</a></li> --}}
                 <li class="divider"></li>
-                <li><a href="{{route('admin.logout')}}">Logout</a></li>
+                <li><a href="{{route('admin.logout')}}" class="waves-effect waves-white btn-flat col l12 center-align">Logout</a></li>
+
             </ul>
         </div>
        
@@ -28,7 +29,6 @@
               @elseif(Auth::guard('org')->check())
                 {{Auth::guard('org')->user()->name}}
               @endif
-
         </div>  
 
         <div class="col left-align white-text" id="clock"  style="float:right;line-height: 45px">
@@ -40,7 +40,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $('.dropdown-list').hide();
-    $('.dropdown-button').click(function(){
+    $('.dropdown-button1').click(function(){
         $('.dropdown-list').toggle();
     });
 });
@@ -62,9 +62,9 @@ $(document).ready(function(){
         margin-left: -100px;
         text-align: left;
     }
-    .dropdown-list li{
-        padding: 12px
-    }
+   /* .dropdown-list > li > a{
+       padding:20px;
+    }*/
     .dropdown-list li:hover{
         background-color: #e8e8e8;
     }

@@ -12,7 +12,6 @@ class ModuleController extends Controller
     public function listModule()
     {
     	$model  = Module::with('route')->get();
-    	//dump($model);
     	return view('admin.module.index',['list'=>$model]);
 
     }
@@ -23,8 +22,7 @@ class ModuleController extends Controller
     public function save(Request $request)
     {
     	//dump($request->all());
-
-    	$add = new Module();
+        $add = new Module();
     	$add->fill($request->all());
     	$add->save();
     	$module_id =  $add->id;
@@ -61,7 +59,6 @@ class ModuleController extends Controller
 	public function delete($id)
     {
      $mo = Module::find('id',$id);//->delete();
-
-    	$mo->route()->detach($id);
+     $mo->route()->detach(['module_id',$id]);
     }
 }

@@ -33,70 +33,100 @@ class OrganizationController extends Controller
 	public function delete($id)
 	{
 		try{
+            DB::beginTransaction();
       		$model = ORG::findOrFail($id);
 			$model->delete();
 
          $data =   DB::select("select CONCAT('DROP TABLE `',t.table_schema,'`.`',t.table_name,'`;') AS dropTable
           FROM information_schema.tables t
-          WHERE t.table_schema = 'organizerr'
+          WHERE t.table_schema = '".env('DB_DATABASE', 'forge')."'
           AND t.table_name LIKE 'ocrm_".$id."%' 
           ORDER BY t.table_name");
         foreach ($data as $key => $value) {
              DB::select($value->dropTable);
           }
+                      DB::commit();
+
         Session::flash('success','Successfully deleted!');
-          return redirect()->route('list.organization');
+          return redirect()->route('list.organizations');
         }catch(\Exception $e){
-           // throw $e;
+          // throw $e;
+            DB::rollback();
         	return ['status'=>'error', 'message'=>'Somthing goes wrong Try again.'];
         }
 
 	}
 
 	public function create(){
+         
+         Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_global_widgets',
+                                '--schema'=>'title:string, description:text:nullable, module_id:integer:nullable, model:string:nullable, slug:string, status:integer:default(1)'
+                            ]);
 
-	// Artisan::call('make:migration:schema',[
- //                                '--model'=>false,
- //                                'name'=>'create_global_modules',
- //                                '--schema'=>'name:string, route_data:text:nullable, status:integer:default(1)'
- //                            ]);
-        // `permisson_id`, `route`, `route_for`, `route_name`
-    // Artisan::call('make:migration:schema',[
-    //                             '--model'=>false,
-    //                             'name'=>'create_global_module_routes',
-    //                             '--schema'=>'module_id:integer, route:string, route_for:string, route_name:string, status:integer:default(1)'
-    //                         ]);
- //    Artisan::call('make:migration:schema',[
- //                                '--model'=>false,
- //                                'name'=>'create_global_form_sections',
- //                                '--schema'=>'section_name:string, section_description:string:nullable, status:integer:default(1)'
- //                            ]);
- //     Artisan::call('make:migration:schema',[
- //                                '--model'=>false,
- //                                'name'=>'create_global_form_fields',
- //                                '--schema'=>'form_id:integer, section_id:integer,  label:string:nullable, type:string, field_data:text:nullable'
- //                            ]);
-     // Artisan::call('migrate');
 
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_global_forms',
+        //                         '--schema'=>'form_title:string, form_slug:string, form_description:text:nullable'
+        //                     ]);
+
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_global_form_meta',
+        //                         '--schema'=>'form_id:integer, key:string, value:text'
+        //                     ]);
+
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_global_form_sections',
+        //                         '--schema'=>'form_id:integer, section_name:string, section_slug:string, section_description:text:nullable'
+        //                     ]);
+
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_global_form_section_meta',
+        //                         '--schema'=>'section_id:integer, key:string, value:text'
+        //                     ]);
+
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_global_form_fields',
+        //                         '--schema'=>'field_slug:string, form_id:integer, section_id:integer, field_title:string, type:string, field_description:text:nullable'
+        //                     ]);
+
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_global_form_field_  meta',
+        //                         '--schema'=>'field_id:integer, key:string, value:text'
+        //                     ]);
+         // Artisan::call('migrate');
+	
 		return view('admin.organization.create');
 	}
     public function edit(){
         return view('admin.organization.edit');
-   
     }
 	public function save(Request $request)
 	{
 		$org_count = ORG::where('name',$request->name)->count();
 		if($org_count>0){
-			
 			 Session::flash('error','Organization name already Exist!');
 			 return redirect()->route('create.organization');
 		}
 		$org = new ORG();
-		$org->fill($request->all());
+		$org->fill($request->except('description'));
 		$org->save();
 		$org->id;
 		Session::put('organization_id',$org->id);
+        
+        //Widget Permisson
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org->id.'_widget_permissons',
+                                '--schema'=>'role_id:integer, widget_id:integer:nullable, permisson:string:nullable'
+                            ]);
 	// USERS
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -111,12 +141,12 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_users_roles',
-                                '--schema'=>'name:string, description:text, status:integer:default(0)'
+                                '--schema'=>'name:string, description:text:nullable, status:integer:default(0)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_role_permissons',
-                                '--schema'=>'role_id:integer, module_id:integer, read:tinyInteger:null, write:tinyInteger:null, delete:tinyInteger:null, other:tinyInteger:null, status:integer:default(1)'
+                                '--schema'=>'role_id:integer, module_id:integer, read:string:nullable, write:string:nullable, delete:string:nullable, other:string:nullable, status:integer:default(1)'
                             ]);
 
 		Artisan::call('make:migration:schema',[

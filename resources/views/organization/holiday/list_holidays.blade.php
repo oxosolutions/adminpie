@@ -38,37 +38,53 @@
 		
 	}*/
 </style>
-
+<div class="fade-background">
+</div>
 
 <div id="projects" class="projects list-view">
 	<div class="row">
 		<div class="col s12 m12 l9 pr-7" >
 			<div class="row no-margin-bottom">
-				<div class="col s12 m8 l5 no-padding-left aione-field-wrapper pr-7">
-					<input class="search aione-field" placeholder="Search" />
+				<div class="col s12 m12 l6  pr-7 tab-mt-10" >
+					<!-- <input class="search aione-field" placeholder="Search" /> -->
+					<nav>
+					    <div class="nav-wrapper">
+					      	<form>
+						        <div class="input-field">
+						          	<input id="search" type="search" required style="background-color: #ffffff">
+						          	<label class="label-icon" for="search" style=""><i class="material-icons icon-search" >search</i></label>
+						          	<i class="material-icons icon-close">close</i>
+						        </div>
+					      	</form>
+					    </div>
+					</nav>
 				</div>
-				<div class="col  aione-field-wrapper pl-7">
-					<select class="browser-default aione-field">
-						<option value="" disabled selected>Sort By</option>
-						<option value="1">Name</option>
-						<option value="2">Date</option>
-					</select>
-				</div>
-				<div class="col no-padding-right aione-field-wrapper">
-
-					<div class="alpha-sort">
-						<a href="javascript:;" class="sort" ><i class="fa fa-sort-alpha-asc arrow_sort white"></i></a>
+				<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10">
+					<div class="row aione-sort" style="">
+						<select class="col  browser-default aione-field" >
+							<option value="" disabled selected>Sort By</option>
+							<option value="1">Name</option>
+							<option value="2">Date</option>
+						</select>
+						<div class="col alpha-sort" style="width: 25%;padding-left:7px;">
+							<a href="javascript:;" class="sort" ><i class="fa fa-sort-alpha-asc arrow_sort white" ></i></a>
+						</div>
 					</div>
 				</div>
-				<div class="col pl-7 right-float" >
-					
-					<ul class="right hide-on-med-and-down views m-0 mt-4" >
-						<li class="inline-block" style=""><a href="#list-view" class="btn view" data-view="list-view"><i class="material-icons">view_list</i></a></li>
-						
-						<li class="inline-block"><a href="#grid-view" class="btn view" data-view="grid-view"><i class="material-icons">view_module</i></a></li>
 
-						<li class="inline-block"><a href="#detail-view" class="btn view" data-view="detail-view"><i class="material-icons">view_stream</i></a></li>
-					</ul>
+				<div class="col s6 m6 l3 pl-7 right-float tab-mt-10 tab-pl-10">
+					<div class="row aione-switch-view">
+						<ul class="right  views m-0" >
+							<li class="inline-block" sty><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
+							
+							
+
+							<li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
+
+
+							<li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
+						</ul>
+					</div>
 				</div>
 			</div>
 			<div class="list" id="list">
@@ -88,7 +104,7 @@
 						</div>
 						
 						<div class="col l11 s10 editable" >
-							<div class="row" style="margin: 0">
+							<div class="row valign-wrapper" style="margin: 0">
 								<div class="col l4">
 									<input type="hidden" value="{{$val->id}}" class="holiday_id" >
 									<input type="hidden" name="_token" value="{{csrf_token()}}" class="holiday_token" >
@@ -100,7 +116,7 @@
 									</a>
 								</div>
 								<div class="col l4">
-									<p class="project-detail truncate holiday_date " style="line-height: 35px;margin-bottom: 0px">
+									<p class="project-detail truncate holiday_date " style="line-height: 35px;margin-bottom: 0px;margin-top:0px">
 										<span  contenteditable="true">{{date('d F Y',strtotime($val->date_of_holiday))}}</span>
 									</p>
 								</div>
@@ -151,17 +167,11 @@
 		</div>
 
 		<div class="col s12 m12 l3 pl-7">
-			{{-- <a id="add_new" class="add-new" href="#">
-				<div class="card shadow hoverable light-blue darken-2 no-margin-top">	
-					<div class="card-content center-align p-10">
-				      <span class="card-title activator white-text text-darken-2 no-margin-bottom"><i class="material-icons">add_circle_outline</i> Add New Holiday</span>
-				    </div>
-				</div>
-			</a> --}}
+			
 			<a id="add_new" href="#" class="btn add-new display-form-button" >
 				Add New Holiday
 			</a>
-			<div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2  create-fields">
+			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 				{!! Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 					<div class="row no-margin-bottom">
@@ -176,45 +186,14 @@
 						</div>
 
 						<div class="col s12 m3 l12 aione-field-wrapper">
-							<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" name="action">Save Holiday
-								<i class="material-icons right">save</i>
+							<button class="btn blue" type="submit" name="action">Save Holiday
+								
 							</button>
 						</div>
 					</div>
 				{!!Form::close()!!}
 			</div>
-			<div class="card shadow">	
-				<div class="card-content">
-			      <span class="card-title activator blue-text text-darken-2">Clients<i class="material-icons">priority_high</i></span>
-			      <div class="divider"></div>
-			      <p class="p-20">
-			      </p>
-			    </div>
-			</div>
-			<div class="card shadow">	
-				<div class="card-content">
-			      <span class="card-title activator blue-text text-darken-2">Categories<i class="material-icons">priority_high</i></span>
-			      <div class="divider"></div>
-			      <p class="p-20">
-			      </p>
-			    </div>
-			</div>
-
-			<div class="card shadow">	
-				<div class="card-content">
-			      <span class="card-title activator blue-text text-darken-2">Tags<i class="material-icons">priority_high</i></span>
-			      <div class="divider"></div>
-			      <p class="p-20">
-			      	
-			      	<div class="chip">Custom Design <i class="close material-icons">close</i></div>
-			      	<div class="chip">Logo <i class="close material-icons">close</i></div>
-			      	<div class="chip">Amritsar <i class="close material-icons">close</i></div>
-			      	<div class="chip">Restaurant<i class="close material-icons">close</i></div>
-			      	<div class="chip">India<i class="close material-icons">close</i></div>
-			      	<div class="chip">Custom<i class="close material-icons">close</i></div>
-			      </p>
-			    </div>
-			</div>
+			
 
 		</div>
 
@@ -230,7 +209,13 @@
 		$('.add-new').off().click(function(e){
 			e.preventDefault();
 			$('.add-new-wrapper').toggleClass('active'); 
+			$('.fade-background').fadeToggle(300);
 		});
+		$('.fade-background').click(function(){
+			$('.fade-background').fadeToggle(300);
+			$('.add-new-wrapper').toggleClass('active');
+		});
+
 
 		$(document).on('blur', '.edit-fields',function(e){
 			e.preventDefault();

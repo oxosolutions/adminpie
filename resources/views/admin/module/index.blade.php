@@ -52,51 +52,7 @@
       </div>
 
       
-      @foreach($list as $key => $val)
-      <div class="list" id="list">
-     
-        <div class="card-panel shadow white z-depth-1 hoverable project"  >
-
-          <div class="row valign-wrapper no-margin-bottom">
-            <div class="col l1 s2 center-align project-image-wrapper">
-              
-              {{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
-              <div class="defualt-logo"  data-toggle="popover" title="Click to view details" >
-               s
-              </div>
-              
-            </div>
-            
-            <div class="col l11 s10 editable " >
-              <div class="row m-0 valign-wrapper">
-                <div class="col s8 m8 l8">
-                  <input type="hidden" value="1212" class="shift_id" >
-                  <input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
-                  
-                  <a href="#" data-toggle="popover" title="Click here to edit the organization name" data-content="TEST" >
-                    <h5 class="project-title black-text flow-text truncate line-height-35">
-                      <span class="project-name shift_name font-size-14 name" contenteditable="true" > {{$val->name}}</span>
-
-
-                    </h5>
-                  </a>
-                </div>
-                
-                <div class="col s4 m4 l4 right-align">
-                  <div class="switch">
-                    <a href="{{route('delete.module',['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Module">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
-                      
-                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            
-        </div>
       
-        
-      </div>
-      @endforeach
     </div>
 
     <div class="col s12 m3 l3 pl-7" >
@@ -121,10 +77,55 @@
         {!!Form::close()!!}
 
       </div>
-      <div class="card-panel shadow mt-22" >
-        clients
-      </div>
+      
     </div>
+  </div>
+  <div class="row">
+    @foreach($list as $key => $val)
+      <div class="list" id="list">
+     
+        <div class="card-panel shadow white z-depth-1 hoverable project"  >
+
+          <div class="row valign-wrapper no-margin-bottom">
+            <div class="col l1 s2 center-align project-image-wrapper">
+              
+              {{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
+              <div class="defualt-logo"  data-toggle="popover" title="Click to view details" >
+               {{ucwords(substr($val->name, 0, 1))}}
+              </div>
+              
+            </div>
+            
+            <div class="col l11 s10 editable " >
+              <div class="row m-0 valign-wrapper">
+                <div class="col s8 m8 l8">
+                  <input type="hidden" value="1212" class="shift_id" >
+                  <input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
+                  
+                  <a href="#" data-toggle="popover" title="Click here to edit the Module name" data-content="TEST" >
+                    <h5 class="project-title black-text flow-text truncate line-height-35">
+                      <span class="project-name shift_name font-size-14 name" contenteditable="true" > {{$val->name}}</span>
+
+
+                    </h5>
+                  </a>
+                </div>
+                
+                <div class="col s4 m4 l4 right-align">
+                  <div class="switch">
+                    <a href="{{route('delete.module',['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Module">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
+                      
+                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+            
+        </div>
+      
+        
+      </div>
+      @endforeach
   </div>
 </div>
 

@@ -54,19 +54,21 @@
 						{!! Form::text('email', $value['user_info']['email'], array('required')) !!}
 					</div>
 				</div>
-				<div class="row valign-wrapper">
-					<div class="col l3 left-align">
-						Phone:
-					</div>
-					<div class="col l9 left-align view-info" >
-						{{$value['user_meta']['phone']}}
+				@if($value['user_meta']['phone'] != "" || !empty($value['user_meta']['phone']) || $value['user_meta']['phone'] != null)
+					<div class="row valign-wrapper">
+						<div class="col l3 left-align">
+							Phone:
+						</div>
+						<div class="col l9 left-align view-info" >
+								{{$value['user_meta']['phone']}}
 
+						</div>
+						<div class="col l9 left-align edit-info" >
+							{{-- <input type="text" name="phone" value="8566820937"> --}}
+							{!! Form::text('phone', $value['user_meta']['phone'], array('required')) !!}
+						</div>
 					</div>
-					<div class="col l9 left-align edit-info" >
-						{{-- <input type="text" name="phone" value="8566820937"> --}}
-						{!! Form::text('phone', $value['user_meta']['phone'], array('required')) !!}
-					</div>
-				</div>
+				@endif
 				<div class="row valign-wrapper">
 					<div class="col l3 left-align">
 						Date of birth:
