@@ -1,6 +1,5 @@
 @extends('admin.layouts.main')
 @section('content')
-
 	<div>
 		<div class="row">
 		@foreach($model as $key => $value)
@@ -16,6 +15,7 @@
 		@endforeach
 		</div>
 	</div>
+
 	<style type="text/css">
 		.aione-widget-header{
 			border-bottom: 1px solid #e8e8e8;cursor: pointer;

@@ -78,6 +78,7 @@
 											<span class="project-name shift_name font-size-14" contenteditable="true" > {{$val->title}}</span>
 										</h5>
 									</a>
+									<a href="{{route('delete.widget',['id'=>$val->id])}}">delete</a>
 								</div>
 								
 								<div class="col s4 m4 l4 right-align">
@@ -106,7 +107,26 @@
 							Title
 						</div>
 						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							{!! Form::text('name',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+							{!! Form::text('title',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+						</div>
+
+						<div class="col s12 m2 l12 " style="padding: 10px 0px">
+							Slug
+						</div>
+						<div class="col s12 m2 l12 " style="padding: 10px 0px">
+							{!! Form::text('slug',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+						</div>
+						<div class="col s12 m2 l12 " style="padding: 10px 0px">
+							Module
+						</div>
+						<div class="col s12 m2 l12 " style="padding: 10px 0px">
+							{!! Form::text('module_id',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+						</div>
+						<div class="col s12 m2 l12 " style="padding: 10px 0px">
+							Model
+						</div>
+						<div class="col s12 m2 l12 " style="padding: 10px 0px">
+							{!! Form::text('model',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
 						</div>
 						<div class="col s12 m2 l12 " style="padding: 10px 0px">
 							Description

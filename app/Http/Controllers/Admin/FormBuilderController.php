@@ -68,9 +68,10 @@ class FormBuilderController extends Controller
         return view('admin.formbuilder._row')->render();
     }
     
-    public function listFields()
+    public function listFields(Request $request)
     {
-        $model = FormBuilder::get();
+        dd($request->id);
+        $model = FormBuilder::where('id',$id)::get();
         return view('admin.formbuilder._row')->with(['model'=> $model])->render();
     }
 
@@ -96,14 +97,19 @@ class FormBuilderController extends Controller
             unset($request['field_slug'], $request['form_id'], $request['section_id'], $request['field_title'],$request['type'],$request['field_description'],$request['_token']); 
             if($model){
                     foreach ($request->all() as $key => $value) {
+
                         $meta = new FM;
                         $meta->field_id = $field_id->id;
                         $meta->key = $key;
-                        $meta->value = $value;
+                        if($value == ""){
+                           $meta->value = ""; 
+                        }elseif($value){
+                            $meta->value = $value;
+                        }
                         $meta->save();
                     }
             }
-            return back();
+            return "successfully entered for single error message and single validation";
     }
 
     public function formFields(){
@@ -112,7 +118,7 @@ class FormBuilderController extends Controller
     }
     public function formsList(){
         $model = FormBuilder::get();
-
+        dd($model);
         return view('admin.formbuilder.list',['model'=>$model]);
     }
 

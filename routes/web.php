@@ -6,7 +6,8 @@
 
 		Route::group(['middleware' => 'auth.admin'], function(){
 		//Widget Route
-			Route::get('widget_permission_save', ['as'=>'index.widget' , 'uses'=>'WidgetController@index']);
+			Route::get('widgets', ['as'=>'index.widget' , 'uses'=>'WidgetController@index']);
+			Route::get('widget/delete/{id}', ['as'=>'delete.widget' , 'uses'=>'WidgetController@delete']);
 
 			Route::match(['get', 'post'],'widget/create', ['as'=>'create.widget' , 'uses'=>'WidgetController@create']);
 			// Route::post('widget/create', ['as'=>'create.widget' , 'uses'=>'WidgetController@create']);
@@ -60,6 +61,10 @@
 			Route::get('/form/edit/{id}',		['as'=>'form.edit','uses'=>'FormBuilderController@editForm']);
 			Route::get('/form/update/{id}',		['as'=>'form.udpate','uses'=>'FormBuilderController@updateForm']);
 
+
+
+			
+
 		});
 		//settings
 		Route::get('settings', ['as' => 'list.settings' , 'uses' => 'SettingController@list']);
@@ -82,7 +87,17 @@
 
 		Route::group(['middleware' => 'auth.org'], function(){
 
-
+			//visualization
+			Route::get('view/visual' , ['as'=>'view.visual' , 'uses' => function(){
+				return view('organization.visualization.view');
+			}]);
+			Route::get('edit/visual' , ['as'=>'edit.visual' , 'uses' => function(){
+				return view('organization.visualization.edit');
+			}]);
+			Route::get('list/visual' , ['as'=>'list.visual' , 'uses' => function(){
+				return view('organization.visualization.list');
+			}]);
+			
 			Route::get('/',['as'=>'organization.dashboard','uses'=>'DashboardController@index']);
 			//Pages 
 				Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@listPage' ]);
@@ -98,9 +113,14 @@
 				Route::post('team_info/save',	['as'=>'save.team_info' , 'uses'=>'ManageTeamController@save_info']);
 
 			
-			//Employee				
+			//Employee	
+
+						
 
 			Route::group(['prefix'=>'hrm','namespace' => 'hrm'],function(){
+
+			Route::match(['get','post'],'employee/leave',				['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@list']);
+
 
 		//ROLE PERMISSON ROUTE
 			// Route::get('role/create',['as'=>'create.role', 'uses'=>'UserRoleController@create']);
@@ -111,7 +131,7 @@
 			
 		//END ROLE PERMISSON ROUTE
 				//employee
-					Route::get('employees', 				['middleware'=>'role' , 'as' => 'list.employee' , 'uses' => 'EmployeeController@index']);
+					Route::get('employees', 				[ 'as' => 'list.employee' , 'uses' => 'EmployeeController@index']);
 					Route::post('employee/save', 			['as' => 'store.employee' , 'uses' => 'EmployeeController@save']);
 					Route::post('employee/update', 			['as' => 'update.employee' , 'uses' => 'EmployeeController@update']);
 					Route::post('employee/update/name',		['as' => 'update.employee.name', 'uses'=> 'EmployeeController@updateEmployeeName']);
@@ -142,7 +162,7 @@
 					Route::post('widget_permission_save',	['as' => 'save.widget_permission' , 'uses' => 'UserRoleController@widget_permission_save']);
 
 			Route::get('/attendance/list', ['as' => 'ajax.list.attendance' , 'uses' =>'AttendanceController@ajax']);
-		//	Route::post('/attendance/list',				['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
+			Route::post('/attendance/list',				['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
 
 
 				//attendance

@@ -120,7 +120,7 @@ a{
 		</div>
 		<div id="projects" class="projects list-view">
 			<div class="row ">
-				<div class="col s12 m12 l6 " >
+				{{-- <div class="col s12 m12 l6 " >
 					<ul class="class-list" style="margin: 0px;margin-top: 4px">
 						<li style="display: inline-block;"><a style="margin-top: 0px" onclick="showHide('month')"  class="btn monthly">Monthly</a></li>
 						
@@ -128,7 +128,7 @@ a{
 
 						<li style="display: inline-block;"><a style="margin-top: 0px" class="btn daily" >Daily</a></li>
 					</ul>
-				</div>
+				</div> --}}
 
 				<div class="col s12 m12 l6 right-align">
 					
@@ -142,6 +142,7 @@ a{
 		<div id="main" class="main-container">
 		
 		</div>
+		
 	</div>
 	<script type="text/javascript">
 	$(document).ready(function(){

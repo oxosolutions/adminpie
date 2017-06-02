@@ -7,7 +7,7 @@
 	// 			$holidays[$value->day] = $value->title;
 	// 			}
 	// 		}
-		$emp_group_by = $employee_data->groupBy('employee_id')->toArray();
+		//$emp_group_by = $employee_data->groupBy('employee_id')->toArray();
 		//dump($emp_group_by);
 		$holidays =[];
 		if(!empty($holiday_data))
@@ -58,7 +58,12 @@
 		$pre_week_month = $dat->month;
 		$pre_week_year = $dat->year;
 
-		
+		 $current_month =	$dat->month;
+		 $current_year =	$dat->year;
+
+		 $current_days = $dat->daysInMonth;
+		 
+
 		 $previous = $dat->subMonth();
 		 $previousMonth = $previous->month;
 		 $previousYear  =  $previous->year;
@@ -106,6 +111,26 @@
 	{{dump('weekno-'. $pre_week )}}
 {{dump('mo-'.$pre_week_month )}}
 {{dump('yr-'.$pre_week_year )}} --}}
+<div id="projectss" class="projects list-view">
+			<div class="row ">
+				<div class="col s12 m12 l6 " >
+					<ul class="class-list" style="margin: 0px;margin-top: 4px">
+						<li style="display: inline-block;"><a style="margin-top: 0px" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )"  class="btn monthly">Monthly</a></li>
+						
+						<li style="display: inline-block;"><a onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )"   style="margin-top: 0px"  class="btn weekly">Weekly</a></li>
+
+						<li style="display: inline-block;"><a onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" style="margin-top: 0px" class="btn daily" >Daily</a></li>
+					</ul>
+				</div>
+
+				{{-- <div class="col s12 m12 l6 right-align">
+					
+					<a id="add_new" href="#" class="btn add-new" style="width: 50%;margin-top: 4px;background-color: #0288D1">
+						Import Attendence
+					</a>
+				</div> --}}
+			</div>
+		</div>
 
 <div class="row">
 
@@ -192,7 +217,7 @@
 				</div>
 		  	</div>
 		  	<div id="dates" class="aione-navigation">
-								@for($i=1; $i<=$total_days; $i++)
+								@for($i=1; $i<=$current_days; $i++)
 
 								<a style="cursor: pointer;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$previousYear}} )" name="date"  > {{$i}}</a>
 								@endfor
@@ -226,10 +251,12 @@
 									{{substr($getDay->format('l'),0,1)}} 
 									</div>
 								@endfor
+
 						</div>
 						<div style="clear:both;">
 						</div>
 					</div>
+					{{dump($employee_data)}}
 						@foreach($employee_data as $empKey => $empVal)
 						<div class="attendance-sheet row">
 							<div class="attendanc-sheet content">

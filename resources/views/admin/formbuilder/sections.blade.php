@@ -92,7 +92,7 @@
 						<div class="col l1 s2 center-align project-image-wrapper">
 							<a href="javascript:void(0)" data-toggle="popover" title="Click here to view details" data-content="TEST">
 							<div class="defualt-logo">
-								F
+								{{ucfirst($value->section_name[0])}}
 							</div>
 							</a>
 						</div>
@@ -120,6 +120,7 @@
 										<div class="col l4">
 											<a class='dropdown-button btn blue ' href='javascript:;' data-activates='d{{$index}}'>Actions</a>
 											<ul id='d{{$index}}' class='dropdown-content'>
+												<input type="hidden" name="section_id" value="{{$value->id}}">
 											    <li><a href="{{route('del.section',[$value->id,$id_slug[0]->form_slug])}}">Delete</a></li>
 											    <li><a href="{{route('list.form',[$value->id])}}">Fields</a></li>
 											</ul>

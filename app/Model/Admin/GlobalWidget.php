@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalWidget extends Model
 {
-    protected $fillable = ['title', 'description', 'status'];
+    protected $fillable = ['title', 'description', 'status', 'slug','model', 'module_id'];
 
     public function widget_permisson()
     {

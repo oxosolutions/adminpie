@@ -1,13 +1,8 @@
 $(function(){
-	// $.ajax({
-	// 	url:route()+'/field/lists',
-	// 	type:"GET",
-	// 	success:function(res){
-	// 		console.log(res);
-	// 		$('.form-rows').html(res);
-	// 	}
-	// });
 
+
+
+	// dropdown-content
 	$('.add-row').click(function(){
 		$.ajax({
 			type:'GET',

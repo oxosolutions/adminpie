@@ -59,11 +59,11 @@ class OrganizationController extends Controller
 
 	public function create(){
          
-         Artisan::call('make:migration:schema',[
-                                '--model'=>false,
-                                'name'=>'create_global_widgets',
-                                '--schema'=>'title:string, description:text:nullable, module_id:integer:nullable, model:string:nullable, slug:string, status:integer:default(1)'
-                            ]);
+         // Artisan::call('make:migration:schema',[
+         //                        '--model'=>false,
+         //                        'name'=>'create_global_widgets',
+         //                        '--schema'=>'title:string, description:text:nullable, module_id:integer:nullable, model:string:nullable, slug:string, status:integer:default(1)'
+         //                    ]);
 
 
         // Artisan::call('make:migration:schema',[
@@ -101,7 +101,7 @@ class OrganizationController extends Controller
         //                         'name'=>'create_global_form_field_  meta',
         //                         '--schema'=>'field_id:integer, key:string, value:text'
         //                     ]);
-         // Artisan::call('migrate');
+          // Artisan::call('migrate');
 	
 		return view('admin.organization.create');
 	}

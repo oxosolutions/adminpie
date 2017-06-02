@@ -1,17 +1,21 @@
 <?php 
-use DB;
 use App\Model\Admin\GlobalWidget as GW;
 
-function global_draw_widget($str)
+function global_draw_widget($slug)
 {
-	$data = GW::all(); 
-	dump($data);
-   return 'A Global Function with '. $str;
+
+	$models ="";
+	$data = GW::where('slug',$slug)->first();
+	if(!empty($data))
+	{	
+		$model_name = $data['model'];
+		$models =  "App\\Model\\Organization\\$model_name";
+		$data['count'] = $models::get()->count();
+		$data['list'] = $models::get()->take(2);
+		return view('admin.widget.view_widget',['data'=>$data]);
+	} 
 }
 
-function abc($a)
-{
-	return "abc func working->".$a;
-}
+
 
 ?>

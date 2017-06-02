@@ -21,7 +21,14 @@ class WidgetController extends Controller
     		$widget->fill($request->all());
     		$widget->save();
     		dump($request->all());
+    		return redirect()->route('index.widget');
     	}
       	return view('admin.widget.widget');
+    }
+    public function delete($id)
+    {
+    	$widget = GW::find($id);	
+    	$widget->delete();
+        return redirect()->route('index.widget');
     }
 }

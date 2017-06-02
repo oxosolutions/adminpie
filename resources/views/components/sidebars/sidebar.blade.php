@@ -474,6 +474,41 @@
         <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
+                    <i class="fa fa-area-chart red center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text ">
+                    Visualizations
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu " >
+                <li>
+                    <a href="{{route('view.visual')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-eye orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            View
+                        </span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{route('edit.visual')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-pencil-square-o orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Edit
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li class="root">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
                     <i class="fa fa-cogs red center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text ">

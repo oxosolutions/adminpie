@@ -45,6 +45,12 @@ class DashboardController extends Controller
 
 		$collection = collect($widget[0]['role_widget'])->toArray();
 		foreach ($collection as $key => $value) {
+			if(!empty($value['widget']['slug']))
+			{
+				//dump($value['widget']['slug']);
+				 $d = global_draw_widget($value['widget']['slug']);
+				 $slug[] = $value['widget']['slug'];
+			}
 			$allow[] = $value['widget']['title'];
 		}
 		$dashboardData = [];
@@ -62,6 +68,6 @@ class DashboardController extends Controller
 									];
 			}
 		}
-		return view('organization.dashboard.index',['check_in_out_status'=>$check_in_out_status ,'model' => $dashboardData, 'widget_data'=>$widget_data]);
+		return view('organization.dashboard.index',['check_in_out_status'=>$check_in_out_status ,'model' => $dashboardData, 'widget_data'=>$widget_data , 'slug'=>$slug]);
     }
 }

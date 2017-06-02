@@ -49,6 +49,7 @@
 					</div>
 				</div>
 			</div>
+			{!!global_draw_widget('cl')!!}
 			<div class="list" id="list">
 
 		
