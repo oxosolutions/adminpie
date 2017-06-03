@@ -1,15 +1,15 @@
 @extends('layouts.main')
 @section('content')
-	<div>
+	{{-- <div> --}}
 	{{-- {{dump($widget_data)}} --}}
 
 	
 
-
+{{-- 
 		<div class="row">
 		@foreach($slug as $slugKey => $slugVal)
 			{!!global_draw_widget($slugVal)!!}
-		@endforeach
+		@endforeach --}}
 			{{-- @foreach($widget_data as $key => $value)
 				@php
 				unset($permissons);
@@ -51,8 +51,8 @@
 				</div>
 			</div>
 		@endforeach --}}
-		</div>
-	</div>
+	{{-- 	</div>
+	</div> --}}
 	<div class="row">
 		<div class="col l3 pr-7">
 			<div class="card">
@@ -424,8 +424,296 @@
 				
 			</div>
 		</div>
+		
 		<div class="col l3 pl-7 pr-7">
 			<div class="card">
+				<div class="row my-stats">
+					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
+						CMS
+					</div>
+					<div class=" col l12">
+						<ul>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-folder-open-o"></i>
+									</div>
+									<div class="col l8">Pages</div>
+									<div class="col l2 right-align ">
+										<span class="light-blue white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-tasks"></i>
+									</div>
+									<div class="col l8">Posts</div>
+									<div class="col l2 right-align ">
+										<span class="light-green lighten-1 white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-life-ring"></i>
+									</div>
+									<div class="col l8">Categories</div>
+									<div class="col l2 right-align ">
+										<span class="deep-orange lighten-1 white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-clock-o"></i>
+									</div>
+									<div class="col l8">Media</div>
+									<div class="col l2 right-align ">
+										<span class=" blue-grey darken-1 white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>	
+				</div>
+				
+			</div>
+		</div>
+		<div class="col l3 pl-7">
+			<div class="card">
+				<div class="row my-stats">
+					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
+						Users
+					</div>
+					<div class=" col l12">
+						<ul>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-folder-open-o"></i>
+									</div>
+									<div class="col l8">All Users</div>
+									<div class="col l2 right-align ">
+										<span class="light-blue white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-tasks"></i>
+									</div>
+									<div class="col l8">Online Users</div>
+									<div class="col l2 right-align ">
+										<span class="light-green lighten-1 white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-life-ring"></i>
+									</div>
+									<div class="col l8">Banned User</div>
+									<div class="col l2 right-align ">
+										<span class="deep-orange lighten-1 white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-clock-o"></i>
+									</div>
+									<div class="col l8">Unconfirmed User</div>
+									<div class="col l2 right-align ">
+										<span class=" blue-grey darken-1 white-text" style="padding: 4px 8px;">5</span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>	
+				</div>
+				
+			</div>
+		</div>
+		<div class="col l3 pl-7 pr-7">
+			<div class="card">
+				<div class="row my-stats">
+					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
+						Settings
+					</div>
+					<div class=" col l12">
+						<ul>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-folder-open-o"></i>
+									</div>
+									<div class="col l8">Setting 1</div>
+									<div class="col l2 right-align ">
+										 <div class="switch">
+										<label>
+									     
+									      <input type="checkbox">
+									      <span class="lever"></span>
+									    
+									    </label>
+									    </div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-tasks"></i>
+									</div>
+									<div class="col l8">Setting 2</div>
+									<div class="col l2 right-align ">
+										<div class="switch">
+										<label>
+									     
+									      <input type="checkbox">
+									      <span class="lever"></span>
+									    
+									    </label>
+									    </div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-life-ring"></i>
+									</div>
+									<div class="col l8">Setting 3</div>
+									<div class="col l2 right-align ">
+										<div class="switch">
+										<label>
+									     
+									      <input type="checkbox">
+									      <span class="lever"></span>
+									    
+									    </label>
+									    </div>
+									</div>
+								</div>
+							</li>
+							<li>
+								<div class="row">
+									<div class="col l2">
+										<i class="fa fa-clock-o"></i>
+									</div>
+									<div class="col l8">Setting 4</div>
+									<div class="col l2 right-align ">
+										<div class="switch">
+										<label>
+									     
+									      <input type="checkbox">
+									      <span class="lever"></span>
+									    
+									    </label>
+									    </div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>	
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col l3 pl-7 pr-7">
+			<div class="card">
+				<div class="row my-stats">
+					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
+						My Attendence
+					</div>
+					<div class=" col l12">
+						<div id='calendar'></div>	
+					</div>	
+				</div>
+				
+			</div>
+		</div>
+		<div class="col l3 pl-7 pr-7">
+			<div class="card">
+				<div class="row valign-wrapper">
+					<div class="col l3 center-align" style="border-right:1px solid #e8e8e8">
+						<i class="fa fa-user " style="font-size:28px;margin: 10px 0px;color:#38312B"></i>
+					</div>
+					<div class="col l9">
+						<div class="row pl-7" style="font-size: 28px;font-weight: 500">17</div>
+						<div class="row pl-7" style="padding-bottom: 8px">Employees</div>
+					</div>
+				</div>
+			</div>
+			<div class="card" style="margin-top: 14px">
+				<div class="row valign-wrapper">
+					<div class="col l3 center-align" style="border-right:1px solid #e8e8e8">
+						<i class="fa fa-calendar" style="font-size:28px;margin: 10px 0px;color:#38312B "></i>
+					</div>
+					<div class="col l9">
+						<div class="row pl-7" style="font-size: 28px;font-weight: 500">3%<span style="font-size: 14px" class="grey-text pl-7">( 2/17 )</span></div>
+						<div class="row pl-7" style="padding-bottom: 8px">Absence Rate</div>
+					</div>
+				</div>
+			</div>
+			<div class="card" style="margin-top: 14px">
+				<div class="row valign-wrapper">
+					<div class="col l3 center-align" style="border-right:1px solid #e8e8e8">
+						<i class="fa fa-user " style="font-size:28px;margin: 10px 0px;color:#38312B"></i>
+					</div>
+					<div class="col l9">
+						<div class="row pl-7" style="font-size: 28px;font-weight: 500">6</div>
+						<div class="row pl-7" style="padding-bottom: 8px">Department</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col l3 pl-7 pr-7">
+			<div class="card">
+				<div class="row valign-wrapper">
+					<div class="col l3 center-align" style="border-right:1px solid #e8e8e8">
+						<i class="fa fa-sign-out " style="font-size:28px;margin: 10px 0px;color:#38312B"></i>
+					</div>
+					<div class="col l9">
+						<div class="row pl-7" style="font-size: 28px;font-weight: 500">0<span style="font-size: 14px" class="grey-text pl-7">( 0/17 )</span></div>
+						<div class="row pl-7" style="padding-bottom: 8px">Leavers</div>
+					</div>
+				</div>
+			</div>
+			<div class="card" style="margin-top: 14px">
+				<div class="row valign-wrapper">
+					<div class="col l3 center-align" style="border-right:1px solid #e8e8e8">
+						<i class="fa fa-arrow-up" style="font-size:28px;margin: 10px 0px;color:#38312B "></i>
+					</div>
+					<div class="col l9">
+						<div class="row pl-7" style="font-size: 28px;font-weight: 500">0<span style="font-size: 14px" class="grey-text pl-7">( 0/17 )</span></div>
+						<div class="row pl-7" style="padding-bottom: 8px">High Performers</div>
+					</div>
+				</div>
+			</div>
+			<div class="card" style="margin-top: 14px">
+				<div class="row valign-wrapper">
+					<div class="col l3 center-align" style="border-right:1px solid #e8e8e8">
+						<i class="fa fa-arrow-down" style="font-size:28px;margin: 10px 0px;color:#38312B"></i>
+					</div>
+					<div class="col l9">
+						<div class="row pl-7" style="font-size: 28px;font-weight: 500">0<span style="font-size: 14px" class="grey-text pl-7">( 0/17 )</span></div>
+						<div class="row pl-7" style="padding-bottom: 8px">Low Performers</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col l3 pl-7 pr-7">
+			<div class="card" style="padding-bottom: 14px">
 				<div class="row my-stats">
 					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
 						Attendence
@@ -448,7 +736,7 @@
 									<div class="col l2">
 										<i class="fa fa-tasks"></i>
 									</div>
-									<div class="col l8">Open Tasks</div>
+									<div class="col l8">Present</div>
 									<div class="col l2 right-align ">
 										<span class="light-green lighten-1 white-text" style="padding: 4px 8px;">5</span>
 									</div>
@@ -459,7 +747,7 @@
 									<div class="col l2">
 										<i class="fa fa-life-ring"></i>
 									</div>
-									<div class="col l8">Support Ticket</div>
+									<div class="col l8">Absence</div>
 									<div class="col l2 right-align ">
 										<span class="deep-orange lighten-1 white-text" style="padding: 4px 8px;">5</span>
 									</div>
@@ -470,144 +758,13 @@
 									<div class="col l2">
 										<i class="fa fa-clock-o"></i>
 									</div>
-									<div class="col l8">Active Timer</div>
+									<div class="col l8">Leaves</div>
 									<div class="col l2 right-align ">
 										<span class=" blue-grey darken-1 white-text" style="padding: 4px 8px;">5</span>
 									</div>
 								</div>
 							</li>
 						</ul>
-					</div>	
-				</div>
-				
-			</div>
-		</div>
-		<div class="col l3 pl-7 pr-7">
-			<div class="card">
-				<div class="row my-stats">
-					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
-						My Stats
-					</div>
-					<div class=" col l12">
-						<ul>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-folder-open-o"></i>
-									</div>
-									<div class="col l8">Active Projects</div>
-									<div class="col l2 right-align ">
-										<span class="light-blue white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-tasks"></i>
-									</div>
-									<div class="col l8">Open Tasks</div>
-									<div class="col l2 right-align ">
-										<span class="light-green lighten-1 white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-life-ring"></i>
-									</div>
-									<div class="col l8">Support Ticket</div>
-									<div class="col l2 right-align ">
-										<span class="deep-orange lighten-1 white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-clock-o"></i>
-									</div>
-									<div class="col l8">Active Timer</div>
-									<div class="col l2 right-align ">
-										<span class=" blue-grey darken-1 white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>	
-				</div>
-				
-			</div>
-		</div>
-		<div class="col l3 pl-7">
-			<div class="card">
-				<div class="row my-stats">
-					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
-						My Stats
-					</div>
-					<div class=" col l12">
-						<ul>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-folder-open-o"></i>
-									</div>
-									<div class="col l8">Active Projects</div>
-									<div class="col l2 right-align ">
-										<span class="light-blue white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-tasks"></i>
-									</div>
-									<div class="col l8">Open Tasks</div>
-									<div class="col l2 right-align ">
-										<span class="light-green lighten-1 white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-life-ring"></i>
-									</div>
-									<div class="col l8">Support Ticket</div>
-									<div class="col l2 right-align ">
-										<span class="deep-orange lighten-1 white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-							<li>
-								<div class="row">
-									<div class="col l2">
-										<i class="fa fa-clock-o"></i>
-									</div>
-									<div class="col l8">Active Timer</div>
-									<div class="col l2 right-align ">
-										<span class=" blue-grey darken-1 white-text" style="padding: 4px 8px;">5</span>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>	
-				</div>
-				
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col l3 pl-7 pr-7">
-			<div class="card">
-				<div class="row my-stats">
-					<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
-						My Attendence
-					</div>
-					<div class=" col l12">
-						<div id='calendar'></div>	
 					</div>	
 				</div>
 				
@@ -669,20 +826,31 @@
 		td{
 			text-align: center
 		}
+		.switch label .lever{
+			width: 30px !important;
+			height:16px !important;
+		}
+		.switch label .lever:after{
+			width: 14px !important;
+			height: 14px !important;
+			left: 1px ;
+			top:1px !important;
+		}
+		.switch label input[type=checkbox]:checked+.lever:after{
+			    background-color: white !important;
+		}
+		.switch label input[type=checkbox]:checked+.lever:after{
+			left: 15px;
+		}
+		.switch label input[type=checkbox]:checked+.lever{
+			background-color: #6DAD25 !important;
+		}
 	</style>
 	<script type="text/javascript">
 		 
 	$(document).ready(function() {
 		
 		$('#calendar').fullCalendar({
-			/*header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,basicWeek,basicDay'
-			},*/
-			
-			/*navLinks: true, */// can click day/week names to navigate views
-			 // allow "more" link when too many events
 			
 		});
 		

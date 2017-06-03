@@ -37,12 +37,7 @@
 					<div class="row aione-switch-view">
 						<ul class="right  views m-0" >
 							<li class="inline-block" sty><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
-							
-							
-
 							<li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
-
-
 							<li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
 						</ul>
 					</div>
@@ -92,6 +87,7 @@
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 				{!! Form::open(['method' => 'POST','class' => '']) !!}
+			
 					<div class="row">
 						<div class="col s12 m3 l12 aione-field-wrapper">
 							<div class="form-group">
@@ -140,11 +136,11 @@
 		$('.fade-background').fadeToggle(300);
 		$('.add-new-wrapper').toggleClass('active');
 	});
-	$(document).on('.list','mouseenter',function(){
+	$(document).on('mouseenter','.list',function(){
 		$(this).find('.action-button > ul').show();
 	});
-	$(document).on('.list','mouseleave',function(){
-		$('.action-button > ul').hide();
+	$(document).on('mouseleave','.list',function(){
+		$(this).find('.action-button > ul').hide();
 	});
 </script>
 

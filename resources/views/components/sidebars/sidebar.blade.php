@@ -13,6 +13,18 @@
             
         </li>
         <li class="root">
+            <a href="{{Route('organization.profile')}}">
+                <span class="side-bar-icon">
+                    <i class="fa fa-user orange center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text">
+                    My Profile
+                </span>
+               
+            </a>
+            
+        </li>
+        <li class="root">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-tachometer blue center-align side-bar-icon-bg white-text" style=""></i>
@@ -484,6 +496,16 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
+                <li>
+                    <a href="{{route('list.visual')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-files-o orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            list
+                        </span>
+                    </a>
+                </li>
                 <li>
                     <a href="{{route('view.visual')}}">
                         <span class="side-bar-icon">

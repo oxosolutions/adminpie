@@ -122,7 +122,7 @@
 											<ul id='d{{$index}}' class='dropdown-content'>
 												<input type="hidden" name="section_id" value="{{$value->id}}">
 											    <li><a href="{{route('del.section',[$value->id,$id_slug[0]->form_slug])}}">Delete</a></li>
-											    <li><a href="{{route('list.form',[$value->id])}}">Fields</a></li>
+											    <li><a class="field" href="{{route('list.form',[$value->id])}}">Fields</a></li>
 											</ul>
 										</div>
 

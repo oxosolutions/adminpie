@@ -55,7 +55,6 @@
 			Route::get('/field/lists',				['as'=>'list.field','uses'=>'FormBuilderController@listFields']);
 			Route::get('/field/list/{id}',			['as'=>'list.form','uses'=>'FormBuilderController@fieldList']);
 
-			Route::get('/field/meta', ['as'=>'field.meta','uses'=>'FormBuilderController@fieldMeta']);
 			Route::get('/form/row',				['as'=>'form.row','uses'=>'FormBuilderController@addRow']);
 			Route::post('/form/store',			['as'=>'form.store','uses'=>'FormBuilderController@store']);
 			Route::get('/form/field',			['as'=>'form.field','uses'=>'FormBuilderController@formFields']);
@@ -118,7 +117,7 @@
 
 			Route::group(['prefix'=>'hrm','namespace' => 'hrm'],function(){
 
-			Route::any('employee/leave/{id?}',['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@list']);
+			Route::match(['get','post'],'employee/leave',['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@list']);
 
 
 		//ROLE PERMISSON ROUTE

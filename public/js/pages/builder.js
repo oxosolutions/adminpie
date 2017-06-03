@@ -1,6 +1,12 @@
 $(function(){
-
-
+		$.ajax({
+			type:'GET',
+			url: route()+'/field/lists',
+			data: {id : $('input[name=section_id]').val()},
+			success: function(result){
+				$('.form-rows').html(result);
+			}
+		});
 
 	// dropdown-content
 	$('.add-row').click(function(){
@@ -13,6 +19,7 @@ $(function(){
 				$('.row-count:last').html($('.row-count').length);
 			}
 		});
+		
 	});
 	$('body').on('click','.delete-row', function(){
 		var elem = $(this).parents('.form-row');
@@ -26,6 +33,15 @@ $(function(){
 
 	$('body').on('click','.edit-fields',function(){
 		$(this).parents('.form-row').next('.fields-list').slideToggle(300);
+		var field_id = $(this).parents('.main-row').find('input[name=field_id]').val();
+		$.ajax({
+			url : route()+'/field/meta',
+			type: 'get',
+			data : {id : field_id},
+			success : function(meta){
+				console.log(meta);
+			}
+		});
 	});
 	$('body').on('click', '.add_field_option', function(){
 		console.log('working');

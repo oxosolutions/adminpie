@@ -1,4 +1,8 @@
-<div>
+@php $index = 1;  @endphp
+
+@foreach($model as $key => $value)
+
+<div class="main-row">
   <div class="row form-row option-trigger" style="background-color: #fff;padding: 15px 10px">
 
     <div class="col l2">
@@ -7,7 +11,7 @@
           <i class="fa fa-arrows" style="color: white"></i>
         </a>
       </div>
-      <span style="border:1px solid #e8e8e8;line-height: 46px;width: 34px;margin: 0 auto;margin-left:10px;border-radius: 50%;padding:10px 15px;" class="row-count">1</span>
+      <span style="border:1px solid #e8e8e8;line-height: 46px;width: 34px;margin: 0 auto;margin-left:10px;border-radius: 50%;padding:10px 15px;" class="row-count">{{$index++}}</span>
       <div style="clear: both">
           
       </div>
@@ -15,18 +19,19 @@
     <div class="col l4">
       <div class="row">
         <div class="col l12 field-label">
-          Field Label
+          {{$value->field_title}}
         </div>
         <div class="" style="font-size: 12px;height: 0px">
           <span class="options">
+            <input type="hidden" name="field_id" value="{{$value->id}}">
             <a href="javascript:void(0)" class="edit-fields" style="border:0px !important;padding: 0px">Edit </a>|
             <a href="javascript:void(0)" class="delete-row">Delete </a>
           </span>
         </div>
       </div>
     </div>
-    <div class="col l4 field-name-text">Test</div>
-    <div class="col l2 field-type">Test</div>
+    <div class="col l4 field-name-text">{{$value->field_slug}}</div>
+    <div class="col l2 field-type">{{$value->created_at}}</div>
   </div>
   <div class="fields-list" style="display: none;border-top:1px;border-color: #e8e8e8;border-style: solid">
     <div colspan=100% style="padding: 0px;">
@@ -195,7 +200,7 @@
                     <span class="field-description">Appears</span> 
                 </div>
                 <div class="col l8 form-group" style="padding:10px">
-                    <input type="text" name="field_class" class="form-control">
+                    <input type="text" name="field_class" value="{{$value['fieldMeta']}}" class="form-control">
                 </div>  
             </div>
         </div>
@@ -203,6 +208,8 @@
     </div>
   </div>
 </div>
+
+@endforeach
 <script type="text/javascript">
    $(document).ready(function() {
     $('select').material_select();

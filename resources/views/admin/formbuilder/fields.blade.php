@@ -49,12 +49,12 @@ input{
                   <div class=" row" style="background-color: #24425C;color: white;padding: 15px 10px">
                     <div class="col l2" >Field Order</div>
                     <div class="left-align col l4 ">Field Label</div>
-                    <div class="col l4">Field Name </div>
-                    <div class="col l2">Field Type</div>
+                    <div class="col l4">Field Slug </div>
+                    <div class="col l2">Created at</div>
                   </div>
                 </div>
                 <div class="form-rows">
-                  
+                
                 </div>
             </div>
             </div>

@@ -15,4 +15,8 @@ class FormBuilder extends Model
     {
     	return $this->belongsTo('App\Model\Admin\section','id','section_id');
     }
+    public function fieldMeta()
+    {
+    	return $this->hasMany('App\Model\Admin\FieldMeta','field_id','id');
+    }
 }

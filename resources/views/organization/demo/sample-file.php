@@ -58,10 +58,10 @@
 
 					<div class="row valign-wrapper no-margin-bottom">
 						<div class="col l1 s2 center-align project-image-wrapper">
-							<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title=" {{$val->reason_of_leave}}" data-content="TEST">
+							<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title=" {{$val->name}}" data-content="TEST">
 							{{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
 							<div class="defualt-logo">
-								{{ucwords(substr($val->reason_of_leave, 0, 1))}}
+								{{ucwords(substr($val->name, 0, 1))}}
 							</div>
 							</a>
 						</div>
@@ -72,29 +72,24 @@
 									<input type="hidden" value="{{$val->id}}" class="shift_id" >
 									<input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
 									
-									<a class="update" href="#" data-toggle="popover" title="Popover title" data-content="TEST" >
+									<a href="#" data-toggle="popover" title="Popover title" data-content="TEST" >
 										<h5 class="project-title black-text flow-text truncate line-height-35">
-											<span class="project-name shift_name font-size-14" contenteditable="true" > {{$val->reason_of_leave}}</span>
+											<span class="project-name shift_name font-size-14" contenteditable="true" > {{$val->name}}</span>
 										</h5>
 									</a>
 								</div>
 								
 								<div class="col s4 m4 l4 right-align">
-								{!! Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'delete' ,'id'=>'form-delete'])!!}
-								<input type="hidden" name="delete_id" value="{{$val->id}}">
-								<button type="submit"> Delete </button>
-								{!! Form::close() !!}
-
 									<div class="switch">
 									    <label>
 											
-												@if($val->approved_status == '0')
-													<span style="color:red;"> Un-Approve</span>
+												@if($val->status == '0')
+													<input type="checkbox">
 												@else
-													<span style="color:green;">Approved</span>
+													<input type="checkbox" checked="checked">
 												@endif
 											
-									      
+									      <span class="lever"></span>
 									      
 									    </label>
 									  </div>
@@ -114,26 +109,14 @@
 				Add Leave
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-				{!! Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'post' ,'id'=>'form'])!!}
-					<input id="methods" type="hidden" name="_method" value="NULL">
-
+				{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 					<div class="row no-margin-bottom">
 						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="reason_of_leave" class="no-margin-bottom aione-field" type="text" placeholder="Reason of leave" />
+							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Designation Title" />
 						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="description" class="no-margin-bottom aione-field" type="text" placeholder="Description" />
-						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="total_day_of_leave" class="no-margin-bottom aione-field" type="text" placeholder="Day of leave" />
-						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="from" class="no-margin-bottom aione-field" type="text" placeholder="From" />
-						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="to" class="no-margin-bottom aione-field" type="text" placeholder="To" />
-						</div>
+						
+
 						<div class="col s12 m6 l12 aione-field-wrapper">
 							<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Leave
 								<i class="material-icons right">save</i>
@@ -148,16 +131,8 @@
 	</div>
 </div>
 <script type="text/javascript">
-		$('.update').off().click(function(e){
-			e.preventDefault();
-			$("#methods").val('patch');
-			$('.add-new-wrapper').toggleClass('active');
-			$('.fade-background').fadeToggle(300);
-		});
-
 		$('.add-new').off().click(function(e){
 			e.preventDefault();
-			//$("#form").attr('method','post');
 			$('.add-new-wrapper').toggleClass('active');
 			$('.fade-background').fadeToggle(300);
 		});
@@ -167,5 +142,6 @@
 			$('.add-new-wrapper').toggleClass('active');
 		});
 </script>
+
 
 @endsection

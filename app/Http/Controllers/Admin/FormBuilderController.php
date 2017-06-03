@@ -50,11 +50,14 @@ class FormBuilderController extends Controller
     } 
     public function sectionsList($slug)
     {
+         $plugins = [
+                        'js' => ['custom'=>['builder']],
+                   ];
         $id_slug = forms::select('id','form_slug')->where('form_slug',$slug)->get();
         $id = $id_slug[0]->id;
         $model = sec::where('form_id',$id)->with(['fields'])->get();
         // dd($model);
-        return view('admin.formbuilder.sections')->with(['id_slug'=>$id_slug , 'section' => $model]);
+        return view('admin.formbuilder.sections')->with(['id_slug'=>$id_slug , 'section' => $model,'plugins'=> $plugins]);
     }
     public function deleteSection($id)
     {
@@ -70,11 +73,15 @@ class FormBuilderController extends Controller
     
     public function listFields(Request $request)
     {
-        dd($request->id);
-        $model = FormBuilder::where('id',$id)::get();
+        $id = $request->id;
+        $model = FormBuilder::where('section_id',$id)->with('fieldMeta')->get();
         return view('admin.formbuilder._row')->with(['model'=> $model])->render();
     }
-
+    public function fieldMeta(Request $request)
+    {
+        $meta = FM::select('key','value')->where('field_id',$request->id)->get();
+        return view('admin.formbuilder._row')->with(['model'=> $meta]);
+    }
     public function fieldList(Request $request , $id)
     {
         $plugins = [
