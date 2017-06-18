@@ -1,5 +1,4 @@
 @extends('admin.layouts.main')
-
 @section('content')
 <div class="fade-background">
 
@@ -59,29 +58,12 @@
       <a id="add_new" href="{{route('create.module')}}" class="btn add-new display-form-button" >
         Add Module
       </a>
-      <div id="add_new_wrapper" class="add-new-wrapper add-form ">
-        {!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-
-          <div class="row no-margin-bottom">
-            <div class="col s12 m2 l12 aione-field-wrapper">
-              <input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Designation Title" />
-            </div>
-            
-
-            <div class="col s12 m6 l12 aione-field-wrapper">
-              <button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Module
-                <i class="material-icons right">save</i>
-              </button>
-            </div>
-          </div>
-        {!!Form::close()!!}
-
-      </div>
+     
       
     </div>
   </div>
   <div class="row">
-    @foreach($list as $key => $val)
+    @foreach($listModule as $key => $val)
       <div class="list" id="list">
      
         <div class="card-panel shadow white z-depth-1 hoverable project"  >
@@ -91,15 +73,16 @@
               
               {{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
               <div class="defualt-logo"  data-toggle="popover" title="Click to view details" >
-               {{ucwords(substr($val->name, 0, 1))}}
+               {{ucwords(substr($val->name, 0, 1))}} 
               </div>
+                <a href="{{route('edit.module',['id'=>$val->id])}}"> edit</a>
               
             </div>
             
             <div class="col l11 s10 editable " >
               <div class="row m-0 valign-wrapper">
                 <div class="col s8 m8 l8">
-                  <input type="hidden" value="1212" class="shift_id" >
+                  <input type="hidden" value="{{$val->id}}" class="module_id" >
                   <input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
                   
                   <a href="#" data-toggle="popover" title="Click here to edit the Module name" data-content="TEST" >
@@ -110,15 +93,32 @@
                     </h5>
                   </a>
                 </div>
+                <div class="col l4 right-align">
+                  <input type="hidden" name="_token" value="{{csrf_token()}}" class="module_token" >
+                  <div class="switch">
+                      <label>
+                      
+                        @if($val->status == '0')
+                          <input type="checkbox">
+                        @else
+                          <input type="checkbox" checked="checked">
+                        @endif
+                      
+                        <span class="lever"></span>
+                        
+                      </label>
+                    </div>
+                </div>
                 
                 <div class="col s4 m4 l4 right-align">
                   <div class="switch">
-                    <a href="{{route('delete.module',['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Module">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
+                    <a onclick="return confirm('Are you sure want to delete?')" href="{{route('delete.module',['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Module">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
                       
                    </div>
                 </div>
               </div>
             </div>
+            
           </div>
             
         </div>
@@ -128,6 +128,26 @@
       @endforeach
   </div>
 </div>
+
+<script type="text/javascript">
+  $(document).on('change', '.switch > label > input',function(e){
+      e.preventDefault();
+      var postedData = {};
+      postedData['id']        = $(this).parents('.shadow').find('.module_id').val();
+      postedData['status']      = $(this).prop('checked');
+      postedData['_token']      = $('.shadow').find('.module_token').val();
+
+      $.ajax({
+        url:route()+'/module/status/update',
+        type:'POST',
+        data:postedData,
+        success: function(res){
+          console.log('data sent successfull');
+        }
+      });
+      $('.editable h5 ,.editable p').removeClass('edit-fields');
+    });
+</script>
 
 
 @endsection

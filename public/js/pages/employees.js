@@ -29,6 +29,7 @@ $(function(){
 
 	$('.add-new').off().click(function(e){
 		e.preventDefault();
+
 		$('.add-new-wrapper').toggleClass('active'); 
 		$('.fade-background').fadeToggle(300);
 	});

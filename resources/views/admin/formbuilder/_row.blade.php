@@ -1,229 +1,327 @@
-@php $index = 1;  @endphp
+    @php
+        $keys = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->key;
+        $values = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->value;
+        $combine_array = array_combine($keys, $values);
+    @endphp
+    {{-- {{dump(@$existSlug)}}
+    @if(@$existSlug != null || @$existSlug != "" || !empty(@$existSlug) || @$existSlug != "NULL" )
+        {{@$existSlug}}
+    @endif --}}
+    <div class="main-row">
+        <div class="row form-row option-trigger" style="background-color: #fff;padding: 15px 10px">
 
-@foreach($model as $key => $value)
-
-<div class="main-row">
-  <div class="row form-row option-trigger" style="background-color: #fff;padding: 15px 10px">
-
-    <div class="col l2">
-      <div style="float: left;background-color: grey;text-align: center;width: 42px;margin-top: -11px;margin-bottom: -11px;line-height: 67px;" class="handle">
-        <a href="">
-          <i class="fa fa-arrows" style="color: white"></i>
-        </a>
+        <div class="col l2">
+          <div style="float: left;background-color: grey;text-align: center;width: 42px;margin-top: -11px;margin-bottom: -11px;line-height: 67px;" class="handle">
+            <a href="">
+              <i class="fa fa-arrows" style="color: white"></i>
+            </a>
+          </div>
+          <span style="border:1px solid #e8e8e8;line-height: 46px;width: 34px;margin: 0 auto;margin-left:10px;border-radius: 50%;padding:10px 15px;" class="row-count">{{$index}}</span>
+          <div style="clear: both">
+              
+          </div>
+        </div>
+        <div class="col l4">
+          <div class="row">
+            <div class="col l12 field-label">
+              {{@$value->field_title}}
+            </div>
+            <div class="" style="font-size: 12px;height: 0px">
+              <span class="options">
+                <input type="hidden" name="field_id[{{$rowCount}}]" value="{{@$value->id}}">
+                <a href="javascript:void(0)" class="edit-fields" style="border:0px !important;padding: 0px">Edit </a> |
+                <a href="{{ route('field.delete',$value->id) }}" class="delete-row">Delete </a>
+              </span>
+            </div>
+          </div>
+        </div>
+            @php
+                $slug[]['name'] = $value->field_slug;
+            @endphp
+        {{-- {{dump(@$value->field_slug)}} --}}
+        {{-- @if(in_array($value->field_slug, $model)) --}}
+            <div class="col l4 field-name-text">{{@$value->field_slug}}</div>
+            <div class="col l2 field-type">{{ucfirst(@$value->field_type)}}</div>
+        {{-- @endif --}}
       </div>
-      <span style="border:1px solid #e8e8e8;line-height: 46px;width: 34px;margin: 0 auto;margin-left:10px;border-radius: 50%;padding:10px 15px;" class="row-count">{{$index++}}</span>
-      <div style="clear: both">
-          
+      <div class="fields-list" style="display: none;border-top:1px;border-color: #e8e8e8;border-style: solid">
+        <div colspan=100% style="padding: 0px;">
+           <div>
+
+            <div class="fields_list active-field">
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5 " style="padding:20px">
+                        <span class="field-title">Field Label*</span><br>
+                        <span class="field-description">This is the name which will appear on the EDIT page</span>
+                    </div>
+                    <div class="col l8 form-group"  style="padding: 10px">
+                         <input type="text" required="required" name="field_title[{{$rowCount}}]" value="{{@$value->field_title}}" class="form-control field-label-input">
+                    </div>
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
+                        <span class="field-title">Field Description</span><br>
+                        <span class="field-description">Field Description</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        {{-- <textarea class="form-control" rows="3" name="question_desc"></textarea> --}}
+                        <input type="text" id="textarea2" class="materialize-textarea" required="required" name="field_description[{{$rowCount}}]" value="{{@$value->field_description}}">
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding: 30px 20px">
+                        <span class="field-title" style="line-height: 36px">Field Type*</span>         
+                    </div>
+                    <div class="col l8 input-field" style="padding:10px">
+                        <select name="field_type[{{$rowCount}}]" required="required" class="field_type select_type">
+                         <optgroup label="Basic">
+                                <option value="" selected="selected">Select Type</option>
+                                <option value="text" {{(@$value->field_type == 'text')?'selected':''}}>Text</option>
+                                <option value="textarea" {{(@$value->field_type == 'textarea')?'selected':''}}>Text Area</option>
+                                <option value="number" {{(@$value->field_type == 'number')?'selected':''}}>Number</option>
+                                <option value="email" {{(@$value->field_type == 'email')?'selected':''}}>Email</option>
+                                <option value="password" {{(@$value->field_type == 'password')?'selected':''}}>Password</option>
+                                <option value="datepicker" {{(@$value->field_type == 'datepicker')?'selected':''}}>Datepicker</option>
+                                <option value="timepicker" {{(@$value->field_type == 'timepicker')?'selected':''}}>Timepicker</option>
+                            </optgroup>
+                            <optgroup label="Content">
+                                <option value="image" {{(@$value->field_type == 'image')?'selected':''}}>Image</option>
+                                <option value="file" {{(@$value->field_type == 'file')?'selected':''}}>File</option>
+                            </optgroup>
+                            <optgroup label="Choice">
+                                <option value="select" {{(@$value->field_type == 'select')?'selected':''}}>Select</option>
+                                <option value="multi_select" {{(@$value->field_type == 'multi_select')?'selected':''}}>Multi Select</option>
+                                <option value="checkbox" {{(@$value->field_type == 'checkbox')?'selected':''}}>Checkbox</option>
+                                <option value="radio" {{(@$value->field_type == 'radio')?'selected':''}}>Radio Button</option>
+                            </optgroup>
+                        </select>
+                          
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                    <span class="field-title">Field Order</span><br>
+                        <span class="field-description">Question Order be in number [0-9]</span>
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                         <input type="text" name="field_order[{{$rowCount}}]" required="required" class="form-control field-label-input" value="{{@$value->field_order}}">
+                    </div>
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5 " style="padding:20px">
+                        <span class="field-title">Field Slug*</span><br>
+                        <span class="field-description"></span>
+                    </div>
+                    <div class="col l8 form-group"  style="padding: 10px">
+                         <input type="text" name="field_slug[{{$rowCount}}]" required="" class="form-control field-label-input" value="{{@$value->field_slug}}">
+                    </div>
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
+                        <span class="field-title">Field Required?</span><br>
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <select name="field_required[{{$rowCount}}]">
+                           <option value="yes" {{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_required') == 'yes')?'selected':''}}>Yes</option>
+                            <option value="no" {{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_required') == 'no')?'selected':''}}>No</option>
+                        </select>
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field Error Messages</span><br>
+                        <span class="field-description">eg. Show extra content</span> 
+                    </div>
+                    <div class="col l6 form-group messages" style="padding:5px">
+                    	@php  
+                            $errorMessages = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_error_message'));
+	                    @endphp
+	                    @foreach(@$errorMessages as $error => $message)
+                    		<div class="appended_error">
+	                    		<input type="text" class="form-control" name="field_error_message[{{$rowCount}}][]" value="{{@$message}}">
+	                    		<a href="javascript:;" style="float:right;" class="delete_message"><span class=" fa fa-trash"></span></a>
+                    		</div>
+	                    @endforeach
+                    </div>  
+                    <div class="col l1 form-group" style="padding:5px">
+                        <a href="javascript:;" class="add_message" data-count="{{$rowCount}}">Add</a>
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field Validation</span><br>
+                        <span class="field-description">validations</span>
+                    </div>
+                    <div class="col l6 form-group validations" style="padding:10px">
+                    @php  
+                        $validation = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_validation'));
+					@endphp
+                    @foreach(@$validation as $keyValidation => $validationList)
+                    	<div class="appended_vallidation">
+                        	<input type="text" name="field_validation[{{$rowCount}}][]" class="form-control field-label-input" value="{{@$validationList}}">
+                        	<a href="javascript:;" style="float:right;" class="delete_validation"><span class=" fa fa-trash"></span></a>
+                    	</div>
+                    @endforeach
+                    </div>
+                    <a href="javascript:;" class="btn add_validation" data-count="{{$rowCount}}">Add</a>
+                </div>
+                {{-- {{dump(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))}} --}}
+                    <div class="row field_row main-option-row">
+                        <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
+                            <span class="field-title">Field options</span><br>
+                        </div>
+                        <div class="col l8 form-group" style="padding:5px">
+                            @foreach($combine_array as $ke => $data)
+                                <div class="row main-option-div">
+                                    <div class="col l5">
+                                        <div class="field_options_key">
+                                            <input type="text" id="test4" name="field_options[{{$rowCount}}][key][]" value="{{$ke}}"/>
+                                            <label for="test4">Key</label>
+                                        </div>
+                                    </div>
+                                    <div class="col l5">
+                                        <div class="field_options_value">
+                                            <input type="text" id="test5" name="field_options[{{$rowCount}}][value][]" value="{{$data}}"/>
+                                            <label for="test4">Value</label>
+                                            <div class="col l2" style="float: right;">
+                                                <a href="javascript:;" class="delete_option"><i class="fa fa-trash"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                            <div class="col l2">
+                                <a href="javascript:;" class="add_options btn btn-primary" data-count="{{$rowCount}}">Add</a>
+                            </div>
+                            <div class="appended_options">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="row field_row main-option-row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Model Associate</span><br>
+                        <span class="field-description">Enter the model name which one is associate with this dropdown</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <input type="text" name="choice_model[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'choice_model')}}">
+                    </div>  
+                </div>
+
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field Formatting</span><br>
+                        <span class="field-description">Affects value on front end</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <select name="field_format[{{$rowCount}}]">
+                            <option value="" disabled selected>Choose your option</option>
+                           <option value="plain" selected="{{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_format') == 'plain')?'checked':''}}">Plain</option>
+                            <option value="text" selected="{{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_format') == 'text')?'checked':''}}">HTML</option>
+                        </select>
+                    </div>  
+                </div>        
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field Placeholder</span><br>
+                        <span class="field-description">Appears within the input</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <input type="text" name="field_placeholder[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_placeholder')}}">
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field Tooltip</span><br>
+                        <span class="field-description">Appears on hover</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <input type="text" name="field_tooltip[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_tooltip')}}">
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field value</span><br>
+                        <span class="field-description">Appears</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <input type="text" name="field_value[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_value')}}">
+                    </div>  
+                </div>
+                <div class="row field_row">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                        <span class="field-title">Field class</span><br>
+                        <span class="field-description">Appears</span> 
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                        <input type="text" name="field_class[{{$rowCount}}]" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_class')}}" class="form-control">
+                    </div>  
+                </div>
+                {{-- <div class="row field_row">
+                    <div class="col l12 right-align grey lighten-5" style="padding:20px">
+                        <a href="javascript:;" class="btn btn-primary UpdateField">Update</a>
+                    </div>
+                </div> --}}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col l4">
-      <div class="row">
-        <div class="col l12 field-label">
-          {{$value->field_title}}
-        </div>
-        <div class="" style="font-size: 12px;height: 0px">
-          <span class="options">
-            <input type="hidden" name="field_id" value="{{$value->id}}">
-            <a href="javascript:void(0)" class="edit-fields" style="border:0px !important;padding: 0px">Edit </a>|
-            <a href="javascript:void(0)" class="delete-row">Delete </a>
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="col l4 field-name-text">{{$value->field_slug}}</div>
-    <div class="col l2 field-type">{{$value->created_at}}</div>
-  </div>
-  <div class="fields-list" style="display: none;border-top:1px;border-color: #e8e8e8;border-style: solid">
-    <div colspan=100% style="padding: 0px;">
-       <div>
-        <div class="fields_list active-field">
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5 " style="padding:20px">
-                    <span class="field-title">Field Label*</span><br>
-                    <span class="field-description">This is the name which will appear on the EDIT page</span>
-                </div>
-                <div class="col l8 form-group"  style="padding: 10px">
-                     <input type="text" required="required" name="field_title" class="form-control field-label-input">
-                </div>
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
-                    <span class="field-title">Field Description</span><br>
-                    <span class="field-description">Field Description</span> 
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    {{-- <textarea class="form-control" rows="3" name="question_desc"></textarea> --}}
-                    <input type="text" id="textarea2" class="materialize-textarea" required="required" name="field_description">
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding: 30px 20px">
-                    <span class="field-title" style="line-height: 36px">Field Type*</span>         
-                </div>
-                <div class="col l8 input-field" style="padding:10px">
-                    <select name="field_type" required="required" class="field_type">
-                     <optgroup label="Basic">
-                            <option value="" selected="selected">Select Type</option>
-                            <option value="text" selected="selected">Text</option>
-                            <option value="textarea">Text Area</option>
-                            <option value="number">Number</option>
-                            <option value="email">Email</option>
-                            <option value="password">Password</option>
-                        </optgroup>
-                        <optgroup label="Content">
-                            <option value="image">Image</option>
-                            <option value="file">File</option>
-                        </optgroup>
-                        <optgroup label="Choice">
-                            <option value="select">Select</option>
-                            <option value="multi_select">Multi Select</option>
-                            <option value="checkbox">Checkbox</option>
-                            <option value="radio">Radio Button</option>
-                        </optgroup>
-                    </select>
-                      
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                <span class="field-title">Field Order</span><br>
-                    <span class="field-description">Question Order be in number [0-9]</span>
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                     <input type="text" name="field_order" required="required" class="form-control field-label-input">
-                </div>
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5 " style="padding:20px">
-                    <span class="field-title">Field Slug*</span><br>
-                    <span class="field-description"></span>
-                </div>
-                <div class="col l8 form-group"  style="padding: 10px">
-                     <input type="text" name="field_slug" required="" class="form-control field-label-input">
-                </div>
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
-                    <span class="field-title">Field Required?</span><br>
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    <p>
-                      <input type="radio" id="test1" name="field_required" />
-                      <label for="test1">Yes</label>
-                    </p>
-                    <p>
-                      <input type="radio" id="test2" name="field_required" />
-                      <label for="test2">No</label>
-                    </p>
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                    <span class="field-title">Field Error Messages</span><br>
-                    <span class="field-description">eg. Show extra content</span> 
-                </div>
-                <div class="col l6 form-group messages" style="padding:5px">
-                    <input type="text" class="form-control" name="field_error_message">
-                </div>  
-                <div class="col l1 form-group" style="padding:5px">
-                    <a href="javascript:;" class="add_message">Add</a>
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                <span class="field-title">Field Validation</span><br>
-                    <span class="field-description">validations</span>
-                </div>
-                <div class="col l6 form-group validations" style="padding:10px">
-                     <input type="text" name="field_validation" class="form-control field-label-input">
-                </div>
-                <a href="javascript:;" class="add_validation">Add</a>
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
-                    <span class="field-title">Field Condition</span><br>
-                </div>
-                <div class="col l8 form-group" style="padding:5px">
-                    <p>
-                      <input type="radio" id="test4" name="field_condition" />
-                      <label for="test4">Yes</label>
-                    </p>
-                    <p>
-                      <input type="radio" id="test5" name="field_condition" />
-                      <label for="test5">No</label>
-                    </p>
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                    <span class="field-title">Field Formatting</span><br>
-                    <span class="field-description">Affects value on front end</span> 
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    <select name="field_format">
-                        <option value="" disabled selected>Choose your option</option>
-                        <option value="No Formatting">Plain</option>
-                        <option value="text">HTML</option>
-                    </select>
-                </div>  
-            </div>        
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                    <span class="field-title">Field Placeholder</span><br>
-                    <span class="field-description">Appears within the input</span> 
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    <input type="text" name="field_placeholder" class="form-control">
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                    <span class="field-title">Field Tooltip</span><br>
-                    <span class="field-description">Appears on hover</span> 
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    <input type="text" name="field_tooltip" class="form-control">
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                    <span class="field-title">Field value</span><br>
-                    <span class="field-description">Appears</span> 
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    <input type="text" name="field_value" class="form-control">
-                </div>  
-            </div>
-            <div class="row field_row">
-                <div class="col l4 left-align grey lighten-5" style="padding:20px">
-                    <span class="field-title">Field class</span><br>
-                    <span class="field-description">Appears</span> 
-                </div>
-                <div class="col l8 form-group" style="padding:10px">
-                    <input type="text" name="field_class" value="{{$value['fieldMeta']}}" class="form-control">
-                </div>  
-            </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-@endforeach
+    
 <script type="text/javascript">
-   $(document).ready(function() {
-    $('select').material_select();
-  });
-   $('.add_message').click(function(){
-    var appended_row = '<input type="text" class="form-control" name="field_error_message"><a href="javascript:;" style="float:right;" class="delete_message"><span class=" fa fa-trash"></span></a>';
-    $('.messages').append(appended_row);
-   });
-   $('.delete_message').click(function(){
-    alert('clicked');
-   });
+    $(document).ready(function() {
+        $('select').material_select();
+        $('.main-option-row').hide();
+        $('body').on('change','.field_type',function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            if($(this).val() == 'select'  || $(this).val() == 'multi_select' || $(this).val() == 'checkbox' || $(this).val() == 'radio'){
+                $('.main-option-row').show();
+            }else{
+                $('.main-option-row').hide();
+            }
+        });
 
-   $('.add_validation').click(function(){
-    var appended_row = '<input type="text" name="field_validation" class="form-control field-label-input"><a href="javascript:;" style="float:right;" class="delete_validation"><span class=" fa fa-trash"></span></a>';
-    $('.validations').append(appended_row);
-   });
+    });
+    $('.add_message').unbind('click').bind('click' ,function(e){
+        e.preventDefault();
+        var count = $(this).attr('data-count');
+        var appended_row = '<div class="appended_error"><input type="text" class="form-control" name="field_error_message['+count+'][]"><a href="javascript:;" style="float:right;" class="delete_message"><span class=" fa fa-trash"></span></a></div>';
+        $(this).parents('.field_row').find('.messages').append(appended_row);
+        $(this).parents('.field_row').find('.delete_message').show();
+    });
+    $('body').on('click','.delete_message',function(){
+        $(this).parents('.appended_error').remove();
+        // if($(this).parents('.form-group').find('div').length == 2){
+        //     alert($(this).parents('.messages').find('.delete_message').length);
+        // }
+    });
+    $('body').on('click','.delete_validation',function(){
+        $(this).parents('.appended_vallidation').remove();
+    });
+    $('body').on('click','.delete_option',function(){
+        $(this).parents('.main-option-div').remove();
+    });
+
+    $('body').on('click','.del_option',function(){
+        $(this).parents('.del_opt').remove();
+    });    
+
+    $('.add_validation').unbind('click').bind('click' ,function(){
+        var count = $(this).attr('data-count');
+        var appended_row = '<div class="appended_validation"><input type="text" name="field_validation['+count+'][]" class="form-control field-label-input"><a href="javascript:;" style="float:right;" class="delete_validation"><span class=" fa fa-trash"></span></a></div>';
+        $(this).parents('.field_row').find('.validations').append(appended_row);
+    });
+
+    $('.add_options').unbind('click').bind('click' ,function(){
+        var count = $(this).attr('data-count');
+        var appended_row = '<div class="col l12 form-group del_opt" style="padding:5px"><div class="row"><div class="col l5"><input type="text" id="test4" name="field_options['+count+'][key][]"/><label for="test4">Key</label></div><div class="col l5"><input type="text" id="test5" name="field_options['+count+'][value][]" /><label for="test4">Value</label></div><div class="col l2"><a href="javascript:;" class="add_options"><i class="fa fa-trash del_option"></i></a></div></div></div>';
+        $(this).parents('.field_row').find('.appended_options').append(appended_row);
+    });
 </script>
+<style type="text/css">
+	.delete_message:first-child{
+		display: none;
+	}
+</style>

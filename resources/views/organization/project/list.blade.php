@@ -49,7 +49,7 @@
 					</div>
 				</div>
 			</div>
-			{!!global_draw_widget('cl')!!}
+			{{-- {!!global_draw_widget('cl')!!} --}}
 			<div class="list" id="list">
 
 		
@@ -67,12 +67,12 @@
 
 					<div class="row no-margin-bottom">
 						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="name" class="search no-margin-bottom aione-field" type="text" placeholder="Project Name" />
+							<input name="name" class="search no-margin-bottom aione-field" type="text" placeholder="Project Name" required />
 						</div>
 
 						
 						<div class="col s12 m3 l12 aione-field-wrapper">
-							<select name="category" class="browser-default aione-field">
+							<select name="category" required class="browser-default aione-field">
 								<option value="" disabled selected>Project Category</option>
 								@foreach($categories as $category)
 									<option value="{{$category->id}}" >{{$category->name}}</option>
@@ -88,62 +88,7 @@
 				{!!Form::close()!!}
 
 			</div>
-			<div class="col s12 m12 l3">
-
-		
-				<!-- <div class="col l12 card shadow" style="margin-top:-10px">	
-					<div class="card-content">
-						<span class="card-title activator blue-text text-darken-2 left-align">Clients<i class="material-icons">priority_high</i> 
-							<a class="btn-floating btn-small waves-effect waves-light blue right-align" data-toggle="modal" data-target="#modal1" style="float: right;line-height: 48px"><i class="material-icons">add</i></a>
-						</span>
-				   
-
-				      <div class="divider"></div>
-				      <p class="p-20">
-				      	@foreach($clients as $client)
-				      		<div class="chip">{{$client->name}} <i class="close material-icons">close</i></div>
-				      	@endforeach
-				      </p>
-				      	<div class="input-field col s12">
-				         
-				          <input type="text" id="autocomplete-input" class="autocomplete">
-				          
-				        </div>
-				        <div class="chips chips-autocomplete"></div>
-				        <div style="clear: both">
-				        	
-				        </div>
-				    </div>
-				</div>
-				<div class="col l12 card shadow">	
-					<div class="card-content">
-						<span class="card-title activator blue-text text-darken-2">Categories<i class="material-icons">priority_high</i>
-							<a class="btn-floating btn-small waves-effect waves-light blue right-align" style="float: right;line-height: 48px" href="{{route('categories.project')}}"><i class="material-icons">add</i></a>
-						</span>
-				      <div class="divider"></div>
-				      <p class="p-20">
-				      	{{-- @foreach($categories as $key => $category)
-				      		<div class="chip">{{$category->name}} <i class="close material-icons">close</i></div>
-				      	@endforeach --}}
-				      	<div class="chips chips-autocomplete"></div>
-				      </p>
-				    </div>
-				</div>
-
-				<div class="card shadow">	
-					<div class="card-content">
-						<span class="card-title activator blue-text text-darken-2">Tags<i class="material-icons">priority_high</i>
-						</span>
-				      <div class="divider"></div>
-				      <p class="p-20">
-				      	{{-- @foreach($tags as $key => $tag)
-				      		<div class="chip">{{$tag}} <i class="close material-icons">close</i></div>
-				      	@endforeach --}}
-				      	<div class="chips chips-autocomplete projects-chips"></div>
-				      </p>
-				    </div>
-				</div> -->
-			</div>
+			
 		</div>
 	</div>
 </div>

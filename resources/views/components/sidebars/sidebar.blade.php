@@ -1,6 +1,6 @@
 <div class="row">
     <ul id="slide-out" class="side-nav fixed hrm">
-        <li class="root">
+        <li class="root {{Request::is('/')?'active-state':''}}" >
             <a href="{{Route('organization.dashboard')}}">
                 <span class="side-bar-icon">
                     <i class="fa fa-tachometer blue center-align side-bar-icon-bg white-text" style=""></i>
@@ -8,26 +8,159 @@
                 <span class="side-bar-text">
                     Dashboard
                 </span>
-               
             </a>
             
         </li>
-        <li class="root">
-            <a href="{{Route('organization.profile')}}">
+        <li class="root {{in_array(Request::path(),array('account/emails','account/profile','account/activities','account/attandance','account/leaves','account/tasks','account/ToDo','account/notes','account/performance','account/projects','account/salary','account/chat','account/discussion'))?'active-state':''}}">
+            <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-user orange center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text">
-                    My Profile
+                    Account
                 </span>
-               
+               <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
             </a>
+            <ul class="side-bar-submenu">
+                <li class="{{Request::is('account/profile')?'active-state':''}}">
+                    <a href="{{Route('account.profile')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Profile
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/activities')?'active-state':''}}">
+                    <a href="{{Route('account.activities')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Activity
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/attandance')?'active-state':''}}">
+                    <a href="{{Route('account.attandance')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Attendance
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/employeeleave')?'active-state':''}}">
+                    <a href="{{Route('list.employeeleave')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-minus red darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                         Leaves
+                    </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/tasks')?'active-state':''}}">
+                    <a href="{{Route('account.tasks')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-tasks red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Tasks
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/todo')?'active-state':''}}">
+                    <a href="{{Route('account.todo')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-th-list red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            To Do
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/notes')?'active-state':''}}">
+                    <a href="{{Route('account.notes')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-sticky-note red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Notes
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/performance')?'active-state':''}}">
+                    <a href="{{Route('account.performance')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Performance
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/projects')?'active-state':''}}">
+                    <a href="{{Route('account.projects')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-file red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Projects 
+                        </span>
+                    </a>
+                </li>
+                <li  class="{{Request::is('account/emails')?'active-state':''}}">
+                    <a href="{{Route('account.emails')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-envelope red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Email 
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/salary')?'active-state':''}}">
+                    <a href="{{Route('account.salary')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-usd red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Salary 
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/chat')?'active-state':''}}">
+                    <a href="{{Route('account.chat')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-comments red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Chat 
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('account/discussion')?'active-state':''}}">
+                    <a href="{{Route('account.discussion')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-bullhorn red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Discussion 
+                        </span>
+                    </a>
+                </li>
             
+            </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('crm/client/list'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
-                    <i class="fa fa-tachometer blue center-align side-bar-icon-bg white-text" style=""></i>
+                    <i class="fa fa-handshake-o blue center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
                 <span class="side-bar-text">
                     CRM
@@ -37,7 +170,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu">
-                <li>
+                <li class="{{Request::is('crm/client/list')?'active-state':''}}">
                     <a href="{{route('list.client')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-handshake-o red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -56,8 +189,8 @@
                             Products
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+               {{--  <li>
                     <a href="{{route('list.services')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-info-circle red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -66,8 +199,8 @@
                             Services
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+               {{--  <li>
                     <a href="{{route('list.invoice')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-window-restore red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -76,8 +209,8 @@
                             Invoices
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="{{route('list.billing')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-money red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -86,8 +219,8 @@
                             Billing
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+              {{--   <li>
                     <a href="">
                         <span class="side-bar-icon">
                             <i class="fa fa-line-chart red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -96,8 +229,8 @@
                             Leads
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="javascript:;">
                         <span class="side-bar-icon">
                             <i class="fa fa-bar-chart red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -106,8 +239,8 @@
                             Sales
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+               {{--  <li>
                     <a href="javascript:;">
                         <span class="side-bar-icon">
                             <i class="fa fa-usd red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -116,8 +249,8 @@
                             Pricing
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+                {{-- <li>
                     <a href="javascript:;">
                         <span class="side-bar-icon">
                             <i class="fa fa-credit-card red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -126,8 +259,8 @@
                             Payment Method
                         </span>
                     </a>
-                </li>
-                <li>
+                </li> --}}
+               {{--  <li>
                     <a href="javascript:;">
                         <span class="side-bar-icon">
                             <i class="fa fa-tachometer red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -139,7 +272,7 @@
                 </li> --}}
             </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('hrm/employees','hrm/attendance','hrm/attendance/hr','hrm/designations','hrm/departments','hrm/leaves','hrm/leave-categories','hrm/shifts','hrm/holidays'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-tachometer green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
@@ -152,47 +285,57 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-                <li>
+                <li class="{{Request::is('hrm/employees')?'active-state':''}}">
                     <a href="{{Route('list.employee')}}">
                     <span class="side-bar-icon">
-                        <i class="fa fa-address-card red darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-address-card orange darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
                         Employee
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/attendance')?'active-state':''}}">
                     <a href="{{Route('list.attendance')}}">
                     <span class="side-bar-icon">
-                        <i class="fa fa-random orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-random red darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
                         Attendence  
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/attendance/hr')?'active-state':''}}">
+                    <a href="{{Route('hr.attendance')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-random red darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Attendence by
+                    </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('hrm/designations')?'active-state':''}}">
                     <a href="{{route('designations')}}">
                     <span class="side-bar-icon">
-                        <i class="fa fa-briefcase orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-briefcase blue darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
                         Designations
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/departments')?'active-state':''}}">
                     <a href="{{route('departments')}}">
                     <span class="side-bar-icon">
-                        <i class="fa fa-building orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-building green darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
                         Departments
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/leaves')?'active-state':''}}">
                     <a href="{{route('leaves')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-user-times teal darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -202,27 +345,27 @@
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/leave-categories')?'active-state':''}}">
                     <a href="{{route('leave.categories')}}">
                     <span class="side-bar-icon">
-                        <i class="fa fa-tachometer green darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-tachometer grey darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
                         Leave Categories
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/shifts')?'active-state':''}}">
                     <a href="{{route('shifts')}}">
                         <span class="side-bar-icon">
-                            <i class="fa fa-clock-o grey darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-clock-o red darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
                             Shifts
                         </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('hrm/holidays')?'active-state':''}}">
                     <a href="{{Route('list.holidays')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-bed teal darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -232,7 +375,7 @@
                     </span>
                     </a>
                 </li>
-{{--                 <li>
+                {{--<li>
                     <a href="javascript:;">
                     <span class="side-bar-icon">
                         <i class="fa fa-user-plus teal darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -271,11 +414,10 @@
                         Forms
                     </span>
                     </a>
-                </li>  
- --}}                
+                </li>  --}}                
             </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('projects','projects/categories'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-files-o blue center-align side-bar-icon-bg white-text" style=""></i>
@@ -288,16 +430,16 @@
                 </span>
             </a>
             <ul class="side-bar-submenu">
-                <li>
-                    <a href="javascript:;" class="side-bar-submenu-li">
+                <li class="{{Request::is('projects')?'active-state':''}}">
+                    <a href="{{route('list.project')}}" class="side-bar-submenu-li">
                         <span class="side-bar-icon">
                             <i class="fa fa-database red darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            Projects
+                            All Projects
                         </span>
                     </a>
-                    <ul class="submenu-teir2 ">
+                   {{--  <ul class="submenu-teir2 ">
                         <li>
                             <a href="{{route('list.project')}}">List Projects</a>
                         </li>                   
@@ -320,7 +462,7 @@
                            <a href="#"> Attachments</a>
                         </li>
                         
-                    </ul>
+                    </ul> --}}
                 </li>
                 <li>
                     <a href="javascript:;">
@@ -332,7 +474,7 @@
                         </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('projects/categories')?'active-state':''}}">
                     <a href="{{route('categories.project')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-tachometer red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -344,7 +486,7 @@
                 </li>
             </ul>
         </li>
-        <li class="root">
+        <li class="root  {{in_array(Request::path(),array('pages'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-tachometer red center-align side-bar-icon-bg white-text" style=""></i>
@@ -357,7 +499,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-               <li>
+               <li class="{{Request::is('pages')?'active-state':''}}">
                     <a href="{{Route('list.pages')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-leanpub orange darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -367,7 +509,7 @@
                         </span>
                     </a>
                 </li>
-            {{--     <li>
+                <li {{-- class="{{Request::is('projects')?'active-state':''}}" --}}>
                     <span class="side-bar-icon">
                         <i class="fa fa-thumb-tack red darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
@@ -375,7 +517,7 @@
                         Posts
                     </span>
                 </li>
-                <li>
+                <li {{-- class="{{Request::is('projects')?'active-state':''}}" --}}>
                     <span class="side-bar-icon">
                         <i class="fa fa-object-group teal darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
@@ -383,14 +525,75 @@
                         Categories
                     </span>
                 </li>
-                <li>
+                <li {{-- class="{{Request::is('projects')?'active-state':''}}" --}}>
                     <span class="side-bar-icon">
                         <i class="fa fa-camera green darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
                         Media
                     </span>
-                </li> --}}
+                </li>
+            </ul>
+        </li>
+        <li class="root  {{-- {{in_array(Request::path(),array('crm/client/list'))?'active-state':''}}" --}}">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
+                    <i class="fa fa-check red center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text ">
+                    Survey
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu " >
+               <li>
+                    <a href="javascript:;">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-leanpub orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            list
+                        </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        
+        <li class="root  {{in_array(Request::path(),array('dataset/list','dataset/import'))?'active-state':''}}">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
+                    <i class="fa fa-table red center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text ">
+                  Dataset
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu">
+               <li class="{{Request::is('dataset/list')?'active-state':''}}">
+                    <a href="{{route('list.dataset')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            All Datasets
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('dataset/import')?'active-state':''}}">
+                    <a href="{{route('import.dataset')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Import
+                        </span>
+                    </a>
+                </li>
             </ul>
         </li>
        {{--  <li class="root">
@@ -448,42 +651,7 @@
                 </li>
             </ul>
         </li> --}}
-        <li class="root">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    Users
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li>
-                    <a href="{{route('list.user')}}">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Users
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{Route('list.role')}}">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Roles
-                    </span>
-                    </a>
-                </li>  
-            </ul>
-        </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('list/visual'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-area-chart red center-align side-bar-icon-bg white-text" style=""></i>
@@ -496,7 +664,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-                <li>
+                <li class="{{Request::is('list/visual')?'active-state':''}}">
                     <a href="{{route('list.visual')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-files-o orange darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -506,29 +674,45 @@
                         </span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{route('view.visual')}}">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-eye orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            View
-                        </span>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{route('edit.visual')}}">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-pencil-square-o orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Edit
-                        </span>
-                    </a>
-                </li>
             </ul>
         </li>
-        <li class="root">
+
+        <li class="root {{in_array(Request::path(),array('users','hrm/roles'))?'active-state':''}}">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
+                    <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text ">
+                    Users
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu " >
+               <li class="{{Request::is('users')?'active-state':''}} ">
+                    <a href="{{route('list.user')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Users
+                        </span>
+                    </a>
+                </li>
+                <li class="{{Request::is('hrm/roles')?'active-state':''}} ">
+                    <a href="{{Route('list.role')}}">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Roles
+                    </span>
+                    </a>
+                </li>  
+            </ul>
+        </li>
+        <li class="root  {{-- {{in_array(Request::path(),array('crm/client/list'))?'active-state':''}}" --}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-cogs red center-align side-bar-icon-bg white-text" style=""></i>
@@ -582,7 +766,7 @@
                     </a>
                 </li>
                <li>
-                    <a href="{{route('shifts')}}">
+                    <a href="">
                         <span class="side-bar-icon">
                             <i class="fa fa-tachometer deep-orange darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
@@ -591,6 +775,32 @@
                         </span>
                     </a>
                 </li>
+            </ul>
+        </li>
+        <li class="root  {{in_array(Request::path(),array('hrm/log'))?'active-state':''}}">
+            <a href="javascript:;">
+                <span class="side-bar-icon">
+                    <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
+                </span>
+                <span class="side-bar-text ">
+                    Manage
+                </span>
+                <span class="arrow">
+                    <i class="fa fa-chevron-right" ></i>
+                </span>
+            </a>
+            <ul class="side-bar-submenu">
+               <li class="{{Request::is('hrm/log')?'active-state':''}}">
+                    <a href="{{route('list.log')}}">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Log
+                        </span>
+                    </a>
+                </li>
+               
             </ul>
         </li>
     </ul>
@@ -641,5 +851,12 @@
 #slide-out ul li:last-child:after {
   display: none;
 }
-
+.side-bar-submenu{
+    width: 225px !important;
+    margin-left: -8px !important;
+    padding-left: 28px !important;
+}
+.display-block{
+    display: block;
+}
 </style>

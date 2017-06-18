@@ -13,9 +13,8 @@ class CategoryController extends Controller
 {
     public function index(){
       $data = CAT::all();
-      
-      $designation = DES::where('status',1)->pluck('name','id');
-      $designation_day =  LR::where('status',1)->get();
+     $designation = DES::where('status',1)->pluck('name','id');
+     // $designation_day =  LR::where('status',1)->get();
     	return view('organization.category.list_category',['data'=>$data , 'designation'=> $designation]);
    }
   
@@ -25,8 +24,7 @@ class CategoryController extends Controller
       $cat->fill($request->all());
       $cat->type = "leave";
       $cat->save();
-
-     return redirect()->route('leave.categories');
+      return redirect()->route('leave.categories');
    }
    public function update(Request $request)
    {
@@ -43,22 +41,29 @@ class CategoryController extends Controller
       $cat->save();
 
    }
-   public function leave_rule(Request $request)
+   public function categoryMeta()
+   {  
+     return view('organization.category.leave_rule');
+   }
+   public function leave_rule()
    {
-      foreach ($request->designation_id as $key => $value) {
-        $insert = ['designation_id'=>$value , 'leave_category_id'=>$request['leave_category_id'] , 'days'=>$request['days'][$key],'status'=>1];
-        $condition = LR::where(['designation_id'=>$value , 'leave_category_id'=>$request['leave_category_id']]);
-        if($condition->count() > 0)
-        {
-          $lr =  LR::find($condition->first()->id);
-        }else{
-          $lr = new LR();
-        }
-        $lr->fill($insert);
-        $lr->save();
-      }
-        return redirect()->route('leave.categories');
 
+
+      // foreach ($request->designation_id as $key => $value) {
+      //   $insert = ['designation_id'=>$value , 'leave_category_id'=>$request['leave_category_id'] , 'days'=>$request['days'][$key],'status'=>1];
+      //   $condition = LR::where(['designation_id'=>$value , 'leave_category_id'=>$request['leave_category_id']]);
+      //   if($condition->count() > 0)
+      //   {
+      //     $lr =  LR::find($condition->first()->id);
+      //   }else{
+      //     $lr = new LR();
+      //   }
+      //   $lr->fill($insert);
+      //   $lr->save();
+      // }
+      //   return redirect()->route('leave.categories');
+     return view('organization.leave_category.leave_rule');
+    
    }
    public function delete($id)
    {

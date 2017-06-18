@@ -2,18 +2,51 @@
 	
 	<div class="input-field col l12">
 		{!! Form::hidden('id',null)!!}
-
-	{!! Form::text('title',null,['class'=>'validate', 'placeholder'=>'Enter the title of the page'])!!}
+		{!! Form::text('title',null,['class'=>'validate', 'placeholder'=>'Enter the title of the page'])!!}
 		<label for="first_name">Page Name</label>
     </div>
     <div class="input-field col l12">
 				 {!!Form::select('categories', ['L' => 'sports', 'S' => 'entertainment'],null)!!}
 	</div>
+	 <div class="input-field col l12">
+
+    {!!Form::text('sub_title',null, ['class'=>'form-control','placeholder'=>'Enter Page Sub-title']) !!}
+		<label for="first_name">Sub Title</label>
+    </div>
+     <div class="input-field col l12">
+
+    {!!Form::text('slug',null, ['class'=>'form-control','placeholder'=>'Enter Page Sub-title']) !!}
+		<label for="first_name">Slug</label>
+    </div>
     <div class="input-field col s12">
     {!! Form::textarea('content', null , ["class"=>"materialize-textarea"]) !!}
 {{--         <textarea name="content" id="textarea1" class="materialize-textarea"></textarea>
  --}}        <label for="textarea1">Description</label>
     </div>
+   
+
+
+ @if(!empty(@$model->page_image))
+    <div class="input-group input-group-sm">
+      {!!Form::label('page_image','Current Image') !!}<br/>
+      <img src="{{asset('pages_data/').'/'.$model->page_image}}" width="160px" />
+    </div><br/>
+    @else
+     <div class="input-group input-group-sm">
+     
+      <img src="{{asset('/No_Image_Available.png')}}" width="100px" />
+    </div><br/>
+   
+  @endif
+  <div class="{{ $errors->has('page_image') ? ' has-error' : '' }} input-group input-group-sm">
+    {!!Form::label('page_image','Image') !!}
+    {!!Form::file('page_image',['class'=>'form-control','id'=>'file-3']) !!}
+    @if($errors->has('page_image'))
+      <span class="help-block">
+            {{ $errors->first('page_image') }}
+      </span>
+    @endif
+  </div>
 
 </div>
 	

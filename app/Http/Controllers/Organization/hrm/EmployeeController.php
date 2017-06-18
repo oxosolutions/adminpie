@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Employee as EMP;
 use App\Model\Organization\Designation As DES;
+use App\Model\Organization\Category as CAT;
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\User;
 use Session;
@@ -57,6 +58,14 @@ class EmployeeController extends Controller
 
     public function save(Request $request)
     {
+        $tbl = Session::get('organization_id');
+        $valid_fields = [
+                            'name'          => 'required',
+                            'email'         => 'required|email|unique:'.$tbl.'_users',
+                            'password'      => 'required|regex:/^[a-z0-9]+$/|min:8',
+                            'employee_id'   => 'required|min:4|max:300|unique:'.$tbl.'_employees'
+                        ];
+        $this->validate($request , $valid_fields);
         $user_id = $this->user->create($request->all(), 2);
         $emp = new EMP();
         $emp->user_id = $user_id;
@@ -65,7 +74,10 @@ class EmployeeController extends Controller
         $emp->save();
         return redirect()->route('list.employee');
     }
-    
+    function editEmployee()
+    {
+        
+    }
     public function update(Request $request)
     {
         $emp =  EMP::find($request->id);
@@ -118,4 +130,5 @@ class EmployeeController extends Controller
             throw $e;
         }
     }
+ 
 }

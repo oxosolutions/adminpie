@@ -1,5 +1,12 @@
 @extends('admin.layouts.main')
 @section('content')
+@if(!empty(Session::get('success')))
+	<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">{{Session::get('success')}}</div></div>
+	{{-- <script type="text/javascript">
+		  Materialize.toast('I am a toast!', 4000);
+	</script>	 --}}
+@endif
+
 <div class="fade-background">
 
 </div>
@@ -51,6 +58,7 @@
 			</div>
 			<div class="list" id="list">
 			@foreach($org_list as $key =>$val)
+
 				<div class="card-panel shadow white z-depth-1 hoverable project"  >
 
 					<div class="row valign-wrapper no-margin-bottom">
@@ -65,9 +73,7 @@
 						
 						<div class="col l11 s10 editable " >
 							<div class="row m-0 valign-wrapper">
-								<div class="col s8 m8 l8">
-									<input type="hidden" value="1212" class="shift_id" >
-									<input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
+								<div class="col s8 m8 l5">
 									
 									<a href="#" data-toggle="popover" title="Click here to edit the organization name" data-content="TEST" >
 										<h5 class="project-title black-text flow-text truncate line-height-35">
@@ -75,10 +81,23 @@
 										</h5>
 									</a>
 								</div>
-								
+								<div class="col s8 m8 l3">
+									
+									<a href="#" data-toggle="popover" title="Organization slug" data-content="TEST" >
+										<h5 class="project-title black-text flow-text truncate line-height-35">
+											<span class="project-name shift_name font-size-14 name" > {{$val->slug}}</span>
+										</h5>
+									</a>
+								</div>
 								<div class="col s4 m4 l4 right-align">
 									<div class="switch">
-										<a href="{{route('delete.organization', ['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Organization">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
+										<a  href="{{route('edit.organization', ['id'=>$val->id])}}" data-toggle="popover" title="Click here to edit this Organization">  edit</a>
+									    
+									 </div>
+								</div>
+								<div class="col s4 m4 l4 right-align">
+									<div class="switch">
+										<a onclick="return confirm('Are your sure to Delete Organization?')"  href="{{route('delete.organization', ['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Organization">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
 									    
 									 </div>
 								</div>

@@ -1,6 +1,6 @@
 <div class="row">
     <ul id="slide-out" class="side-nav fixed hrm">
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('/'))?'active-state':''}}">
             <a href="{{route('admin.dashboard')}}">
                 <span class="side-bar-icon">
                     <i class="fa fa-tachometer blue center-align side-bar-icon-bg white-text" style=""></i>
@@ -13,7 +13,7 @@
                 </span> --}}
             </a>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('organization/list','organization/create'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-sitemap orange center-align side-bar-icon-bg white-text" style=""></i>
@@ -26,7 +26,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu">
-                <li>
+                <li class="{{Request::is('organization/list')?'active-state':''}}">
                     <a href="{{route('list.organizations')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-list grey darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -37,7 +37,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li class="{{Request::is('organization/create')?'active-state':''}}">
                     <a href="{{route('create.organization')}}">
                         <span class="side-bar-icon">
                             <i class="fa fa-plus cyan darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -49,7 +49,7 @@
                 </li>
             </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('forms','form/create'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-file-text red darken-1 center-align side-bar-icon-bg white-text" style=""></i>
@@ -62,7 +62,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-               <li>
+               <li class="{{Request::is('forms')?'active-state':''}}">
                     <a href="{{Route('list.forms')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -72,7 +72,7 @@
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('form/create')?'active-state':''}}">
                     <a href="{{Route('create.form')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-plus green darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -84,7 +84,7 @@
                 </li>
             </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('modules','module/create'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-square-o red darken-1 center-align side-bar-icon-bg white-text" style=""></i>
@@ -97,7 +97,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-               <li>
+               <li class="{{Request::is('modules')?'active-state':''}}">
                     <a href="{{Route('list.module')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -107,7 +107,7 @@
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('module/create')?'active-state':''}}">
                     <a href="{{Route('create.module')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-plus green darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -119,7 +119,7 @@
                 </li>
             </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('widgets','widget/create'))?'active-state':''}}">
             <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-square-o cyan darken-1 center-align side-bar-icon-bg white-text" style=""></i>
@@ -132,7 +132,7 @@
                 </span>
             </a>
             <ul class="side-bar-submenu " >
-               <li>
+               <li class="{{Request::is('widgets')?'active-state':''}}">
                     <a href="{{Route('index.widget')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-list blue darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -142,20 +142,20 @@
                     </span>
                     </a>
                 </li>
-                <li>
+                <li class="{{Request::is('widget/create')?'active-state':''}}">
                     <a href="{{Route('create.widget')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-plus green darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
                     <span class="side-bar-text">
-                        Add New Widgets
+                        Add New Widget
                     </span>
                     </a>
                 </li>
             </ul>
         </li>
-        <li class="root">
-            <a href="#">
+        <li class="root {{in_array(Request::path(),array('settings'))?'active-state':''}}">
+            <a href="javascript:;">
                 <span class="side-bar-icon">
                     <i class="fa fa-cogs teal darken-1 center-align side-bar-icon-bg white-text" style=""></i>
                 </span>
@@ -168,7 +168,7 @@
              
             </a>
             <ul class="side-bar-submenu" >
-               <li>
+               <li class="{{Request::is('settings')?'active-state':''}}">
                     <a href="{{Route('list.settings')}}">
                     <span class="side-bar-icon">
                         <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
@@ -180,7 +180,7 @@
                 </li>
             </ul>
         </li>
-        <li class="root">
+        <li class="root {{in_array(Request::path(),array('users'))?'active-state':''}}">
             <a href="#">
                 <span class="side-bar-icon">
                     <i class="fa fa-users green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
@@ -193,8 +193,8 @@
                 </span>
             </a>
             <ul class="side-bar-submenu" >
-               <li>
-                    <a href="{{Route('admin_users')}}">
+               <li class="{{Request::is('users')?'active-state':''}}">
+                    <a href="{{ route('admin_users') }}">
                     <span class="side-bar-icon">
                         <i class="fa fa-pencil red darken-1 center-align side-bar-icon-bg" style=""></i>
                     </span>
@@ -204,12 +204,8 @@
                     </a>
                 </li>
             </ul>
-        </li>
-         
+        </li> 
     </ul>
-    
-      
-    
 </div>
 
 <style type="text/css">

@@ -15,5 +15,5 @@ class Page extends Model
    		}
    }
 
-   protected $fillable = ['title', 'content', 'tags', 'categories', 'post_type', 'attachments', 'version', 'revision', 'created_by', 'post_status', 'status'];
+   protected $fillable = ['title','sub_title', 'slug', 'content', 'tags', 'categories', 'post_type', 'attachments', 'version', 'revision', 'created_by', 'post_status', 'status'];
 }

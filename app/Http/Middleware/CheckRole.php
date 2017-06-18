@@ -82,7 +82,6 @@ class CheckRole
                        $route_for_val = $routeValue['route_for'];
                         if($permisson_val[$routeValue['module_id']][$route_for_val]==true)
                         {
-                            dump("Yes have permisson Yes have permisson Yes have permisson Yes have permisson");
                             return $next($request);
 
                         }

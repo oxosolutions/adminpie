@@ -1,8 +1,9 @@
 <?php 
 namespace App\Helpers;
-use App\Model\Employee;
+//use App\Model\Employee;
+use App\Model\Organization\Employee;
 use App\Model\EmployeeLeave as Leave;
-use App\Model\EmployeeAttendance as EMP_ATT;
+use App\Model\Organization\Attendance as EMP_ATT;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class EmployeeHelper{
 	{
 		// ORG_EMP::where('employee_id', $employee_id)->first
 
-		$employee_data = Employee::where('employee_id',$employee_id);
+		$employee_data = Employee::with('employ_info')->select(['user_id', 'employee_id', 'designation', 'department','user_id'])->where('employee_id',$employee_id);
 		if($employee_data->count() >0)
 		{
 			return $employee_data->first();	

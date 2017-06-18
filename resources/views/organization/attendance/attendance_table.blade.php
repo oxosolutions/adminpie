@@ -83,6 +83,9 @@
 		}
 		$sunday_count =0;
 		$td="";
+		$MO_data = ['01'=>'JAN', '02'=>'FEB', '03'=>'MAR', '04'=>'APR' ,'05'=>'MAY', '06'=>'JUN','07'=>'JUL', '08'=>'AUG','09'=>'SEP', '10'=>'OCT','11'=>'NOV', '12'=>'DEC'];
+		$year_data = range(2015, 2050);
+
 @endphp
 
 @if($total_days==28)
@@ -137,7 +140,10 @@
 			<h5 class="text-center"></h5>
 </div>
 
+
 <div id="month">
+
+					
 			<div class="row design-bg valign-wrapper">
 				<div class="row col s4">
 					<?php  
@@ -150,7 +156,73 @@
 						</div>
 				</div>
 				<div class="aione aione-heading center-align">
-						<span class="design-style">{{date('F, Y', strtotime($dt))}}</span>
+					<div class="row">
+						<div class=" col s3">
+							
+						</div>
+						<div class="col s3 pr-7 right-align">
+							<select  onchange="attendance_filter(null, null, {{$current_month}}, this.value )" >
+								@foreach($year_data as $key =>$val)
+								@if($current_year==$val)
+								<option selected="selected" value="{{$val}}">{{$val}} </option>
+
+									@else
+										<option value="{{$val}}">{{$val}} </option>
+									@endif
+								@endforeach
+
+							</select>
+						</div>
+						<div class="col s3 pl-7">
+							<select  onchange="attendance_filter(null, null, this.value, {{$current_year}} )" >
+								@foreach($MO_data as $key => $val)
+									@if($current_month==$key)
+										<option selected="selected" value="{{$key}}">{{$val}} </option>
+
+									@else
+										<option value="{{$key}}">{{$val}} </option>
+									@endif
+								@endforeach
+								
+							</select>
+
+						</div>
+						<div class=" col s3">
+							
+						</div>
+					</div>
+					<style type="text/css">
+						.select-dropdown{
+								margin-bottom: 0px !important;
+							    border: 1px solid #a8a8a8 !important;
+							    
+							}
+							.select-wrapper input.select-dropdown{
+								height: 30px;
+						    	line-height: 30px;
+						    	text-align: center;
+								
+								
+								background-color: white !important;
+							}
+							
+							.select-wrapper span.caret{
+								   
+								    z-index: 9 !important;
+							}
+							.dropdown-content{
+								background-color: white;
+								
+							}
+							.dropdown-content li>a, .dropdown-content li>span{
+								color: #0288D1 !important
+							}
+					</style>
+					
+						
+
+						
+						{{-- <span class="design-style">{{date('F, Y', strtotime($dt))}}</span> --}}
 				</div>
 				<div class="row col s4" style="text-align: right;">
 					<div class="right-align">
@@ -256,13 +328,17 @@
 						<div style="clear:both;">
 						</div>
 					</div>
-					{{dump($employee_data)}}
+					
 						@foreach($employee_data as $empKey => $empVal)
+						@php
+						$employ_info = EmployeeHelper::employ_info($empVal['employee_id']); 
+
+						@endphp
 						<div class="attendance-sheet row">
 							<div class="attendanc-sheet content">
 								{{$empVal['employee_id']}}
 							</div>
-								<div class="attendanc-sheet content">name</div>
+								<div class="attendanc-sheet content">{{$employ_info['employ_info']['name']}}  </div>
 							{!! $td  !!}
 						</div>
 						@endforeach
@@ -325,8 +401,10 @@
 					<div class="attendanc-sheet content">
 					@if(!empty($attendance_data))
 					
-						@foreach($attendance_data as $groupkey => $groupVal) 
+						@foreach($attendance_data as $groupkey => $groupVal)
 								<?php 
+
+
 								
 									$day_count = $chunk - $sunday_count;
 									$employ_info = EmployeeHelper::employ_info($groupVal[0]['employee_id']); 
@@ -344,7 +422,9 @@
 									//$over_time_sum = $sum = 0;
 								?>
 					</div>
-				</div>
+				</div>	
+						@if(EmployeeHelper::employ_info($groupVal[0]['employee_id']))
+
 							<div class="attendance-sheet row" > 
 									
 								<div class="attendanc-sheet content emp_id">
@@ -363,7 +443,11 @@
 									{{$groupVal[0]['employee_id']}} 
 								</div>
 								<div class="attendanc-sheet content emp_name">
-									{{$employ_info['name']}}
+								@if(!empty($employ_info['employ_info']['name']))
+									{{$employ_info['employ_info']['name']}}
+									@else
+									--
+								@endif
 								</div>
 								{{-- <div class="attendance-sheet column"> {{$percent}} </div>
 								<div class="attendance-sheet column"> {{$total_hour[$groupVal[0]['employee_id']]}}</div>
@@ -389,12 +473,15 @@
 									{!! $td  !!}
 									<div style="clear: both;"></div>
 							</div>
+							@endif
 						@endforeach
 					@endif
 
 			</div>
 			@endif
 			<div style="clear: both;"></div>
+
+			
 
 </div>
 

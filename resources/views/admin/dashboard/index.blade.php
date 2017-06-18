@@ -5,10 +5,10 @@
 		@foreach($model as $key => $value)
 			<div class="col l3 pr-7">
 				<div class="card shadow" style="margin-top: 0px;">
-					<div class="row center-align aione-widget-header" ><h5 style="margin: 0px"><a href="{{route('list.'.$key)}}" style="display: block">{{ucfirst($key)}}</a></h5></div>
+					<div class="row center-align aione-widget-header" ><h5 style="margin: 0px"><a href="{{route($value['route'])}}" style="display: block">{{ucfirst($key)}}</a></h5></div>
 					<div class="row center-align aione-widget-content" >{{$value['count']}}</div>
 					<div class="row center-align aione-widget-footer" >
-						<a href="{{route('list.'.$key)}}" class="btn" style="background-color: #005A8B">All {{$key}}</a>
+						<a href="{{route($value['route'])}}" class="btn" style="background-color: #005A8B">All {{$key}}</a>
 					</div>
 				</div>
 			</div>

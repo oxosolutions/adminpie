@@ -1,16 +1,20 @@
 @extends('layouts.main')
 @section('content')
 	<div class="row">
+		@include('organization.profile._tabs')
 		<div class="col l9 pr-7">
-			<div class="card" style="margin-top: 0px">
+			<div class="card" style="margin-top: 14px">
 				<div class="row">
 					<div class="col l3" style="padding:14px">
 						<img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" style="width: 100%">
 					</div>
 					<div class="col l9" style="padding:14px">
 						<div class="row" style="padding:0px 0px 5px 0px">
-							<div class="col l3"><strong>Name</strong></div>
-							<div class="col l9">Sgs Sandhu</div>
+							<div class="col l3"><strong>Name:</strong></div>
+							<div class="col l5">Sgs Sandhu</div>
+							<div class="col l4 right-align">
+								<a href="{{ route('profile.edit') }}" class="btn blue">Edit Profile</a>
+							</div>
 						</div>
 						<div class="row" style="padding:5px 0px">
 							<div class="col l3"><strong>Designation</strong></div>
@@ -25,7 +29,7 @@
 				</div>
 			</div>
 			<div class="card" style="margin-top: 14px">
-				<div class="row">
+				{{-- <div class="row">
 					<ul class="aione-tabs">
 				        <li class="tab col aione-active "><a href="{{route('list.settings')}}">Recent Activities</a></li>
 				        <li class="tab col "><a href="javascript:;">Attendence</a></li>
@@ -38,7 +42,7 @@
 				          
 				        </div>
 				    </ul>
-				</div>
+				</div> --}}
 				<div class="row ">
 					<div class="row valign-wrapper" style="padding:5px 0px">
 						<div class="col l1 blue white-text center-align">
@@ -97,13 +101,114 @@
 							2 hour ago
 						</div>	
 					</div>
+					<div class="row valign-wrapper" style="padding:5px 0px">
+						<div class="col l1 blue white-text center-align">
+							<div class="row " style="font-size: 16px ;font-weight: 700">
+								June
+							</div>
+							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+								01
+							</div>
+						</div>
+						<div class="col l7 pl-7">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						</div>
+						<div class="col l2">
+							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
+						</div>
+						<div class="col l2 grey-text center-align" style="font-size: 13px">
+							2 hour ago
+						</div>	
+					</div>
+					<div class="row valign-wrapper" style="padding:5px 0px">
+						<div class="col l1 blue white-text center-align">
+							<div class="row " style="font-size: 16px ;font-weight: 700">
+								June
+							</div>
+							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+								01
+							</div>
+						</div>
+						<div class="col l7 pl-7">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						</div>
+						<div class="col l2">
+							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
+						</div>
+						<div class="col l2 grey-text center-align" style="font-size: 13px">
+							2 hour ago
+						</div>	
+					</div>
+					<div class="row valign-wrapper" style="padding:5px 0px">
+						<div class="col l1 blue white-text center-align">
+							<div class="row " style="font-size: 16px ;font-weight: 700">
+								June
+							</div>
+							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+								01
+							</div>
+						</div>
+						<div class="col l7 pl-7">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						</div>
+						<div class="col l2">
+							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
+						</div>
+						<div class="col l2 grey-text center-align" style="font-size: 13px">
+							2 hour ago
+						</div>	
+					</div>
+					<div class="row valign-wrapper" style="padding:5px 0px">
+						<div class="col l1 blue white-text center-align">
+							<div class="row " style="font-size: 16px ;font-weight: 700">
+								June
+							</div>
+							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+								01
+							</div>
+						</div>
+						<div class="col l7 pl-7">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						</div>
+						<div class="col l2">
+							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
+						</div>
+						<div class="col l2 grey-text center-align" style="font-size: 13px">
+							2 hour ago
+						</div>	
+					</div>
+					<div class="row valign-wrapper" style="padding:5px 0px">
+						<div class="col l1 blue white-text center-align">
+							<div class="row " style="font-size: 16px ;font-weight: 700">
+								June
+							</div>
+							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+								01
+							</div>
+						</div>
+						<div class="col l7 pl-7">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						</div>
+						<div class="col l2">
+							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
+						</div>
+						<div class="col l2 grey-text center-align" style="font-size: 13px">
+							2 hour ago
+						</div>	
+					</div>
 					
 				</div>
 					 
 			</div>
 		</div>
 		<div class="col l3 pl-7">
-			<div class="card" style="margin-top: 0px">
+			<div class="card"  style="margin-top: 14px">
+				<div class="row center-align" style="padding:10px 0px">
+					<a href="{{ route('profile.changepassword') }}" class="btn blue">Change Password</a>	
+				</div>
+				
+			</div>
+			<div class="card" style="margin-top: 14px">
 				<div class="row">
 					<span style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Contact Detail</span>
 				</div>
@@ -169,6 +274,38 @@
 						</div>
 						<div class="col l3 center-align">
 							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text ">Low</span>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<div class="card">
+				<div class="row">
+					<span style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">My Projects</span>
+				</div>
+				<div class="row">
+					<div class="row" style="padding: 10px 5px;">
+						<div class="col l12">
+							Project 1	
+						</div>
+						
+					</div>
+					<div class="divider">
+						
+					</div>
+					<div class="row" style="padding: 10px 5px;">
+						<div class="col l12">
+							Project 2	
+						</div>
+						
+						
+					</div>
+					<div class="divider">
+						
+					</div>
+					<div class="row" style="padding: 10px 5px;">
+						<div class="col l12">
+							Project #
 						</div>
 						
 					</div>

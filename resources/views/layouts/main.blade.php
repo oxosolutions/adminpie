@@ -20,11 +20,20 @@
                 $string = explode('/',$url);
             @endphp
             <div class="col s12 m6 l6 valign-center">
-                @if(isset($string[2]))
-                    <h5 style="margin: 0px;">{{ucfirst($string[2])}}</h5>
-                @else
-                    <h5 style="margin: 0px;">{{ucfirst($string[1])}}</h5>
-                @endif
+                <div class="row valign-wrapper">
+                  
+                        @if(isset($string[2]))
+                            <h5 style="margin: 0px;">{{ucfirst($string[2])}}</h5>
+                        @else
+                            <h5 style="margin: 0px;">{{ucfirst($string[1])}}</h5>
+                        @endif
+                    
+                   
+                </div>
+                   
+
+                        
+              
             </div>
             <div class="col s12 m6 l6 right-align " style="padding-right: 10px">
                 <ul class="aione-breadcrumb">

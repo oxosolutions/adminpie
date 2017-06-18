@@ -14,7 +14,9 @@
     font-size: 16px;
     font-weight: 400;
 }
-
+.active-state{
+       background-color: rgb(38, 40, 45) !important;
+}
 
 /********  Override materialize css ********/
 .row.page-header .col {
@@ -23,7 +25,9 @@
 .row.app-footer .col {
     padding: 0;
 }
-
+.side-bar-submenu{
+    display: none;
+} 
 .aione-field-wrapper input:not([type]), 
 .aione-field-wrapper input[type=text], 
 .aione-field-wrapper input[type=password], 
@@ -39,7 +43,7 @@
 .aione-field-wrapper textarea.materialize-textarea {
 	background-color: #FFFFFF;
     border: 1px solid #e8e8e8;
-    border-bottom: 1px solid #e8e8e8;
+    border-bottom: 1px solid #e8e8e8;625
     padding: 0;
     text-indent: 1rem;
     margin-bottom: 10px;
@@ -536,7 +540,7 @@ padding:0px;
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     }
     .modal{
-        max-height: 59% !important
+        max-height: 90% !important
     }
  
     .modal::-webkit-scrollbar-thumb {
@@ -584,7 +588,7 @@ padding:0px;
         z-index:999;width: 100%;margin-top: 4px;background-color: #0288D1;position: relative;
     }
     .add-form{
-        z-index:999;background-color:#fff;border-bottom: 3px solid #0288D1;border-right: 1px solid #0288D1;border-left: 1px solid #0288D1;padding:10px;    position: relative;;
+        z-index:999;background-color:#fff;border-bottom: 3px solid #0288D1;border-right: 1px solid #0288D1;border-left: 1px solid #0288D1;padding:10px;position: absolute;margin-right: 14px;
 
     }
     .mt-22{
@@ -624,6 +628,9 @@ padding:0px;
     }
     .aione-switch-view > ul > li{
         border:1px solid #e8e8e8;line-height: 0px;padding:2px;width: 31%;text-align: center;
+    }
+    .aione-switch-view > ul > li > a{
+        display: block;
     }
     .aione-switch-view i{
         color:#434c47;

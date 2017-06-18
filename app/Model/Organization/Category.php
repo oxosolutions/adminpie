@@ -17,8 +17,8 @@ class Category extends Model
 	}
 	protected $fillable = ['name', 'description', 'type', 'status'];
 
-	public function rule()
+	public function meta()
     {
-    	return $this->hasMany('App\Model\Organization\LeaveRule','leave_category_id','id');
+    	return $this->hasMany('App\Model\Organization\CategoryMeta','category_id','id');
     }
 }

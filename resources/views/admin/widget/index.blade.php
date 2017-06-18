@@ -50,7 +50,6 @@
 				</div>
 			</div>
 			<div class="list" id="list">
-
 			@if(!empty($data))
 				@foreach($data as $key => $val)
 
@@ -78,12 +77,33 @@
 											<span class="project-name shift_name font-size-14" contenteditable="true" > {{$val->title}}</span>
 										</h5>
 									</a>
-									<a href="{{route('delete.widget',['id'=>$val->id])}}">delete</a>
+									
+								</div>
+								<div class="col s4 m4 l4 right-align">
+									<a   href="{{route('edit.widget',['id'=>$val->id])}}">edit</a>
 								</div>
 								
 								<div class="col s4 m4 l4 right-align">
-									
+									<a onclick="confirm('Are you sure want to delete?')" href="{{route('delete.widget',['id'=>$val->id])}}"><i class="fa fa-trash red-text" style="font-size:18px"></i></a>
 								</div>
+								<div class="col l4 right-align">
+									<input type="hidden" name="id" value="{{$val->id}}" class="id" >
+
+					                  <input type="hidden" name="_token" value="{{csrf_token()}}" class="token" >
+					                  <div class="switch">
+					                      <label>
+					                      
+					                        @if($val->status == '0')
+					                          <input type="checkbox">
+					                        @else
+					                          <input type="checkbox" checked="checked">
+					                        @endif
+					                      
+					                        <span class="lever"></span>
+					                        
+					                      </label>
+					                    </div>
+					            </div>
 							</div>
 						</div>
 					</div>
@@ -95,66 +115,40 @@
 		</div>
 
 		<div class="col s12 m3 l3 pl-7" >
-			<a id="add_new" href="#" class="btn add-new display-form-button" >
+			<a id="add_new" href="{{route('create.widget')}}" class="btn add-new display-form-button" >
 				Add Widget
 			</a>
-			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-			 {!! Form::open(['route' => 'create.widget' ,'class'=> 'form-horizontal','method' => 'post']) !!}
-				
-
-					<div class="row no-margin-bottom">
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							Title
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							{!! Form::text('title',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-						</div>
-
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							Slug
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							{!! Form::text('slug',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							Module
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							{!! Form::text('module_id',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							Model
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							{!! Form::text('model',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							Description
-						</div>
-						<div class="col s12 m2 l12 " style="padding: 10px 0px">
-							{!! Form::textarea('description',null,['rows' => '10' ,'class' => 'materialize-textarea', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
-						</div>
-						
-
-						<div class="col s12 m6 l12 aione-field-wrapper center-align">
-							<button class="btn blue" type="submit">Save Widget
-								
-							</button>
-						</div>
-					</div>
-				{!!Form::close()!!}
-
-			</div>
+			
 			
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
-	$('.add-new').off().click(function(e){
-			e.preventDefault();
-			$('.add-new-wrapper').toggleClass('active');
-			$('.fade-background').fadeToggle(300);
-		});
+
+  $(document).on('change', '.switch > label > input',function(e){
+      e.preventDefault();
+      var postedData = {};
+      postedData['id']        = $(this).parents('.shadow').find('.id').val();
+      postedData['status']      = $(this).prop('checked');
+      postedData['_token']      = $('.shadow').find('.token').val();
+
+      $.ajax({
+        url:route()+'/widget/status/update',
+        type:'POST',
+        data:postedData,
+        success: function(res){
+          console.log('data sent successfull');
+        }
+      });
+      $('.editable h5 ,.editable p').removeClass('edit-fields');
+    });
+
+
+	// $('.add-new').off().click(function(e){
+	// 		e.preventDefault();
+	// 		$('.add-new-wrapper').toggleClass('active');
+	// 		$('.fade-background').fadeToggle(300);
+	// 	});
 		
 		$('.fade-background').click(function(){
 			$('.fade-background').fadeToggle(300);

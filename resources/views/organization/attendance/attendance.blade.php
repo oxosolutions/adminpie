@@ -90,7 +90,7 @@ a{
 </script>
 	<div id="att_data" class="card" style="margin-top: 0px;padding:10px">
 	<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
-		<div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2 create-fields" >
+		{{-- <div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2 create-fields" >
 		{!! Form::open(['route'=>'upload.attendance', "files"=>true , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 				<div class="row no-margin-bottom ">
@@ -117,7 +117,7 @@ a{
 					</div>
 				</div>
 			{!!Form::close()!!}
-		</div>
+		</div> --}}
 		<div id="projects" class="projects list-view">
 			<div class="row ">
 				{{-- <div class="col s12 m12 l6 " >
@@ -128,11 +128,13 @@ a{
 
 						<li style="display: inline-block;"><a style="margin-top: 0px" class="btn daily" >Daily</a></li>
 					</ul>
-				</div> --}}
-
+				</div>
+ --}} 			<div class="col l6">
+ 						
+				</div>
 				<div class="col s12 m12 l6 right-align">
 					
-					<a id="add_new" href="#" class="btn add-new" style="width: 50%;margin-top: 4px;background-color: #0288D1">
+					<a  href="{{route('import.form.attendance')}}" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
 						Import Attendence
 					</a>
 				</div>
@@ -163,6 +165,7 @@ a{
 			$(".monthly").removeClass("active");
 			$(".weekly").removeClass("active");
 		});
+
 	});
 	function showHide(show)
 	{
@@ -175,16 +178,18 @@ a{
 				url:route()+'/attendance/list',
 				type:'Get',
 				success: function(res){
+					
 					$("#main").html(res);
 					console.log('data sent successfull');
-					$("#month , #week ,#days").hide();
-
+					$("#week ,#days").hide();
+					$('select').material_select();
 				}
 			});
 	}
 
 	function attendance_filter(date, week, mo, yr)
 	{
+		console.log(date, week, mo, yr);
 		
 		var postData = {};
 		postData['date'] = date;
@@ -197,6 +202,7 @@ a{
 				type:'POST',
 				data:postData,
 				success: function(res){
+
 					$("#main").html(res);
 					$("#month , #week ,#days").hide();
 
@@ -208,7 +214,7 @@ a{
 					}else{
 						$("#month").show();
 					}
-					
+					$('select').material_select();
 				
 					console.log('data sent successfull');
 				}

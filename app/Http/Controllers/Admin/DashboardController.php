@@ -5,27 +5,76 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalOrganization as GLOR;
-use App\Model\Admin\User as User;
-use App\Model\Admin\FormBuilder as FBuild;
+use App\Model\Admin\User as US;
+use App\Model\Admin\forms as FBuild;
+use App\Model\Admin\GlobalWidget as WIDGET;
+use App\Model\Admin\GlobalModule as MODULE;
 
 class DashboardController extends Controller
 {
-    public function index(){
-    	$model = [
-    				'organizations' => [
-    										'count' 	=> GLOR::count(),
-    										'list' 		=> GLOR::all(),
-    									],
-    				'users'		   => [
-    										'count'		=> User::count(),
-    										'list'		=> User::all(),
-    									],
-    				'forms'		   => [
-    										'count' 	=> FBuild::count(),
-    										'list'		=> FBuild::all(),
-    									]
-    			];
-
+    // private function getDashboardData()
+    // {
+    //     $modelName = [
+    //                 'organizations' =>    'App\Model\Admin\GlobalOrganization',
+    //                 'users'         =>    'App\Model\Admin\User',
+    //                 'forms'         =>    'App\Model\Admin\forms',
+    //                 'widget'        =>    'App\Model\Admin\GlobalWidget',
+    //                 'module'        =>    'App\Model\Admin\GlobalModule'
+    //                 ];
+    //     //enter the routes according to model
+    //     $routes = ['list.organizations','admin_users','list.forms','index.widget','list.module',];
+    //     $index = 0;
+         
+    //     foreach ($modelName as $mName => $mPath) {
+    //         foreach ($routes as $key => $route) {
+    //             $model =   [
+    //                              $mName  => [
+    //                                             'count' => $mPath::count(),
+    //                                             'list'  => $mPath::all(),
+    //                                             'route' => $route
+    //                                         ]
+    //                         ];
+    //         } 
+            
+    //     }
+    //     dd($model);
+    //     return $model;
+    // } 
+    private function getDashboardData()
+    {
+        $model = [
+                    'organizations' => [
+                                            'count'     => GLOR::count(),
+                                            'list'      => GLOR::all(),
+                                            'route'     => 'list.organizations'
+                                        ],
+                    'users'         => [
+                                            'count'     => US::count(),
+                                            'list'      => US::all(),
+                                            'route'     => 'admin_users'
+                                        ],
+                    'forms'         => [
+                                            'count'     => FBuild::count(),
+                                            'list'      => FBuild::all(),
+                                            'route'     => 'list.forms'
+                                        ],
+                    'widgets'        =>  [
+                                            'count'     => WIDGET::count(),
+                                            'list'      => WIDGET::all(),
+                                            'route'     => 'index.widget'
+                                        ],
+                    'modules'        =>  [
+                                            'count'     => MODULE::count(),
+                                            'list'      => MODULE::all(),
+                                            'route'     => 'list.module'
+                                        ]
+                ];
+                return $model;
+    } 
+   public function index()
+   {
+    	//get dashboard data from the data fumction
+        $model = $this->getDashboardData();
     	return view('admin.dashboard.index')->with('model',$model);
     }
 }

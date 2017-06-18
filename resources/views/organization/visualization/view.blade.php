@@ -10,15 +10,21 @@
 
 				<div class="card-panel shadow white z-depth-1 hoverable project">
 					<div class="row valign-wrapper no-margin-bottom">
-						<img src="https://plot.ly/~RhettAllain/574.png">
+						{{-- <div class="col l12">
+							<h5>chart name</h5>
+						</div> --}}
+						{{-- <div class="divider"></div> --}}
+						<div class="col l12">
+							<img src="https://plot.ly/~RhettAllain/574.png">
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col s12 m3 l3 card-panel shadow ">
+		<div class="col s12 m3 l3 card-panel shadow z-depth-1 hoverable project">
 			<div class="row valign-wrapper no-margin-bottom filters">
-				<center><h5>Filters</h5></center>
+				<h5 style="width: 300px;text-align: center;">Filters</h5>
 			</div>
 		</div>
 		

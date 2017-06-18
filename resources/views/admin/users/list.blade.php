@@ -77,8 +77,14 @@
             </div>
 
             <div class="input-field col l12">
-              <input placeholder="Enter role ID" id="roleId" type="text" class="validate">
+             
               <label for="roleId">Role ID</label>
+              <select>
+                <option> Choose Role</option>
+                @foreach($plugins['roles'] as $key => $val)
+                <option value="{{$key}}">{{$val}} </option>
+                @endforeach
+              </select>
             </div>
 
             <div class="input-field col l12">

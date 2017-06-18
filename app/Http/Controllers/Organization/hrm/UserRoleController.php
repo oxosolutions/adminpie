@@ -8,12 +8,14 @@ use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Admin\GlobalModule as Module;
 use App\Model\Admin\GlobalWidget as Widget;
 use App\Model\Organization\WidegetPermisson as WidgetPermisson;
-
+use Session;
 
 class UserRoleController extends Controller
 {
+   
     public function listRole()
     {
+
        $all_role = Role::all();
        return view('organization.role.list',['data'=>$all_role]);
     }
@@ -23,6 +25,14 @@ class UserRoleController extends Controller
     // }
     public function save(Request $request)
     {
+        $org_id = Session::get('organization_id');
+        $data =  [
+                                    'name' => 'bail|required|unique:'.$org_id.'_users_roles'
+            ];
+
+            // dump($data);
+      
+        $this->validate($request, $data);
         $role = new Role();
         $role->fill($request->all());
         $role->save();
@@ -88,9 +98,9 @@ class UserRoleController extends Controller
     {
         if(!empty($value['permisson']) && isset($value['permisson']))
             {
-                $value['permisson'] = $value['permisson'];
+                $value = $value['permisson'];
             }else{
-                $value['permisson'] = NULL;
+                $value = NULL;
             }
         return $value;
     }
@@ -99,7 +109,7 @@ class UserRoleController extends Controller
            $check =  WidgetPermisson::where(['widget_id'=>$value['widget_id'], 'role_id'=>$value['role_id']]);
            if($check->count()>0)
            {
-                $check->update($this->check_widget($value));
+                $check->update(['permisson'=> $this->check_widget($value)]);
            }else{
             $wpermisson  = new WidgetPermisson();
             $wpermisson->role_id = $value['role_id'];

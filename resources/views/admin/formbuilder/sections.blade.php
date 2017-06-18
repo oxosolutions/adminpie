@@ -45,32 +45,35 @@
 			</div>
 			
 		</div>
-
 		<div class="col s12 m3 l3 pl-7" >
 			<a id="add_new" href="" class="btn add-new display-form-button" >
 				Add Section
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-				{!! Form::open(['route'=>'create.sections' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+				{!! Form::open(['route'=>['create.sections' , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 					<div class="row no-margin-bottom">
-	           				<input type="hidden" name="form_id" value="{{$id_slug[0]->id}}">
-	           				<input type="hidden" name="slug" value="{{$id_slug[0]->form_slug}}">
 			            <div class="input-field col l12">
-			              <input placeholder="Enter section name" name="section_name" id="user_name" type="text" >
-			              <label for="user_name">Section Name</label>
+							<input placeholder="Enter section name" name="section_name" id="user_name" type="text" >
+							<label for="user_name">Section Name</label>
+			 
 			            </div>
 
 			            <div class="input-field col l12">
-			              <input placeholder="Enter slug" name="section_slug" id="emailId" type="text" >
-			              <label for="emailId">Slug</label>
+			              	<input placeholder="Enter slug" name="section_slug" id="emailId" type="text" >
+			              	<label for="emailId">Slug</label>
+			              	
 			            </div>
 
 			            <div class="input-field col l12">
 			              <input placeholder="Enter description" name="section_description" id="roleId" type="text" >
 			              <label for="roleId">Description</label>
 			            </div>
-
+		@if(@$errors->has())
+          @foreach($errors->all() as $kay => $err)
+            <div style="color: red">{{$err}}</div>
+          @endforeach
+        @endif
 			            <div class="col s12 m12 l12 aione-field-wrapper center-align">
 			              <button class="save_user btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save
 			                <i class="material-icons right">save</i>
@@ -120,9 +123,8 @@
 										<div class="col l4">
 											<a class='dropdown-button btn blue ' href='javascript:;' data-activates='d{{$index}}'>Actions</a>
 											<ul id='d{{$index}}' class='dropdown-content'>
-												<input type="hidden" name="section_id" value="{{$value->id}}">
-											    <li><a href="{{route('del.section',[$value->id,$id_slug[0]->form_slug])}}">Delete</a></li>
-											    <li><a class="field" href="{{route('list.form',[$value->id])}}">Fields</a></li>
+											    <li><a href="#">Delete</a></li>
+											    <li><a class="field" href="{{route('list.field',['form_id'=>$value->form_id,'section_id'=>$value->id])}}">Fields</a></li>
 											</ul>
 										</div>
 

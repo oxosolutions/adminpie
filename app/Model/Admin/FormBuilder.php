@@ -9,7 +9,7 @@ class FormBuilder extends Model
 
     protected $table = 'global_form_fields';
 
-    protected $fillable = ['field_slug', 'form_id', 'section_id', 'field_title','type','field_description','field_order'];
+    protected $fillable = ['field_slug', 'form_id', 'section_id', 'field_title','field_type','field_description','field_order'];
 
     public function fields()
     {
@@ -17,6 +17,6 @@ class FormBuilder extends Model
     }
     public function fieldMeta()
     {
-    	return $this->hasMany('App\Model\Admin\FieldMeta','field_id','id');
+        return $this->hasMany('App\Model\Admin\FieldMeta','field_id','id');
     }
 }

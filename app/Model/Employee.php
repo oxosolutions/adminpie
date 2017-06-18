@@ -15,6 +15,6 @@ class Employee extends Model
 
 	public function attendance()
 	{
-		return $this->hasMany('App\Model\EmployeeAttendance', 'employee_id' , 'employee_id'  );
+		return $this->hasMany('App\Model\Organization\Attendance', 'employee_id' , 'employee_id'  );
 	}
 }

@@ -7,15 +7,18 @@ use Session;
 
 class LeaveRule extends Model
 {
+	protected $fillable = ['name', 'designation_id', 'user_id', 'leave_category_id', 'number_of_day', 'apply_before', 'status'];
     public function __construct()
 	{
 		if(!empty(Session::get('organization_id')))
 		{
 			$this->table = Session::get('organization_id').'_leave_rules';
 		}
-
-					//$this->table = '32_holidays';
 	}
-	//use SoftDeletes;
-    protected $fillable = ['name', 'designation_id', 'leave_category_id', 'days', 'status'];
+	
+	public function leave_category()
+	{
+		return $this->belongsTo('App\Model\Organization\Category','leave_category_id','id');
+	}
+
 }

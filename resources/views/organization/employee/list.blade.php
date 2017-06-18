@@ -1,12 +1,131 @@
 @extends('layouts.main')
 @section('content')
-	
-<div class="fade-background">
-</div>
+	<style type="text/css">
+		.error-red{
+			color: red
+		}
+		.display_block{
+			display: block !important;
+		}
+	</style>
+
 
 <div id="projects" class="projects list-view">
 	<div class="row">
-		<div class="col s12 m9 l9 pr-7" >
+		<div class="col s12 m3 l3 pl-7">
+
+			<a id="add_new" href="#modal1" class="btn add-new display-form-button" >
+				Add Employee
+			</a>
+			<div id="modal1" class="modal">
+				{!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+					<div class="modal-header">
+						<h5>Add employee</h5>
+					</div>
+					<div class="modal-content" style="padding: 10px">
+						<div class="col s12 m12 l12 aione-field-wrapper">
+							<input name="name" class="no-margin-bottom aione-field " type="text" placeholder="name" />
+								<div class="error-red">
+									@if(@$errors->has())
+										{{$errors->first('name')}}
+									@endif
+								</div>
+						</div>
+						<div class="col s12 m12 l12 aione-field-wrapper">
+							<input name="email" class="no-margin-bottom aione-field " type="email" placeholder="email" />
+							<div class="error-red">
+								@if(@$errors->has())
+									{{$errors->first('email')}}
+								@endif
+							</div>
+						</div>
+
+						<div class="col s12 m12 l12 aione-field-wrapper">
+							<input name="password" class="no-margin-bottom aione-field " type="text" placeholder="password" />
+							<div class="error-red">
+								@if(@$errors->has())
+									{{$errors->first('password')}}
+								@endif
+							</div>
+						</div>
+
+						<div class="col s12 m12 l12 aione-field-wrapper">
+							<input name="employee_id" class="no-margin-bottom aione-field " type="text" placeholder="employee ID" />
+							<div class="error-red">
+								@if(@$errors->has())
+									{{$errors->first('employee_id')}}
+								@endif
+							</div>
+						</div>
+						<div class="col s12 m12 l12 aione-field-wrapper">
+							{!! Form::select('designation',$designation,null,['class'=>"no-margin-bottom aione-field"])!!}
+						</div>
+						
+
+						
+					</div>
+					<div class="modal-footer">
+						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Employee
+							<i class="material-icons right">save</i>
+						</button>
+					</div>
+				{!!Form::close()!!}
+			</div>
+			{{-- <div id="add_new_wrapper" class="add-new-wrapper add-form {{(@$errors->has())?'active':''}}">
+				{!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+				<div class="row no-margin-bottom">
+					<div class="col s12 m12 l12 aione-field-wrapper">
+						<input name="name" class="no-margin-bottom aione-field " type="text" placeholder="name" />
+							<div class="error-red">
+								@if(@$errors->has())
+									{{$errors->first('name')}}
+								@endif
+							</div>
+					</div>
+					<div class="col s12 m12 l12 aione-field-wrapper">
+						<input name="email" class="no-margin-bottom aione-field " type="email" placeholder="email" />
+						<div class="error-red">
+							@if(@$errors->has())
+								{{$errors->first('email')}}
+							@endif
+						</div>
+					</div>
+
+					<div class="col s12 m12 l12 aione-field-wrapper">
+						<input name="password" class="no-margin-bottom aione-field " type="text" placeholder="password" />
+						<div class="error-red">
+							@if(@$errors->has())
+								{{$errors->first('password')}}
+							@endif
+						</div>
+					</div>
+
+					<div class="col s12 m12 l12 aione-field-wrapper">
+						<input name="employee_id" class="no-margin-bottom aione-field " type="text" placeholder="employee ID" />
+						<div class="error-red">
+							@if(@$errors->has())
+								{{$errors->first('employee_id')}}
+							@endif
+						</div>
+					</div>
+					<div class="col s12 m12 l12 aione-field-wrapper">
+						{!! Form::select('designation',$designation,null,['class'=>"no-margin-bottom aione-field"])!!}
+					</div>
+					
+
+					<div class="col s12 m12 l12 aione-field-wrapper">
+						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Employee
+							<i class="material-icons right">save</i>
+						</button>
+					</div>
+				</div>
+				{!!Form::close()!!}
+			</div> --}}
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col s12 m9 l12 pr-7" >
 			<div class="row no-margin-bottom">
 				<!-- <div class="col s12 m6 l7 aione-field-wrapper pr-7">
 					<input class="search-employee aione-field" placeholder="Search" />
@@ -59,55 +178,10 @@
 			</div>
 		</div>
 
-		<div class="col s12 m3 l3 pl-7">
-			{{-- <a id="add_new" class="add-new" href="#">
-				<div class="card shadow hoverable light-blue darken-2 no-margin-top">	
-					<div class="card-content center-align p-10">
-				      <span class="card-title activator white-text text-darken-2 no-margin-bottom"><i class="material-icons">add_circle_outline</i>Employee</span>
-				    </div>
-				</div>
-			</a> --}}
-			<a id="add_new" href="#" class="btn add-new display-form-button" >
-				Add Employee
-			</a>
-			<div id="add_new_wrapper" class="add-new-wrapper add-form">
-				{!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-
-				<div class="row no-margin-bottom">
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="name" class="no-margin-bottom aione-field " type="text" placeholder="name" />
-					</div>
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="email" class="no-margin-bottom aione-field " type="email" placeholder="email" />
-					
-					</div>
-
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="password" class="no-margin-bottom aione-field " type="text" placeholder="password" />
-					
-					</div>
-
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="employee_id" class="no-margin-bottom aione-field " type="text" placeholder="employee ID" />
-					</div>
-					<div class="col s12 m12 l12 aione-field-wrapper">
-					{!! Form::select('designation',$designation,null,['class'=>"no-margin-bottom aione-field"])!!}
-					</div>
-					
-
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Employee
-							<i class="material-icons right">save</i>
-						</button>
-					</div>
-				</div>
-				{!!Form::close()!!}
-			</div>
-			
-
-		</div>
-
+		
 	</div>
 </div>
-
+<script type="text/javascript">
+	 $('#modal1').modal();
+</script>
 @endsection

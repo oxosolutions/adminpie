@@ -71,14 +71,24 @@
 	}
 </style>
 <?php
-
-		$current_date_time = Carbon\Carbon::now('Asia/Calcutta');
+			if(isset($filter_dates)){
+			//	dump($filter_dates);
+				$dateFilter = $filter_dates['year'].'-'.$filter_dates['month'].'-'.$filter_dates['date'];
+				$current_date_time = Carbon\Carbon::parse($dateFilter);
+			}else{
+					$current_date_time = Carbon\Carbon::now('Asia/Calcutta');
+				}
 		$dateformat = $current_date_time->toDayDateTimeString();
+		$daysinmo = $current_date_time->daysInMonth;
 		$month 	= $current_date_time->month;
 		$year 	= $current_date_time->year;
 		$date	= $current_date_time->day;
 		$month_week_no = $current_date_time->weekOfMonth;
 		$day =  $current_date_time->format('l');
+
+		$MO_data = ['01'=>'JAN', '02'=>'FEB', '03'=>'MAR', '04'=>'APR' ,'05'=>'MAY', '06'=>'JUN','07'=>'JUL', '08'=>'AUG','09'=>'SEP', '10'=>'OCT','11'=>'NOV', '12'=>'DEC'];
+		$year_data = range(2015, 2050);
+		$daysInMonth = range(1, $daysinmo);
 ?>
 
 {{-- <div class="row">
@@ -94,6 +104,57 @@
 			</ul>
 		</div> --}}
 		<div class="col-md-4">
+
+		
+
+			{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post'] )!!}
+			<div class="col s3 pr-7 right-align">
+							<select name="date"  >
+								@foreach($daysInMonth as $key =>$val)
+								@if($date==$val)
+								<option selected="selected" value="{{$val}}">{{$val}} </option>
+
+									@else
+										<option value="{{$val}}">{{$val}} </option>
+									@endif
+								@endforeach
+
+							</select>
+						</div>
+
+			
+						<div class="col s3 pl-7">
+							<select name="month" >
+								@foreach($MO_data as $key => $val)
+									@if($month==$key)
+										<option selected="selected" value="{{$key}}">{{$val}} </option>
+
+									@else
+										<option value="{{$key}}">{{$val}} </option>
+									@endif
+								@endforeach
+								
+							</select>
+
+						</div>
+
+						<div class="col s3 pr-7 right-align">
+							<select  name="year">
+								@foreach($year_data as $key =>$val)
+								@if($year==$val)
+								<option selected="selected" value="{{$val}}">{{$val}} </option>
+
+									@else
+										<option value="{{$val}}">{{$val}} </option>
+									@endif
+								@endforeach
+
+							</select>
+						</div>
+			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" >Search
+				<i class="material-icons right">save</i>
+			</button>
+			{!!Form::close()!!}
 			<h5 class="design-style"><span>Attendance </span>{{$dateformat}}</h5>
 		</div>
 		{{-- <div class="col-md-4">
@@ -104,11 +165,15 @@
 	</div> 
 	<div class="table-responsive">
 	{!!Form::open(['route'=>'hr_store.attendance' , 'method'=>'post'] )!!}
-					{{-- {!! Form::hidden('year',$year,['class' => 'form-control']) !!}
-					{!! Form::hidden('month',$month,['class' => 'form-control']) !!}
-					{!! Form::hidden('date',$date,['class' => 'form-control']) !!}
-					{!! Form::hidden('day',$day,['class' => 'form-control']) !!}
-					{!! Form::hidden('month_week_no',$month_week_no,['class' => 'form-control']) !!} --}}
+					{!! Form::hidden('dates[year]',$year,['class' => 'form-control']) !!}
+					@if(strlen($month)==1)
+					{!! Form::hidden('dates[month]','0'.$month,['class' => 'form-control']) !!}
+					@else
+					{!! Form::hidden('dates[month]',$month,['class' => 'form-control']) !!}
+					@endif
+					{!! Form::hidden('dates[date]',$date,['class' => 'form-control']) !!}
+					{!! Form::hidden('dates[day]',$day,['class' => 'form-control']) !!}
+					{!! Form::hidden('dates[month_week_no]',$month_week_no,['class' => 'form-control']) !!}
 					
 		<table class="table table-bordered table-striped">
 			<thead>
@@ -116,6 +181,7 @@
 				<th>Sr</th>
 					<th>Employee</th>
 					<th>Name</th>
+					<th>Designation</th>
 					<th>Department</th>
 					<th>Attendance Status</th>
 					<th>In Time</th>
@@ -129,32 +195,32 @@
 			</thead>
 			<tbody>
 			
-			@if(!empty($employee_data))
-				@foreach($employee_data as $empKey => $empValue)
+			@if(!empty($attendance_data))
+				@foreach($attendance_data as $attKey => $attValue)
+				
+					@php 
+					$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
 
-			<?php 
-				$emp_id = $empValue['employee_id']; 
-				$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
-				if(!empty($attendance_data))
-				{
-					if($attendance_data[$empKey]['employee_id'] == $emp_id)
-					{
-						$attendance_status = $attendance_data[$empKey]['attendance_status'];
-						$in_time = $attendance_data[$empKey]['in_time'];
-						$out_time = $attendance_data[$empKey]['out_time'];
+						$emp_id = $attValue['employee_id'];
+						$attendance_status = $attValue['attendance_status'];
+						$in_time = $attValue['in_time'];
+						$out_time = $attValue['out_time'];
 						//@$total_hour = $attendance_data[$empKey]['total_hour'];
-						$over_time = $attendance_data[$empKey]['over_time'];
-						$due_time = $attendance_data[$empKey]['due_time'];
-
-
-					}
-				}
-			?>
+						$over_time = $attValue['over_time'];
+						$due_time = $attValue['due_time'];
+						
+					@endphp
+			
 					<tr class="table-tr">
 						<td>{{$loop->index}}</td>
-						<td>{{$empValue['employee_id']}}</td>
-						<td>-</td>
-						<td>{{$empValue['department']}}</td>
+						<td>{{$attValue['employee_id']}}</td>
+						<td>{{$attValue['employee']['employ_info']['name']}}</td>
+
+						<td>{{$attValue['employee']['designations']['name']}}</td>
+					
+							<td>--</td>
+						
+
 						<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],$attendance_status	,['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]) !!}</td>
 						<td>{!! Form::text($emp_id."[out_time]",($out_time == null) ? '00:00' : $out_time,['class' => '','id'=>$emp_id, 'onclick'=>'add(this.id)']) !!}</td>
@@ -166,6 +232,40 @@
 					</tr>
 					
 				@endforeach
+
+				@else
+					@foreach($employee_data as $key => $attValue)
+						@php 
+						$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
+
+							$emp_id = $attValue['employee_id'];
+
+						@endphp
+
+						<tr class="table-tr">
+						<td>{{$loop->index}}</td>
+						<td>{{@$attValue['employee_id']}}</td>
+						<td>{{@$attValue['employ_info']['name']}}</td>
+
+						<td>{{@$attValue['designations']['name']}}</td>
+					
+							<td>--</td>
+						
+
+						<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']) !!}</td>
+						<td>{!! Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]) !!}</td>
+						<td>{!! Form::text($emp_id."[out_time]",($out_time == null) ? '00:00' : $out_time,['class' => '','id'=>$emp_id, 'onclick'=>'add(this.id)']) !!}</td>
+						<td>{!! Form::text($emp_id."[lunch_start_time]",'00:00',['class' => '']) !!}</td>
+						<td>{!! Form::text($emp_id."[lunch_out]",'00:00',['class' => '']) !!}</td>
+						<td>{!! Form::text($emp_id."[total_hour]",($total_hour==null)? '00:00': $total_hour,['class' => '']) !!}</td>
+						<td>{!! Form::text($emp_id."[over_time]",($over_time==null)? '00:00' : $over_time,['class' => '']) !!}</td>
+						<td>{!! Form::text($emp_id."[due_time]", ($due_time ==null)? '00:00': $due_time,['class' => '']) !!}</td>
+					</tr>
+
+					@endforeach
+
+					
+				
 			@endif
 				
 			</tbody>

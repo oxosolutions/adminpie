@@ -47,7 +47,7 @@ input{
             <div class="bordered centered" style="background-color: transparent;">
                 <div>
                   <div class=" row" style="background-color: #24425C;color: white;padding: 15px 10px">
-                    <div class="col l2" >Field Order</div>
+                    <div class="col l2" >Field Order1</div>
                     <div class="left-align col l4 ">Field Label</div>
                     <div class="col l4">Field Slug </div>
                     <div class="col l2">Created at</div>
@@ -72,9 +72,8 @@ input{
             </div>
       <div class="row">
         <div class="col l12" style="margin: 15px">
-               <input type="hidden" name="form_id" value="{{$section->id}}">
-                <input type="hidden" name="section_id" value="{{$section->form_id}}">
-
+               <input type="hidden" name="section_id" value="{{$section->id}}">
+                <input type="hidden" name="form_id" value="{{$section->form_id}}">
           <button class=" btn" type="submit">Save survey</button>  
         </div>
         

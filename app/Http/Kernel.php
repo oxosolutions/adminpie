@@ -60,7 +60,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'guest.admin' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
         'guest.org' => \App\Http\Middleware\RedirectIfOrganizationAuthenticated::class,
-         'role' => \App\Http\Middleware\CheckRole::class,
+        'role' => \App\Http\Middleware\CheckRole::class,
+        'log' => \App\Http\Middleware\Logsystem::class,
     ];
 
 }

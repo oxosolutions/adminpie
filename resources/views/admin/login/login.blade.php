@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
 	{{-- <form class="modal-body"> --}}
-{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'admin.login.post']) !!}
+{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => ['login.post']]) !!}
 
 <div class="" style="">
 	<div class="container-body">

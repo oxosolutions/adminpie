@@ -34,28 +34,39 @@ input{
 
 }
 </style>
-
 <!-- main-content-->
+{{-- {{dd($model)}} --}}
+
 <div class="card" style="margin-top: 0px;">
 	<div class="content-wrapper">
-  {!!Form::open(['route'=>'form.store'])!!}
+  @if(!empty($model))
+      {!!Form::open(['route'=>['update.field','form_id'=>request()->form_id,'section_id'=>request()->section_id]])!!}
+  @else
+      {!!Form::open(['route'=>['form.store','form_id'=>request()->form_id,'section_id'=>request()->section_id]])!!}
+  @endif
 		<section class="section-header">
 			<div class="" style="padding: 10px 5px;">
-				Create Surrvey
+				Create Field
 			</div>
 			<div>
             <div class="bordered centered" style="background-color: transparent;">
                 <div>
-                  <div class=" " style="background-color: #24425C;color: white">
-                    <div style="width: 100px;">Field Order</div>
-                    <div class="left-align">Field Label</div>
-                    <div>Field Name </div>
-                    <div>Field Type</div>
+                  <div class="top-header row" style="background-color: #24425C;color: white;padding: 15px 10px">
+                    <div class="col l2" >Field Order1</div>
+                    <div class="left-align col l4 ">Field Label</div>
+                    <div class="col l4">Field Slug </div>
+                    <div class="col l2">Field Type</div>
                   </div>
                 </div>
-                <div class="form-rows">
-                  
-                </div>
+                @php $index = 1; $rowCount=0; $slug = []; @endphp
+                <div style="color: red;font-size:20px;padding: 10px">{{ucfirst(Session::get('sameSlugmessage'))}}</div>
+                 @foreach($model as $key => $value)
+                    @include('admin.formbuilder._row',$value)
+                    @php $index++; $rowCount++; @endphp
+                  @endforeach
+                 <div class="form-rows">
+                   
+                 </div>
             </div>
 			</div>
 			<div>
@@ -92,5 +103,6 @@ input{
   .option-trigger:hover .options{
     display: block;
   }
+
 </style>
 @endsection

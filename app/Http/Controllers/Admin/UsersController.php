@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\User as admin_user;
+use App\Model\Admin\GlobalUsersRole as Role;
+
 
 use Hash;
 use Session;
@@ -17,12 +19,15 @@ class UsersController extends Controller
     //     $this->userRepo = $userRepo;
     // }
     public function index(){
+        $roles = Role::where('status',1)->pluck('role_name','id');
+      
         $plugins = [
-                        'js' => ['select2','custom'=>['admin_users']]
+                        'js' => ['select2','custom'=>['admin_users']],
+                        'roles'=>$roles
                     ];
         return view('admin.users.list')->with(['plugins'=>$plugins]);
     }
-    public function list()
+    public function list_user()
     {
         $userList = admin_user::orderBy('id','desc')->get();
         return view('admin.users._user')->with(['userList'=>$userList])->render();
@@ -47,13 +52,22 @@ class UsersController extends Controller
     }
     public function getUserById($id)
     {
-    	$model = admin_user::where('id',$id)->get();
-    	return view('admin.users.editUser')->with(['model'=>$model]);
+        $roles = Role::where('status',1)->pluck('role_name','id');
+        $model = admin_user::where('id',$id)->get();
+        $plugins = [
+                        'js'    =>  ['select2','custom'=>['admin_users']],
+                        'roles' =>  $roles,
+                        'model' =>  $model
+                    ];
+    	return view('admin.users.editUser')->with(['plugins'=>$plugins]);
     }
     public function editUser(Request $request , $id)
     {
     	$id = $request->id;
     	$model = admin_user::where('id',$id)->update($request->except(['_token','id']));
-    	return back();
+    	if($model){
+
+            return back();
+        }
     }
 }

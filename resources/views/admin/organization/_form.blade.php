@@ -50,6 +50,11 @@
 <div>  
     <div class="row">
         <h5 style="margin-top: 0px">Add new Organization</h5>
+        @if(@$errors->has())
+           @foreach ($errors->all() as $error)
+              <div style="color:red;">{{ $error }}</div>
+          @endforeach
+        @endif
     </div>
     <div class="row">
         <div class="row pv-10">
@@ -59,6 +64,53 @@
            <div class="col l9">
                {{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ">
  --}}               {!! Form::text('name',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Slug
+           </div>
+           <div class="col l9">
+              {{--  <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
+               {!! Form::text('slug',null,[ 'class' => 'aione-setting-field', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Primary Domain
+           </div>
+           <div class="col l9">
+              {{--  <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
+               {!! Form::text('primary_domain',null,['class' => 'aione-setting-field', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Seondary Domains
+           </div>
+           <div class="col l9">
+              {{--  <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
+               {!! Form::text('secondary_domains',null,['class' => 'aione-setting-field', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
+           </div>
+        </div>
+        <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+              Modules
+           </div>
+           <div class="col l9">
+              {{--  <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
+
+             {{--  @foreach($modules as $moduleKey => $moduleVal)
+              {
+               {{ Form::label($moduleVal, null, ['class' => 'control-label']) }}
+                {!! Form::checkbox('modules[]', 'moduleKey', true) !!}
+              }
+              @endforeach --}}
+                  
+               {!! Form::select('modules[]',$modules,null,['multiple'=>'multiple', 'class' => 'browser-default', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
+             
+
+
            </div>
         </div>
         <div class="row pv-10">
@@ -79,6 +131,8 @@
                {!! Form::email('email',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']) !!} 
            </div>
         </div>
+
+      @if(!str_contains(url()->current(), 'edit'))
         <div class="row pv-10">
            <div class="col l3" style="line-height: 32px">
                Password
@@ -87,7 +141,21 @@
                {{-- <input type="password" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
                 {!! Form::password('password',['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']) !!}
            </div>
+          
         </div>
+
+
+         <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+              Confirm Password
+           </div>
+           <div class="col l9">
+               {{-- <input type="password" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+                {!! Form::password('confirm_password',['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']) !!}
+           </div>
+          
+        </div>
+      @endif
        
     </div>
 </div>

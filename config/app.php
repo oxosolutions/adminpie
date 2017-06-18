@@ -164,6 +164,7 @@ return [
         Illuminate\View\ViewServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Generators\GeneratorsServiceProvider::class,
+        PHPMySQLWrapper\MySQLWrapper\PHPMySQLWrapperProvider::class,
         
 
         /*
@@ -235,7 +236,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'EmployeeHelper' => App\Helpers\EmployeeHelper::class,
-
+        'FormGenerator' => App\Helpers\FormGenerator::class,
+        'MySQLWrapper' => PHPMySQLWrapper\MySQLWrapper\Wrapper::class,
 
     ],
 

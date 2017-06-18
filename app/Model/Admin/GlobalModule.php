@@ -11,21 +11,17 @@ class GlobalModule extends Model
 
      public static function getRouteListArray()
     {
-
-            $routes = Route::getRoutes();
-
-            foreach($routes as $route)
-            {
-            	//dump($route->uri);
-               if(substr($route->uri ,0,1)=='_'){
-                }
-               else{
-                    $rout =  str_replace('/{id}','',$route->uri);
-                    $routeList[$rout] = $rout;
-                }
+        $routes = Route::getRoutes();
+        foreach($routes as $route)
+        {
+           if(substr($route->uri ,0,1)=='_'){
             }
-            
-             return $routeList;
+           else{
+                $rout =  str_replace('/{id}','',$route->uri);
+                $routeList[$rout] = $rout;
+            }
+        }
+        return $routeList;
     }
 
 	public function route()

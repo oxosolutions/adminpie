@@ -125,12 +125,16 @@
 		</div>
 	</div>
 	<div class="row">
+		<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
+		<input type="text" class="status" value="{{$check_in_out_status}}" >
+		<button  status="check_in" class="checkInOut" id="check_in">Check In</button>
+		<button  status="check_out" class="checkInOut" id="check_out">Check Out</button>
 		<div class="col l6 pr-7">
 			<div class="card" >
 				<div>
 					<div class="row">
 						<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
-							Projects
+							Projects 12376
 						</div>
 					</div>
 					<div class="row">
@@ -850,11 +854,64 @@
 		 
 	$(document).ready(function() {
 		
+		status = $(".status").val();
+		if(status=='check_in')
+		{
+			$("#check_out").show();
+			$("#check_in").hide();
+		}else{
+			$("#check_out").hide();
+			$("#check_in").show();
+		}
+
 		$('#calendar').fullCalendar({
 			
 		});
 		
 	});
-        
+
+	$(document).on('click','.checkInOut',function(e){
+
+		status = $(this).attr('status');
+		postdata ={}; 
+		postdata['_token'] = $("#token").val();
+		postdata['status'] = status;
+		$.ajax({
+			url:route()+'hrm/attendance/check_in_out',
+			type:'POST',
+			data:postdata,
+			success:function(res)
+			{	
+				$("#check_out , #check_in").show();
+				 $("#"+status).hide();
+				//$("#"+status).hide();
+				// if(status=='check_in'){
+					
+				//  }else{
+				// 	$("#check_in").show();
+				//  }
+
+				
+			}
+		});
+	});
+
+	// function checkInOut(e)
+	// {	
+	// 	e.preventDefault();
+	// 	 token = $("#token").val();
+	// 	$.ajax({
+	// 		url:route()+'attendance/check_in_out',
+	// 		type:'POST',
+	// 		data:{'checkInOut':'check','token':token},
+	// 		success:function(res)
+	// 		{
+	// 			console('success');
+	// 		}
+	// 	});
+		
+		
+ //    }
 	</script>
+
 @endsection

@@ -13,10 +13,10 @@ $(document).ready(function(){
 	
 	//del user
 	$(document).on('mouseenter','.card-panel',function(){
-		$(this).find('.delete').show();
+		$(this).find('.delete , .edit').show();
 	});
 	$(document).on('mouseleave','.card-panel',function(){
-		$(this).find('.delete').hide();
+		$(this).find('.delete , .edit').hide();
 	});
 
 	//save user
@@ -41,6 +41,9 @@ $(document).ready(function(){
 			data : data,
 			success :function(res){
 				$('#list').html(res);
+				 $('.add-new-wrapper').removeClass('active');
+				 $('.fade-background').fadeOut();
+				 Materialize.toast('User created successfully ..!',4000);
 			}
 		});
 	});

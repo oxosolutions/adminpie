@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Organization\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
+use App\Model\Admin\GlobalOrganization;
 use Auth;
 use Session;
+use Route;
 class LoginController extends Controller
 {
     /*
@@ -41,7 +42,13 @@ class LoginController extends Controller
     }
 
     public function showLoginForm(){
-        Session::put('organization_id',50);
+        $domain = explode('.', request()->getHost());
+        $subdomain = $domain[0];
+        $model = GlobalOrganization::where('slug',$subdomain)->first();
+        if($model == null){
+            dd('Not Valid Organization');
+        }
+        Session::put('organization_id',$model->id);
         return view('organization.login.login');
     }
 

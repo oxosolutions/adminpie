@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Model\GlobalPage as Page;
 
 use App\Repositories\Pages\PagesRepositoryContract;
 use Illuminate\Http\UploadedFile;
@@ -16,6 +17,12 @@ class PagesController extends Controller
 	public function __construct( PagesRepositoryContract $pages)
 	{
 		$this->pages = $pages;# code...
+	}
+
+	public function listPages()
+	{
+		$pages = Page::all();
+		dd($pages);
 	}
 
 	public function create()

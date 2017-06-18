@@ -66,10 +66,10 @@
 						<div class="col l2 action-button">
 							<ul>
 								<li class="edit">
-									<span><a href="javascript:;"><i class="fa fa-pencil"></i></a></span>
+									<span><a href="{{route('edit.visual')}}"><i class="fa fa-pencil"></i></a></span>
 								</li>
 								<li class="view">
-									<span><a href="javascript:;"><i class="fa fa-eye"></i></a></span>
+									<span><a href="{{route('view.visual')}}"><i class="fa fa-eye"></i></a></span>
 								</li>
 								<li class="delete">
 									<span><a href="javascript:;"><i class="fa fa-times red-text"></i></a></span>
@@ -123,6 +123,7 @@
 	}
 	.action-button > ul{
 		display: none;
+		margin:0px;
 	}
 </style>
 <script type="text/javascript">
@@ -141,6 +142,9 @@
 	});
 	$(document).on('mouseleave','.list',function(){
 		$(this).find('.action-button > ul').hide();
+	});
+	$(document).on('click','.delete .fa-times',function(){
+		$(this).parents('.list').hide();
 	});
 </script>
 

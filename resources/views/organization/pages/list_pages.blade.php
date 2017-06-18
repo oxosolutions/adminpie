@@ -137,7 +137,7 @@
 
 					<div class="row no-margin-bottom">
 						<div class="col s12 m2 l12  input-field">
-							{!!Form::text('title',null,['class' => 'validate','placeholder'=>'Enter Title','id'=>'attendence-title','style'=>'color:#fff'])!!}
+							{!!Form::text('title',null,['class' => 'validate','placeholder'=>'Enter Title','id'=>'attendence-title'])!!}
 							<label for="attendence-title">Enter title</label>
 
 						</div>
@@ -170,6 +170,25 @@
 	</div>
 </div>
 <script type="text/javascript">
+
+ $(document).on('change', '.switch > label > input',function(e){
+      e.preventDefault();
+      var postedData = {};
+      postedData['id']        = $(this).parents('.shadow').find('.page_id').val();
+      postedData['status']      = $(this).prop('checked');
+      postedData['_token']      = $('.shadow').find('.page_token').val();
+
+      $.ajax({
+        url:route()+'pages/status/update',
+        type:'POST',
+        data:postedData,
+        success: function(res){
+          console.log('data sent successfull');
+        }
+      });
+      $('.editable h5 ,.editable p').removeClass('edit-fields');
+    });
+
 	$('.add-new').off().click(function(e){
 			e.preventDefault();
 			$('.add-new-wrapper').toggleClass('active');

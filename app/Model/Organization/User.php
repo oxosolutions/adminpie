@@ -21,9 +21,13 @@ class User extends Authenticatable
    {
    	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');
    }
+   public static function userList()
+   {
+      return self::pluck('name','id');
+   }
 
    public function employee_rel()
    {
-      return $this->hasOne('App\Model\Employee','user_id','id');
+      return $this->hasOne('App\Model\Organization\Employee','user_id','id');
    }
 }

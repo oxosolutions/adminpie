@@ -9,8 +9,12 @@ class forms extends Model
     protected $fillable = ['form_title','form_slug','form_description'];
     protected $table	= 'global_forms';
 
-    function section(){
+    public function section(){
     	return $this->hasMany('App\Model\Admin\section','form_id','id');
+    }
+
+    public function formsMeta(){
+    	return $this->hasMany('App\Model\Admin\FormsMeta','id','form_id');
     }
 }
 

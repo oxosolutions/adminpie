@@ -17,7 +17,7 @@
                 <li><a href="#">Settings</a></li>
                 <li><a href="#">Help</a></li> --}}
                 <li class="divider"></li>
-                <li><a href="{{route('admin.logout')}}" class="waves-effect waves-white btn-flat col l12 center-align">Logout</a></li>
+                <li><a href="{{route('org.logout')}}" class="waves-effect waves-white btn-flat col l12 center-align">Logout</a></li>
 
             </ul>
         </div>
