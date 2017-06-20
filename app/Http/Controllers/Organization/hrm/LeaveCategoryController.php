@@ -4,16 +4,18 @@ namespace App\Http\Controllers\Organization\hrm;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Organization\Category as CAT;
 use App\Model\Organization\Designation As DES;
 use App\Model\Organization\User;
 use App\Model\Organization\CategoryMeta as CM;
 use App\Repositories\Category\CategoryRepositoryContract;
+use App\Model\Organization\Leave as LV; 
+use App\Model\Organization\Category as CAT;
 
 /**
  *  @last_modified 2017-06-11 Day sunday
  *  modififed by Paljinder Singh
  */
+
 class LeaveCategoryController extends Controller
 {
     protected $catRepo;
@@ -39,6 +41,12 @@ class LeaveCategoryController extends Controller
       * @return [type]           [back category list]
       */
     public function save(Request $request){
+      $valid_fields = [
+                          'name'          => 'required',
+                          'description'   => 'required'
+                      ];
+      $this->validate($request , $valid_fields);
+
         $this->catRepo->create($request);
         return redirect()->route('leave.categories');
      }
@@ -72,8 +80,30 @@ class LeaveCategoryController extends Controller
       return view('organization.leave_category.leave_rule',['data'=>$data ,'select'=>$select]);
      }
 
-     public function delete($id){
+    public function delete($id){
         CAT::where('id',$id)->delete();
         return back();
-     }
+    }
+    public function editLeaveCat(Request $request){
+      $newData = $request->except('_token','id','number_of_day','apply_before','valid_for','user','designation');
+        CAT::where('id' , $request->id)->update($newData);
+      $newMeta = $request->except('name','description');
+        CM::where('category_id', $request->id)->delete();
+        foreach($newMeta as $key => $value){
+          $data = new CM;
+          $data->category_id = $request->id;
+          $data->key = $key;
+            if(is_array($value)){
+              $data->value = json_encode($value);
+            }elseif($value == ""){
+              $data->value = "";
+            }else{
+              $data->value = $value;
+            }
+            $data->save();
+        }
+        return back();
+    }
+
 }
+

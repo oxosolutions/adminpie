@@ -1,4 +1,7 @@
 <?php $__env->startSection('content'); ?>
+<?php 
+	$section_id = ""; 
+ ?>
 <div class="fade-background">
 </div>
 <div id="projects" class="projects list-view">
@@ -51,7 +54,7 @@
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 				<?php echo Form::open(['route'=>['create.sections' , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-
+				
 					<div class="row no-margin-bottom">
 			            <div class="input-field col l12">
 							<input placeholder="Enter section name" name="section_name" id="user_name" type="text" >
@@ -69,6 +72,15 @@
 			              <input placeholder="Enter description" name="section_description" id="roleId" type="text" >
 			              <label for="roleId">Description</label>
 			            </div>
+			            <div class="input-field col l12">
+			            	<select class="no-margin-bottom aione-field" name="section_type">
+				            	<option selected="selected" disabled="disabled" hidden="hidden" value="">Select type</option>
+				            	<option value="Single">Single</option>
+				            	<option value="Repeater">Repeater</option>
+				            </select>
+			            </div>
+			            
+
 		<?php if(@$errors->has()): ?>
           <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kay => $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <div style="color: red"><?php echo e($err); ?></div>
@@ -89,8 +101,11 @@
 	</div>
 	<div class="row">
 		<div class="list" id="list">
-		<?php  $index = 1;  ?>
-			<?php $__currentLoopData = $section; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>	
+		<?php  $index = 1; ?>
+			<?php $__currentLoopData = $section; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+				<?php 
+					$section_id = $value->id;	
+				 ?>
 				<div class="card-panel shadow white z-depth-1 hoverable project"  >
 					<div class="row valign-wrapper no-margin-bottom">
 						<div class="col l1 s2 center-align project-image-wrapper">
@@ -126,7 +141,7 @@
 										<div class="col l4">
 											<a class='dropdown-button btn blue ' href='javascript:;' data-activates='d<?php echo e($index); ?>'>Actions</a>
 											<ul id='d<?php echo e($index); ?>' class='dropdown-content'>
-											    <li><a href="#">Delete</a></li>
+											    <li><a href="<?php echo e(route('del.section',['id'=>$value->id])); ?>">Delete</a></li>
 											    <li><a class="field" href="<?php echo e(route('list.field',['form_id'=>$value->form_id,'section_id'=>$value->id])); ?>">Fields</a></li>
 											</ul>
 										</div>

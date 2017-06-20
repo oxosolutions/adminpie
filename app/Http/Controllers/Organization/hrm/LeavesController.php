@@ -71,7 +71,7 @@ class LeavesController extends Controller
     {
       $valid_fields = [
                           'reason_of_leave'  => 'required',
-                          'from'             => 'required',
+                          'from'             => 'required',
                           'to'               => 'required'
                       ];
       $this->validate($request , $valid_fields);
@@ -122,7 +122,7 @@ class LeavesController extends Controller
     {
       $valid_fields = [
                           'reason_of_leave'  => 'required',
-                          'from'             => 'required',
+                          'from'             => 'required',
                           'to'               => 'required'
                       ];
       $this->validate($request , $valid_fields);

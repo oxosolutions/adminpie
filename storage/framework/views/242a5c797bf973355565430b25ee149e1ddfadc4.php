@@ -10,21 +10,198 @@
 					<div class="col l9" style="padding:14px">
 						<div class="row" style="padding:0px 0px 5px 0px">
 							<div class="col l3"><strong>Name:</strong></div>
-							<div class="col l5">Sgs Sandhu</div>
+							<div class="col l5"><?php echo e($model->name); ?></div>
 							<div class="col l4 right-align">
-								<a href="<?php echo e(route('profile.edit')); ?>" class="btn blue">Edit Profile</a>
+								<a href="#modal1" class="btn blue">Edit Profile</a>
+								<div id="modal1" class="modal">
+									<div class="modal-header">
+										<h5>Add department</h5>
+									</div>
+									<?php echo Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH']); ?>
+
+										<div class="modal-content">
+											<?php echo FormGenerator::GenerateSection('editempsec1',['type' => 'inset']); ?>
+
+										</div>
+										<div class="modal-footer">
+											<button class="ml-4 btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Department
+												<i class="material-icons right">save</i>
+											</button>
+										</div>
+									<?php echo Form::close(); ?>
+
+								</div>
 							</div>
 						</div>
 						<div class="row" style="padding:5px 0px">
 							<div class="col l3"><strong>Designation</strong></div>
-							<div class="col l9">MD</div>
+							<div class="col l9"><?php echo e(@App\Model\Organization\Designation::find($model->designation)->name); ?></div>
 						</div>
 						<div class="row" style="padding:5px 0px 0px 0px">
 							<div class="col l3"><strong>About Me</strong></div>
-							<div class="col l9">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse fermentum at ante ut rhoncus. Vestibulum a ullamcorper risus, at eleifend sem. Sed turpis dui, sollicitudin sit amet lobortis at,</div>
+							<div class="col l9"><?php echo e(@$model->about_me); ?></div>
 						</div>
 						
 					</div>
+				</div>
+			</div>
+			 <?php echo FormGenerator::GenerateSection('testingsectionrepeatertest',['type'=>'inset']); ?>
+
+			 
+			<div class="row" style="border:1px dashed #e8e8e8;">
+				<div class="row">
+					<div class="col l1 offset-l11 right-align">
+						<i class="fa fa-pencil"></i>
+						<i class="fa fa-close close-delete"></i>
+
+					</div>
+					<style type="text/css">
+						.close-delete{
+							  	margin-right: 3px;
+							    background-color: white;
+							    color: black;
+							    width: 28px;
+							    line-height: 18px;
+							    text-align: center;
+						}
+						.close-delete:hover{
+							background-color: red !important;
+							color: white !important;
+						}
+					</style>
+				</div>
+				<div class="row" style="padding:15px 10px; ">
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>	
+				</div>
+				
+			</div><div class="row" style="border:1px dashed #e8e8e8;">
+				<div class="row">
+					<div class="col l1 offset-l11 right-align">
+						<i class="fa fa-pencil"></i>
+						<i class="fa fa-close close-delete"></i>
+
+					</div>
+					<style type="text/css">
+						.close-delete{
+							  	margin-right: 3px;
+							    background-color: white;
+							    color: black;
+							    width: 28px;
+							    line-height: 18px;
+							    text-align: center;
+						}
+						.close-delete:hover{
+							background-color: red !important;
+							color: white !important;
+						}
+					</style>
+				</div>
+				<div class="row" style="padding:15px 10px; ">
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>	
+				</div>
+				
+			</div><div class="row" style="border:1px dashed #e8e8e8;">
+				<div class="row">
+					<div class="col l1 offset-l11 right-align">
+						<i class="fa fa-pencil"></i>
+						<i class="fa fa-close close-delete"></i>
+
+					</div>
+					<style type="text/css">
+						.close-delete{
+							  	margin-right: 3px;
+							    background-color: white;
+							    color: black;
+							    width: 28px;
+							    line-height: 18px;
+							    text-align: center;
+						}
+						.close-delete:hover{
+							background-color: red !important;
+							color: white !important;
+						}
+					</style>
+				</div>
+				<div class="row" style="padding:15px 10px; ">
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>
+					<div class="col l4">
+						<div class="col s12 m2 l12 aione-field-wrapper" style="padding: 0px 5px">
+							 <input class="no-margin-bottom aione-field" placeholder="name" name="name" type="text">
+						</div>
+					</div>	
+				</div>
+				
+			</div>
+			<div class="row">
+				<div class="col l3 offset-l9 right-align">
+					<a href="" class="btn">Add New</a>
 				</div>
 			</div>
 			<div class="card" style="margin-top: 14px">
@@ -330,6 +507,12 @@
 		      font-weight: 500
 		   }
 	</style>
+	<script type="text/javascript">
+		  $(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+  });
+	</script>
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

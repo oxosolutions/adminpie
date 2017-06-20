@@ -223,7 +223,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_employees',
-                                '--schema'=>'user_id:integer, employee_id:integer, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
+                                '--schema'=>'user_id:integer, employee_id:integer(50), designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
                             ]);
 	//Department
 		Artisan::call('make:migration:schema',[

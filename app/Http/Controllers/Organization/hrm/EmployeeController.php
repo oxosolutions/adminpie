@@ -94,7 +94,10 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-
+        $model = EMP::where('user_id',$id)->delete();
+        if($model){
+            return back();
+        }
     } 
 
     public function updateEmployeeName(Request $request){

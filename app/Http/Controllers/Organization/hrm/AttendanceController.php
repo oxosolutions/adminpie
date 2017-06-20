@@ -38,6 +38,12 @@ class AttendanceController extends Controller
 	}
 	public function check_in_out(Request $request)
 	{
+
+							$time = new Carbon('09:00');
+							$shift_end_time =new Carbon('12:00');
+							$totalDuration = $time->diffInSeconds($shift_end_time);
+							$total_time = gmdate('H:i:s', $totalDuration);
+							dump($total_time);
 		//dump($request->all());
 		$u_id = Auth::guard('org')->user()->id;
 
@@ -68,12 +74,38 @@ class AttendanceController extends Controller
 			//  }
 			if(!empty($att_data->in_out_data))
 			{
+				// if($att_data->check_for_checkin_checkout =='check_in'){
+						$timeData = json_decode($att_data->in_out_data);
+						dump($timeData);
+						$old =0;
+
+						// foreach ($timeData as $key => $value) {
+
+						// 	//dump($value);
+						// 	$next = $key +1;
+						// 	if(!empty(@$value[$next]))
+						// 	{
+						// 		dump('cc'.$timeData[$key]);
+						// 		dump('nxt'.$timeData[$next]);
+						// 			// echo $key;
+						// 		$time =   new Carbon($timeData[$key]);
+						// 		$shift_end_time = new Carbon($timeData[$next]);
+						// 		$totalDuration = $time->diffInSeconds($shift_end_time);
+
+						// 	$sum +=	 gmdate('H:i:s',$totalDuration);
+						// 	$old = $t_time[] = gmdate('H:i:s',$totalDuration);
+						// 	}
+						// }
+							
+						//dump($sum);
+						// foreach ($t_time as $key => $value) {
+						// 	$nxt = $value;
+						// }
+				// }
 				$current_time = array_collapse([ json_decode($att_data->in_out_data) ,$current_time]);
 			}
 		}
 		else{
-
-
 		$emp_attendance =	new Attendance();
 		}
 		$emp_attendance->user_id = $u_id;//$request->user_id;
@@ -89,6 +121,31 @@ class AttendanceController extends Controller
 		$emp_attendance->check_for_checkin_checkout = $status;
 		$emp_attendance->submited_by ='self';
 		$emp_attendance->save();
+
+		$attendance = $data->first();
+
+		$timeData = json_decode($att_data->in_out_data);
+						dump($timeData);
+						$old =0;
+
+						// foreach ($timeData as $key => $value) {
+
+						// 	//dump($value);
+						// 	$next = $key +1;
+						// 	if(!empty(@$value[$next]))
+						// 	{
+						// 		dump('cc'.$timeData[$key]);
+						// 		dump('nxt'.$timeData[$next]);
+						// 			// echo $key;
+						// 		$time =   new Carbon($timeData[$key]);
+						// 		$shift_end_time = new Carbon($timeData[$next]);
+						// 		$totalDuration = $time->diffInSeconds($shift_end_time);
+
+						// 	$sum +=	 gmdate('H:i:s',$totalDuration);
+						// 	$old = $t_time[] = gmdate('H:i:s',$totalDuration);
+						// 	}
+						// }
+		dump($attendance);
 		return ['message'=>'successfully '];
 		//dump($request->all());
 	}

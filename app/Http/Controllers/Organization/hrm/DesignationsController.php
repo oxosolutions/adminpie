@@ -89,13 +89,19 @@ class DesignationsController extends Controller
         return view('organization.designation.list_designation',$getData);
      }
     public function editUserDesignation(Request $request){
-          $tbl = Session::get('organization_id');
-          $valid_fields = [
-                                  'name' => 'required|unique:'.$tbl.'_designations'
-                              ];
-            $this->validate($request , $valid_fields);
+      $getData = DES::where('id',$request->id)->first();
+      if($getData->name == $request->name){
+        $model = DES::where('id',$request->id)->update(['name' => $request->name]);
+      }else{
+        $tbl = Session::get('organization_id');
+        $valid_fields = [
+                                'name' => 'required|unique:'.$tbl.'_designations'
+                            ];
+        $this->validate($request , $valid_fields);
+        $model = DES::where('id',$request->id)->update(['name' => $request->name]);
+      }
+     
 
-      $model = DES::where('id',$request->id)->update(['name' => $request->name]);
       return redirect()->route('designations');
     }
     public function deleteUserDesignation(Request $request , $id){

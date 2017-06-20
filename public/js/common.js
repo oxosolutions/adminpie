@@ -175,4 +175,8 @@ setInterval(function(){clock();},100);
    $(document).ready(function() {
     $('select').material_select();
   });
+   $('.closeDialog').click(function(){
+    $('#modal1').modal('close');
+   });
+
 });

@@ -46,11 +46,14 @@ class FormGenerator{
 	 * @param Array|array $Options      [description]
 	 */
 	public static function GenerateSection($section_slug, Array $Options = []){
-		
-		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
 
-		$HTMLContent = self::GetHTMLSection($SectionCollection, $Options);
-			
+		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
+		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
+		if($sectionType == 'Repeater'){
+			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options);
+		}else{
+			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options);
+		}
 		return $HTMLContent;
 	}
 
@@ -60,6 +63,15 @@ class FormGenerator{
 	 */
 	public static function GetHTMLSection($collection, $Options){
 		return view('common.form.section',['collection'=>$collection,'options'=>$Options])->render();
+	}
+
+	/**
+	 * [GetHTMLGroup description]
+	 * @param [type] $collection [description]
+	 * @param [type] $Options    [description]
+	 */
+	public static function GetHTMLGroup($collection, $Options){
+		return view('common.form.group',['collection'=>$collection,'options'=>$Options])->render();
 	}
 
 	/**

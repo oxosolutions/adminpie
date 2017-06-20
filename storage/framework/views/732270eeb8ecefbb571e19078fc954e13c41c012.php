@@ -46,15 +46,13 @@
 			<div class="col l2 pl-7">
 				<select class="browser-default aione-field" name="per_page" onchange="document.form1.submit();">
 					<option value="" disabled selected>Records per page</option>
-					
-							<option value="5" <?php echo e((Request::get('per_page') && Request::get('per_page') == '5')?'selected':''); ?>>5</option>
-							<option value="10" <?php echo e((Request::get('per_page') && Request::get('per_page') == '10')?'selected':''); ?>>10</option>
-							<option value="25" <?php echo e((Request::get('per_page') && Request::get('per_page') == '25')?'selected':''); ?>>25</option>
-							<option value="50" <?php echo e((Request::get('per_page') && Request::get('per_page') == '50')?'selected':''); ?>>50</option>
-							<option value="75" <?php echo e((Request::get('per_page') && Request::get('per_page') == '75')?'selected':''); ?>>75</option>
-							<option value="100" <?php echo e((Request::get('per_page') && Request::get('per_page') == '100')?'selected':''); ?>>100</option>
-							<option value="all" <?php echo e((Request::get('per_page') && Request::get('per_page') == 'all')?'selected':''); ?>>All</option>
-					
+						<option value="5" <?php echo e((Request::get('per_page') && Request::get('per_page') == '5')?'selected':''); ?>>5</option>
+						<option value="10" <?php echo e((Request::get('per_page') && Request::get('per_page') == '10')?'selected':''); ?>>10</option>
+						<option value="25" <?php echo e((Request::get('per_page') && Request::get('per_page') == '25')?'selected':''); ?>>25</option>
+						<option value="50" <?php echo e((Request::get('per_page') && Request::get('per_page') == '50')?'selected':''); ?>>50</option>
+						<option value="75" <?php echo e((Request::get('per_page') && Request::get('per_page') == '75')?'selected':''); ?>>75</option>
+						<option value="100" <?php echo e((Request::get('per_page') && Request::get('per_page') == '100')?'selected':''); ?>>100</option>
+						<option value="all" <?php echo e((Request::get('per_page') && Request::get('per_page') == 'all')?'selected':''); ?>>All</option> 				
 				</select>
 			</div>
 			</form>
@@ -101,7 +99,7 @@
 											<div class="options">
 												<?php $__currentLoopData = $actions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $action_key => $action_value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 													<?php if($action_value['title'] == 'Delete'): ?>
-														<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" onclick="return confirm('Are you sure ..?')" style="padding-right:10px" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
+														<a href="javascript:;" data-value="<?php echo e(route($action_value['route'],$dataset->id)); ?>" onclick="deleteAlert()" style="padding-right:10px" id="delete" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
 													<?php else: ?>
 														<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" style="padding-right:10px" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
 													<?php endif; ?>
@@ -156,10 +154,23 @@
 	#list li:nth-child(odd) {background: #FFF}
 </style>
 <script type="text/javascript">
+	function deleteAlert(){
+			swal({  title: "Are you sure?",
+					text: "You will not be able to recover this imaginary file!",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonColor: "#DD6B55",
+					confirmButtonText: "Yes, delete it!",
+					closeOnConfirm: false }, function(){
+						// swal("Deleted!", "Your imaginary file has been deleted.", "success");
+						alert(this.attr('data-value'));
+					});
+		}
 	$(function(){
 		if($('input[name=desc_asc]').val() == ''){
 			$('input[name=desc_asc]').val('asc');
 		}
+		
 		$('.sort').click(function(){
 			if($(this).find('i').hasClass('fa-sort-alpha-asc')){
 				$(this).find('i').removeClass('fa-sort-alpha-asc');

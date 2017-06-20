@@ -16,9 +16,9 @@
 					<div class="col" style="padding-left: 10px">
 						<div style="" class=""><span class="project-name name edit" id="<?php echo e($val->employ_info->id); ?>"> <?php echo e($val->employ_info->name); ?></span></div>
 						<div class="options">
-							<a href="" style="padding-right:10px">Edit</a>
+							<a href="<?php echo e(route('account.profile',$val->employ_info->id)); ?>" style="padding-right:10px">Edit</a>
 							
-							<a href="javascript:;" onclick="deleteAlert()" style="padding-right:10px;color: red">Delete</a>
+							<a href="javascript:;" class="delete-employee" data-route="<?php echo e(route('delete.employee',['id'=>$val->employ_info->id])); ?>" onclick="deleteAlert()" style="padding-right:10px;color: red">Delete</a>
 						</div>
 					</div>
 				</div>
@@ -56,19 +56,25 @@
 		}
 	</style>
 	<script type="text/javascript">
-		function deleteAlert(){
+	$(document).ready(function(){
+		$(document).on('click','.delete-employee',function () {		
+		var deletedRoute = $(this).attr('data-route');	
 			swal({   
 				title: "Are you sure?",   
 				text: "You will not be able to recover this imaginary file!",   
 				type: "warning",   
 				showCancelButton: true,   
 				confirmButtonColor: "#DD6B55",   
-				confirmButtonText: "Yes, delete it!",   
+				confirmButtonText: "Yes, delete it!",
 				closeOnConfirm: false }, 
 				function(){   
-					swal("Deleted!", "Your imaginary file has been deleted.", "success");
-				 });
-		}
+					// swal("Deleted!", "Your imaginary file has been deleted.", "success");
+					$(location).attr('href', deletedRoute);
+			}); 
+		});
+	});
+				
+
 	</script>
 	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 <?php endif; ?>

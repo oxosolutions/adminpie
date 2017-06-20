@@ -27,7 +27,7 @@ $(function(){
 	});
 	$('body').on('click','.delete-row', function(){
 		var elem = $(this).parents('.form-row');
-		$(this).parents('.main-row').hide();
+		$(this).parents('.main-row').remove();
 
 		var id = $(this).parents('.options').find('input[name=field_id]').val();
 		$.ajax({

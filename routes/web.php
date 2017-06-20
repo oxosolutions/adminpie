@@ -114,6 +114,7 @@
 				Route::group(['prefix' => 'account','namespace' => 'account'],function(){
 					Route::get('/emails',['as'=>'account.emails','uses'=>'AccountController@emailsList']);
 					Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
+					Route::patch('/profile/update/{id}',['as'=>'update.profile','uses'=>'AccountController@update']);
 					Route::get('/activities',['as'=>'account.activities','uses'=>function(){
 						return view('organization.profile.activities');
 					}]);
@@ -197,7 +198,7 @@
 							Route::get('employees', 				[ 'middleware'=>'log' ,'as' => 'list.employee' , 'uses' => 'EmployeeController@index']);
 							Route::post('employee/save', 			['as' => 'store.employee' , 'uses' => 'EmployeeController@save']);
 							Route::post('employee/edit', 			['as' => 'edit.employee' , 'uses' => 'EmployeeController@editEmployee']);
-							Route::get('employee/delete', 			['as' => 'delete.employee' , 'uses' => 'EmployeeController@deleteEmployee']);
+							Route::get('employee/delete/{id}', 			['as' => 'delete.employee' , 'uses' => 'EmployeeController@delete']);
 							Route::post('employee/update', 			['as' => 'update.employee' , 'uses' => 'EmployeeController@update']);
 							Route::post('employee/update/name',		['as' => 'update.employee.name', 'uses'=> 'EmployeeController@updateEmployeeName']);
 							
@@ -215,6 +216,7 @@
 							Route::post('leave/categories/update',	['as' => 'update.leaveCat' , 'uses' =>'LeaveCategoryController@update']);
 							Route::any('category/meta/{id?}',		['as' => 'meta.category' , 'uses' =>'LeaveCategoryController@categoryMeta']);
 							Route::get('category/delete/{id}',		['as' => 'delete.category','uses'=>'LeaveCategoryController@delete']);
+							Route::post('category/edit',		['as' => 'edit.category','uses'=>'LeaveCategoryController@editLeaveCat']);
 
 						//Leave
 							Route::get('leaves/{id?}',			['as' => 'leaves' , 'uses' =>'LeavesController@index']);
@@ -255,10 +257,11 @@
 
 						//holidays
 							Route::post('/holiday_save',		['as' => 'store.holiday' , 'uses' => 'HolidayController@save']);
-							Route::get('/holidays/{id?}',				['as' => 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
+							Route::get('/holidays/{id?}',		['as' => 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
 							Route::get('/holidays/edit/{id}',	['as' => 'edit.holiday' , 'uses' => 'HolidayController@edit']);
 							Route::post('/holiday/update',		['as' => 'update.holiday' , 'uses' => 'HolidayController@update']);
 							Route::post('/holiday/edit',		['as' => 'edit.holiday' , 'uses' => 'HolidayController@editHoliday']);
+							Route::get('/holiday/delete/{id}',	['as' => 'delete.holiday' , 'uses' => 'HolidayController@deleteHoliday']);
 
 						//Application
 							Route::get('/applications',		['as' => 'applications' , 'uses' => 'ApplicationController@index']);

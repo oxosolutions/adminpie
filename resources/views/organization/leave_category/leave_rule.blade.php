@@ -1,7 +1,8 @@
 @extends('layouts.main')
 @section('content')
 <div class="row">
-	{!! Form::open(['route'=>'meta.category' ,	'class'=> 'form-horizontal', 'method' => 'post']) !!}
+	{!! Form::open(['route'=>'edit.category' ,	'class'=> 'form-horizontal', 'method' => 'post']) !!}
+	<!-- {!! Form::open(['route'=>'meta.category' ,	'class'=> 'form-horizontal', 'method' => 'post']) !!} -->
 	{!! Form::hidden('id',$data['id']) !!}
 
 		<div class="row"  style="padding-bottom: 15px">
@@ -67,7 +68,7 @@
 				Applicable Users
 			</div>
 			<div class="col l9">
-				{{Form::select('user',$data['userData'],@json_encode($data['data']['user']),array('multiple'=>'multiple','name'=>'user[]', 'placeHolder'=>"Select User"))}}
+				{{Form::select('user[]',$data['userData'],@json_encode($data['data']['user']),array('multiple'=>'multiple', 'placeHolder'=>"Select User"))}}
 			</div>
 		</div>
 
@@ -93,37 +94,37 @@
 	    	line-height: 30px;
 		}
 
-	.pv-10{
-		padding:10px 0px
-	}
-	.aione-setting-field:focus{
-		border-bottom: 1px solid #a8a8a8 !important;
-		box-shadow: none !important;
-	}
-	textarea{
-		border-bottom: 1px solid #a8a8a8 !important;
-		box-shadow: none !important;
-	}
-	.btn{
-		background-color: #0288D1;
-	}
-	.select-dropdown{
-		margin-bottom: 0px !important;
-	    border: 1px solid #a8a8a8 !important;
-	    
-	}
-	.select-wrapper input.select-dropdown{
-		height: 30px;
-    	line-height: 30px;
-	}
-	.file-path{
-		margin-bottom: 0px !important
-	}
-	.datepicker{
-		margin-bottom: 0px !important
-	}
-	.level{
-		margin: 0px !important;
-	}
+		.pv-10{
+			padding:10px 0px
+		}
+		.aione-setting-field:focus{
+			border-bottom: 1px solid #a8a8a8 !important;
+			box-shadow: none !important;
+		}
+		textarea{
+			border-bottom: 1px solid #a8a8a8 !important;
+			box-shadow: none !important;
+		}
+		.btn{
+			background-color: #0288D1;
+		}
+		.select-dropdown{
+			margin-bottom: 0px !important;
+		    border: 1px solid #a8a8a8 !important;
+		    
+		}
+		.select-wrapper input.select-dropdown{
+			height: 30px;
+	    	line-height: 30px;
+		}
+		.file-path{
+			margin-bottom: 0px !important
+		}
+		.datepicker{
+			margin-bottom: 0px !important
+		}
+		.level{
+			margin: 0px !important;
+		}
 </style>
 @endsection

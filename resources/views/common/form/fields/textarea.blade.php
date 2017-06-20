@@ -8,7 +8,6 @@
 			{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
 		@endif
 	</div>
-
 @else
 	<div class="col l3" style="line-height: 30px">
 		{{ucfirst($collection->field_title)}}
@@ -21,5 +20,4 @@
 			{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
 		@endif
 	</div>
-
 @endif

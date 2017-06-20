@@ -12,7 +12,17 @@
 	@endphp	
 <div class="fade-background">
 </div>
-
+ <div class="fixed-action-btn">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons">mode_edit</i>
+    </a>
+    <ul>
+      <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+      <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+      <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+      <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+    </ul>
+  </div>
 <div id="projects" class="projects list-view">
 	<div class="row">
 		<div class="col l9">
@@ -30,16 +40,25 @@
 				{!! Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 				<input type="hidden" name="id" value="{{$id}}">
 			@endif
-				<div class="modal-header">
-			    	<h5>Add designation</h5>
+				<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
+			    	<div class="row" style="padding:15px 10px">
+			    		<div class="col l7">
+			    			<h5 style="margin:0px">Add designation</h5>	
+			    		</div>
+			    		<div class="col l5 right-align">
+			    			<a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
+			    		</div>
+			    			
+			    	</div>
+			    	
 			    </div>
-			    <div class="modal-content">
+			    <div class="modal-content" style="background-color: white">
 			    	
 			    	{!!FormGenerator::GenerateField('designation',['type' => 'inset'])!!}
 			    </div>
 			    <div class="modal-footer">
 			    	{{-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Save</a> --}}
-			    	<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Designation
+			    	<button class="btn blue" type="submit">Save Designation
 								<i class="material-icons right">save</i>
 							</button>
 			    </div>
@@ -98,4 +117,9 @@
 	 }
   });
 </script>
+<style type="text/css">
+	.closeDialog{
+		color: #fff;
+	}
+</style>
 @endsection

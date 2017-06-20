@@ -15,4 +15,8 @@ class Department extends Model
 	    }
 	}
 	   protected $fillable = [ 'name', 'description', 'status'];
+
+	public function departmentList(){
+        return self::orderBy('id')->pluck('name','id');
+    }
 }

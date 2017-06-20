@@ -35,9 +35,18 @@
 					<?php echo Form::open(['route'=>'store.shifts' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 				<?php endif; ?>
-					<div class="modal-header">
-				    	<h5 style="padding:0px 10px">Add shift</h5>
-				    </div>
+					<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
+						<div class="row" style="padding:15px 10px">
+							<div class="col l7">
+								<h5 style="margin:0px">Add Shift</h5>	
+							</div>
+							<div class="col l5 right-align">
+								<a href="javascript:;" class="closeDialog" style="color: white"><i class="fa fa-close"></i></a>
+							</div>
+								
+						</div>
+						
+					</div>
 					<div class="modal-content" style="padding: 30px">
 						
 						<?php echo FormGenerator::GenerateSection('addshiftsec1',['type'=>'inset']); ?>

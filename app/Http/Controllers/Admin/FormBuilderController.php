@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin\FormBuilder;
 use App\Model\Admin\forms as forms;
 use App\Model\Admin\section as sec;
+use App\Model\Admin\SectionMeta as SM;
 use App\Model\Admin\FieldMeta as FM;
 use Session;
 
@@ -79,12 +80,25 @@ class FormBuilderController extends Controller
 
     //start section
     public function createSection(Request $request , $id){
+    	$newData = $request->except('section_type');
         $this->validate($request, $this->valid_sections);
+
         $model = new sec;
-        $model->fill($request->except('slug'));
+        $model->fill($newData);
         $model->form_id = $id;
         $model->save();
- 
+        if($model){
+        	$section_id = sec::select('id')->orderBy('id','DESC')->limit('1')->get();
+        	$section_id = $section_id[0]->id;
+        	$newMeta = $request->except('section_name','section_slug','section_description','_token');
+	  		foreach($newMeta as $key => $value){
+	  			$sectionMeta = new SM;
+	  			$sectionMeta->section_id = $section_id;
+	  			$sectionMeta->key = $key;
+	  			$sectionMeta->value = $value;
+	  			$sectionMeta->save();
+	  		}
+        }
         return redirect()->route('list.sections',['form_id' => $id]);
     } 
 
@@ -217,9 +231,9 @@ class FormBuilderController extends Controller
                 $meta->section_id = $section_id;
                 $meta->field_id = $model;
                 $meta->key = $key;
-                if($value[$k] == ""){
+                if(@$value[$k] == ""){
                    $meta->value = ""; 
-                }elseif($value[$k]){
+                }elseif(@$value[$k]){
                     if(is_array($value[$k])){
                         $meta->value = json_encode($value[$k]);
                         // dd($meta->value);

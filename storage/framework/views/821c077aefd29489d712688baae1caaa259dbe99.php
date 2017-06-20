@@ -84,11 +84,34 @@
 		</div>
 	</div>
 	<div class="row">
-		<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
-		<input type="text" class="status" value="<?php echo e($check_in_out_status); ?>" >
-		<button  status="check_in" class="checkInOut" id="check_in">Check In</button>
-		<button  status="check_out" class="checkInOut" id="check_out">Check Out</button>
+
+			
 		<div class="col l6 pr-7">
+			<div class="card center-align" style="padding: 14px">
+				<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
+				<input type="hidden" class="status" value="<?php echo e($check_in_out_status); ?>" >
+				<button href="javascript:;" status="check_in" class="checkInOut blue" id="check_in" style="display: inline-block;color: white;margin: 0 auto;padding: 8px 20px">
+					<span>
+						<span >
+							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
+						</span>
+						<span>
+								<span style="font-size: 18px;margin-left: 5px">Check-In</span>
+						</span>
+					</span>
+				</button>
+				
+				<button  status="check_out" class="checkInOut grey darken-2" id="check_out" style="display: inline-block;color: white;margin: 0 auto;padding: 8px 20px">
+					<span>
+						<span >
+							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
+						</span>
+						<span>
+								<span style="font-size: 18px;margin-left: 5px">Check-Out</span>
+						</span>
+					</span>
+				</button>
+			</div>
 			<div class="card" >
 				<div>
 					<div class="row">

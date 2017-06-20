@@ -72,9 +72,9 @@ input{
             </div>
       <div class="row">
         <div class="col l12" style="margin: 15px">
-               <input type="hidden" name="section_id" value="{{$section->id}}">
-                <input type="hidden" name="form_id" value="{{$section->form_id}}">
-          <button class=" btn" type="submit">Save survey</button>  
+          <input type="hidden" name="section_id" value="{{$section->id}}">
+          <input type="hidden" name="form_id" value="{{$section->form_id}}">
+          <button class=" btn" type="submit">Save Field</button>  
         </div>
         
       </div>

@@ -1,5 +1,8 @@
 @extends('admin.layouts.main')
 @section('content')
+@php
+	$section_id = ""; 
+@endphp
 <div class="fade-background">
 </div>
 <div id="projects" class="projects list-view">
@@ -51,7 +54,7 @@
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 				{!! Form::open(['route'=>['create.sections' , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
-
+				
 					<div class="row no-margin-bottom">
 			            <div class="input-field col l12">
 							<input placeholder="Enter section name" name="section_name" id="user_name" type="text" >
@@ -66,19 +69,30 @@
 			            </div>
 
 			            <div class="input-field col l12">
-			              <input placeholder="Enter description" name="section_description" id="roleId" type="text" >
-			              <label for="roleId">Description</label>
+			            	<input placeholder="Enter description" name="section_description" id="roleId" type="text" >
+			            	<label for="roleId">Description</label>
 			            </div>
-		@if(@$errors->has())
-          @foreach($errors->all() as $kay => $err)
-            <div style="color: red">{{$err}}</div>
-          @endforeach
-        @endif
+			            
+			            <div class="input-field col l12">
+			            	<select class="no-margin-bottom aione-field" name="section_type">
+				            	<option selected="selected" disabled="disabled" hidden="hidden" value="">Select type</option>
+				            	<option value="Single">Single</option>
+				            	<option value="Repeater">Repeater</option>
+				            </select>
+			            </div>
+			            
+						@if(@$errors->has())
+				        	@foreach($errors->all() as $kay => $err)
+				            	<div style="color: red">{{$err}}</div>
+				        	@endforeach
+				        @endif
+
 			            <div class="col s12 m12 l12 aione-field-wrapper center-align">
 			              <button class="save_user btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save
 			                <i class="material-icons right">save</i>
 			              </button>
 			            </div>
+
 			        </div>
 				{!!Form::close()!!}
 
@@ -88,8 +102,11 @@
 	</div>
 	<div class="row">
 		<div class="list" id="list">
-		@php $index = 1; @endphp
-			@foreach($section as $key => $value)	
+		@php $index = 1;@endphp
+			@foreach($section as $key => $value)
+				@php
+					$section_id = $value->id;	
+				@endphp
 				<div class="card-panel shadow white z-depth-1 hoverable project"  >
 					<div class="row valign-wrapper no-margin-bottom">
 						<div class="col l1 s2 center-align project-image-wrapper">
@@ -123,7 +140,7 @@
 										<div class="col l4">
 											<a class='dropdown-button btn blue ' href='javascript:;' data-activates='d{{$index}}'>Actions</a>
 											<ul id='d{{$index}}' class='dropdown-content'>
-											    <li><a href="#">Delete</a></li>
+											    <li><a href="{{ route('del.section',['id'=>$value->id]) }}">Delete</a></li>
 											    <li><a class="field" href="{{route('list.field',['form_id'=>$value->form_id,'section_id'=>$value->id])}}">Fields</a></li>
 											</ul>
 										</div>

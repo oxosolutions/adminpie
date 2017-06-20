@@ -10,7 +10,6 @@
 
 		<?php endif; ?>
 	</div>
-
 <?php else: ?>
 	<div class="col l3" style="line-height: 30px">
 		<?php echo e(ucfirst($collection->field_title)); ?>
@@ -26,5 +25,4 @@
 
 		<?php endif; ?>
 	</div>
-
 <?php endif; ?>

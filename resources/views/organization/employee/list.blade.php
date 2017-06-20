@@ -19,8 +19,17 @@
 			</a>
 			<div id="modal1" class="modal">
 				{!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-					<div class="modal-header">
-						<h5>Add employee</h5>
+					<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
+						<div class="row" style="padding:15px 10px">
+							<div class="col l7">
+								<h5 style="margin:0px">Add Employee</h5>	
+							</div>
+							<div class="col l5 right-align">
+								<a href="javascript:;" class="closeDialog" style="color: white"><i class="fa fa-close"></i></a>
+							</div>
+								
+						</div>
+						
 					</div>
 					<div class="modal-content" style="padding: 10px">
 						<div class="col s12 m12 l12 aione-field-wrapper">
@@ -71,56 +80,7 @@
 					</div>
 				{!!Form::close()!!}
 			</div>
-			{{-- <div id="add_new_wrapper" class="add-new-wrapper add-form {{(@$errors->has())?'active':''}}">
-				{!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-				<div class="row no-margin-bottom">
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="name" class="no-margin-bottom aione-field " type="text" placeholder="name" />
-							<div class="error-red">
-								@if(@$errors->has())
-									{{$errors->first('name')}}
-								@endif
-							</div>
-					</div>
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="email" class="no-margin-bottom aione-field " type="email" placeholder="email" />
-						<div class="error-red">
-							@if(@$errors->has())
-								{{$errors->first('email')}}
-							@endif
-						</div>
-					</div>
-
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="password" class="no-margin-bottom aione-field " type="text" placeholder="password" />
-						<div class="error-red">
-							@if(@$errors->has())
-								{{$errors->first('password')}}
-							@endif
-						</div>
-					</div>
-
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<input name="employee_id" class="no-margin-bottom aione-field " type="text" placeholder="employee ID" />
-						<div class="error-red">
-							@if(@$errors->has())
-								{{$errors->first('employee_id')}}
-							@endif
-						</div>
-					</div>
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						{!! Form::select('designation',$designation,null,['class'=>"no-margin-bottom aione-field"])!!}
-					</div>
-					
-
-					<div class="col s12 m12 l12 aione-field-wrapper">
-						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Employee
-							<i class="material-icons right">save</i>
-						</button>
-					</div>
-				</div>
-				{!!Form::close()!!}
-			</div> --}}
+			
 		</div>
 
 	</div>
