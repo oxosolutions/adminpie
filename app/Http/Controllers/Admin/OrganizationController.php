@@ -68,7 +68,12 @@ class OrganizationController extends Controller
 
 	public function create(){
        
-     
+     // Artisan::call('make:migration:schema',[
+     //                            '--model'=>false,
+     //                            'name'=>'create_employeestest',
+     //                            '--schema'=>'user_id:integer, employee_id:integer, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
+     //                        ]);
+     // Artisan::call('migrate');
       
         $modules = GlobalModule::pluck('name','id');
 		return view('admin.organization.create',['modules'=>$modules]);
@@ -223,7 +228,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_employees',
-                                '--schema'=>'user_id:integer, employee_id:integer(50), designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
+                                '--schema'=>'user_id:integer, employee_id:integer, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
                             ]);
 	//Department
 		Artisan::call('make:migration:schema',[
@@ -291,7 +296,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_attendances',
-                                '--schema'=>'employee_id:string, user_id:integer:nullable, shift_id:integer:nullable, date:string, month:string,year:string, day:string:nullable, month_week_no:integer:nullable, in_time:string:nullable, out_time:string:nullable, total_hour:string:nullable, actual_hour:string:nullable, over_time:string:nullable, due_time:string:nullable, import_data:string:nullable, ip_address:string:nullable, attendance_status:string:nullable, submited_by:string:nullable, check_in:string:nullable, check_out:string:nullable, check_for_checkin_checkout:string:null,  deleted_at:timestamp:nullable'
+                                '--schema'=>'employee_id:string, user_id:integer:nullable, shift_id:integer:nullable, date:string, month:string, year:string, day:string:nullable, month_week_no:integer:nullable, total_hour:string:nullable, actual_hour:string:nullable, over_time:string:nullable, due_time:string:nullable, import_data:string:nullable, attendance_status:string:nullable, submited_by:string:nullable, check_for_checkin_checkout:string:null, in_out_data:string:nullable, lock_status:integer:default(1), deleted_at:timestamp:nullable'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -326,13 +331,13 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org->id.'_project_tasks',
-                                '--schema'=>'project_id:integer, title:string, description:text:nullable, assign_to:string:nullable, priority:string:default("low"), end_date:dateTime:nullable, status:integer:default(0)'
+                                '--schema'=>'project_id:integer, title:string, description:text:nullable, assign_to:string:nullable, priority:string:default("low"), attachment:text:nullable, end_date:dateTime:nullable, status:integer:default(0)'
                             ]);
 //ORGANIZATION TODOS
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org->id.'_project_todos',
-                                '--schema'=>'project_id:integer, title:string, description:text:nullable, start:dateTime:nullable, end:dateTime:nullable, priority:string:default("low"), status:integer:default(1)'
+                                '--schema'=>'project_id:integer, user_id:integer, title:string, description:text:nullable, start:dateTime:nullable, end:dateTime:nullable, priority:string:default("low"), status:integer:default(1)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,

@@ -6,9 +6,9 @@
 	<!-- Global stylesheets -->
 	
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css" media="screen,projection"> --}}
-   
-	<link href="{{ asset('assets/css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
-	<link href="{{ asset('assets/css/materialize.clockpicker.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+	{{-- <link href="{{ asset('assets/css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/> --}}
+	{{-- <link href="{{ asset('assets/css/materialize.clockpicker.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/> --}}
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{ asset('css/ocrm.css?ref='.rand(544,44)) }}" type="text/css" rel="stylesheet"  media="screen,projection"/>
@@ -19,10 +19,13 @@
 	<script src="{{ asset('assets/js/moment.min.js')}}"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="{{ asset('assets/js/fullcalendar.min.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/materialize.js')}}"></script>
-    <script type="text/javascript" src="{{ asset('assets/js/materialize.clockpicker.js')}}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+    {{-- <script type="text/javascript" src="{{ asset('assets/js/materialize.js')}}"></script> --}}
+    {{-- <script type="text/javascript" src="{{ asset('assets/js/materialize.clockpicker.js')}}"></script> --}}
     <script src="{{ asset('bower_components/sweetalert/dist/sweetalert.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/common.js?')}}?ref={{rand(8899,9999)}}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui.min.js?')}}?ref={{rand(8899,9999)}}"></script>
+    
    
     
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>

@@ -1,291 +1,399 @@
 @extends('layouts.main')
 @section('content')
-<script src="{{ asset('js/todo.js') }}"></script>
-<script type="text/javascript">
-    $("#datepicker").datepicker();
-    $("#datepicker").datepicker("option", "dateFormat", "dd/mm/yy");
-    todo.init();
-</script>
-<script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-36251023-1']);
-    _gaq.push(['_setDomainName', 'jqueryscript.net']);
-    _gaq.push(['_trackPageview']);
 
-    (function() {
-        var ga = document.createElement('script');
-        ga.type = 'text/javascript';
-        ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(ga, s);
-    })();
-</script>       
-<div>
-    @include('organization.project._tabs')
-    <div class="col l12 mb-14 ">
-        <div class="card" style="padding: 10px;">
-            <div class="task-list col l12">
-                <h6>Add a task</h6>
-                <form id="todo-form">
-                    <div class="row">
-                        <div class="col l3 pr-7">
-                            <input type="text" placeholder="Title" />    
-                        </div>
-                        <div class="col l3 pr-7 pl-7">
-                            <textarea placeholder="Description"></textarea>    
-                        </div>
-                        <div class="col l2 pr-7 pl-7">
-                            <input type="text" id="datepicker" placeholder="Due Date (dd/mm/yy)" />    
-                        </div>
-                        <div class="col l4 pl-7">
-                            <input type="button" class="btn btn-primary" value="Add task" onclick="todo.add();" /> 
-                             
-                        </div>
-                        
-                        
-                        
-                            
+<div id="opt2">
+    <ul class="collapsible" data-collapsible="accordion">
+        <li>
+            <div class="collapsible-header">
+                <div class="row valign-wrapper">
+                    <div class="col l10">
+                        Module : Dataset
                     </div>
-                    
-                </form>
-                
-              {{--   <div id="delete-div">Drag Here to Delete</div> --}}
-            </div>
-            <div style="clear: both;">
-                
-            </div>
-        </div>
-    </div>
-    <div class="col l12 ">
-        <div class="card">
-           
-            <div>
-                <div class="row">
-                   
-                    <div id="test1" class="col s12 p-15">
-                    	<div class="row">
-                            <div class="task-list col l4 center-align" id="pending" style="border-bottom: 1px solid #e8e8e8;border-right: 1px solid #e8e8e8">
-                                <h6>Pending</h6> 
+                    <div class="col l2 right-align">
+                        <div class="row">
+                            <div class="col l8">
+                                <input class="checkbox select_all1" type="checkbox" id="select_all1" />
+                                <label for="select_all1">Select All</label>      
                             </div>
-                            <div class="task-list col l4 center-align " id="inProgress" style="border-bottom: 1px solid #e8e8e8;border-right: 1px solid #e8e8e8">
-                                <h6>In Progress</h6>
-                            </div>
-                            <div class="task-list col l4 center-align" id="completed" style="border-bottom: 1px solid #e8e8e8;">
-                                <h6>Completed</h6>
-                            </div>
-                            
-                        </div>
-                        <div class="row task-font" >
-                            <div class=" col l4 pr-7" >
-                                <div class="card p-10" >
-                                    <div class="col l12 pl-5" >
-                                        <h6 class="col l8">Title of the issue</h6>
-                                        <img class="circle col l4 right-align img-avatar" src="{{ asset('assets/images/sgs_sandhu.jpg') }}">
-                                    </div>
-                                    <div class="col l12 mt-10">
-                                        <div class=" col l6">
-                                            <i class="fa fa-circle-o red-text" aria-hidden="true"></i>
-                                            High
-                                        </div>
-                                        <div class="col l6 right-align">
-                                            <i class="fa fa-pencil fa-lg mr-5" aria-hidden="true" ></i>
-                                            <i class="fa fa-comment fa-lg mr-5" aria-hidden="true"></i>
-                                            <i class="fa fa-trash red-text fa-lg" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both">
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col l4 pr-7 pl-7">
-                                <div class="card p-10">
-                                    <div class="col l12 pl-5" >
-                                        <h6 class="col l8">Title of the issue</h6>
-                                        <img class="circle col l4 img-avatar " src="{{ asset('assets/images/sgs_sandhu.jpg') }}" >
-                                    </div>
-                                    <div class="col l12 mt-10">
-                                        <div class=" col l6">
-                                            <i class="fa fa-circle-o red-text" aria-hidden="true"></i>
-                                            High
-                                        </div>
-                                        <div class="col l6 right-align">
-                                            <i class="fa fa-pencil fa-lg mr-5" aria-hidden="true" ></i>
-                                            <i class="fa fa-comment fa-lg mr-5" aria-hidden="true" ></i>
-                                            <i class="fa fa-trash red-text fa-lg" aria-hidden="true"></i>
-                                        </div>
-                                    </div>
-                                    <div style="clear: both">
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class=" col l4 pl-7" >
-                                <div class="card p-10">
-                                    <div class="col l12 pl-5" >
-                                        <h6 class="col l8">Title of the issue</h6>
-                                        <img class="circle col l4 right-align img-avatar" src="{{ asset('assets/images/sgs_sandhu.jpg') }}"     >
-                                    </div>
-                                    <div class="col l12 mt-10" >
-                                        <div class=" col l6">
-                                            <i class="fa fa-circle-o red-text" aria-hidden="true"></i>
-                                            High
-                                        </div>
-                                        <div class="col l6 right-align">
-                                            <i class="fa fa-pencil fa-lg mr-5" aria-hidden="true" ></i>
-                                            <i class="fa fa-comment fa-lg mr-5" aria-hidden="true" ></i>
-                                            <i class="fa fa-trash red-text fa-lg" aria-hidden="true"></i>
-                                        </div>
-                                    </div>   
-                                    <div style="clear: both">
-                                        
-                                    </div> 
-                                </div>
-                                
-                            </div>
-                            <div class=" col l4 pr-7 mt-10" >
-                                <a id="add_new" href="#" class="add-new">
-                                    <div class="p-10 center-align" style="border:2px dashed #c8c8c8;">
-                                        
-                                        <div class="empty-box-text">
-                                            Drag a Task Here<br>OR
-                                        </div>
-                                        <a href="" class="btn">Add New</a>
-                                        
-                                    </div>
-                                </a>
-
-                            </div>
-                             <div class=" col l4 pr-7 pl-7 mt-10" >
-                                <div class="p-10 center-align" style="border:2px dashed #c8c8c8;">
-                                    <div class="empty-box-text">
-                                        No Task Found
-                                    </div>
-                                    <div class="empty-box-text">
-                                        Drag a Task Here
-                                    </div>
-                                   
-                                </div>
-                                
-                            </div>
-                             <div class=" col l4 pl-7 mt-10" >
-                                <div class="p-10" style="border:2px dashed #c8c8c8;">
-                                    <div class="empty-box-text">
-                                        No Task Found
-                                    </div>
-                                    <div class="empty-box-text">
-                                        Drag a Task Here
-                                    </div>
-                                </div>
-                                
+                            <div class="col l4 right-align">
+                                <i class="material-icons" style="float: right;margin-right: 0px">expand_less</i>     
                             </div>
                         </div>
-
                     </div>
-                   
                 </div>
             </div>
-        </div>
-    </div>
-    
+            <div class="collapsible-body">
+                <div class="row">
+                    <div class="row">
+                        <div class="col l6">
+                            Sub-module : All Dataset
+                        </div>
+                        <div class="col l6">
+                            <div class="row">
+                                <div class="col l6">
+                                    Add
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test1" />
+                                    <label for="test1" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Edit
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test2" />
+                                    <label for="test2" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    View
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test3" />
+                                    <label for="test3" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Delete
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test4" />
+                                    <label for="test4" style="height: 16px"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider" style="margin: 30px 0px"></div>
+                    <div class="row">
+                        <div class="col l6">
+                            Sub-module : Import
+                        </div>
+                        <div class="col l6">
+                            <div class="row">
+                                <div class="col l6">
+                                    Add
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test5" />
+                                    <label for="test5" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Edit
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test6" />
+                                    <label for="test6" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    View
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test7" />
+                                    <label for="test7" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Delete
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check1" type="checkbox" id="test8" />
+                                    <label for="test8" style="height: 16px"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header">
+                <div class="row valign-wrapper">
+                    <div class="col l10">
+                        Module : Dataset
+                    </div>
+                    <div class="col l2 right-align">
+                    
+                           <div class="row">
+                            <div class="col l8">
+                                <input class="checkbox select_all2" type="checkbox" id="select_all2" />
+                                <label for="select_all2">Select All</label>      
+                            </div>
+                            <div class="col l4 right-align">
+                                <i class="material-icons" style="float: right;margin-right: 0px">expand_less</i>     
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <div class="row">
+                        <div class="col l6">
+                            Sub-module : All Dataset
+                        </div>
+                        <div class="col l6">
+                            <div class="row">
+                                <div class="col l6">
+                                    Add
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test9" />
+                                    <label for="test9" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Edit
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test10" />
+                                    <label for="test10" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    View
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test11" />
+                                    <label for="test11" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Delete
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test12" />
+                                    <label for="test12" style="height: 16px"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider" style="margin: 30px 0px"></div>
+                    <div class="row">
+                        <div class="col l6">
+                            Sub-module : Import
+                        </div>
+                        <div class="col l6">
+                            <div class="row">
+                                <div class="col l6">
+                                    Add
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test13" />
+                                    <label for="test13" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Edit
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test14" />
+                                    <label for="test14" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    View
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test16" />
+                                    <label for="test16" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Delete
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check2" type="checkbox" id="test17" />
+                                    <label for="test17" style="height: 16px"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header">
+                <div class="row valign-wrapper">
+                    <div class="col l10">
+                        Module : Dataset
+                    </div>
+                    <div class="col l2 right-align">
+                        <div class="row">
+                            <div class="col l8">
+                                <input class="checkbox select_all3" type="checkbox" id="select_all3" />
+                                <label for="select_all3">Select All</label>      
+                            </div>
+                            <div class="col l4 right-align">
+                                <i class="material-icons" style="float: right;margin-right: 0px">expand_less</i>     
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <div class="row">
+                        <div class="col l6">
+                            Sub-module : All Dataset
+                        </div>
+                        <div class="col l6">
+                            <div class="row">
+                                <div class="col l6">
+                                    Add
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test18" />
+                                    <label for="test18" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Edit
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test19" />
+                                    <label for="test19" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    View
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test20" />
+                                    <label for="test20" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Delete
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test21" />
+                                    <label for="test21" style="height: 16px"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider" style="margin: 30px 0px"></div>
+                    <div class="row">
+                        <div class="col l6">
+                            Sub-module : Import
+                        </div>
+                        <div class="col l6">
+                            <div class="row">
+                                <div class="col l6">
+                                    Add
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test22" />
+                                    <label for="test22" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Edit
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test23" />
+                                    <label for="test23" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    View
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test24" />
+                                    <label for="test24" style="height: 16px"></label>
+                                </div>
+                            </div>
+                            <div style="margin: 10px 0px"></div>
+                            <div class="row">
+                                 <div class="col l6">
+                                    Delete
+                                </div>
+                                <div class="col l6 right-align">
+                                    <input class="checkbox sub-check3" type="checkbox" id="test25" />
+                                    <label for="test25" style="height: 16px"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+   
+    </ul>
 </div>
 
 
 
+
 <style type="text/css">
-    .card{
-        margin: 0px !important;
+    #opt1 .collapsible .collapsible-header.active{
+            background-color: #1077A3;
+            color: white;
     }
-    .projects-logo{
-        
-        background-color: #000;margin: 10%;
-
+    #opt1 .collapsible .collapsible-header{
+            background-color: grey;
+            color: white;
     }
-    .tabs{
-        height: 32px !important;
-    }
-    .tabs .tab{
-        line-height: 32px !important;
-        
-    }
-    .tabs .tab a{
-        font-size: 12px !important;
-    }
-    .active{
-        background-color: #fff !important;
-    }
-    .p-15{
-        padding: 15px !important;
-    }
-    .mb-14{
-    	margin-bottom: 14px !important;
-    }
-    .optional{
-
-    }
-    .p-10{
-        padding: 10px !important;
-    }
-    .task-font{
-        font-size: 13px !important;padding-top: 10px !important;
-    }
-    .mt-10{
-        margin-top: 10px !important;
-    }
-    .mr-5{
-        margin-right: 5px !important;
-    }
-    .pl-5{
-        padding-left: 5px !important;
-    }
-    .img-avatar{
-        width: 40px !important;float: right !important;
-    }
-    .pt-10{
-        padding-top: 10px;
-    }
-    .empty-box-text{
-        font-size: 20px;
-        font-weight: 700;
-        color:#d8d8d8;
-        text-align: center;
-        
-    }
-     .card{
-        margin: 0px !important;
-    }
-    .projects-logo{
-        
-        background-color: #000;margin: 10%;
-
-    }
-    .tabs{
-        height: 32px !important;
-    }
-    .tabs .tab{
-        line-height: 32px !important;
-        
-    }
-    .tabs .tab a{
-        font-size: 10px !important;color: rgb(33, 150, 243) !important;
-    }
-    .active{
-        background-color: #fff !important;
-    }
-    .p-15{
-        padding: 15px !important;
-    }
-    .pv-5{
-        padding: 5px 0px !important; 
-    }
-    .project-logo{
-        color: white;width: 70px;margin: 0 auto; line-height: 70px;font-size: 24px;border-radius: 50%
-    }
-    .tabs .tab a{
-        padding:0 12px;
-    }
-   
 </style>
-
+<script type="text/javascript">
+$(document).ready(function () {
+    $(".select_all1").click(function () {
+        $(".sub-check1").prop('checked', $(this).prop('checked'));
+    });
+    $(".select_all2").click(function () {
+        $(".sub-check2").prop('checked', $(this).prop('checked'));
+    });
+     $(".select_all3").click(function () {
+        $(".sub-check3").prop('checked', $(this).prop('checked'));
+    });
+});
+</script>
+<style type="text/css">
+    .collapsible{
+        box-shadow: none !important;
+    }
+     .collapsible li.active i {
+      
+      transform: rotate(180deg);
+    }
+</style>
 @endsection

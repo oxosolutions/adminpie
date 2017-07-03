@@ -157,455 +157,472 @@
             
             </ul>
         </li>
-        <li class="root <?php echo e(in_array(Request::path(),array('crm/client/list'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-handshake-o blue center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text">
-                    CRM
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu">
-                <li class="<?php echo e(Request::is('crm/client/list')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('list.client')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-handshake-o red darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Customers
-                        </span>
-                    </a>
-                </li>
-               
-               
-               
-                
-              
-                
-               
-                
-               
-            </ul>
-        </li>
-        <li class="root <?php echo e(in_array(Request::path(),array('hrm/employees','hrm/attendance','hrm/attendance/hr','hrm/designations','hrm/departments','hrm/leaves','hrm/leave-categories','hrm/shifts','hrm/holidays'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-tachometer green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text">
-                    HRM
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-                <li class="<?php echo e(Request::is('hrm/employees')?'active-state':''); ?>">
-                    <a href="<?php echo e(Route('list.employee')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-address-card orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Employee
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/attendance')?'active-state':''); ?>">
-                    <a href="<?php echo e(Route('list.attendance')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-random red darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Attendence  
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/attendance/hr')?'active-state':''); ?>">
-                    <a href="<?php echo e(Route('hr.attendance')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-random red darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Attendence by
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/designations')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('designations')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-briefcase blue darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Designations
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/departments')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('departments')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-building green darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Departments
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/leaves')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('leaves')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-user-times teal darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Leaves
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/leave-categories')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('leave.categories')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-tachometer grey darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Leave Categories
-                    </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/shifts')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('shifts')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-clock-o red darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Shifts
-                        </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/holidays')?'active-state':''); ?>">
-                    <a href="<?php echo e(Route('list.holidays')); ?>">
-                    <span class="side-bar-icon">
-                        <i class="fa fa-bed teal darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Holidays
-                    </span>
-                    </a>
-                </li>
-                                
-            </ul>
-        </li>
-        <li class="root <?php echo e(in_array(Request::path(),array('projects','projects/categories'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-files-o blue center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text">
-                    Projects
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu">
-                <li class="<?php echo e(Request::is('projects')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('list.project')); ?>" class="side-bar-submenu-li">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-database red darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            All Projects
-                        </span>
-                    </a>
-                   
-                </li>
-                <li>
-                    <a href="javascript:;">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-tasks red darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Tasks
-                        </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('projects/categories')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('categories.project')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-tachometer red darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Project Categories
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="root  <?php echo e(in_array(Request::path(),array('pages'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-tachometer red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    CMS
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li class="<?php echo e(Request::is('pages')?'active-state':''); ?>">
-                    <a href="<?php echo e(Route('list.pages')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-leanpub orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Pages
-                        </span>
-                    </a>
-                </li>
-                <li >
-                    <span class="side-bar-icon">
-                        <i class="fa fa-thumb-tack red darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Posts
-                    </span>
-                </li>
-                <li >
-                    <span class="side-bar-icon">
-                        <i class="fa fa-object-group teal darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Categories
-                    </span>
-                </li>
-                <li >
-                    <span class="side-bar-icon">
-                        <i class="fa fa-camera green darken-1 center-align side-bar-icon-bg" style=""></i>
-                    </span>
-                    <span class="side-bar-text">
-                        Media
-                    </span>
-                </li>
-            </ul>
-        </li>
-        <li class="root  ">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-check red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    Survey
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li>
-                    <a href="javascript:;">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-leanpub orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            list
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
         
-        <li class="root  <?php echo e(in_array(Request::path(),array('dataset/list','dataset/import'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-table red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                  Dataset
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu">
-               <li class="<?php echo e(Request::is('dataset/list')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('list.dataset')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            All Datasets
-                        </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('dataset/import')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('import.dataset')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Import
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-       
-        <li class="root <?php echo e(in_array(Request::path(),array('list/visual'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-area-chart red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    Visualizations
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-                <li class="<?php echo e(Request::is('list/visual')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('list.visual')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-files-o orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            list
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
+        <?php 
+            $user_type = json_decode(Auth::guard('org')->user()->user_type);
 
-        <li class="root <?php echo e(in_array(Request::path(),array('users','hrm/roles'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    Users
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li class="<?php echo e(Request::is('users')?'active-state':''); ?> ">
-                    <a href="<?php echo e(route('list.user')); ?>">
-                        <span class="side-bar-icon">
-                            <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
-                        </span>
-                        <span class="side-bar-text">
-                            Users
-                        </span>
-                    </a>
-                </li>
-                <li class="<?php echo e(Request::is('hrm/roles')?'active-state':''); ?> ">
-                    <a href="<?php echo e(Route('list.role')); ?>">
+         ?>
+        <?php if(in_array('1' , $user_type)): ?>
+            <li class="root <?php echo e(in_array(Request::path(),array('crm/client/list'))?'active-state':''); ?>">
+                <a href="javascript:;">
                     <span class="side-bar-icon">
-                        <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                        <i class="fa fa-handshake-o blue center-align side-bar-icon-bg white-text" style=""></i>
                     </span>
                     <span class="side-bar-text">
-                        Roles
+                        CRM
                     </span>
-                    </a>
-                </li>  
-            </ul>
-        </li>
-        <li class="root  ">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-cogs red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    Settings
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li>
-                    <a href="javascript:;">
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu">
+                    <li class="<?php echo e(Request::is('crm/client/list')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('list.client')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-handshake-o red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Customers
+                            </span>
+                        </a>
+                    </li>
+                   
+                   
+                   
+                    
+                  
+                    
+                   
+                    
+                   
+                </ul>
+            </li>
+            <li class="root <?php echo e(in_array(Request::path(),array('hrm/employees','hrm/attendance','hrm/attendance/hr','hrm/designations','hrm/departments','hrm/leaves','hrm/leave-categories','hrm/shifts','hrm/holidays'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-tachometer green darken-1 center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        HRM
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                    <li class="<?php echo e(Request::is('hrm/employees')?'active-state':''); ?>">
+                        <a href="<?php echo e(Route('list.employee')); ?>">
                         <span class="side-bar-icon">
-                            <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-address-card orange darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            Projects
+                            Employee
                         </span>
-                    </a>
-                </li>
-               <li>
-                    <a href="javascript:;">
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/attendance')?'active-state':''); ?>">
+                        <a href="<?php echo e(Route('list.attendance')); ?>">
                         <span class="side-bar-icon">
-                            <i class="fa fa-tachometer blue darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-random red darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            CRM
+                            Attendence  
                         </span>
-                    </a>
-                </li>
-               <li>
-                    <a href="javascript:;">
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/attendance/hr')?'active-state':''); ?>">
+                        <a href="<?php echo e(Route('hr.attendance')); ?>">
                         <span class="side-bar-icon">
-                            <i class="fa fa-tachometer green darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-random red darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            HRM
+                            Attendence by
                         </span>
-                    </a>
-                </li>
-               <li>
-                    <a href="javascript:;">
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/designations')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('designations')); ?>">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-briefcase blue darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Designations
+                        </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/departments')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('departments')); ?>">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-building green darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Departments
+                        </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/leaves')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('leaves')); ?>">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-user-times teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Leaves
+                        </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/leave-categories')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('leave.categories')); ?>">
                         <span class="side-bar-icon">
                             <i class="fa fa-tachometer grey darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            Support
+                            Leave Categories
                         </span>
-                    </a>
-                </li>
-               <li>
-                    <a href="">
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/shifts')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('shifts')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-clock-o red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Shifts
+                            </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/holidays')?'active-state':''); ?>">
+                        <a href="<?php echo e(Route('list.holidays')); ?>">
                         <span class="side-bar-icon">
-                            <i class="fa fa-tachometer deep-orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-bed teal darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            Users
+                            Holidays
                         </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="root  <?php echo e(in_array(Request::path(),array('hrm/log'))?'active-state':''); ?>">
-            <a href="javascript:;">
-                <span class="side-bar-icon">
-                    <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
-                </span>
-                <span class="side-bar-text ">
-                    Manage
-                </span>
-                <span class="arrow">
-                    <i class="fa fa-chevron-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu">
-               <li class="<?php echo e(Request::is('hrm/log')?'active-state':''); ?>">
-                    <a href="<?php echo e(route('list.log')); ?>">
+                        </a>
+                    </li>
+                                    
+                </ul>
+            </li>
+            <li class="root <?php echo e(in_array(Request::path(),array('projects','projects/categories'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-files-o blue center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text">
+                        Projects
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu">
+                    <li class="<?php echo e(Request::is('projects')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('list.project')); ?>" class="side-bar-submenu-li">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-database red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                All Projects
+                            </span>
+                        </a>
+                       
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tasks red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Tasks
+                            </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('projects/categories')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('categories.project')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Project Categories
+                            </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('projects/categories')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('list.team')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer red darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Team
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="root  <?php echo e(in_array(Request::path(),array('pages'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-tachometer red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                        CMS
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li class="<?php echo e(Request::is('pages')?'active-state':''); ?>">
+                        <a href="<?php echo e(Route('list.pages')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-leanpub orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Pages
+                            </span>
+                        </a>
+                    </li>
+                    <li >
                         <span class="side-bar-icon">
-                            <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            <i class="fa fa-thumb-tack red darken-1 center-align side-bar-icon-bg" style=""></i>
                         </span>
                         <span class="side-bar-text">
-                            Log
+                            Posts
                         </span>
-                    </a>
-                </li>
-               
-            </ul>
-        </li>
+                    </li>
+                    <li >
+                        <span class="side-bar-icon">
+                            <i class="fa fa-object-group teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Categories
+                        </span>
+                    </li>
+                    <li >
+                        <span class="side-bar-icon">
+                            <i class="fa fa-camera green darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Media
+                        </span>
+                    </li>
+                </ul>
+            </li>
+            <li class="root  ">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-check red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                        Survey
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li>
+                        <a href="javascript:;">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-leanpub orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                list
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="root  <?php echo e(in_array(Request::path(),array('dataset/list','dataset/import'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-table red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                      Dataset
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu">
+                   <li class="<?php echo e(Request::is('dataset/list')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('list.dataset')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                All Datasets
+                            </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('dataset/import')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('import.dataset')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Import
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+           
+            <li class="root <?php echo e(in_array(Request::path(),array('list/visual'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-area-chart red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                        Visualizations
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                    <li class="<?php echo e(Request::is('list/visual')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('list.visual')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-files-o orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                list
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="root <?php echo e(in_array(Request::path(),array('users','hrm/roles'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                        Users
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li class="<?php echo e(Request::is('users')?'active-state':''); ?> ">
+                        <a href="<?php echo e(route('list.user')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Users
+                            </span>
+                        </a>
+                    </li>
+                    <li class="<?php echo e(Request::is('hrm/roles')?'active-state':''); ?> ">
+                        <a href="<?php echo e(Route('list.role')); ?>">
+                        <span class="side-bar-icon">
+                            <i class="fa fa-bars teal darken-1 center-align side-bar-icon-bg" style=""></i>
+                        </span>
+                        <span class="side-bar-text">
+                            Roles
+                        </span>
+                        </a>
+                    </li>  
+                </ul>
+            </li>
+            <li class="root  ">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-cogs red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                        Settings
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li>
+                        <a href="javascript:;">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Projects
+                            </span>
+                        </a>
+                    </li>
+                   <li>
+                        <a href="javascript:;">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer blue darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                CRM
+                            </span>
+                        </a>
+                    </li>
+                   <li>
+                        <a href="javascript:;">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer green darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                HRM
+                            </span>
+                        </a>
+                    </li>
+                   <li>
+                        <a href="javascript:;">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer grey darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Support
+                            </span>
+                        </a>
+                    </li>
+                   <li>
+                        <a href="">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-tachometer deep-orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Users
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="root  <?php echo e(in_array(Request::path(),array('hrm/log'))?'active-state':''); ?>">
+                <a href="javascript:;">
+                    <span class="side-bar-icon">
+                        <i class="fa fa-users red center-align side-bar-icon-bg white-text" style=""></i>
+                    </span>
+                    <span class="side-bar-text ">
+                        Manage
+                    </span>
+                    <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu">
+                   <li class="<?php echo e(Request::is('hrm/log')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('list.log')); ?>">
+                            <span class="side-bar-icon">
+                                <i class="fa fa-user-plus orange darken-1 center-align side-bar-icon-bg" style=""></i>
+                            </span>
+                            <span class="side-bar-text">
+                                Log
+                            </span>
+                        </a>
+                    </li>
+                   
+                </ul>
+            </li>
+        <?php endif; ?>
     </ul>
 
    

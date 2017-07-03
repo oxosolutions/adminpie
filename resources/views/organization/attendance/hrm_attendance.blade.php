@@ -72,7 +72,6 @@
 </style>
 <?php
 			if(isset($filter_dates)){
-			//	dump($filter_dates);
 				$dateFilter = $filter_dates['year'].'-'.$filter_dates['month'].'-'.$filter_dates['date'];
 				$current_date_time = Carbon\Carbon::parse($dateFilter);
 			}else{
@@ -91,6 +90,7 @@
 		$daysInMonth = range(1, $daysinmo);
 ?>
 
+
 {{-- <div class="row">
 	<h5 class="text-center">Attendance<span style="font-size:26;"> {{$dateformat}}</span></h5>
 </div> --}}
@@ -104,9 +104,6 @@
 			</ul>
 		</div> --}}
 		<div class="col-md-4">
-
-		
-
 			{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post'] )!!}
 			<div class="col s3 pr-7 right-align">
 							<select name="date"  >
@@ -164,6 +161,9 @@
 		</div>	  --}}
 	</div> 
 	<div class="table-responsive">
+	@if($day=='Sunday')
+		<h1> Sunday off </h1>
+	@else
 	{!!Form::open(['route'=>'hr_store.attendance' , 'method'=>'post'] )!!}
 					{!! Form::hidden('dates[year]',$year,['class' => 'form-control']) !!}
 					@if(strlen($month)==1)
@@ -184,102 +184,169 @@
 					<th>Designation</th>
 					<th>Department</th>
 					<th>Attendance Status</th>
-					<th>In Time</th>
+					<th>Punch In Out</th>		
+					<th>Check In Out</th>
+					{{-- <th>In Time</th>
 					<th>Leaving Time</th>
 					<th>Lunch Start Time </th>
 					<th>Lunch End Time </th>
 					<th>Total Time</th>
 					<th>Over Time</th>
-					<th>Due Time</th>
+					<th>Due Time</th> --}}
 				</tr>
 			</thead>
 			<tbody>
 			
-			@if(!empty($attendance_data))
-				@foreach($attendance_data as $attKey => $attValue)
-				
-					@php 
-					$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
 
-						$emp_id = $attValue['employee_id'];
-						$attendance_status = $attValue['attendance_status'];
-						$in_time = $attValue['in_time'];
-						$out_time = $attValue['out_time'];
-						//@$total_hour = $attendance_data[$empKey]['total_hour'];
-						$over_time = $attValue['over_time'];
-						$due_time = $attValue['due_time'];
-						
-					@endphp
+				<?php $lock_status=1; ?>
+				@foreach($employee_data as $keys => $vals)
+					@if(count($vals['attendance'])>0)
+						@foreach($vals['attendance'] as $attKey => $attValue)
+											
+						@php 
+							$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
+
+								$emp_id = $attValue['employee_id'];
+								$attendance_status = $attValue['attendance_status'];
+								$in_time = $attValue['in_time'];
+								$out_time = $attValue['out_time'];
+								//@$total_hour = $attendance_data[$empKey]['total_hour'];
+								$over_time = $attValue['over_time'];
+								$due_time = $attValue['due_time'];
+								$lock_status = $attValue['lock_status'];
+								$punch_in_out = json_decode($attValue['punch_in_out'],true);
+								$in_out_data = json_decode($attValue['in_out_data'],true);
+
+									
+						@endphp
 			
 					<tr class="table-tr">
-						<td>{{$loop->index}}</td>
+						<td>{{$loop->parent->iteration}}</td>
 						<td>{{$attValue['employee_id']}}</td>
 						<td>{{$attValue['employee']['employ_info']['name']}}</td>
 
 						<td>{{$attValue['employee']['designations']['name']}}</td>
 					
 							<td>--</td>
-						
+						@if(@$attValue['lock_status']==1)
 
 						<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],$attendance_status	,['class' => '']) !!}</td>
-						<td>{!! Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]) !!}</td>
+						
+						@if($punch_in_out)
+							<td>
+							@foreach($punch_in_out as $key =>$val)
+							<div>
+									{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!} <a class="del_check">del </a>
+							</div>
+							@endforeach
+							</td>
+							@else
+							<td><button class="show_punch_in_out">add punch in out time</button> <div class="add_punch_in_out">{!! Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}
+							{!! Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}  </div> </td>
+						@endif
+
+						@if($in_out_data)
+						@php
+						// $checkdata = json_decode($in_out_data,true);
+						// dump($checkdata)
+						@endphp
+							<td>
+							@foreach($in_out_data as $key =>$val)
+							{{$loop->iteration}}
+								@foreach($val as $ip =>$times)
+									<div>
+											 {{$ip}}{!! Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
+									</div>
+
+								@endforeach
+							@endforeach
+							</td>
+							@else
+							<td>--</td>
+						@endif
+
+						{{-- <td>{!! Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]) !!}</td>
 						<td>{!! Form::text($emp_id."[out_time]",($out_time == null) ? '00:00' : $out_time,['class' => '','id'=>$emp_id, 'onclick'=>'add(this.id)']) !!}</td>
 						<td>{!! Form::text($emp_id."[lunch_start_time]",'00:00',['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[lunch_out]",'00:00',['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[total_hour]",($total_hour==null)? '00:00': $total_hour,['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[over_time]",($over_time==null)? '00:00' : $over_time,['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[due_time]", ($due_time ==null)? '00:00': $due_time,['class' => '']) !!}</td>
+ --}}
+						@elseif($attValue['lock_status']==0)
+						<td>{{ $attendance_status}}</td>
+						<td>{{($in_time == null) ? '00:00' : $in_time}}</td>
+						<td>{{($out_time == null) ? '00:00' : $out_time}}</td>
+						<td>lunch start time</td>
+						<td>lunch_out</td>
+						<td>{{($total_hour==null)? '00:00': $total_hour}}</td>
+						<td>{{($over_time==null)? '00:00' : $over_time}}</td>
+						<td>{{ ($due_time ==null)? '00:00': $due_time}}</td>
+
+						@endif
 					</tr>
 					
 				@endforeach
+			
 
 				@else
-					@foreach($employee_data as $key => $attValue)
+					
 						@php 
 						$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
-
-							$emp_id = $attValue['employee_id'];
+						$emp_id = $vals['employee_id'];
 
 						@endphp
 
 						<tr class="table-tr">
-						<td>{{$loop->index}}</td>
-						<td>{{@$attValue['employee_id']}}</td>
-						<td>{{@$attValue['employ_info']['name']}}</td>
+						<td>{{$loop->iteration}}</td>
+						<td>{{@$vals['employee_id']}}</td>
+						<td>{{@$vals['employ_info']['name']}}</td>
 
-						<td>{{@$attValue['designations']['name']}}</td>
+						<td>{{@$vals['designations']['name']}}</td>
 					
 							<td>--</td>
 						
 
-						<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']) !!}</td>
+						{{-- <td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]) !!}</td>
 						<td>{!! Form::text($emp_id."[out_time]",($out_time == null) ? '00:00' : $out_time,['class' => '','id'=>$emp_id, 'onclick'=>'add(this.id)']) !!}</td>
 						<td>{!! Form::text($emp_id."[lunch_start_time]",'00:00',['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[lunch_out]",'00:00',['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[total_hour]",($total_hour==null)? '00:00': $total_hour,['class' => '']) !!}</td>
 						<td>{!! Form::text($emp_id."[over_time]",($over_time==null)? '00:00' : $over_time,['class' => '']) !!}</td>
-						<td>{!! Form::text($emp_id."[due_time]", ($due_time ==null)? '00:00': $due_time,['class' => '']) !!}</td>
+						<td>{!! Form::text($emp_id."[due_time]", ($due_time ==null)? '00:00': $due_time,['class' => '']) !!}</td> --}}
 					</tr>
-
-					@endforeach
-
 					
-				
-			@endif
+				@endif
+				@endforeach
 				
 			</tbody>
 		</table>
+		@if(@$lock_status==1)
 		<div class="col s12 m3 l12 aione-field-wrapper right-align">
 			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" >Save Attendance
 				<i class="material-icons right">save</i>
 			</button>
 		</div>
+		@endif
 
 	{!! Form::close() !!}
+	@endif
 	</div>
 </div>
 	<script type="text/javascript">
+	$(document).ready(function(){
+		$('.add_punch_in_out').hide();
+	});
+
+	$(document).on('click','.show_punch_in_out',function(e){
+		e.preventDefault();
+		$(this).siblings('.add_punch_in_out').toggle();
+	});
+	$(document).on('click','.del_check',function(e){
+			e.preventDefault();
+			$(this).parent().remove();
+	});
 		$(document).ready(function(){
 			$('.add-new').off().click(function(e){
 				e.preventDefault();

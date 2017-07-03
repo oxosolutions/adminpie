@@ -54,7 +54,7 @@
 
 		
 
-				<div class="card-panel shadow white z-depth-1 hoverable project"  >
+				<!-- <div class="card-panel shadow white z-depth-1 hoverable project"  >
 
 					<div class="row valign-wrapper no-margin-bottom">
 						<div class="col l1 s2 center-align project-image-wrapper">
@@ -98,48 +98,24 @@
 						</div>
 					</div>
 						
-				</div>
+				</div> -->
 				
 			</div>
 		</div>
 
 		<div class="col s12 m3 l3 pl-7" >
-			<a id="add_new" href="#" class="btn add-new display-form-button" >
+			<a href="#modal1" class="btn " >
 				Add Client
 			</a>
-			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-				{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-
-					<div class="row no-margin-bottom">
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Name" />
-						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Contact No." />
-						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Address" />
-						</div>
-						<div class="col s12 m2 l12 aione-field-wrapper">
-							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Designation Title" />
-						</div>	
-						
-
-						<div class="col s12 m6 l12 aione-field-wrapper center-align">
-							<button class="btn blue" type="submit">Save Client
-							</button>
-						</div>
-					</div>
-				{!!Form::close()!!}
-
-			</div>
-			
+			{!! Form::open(['route'=>'save.client' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+				@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add client','button_title'=>'Save Client','section'=>'clisec1']])
+			{!!Form::close()!!}
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
-	$('.add-new').off().click(function(e){
+		$('.add-new').off().click(function(e){
 			e.preventDefault();
 			$('.add-new-wrapper').toggleClass('active');
 			$('.fade-background').fadeToggle(300);

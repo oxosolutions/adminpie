@@ -1,4 +1,5 @@
 {{-- {{dd($data)}} --}}
+
 @if(!empty($data))
 	@foreach($data as $key => $val)
 	<div class="row hover-me" style="padding:14px;">
@@ -6,6 +7,9 @@
 			<div class="col s7">
 				<div class="row valign-wrapper">
 					<div class="col">
+						<div class="id" style="display: none">
+							{{$val->id}}
+						</div>
 						<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title="{{$val->employ_info->name}}" data-content="TEST">
 						<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
 							{{ucwords(substr($val->employ_info->name, 0, 1))}}

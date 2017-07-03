@@ -13,20 +13,72 @@ class ManageTeamController extends Controller
     {
 
     }
-    Public function listTeam()
+    Public function listTeam(Request $request , $id = null) 
     {
-        $plugins = [
+      // if($id != null){
+      //   $data = Team::where('id',$id)->get();
+      // }
+        $datalist= [];
+        $data= [];
+          if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
+          $sortedBy = @$request->sort_by;
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = Team::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                  $model = Team::where('name','like','%'.$request->search.'%')->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = Team::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                   $model = Team::paginate($perPage);
+              }
+          }
+          $datalist =  [
+                          'datalist'=>  $model,
+                          'showColumns' => ['title'=>'Title','created_at'=>'Created At'],
+                          'actions' => [
+                                          'edit' => ['title'=>'Edit','route'=>'list.team' , 'class' => 'edit'],
+                                          'delete'=>['title'=>'Delete','route'=>'delete.team']
+                                       ],
+                          'js'  =>  ['custom'=>['list-designation']],
+                          'css'=> ['custom'=>['list-designation']]
+                      ];
+        // $id = null;
+        if(!empty($id) || $id != null || $id != ''){
+          $data['data'] = Team::where('id',$id)->first();
+        }
+
+        return view('organization.team.list',$datalist)->with(['data' => $data]);
+        /*$plugins = [
                         'js' => ['select2']
                     ];
     	$team_data = Team::orderBy('id','desc')->get();
-    	return view('organization.team.list',['team_data'=>$team_data,'plugins'=>$plugins]);
+    	return view('organization.team.list',['team_data'=>$team_data,'plugins'=>$plugins]);*/
     }
     public function save(Request $request)
-    {
-	    $team = 	new Team();
-	    $team->fill($request->all());
+    {   
+	    $team = new Team();
+        $team->title = $request->title;
+        $team->description = $request->description;
+        $team->member_ids = json_encode($request->member_ids);
 	    $team->save();
 	    return redirect()->route('list.team');
+    }
+    public function deleteTeam($id)
+    {
+      $model = Team::where('id',$id)->delete();
+      if($model){
+        return back();
+      }
     }
     public function info($id)
     {	
@@ -62,5 +114,12 @@ class ManageTeamController extends Controller
     	Team::where('id',$request->team_id)->update(['member_ids'=>json_encode($request->id)]);
         return response()->json(['status'=>'success','message'=>'Successfully updated!']);
     	// return redirect()->route('list.team');
+    }
+    public function editTeam(Request $request)
+    {
+        $team = $request->except('action','_token');
+        $team['member_ids'] = json_encode($request->member_ids);
+        $model = Team::where('id',$request->id)->update($team);
+        return redirect()->route('list.team');
     }
 }

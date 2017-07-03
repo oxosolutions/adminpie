@@ -1,5 +1,6 @@
 
 <?php $__env->startSection('content'); ?>
+
 	<?php if(@$data): ?>
 		<?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 			<?php 
@@ -44,6 +45,7 @@
 						
 						<?php echo FormGenerator::GenerateField('departmentadd',['type' => 'inset']); ?>
 
+						
 					</div>
 					<div class="modal-footer">
 						<button class="ml-4 btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Department

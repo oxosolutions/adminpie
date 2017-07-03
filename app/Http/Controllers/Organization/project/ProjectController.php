@@ -13,13 +13,16 @@ use Auth;
 use App\Model\Organization\User;
 use App\Model\Organization\ProjectCategory as CAT;
 use App\Model\Organization\Todo as TD;
+use App\Model\Organization\Tasks;
+use Carbon\Carbon;
+use Artisan;
 
 class ProjectController extends Controller
 {
     protected $user;
     protected $client;
-    public function __construct(UserRepositoryContract $user ,
-                                 ClientRepositoryContract $client)
+    
+    public function __construct(UserRepositoryContract $user ,ClientRepositoryContract $client)
     {
         $this->user = $user;
         $this->client = $client;
@@ -28,8 +31,18 @@ class ProjectController extends Controller
 	{
 		return view('organization.project.create');
 	}
+    public function validation(Request $request)
+    {
+        $pro_table = Session::get('organization_id');
+        $validation = [
+                                'name' => 'required|unique:'.$pro_table.'_projects',
+                                'category' => 'required'
+                            ];
+        return $this->validate($request, $validation);
+    }
     public function save(Request $request)
     {
+        $this->validation($request);
     	$project = new Project();
     	$project->fill($request->all());
         $project->tags = json_encode(['abc','cde']);
@@ -45,39 +58,79 @@ class ProjectController extends Controller
 
     }
 
-    public function listProject()
+    public function listProject(Request $request , $id = null)
     {
-        $categories =  CAT::all();
+        $data = "";
+        if(@$id){
+            $data = $this->getProjectById($id);
+        }
+        $datalist= [];
+          if($request->has('per_page')){
+                $perPage = $request->per_page;
+                if($perPage == 'all'){
+                  $perPage = 999999999999999;
+                }
+              }else{
+                $perPage = 5;
+              }
+          $sortedBy = @$request->sort_by;
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = Project::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                  $model = Project::where('name','like','%'.$request->search.'%')->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = Project::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                   $model = Project::paginate($perPage);
+              }
+          }
+          $datalist =  [
+                          'datalist'=>  $model,
+                          'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                          'actions' => [
+                                          // 'edit' => ['title'=>'Edit','route'=>'list.project' , 'class' => 'edit'],
+                                          'edit' => ['title'=>'Edit','route'=>'details.project' , 'class' => 'edit'],
+                                          'delete'=>['title'=>'Delete','route'=>'delete.project']
+                                       ],
+                          'js'  =>  ['custom'=>['list-designation']],
+                          'css'=> ['custom'=>['list-designation']]
+                      ];
+                  // dd($datalist);
+      return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
+        /*$categories =  CAT::all();
         $clients = $this->client->get_client();
         $plugins = [
                 'js' => ['custom'=>['list']]
         ];
-        return view('organization.project.list',['clients'=>@$clients,'categories'=>@$categories, 'tags' => @$tag_final_data,'plugins'=>$plugins]);
+        return view('organization.project.list',['clients'=>@$clients,'categories'=>@$categories, 'tags' => @$tag_final_data,'plugins'=>$plugins]);*/
     }
 
     /*
     * To load list project for ajax
     * 
      */
-    public function projectsList(Request $request){
-        if($request->has('order')){
-            $order = $request->order;
-        }else{
-            $order = 'desc';
-        }
-        $projects = Project::orderBy('name',$order);
+    // public function projectsList(Request $request){
+    //     if($request->has('order')){
+    //         $order = $request->order;
+    //     }else{
+    //         $order = 'desc';
+    //     }
+    //     $projects = Project::orderBy('name',$order);
 
-        if($request->has('q')){
-            $projects = $projects->orWhere('name','like','%'.$request->q.'%');
-        }
-        if($request->has('tags')){
-            foreach($request->tags as $tag){
-                $projects->orWhere('tags','like','%'.$tag['tag'].'%');
-            }
-        }
-        $projects = $projects->paginate(10);
-        return view('organization.project.ajax.projects',['projects'=>$projects]);
-    }
+    //     if($request->has('q')){
+    //         $projects = $projects->orWhere('name','like','%'.$request->q.'%');
+    //     }
+    //     if($request->has('tags')){
+    //         foreach($request->tags as $tag){
+    //             $projects->orWhere('tags','like','%'.$tag['tag'].'%');
+    //         }
+    //     }
+    //     $projects = $projects->paginate(10);
+    //     return view('organization.project.ajax.projects',['projects'=>$projects]);
+    // }
    
 
     public function edit($id)
@@ -91,13 +144,23 @@ class ProjectController extends Controller
     		}
     }
 
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
+        foreach($request->except('_token') as $key => $value){
+            $model = PM::firstOrNew(['project_id'=>$id,'key'=>$key]);
+            $model->project_id = $id;
+            $model->key = $key;
+            $model->value = ($value == null)?'':$value;
+            $model->type = 'test';
+            $model->save();
+        }
+        return back();
+        /*$id = $request->id;
     	$project = Project::findOrFail($id);
     	$project->fill($request->all());
     	$project->save();
     	Session::flash('success','successfully update project');
-    	return redirect()->route('list.project');
+    	return redirect()->route('list.project');*/
     }
 
     public function add_project_info($id)
@@ -200,15 +263,57 @@ class ProjectController extends Controller
     function view(){
         return view('organization.project.view');
     }
+    function delete($id){
+        $model = Project::where('id',$id)->delete();
+        return back();
+    }
+    function getProjectById($id){
+        $model = Project::where('id',$id)->get();
+        return $model;
+    }
+    function editProject(){
+        // update.project
+    }
 
-    public function categories(){
+    public function categories(Request $request){
+         if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
+      $sortedBy = @$request->sort_by;
+      if($request->has('search')){
+          if($sortedBy != ''){
+              $model = CAT::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+          }else{
+              $model = CAT::where('name','like','%'.$request->search.'%')->paginate($perPage);
+          }
+      }else{
+          if($sortedBy != ''){
+              $model = CAT::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+          }else{
+               $model = CAT::paginate($perPage);
+          }
+      }
+      $datalist =  [
+                      'datalist'=>  $model,
+                      'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                      'actions' => [
+                                      'edit' => ['title'=>'Edit','route'=>'designations' , 'class' => 'edit'],
+                                      'delete'=>['title'=>'Delete','route'=>'delete.designation']
+                                   ],
+                      'js'  => ['custom'=>['project-categories']],
+                      
+                  ];
+  /*  if(!empty($id) || $id != null || $id != ''){
+      $data['data'] = CAT::where('id',$id)->first();
+    }*/
+      
 
-        $categories = CAT::all();
-        $plugins = [
-                'js'  => ['custom'=>['project-categories']]
-          ];
-
-        return view('organization.categories.list',['categories'=>$categories,'plugins'=>$plugins]);
+         return view('organization.categories.list',$datalist);
     }
 
     public function saveCategory(Request $request){
@@ -231,13 +336,39 @@ class ProjectController extends Controller
     }
     public function tasks()
     {
-        # code...
+      $model = Tasks::all();
+      $plugins = [
+
+      			'js' => ['custom'=>['tasks']]
+      ];
+      return view('organization.project.tasks',['plugins'=>$plugins,'model'=>$model]);
     }
-    public function details(){
-         return view('organization.project.details');
+    public function details($id){
+        $model = Project::with('projectMeta')->find($id);
+        if(!$model->projectMeta->isEmpty()){
+            foreach($model->projectMeta as $key => $value){
+                if(in_array($value->key,['start_date','end_date'])){
+                    $model->{$value->key} = Carbon::parse($value->value)->format('Y-m-d');
+                }else{
+                    json_decode($value->value);
+                    if(json_last_error() == JSON_ERROR_NONE){
+                      $model->{$value->key} = json_decode($value->value);
+                    }else{
+                      $model->{$value->key} = $value->value;
+                    }
+                }
+            }
+        }
+        return view('organization.project.details',['model'=>$model]);
     }
     public function credentials(){
-         return view('organization.project.credentials');
+       /*Artisan::call('make:migration:schema',[
+                                  '--model'=>false,
+                                  'name'=>'create_employeestest',
+                                  '--schema'=>'user_id:integer, employee_id:integer, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
+                              ]);
+       Artisan::call('migrate');*/
+        return view('organization.project.credentials');
     }
     public function activities(){
          return view('organization.project.activities');
@@ -249,9 +380,28 @@ class ProjectController extends Controller
     public function documentation(){
         return view('organization.project.documentation');
     }
-    public function todo(){
-        $list = TD::all();
-        $plugins = ['js' => ['custom'=>['todo']]];
-        return view('organization.project.todo',['plugins' => $plugins , 'list' =>$list ]);
+    public function todo(Request $request , $id=null){
+      $plugins = ['js' => ['custom'=>['todo']]];
+      if($id != null || $id != "" || !empty($id) ){
+        $list = TD::where('project_id',$id)->get();
+        return view('organization.project.todo',['plugins' => $plugins , 'list' => $list ]);
+      }else{
+        $list = TD::where('user_id',Auth::guard('org')->user()->id)->get();
+        return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);
+      }
     }
+
+    public function updateTeam(Request $request, $id){
+
+        foreach($request->except(['_token','action']) as $key => $value){
+            $model = PM::firstOrNew(['project_id'=>$id,'key'=>$key]);
+            $model->project_id = $id;
+            $model->key = $key;
+            $model->value = json_encode($value);
+            $model->type = 'test';
+            $model->save();
+        }
+        return back();
+    }
+
 }

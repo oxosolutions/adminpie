@@ -1,0 +1,37 @@
+ATTENDANCE 
+
+1. submit  by hr one by one or all 
+2. leave row read only
+3. Sunday  
+4. lock on attendance -completed
+5. other employee list not display when attendance filled  attendance by hr .  Fixed
+
+6 week filter issue previous nxt not work for third fourth .. week  
+7. lock not work in Import file.--completed
+8. attendance filled by by -- employee name repeated  -working
+
+
+
+check in out issue 
+
+1. only employee view checkin - out button ---complete
+
+
+punch data
+
+checkin --json data
+
+---------------------------
+
+puch in out
+	edit time --complete
+	del --	complete
+
+
+
+
+check in out 
+
+del ---- completed
+
+

@@ -15,4 +15,9 @@ class ProjectCategory extends Model
 	   	}
    }
    protected $fillable = [ 'name', 'description', 'status'];
+
+   public function categoryList(){
+
+   		return self::orderBy('id','asc')->pluck('name','id');
+   }
 }

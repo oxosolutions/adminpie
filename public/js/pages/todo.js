@@ -1,10 +1,9 @@
 $(document).ready(function(){
-
 	function list_todo() {
 		$.ajax({
-			url			:route()+'/project/todo/list',
-			type		:'get',
-			datatype	:"html",
+			url			: route()+'/project/todo/list',
+			type		: 'get',
+			data		: {id : $('.project_id').val()},
 			success		: function (res) {
 				$('#list_todo').html(res);
 			}
@@ -18,7 +17,7 @@ $(document).ready(function(){
 	});
 
 
-	$(document).on('click','.project-title',function(){
+	$(document).on('click','.project-title',function(event){
 		$(this).parents('.add-details').find('.todo-details').slideToggle();
 		$('.edit-todo').parents('.todo_list').find('.todo-name').css({'border-bottom':'none'});
 		$('.edit-todo').parents('.todo_list').find('.todo-desc').css({'border-bottom':'none'});
@@ -33,15 +32,16 @@ $(document).ready(function(){
 		$('input[name=categories]').each(function(e){
 			if($(this).is(':checked')){
 				var data = $(this).attr('id');
-				// if(data == 'all'){
-				// 	$('input[name=priority]').prop('checked', false);
-				// }
+				value['project_id'] = $('.project_id').val();
+				value['user_id'] 	= $('input[name=user_id]').val();
 				value['categories'] = data;
 			}
 		});
 		$('input[name=priority]').each(function(g){
 			if($(this).is(':checked')){
 			 	var data = $(this).attr('id');
+			 	value['project_id'] = $('.project_id').val();
+				value['user_id'] 	= $('input[name=user_id]').val();
 				value['priority'] = data;
 			}
 		});
@@ -126,6 +126,7 @@ $(document).ready(function(){
 			}else{
 				var array = {
 							project_id 	: $('.project_id').val(),
+							user_id 	: $('input[name=user_id]').val(),
 							title 		: $('.todo-names').val(),
 							priority	: $('.select-dropdown').val(),
 							_token		: $('.shift_token').val(),
@@ -135,7 +136,6 @@ $(document).ready(function(){
 					type:'POST',
 					data: array,
 					success: function (res) {
-						// console.log(res);
 						$('#list_todo').html(res);
 					}
 				});
@@ -148,6 +148,8 @@ $(document).ready(function(){
 	//add todo to database
 			
 	$(document).on('click','.save-todo',function(){
+		$(this).parents('.add-details').find('.todo-details').slideUp();
+		$('.project-title').click();
 		var prefix = $(this).parents('.todo_list');
 			var data = 	{
 						id 			: prefix.find('.todo_id').val(),
@@ -167,5 +169,4 @@ $(document).ready(function(){
 			}
 		});
 	});
-
 });

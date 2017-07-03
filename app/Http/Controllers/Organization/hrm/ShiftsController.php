@@ -55,7 +55,7 @@ class ShiftsController extends Controller
     $tbl = Session::get('organization_id');
 
     $valid_fields = [
-                            'name' => 'required',
+                            'name' => 'required|unique:'.$tbl.'_shifts',
                             'from' => 'required',
                             'to'   => 'required'
                         ];

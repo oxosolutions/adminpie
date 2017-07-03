@@ -58,7 +58,7 @@ class LeavesController extends Controller
           }
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['reason_of_leave'=>'Reason of Leave','from'=>'From','to'=>'To','created_at'=>'Created At','id'=>'ID','updated_at'=>'Updated At'],
+                          'showColumns' => ['employee_id' => 'Employee Id'  , 'reason_of_leave'=>'Reason of Leave','from'=>'From','to'=>'To','created_at'=>'Created At','id'=>'ID','updated_at'=>'Updated At'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'leaves','class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.leave']
@@ -127,7 +127,7 @@ class LeavesController extends Controller
                       ];
       $this->validate($request , $valid_fields);
 
-      $updateArray = $request->except('id','_token','from','to');
+      $updateArray = $request->except('id','_token','from','to','action');
       $updateArray['from']= $this->date_format($request['from']);
       $updateArray['to']= $this->date_format($request['to']);
 

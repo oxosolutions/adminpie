@@ -71,7 +71,6 @@
 </style>
 <?php
 			if(isset($filter_dates)){
-			//	dump($filter_dates);
 				$dateFilter = $filter_dates['year'].'-'.$filter_dates['month'].'-'.$filter_dates['date'];
 				$current_date_time = Carbon\Carbon::parse($dateFilter);
 			}else{
@@ -92,14 +91,12 @@
 
 
 
+
 		
 <div class="card">
 	<div class="row design-bg">
 		
 		<div class="col-md-4">
-
-		
-
 			<?php echo Form::open(['route'=>'hr.attendance' , 'method'=>'post'] ); ?>
 
 			<div class="col s3 pr-7 right-align">
@@ -155,6 +152,9 @@
 		
 	</div> 
 	<div class="table-responsive">
+	<?php if($day=='Sunday'): ?>
+		<h1> Sunday off </h1>
+	<?php else: ?>
 	<?php echo Form::open(['route'=>'hr_store.attendance' , 'method'=>'post'] ); ?>
 
 					<?php echo Form::hidden('dates[year]',$year,['class' => 'form-control']); ?>
@@ -182,103 +182,152 @@
 					<th>Designation</th>
 					<th>Department</th>
 					<th>Attendance Status</th>
-					<th>In Time</th>
-					<th>Leaving Time</th>
-					<th>Lunch Start Time </th>
-					<th>Lunch End Time </th>
-					<th>Total Time</th>
-					<th>Over Time</th>
-					<th>Due Time</th>
+					<th>Punch In Out</th>		
+					<th>Check In Out</th>
+					
 				</tr>
 			</thead>
 			<tbody>
 			
-			<?php if(!empty($attendance_data)): ?>
-				<?php $__currentLoopData = $attendance_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attKey => $attValue): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				
-					<?php  
-					$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
 
-						$emp_id = $attValue['employee_id'];
-						$attendance_status = $attValue['attendance_status'];
-						$in_time = $attValue['in_time'];
-						$out_time = $attValue['out_time'];
-						//@$total_hour = $attendance_data[$empKey]['total_hour'];
-						$over_time = $attValue['over_time'];
-						$due_time = $attValue['due_time'];
-						
-					 ?>
+				<?php $lock_status=1; ?>
+				<?php $__currentLoopData = $employee_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys => $vals): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+					<?php if(count($vals['attendance'])>0): ?>
+						<?php $__currentLoopData = $vals['attendance']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attKey => $attValue): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+											
+						<?php  
+							$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
+
+								$emp_id = $attValue['employee_id'];
+								$attendance_status = $attValue['attendance_status'];
+								$in_time = $attValue['in_time'];
+								$out_time = $attValue['out_time'];
+								//@$total_hour = $attendance_data[$empKey]['total_hour'];
+								$over_time = $attValue['over_time'];
+								$due_time = $attValue['due_time'];
+								$lock_status = $attValue['lock_status'];
+								$punch_in_out = json_decode($attValue['punch_in_out'],true);
+								$in_out_data = json_decode($attValue['in_out_data'],true);
+
+									
+						 ?>
 			
 					<tr class="table-tr">
-						<td><?php echo e($loop->index); ?></td>
+						<td><?php echo e($loop->parent->iteration); ?></td>
 						<td><?php echo e($attValue['employee_id']); ?></td>
 						<td><?php echo e($attValue['employee']['employ_info']['name']); ?></td>
 
 						<td><?php echo e($attValue['employee']['designations']['name']); ?></td>
 					
 							<td>--</td>
-						
+						<?php if(@$attValue['lock_status']==1): ?>
 
 						<td> <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],$attendance_status	,['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]); ?></td>
-						<td><?php echo Form::text($emp_id."[out_time]",($out_time == null) ? '00:00' : $out_time,['class' => '','id'=>$emp_id, 'onclick'=>'add(this.id)']); ?></td>
-						<td><?php echo Form::text($emp_id."[lunch_start_time]",'00:00',['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[lunch_out]",'00:00',['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[total_hour]",($total_hour==null)? '00:00': $total_hour,['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[over_time]",($over_time==null)? '00:00' : $over_time,['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[due_time]", ($due_time ==null)? '00:00': $due_time,['class' => '']); ?></td>
+						
+						<?php if($punch_in_out): ?>
+							<td>
+							<?php $__currentLoopData = $punch_in_out; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							<div>
+									<?php echo Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?> <a class="del_check">del </a>
+							</div>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							</td>
+							<?php else: ?>
+							<td><button class="show_punch_in_out">add punch in out time</button> <div class="add_punch_in_out"><?php echo Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?>
+
+							<?php echo Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?>  </div> </td>
+						<?php endif; ?>
+
+						<?php if($in_out_data): ?>
+						<?php 
+						// $checkdata = json_decode($in_out_data,true);
+						// dump($checkdata)
+						 ?>
+							<td>
+							<?php $__currentLoopData = $in_out_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							<?php echo e($loop->iteration); ?>
+
+								<?php $__currentLoopData = $val; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ip =>$times): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+									<div>
+											 <?php echo e($ip); ?><?php echo Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]); ?>  <a class="del_check">del </a>
+									</div>
+
+								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							</td>
+							<?php else: ?>
+							<td>--</td>
+						<?php endif; ?>
+
+						
+						<?php elseif($attValue['lock_status']==0): ?>
+						<td><?php echo e($attendance_status); ?></td>
+						<td><?php echo e(($in_time == null) ? '00:00' : $in_time); ?></td>
+						<td><?php echo e(($out_time == null) ? '00:00' : $out_time); ?></td>
+						<td>lunch start time</td>
+						<td>lunch_out</td>
+						<td><?php echo e(($total_hour==null)? '00:00': $total_hour); ?></td>
+						<td><?php echo e(($over_time==null)? '00:00' : $over_time); ?></td>
+						<td><?php echo e(($due_time ==null)? '00:00': $due_time); ?></td>
+
+						<?php endif; ?>
 					</tr>
 					
 				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			
 
 				<?php else: ?>
-					<?php $__currentLoopData = $employee_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $attValue): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+					
 						<?php  
 						$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
-
-							$emp_id = $attValue['employee_id'];
+						$emp_id = $vals['employee_id'];
 
 						 ?>
 
 						<tr class="table-tr">
-						<td><?php echo e($loop->index); ?></td>
-						<td><?php echo e(@$attValue['employee_id']); ?></td>
-						<td><?php echo e(@$attValue['employ_info']['name']); ?></td>
+						<td><?php echo e($loop->iteration); ?></td>
+						<td><?php echo e(@$vals['employee_id']); ?></td>
+						<td><?php echo e(@$vals['employ_info']['name']); ?></td>
 
-						<td><?php echo e(@$attValue['designations']['name']); ?></td>
+						<td><?php echo e(@$vals['designations']['name']); ?></td>
 					
 							<td>--</td>
 						
 
-						<td> <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[in_time]",($in_time == null) ? '00:00' : $in_time,['class' => '','id'=>'in_'.$emp_id]); ?></td>
-						<td><?php echo Form::text($emp_id."[out_time]",($out_time == null) ? '00:00' : $out_time,['class' => '','id'=>$emp_id, 'onclick'=>'add(this.id)']); ?></td>
-						<td><?php echo Form::text($emp_id."[lunch_start_time]",'00:00',['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[lunch_out]",'00:00',['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[total_hour]",($total_hour==null)? '00:00': $total_hour,['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[over_time]",($over_time==null)? '00:00' : $over_time,['class' => '']); ?></td>
-						<td><?php echo Form::text($emp_id."[due_time]", ($due_time ==null)? '00:00': $due_time,['class' => '']); ?></td>
+						
 					</tr>
-
-					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
 					
-				
-			<?php endif; ?>
+				<?php endif; ?>
+				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				
 			</tbody>
 		</table>
+		<?php if(@$lock_status==1): ?>
 		<div class="col s12 m3 l12 aione-field-wrapper right-align">
 			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" >Save Attendance
 				<i class="material-icons right">save</i>
 			</button>
 		</div>
+		<?php endif; ?>
 
 	<?php echo Form::close(); ?>
 
+	<?php endif; ?>
 	</div>
 </div>
 	<script type="text/javascript">
+	$(document).ready(function(){
+		$('.add_punch_in_out').hide();
+	});
+
+	$(document).on('click','.show_punch_in_out',function(e){
+		e.preventDefault();
+		$(this).siblings('.add_punch_in_out').toggle();
+	});
+	$(document).on('click','.del_check',function(e){
+			e.preventDefault();
+			$(this).parent().remove();
+	});
 		$(document).ready(function(){
 			$('.add-new').off().click(function(e){
 				e.preventDefault();

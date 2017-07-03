@@ -7,6 +7,7 @@ use Session;
 use App\Model\Organization\User;
 class Employee extends Model
 {
+    public static $breadCrumbColumn = 'employee_id';
     public function __construct()
     {
     	if(!empty(Session::get('organization_id')))
@@ -26,7 +27,7 @@ class Employee extends Model
 
     public function attendance()
     {
-        return $this->hasMany('App\Model\Organization\Attendance','employee_id','id');
+        return $this->hasMany('App\Model\Organization\Attendance','employee_id','employee_id');
     }
     public function designations(){
         return $this->belongsTo('App\Model\Organization\Designation','designation','id');
@@ -44,7 +45,7 @@ class Employee extends Model
         return $this->belongsTo('App\Model\Organization\Designation','designation','id');
     }
 
-    public function employees()
+    public static function employees()
     {
         return User::where('user_type','[2]')->pluck('name','id');
     }

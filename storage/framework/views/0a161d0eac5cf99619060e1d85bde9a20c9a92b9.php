@@ -1,4 +1,5 @@
 
+
 <?php if(!empty($data)): ?>
 	<?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 	<div class="row hover-me" style="padding:14px;">
@@ -6,6 +7,10 @@
 			<div class="col s7">
 				<div class="row valign-wrapper">
 					<div class="col">
+						<div class="id" style="display: none">
+							<?php echo e($val->id); ?>
+
+						</div>
 						<a href="" data-toggle="popover" title="<?php echo e($val->employ_info->name); ?>" data-content="TEST">
 						<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
 							<?php echo e(ucwords(substr($val->employ_info->name, 0, 1))); ?>

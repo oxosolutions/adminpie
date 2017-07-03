@@ -47,17 +47,25 @@ class FormBuilderController extends Controller
     public function listForm(Request $request)
     {
         $sortedBy = @$request->sort_by;
+        if($request->has('per_page')){
+          $perPage = $request->per_page;
+          if($perPage == 'all'){
+            $perPage = 999999999999999;
+          }
+        }else{
+          $perPage = 5;
+        }
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = forms::where('form_title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->with(['section'])->paginate(3);
+                $model = forms::where('form_title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->with(['section'])->paginate($perPage);
             }else{
-                $model = forms::where('form_title','like','%'.$request->search.'%')->with(['section'])->paginate(3);
+                $model = forms::where('form_title','like','%'.$request->search.'%')->with(['section'])->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = forms::orderBy($sortedBy,$request->desc_asc)->with(['section'])->paginate(3);
+                $model = forms::orderBy($sortedBy,$request->desc_asc)->with(['section'])->paginate($perPage);
             }else{
-                 $model = forms::paginate(3);
+                 $model = forms::paginate($perPage);
             }
         }
         $datalist =  [
@@ -131,6 +139,7 @@ class FormBuilderController extends Controller
 
     public function listFields(Request $request , $form_id, $section_id)
     {  
+
     	$model = FormBuilder::where(['section_id' => $section_id,'form_id'=>$form_id])->with([
                 'fieldMeta'=>function($query) use ($form_id, $section_id){
                     $query->where(['form_id'=>$form_id,'section_id'=>$section_id]);
@@ -138,6 +147,23 @@ class FormBuilderController extends Controller
     	$plugins = [
                         'js' => ['custom'=>['builder']] 
                    ];
+            //check if the existing field data has same slug
+
+        $slug_data=[];
+        $existSlug = '';
+        Session::put('sameSlugmessage', "");
+        $checkExstingSlug = FormBuilder::select('field_slug')->where(['form_id'=> $form_id,'section_id' => $section_id])->get();
+            foreach($checkExstingSlug  as $key => $array){
+                $slug_data[] = $array->field_slug;
+            }
+        $result_slug = count($slug_data) === count(array_flip($slug_data));
+        // dd($slug_data);
+        if($result_slug == false){
+            $existSlug = "dublicate slug recognized , please verify and rename the slug";
+        }else{
+            $existSlug = "";
+        }
+        Session::put('sameSlugmessage', $existSlug);        
         return view('admin.formbuilder.formbuilder', $plugins)->with(['model'=>$model,'plugins'=>$plugins]);
     }
 
@@ -146,6 +172,7 @@ class FormBuilderController extends Controller
     public function fieldMeta(Request $request)
     {
         $meta = FM::select('key','value')->where('field_id',$request->id)->get();
+
         return view('admin.formbuilder._row')->with(['model'=> $meta]);
     }
     public function fieldList(Request $request , $id)
@@ -168,20 +195,21 @@ class FormBuilderController extends Controller
         $field_id = formbuilder::where(['field_slug' => $request->field_slug])->first();
             unset($request['field_slug'],$request['field_title'],$request['field_type'],$request['field_description'],$request['_token']); 
             if($model){
-                    foreach ($request->all() as $key => $value) {
+                foreach ($request->all() as $key => $value) {
 
-                        $meta = new FM;
-                        $meta->form_id = $request->form_id;
-                        $meta->section_id = $request->section_id;
-                        $meta->field_id = $field_id->id;
-                        $meta->key = $key;
+                    $meta = new FM;
+                    $meta->form_id = $request->form_id;
+                    $meta->section_id = $request->section_id;
+                    $meta->field_id = $field_id->id;
+                    $meta->key = $key;
                         if($value == ""){
                            $meta->value = ""; 
                         }elseif($value){
                             $meta->value = $value;
                         }
-                        $meta->save();
-                    }
+                    $meta->save();
+
+                }
             }
             return back();
     }
@@ -254,7 +282,7 @@ class FormBuilderController extends Controller
                 $slug_data[] = $array->field_slug;
             }
             
-            $result_slug = count($slug_data) === count(array_flip($slug_data));
+        $result_slug = count($slug_data) === count(array_flip($slug_data));
         if($result_slug == false){
             $existSlug = "dublicate slug recognized , please verify and rename the slug";
         }else{
@@ -263,31 +291,4 @@ class FormBuilderController extends Controller
         Session::put('sameSlugmessage', $existSlug);
         return redirect()->route('list.field',['form_id' => $form_id,'section_id' => $section_id]);        
     }
-
-    // public function deletefield($id){
-    //     FormBuilder::where(['id',$id])->delete();
-    //     return back();
-    // }
-    // public function editForm($id){
-    //     $model = FormBuilder::find($id);
-    //     $plugins = [
-    //                     'js' => ['custom'=>['builder']],
-    //                     'model' => $model
-    //                ];
-    //     return view('admin.formbuilder.formbuilder',['plugins' => $plugins ]);
-    // }
-
-    // public function updateForm(Request $request, $id){
-
-    //     $model = FormBuilder::find($id);
-    //     $model->key = $request->form_slug;
-    //     $model->form_name = $request->form_name;
-    //     $model->value = json_encode($request->except(['form_name','form_slug','_token']));
-    //     $model->save();
-    // }
-
-    // public function sections($slug){
-
-    //     return view('admin.formbuilder.sections');
-    // }
 }

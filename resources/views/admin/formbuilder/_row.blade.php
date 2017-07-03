@@ -1,7 +1,9 @@
     @php
-        $keys = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->key;
-        $values = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->value;
-        $combine_array = array_combine($keys, $values);
+        @$keys = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->key;
+        @$values = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->value;
+        if(!empty($keys) || $keys != null){
+            $combine_array = array_combine($keys, $values);            
+        }
     @endphp
     {{-- {{dump(@$existSlug)}}
     @if(@$existSlug != null || @$existSlug != "" || !empty(@$existSlug) || @$existSlug != "NULL" )
@@ -171,17 +173,37 @@
                             <span class="field-title">Field options</span><br>
                         </div>
                         <div class="col l8 form-group" style="padding:5px">
-                            @foreach($combine_array as $ke => $data)
+                            @if(!empty($keys) || $keys != null)
+                                @foreach($combine_array as $ke => $data)
+                                    <div class="row main-option-div">
+                                        <div class="col l5">
+                                            <div class="field_options_key">
+                                                <input type="text" id="test4" name="field_options[{{$rowCount}}][key][]" value="{{$ke}}"/>
+                                                <label for="test4">Key</label>
+                                            </div>
+                                        </div>
+                                        <div class="col l5">
+                                            <div class="field_options_value">
+                                                <input type="text" id="test5" name="field_options[{{$rowCount}}][value][]" value="{{$data}}"/>
+                                                <label for="test4">Value</label>
+                                                <div class="col l2" style="float: right;">
+                                                    <a href="javascript:;" class="delete_option"><i class="fa fa-trash"></i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
                                 <div class="row main-option-div">
                                     <div class="col l5">
                                         <div class="field_options_key">
-                                            <input type="text" id="test4" name="field_options[{{$rowCount}}][key][]" value="{{$ke}}"/>
+                                            <input type="text" id="test4" name="field_options[{{$rowCount}}][key][]" value=""/>
                                             <label for="test4">Key</label>
                                         </div>
                                     </div>
                                     <div class="col l5">
                                         <div class="field_options_value">
-                                            <input type="text" id="test5" name="field_options[{{$rowCount}}][value][]" value="{{$data}}"/>
+                                            <input type="text" id="test5" name="field_options[{{$rowCount}}][value][]" value=""/>
                                             <label for="test4">Value</label>
                                             <div class="col l2" style="float: right;">
                                                 <a href="javascript:;" class="delete_option"><i class="fa fa-trash"></i></a>
@@ -189,7 +211,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
+                            @endif
                             <div class="col l2">
                                 <a href="javascript:;" class="add_options btn btn-primary" data-count="{{$rowCount}}">Add</a>
                             </div>

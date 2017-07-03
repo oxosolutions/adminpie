@@ -23,7 +23,8 @@ class RedirectIfOrganizationAuthenticated
         $subdomain = $domain[0];
         $model = GlobalOrganization::where('slug',$subdomain)->first();
         if($model == null){
-            dd('Not Valid Organization');
+            return redirect()->route('demo5');
+            //dd('Not Valid Organization');
         }
         Session::put('organization_id',$model->id);
         $auth = Auth::guard('org');

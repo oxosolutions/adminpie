@@ -31,27 +31,30 @@
 			<a id="add_new" href="#modal1" class="btn add-new display-form-button" >
 				Add Leave
 			</a>
-			<div id="modal1" class="modal modal-fixed-footer">
-				@if(@$model)
-					{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-					<input type="hidden" name="id" value="{{$id}}">
-				@else
-					{!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-				@endif	
-					<div class="modal-header">
-				    	<h5 style="padding:0px 10px">Add leaves</h5>
-				    	<a href="{{route('leaves')}}" class="close-model"><i class="fa fa-close"></i></a>
-				    </div>
-					<div class="modal-content" style="padding: 30px">
-						{!!FormGenerator::GenerateSection('leavesection',['type'=>'inset'])!!}
-					</div>
-					<div class="modal-footer">
-						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save leave
-							<i class="material-icons right">save</i>
-						</button>
-					</div>
-				{!!Form::close()!!}
-			</div>
+			@if(@$model)
+				{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+				<input type="hidden" name="id" value="{{$id}}">
+			@else
+				{!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+			@endif	
+			@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add leaves','button_title'=>'Save','section'=>'leavesection']])
+			{{-- <div id="modal1" class="modal modal-fixed-footer">
+				
+				<div class="modal-header">
+			    	<h5 style="padding:0px 10px">Add leaves</h5>
+			    	<a href="{{route('leaves')}}" class="close-model"><i class="fa fa-close"></i></a>
+			    </div>
+				<div class="modal-content" style="padding: 30px">
+					{!!FormGenerator::GenerateSection('leavesection',['type'=>'inset'])!!}
+				</div>
+				<div class="modal-footer">
+					<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save leave
+						<i class="material-icons right">save</i>
+					</button>
+				</div>
+				
+			</div> --}}
+			{!!Form::close()!!}
           
 			
 			

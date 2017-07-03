@@ -50,7 +50,6 @@ class EmployeeController extends Controller
                 $query->orderBy('name',$order);
             });
         })->get();
-        // dd($employee);
         $data = $employee;
         $designation  = DES::where('status',1)->pluck('name','id');
         return view('organization.employee._list_ajax',['data'=>$data,'designation'=>$designation])->render();
@@ -83,14 +82,14 @@ class EmployeeController extends Controller
         $emp =  EMP::find($request->id);
         if($request['status'] == 'true')
         {
-            $request['status'] =1;
+            $request['status'] = 1;
         }
         else if($request['status'] == 'false')
         {
-            $request['status'] =0;
+            $request['status'] = 0;
         }
-        $emp->status = $request['status']; 
-        $emp->save();
+        $changeStatus = EMP::where('id',$request->id)->update(['status'=>$request['status']]);
+        
     }
     public function delete($id)
     {

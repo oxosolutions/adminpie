@@ -26,7 +26,6 @@ class AttendanceController extends Controller
  	{
  		$current_date_time = Carbon::now('Asia/Calcutta');
  		$this->current_date_data  = ['date'=>$current_date_time->day, 'month'=> '0'.$current_date_time->month , 'year'=>$current_date_time->year, 'day'=> $current_date_time->format('l') , 'month_week_no'=>$current_date_time->weekOfMonth];
- 		
  	}
 	public function design_attendance()
 	{
@@ -38,77 +37,44 @@ class AttendanceController extends Controller
 	}
 	public function check_in_out(Request $request)
 	{
-
-							$time = new Carbon('09:00');
-							$shift_end_time =new Carbon('12:00');
-							$totalDuration = $time->diffInSeconds($shift_end_time);
-							$total_time = gmdate('H:i:s', $totalDuration);
-							dump($total_time);
-		//dump($request->all());
 		$u_id = Auth::guard('org')->user()->id;
-
 		$status = $request->status;
-		$employee_id = Employee::select('employee_id')->where('user_id',$u_id)->first()->employee_id;
+		$employee_id = Employee::select('employee_id')->where(['user_id'=>$u_id])->first()->employee_id;
 		$time = Carbon::now('Asia/Calcutta');
 		$ct = gmdate('H:i:s',strtotime($time));
-		$current_time =  [gmdate('H:i:s',strtotime($time))];
-		//echo $time->format('l jS \\of F Y h:i:s A');
 		$ip =  \Request::ip();
+	
 		$year 	= 	$time->format('Y');
 		$month 	= 	$time->format('m');
-		$date  	=	$time->format('d');
+		$date  	=	str_replace('0', '', $time->format('d'));
+		//dd($date);
+		// if(starts_with($time->format('d'), 0))
+		// {
+
+		// }
 		$day 	=  	$time->format('l');
 		$data = Attendance::select(['id','check_in','check_out','check_for_checkin_checkout','in_out_data'])->where([ 'user_id'=> $u_id , 'year'=>$year ,'date'=>$date , 'month'=>$month ]);
 		if($data->count() > 0)
 		{
 			$att_data = $data->first();
 			$emp_attendance = Attendance::find($att_data->id);
-			//  if($status =='check_out')
-			// {
-			// 				echo $in_time = last(json_decode($att_data->check_in));
-			// 				echo '<br>in'. $times 	= new Carbon($in_time);
-			// 				echo '<br> out'. $shift_end_time 	= new Carbon($ct);
-			// 				echo 'total durnation '.$totalDuration 	= $times->diffInSeconds($shift_end_time);
-			// 				$total_time = gmdate('H:i:s', $totalDuration);
-			// 				dump($total_time);
-			//  }
 			if(!empty($att_data->in_out_data))
-			{
-				// if($att_data->check_for_checkin_checkout =='check_in'){
-						$timeData = json_decode($att_data->in_out_data);
-						dump($timeData);
-						$old =0;
-
-						// foreach ($timeData as $key => $value) {
-
-						// 	//dump($value);
-						// 	$next = $key +1;
-						// 	if(!empty(@$value[$next]))
-						// 	{
-						// 		dump('cc'.$timeData[$key]);
-						// 		dump('nxt'.$timeData[$next]);
-						// 			// echo $key;
-						// 		$time =   new Carbon($timeData[$key]);
-						// 		$shift_end_time = new Carbon($timeData[$next]);
-						// 		$totalDuration = $time->diffInSeconds($shift_end_time);
-
-						// 	$sum +=	 gmdate('H:i:s',$totalDuration);
-						// 	$old = $t_time[] = gmdate('H:i:s',$totalDuration);
-						// 	}
-						// }
-							
-						//dump($sum);
-						// foreach ($t_time as $key => $value) {
-						// 	$nxt = $value;
-						// }
-				// }
-				$current_time = array_collapse([ json_decode($att_data->in_out_data) ,$current_time]);
+			{	
+				$current_time =[];
+				$inserted_time = json_decode($att_data->in_out_data,true);
+				for($i=0; $i<count($inserted_time); $i++)
+				{
+					array_push($current_time, $inserted_time[$i]);	
+				}
+				array_push($current_time, [$ip=>gmdate('H:i:s',strtotime($time))]);
 			}
 		}
 		else{
-		$emp_attendance =	new Attendance();
+			$emp_attendance =	new Attendance();
+			$current_time[] =  [$ip=>gmdate('H:i:s',strtotime($time))];
+
 		}
-		$emp_attendance->user_id = $u_id;//$request->user_id;
+		$emp_attendance->user_id = $u_id;
 		$emp_attendance->employee_id = $employee_id;
 		$emp_attendance->in_out_data = 		json_encode($current_time);
 		$emp_attendance->year 	=		$year; 
@@ -122,32 +88,7 @@ class AttendanceController extends Controller
 		$emp_attendance->submited_by ='self';
 		$emp_attendance->save();
 
-		$attendance = $data->first();
-
-		$timeData = json_decode($att_data->in_out_data);
-						dump($timeData);
-						$old =0;
-
-						// foreach ($timeData as $key => $value) {
-
-						// 	//dump($value);
-						// 	$next = $key +1;
-						// 	if(!empty(@$value[$next]))
-						// 	{
-						// 		dump('cc'.$timeData[$key]);
-						// 		dump('nxt'.$timeData[$next]);
-						// 			// echo $key;
-						// 		$time =   new Carbon($timeData[$key]);
-						// 		$shift_end_time = new Carbon($timeData[$next]);
-						// 		$totalDuration = $time->diffInSeconds($shift_end_time);
-
-						// 	$sum +=	 gmdate('H:i:s',$totalDuration);
-						// 	$old = $t_time[] = gmdate('H:i:s',$totalDuration);
-						// 	}
-						// }
-		dump($attendance);
 		return ['message'=>'successfully '];
-		//dump($request->all());
 	}
 	public function import_form()
 	{
@@ -157,7 +98,9 @@ class AttendanceController extends Controller
 	public function attendance_import(Request $request)
 	{
 
+
 		//dump($request->file('attendance_file'));
+		
 		if($request->file('attendance_file'))
 		{	
 			$storage_path = public_path().'/attendance_file';
@@ -177,167 +120,153 @@ class AttendanceController extends Controller
 			$month_year = date('m-Y', strtotime($dates[0]));
 			$year = date('Y', strtotime($dates[0]));
 			$month = date('m', strtotime($dates[0]));
-			$check_attendance = Attendance::where(['year'=>$year,'month'=>$month])->count();	
+			$check_attendance = Attendance::where(['year'=>$year,'month'=>$month,'lock_status'=>0])->count();	
 			if($check_attendance>0)
 			{
-				
-				echo "alraedy import";
-			}							
-			foreach($all_data as $logkey => $logvalue)
-			{				
-				if ($logvalue[0] == "Period :")
-				{
-					dump($logvalue);
-				}
-				if ($logvalue[0] == "No :")
-				{
-					foreach($logvalue as $log_val_key => $log_value)
-					{
-						if (is_null($log_value))
-						{
-							unset($logvalue[$log_val_key]);
-						}
-						else
-						{
-							if ($log_val_key == 2)
-							{
-								$employee[$i]['employee_id'] = $log_value;
+				Session::flash('error','This month attendance locked!');
+			return redirect()->route('list.attendance');
+			}else{						
+				foreach($all_data as $logkey => $logvalue){				
+					if ($logvalue[0] == "Period :"){
+						dump($logvalue);
+					}
+					if ($logvalue[0] == "No :"){
+						foreach($logvalue as $log_val_key => $log_value){
+							if (is_null($log_value)){
+								unset($logvalue[$log_val_key]);
 							}
-							if ($log_val_key == 10)
-							{
-								$employee[$i]['name'] = $log_value;
-							}
-							if ($log_val_key == 20)
-							{
-								$employee[$i]['department'] = $log_value;
-							}
-						}
-					}
-					$keys = $logkey + 1;
-				}
-				else
-				{
-					if ($logkey == $keys && $keys != "abc")
-					{
-						$employee[$i]['attendence'] = $logvalue;
-						$i++;
-					}
-				}
-			}
-			
-			foreach ($employee as $key => $value) {
-
-				$employee_id = $value['employee_id'];
-				// $employee_check = Employee::where('employee_id',$employee_id)->count();
-				// if($employee_check ==0)
-				// {
-				// 	$employee  =	new Employee();
-				// 	$employee->employee_id = $value['employee_id'];
-				// 	//$employee->name = $value['name'];
-				// 	$employee->department = $value['department'];
-				// 	$employee->save();
-				// }
-				$limitDays = 1;
-				$dt  = carbon::parse(date('Y-m-d',strtotime($dates[0])));
-			  	$endLimit = $dt->daysInMonth;
-
-				foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
-					if($limitDays > $endLimit){
-						break; 
-					}
-					$dates =	$attendanceDate;
-					$dates++;
-					$full_date = $dates.'-'.$month_year;
-					$day = date('l', strtotime($full_date));
-					$due_time = $over_time = $total_time ="00:00:00";
-					if(is_null($attendanceValue))
-					{
-						$in_time =null;		
-						$out_time =null;
-						if($day == "Sunday")
-						{
-							$attendance_status =	$day;
-						}else{
-							$attendance_status = 	"absent";
-						}		
-					}
-					else
-					{
-						$time =	explode(PHP_EOL, $attendanceValue);
-						$in_time 	= $time[0];
-						$out_time 	= $time[1];
-						$actual_hour = '09:00:00';
-						if(!empty($in_time ) && !empty($out_time))
-						{
-							$actual_hours	= new Carbon('09:00:00');
-							$time = new Carbon($in_time);
-							$shift_end_time =new Carbon($out_time);
-							$totalDuration = $time->diffInSeconds($shift_end_time);
-							$total_time = gmdate('H:i:s', $totalDuration);
-							$total = new Carbon($total_time);
-								if($total>$actual_hours)
-								{	
-									$over_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
-								}else{ 
-									$due_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
+							else{
+								if ($log_val_key == 2){
+									$employee[$i]['employee_id'] = $log_value;
 								}
-						}	
-							
-    					$diff = (strtotime($out_time) - strtotime($in_time));
-    					$total = $diff/60;
-						if(is_null($in_time) &&  is_null($out_time))
-						{
-							$attendance_status = "absent";
-						}else{
-							$attendance_status = "present";		
+								if ($log_val_key == 10){
+									$employee[$i]['name'] = $log_value;
+								}
+								if ($log_val_key == 20){
+									$employee[$i]['department'] = $log_value;
+								}
+							}
+						}
+						$keys = $logkey + 1;
+					}
+					else{
+						if ($logkey == $keys && $keys != "abc"){
+							$employee[$i]['attendence'] = $logvalue;
+							$i++;
 						}
 					}
-			 		$carbon = carbon::parse("$dates-$month_year");
-					$month_week_no =$carbon->weekOfMonth;
-					if(empty($in_time) || is_null($in_time))
-					{
-						$in_time = Null;
-					}
-
-					if(empty($out_time) || is_null($in_time) )
-					{
-						$out_time = Null;
-					}
-
-					$data_for_insertion = ['employee_id'=>$employee_id,
-											'year'=>$year,
-											'month'=>$month,
-											'date'=>$dates ,
-											'day'=> $day,
-											'month_week_no' => $month_week_no,
-											'in_time' => $in_time,
-											'out_time' => $out_time,
-											'actual_hour' => $actual_hour,
-											'total_hour' => $total_time,
-											'over_time'  => $over_time,
-											'due_time' => $due_time,
-											'attendance_status' => $attendance_status,
-											'import_data' => $attendanceValue,
-											'submited_by' => "import"];
-					$attendance_query = Attendance::where(['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates]);
-					if($attendance_query->count() >0)
-					{
-						$attendance_query->update($data_for_insertion);
-					}else{
-
-						$attendance = new Attendance();
-						$attendance->fill($data_for_insertion);
-						$attendance->save();
-						$limitDays++;
-					}
 				}
-				//dump($endLimit);
-				//$this->paritial_attendance($dates , $endLimit , $month , $year);
+				foreach ($employee as $key => $value) {
+
+					$employee_id = $value['employee_id'];
+					$limitDays = 1;
+					$dt  = carbon::parse(date('Y-m-d',strtotime($dates[0])));
+				  	$endLimit = $dt->daysInMonth;
+					foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
+						if($limitDays > $endLimit){
+							break; 
+						}
+						$pus_in_out =null;
+						$dates =	$attendanceDate;
+						$dates++;
+						$full_date = $dates.'-'.$month_year;
+						$day = date('l', strtotime($full_date));
+						$due_time = $over_time = $total_time ="00:00:00";
+						if(is_null($attendanceValue)){
+							$in_time =null;		
+							$out_time =null;
+							if($day == "Sunday"){
+								$attendance_status =	$day;
+							}else{
+								$attendance_status = 	"absent";
+							}		
+						}
+						else{
+							$pushinout =null;
+							$time =	explode(PHP_EOL, $attendanceValue);
+							if(count($time)>0)
+							{
+								for($i=0; $i<count($time); $i++)
+								{
+									if(!empty($time[$i])){
+										$pushinout[] =	$time[$i];
+									}
+								}
+								$pus_in_out = json_encode($pushinout);
+							}
+							$in_time 	= $time[0];
+							$out_time 	= $time[1];
+							$actual_hour = '09:00:00';
+							if(!empty($in_time ) && !empty($out_time)){
+								$actual_hours	= new Carbon('09:00:00');
+								$time = new Carbon($in_time);
+								$shift_end_time =new Carbon($out_time);
+								$totalDuration = $time->diffInSeconds($shift_end_time);
+								$total_time = gmdate('H:i:s', $totalDuration);
+								$total = new Carbon($total_time);
+									if($total>$actual_hours){	
+										$over_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
+									}else{ 
+										$due_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
+									}
+							}	
 								
-			 }
-			
+	    					$diff = (strtotime($out_time) - strtotime($in_time));
+	    					$total = $diff/60;
+							if(is_null($in_time) &&  is_null($out_time)){
+								$attendance_status = "absent";
+							}else{
+								$attendance_status = "present";		
+							}
+						}
+				 		$carbon = carbon::parse("$dates-$month_year");
+						$month_week_no =$carbon->weekOfMonth;
+						if(empty($in_time) || is_null($in_time)){
+							$in_time = Null;
+						}
+						if(empty($out_time) || is_null($in_time) ){
+							$out_time = Null;
+						}
+						$data_for_insertion = ['employee_id'=>$employee_id,
+												'year'=>$year,
+												'month'=>$month,
+												'date'=>$dates ,
+												'day'=> $day,
+												'month_week_no' => $month_week_no,
+												'in_time' => $in_time,
+												'out_time' => $out_time,
+												'actual_hour' => $actual_hour,
+												'total_hour' => $total_time,
+												'over_time'  => $over_time,
+												'due_time' => $due_time,
+												'attendance_status' => $attendance_status,
+												'push_in_out'=> $pus_in_out,
+												'import_data' => $attendanceValue,
+												'submited_by' => "import"];
+						$attendance_query = Attendance::where(['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates]);
+						if($attendance_query->count() >0){
+							$attendance_query->update($data_for_insertion);
+							}else{
+
+								$attendance = new Attendance();
+								$attendance->fill($data_for_insertion);
+								$attendance->save();
+								$limitDays++;
+							}
+					}
+
+					//dump($endLimit);
+					//$this->paritial_attendance($dates , $endLimit , $month , $year);
+									
+				 }
+		}	
 		});
+	if(!Session::has('error')){
 		Session::flash('success','File upload successfully!');
+	}else{
+		return redirect()->route('list.attendance');
+	}
+
 		return redirect()->route('import.form.attendance');
 		}
 	}
@@ -438,7 +367,6 @@ class AttendanceController extends Controller
 			}
 			 	$where['month'] = $month 	=  $request['month'];
 				$where['year']  = $years  = $request['years'];
-
 			if(strlen($month)==1)
 			{
 				$where['month'] = $month ='0'.$month;
@@ -462,24 +390,10 @@ class AttendanceController extends Controller
 				$error = "no data exist";
 				return view('organization.attendance.attendance_table',['error'=>$error , 'month'=> $month , 'year'=> $years, 'employee_data'=>$employee_data ,'fweek_no'=>$fweek_no ]);
 			}
-				//$where['submited_by'] = 'import';
 				$d = Attendance::with('employee')->groupBy('employee_id')->selectRaw('count(id) as row,  employee_id')->where($where)->first()->row;
-				//dump();
-		
-
-		
 				$chunk = $total_days = $count = $d;//$dt->daysInMonth;
 				
-				// if(isset($where['month_week_no']) )
-				// {	
-				// 	$chunk =7;
-				// 	if($where['month_week_no'] ==5)
-				// 	{
-				// 		$chunk = $total_days;// -28;
-				// 		dump($total_days);
-				// 		//dd($chunk);
-				// 	}
-				// }
+				
 				if(isset($where['date']) )
 				{	
 					$chunk =1;
@@ -487,7 +401,14 @@ class AttendanceController extends Controller
 				$holiday_data = LH::select([DB::raw('DAY(date_of_holiday) as day'),'title'])->whereYear('date_of_holiday', '=', $where['year'])
 							->whereMonth('date_of_holiday', '=', $where['month'])
 							->get();
-				$attendance = Attendance::with('employee')->select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status')->where($where)->get();
+				$attendance = Attendance::with('employee')->select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get();
+				$new_attendance_data = $attendance->groupBy('employee_id')->toArray();
+				// foreach ($new as $key => $value) {
+				// 	dump(collect($value)->keyBy('date'));
+				// }
+
+
+				$lock_status = $attendance[0]['lock_status'];
 				$attendanceAggregate = Attendance::groupBy('employee_id')
 		   		->selectRaw('sum(total_hour) as sum_total, sum(over_time) as ot, count(id) as row,  employee_id')->where($where);
 				$total_hour = $attendanceAggregate->pluck('sum_total','employee_id');
@@ -500,13 +421,16 @@ class AttendanceController extends Controller
 		   		->selectRaw(' count(employee_id) as row,  employee_id')->where($where)->pluck('row','employee_id');
 //dump('chunk'.$chunk);
 				$attendance_data = array_chunk(json_decode(json_encode($attendance),true),$chunk);
-				
+
+				//dump($attendance_data);
+				// $collect = collect($attendance_data[0]);
+				//  dump($collect->groupBy('date'));
 				$leave_data = [];//Leave::whereYear('from','=',$where['year'])->whereMonth('from','=',$where['month'])->where('approved_status',1)->get();
 				
 				$where['submited_by'] = 'self';
 				$attendance_by_self = Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status')->where($where)->get();
 		
- 		return view('organization.attendance.attendance_table', ['attendance_data'=>$attendance_data, 'chunk'=>$chunk , 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' =>  $fdate]);
+ 		return view('organization.attendance.attendance_table', ['attendance_data'=>$new_attendance_data, 'chunk'=>$chunk , 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
 
 
 	}
@@ -514,56 +438,59 @@ class AttendanceController extends Controller
 	 * 
 	 */
 
-	public function attendance_by_hr(Request $request)
-	{	
+	public function attendance_by_hr(Request $request){	
 		$filter_dates = $attendance_data = null;
-		$employee_data = Employee::with('employ_info', 'designations', 'department', 'department')->where('status',1)->get();
-		$employee_ids  = $employee_data->pluck('employee_id');
-		
-		if($request->isMethod('post'))
-		{
+		$current_dates = $this->current_date_data;
+		$employee_ids = Employee::where('status',1)->pluck('employee_id');
+	
+		if($request->isMethod('post')){
 			$filter_dates = $request->except(['_token']);
-			 $attendance_check  = Attendance::with('employee.employ_info', 'employee.designations', 'employee.department', 'employee.department')->where($request->except(['_token']))->whereIn('employee_id',$employee_ids);
+			//dump($filter_dates , $employee_ids);
+			 // $attendance_check  = Attendance::with('employee.employ_info', 'employee.designations', 'employee.department', 'employee.department')->where($request->except(['_token']))->whereIn('employee_id',$employee_ids);
+			
+			$employee_data = Employee::with(['employ_info', 'designations', 'department', 'department','attendance'=>function($q) use($filter_dates, $employee_ids){
+						$q->where($filter_dates)->whereIn('employee_id',$employee_ids);
+			}])->where(function($subQuery) use ($filter_dates, $employee_ids){
+					$subQuery->whereHas('attendance', function($query) use ($filter_dates, $employee_ids){
+						$query->where($filter_dates)->whereIn('employee_id',$employee_ids);
+					});
+			})->get();
 		}else{
-			$attendance_check  = Attendance::with(['employee.employ_info', 'employee.designations', 'employee.department', 'employee.department'])->where($this->current_date_data)->whereIn('employee_id',$employee_ids);
+			$employee_data = Employee::with(['employ_info', 'designations', 'department', 'department','attendance' =>function($query) use($current_dates){
+				 $query->where($current_dates);
+			}])->where('status',1)->get();
+			
 		}
-		if($attendance_check->count()>0)
-		{
-			$attendance_data = 	$attendance_check->get();
-		}else{ $attendance_data =null;}
 
-		//dump($attendance_data);
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);
 	}
 	public function attendance_fill_hr(Request $request )
 	{
-
-
 		//dd($request->all());
 		$conditions = $request['dates'];
 		unset($request['dates']);
 		foreach ($request->all() as $key => $value) {
-			if($key !='_token')
-			{
-				// $where 		= 	array_collapse([$this->current_date_data , ['employee_id'=>$key]]);
-				// $all_data 	= 	array_collapse([$this->current_date_data , $value]);
-				// 
-				
+			if($key !='_token'){
+
+				if(isset($value['punch_in_out']))
+				{
+					$value['punch_in_out'] = json_encode($value['punch_in_out']);
+				}
+
+				if(isset($value['in_out_data']))
+				{
+					$value['in_out_data'] = json_encode($value['in_out_data']);
+				}
 				
 				$where 		= 	array_collapse([$conditions, ['employee_id'=>$key]]);
-				//dump($key);
-				//dump($where);
-				$all_data 	= 	array_collapse([$conditions, $value]);	
+				$all_data 	= 	array_collapse([$conditions, $value]);
 				$attendance_check = Attendance::select('id')->where($where);
 				if($attendance_check->count() > 0)
 				{
-					//dump($attendance_check->first()->id);
 					$attendance = Attendance::find($attendance_check->first()->id);
-					
 				}
 				else
 				{
-				
 					$attendance = 	new Attendance();
 					$attendance->employee_id = $key;
 				}
@@ -574,6 +501,19 @@ class AttendanceController extends Controller
 			}
 		}
 		return back();//redirect()->route('hr.attendance');
+	}
+	public function lock_status(Request $request){
+		$mo = $request['month'];
+		if(strlen($request['month'])==1){
+			$mo = '0'.$request['month'];
+		}
+		if($request['lock_status']=='true'){
+			$lock_status['lock_status'] =0;
+		}
+		else{
+			$lock_status['lock_status'] =1;
+		}
+		Attendance::where(['month'=>$mo , 'year'=> $request['year'] ])->update($lock_status);
 	}
 
 }

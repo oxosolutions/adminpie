@@ -167,6 +167,51 @@
 
 </div>
 <!-- //main-content-->
+<div>
+	<div style="margin-top: 2px">
+		<div style="font-size: 12px;float: left">March</div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="clear: both"></div>	
+	</div>
+	<div style="margin-top: 2px">
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>	
+		<div style="width: 10px;height: 10px;background-color: red;margin-left: 2px;float: left"></div>
+		<div style="clear: both"></div>	
+	</div>
+	
+</div>
 
 
 @endsection

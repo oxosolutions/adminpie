@@ -7,7 +7,7 @@ use Session;
 use App\Model\Organization\Category as CAT; 
 class Leave extends Model
 {
-    
+    public static $breadCrumbColumn = 'reason_of_leave';
 	public function __construct()
 	{
 		if(!empty(Session::get('organization_id')))

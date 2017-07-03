@@ -1,95 +1,19 @@
 <?php $__env->startSection('content'); ?>
-<style type="text/css">
-.active
-{
-	background-color: #005A8B;
-	-webkit-background-color: #005A8B;
-}
-li
-{
-	border-radius:0px;
-	margin-left:-4px;
-}
-li:first-child
-{
-	margin:0;
-}
-.fa-calendar
-{
-	font-size: 25px;
 
-}
-.main-container
-{
-	border-top:1px solid #e8e8e8;
-	margin-top:15px;
-}
-.design-style
-{
-	font-size: 18px;
-	line-height:50px;
-}
-.fa
-{
-	font-size:18px;
-}
-.btn
-{
-	border-radius: 0px;
-	box-shadow: none;
-}
-a{
-	color:black;
-}
-.nav:hover
-{
-	color:#2196F3;
-
-}
-/*Div table*/
-
-.row
-{
-	width:100%;
-	border: none;
-}
-.content
-{
-	width:10%;
-	float:left;
-	background-color: white;
-} 
-.column
-{
-	width: 2.66%;
-    float: left;
-    border-top:0.1px solid #e8e8e8;
-    border-left:0.1px solid #e8e8e8;
-    text-align: center;
-    
-}
-.present-bg-color
-{
-	background-color:#79BEDB;
-	
-}
-.sunday
-{
-	background-color:#f2f2f2;
-	color: #686868;
-}
-.absent-bg-color
-{
-	background-color:#F08B8A;
-}
-
-</style>
 <script type="text/javascript">
 	
 </script>
+<?php if(Session::has('success')): ?>
+<p class="alert"><?php echo e(Session::get('success')); ?></p>
+<?php endif; ?>
+
+
+<?php if(Session::has('error')): ?>
+<p class="alert"><?php echo e(Session::get('error')); ?></p>
+<?php endif; ?>
 	<div id="att_data" class="card" style="margin-top: 0px;padding:10px">
-	<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
-		
+		<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
+			
 		<div id="projects" class="projects list-view">
 			<div class="row ">
 				 			<div class="col l6">
@@ -109,6 +33,91 @@ a{
 		</div>
 		
 	</div>
+	<style type="text/css">
+#att_data .active
+{
+	background-color: #005A8B;
+	-webkit-background-color: #005A8B;
+}
+#att_data li
+{
+	border-radius:0px;
+	margin-left:-4px;
+}
+#att_data li:first-child
+{
+	margin:0;
+}
+#att_data .fa-calendar
+{
+	font-size: 25px;
+
+}
+#att_data .main-container
+{
+	border-top:1px solid #e8e8e8;
+	margin-top:15px;
+}
+#att_data .design-style
+{
+	font-size: 18px;
+	line-height:50px;
+}
+#att_data .fa
+{
+	font-size:18px;
+}
+#att_data .btn
+{
+	border-radius: 0px;
+	box-shadow: none;
+}
+#att_data a{
+	color:black;
+}
+#att_data .nav:hover
+{
+	color:#2196F3;
+
+}
+/*Div table*/
+
+#att_data .row
+{
+	width:100%;
+	border: none;
+}
+#att_data .content
+{
+	width:10%;
+	float:left;
+	background-color: white;
+} 
+#att_data .column
+{
+	width: 2.66%;
+    float: left;
+    border-top:0.1px solid #e8e8e8;
+    border-left:0.1px solid #e8e8e8;
+    text-align: center;
+    
+}
+#att_data .present-bg-color
+{
+	background-color:#79BEDB;
+	
+}
+#att_data .sunday
+{
+	background-color:#f2f2f2;
+	color: #686868;
+}
+#att_data .absent-bg-color
+{
+	background-color:#F08B8A;
+}
+
+</style>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		attendance_list();
@@ -182,6 +191,58 @@ a{
 					console.log('data sent successfull');
 				}
 			});
+		}
+		
+		function lock(month, year)
+		{
+			var datas ={};
+			datas['month'] =month;
+			datas['year'] =year;
+			datas['_token'] = $("#token").val();
+
+			$.ajax({
+				url:route()+'/attendance/lock',
+				type:'POST',
+				data:datas,
+				success: function(res){
+					console.log(res);
+				}
+			})
+		}
+
+		$(document).on('change', '.switch > label > input',function(e){
+			var postedData = {};
+			postedData['month']	= $("#current_month").val();
+			postedData['year']	= $("#year").val();
+			postedData['lock_status'] 			= $(this).prop('checked');
+			postedData['_token'] 			= $("#token").val();
+
+			$.ajax({
+				url:route()+'/attendance/lock',
+				type:'POST',
+				data:postedData,
+				success: function(res){
+					console.log('data sent successfull');
+				}
+			});
+			$('.editable h5 ,.editable p').removeClass('edit-fields');
+		});
+
+function unlock(month, year)
+		{
+			var datas ={};
+			datas['month'] =month;
+			datas['year'] =year;
+			datas['_token'] = $("#token").val();
+
+			$.ajax({
+				url:route()+'/attendance/lock',
+				type:'POST',
+				data:datas,
+				success: function(res){
+					console.log(res);
+				}
+			})
 		}
 
 

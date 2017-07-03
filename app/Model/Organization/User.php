@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable 
 {
+   public static $breadCrumbColumn = 'name';
    public function __construct()
    {	
 	   	if(!empty(Session::get('organization_id')))
@@ -29,5 +30,12 @@ class User extends Authenticatable
    public function employee_rel()
    {
       return $this->hasOne('App\Model\Organization\Employee','user_id','id');
+   }
+   public static function getTeamById($data = null){
+      $array = [];
+      foreach ($data as $key => $id) {
+         $array = self::where('id',$id)->get();
+      }
+      return $array;
    }
 }

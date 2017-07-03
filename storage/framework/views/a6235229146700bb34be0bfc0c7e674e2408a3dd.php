@@ -1,4 +1,6 @@
 <?php  
+
+	//hellooooo
 	// $sunday_count =0;
 	// $holidays =[];
 	// 		if(!empty($holiday_data))
@@ -21,7 +23,7 @@
 		 {
 		 	$postDate = Session::get('date');
 		 }
-		$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 0);
+			$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 0);
 		 $mo =	$dat->month;
 
 		 if(!empty($fill_attendance_days)) 
@@ -38,7 +40,6 @@
 		 }else{
 		 $total_days = $daysInMonth  =$dat->daysInMonth;
 		}
-
 //dump($fweek_no);
 
 //previous days		 
@@ -62,15 +63,27 @@
 		 $current_year =	$dat->year;
 
 		 $current_days = $dat->daysInMonth;
-		 
-
-		 $previous = $dat->subMonth();
-		 $previousMonth = $previous->month;
-		 $previousYear  =  $previous->year;
 		
-		 $next = $dat->addMonth(2);
-		 $nextMonth = $next->month;
-		 $nextYear = $next->year;
+		if(!empty($fweek_no))
+		{
+			$dat->addWeek(); 
+			$nxt_week = $dat->weekOfMonth;
+			$nxt_week_month =	$dat->month;
+			$nxt_week_year =	$dat->year;
+			$dat->subWeeks(2); 
+
+			$prev_month = $dat->weekOfMonth;
+			$prev_week_month =	$dat->month;
+		 	$prev_week_year =	$dat->year;
+		}		 
+
+			$previous = $dat->subMonth();
+			$previousMonth = $previous->month;
+			$previousYear  =  $previous->year;
+
+			$next = $dat->addMonth(2);
+			$nextMonth = $next->month;
+			$nextYear = $next->year;
 	
 		$week =4;
 		if($total_days >28)
@@ -85,8 +98,7 @@
 		$td="";
 		$MO_data = ['01'=>'JAN', '02'=>'FEB', '03'=>'MAR', '04'=>'APR' ,'05'=>'MAY', '06'=>'JUN','07'=>'JUL', '08'=>'AUG','09'=>'SEP', '10'=>'OCT','11'=>'NOV', '12'=>'DEC'];
 		$year_data = range(2015, 2050);
-
- ?>
+	 ?>
 
 <?php if($total_days==28): ?>
 	<style type="text/css"> 
@@ -146,18 +158,33 @@
 				<div class="aione aione-heading center-align">
 					<div class="row">
 						<div class=" col s3">
+						lock 
+						<div class="switch">
+									    <label>
+											
+												<?php if(@$lock_status == 1): ?>
+													<input type="checkbox">
+												<?php else: ?>
+													<input type="checkbox" checked="checked">
+												<?php endif; ?>
+											
+									      <span class="lever"></span>
+									    </label>
+									  </div>
+							
+							<input id="current_month" type="hidden" value="<?php echo e($current_month); ?>">
+							<input id="year" type="hidden" value="<?php echo e($current_year); ?>">
 							
 						</div>
 						<div class="col s3 pr-7 right-align">
 							<select  onchange="attendance_filter(null, null, <?php echo e($current_month); ?>, this.value )" >
-								<?php $__currentLoopData = $year_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							<?php $__currentLoopData = $year_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 								<?php if($current_year==$val): ?>
-								<option selected="selected" value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
-
-									<?php else: ?>
+									<option selected="selected" value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
+								<?php else: ?>
 										<option value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
 									<?php endif; ?>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 							</select>
 						</div>
@@ -380,7 +407,7 @@
 							<?php endfor; ?>
 						<?php endif; ?>
 					</div>
-				</div>
+				</div>in
 			</div>
 
 			
@@ -388,10 +415,12 @@
 				<div class="attendance-sheet row">
 					<div class="attendanc-sheet content">
 					<?php if(!empty($attendance_data)): ?>
-					
-						<?php $__currentLoopData = $attendance_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupkey => $groupVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								<?php 
 
+						<?php $__currentLoopData = $attendance_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $groupkey => $groupVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+								<?php 
+								$collect = collect($groupVal);
+							 $att_datas =$collect->keyBy('date')->toArray();
 
 								
 									$day_count = $chunk - $sunday_count;
@@ -402,10 +431,8 @@
 									}
 									if($day_count==0)
 									{
-												$day_count =1;
+											$day_count =1;
 									}
-									
-
 									$percent = ceil(($attendance_count[$groupVal[0]['employee_id']] / $day_count * 100));
 									//$over_time_sum = $sum = 0;
 								?>
@@ -434,31 +461,35 @@
 								<?php if(!empty($employ_info['employ_info']['name'])): ?>
 									<?php echo e($employ_info['employ_info']['name']); ?>
 
-									<?php else: ?>
-									--
+									
 								<?php endif; ?>
 								</div>
 								
 									
 
+									<?php for($j=1; $j<=$total_days; $j++): ?>
+									<?php if(isset($att_datas[$j]['attendance_status'])): ?>
 
-									<?php $__currentLoopData = $groupVal; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $employeeKey =>$employeeVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-										
-										<?php if(array_key_exists($employeeVal['date'], $holidays)): ?>
-												<div class="attendance-sheet column absent-bg-color"><?php echo e($holidays[$employeeVal['date']]); ?></div>
+										<?php if(array_key_exists($att_datas[$j]['date'], $holidays)): ?>
+												<div class="attendance-sheet column absent-bg-color"><?php echo e($holidays[$j]); ?></div>
 											<?php else: ?>
-												<?php if($employeeVal['attendance_status']=='present'): ?>
+												<?php if($att_datas[$j]['attendance_status']=='present'): ?>
 														<div class="attendance-sheet column present-bg-color">P</div>
-												<?php elseif($employeeVal['attendance_status']=='absent'): ?>
+												<?php elseif($att_datas[$j]['attendance_status']=='absent'): ?>
 													<div class="attendance-sheet column absent-bg-color">A</div>
-												<?php elseif($employeeVal['attendance_status']=='Sunday'): ?>
+												<?php elseif($att_datas[$j]['attendance_status']=='Sunday'): ?>
 													<div class="attendance-sheet column sunday">S</div>
-													
+												<?php elseif($att_datas[$j]['attendance_status']=='leave'): ?>
+													<div class="attendance-sheet column sunday">L</div>
+												<?php else: ?>
+													<div class="attendance-sheet column sunday">o</div>
 												<?php endif; ?>
 										<?php endif; ?>
-									<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-									<?php echo $td; ?>
-
+									<?php else: ?>
+									<div class="attendance-sheet column present-bg-color">--</div>
+									<?php endif; ?>
+									<?php endfor; ?>
+									<br>
 									<div style="clear: both;"></div>
 							</div>
 							<?php endif; ?>
@@ -472,6 +503,7 @@
 			
 
 </div>
+
 
 
 

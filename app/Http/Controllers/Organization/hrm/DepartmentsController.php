@@ -38,8 +38,8 @@ class DepartmentsController extends Controller
                       'datalist'=>$model,
                       'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
                       'actions' => [
-                                      'edit' => ['title'=>'Edit','route'=>'departments','class'=>'edit'],
-                                      'delete'=>['title'=>'Delete','route'=>'delete.department']
+                                      'edit'    => ['title'=>'Edit','route'=>'departments','class'=>'edit'],
+                                      'delete'  => ['title'=>'Delete','route'=>'delete.department']
                                    ]
                   ];
           if(!empty($id) || $id != null || $id != ''){

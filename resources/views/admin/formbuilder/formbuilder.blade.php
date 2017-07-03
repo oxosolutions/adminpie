@@ -83,7 +83,7 @@ input{
 			</div>
       <div class="row">
         <div class="col l12" style="margin: 15px">
-          <button class=" btn" type="submit">Save survey</button>  
+          <button class=" btn" type="submit">Save Field</button>  
         </div>
         
       </div>

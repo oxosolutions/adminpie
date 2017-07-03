@@ -46,8 +46,10 @@ class FormGenerator{
 	 * @param Array|array $Options      [description]
 	 */
 	public static function GenerateSection($section_slug, Array $Options = []){
-
 		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
+		if($SectionCollection == null){
+			dd('No section found');
+		}
 		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
 		if($sectionType == 'Repeater'){
 			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options);
@@ -102,6 +104,15 @@ class FormGenerator{
 			$metaValue = $value->value;
 		}
 		return $metaValue;
+	}
+
+	public static function GetSectionFieldsName($section_slug){
+		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
+		$fields = [];
+		foreach($SectionCollection->fields as $key =>  $field){
+			$fields[] = $field->field_title;
+		}
+		return $fields;
 	}
 
 }

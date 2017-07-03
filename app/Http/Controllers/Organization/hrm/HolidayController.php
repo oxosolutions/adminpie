@@ -14,18 +14,20 @@ class HolidayController extends Controller
     {
     	$tbl = Session::get('organization_id');
         $valid_fields = [
-                            'title'         => 'required|unique:'.$tbl.'_holidays',
-                            'from'          => 'required',
-                            'description'   => 'required'
+                            'title'             => 'required|unique:'.$tbl.'_holidays',
+                            'date_of_holiday'   => 'required|unique:'.$tbl.'_holidays',
+                            'description'       => 'required'
                         ];
         $this->validate($request , $valid_fields);
-
-    	$holiday = new Holiday();
-    	$holiday->fill($request->all());
+        $newaData = [];
+        foreach($request->all() as $key => $value){
+            $newData[$key] = $value;
+            $newData['date_of_holiday'] = Carbon::parse($request['date_of_holiday'])->format('Y-m-d');
+        }
+        $holiday = new Holiday();
+        $holiday->fill($newData);
     	$holiday->save();
     	return redirect()->route('list.holidays');
-
-
     }
     public function listHoliday(Request $request , $id = null)
     {
@@ -61,7 +63,7 @@ class HolidayController extends Controller
         }
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['title'=>'Title','description'=>'Description','date_of_holiday'=>'Date of Holiday','created_at'=>'Created At'],
+                        'showColumns' => ['title'=>'Title','description'=>'Description','date_of_holiday:human_readable'=>'Date of Holiday','created_at'=>'Created At'],
                         'actions' => [
                                         'edit' => ['title'=>'Edit','route'=>'list.holidays'],
                                         'delete'=>['title'=>'Delete','route'=>'delete.holiday']
@@ -117,7 +119,7 @@ class HolidayController extends Controller
             $tbl = Session::get('organization_id');
             $valid_fields = [
                                 'title'         => 'required|unique:'.$tbl.'_holidays',
-                                'from'          => 'required',
+                                'from'          => 'required|unique:'.$tbl.'_holidays',
                                 'description'   => 'required'
                             ];
             $this->validate($request , $valid_fields);

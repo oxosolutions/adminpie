@@ -17,9 +17,12 @@ use App\Model\Organization\User as User;
 use App\Model\Organization\UsersRole as Role;
 
 
+
 class DashboardController extends Controller
 {
     public function index(){
+
+
     	$time = Carbon::now('Asia/Calcutta');
 		$current_time =  gmdate('H:i:s',strtotime($time));
 			//echo $time->format('l jS \\of F Y h:i:s A');
@@ -29,12 +32,19 @@ class DashboardController extends Controller
 			$date  	=	$time->format('d');
 			$day 	=  	$time->format('l');
 	    	$user_id = Auth::guard('org')->user()->id;
+	    	$check_employee  = Employee::where('user_id',$user_id)->exists();
+    	if($check_employee)
+    	{
 	    	$data = Attendance::select('check_for_checkin_checkout')->where([ 'user_id'=> $user_id , 'year'=>$year ,'date'=>$date , 'month'=>$month ]);
 			$check_in_out_status = Null;
 			if($data->count() > 0)
 			{
 				$check_in_out_status = $data->first()->check_for_checkin_checkout;
 			}
+		}else{
+			$check_in_out_status ="not_employ";
+		}
+
 		//widgets
 		$widget_data = [];
 		$allow = [];
@@ -57,26 +67,43 @@ class DashboardController extends Controller
 			}
 		}
 		$dashboardData = [];
-		$keys = ['client' 	=> 'App\Model\Organization\Client',
-				'employee' 	=> 'App\Model\Organization\Employee',
-				'project' 	=> 'App\Model\Organization\Project',
-				'tasks' 	=> 'App\Model\Organization\ProjectTask',
-				'user' 		=> 'App\Model\Organization\User'];
+		$keys = ['client' 	=> [
+								'model' => 'App\Model\Organization\Client',
+								'route' => 'list.client'
+								],
+				'employee' 	=> ['model' => 'App\Model\Organization\Employee',
+								'route' => 'list.employee'
+								],
+				'project' 	=> ['model' => 'App\Model\Organization\Project',
+								'route' => 'list.project'
+								],
+				'tasks' 	=> ['model' => 'App\Model\Organization\ProjectTask',
+								'route' => 'account.tasks'
+								],
+				'user' 		=> ['model' => 'App\Model\Organization\User',
+								'route' => 'list.user'
+								],
+
+				];
 		foreach ($keys as $key => $arrayKey) {
-			if(Auth::guard('org')->user()->id==1)
-			{
+// condition commented by sandeep .reason. role system is not working correctly
+
+			// if(Auth::guard('org')->user()->id==1)
+			// {
 				$dashboardData[$key] = [
-										'count' => $arrayKey::get()->count(),
-										'list' => $arrayKey::get()->take(6)
+										'count' => $arrayKey['model']::get()->count(),
+										'list' => $arrayKey['model']::get()->take(6),
+										'route' => $arrayKey['route']
 									];
-			}
-			elseif(in_array($key, $allow))
-			 {
-					$dashboardData[$key] =  [
-										'count' => $arrayKey::get()->count(),
-										'list' => $arrayKey::get()->take(6)
-									];
-			 }
+			// }
+			// elseif(in_array($key, $allow))
+			//  {
+					// $dashboardData[$key] =  [
+					// 					'count' => $arrayKey['model']::get()->count(),
+					// 					'list' => $arrayKey['model']::get()->take(6),
+					// 					'route' => $arrayKey['route']
+					// 				];
+			 // }
 		}
 		return view('organization.dashboard.index',['check_in_out_status'=>$check_in_out_status ,'model' => $dashboardData, 'widget_data'=>$widget_data , 'slug'=>$slug]);
     }

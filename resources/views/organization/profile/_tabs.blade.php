@@ -7,7 +7,7 @@
   
 @endphp
 
-<div class="col l12"  >
+<div class="col l12" style="margin-top: 14px"  >
 
     <ul class="aione-tabs">
         <li class="tab col aione-active {{strpos($link, 'profile')?'aione-active':''}}"><a href="{{Route('account.profile')}}">Profile</a></li>

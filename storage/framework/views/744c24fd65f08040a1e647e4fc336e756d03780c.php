@@ -8,7 +8,14 @@
 			display: block !important;
 		}
 	</style>
-
+	<?php if(@$errors->has()): ?>
+		<script type="text/javascript">
+		$(window).load(function(){
+			document.getElementById('add_new').click();
+		});
+	</script>
+	<?php endif; ?>
+	
 
 <div id="projects" class="projects list-view">
 	<div class="row">
@@ -34,7 +41,7 @@
 					</div>
 					<div class="modal-content" style="padding: 10px">
 						<div class="col s12 m12 l12 aione-field-wrapper">
-							<input name="name" class="no-margin-bottom aione-field " type="text" placeholder="name" />
+							<input name="name" class="no-margin-bottom aione-field " type="text" placeholder="Name" />
 								<div class="error-red">
 									<?php if(@$errors->has()): ?>
 										<?php echo e($errors->first('name')); ?>
@@ -43,7 +50,7 @@
 								</div>
 						</div>
 						<div class="col s12 m12 l12 aione-field-wrapper">
-							<input name="email" class="no-margin-bottom aione-field " type="email" placeholder="email" />
+							<input name="email" class="no-margin-bottom aione-field " type="email" placeholder="Email" />
 							<div class="error-red">
 								<?php if(@$errors->has()): ?>
 									<?php echo e($errors->first('email')); ?>
@@ -53,7 +60,7 @@
 						</div>
 
 						<div class="col s12 m12 l12 aione-field-wrapper">
-							<input name="password" class="no-margin-bottom aione-field " type="text" placeholder="password" />
+							<input name="password" class="no-margin-bottom aione-field " type="text" placeholder="Password" />
 							<div class="error-red">
 								<?php if(@$errors->has()): ?>
 									<?php echo e($errors->first('password')); ?>
@@ -63,7 +70,7 @@
 						</div>
 
 						<div class="col s12 m12 l12 aione-field-wrapper">
-							<input name="employee_id" class="no-margin-bottom aione-field " type="text" placeholder="employee ID" />
+							<input name="employee_id" class="no-margin-bottom aione-field " type="text" placeholder="Employee ID" />
 							<div class="error-red">
 								<?php if(@$errors->has()): ?>
 									<?php echo e($errors->first('employee_id')); ?>
@@ -72,7 +79,7 @@
 							</div>
 						</div>
 						<div class="col s12 m12 l12 aione-field-wrapper">
-							<?php echo Form::select('designation',$designation,null,['class'=>"no-margin-bottom aione-field"]); ?>
+							<?php echo Form::select('Designation',$designation,null,['class'=>"no-margin-bottom aione-field"]); ?>
 
 						</div>
 						

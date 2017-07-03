@@ -2,10 +2,15 @@
 @section('content')
 
 
-{{Session::get('success')}}
+
 
 @if(Session::has('success'))
 <p class="alert">{{ Session::get('success') }}</p>
+@endif
+
+
+@if(Session::has('error'))
+<p class="alert">{{ Session::get('error') }}</p>
 @endif
 
 {{-- <div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2 create-fields active" >

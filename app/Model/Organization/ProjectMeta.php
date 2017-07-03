@@ -14,5 +14,5 @@ class ProjectMeta extends Model
 	       $this->table = Session::get('organization_id').'_project_metas';
 	   	}
    }
-   protected $fillable = [ 'key', 'value', 'type', 'project_id'];
+   protected $fillable = [ 'key', 'value', 'type', 'project_id','teams'];
 }

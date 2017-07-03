@@ -12,8 +12,12 @@ use Illuminate\Support\Facades\Hash;
 class NotesController extends Controller
 {
     public function index(){
+        $viewFrom = request()->segment(1);
+        if($viewFrom == 'account'){
+            $viewFrom = 'profile';
+        }
     	$plugins = ['js' => ['custom'=>['notes']]];
-    	return view('organization.project.notes',['plugins' => $plugins]); 
+    	return view('organization.'.$viewFrom.'.notes',['plugins' => $plugins]);
     }
     public function createNotes(Request $request)
     {

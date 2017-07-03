@@ -4,6 +4,12 @@
 				<?php echo Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker']); ?>
 
 		</div>
+		<div class="error-red">	
+				<?php if(@$errors->has()): ?>
+					<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
+
+				<?php endif; ?>
+			</div>
 	<?php else: ?>
 		<div class="row" style="padding:10px 0px">
 			<div class="col l3" style="line-height: 30px">
@@ -13,6 +19,12 @@
 			<div class="col l9">
 				<?php echo Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker']); ?>
 
+			</div>
+			<div class="error-red">	
+				<?php if(@$errors->has()): ?>
+					<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
+
+				<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>
@@ -25,6 +37,12 @@
 			<div class="col l9">
 				<?php echo Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker']); ?>
 
+			</div>
+			<div class="error-red">	
+				<?php if(@$errors->has()): ?>
+					<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
+
+				<?php endif; ?>
 			</div>
 		</div>
 <?php endif; ?>

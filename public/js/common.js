@@ -170,7 +170,7 @@ setInterval(function(){clock();},100);
     });
 
 	$('select').material_select();
-	$('.shift-select').material_select();
+	// $('.shift-select').material_select();
 
    $(document).ready(function() {
     $('select').material_select();

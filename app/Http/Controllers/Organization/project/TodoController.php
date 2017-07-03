@@ -6,22 +6,36 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Session;
 use App\Model\Organization\Todo as TD;
+use Auth;
 
 class TodoController extends Controller
 {
 	public function create(Request $request)
 	{
-		$model = new TD;
-        $model->fill($request->except('_token'));
-        $model->description = "manually entered from controller";
-        $model->save();
 
-        $model = TD::all();
-        return view('organization.project._todo_list',['model'=>$model])->render();
+		$model = new TD;
+		$model->fill($request->except('_token','user_id'));
+    	$model->description = "please enter some description";
+    	$model->user_id = $request->user_id;
+			if($request->project_id != null || $request->project_id != "" || !empty($request->project_id) ){
+				$model->project_id = $request->project_id;
+				$model->save();
+				$data = TD::where('project_id',$request->project_id)->get();
+			}else{
+		        $model->project_id = "0";
+		        $model->save();
+		        $data = TD::where('user_id',Auth::guard('org')->user()->id)->get();
+			}
+        return view('organization.project._todo_list',['model'=>$data])->render();
 	}
-	public function listTodo()
+	public function listTodo(Request $request ,$id = null)
 	{
-		$model = TD::all();
+		$plugins = ['js' => ['custom'=>['todo']]];
+		if($request->id != null || $request->id != "" || !empty($request->id) ){
+			$model = TD::where('project_id',$request->id)->get();
+		}else{
+			$model = TD::where('user_id',Auth::guard('org')->user()->id)->get();
+		}
 
         return view('organization.project._todo_list',['model'=>$model])->render();
 	}
@@ -61,31 +75,35 @@ class TodoController extends Controller
 	{
 		$data[] = '';
 		if(array_key_exists('categories', $request->value)){
-			if(array_key_exists('priority', $request->value)){
-				if($request->value['categories'] == "all"){
-					$this->list();
-				}if($request->value['categories'] == "completed"){
-					$cat = (int)'0';
-				}elseif($request->value['categories'] == "in-completed"){
-					$cat = (int)'1';
+			if(array_key_exists('categories', $request->value)){
+				if($request->value['project_id'] == null){
+					if($request->value['categories'] == "all"){
+						$model = TD::where('user_id' , $request->value['user_id'])->get();
+					}elseif($request->value['categories'] == "completed"){
+						$model = TD::where(['status'=>(int)'0' , 'user_id' => $request->value['user_id']])->get();
+					}elseif($request->value['categories'] == "in-completed"){
+						$model = TD::where(['status'=>(int)'1' , 'user_id' => $request->value['user_id']])->get();
+					}
+				}else{
+					if($request->value['categories'] == "all"){
+						$model = TD::where(['user_id'=>$request->value['user_id'],'project_id' => $request->value['project_id']])->get();
+					}elseif($request->value['categories'] == "completed"){
+						$model = TD::where(['status'=>(int)'0' , 'user_id' => $request->value['user_id'] , 'project_id' => $request->value['project_id']])->get();
+					}elseif($request->value['categories'] == "in-completed"){
+						$model = TD::where(['status'=>(int)'1' , 'user_id' => $request->value['user_id'], 'project_id' => $request->value['project_id']])->get();
+					}
 				}
-
-				$model = TD::where(['status'=> $cat, 'priority' => $request->value['priority']])->get();
-			}else{
-				if($request->value['categories'] == "all"){
-					$model = TD::all();
-				}elseif($request->value['categories'] == "completed"){
-					$model = TD::where('status',(int)'0')->get();
-				}elseif($request->value['categories'] == "in-completed"){
-					$model = TD::where('status',(int)'1')->get();
-				}
-			}			
-		}
-		if(!array_key_exists('categories', $request->value)){
-			if(array_key_exists('priority', $request->value)){
-				$model = TD::where('priority',$request->value['priority'])->get();
+				
 			}
 		}
+			if(array_key_exists('priority', $request->value)){
+				if($request->value['project_id'] == null){
+					$model = TD::where(['priority'=>$request->value['priority'] , 'user_id' => $request->value['user_id']])->get();
+				}else{
+					$model = TD::where(['priority'=>$request->value['priority'] , 'user_id' => $request->value['user_id'] , 'project_id' => $request->value['project_id']])->get();
+				}
+				
+			}
 		return view('organization.project._todo_list',['model'=>$model])->render();
 	}
 }

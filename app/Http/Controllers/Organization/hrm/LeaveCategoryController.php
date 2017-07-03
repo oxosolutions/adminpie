@@ -46,7 +46,7 @@ class LeaveCategoryController extends Controller
                           'description'   => 'required'
                       ];
       $this->validate($request , $valid_fields);
-
+        $request->request->add(['type' => 'leave']);
         $this->catRepo->create($request);
         return redirect()->route('leave.categories');
      }

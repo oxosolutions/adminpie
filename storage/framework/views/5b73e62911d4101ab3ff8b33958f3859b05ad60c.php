@@ -1,8 +1,72 @@
 
 <?php $__env->startSection('content'); ?>
+<style>
+		.line{
+		width: 100%;
+		display: flex;
+
+		}
+		.mo{
+		width: 5%;
+		height: 18px;
+		display: block;
+		float: left;
+		margin-right: 2px;
+		font-size: 13px;
+		}
+
+		.square{
+		width: 2.1%;
+		height: 15px;
+		display: block;
+		float: left;
+		margin-left: 2px;
+		margin-right: 2px;
+		margin-bottom: 4px;
+		}
+
+		.present{
+		background-color: green;
+		color: green;
+		font-size: 1px;
+		}
+
+		.absent{
+		background-color: red;
+		color: red;
+		font-size: 1px;
+		}
+		.leave{
+		background-color: orange;
+		color:orange;
+		font-size: 1px;
+		}
+
+		.holiday{
+		background-color: yellow;
+		color:yellow;
+		font-size: 1px;
+		}
+		.sunday{
+		background-color: pink;
+		color:pink;
+		font-size: 1px;
+		}
+		.empty{
+		background-color: grey;
+		color:grey;
+		font-size: 1px;
+		}
+
+		.days{
+		font-size: 13px;
+		}
+
+</style>
+
 	<script type="text/javascript">
 		$(document).ready(function(){
-			$('.month-view').hide();
+			 $('.month-view').hide();
 		    $(".week-view").hide();
 		    $("#weekly").click(function(){
 		        $('.month-view').hide();
@@ -22,8 +86,24 @@
 		    });
 		});
 	</script>
+	<?php 
+		$now = Carbon\Carbon::now();
+		$year= $now->year;
+		$now->subMonth();
+		$month = $now->month;
+		if(strlen($month)==1)
+		{
+			$month = '0'.$month;
+		}
+		
+
+		//$dt = Carbon\Carbon::create($now->year, $now->month, 1);
+		//$beforeDay = $dt->dayOfWeek;
+	 ?>
 	<div class="row">
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
+
 		<div class="row">
 			<div class="col l9 pr-7">
 				<div class="card">
@@ -32,493 +112,127 @@
 							<h5>Attendence (Yearly)</h5>
 						</div>
 						<div class="col l6">
-							<a href="javascript:;" class="btn blue" id="weekly">Weekly</a>
-							<a href="javascript:;" class="btn blue" id="monthly">Monthly</a>
+							<a href="javascript:;" onclick="attendance_weekly_filter('1', <?php echo e($month); ?>, <?php echo e($year); ?>)" class="btn blue" id="weekly">Weekly</a>
+							<a href="javascript:;" onclick="attendance_monthly_filter(<?php echo e($month); ?>, <?php echo e($year); ?>)" class="btn blue" id="monthly">monthly</a>
 							<a href="javascript:;" class="btn blue" id="yearly">Yearly</a>
 						</div>	
 					</div>
 
-
-
+						
 					
-					<div class="row year-view">
-						<div class="row" style="margin: 20px">
-							<div class=" col l5 right-align">
-								<i class="fa fa-arrow-left" style="line-height: 44px"></i>
-							</div>
-							<div class="col l2 center-align">
-								<h5><a class='dropdown-button' href='#' data-activates='dropdown1'>2017</a></h5>
-								 
+		<div class="row year-view">
+			<div class="row" style="margin: 20px">
+				<div class=" col l5 right-align">
+					<i class="fa fa-arrow-left" style="line-height: 44px"></i>
+				</div>
+				<div class="col l2 center-align">
+					<h5><a class='dropdown-button' href='#' data-activates='dropdown1'><?php echo e($filter['year']); ?></a></h5>
+					 
 
-								  <!-- Dropdown Structure -->
-								  <ul id='dropdown1' class='dropdown-content'>
+					  <!-- Dropdown Structure -->
+					  <ul id='dropdown1' class='dropdown-content'>
 
-								    <li><a href="#!">2016</a></li> 
-								    <li><a href="#!">2017</a></li> 
-								    <li><a href="#!">2018</a></li> 
-								    <li><a href="#!">2019</a></li> 
-								    <li><a href="#!">2020</a></li> 
-								  </ul>
-							</div>
-							<div class="col l5">
-								<i class="fa fa-arrow-right" style="line-height: 44px"></i>
-							</div>
-						</div>	
-					
-						<div class="row center-align" style="margin-top: 30px">
-							<svg width="720" height="260" class="js-calendar-graph-svg">
-							  <g transform="translate(16, 20)" style="font-size: 13px">
-							      <g transform="translate(0, 0)">
-							      	  <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							        
-							         
-							      
-							      </g>
-							      <g transform="translate(0, 20)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							      <g transform="translate(0, 40)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          
-							      </g>
-							       <g transform="translate(0, 60)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							       <g transform="translate(0, 80)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							       <g transform="translate(0, 100)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          
-							      </g>
-							       <g transform="translate(0, 120)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							       <g transform="translate(0, 140)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							         
-							      </g>
-							       <g transform="translate(0, 160)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							       <g transform="translate(0, 180)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							       <g transform="translate(0, 200)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							         
-							          
-							      </g>
-							       <g transform="translate(0, 220)">
-							      	 <rect class="day" width="18" height="18" x="20" y="0" fill="#ebedf0" ></rect>
-							          <rect class="day" width="18" height="18" x="40" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="60" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="80" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="100" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="120" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="140" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="160" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="180" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="200" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="220" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="240" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="260" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="280" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="300" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="320" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="340" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="360" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="380" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="400" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="420" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="440" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="460" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="480" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="500" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="520" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="540" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="560" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="580" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="600" y="0" fill="#ebedf0" data-count="0" ></rect>
-							          <rect class="day" width="18" height="18" x="620" y="0" fill="#ebedf0" data-count="0" ></rect>
-							      </g>
-							      <text x="22" y="-10" class="month" style="padding-left: 1px">1</text>
-							      <text x="42" y="-10" class="month">2</text>
-							      <text x="62" y="-10" class="month">3</text>
-							      <text x="82" y="-10" class="month">4</text>
-							      <text x="102" y="-10" class="month">5</text>
-							      <text x="122" y="-10" class="month">6</text>
-							      <text x="142" y="-10" class="month">7</text>
-							      <text x="162" y="-10" class="month">8</text>
-							      <text x="182" y="-10" class="month">9</text>
-							      <text x="202" y="-10" class="month">10</text>
-							      <text x="222" y="-10" class="month">11</text>
-							      <text x="242" y="-10" class="month">12</text>
-							      <text x="262" y="-10" class="month">13</text>
-							      <text x="282" y="-10" class="month">14</text>
-							      <text x="302" y="-10" class="month">15</text>
-							      <text x="322" y="-10" class="month">16</text>
-							      <text x="342" y="-10" class="month">17</text>
-							      <text x="362" y="-10" class="month">18</text>
-							      <text x="382" y="-10" class="month">19</text>
-							      <text x="402" y="-10" class="month">20</text>
-							      <text x="422" y="-10" class="month">21</text>
-							      <text x="442" y="-10" class="month">22</text>
-							      <text x="462" y="-10" class="month">23</text>
-							      <text x="482" y="-10" class="month">24</text>
-							      <text x="502" y="-10" class="month">25</text>
-							      <text x="522" y="-10" class="month">26</text>
-							      <text x="542" y="-10" class="month">27</text>
-							      <text x="562" y="-10" class="month">28</text>
-							      <text x="582" y="-10" class="month">29</text>
-							      <text x="602" y="-10" class="month">30</text>
-							      <text x="622" y="-10" class="month">31</text>
-							     
-							    
-							      
-							    <text text-anchor="start" class="wday" dx="-14" dy="10">Apr</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="30">May</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="50">Jun</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="70">Jul</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="90">Aug</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="110">Sep</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="130">Oct</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="150">Nov</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="170">Dec</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="190">Jan</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="210">Feb</text>
-							    <text text-anchor="start" class="wday" dx="-14" dy="230">Mar</text>
-							  </g>
-							</svg>
-						</div>
+					    <li>
+							<button onclick="attendance_yearly_filter('2016')"> 2016</button>
+						</li> 
+					    <li>
+							<button onclick="attendance_yearly_filter('2017')"> 2017</button>
+						</li> 
+					    <li>
+							<button onclick="attendance_yearly_filter('2018')"> 2018</button>
+					    </li> 
+					    <li>
+							<button onclick="attendance_yearly_filter('2019')"> 2019</button>
+						</li> 
+					    <li><button onclick="attendance_yearly_filter('2020')"> 2020</button></li> 
+					  </ul>
+				</div>
+				<div class="col l5">
+					<i class="fa fa-arrow-right" style="line-height: 44px"></i>
+				</div>
+			</div>	
+		
+			<div id="attendance-data" class="row center-align" style="margin-top: 30px">
+			<div class="line"><div class='mo'>Day</div>
+			<?php for($i=1; $i<=31; $i++): ?>
+				<div class='square days'><?php echo e($i); ?></div>
+			<?php endfor; ?>
+
+			</div>
+
+
+
+			<?php for($i=1; $i<=12; $i++ ): ?>
+				<?php if(strlen($i) ==1): ?>
+						<?php 
+						$i ='0'.$i;
+						 ?>
+				<?php endif; ?>
+				
+					<?php 
+						$postDate=1;
+						$month_wise   = Carbon\Carbon::create($filter['year'], $i, $postDate, 0);
+						$dayInMonth = $month_wise->daysInMonth;
+					 ?> 
+					<div class="line">
+						<div class='mo'><?php echo e(substr($month_wise->format(' F'),0,4)); ?></div>
+
+						<?php if(!empty($attendance_data[$i])): ?>
+							<?php 
+								$val = collect($attendance_data[$i]);
+								$data = $val->keyBy('date')->toArray();
+							 ?>
+							 <?php for($j=1; $j<=$dayInMonth; $j++): ?>
+								<?php if(!empty($data[$j]['attendance_status'])): ?>
+
+									<?php if($data[$j]['attendance_status']=='present'): ?>
+												<div class='square present'>p</div>
+											<?php elseif($data[$j]['attendance_status']=='absent'): ?>
+												<div class='square absent'>a</div>
+											<?php elseif($data[$j]['attendance_status']=='Sunday'): ?>
+												<div class='square sunday'>s</div>
+											<?php elseif($data[$j]['attendance_status']=='leave'): ?>
+												<div class='square leave'>l</div>
+											<?php else: ?>
+												<div class='square leave'>0</div>
+											<?php endif; ?>
+										
+											
+									<?php else: ?>
+											<div class='square empty'><?php echo e($j); ?></div>
+									<?php endif; ?>
+								<?php endfor; ?>
+						<?php else: ?>
+							 <?php for($j=1; $j<=$dayInMonth; $j++): ?>
+								<div class='square empty'><?php echo e($j); ?></div>
+							 <?php endfor; ?>
+						<?php endif; ?>
 					</div>
+
+						
+			<?php endfor; ?>
+			</div>
+		</div>
 					
 
+	
+
+
 					
-					<div class="row month-view" style="padding: 20px 40px">
+
+					<?php 
+					$now = Carbon\Carbon::now();
+			       echo  $where['year'] = $now->year;
+			         $month = '06';//.$now->month;
+			       $dayInMonth = $now->daysInMonth;
+
+			        $dt = Carbon\Carbon::create($now->year, $now->month, 1);
+			       $beforeDay = $dt->dayOfWeek;
+
+			       							$val = collect($attendance_data[$month]);
+											$data = $val->keyBy('date')->toArray();
+					 ?>
+					<div id="monthly-attendance" class="row month-view" style="padding: 20px 40px">
 						<div class="row">
 							
 						</div>
@@ -528,8 +242,8 @@
 							    <li class="prev"><i class="fa fa-arrow-left" ></i></li>
 							    <li class="next"><i class="fa fa-arrow-right" ></i></li>
 							    <li style="text-align:center">
-							      August,
-							      <span style="font-size:18px">2017</span>
+							      <?php echo e($now->format('F')); ?>,
+							      <span style="font-size:18px"><?php echo e($now->year); ?></span>
 							    </li>
 							  </ul>
 							</div>
@@ -545,37 +259,14 @@
 							</ul>
 
 							<ul class="days">  
-							  <li style="background-color: rgba(0,128,0,0.2);">1</li>
-							  <li style="background-color: rgba(255,0,0,0.1);">2</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">3</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">4</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">5</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">6</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">7</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">8</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">9</li>
-							  <li style="background-color: rgba(255,0,0,0.1);"">10</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">11</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">12</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">13</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">14</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">15</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">16</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">17</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">18</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">19</li>
-							  <li style="background-color: rgba(0,128,0,0.2);"">20</li>
-							  <li>21</li>
-							  <li>22</li>
-							  <li>23</li>
-							  <li>24</li>
-							  <li>25</li>
-							  <li>26</li>
-							  <li>27</li>
-							  <li>28</li>
-							  <li>29</li>
-							  <li>30</li>
-							  <li>31</li>
+							<?php for($i=1; $i<$beforeDay; $i++): ?>
+							<li style="color:white;">.</li>
+							<?php endfor; ?>
+							
+							<?php for($j=1; $j<=$dayInMonth; $j++ ): ?>
+							<li style="background-color: rgba(0,128,0,0.2);"><?php echo e($j); ?></li>
+							<?php endfor; ?>
+							  
 							</ul>
 
 						</div>
@@ -583,7 +274,7 @@
 					
 
 					
-					<div class="row week-view">
+					<div id="attendance-weekly" class="row week-view">
 						<div class="row center-align" style="margin-top: 40px">
 							<span><i class="fa fa-arrow-left" style="margin-right: 10px;line-height: 36px"></i></span>
 							<span>04-Jun-2017 - 10-Jun-2017</span>
@@ -847,5 +538,104 @@
 
 		/**********************************ENDS Css for month view in attendence  *********************************************/
 	</style>
+
+	<script>
+		function attendance_yearly_filter(year)
+		{
+			postData ={};
+			//postData['month'] = month;
+			postData['year']  = year;
+			//postData['month_week_no'] = week;
+			postData['_token'] = $("#token").val();
+			console.log(postData);
+			$.ajax({
+					url:route()+'/attandance',
+					type:'POST',
+					data:postData,
+					success:function(res){
+						$('#attendance-data').html(res);
+
+					}
+			});
+		
+		}
+
+function attendance_monthly_filter(month, year)
+		{
+			postData ={};
+			postData['month'] = month;
+			postData['year']  = year;
+			//postData['month_week_no'] = week;
+			postData['_token'] = $("#token").val();
+			console.log(postData);
+			$.ajax({
+					url:route()+'/attandance_monthly',
+					type:'POST',
+					data:postData,
+					success:function(res){
+						$('#monthly-attendance').html(res);
+
+					}
+			});
+		
+		}
+
+		function attendance_weekly_filter(week_no, month, year)
+		{
+			postData ={};
+			postData['month'] = month;
+			postData['year']  = year;
+			postData['month_week_no'] = week_no;
+			postData['_token'] = $("#token").val();
+			console.log(postData);
+			$.ajax({
+					url:route()+'/attandance_weekly',
+					type:'POST',
+					data:postData,
+					success:function(res){
+						$('#attendance-weekly').html(res);
+
+					}
+			});
+		
+		}
+
+
+
+	// 	function attendance_filter(date, week, mo, yr)
+	// {
+	// 	console.log(date, week, mo, yr);
+		
+	// 	var postData = {};
+	// 	postData['date'] = date;
+	// 	postData['week'] = week;
+	// 	postData['month'] = mo;
+	// 	postData['years'] = yr;
+	// 	postData['_token'] = $("#token").val();
+	// 	$.ajax({
+	// 			url:route()+'/attendance/list',
+	// 			type:'POST',
+	// 			data:postData,
+	// 			success: function(res){
+
+	// 				$("#main").html(res);
+	// 				$("#month , #week ,#days").hide();
+
+	// 				if(date)
+	// 				{
+	// 					$("#days").show();
+	// 				}else if(week){
+	// 					$("#week").show();
+	// 				}else{
+	// 					$("#month").show();
+	// 				}
+	// 				$('select').material_select();
+				
+	// 				console.log('data sent successfull');
+	// 			}
+	// 		});
+	// 	}
+
+	</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

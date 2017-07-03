@@ -13,23 +13,23 @@
 @php
  
   $link=$_SERVER['REQUEST_URI'];
-  
-  
+  $array = explode('/',$link);
+  $project_id = end($array);
 @endphp
 
-<div class="col l12"  >
+<div class="col l12">
     <ul class="one-tabs">
-        <li class="tab col {{strpos($link, 'details')?'one-active':''}}"><a href="{{route('details.project',['12'])}}">Info</a></li>
-        <li class="tab col {{strpos($link, 'demo1')?'one-active':''}}""><a href="{{route('demo1')}}">Tasks</a></li>
-        <li class="tab col {{strpos($link, 'credentials')?'one-active':''}}""><a href="{{route('credentials.project',['12'])}}">Credentials</a></li>
-        <li class="tab col {{strpos($link, 'documentation')?'one-active':''}}""><a href="{{route('documentation.project',['12'])}}">Documentation</a></li>
+        <li class="tab col {{strpos($link, 'details')?'one-active':''}}"><a href="{{route('details.project',[$project_id])}}">Info</a></li>
+        <li class="tab col {{strpos($link, 'demo1')?'one-active':''}}""><a href="{{route('tasks.project',[$project_id])}}">Tasks</a></li>
+        <li class="tab col {{strpos($link, 'credentials')?'one-active':''}}""><a href="{{route('credentials.project',[$project_id])}}">Credentials</a></li>
+        <li class="tab col {{strpos($link, 'documentation')?'one-active':''}}""><a href="{{route('documentation.project',[$project_id])}}">Documentation</a></li>
         <li class="tab col {{strpos($link, 'attachemnts')?'one-active':''}}""><a href="#test4">Attachemnts</a></li>
-        <li class="tab col {{strpos($link, 'todo')?'one-active':''}}""><a href="{{route('todo.project',['12'])}}"><span>To do</span></a></li>
-        <li class="tab col {{strpos($link, 'notes')?'one-active':''}}""><a href="{{route('notes.project',['12'])}}">Notes</a></li>
+        <li class="tab col {{strpos($link, 'todo')?'one-active':''}}""><a href="{{route('todo.project',[$project_id])}}"><span>To do</span></a></li>
+        <li class="tab col {{strpos($link, 'notes')?'one-active':''}}""><a href="{{route('notes.project',[$project_id])}}">Notes</a></li>
         <li class="tab col {{strpos($link, 'discussion')?'one-active':''}}""><a href="#test4">Discussion</a></li>
-        <li class="tab col {{strpos($link, 'activities')?'one-active':''}}""><a href="{{route('activities.project',['12'])}}">Activity</a></li>
+        <li class="tab col {{strpos($link, 'activities')?'one-active':''}}""><a href="{{route('activities.project',[$project_id])}}">Activity</a></li>
         <li class="tab col {{strpos($link, 'milestones')?'one-active':''}}""><a href="#test4">Milestones</a></li>
-        <li class="tab col {{strpos($link, 'calender')?'one-active':''}}""><a href="{{route('calender.project',['12'])}}">calender</a></li>
+        <li class="tab col {{strpos($link, 'calender')?'one-active':''}}""><a href="{{route('calender.project',[$project_id])}}">calender</a></li>
         <li class="tab col {{strpos($link, 'chat')?'one-active':''}}""><a href="#test4">chat</a></li>
         <div style="clear: both">
           

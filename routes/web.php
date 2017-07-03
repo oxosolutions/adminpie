@@ -94,7 +94,9 @@
 	/******************************* All Routes For Organization ************************************/
 		Route::group(['namespace'=>'Organization'], function(){
 			Route::get('logout',['as'=>'org.logout','uses'=>'Auth\LoginController@logout']);
-
+			Route::get('login',		['as'=>'org.login','uses'=>'Auth\LoginController@showLoginForm']);
+			Route::post('login',	['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
+			
 			Route::group(['middleware' => 'auth.org'], function(){
 
 				//visualization
@@ -109,31 +111,54 @@
 				}]);
 				
 				Route::get('/',['as'=>'organization.dashboard','uses'=>'DashboardController@index']);
-				//profile
+				//Notes
+				Route::get('account/notes',['as'=>'account.notes','uses'=>'project\NotesController@index']);
+				Route::get('account/notes/list',	['as'=>'account.notes.list','uses'=>'project\NotesController@listNotes']);
+				Route::post('account/notes/save',	['as'=>'save.account.notes','uses'=>'project\NotesController@createNotes']);
+				Route::post('account/notes/edit',	['as'=>'edit.account.notes','uses'=>'project\NotesController@edit']);
+
+				Route::post('account/tasks/status/update',['as'=>'task.status.update','uses'=>'account\TasksController@changeStatus']);
+				Route::get('account/tasks',['as'=>'account.tasks','uses'=>'account\TasksController@index']);
+				Route::post('account/tasks/create',['as'=>'create.tasks','uses'=>'account\TasksController@create']);
+				Route::post('account/tasks/delete',['as'=>'delete.tasks','uses'=>'account\TasksController@deleteTasks']);
+				Route::post('account/tasks/update',['as'=>'update.tasks','uses'=>'account\TasksController@updateTask']);
+				Route::post('account/tasks/priority/filter',['as'=>'filterPriority.tasks','uses'=>'account\TasksController@filterPriority']);
+
+				Route::post('project/tasks/status/update',['as'=>'task.status.update','uses'=>'account\TasksController@changeStatus']);
+				Route::get('project/tasks',['as'=>'account.tasks','uses'=>'account\TasksController@index']);
+				Route::post('project/tasks/create',['as'=>'create.tasks','uses'=>'account\TasksController@create']);
+				Route::post('project/tasks/delete',['as'=>'delete.tasks','uses'=>'account\TasksController@deleteTasks']);
+				Route::post('project/tasks/update',['as'=>'update.tasks','uses'=>'account\TasksController@updateTask']);
+				Route::post('project/tasks/priority/filter',['as'=>'filterPriority.tasks','uses'=>'account\TasksController@filterPriority']);
 				
+				//profile
 				Route::group(['prefix' => 'account','namespace' => 'account'],function(){
+					//upload profile image
+					Route::post('/profile/upload',['as'=>'profile.picture','uses'=>'AccountController@uploadProfile']);
 					Route::get('/emails',['as'=>'account.emails','uses'=>'AccountController@emailsList']);
 					Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
+					Route::get('/profile/image{id?}',['as'=>'image.profile','uses'=>'AccountController@profilepUpload']);
 					Route::patch('/profile/update/{id}',['as'=>'update.profile','uses'=>'AccountController@update']);
-					Route::get('/activities',['as'=>'account.activities','uses'=>function(){
-						return view('organization.profile.activities');
-					}]);
-					Route::get('/attandance',['as'=>'account.attandance','uses'=>function(){
-						return view('organization.profile.myattandance');
-					}]);
+					Route::patch('/profile/storeMeta/{id}',['as'=>'update.profile.meta','uses'=>'AccountController@storeMeta']);
+					Route::get('/activities',['as'=>'account.activities','uses'=>'AccountActivityController@listActivities']);
+					Route::any('/attandance',['as'=>'account.attandance','uses'=>'AttendanceController@myattendance']);
+					Route::post('/attandance_monthly',['as'=>'account.attendance_monthly','uses'=>'AttendanceController@attendance_monthly']);
+					Route::post('/attandance_weekly',['as'=>'account.attendance_weekly','uses'=>'AttendanceController@attendance_weekly']);
+
 					Route::any('/leaves',['as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@index']);
-					Route::get('/tasks',['as'=>'account.tasks','uses'=>function(){
-						return view('organization.profile.tasks');
-					}]);
-					Route::get('/todo',['as'=>'account.todo','uses'=>function(){
-						return view('organization.profile.to-do');
-					}]);
+					
+
+				/********************************  Task Routes *********************************************/
+					
+
+				/*******************************************************************************************/
+				
+
 					Route::get('/ToDo/{id}',['as'=>'view.todo','uses'=>function(){
 						return view('organization.profile.view_todo');
 					}]);
-					Route::get('/notes',['as'=>'account.notes','uses'=>function(){
-						return view('organization.profile.notes');
-					}]);
+					
+
 					Route::get('/performance',['as'=>'account.performance','uses'=>function(){
 						return view('organization.profile.performance');
 					}]);
@@ -165,11 +190,12 @@
 
 				//TEAM MANAGEMENT ROUTES
 
-					Route::get('teams',				['as'=>'list.team' , 'uses'=>'ManageTeamController@listTeam']);
+					Route::get('teams/{id?}',		['as'=>'list.team' , 'uses'=>'ManageTeamController@listTeam']);
 					Route::get('team/{id}',			['as'=>'info.team' , 'uses'=>'ManageTeamController@info']);
 					Route::post('team/save',		['as'=>'save.team' , 'uses'=>'ManageTeamController@save']);
 					Route::post('team_info/save',	['as'=>'save.team_info' , 'uses'=>'ManageTeamController@save_info']);
-
+					Route::get('delete/team/{id}',	['as'=>'delete.team','uses' => 'ManageTeamController@deleteTeam']);
+					Route::post('edit/team',	['as'=>'edit.team','uses' => 'ManageTeamController@editTeam']);
 				
 				//Employee	
 
@@ -233,13 +259,15 @@
 							Route::post('shift/edit/{id?}',	['as' => 'edit.shifts' , 'uses' =>'ShiftsController@editShifts']);		
 						//Leaves
 							Route::get('leaves-categories',	['as' => 'leaves_categories' , 'uses' => 'LeavesController@leave_categories']);
-							Route::get('delete/leave-categories/{id?}',	['as' => 'delete.leaves_categories' , 'uses' => 'LeavesController@deleteLeaveCategories']);
+							Route::get('delete/leave-categories/{id?}',	['as' => 'delete.leaves_categories' , 'uses' => 'LeavesController@deleteLeaveCategories']);
 						//attendance ajax
 						//widget permission
 							Route::post('widget_permission_save',	['as' => 'save.widget_permission' , 'uses' => 'UserRoleController@widget_permission_save']);
 
 							Route::get('/attendance/list', ['as' => 'ajax.list.attendance' , 'uses' =>'AttendanceController@ajax']);
 							Route::post('/attendance/list',				['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
+							Route::post('/attendance/lock',				['as' => 'ajax.lock.attendance' , 'uses' => 'AttendanceController@lock_status']);
+
 
 
 						//attendance
@@ -324,35 +352,43 @@
 
 
 
-				Route::group(['prefix'=>'projects','namespace' => 'project'],function(){
+				Route::group(['namespace' => 'project'],function(){
+					Route::get('account/todo',	['as'=>'account.todo','uses'=>'ProjectController@todo']);
+				 });
+				//notes
+				Route::get('project/notes/list',	['as'=>'list.notes','uses'=>'project\NotesController@listNotes']);
+				Route::get('project/notes/{id}',	['as'=>'notes.project','uses'=>'project\NotesController@index']);
+				Route::post('project/notes/save',	['as'=>'save.notes','uses'=>'project\NotesController@createNotes']);
+				Route::post('project/notes/edit',	['as'=>'edit.notes','uses'=>'project\NotesController@edit']);
+				// end notes
+				Route::group(['namespace' => 'project'],function(){
 					//project
-						//notes
-						Route::get('project/notes/list',	['as'=>'list.notes','uses'=>'NotesController@listNotes']);
-						Route::get('project/notes/{id}',	['as'=>'notes.project','uses'=>'NotesController@index']);
-						Route::post('project/notes/save',	['as'=>'save.notes','uses'=>'NotesController@createNotes']);
-						Route::post('project/notes/edit',	['as'=>'edit.notes','uses'=>'NotesController@edit']);
-						// end notes
-						Route::get('categories',['as'=>'categories.project','uses'=>'ProjectController@categories']);
+						
+						Route::get('categories',			['as'=>'categories.project','uses'=>'ProjectController@categories']);
 						Route::post('category/save',		['as'=>'save.category','uses'=>'ProjectController@saveCategory']);
 						Route::post('category/update',		['as'=>'update.category','uses'=>'ProjectController@updateCategory']);
 						Route::get('project/{id}',			[ 'as'=>'add_project_info.project' , 'uses'=>'ProjectController@add_project_info']);
 						Route::post('project_info/save',	['as'=>'save.project_meta' , 'uses'=>'ProjectController@save_project_meta']);
 						Route::get('project/view/{id}',		['as'=>'view.project','uses'=>'ProjectController@view']);
+						Route::get('project/delete/{id}',	['as'=>'delete.project','uses'=>'ProjectController@delete']);
 						Route::post('project/add_client',	['as'=>'add_client.project','uses'=>'ProjectController@add_client']);
-
+						
+						// save teams in project
+						Route::POST('update/team/{id}', ['as' => 'update.team' , 'uses' => 'ProjectController@updateTeam']);
+						//
 						Route::get('projects/list',			['as'=>'projects.list.ajax','uses'=>'ProjectController@projectsList']);
 						Route::get('project/create',		['as'=>'create.project','uses'=>'ProjectController@create']);
 						Route::post('project/save',			['as'=>'save.project','uses'=>'ProjectController@save']);
 						Route::get('project/edit/{id}',		['as'=>'edit.project','uses'=>'ProjectController@edit']);
-						Route::post('project/update/{id}',	['as'=>'update.project','uses'=>'ProjectController@update']);
+						Route::post('project/update/{id?}',	['as'=>'update.project','uses'=>'ProjectController@update']);
 						Route::get('project/details/{id}',	['as'=>'details.project','uses'=>'ProjectController@details']);
 						Route::get('project/credentials/{id}',	['as'=>'credentials.project','uses'=>'ProjectController@credentials']);
 						Route::get('project/activities/{id}',	['as'=>'activities.project','uses'=>'ProjectController@activities']);
 						Route::get('project/calender/{id}',	['as'=>'calender.project','uses'=>'ProjectController@calender']);
 						
 						Route::get('project/documentation/{id}',	['as'=>'documentation.project','uses'=>'ProjectController@documentation']);
-						Route::get('/project/todo/list',	['as'=>'list.todo','uses'=>'TodoController@listTodo']);
-						Route::get('project/todo/{id}',	['as'=>'todo.project','uses'=>'ProjectController@todo']);
+						Route::get('/project/todo/list/{id?}',	['as'=>'list.todo','uses'=>'TodoController@listTodo']);
+						Route::get('project/todo/{id?}',	['as'=>'todo.project','uses'=>'ProjectController@todo']);
 						Route::post('/project/todo/create',	['as'=>'create.todo','uses'=>'TodoController@create']);
 						
 						Route::POST('/project/todo/edit',	['as'=>'edit.todo','uses'=>'TodoController@edit']);
@@ -361,10 +397,10 @@
 						Route::get('project/test',function(){
 							return view('organization.project.test');
 						});
-						Route::get('/',['as'=>'list.project','uses'=>'ProjectController@listProject']);
 						
 						//tasks
-						Route::get('tasks',['as'=> 'list.tasks','uses' => 'ProjectController@tasks']);
+						Route::get('project/tasks/{id?}',['as'=> 'tasks.project','uses' => 'ProjectController@tasks']);
+						Route::get('projects',['as'=>'list.project','uses'=>'ProjectController@listProject']);
 
 				
 				});
@@ -399,9 +435,6 @@
 
 			});
 
-			Route::get('login',		['as'=>'org.login','uses'=>'Auth\LoginController@showLoginForm']);
-			Route::post('login',	['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
-
 		});
 	/****************************************** All Routes For Organization *************************************************/
 	//**** Attendance Route
@@ -424,7 +457,7 @@
 		Route::get('demo4',['as' => 'demo4','uses' => function(){
 			return View::make('organization.demo.demo4');
 		}]);
-		Route::get('demo5',['as' => 'demo5','uses' => function(){
+		Route::get('404',['as' => 'demo5','uses' => function(){
 			return View::make('organization.demo.demo5');
 		}]);
 		Route::get('demo6',['as' => 'demo6','uses' => function(){

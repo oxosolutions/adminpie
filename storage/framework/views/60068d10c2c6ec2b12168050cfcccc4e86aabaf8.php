@@ -1,21 +1,20 @@
 <?php $__env->startSection('content'); ?>
-
 <div>
     <?php echo $__env->make('organization.project._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-    
     <div class="col l2  pr-7 center-align " style="margin-top: 14px" >
 
         <div class="card col m6 l12" style="padding: 20px;">
             
-            <div class="blue project-logo" >
-               SF 
+            <div class="blue project-logo" style="text-transform: uppercase;" >
+               <?php echo e(@ucwords(substr($model->name,0,2))); ?> 
             </div>
             <div class="p-15">
-                Smaart Framework
+                <?php echo e(@ucfirst($model->name)); ?>
+
             </div>
         </div>
         <div class="card col m6 l12" style="padding: 20px 10px;margin-top: 14px !important">
-                <div class="col s12 m12 l12" style="border-bottom: 1px solid #e8e8e8;">
+            <div class="col s12 m12 l12" style="border-bottom: 1px solid #e8e8e8;">
                 <h6 style="margin-top: 0px;">Tasks</h6>
             </div>
             <div class="col l12">
@@ -25,10 +24,6 @@
                 <div class="col s12 m12 l12 pv-5"><a href="">Create a new task</a></div>
                 <strong>OR</strong>
                 <div class="col s12 m12 l12 pv-5"><a >Track task</a></div>
-                
-                
-
-                
             </div>
             <div style="clear: both">
                 
@@ -55,7 +50,34 @@
                                     <h5 style="margin-top: 0px;">Project Details</h5>
                                 </div>
                                 <div class="col l6 right-align" >
-                                    <a href="" class="btn">Edit</a>
+                                    <a href="#modal3" class="btn">Edit</a>
+                                    <div id="modal3" class="modal modal-fixed-footer left-align">
+                                        <div class="modal-header white-text" style="background-color: rgb(2,136,209)">
+                                            <div class="row" style="padding:15px 10px">
+                                                <div class="col l7">
+                                                    <h5 style="margin:0px">Project detail</h5> 
+                                                </div>
+                                                <div class="col l5 right-align">
+                                                    <a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
+                                                </div>
+                                                    
+                                            </div>
+                                    
+                                        </div>
+                                        <?php echo Form::model($model,['route'=>['update.project',$model->id],'method'=>'POST']); ?>
+
+                                            <div class="modal-content" style="background-color: white">
+                                                <?php echo FormGenerator::GenerateSection('prosec3',['type'=>'inset']); ?>
+
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn blue" type="submit">Save
+                                                    <i class="material-icons right">save</i>
+                                                </button>
+                                            </div>
+                                        <?php echo Form::close(); ?>
+
+                                    </div>
                                 </div>
                                     
                             </div>
@@ -65,7 +87,8 @@
                                     Project Name
                                 </div>
                                 <div class=" col l9">
-                                    Smaartframework
+                                    <?php echo e($model->name); ?>
+
                                 </div>
                             </div>
                             <div class="col s12 m12  l12"  style="margin-top: 10px">
@@ -73,7 +96,8 @@
                                     Description
                                 </div>
                                 <div class=" col l9">
-                                    The project description. Again this should be meaningful to other project team members.The project description. Again this should be meaningful to other project team members.The project description. Again this should be meaningful to other project team members.The project description. Again this should be meaningful to other project team members.The project description. Again this should be meaningful to other project team members. 
+                                    <?php echo e(@$model->description); ?>
+
                                 </div>
                             </div>
                             <div class="col s12 m12  l12"  style="margin-top: 10px">
@@ -81,7 +105,8 @@
                                     Location
                                 </div>
                                 <div class=" col l9">
-                                    Delhi
+                                    <?php echo e(@$model->location); ?>
+
                                 </div>
                             </div>
                             <div class="col s12 m12 l12 "  style="margin-top: 10px">
@@ -89,7 +114,8 @@
                                     Start Date
                                 </div>
                                 <div class=" col l9">
-                                    12 12 2019
+                                    <?php echo e(@$model->start_date); ?>
+
                                 </div>
                             </div>
                             <div class="col s12 m12 l12"  style="margin-top: 10px">
@@ -97,7 +123,8 @@
                                     End Date
                                 </div>
                                 <div class=" col l9">
-                                    12 12 2020
+                                    <?php echo e(@$model->end_date); ?>
+
                                 </div>
                             </div>
                             <div class="col s12 m12 l12"  style="margin-top: 10px">
@@ -106,7 +133,8 @@
                                 </div>
                                 <div class=" col l9">
                                     <div class="col l6">
-                                        Sgs Sandhu
+                                        <?php echo e(@$model->added_by); ?>
+
                                     </div>
                                     <div class="col l6 right-align grey-text">
                                         2 hours ago 
@@ -128,12 +156,36 @@
             <div class="col s12 m12 l12" style="border-bottom: 1px solid #e8e8e8;">
                 <h6 style="margin-top: 0px;">Team assigned</h6>
             </div>
-             <div class="col l12">
-                <div class="col s12 m12 l12 pv-5 ">Team Darlic</span></div>
-                <div class="col s12 m12 l12 pv-5"> <strong>8</strong><span class="grey-text pl-7">Members</span></div>
-                <div class="col s12 m12 l12 pv-5"><a href="" style="font-size: 10px">View or Edit Team Menbers</a></div>
-                <strong>OR</strong>
-                <div class="col s12 m12 l12 pv-5"><a href="" style="font-size: 10px">Assign another team</a></div>
+            <div class="col l12">
+                <?php if($model->teams != null): ?>
+                    <?php $__currentLoopData = @$model->teams; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php 
+                           $team =  App\Model\Organization\Team::find($value);
+                         ?>
+                        <div class="col s12 m12 l12 pv-5 "><?php echo e($team ->title); ?></span></div>
+                        <div class="col s12 m12 l12 pv-5"> <strong><?php echo e(count(json_decode($team->member_ids))); ?></strong><span class="grey-text pl-7">Members</span></div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                <?php endif; ?>
+                <div class="col s12 m12 l12 pv-5">
+                   
+                    
+                    
+                </div>
+                 
+                
+                <div class="col s12 m12 l12 pv-5">
+                    <?php
+                        if($model->teams != null){
+                            $model->teams = array_map('intval', $model->teams);
+                        }
+                    ?>
+                    <a href="#modal2" style="font-size: 10px">Assign another team</a>
+                    <?php echo Form::model($model,['route'=>['update.team',$model->id]]); ?>
+
+                        <?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'This is Heading','button_title'=>'Save Data','section'=>'prosec4']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    <?php echo Form::close(); ?>
+
+                </div>
                 
                 
                
@@ -234,5 +286,12 @@
    }
  
 </style>
+<script type="text/javascript">
+    $(document).ready(function(){
+      $('#modal1').modal();
+      $('#modal2').modal(); 
+      $('#modal3').modal();
+       });
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

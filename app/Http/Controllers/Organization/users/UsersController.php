@@ -42,7 +42,10 @@ class UsersController extends Controller
     	Session::flash('success','Created Successfully!!');
     	return redirect()->route('info.user',['id'=>$model->id]);
     }
-
+    public function FunctionName(Request $request )
+    {
+        dd($request->all());
+    }
     protected function validateForm($request){
     	$rules = [
 

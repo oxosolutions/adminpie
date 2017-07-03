@@ -39,10 +39,11 @@ $(function(){
 		});
 		
 	$(document).on('change', '.switch > label > input',function(e){
+
 		var postedData = {};
-		postedData['id'] 				= $(this).parents('.shadow').find('.id').val();
+		postedData['id'] 				= $(this).parents('.hover-me').find('.id').html();
 		postedData['status'] 			= $(this).prop('checked');
-		postedData['_token'] 			= $('.shadow').find('._token').val();
+		postedData['_token'] 			= $('input[name=_token]').val();
 
 		$.ajax({
 			url:route()+'/employee/update',

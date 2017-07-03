@@ -20,7 +20,7 @@ class Attendance extends Model
 	}
 
 
-    protected $fillable = [ 'employee_id', 'year','month_week_no','month','date','day', 'in_time', 'out_time', 'total_hour', 'actual_hour', 'over_time', 'due_time', 'check_in', 'check_out', 'ip_address','attendance_status','import_data', 'submited_by'];
+    protected $fillable = [ 'punch_in_out', 'in_out_data', 'employee_id', 'year','month_week_no','month','date','day', 'in_time', 'out_time', 'total_hour', 'actual_hour', 'over_time', 'due_time', 'check_in', 'check_out', 'ip_address','attendance_status','import_data', 'submited_by'];
 	//protected $dates =['deleted_at'];
 	//protected $softDelete = true;
 

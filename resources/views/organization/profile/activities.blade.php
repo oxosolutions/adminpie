@@ -1,125 +1,57 @@
 @extends('layouts.main')
 @section('content')
+
+<!-- @foreach($user_log as $key => $value)
+
+	@php
+		$textData = json_decode($value->text);
+	@endphp
+
+	@foreach($textData as $ky => $val)
+		{{dump($val)}}
+	@endforeach
+
+@endforeach -->
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row ">
-					
-					recent activities
-					<div class="row valign-wrapper" style="padding:5px 0px">
-						<div class="col l1 blue white-text center-align">
-							<div class="row " style="font-size: 16px ;font-weight: 700">
-								June
-							</div>
-							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
-								01
-							</div>
+			recent activities
+			@foreach($user_log as $key => $value)
+				<div class="row valign-wrapper" style="padding:5px 0px">
+					<div class="col l1 blue white-text center-align">
+						<div class="row " style="font-size: 16px ;font-weight: 700">
+							{{date_format($value->created_at , "M")}}
 						</div>
-						<div class="col l7 pl-7">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+							{{date_format($value->created_at , "d")}}
 						</div>
-						<div class="col l2">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-						</div>
-						<div class="col l2 grey-text center-align" style="font-size: 13px">
-							2 hour ago
-						</div>	
 					</div>
-					<div class="row valign-wrapper" style="padding:5px 0px">
-						<div class="col l1 blue white-text center-align">
-							<div class="row " style="font-size: 16px ;font-weight: 700">
-								June
-							</div>
-							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
-								01
-							</div>
-						</div>
-						<div class="col l7 pl-7">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						</div>
-						<div class="col l2">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-						</div>
-						<div class="col l2 grey-text center-align" style="font-size: 13px">
-							2 hour ago
-						</div>	
+					<div class="col l6 pl-7 truncate">
+						@foreach(json_decode($value->text) as $k => $val)
+							@if($loop->index == 0)
+								{{$val}}
+							@endif
+						@endforeach
 					</div>
-					<div class="row valign-wrapper" style="padding:5px 0px">
-						<div class="col l1 blue white-text center-align">
-							<div class="row " style="font-size: 16px ;font-weight: 700">
-								June
-							</div>
-							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
-								01
-							</div>
-						</div>
-						<div class="col l7 pl-7">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						</div>
-						<div class="col l2">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-						</div>
-						<div class="col l2 grey-text center-align" style="font-size: 13px">
-							2 hour ago
-						</div>	
+					<div class="col l3 pl-7 truncate">
+						@foreach(json_decode($value->text) as $k => $val)
+							@if($loop->index == 2)
+								{{$val}}
+							@endif
+						@endforeach
 					</div>
-					<div class="row valign-wrapper" style="padding:5px 0px">
-						<div class="col l1 blue white-text center-align">
-							<div class="row " style="font-size: 16px ;font-weight: 700">
-								June
-							</div>
-							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
-								01
-							</div>
-						</div>
-						<div class="col l7 pl-7">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						</div>
-						<div class="col l2">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-						</div>
-						<div class="col l2 grey-text center-align" style="font-size: 13px">
-							2 hour ago
-						</div>	
+					<div class="col l2">
+						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">{{$value->type}}</span>
 					</div>
-					<div class="row valign-wrapper" style="padding:5px 0px">
-						<div class="col l1 blue white-text center-align">
-							<div class="row " style="font-size: 16px ;font-weight: 700">
-								June
-							</div>
-							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
-								01
-							</div>
-						</div>
-						<div class="col l7 pl-7">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						</div>
-						<div class="col l2">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-						</div>
-						<div class="col l2 grey-text center-align" style="font-size: 13px">
-							2 hour ago
-						</div>	
-					</div>
-					<div class="row valign-wrapper" style="padding:5px 0px">
-						<div class="col l1 blue white-text center-align">
-							<div class="row " style="font-size: 16px ;font-weight: 700">
-								June
-							</div>
-							<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
-								01
-							</div>
-						</div>
-						<div class="col l7 pl-7">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-						</div>
-						<div class="col l2">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-						</div>
-						<div class="col l2 grey-text center-align" style="font-size: 13px">
-							2 hour ago
-						</div>	
-					</div>
-					
+					<!-- <div class="col l2">
+						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
+					</div> -->
+					<div class="col l2 grey-text center-align" style="font-size: 13px">
+						2 hour ago
+					</div>	
 				</div>
+			@endforeach
+			{{$user_log->render()}}
+		</div>
 	</div>
 @endsection

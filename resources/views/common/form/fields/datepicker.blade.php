@@ -3,6 +3,11 @@
 		<div class="col s12 m2 l12 aione-field-wrapper">
 				{!!Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker'])!!}
 		</div>
+		<div class="error-red">	
+				@if(@$errors->has())
+					{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+				@endif
+			</div>
 	@else
 		<div class="row" style="padding:10px 0px">
 			<div class="col l3" style="line-height: 30px">
@@ -10,6 +15,11 @@
 			</div>
 			<div class="col l9">
 				{!!Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker'])!!}
+			</div>
+			<div class="error-red">	
+				@if(@$errors->has())
+					{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+				@endif
 			</div>
 		</div>
 	@endif
@@ -20,6 +30,11 @@
 			</div>
 			<div class="col l9">
 				{!!Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker'])!!}
+			</div>
+			<div class="error-red">	
+				@if(@$errors->has())
+					{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+				@endif
 			</div>
 		</div>
 @endif

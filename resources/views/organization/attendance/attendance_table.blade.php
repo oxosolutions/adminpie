@@ -1,4 +1,6 @@
 @php 
+
+	//hellooooo
 	// $sunday_count =0;
 	// $holidays =[];
 	// 		if(!empty($holiday_data))
@@ -21,7 +23,7 @@
 		 {
 		 	$postDate = Session::get('date');
 		 }
-		$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 0);
+			$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 0);
 		 $mo =	$dat->month;
 
 		 if(!empty($fill_attendance_days)) 
@@ -38,7 +40,6 @@
 		 }else{
 		 $total_days = $daysInMonth  =$dat->daysInMonth;
 		}
-
 //dump($fweek_no);
 
 //previous days		 
@@ -62,15 +63,27 @@
 		 $current_year =	$dat->year;
 
 		 $current_days = $dat->daysInMonth;
-		 
-
-		 $previous = $dat->subMonth();
-		 $previousMonth = $previous->month;
-		 $previousYear  =  $previous->year;
 		
-		 $next = $dat->addMonth(2);
-		 $nextMonth = $next->month;
-		 $nextYear = $next->year;
+		if(!empty($fweek_no))
+		{
+			$dat->addWeek(); 
+			$nxt_week = $dat->weekOfMonth;
+			$nxt_week_month =	$dat->month;
+			$nxt_week_year =	$dat->year;
+			$dat->subWeeks(2); 
+
+			$prev_month = $dat->weekOfMonth;
+			$prev_week_month =	$dat->month;
+		 	$prev_week_year =	$dat->year;
+		}		 
+
+			$previous = $dat->subMonth();
+			$previousMonth = $previous->month;
+			$previousYear  =  $previous->year;
+
+			$next = $dat->addMonth(2);
+			$nextMonth = $next->month;
+			$nextYear = $next->year;
 	
 		$week =4;
 		if($total_days >28)
@@ -85,8 +98,7 @@
 		$td="";
 		$MO_data = ['01'=>'JAN', '02'=>'FEB', '03'=>'MAR', '04'=>'APR' ,'05'=>'MAY', '06'=>'JUN','07'=>'JUL', '08'=>'AUG','09'=>'SEP', '10'=>'OCT','11'=>'NOV', '12'=>'DEC'];
 		$year_data = range(2015, 2050);
-
-@endphp
+	@endphp
 
 @if($total_days==28)
 	<style type="text/css"> 
@@ -106,14 +118,7 @@
 @endif
 
 
-	{{-- {{dump('current'. $mo)}}
-	{{dump('pre'.$previousMonth)}}
-	 {{dump('nxt'.$nextMonth)}}
-	 {{dump($total_days) }}
-
-	{{dump('weekno-'. $pre_week )}}
-{{dump('mo-'.$pre_week_month )}}
-{{dump('yr-'.$pre_week_year )}} --}}
+	
 <div id="projectss" class="projects list-view">
 			<div class="row ">
 				<div class="col s12 m12 l6 " >
@@ -158,18 +163,33 @@
 				<div class="aione aione-heading center-align">
 					<div class="row">
 						<div class=" col s3">
+						lock 
+						<div class="switch">
+									    <label>
+											
+												@if(@$lock_status == 1)
+													<input type="checkbox">
+												@else
+													<input type="checkbox" checked="checked">
+												@endif
+											
+									      <span class="lever"></span>
+									    </label>
+									  </div>
+							{{-- <button onclick="lock()">Lock</button> 							<button onclick="unlock({{$current_month}}, {{$current_year}})">un-Lock</button> --}}
+							<input id="current_month" type="hidden" value="{{$current_month}}">
+							<input id="year" type="hidden" value="{{$current_year}}">
 							
 						</div>
 						<div class="col s3 pr-7 right-align">
 							<select  onchange="attendance_filter(null, null, {{$current_month}}, this.value )" >
-								@foreach($year_data as $key =>$val)
+							@foreach($year_data as $key =>$val)
 								@if($current_year==$val)
-								<option selected="selected" value="{{$val}}">{{$val}} </option>
-
-									@else
+									<option selected="selected" value="{{$val}}">{{$val}} </option>
+								@else
 										<option value="{{$val}}">{{$val}} </option>
 									@endif
-								@endforeach
+							@endforeach
 
 							</select>
 						</div>
@@ -392,7 +412,7 @@
 							@endfor
 						@endif
 					</div>
-				</div>
+				</div>in
 			</div>
 
 			
@@ -400,10 +420,12 @@
 				<div class="attendance-sheet row">
 					<div class="attendanc-sheet content">
 					@if(!empty($attendance_data))
-					
-						@foreach($attendance_data as $groupkey => $groupVal)
-								<?php 
 
+						@foreach($attendance_data as $groupkey => $groupVal)
+
+								<?php 
+								$collect = collect($groupVal);
+							 $att_datas =$collect->keyBy('date')->toArray();
 
 								
 									$day_count = $chunk - $sunday_count;
@@ -414,10 +436,8 @@
 									}
 									if($day_count==0)
 									{
-												$day_count =1;
+											$day_count =1;
 									}
-									
-
 									$percent = ceil(($attendance_count[$groupVal[0]['employee_id']] / $day_count * 100));
 									//$over_time_sum = $sum = 0;
 								?>
@@ -445,8 +465,7 @@
 								<div class="attendanc-sheet content emp_name">
 								@if(!empty($employ_info['employ_info']['name']))
 									{{$employ_info['employ_info']['name']}}
-									@else
-									--
+									
 								@endif
 								</div>
 								{{-- <div class="attendance-sheet column"> {{$percent}} </div>
@@ -454,23 +473,29 @@
 								<div class="attendance-sheet column"> {{$total_over_time[$groupVal[0]['employee_id']]}}</div>> --}}
 									
 
+									@for($j=1; $j<=$total_days; $j++)
+									@if(isset($att_datas[$j]['attendance_status']))
 
-									@foreach($groupVal as $employeeKey =>$employeeVal)
-										
-										@if(array_key_exists($employeeVal['date'], $holidays))
-												<div class="attendance-sheet column absent-bg-color">{{$holidays[$employeeVal['date']]}}</div>
+										@if(array_key_exists($att_datas[$j]['date'], $holidays))
+												<div class="attendance-sheet column absent-bg-color">{{$holidays[$j]}}</div>
 											@else
-												@if($employeeVal['attendance_status']=='present')
+												@if($att_datas[$j]['attendance_status']=='present')
 														<div class="attendance-sheet column present-bg-color">P</div>
-												@elseif($employeeVal['attendance_status']=='absent')
+												@elseif($att_datas[$j]['attendance_status']=='absent')
 													<div class="attendance-sheet column absent-bg-color">A</div>
-												@elseif($employeeVal['attendance_status']=='Sunday')
+												@elseif($att_datas[$j]['attendance_status']=='Sunday')
 													<div class="attendance-sheet column sunday">S</div>
-													
+												@elseif($att_datas[$j]['attendance_status']=='leave')
+													<div class="attendance-sheet column sunday">L</div>
+												@else
+													<div class="attendance-sheet column sunday">o</div>
 												@endif
 										@endif
-									@endforeach
-									{!! $td  !!}
+									@else
+									<div class="attendance-sheet column present-bg-color">--</div>
+									@endif
+									@endfor
+									<br>
 									<div style="clear: both;"></div>
 							</div>
 							@endif
@@ -484,6 +509,7 @@
 			
 
 </div>
+
 
 
 

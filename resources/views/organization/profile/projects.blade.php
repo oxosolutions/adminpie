@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+{{-- @include('organization.profile._header') --}}
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row">

@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+
 	@if(@$data)
 		@foreach(@$data as $key => $value)
 			@php
@@ -41,6 +42,7 @@
 					<div class="modal-content" style="background-color: white">
 						
 						{!!FormGenerator::GenerateField('departmentadd',['type' => 'inset'])!!}
+						{{-- {!!FormGenerator::GenerateSection('empsec3',['type' => 'inset'])!!} --}}
 					</div>
 					<div class="modal-footer">
 						<button class="ml-4 btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Department
