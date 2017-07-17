@@ -9,6 +9,7 @@ use App\Model\Admin\GlobalOrganization;
 use Auth;
 use Session;
 use Route;
+use App\Model\Organization\User;
 class LoginController extends Controller
 {
     /*
@@ -41,7 +42,21 @@ class LoginController extends Controller
         $this->middleware('guest.org', ['except' => 'logout']);
     }
 
-    public function showLoginForm(){
+    public function showLoginForm($id = null){
+        if($id != null){
+            $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
+            if($organizationToken != null){
+                $organizationToken->auth_login_token = '';
+                $organizationToken->save();
+                try{
+                    $model = User::where('user_type','[1]')->first();
+                    Auth::guard('org')->loginUsingId($model->id);
+                    return redirect()->route('org.login');
+                }catch(\Exception $e){
+
+                }
+            }
+        }
         $domain = explode('.', request()->getHost());
         $subdomain = $domain[0];
         $model = GlobalOrganization::where('slug',$subdomain)->first();

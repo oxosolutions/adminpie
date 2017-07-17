@@ -9,6 +9,8 @@ use App\Model\Organization\User;
 use Hash;
 use Carbon\Carbon;
 use App\Model\Organization\EmployeeMeta;
+use App\Model\Organization\Employee;
+use App\Model\Organization\User as US;
 use App\Model\Organization\UsersMeta as UM;
 use App\Model\Organization\LogSystem as LS;
 
@@ -110,6 +112,16 @@ class AccountController extends Controller
         if($request['meta_table'] == 'employeemeta'){
             foreach($request as $key => $value){
                 if($value != null && $value != ''){
+                    if($key == 'designation'){
+                        $employeeModel = Employee::find($id);
+                        $employeeModel->designation = $value;
+                        $employeeModel->save();
+                    }
+                    if($key == 'department'){
+                        $employeeModel = Employee::find($id);
+                        $employeeModel->department = $value;
+                        $employeeModel->save();
+                    }
                     $metaModel = EmployeeMeta::firstOrNew(['employee_id'=>$id,'key'=>$key]);
                     $metaModel->key = $key;
                     $metaModel->value = $value;
@@ -142,5 +154,31 @@ class AccountController extends Controller
         $model->save();
         
         return back();
+    }
+    public function changePassword(Request $request)
+    {
+        if(Auth::guard('admin')->check()){
+            $id = Auth::guard('admin')->user()->id;
+        }else{
+            $id = Auth::guard('org')->user()->id;
+        }
+        $model = US::where('id',$id)->first();
+        $check = Hash::check( Hash::make($request->password) , $model->password);
+        // dd($check);
+
+        $validate = [
+                        'current_password'  => 'required',
+                        'new_password'      => 'required|min:6',
+                        'confirm_password'  => 'required|same:new_password|min:6'
+                    ];
+        $this->validate($request , $validate);
+       
+
+        $model = US::where('id',$id)->update(['password' => Hash::make($request->new_password)]);
+
+        if($model){
+            echo "<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>";
+            return back();
+        }
     }
 }

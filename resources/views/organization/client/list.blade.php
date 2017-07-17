@@ -1,13 +1,12 @@
 @extends('layouts.main')
 @section('content')
 
-	
 <div class="fade-background">
 </div>
 <div id="projects" class="projects list-view">
 	<div class="row">
-		<div class="col s12 m9 l9 pr-7" >
-			<div class="row no-margin-bottom">
+		<div class="col s12 m9 l12 pr-7" >
+			{{-- <div class="row no-margin-bottom">
 				<div class="col s12 m12 l6  pr-7 tab-mt-10" >
 					<!-- <input class="search aione-field" placeholder="Search" /> -->
 					<nav>
@@ -49,57 +48,13 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 			<div class="list" id="list">
+ 				<div class="col s12 m9 l12 pr-7" style="margin-top: 14px">
+			
+					@include('common.list.datalist')
 
-		
-
-				<!-- <div class="card-panel shadow white z-depth-1 hoverable project"  >
-
-					<div class="row valign-wrapper no-margin-bottom">
-						<div class="col l1 s2 center-align project-image-wrapper">
-							<a href="{{-- {{route('add_project_info.project', ['id' => $projVal->id])}} --}}" data-toggle="popover" title="Click ti view details" data-content="TEST">
-							
-							<div class="defualt-logo">
-								C
-							</div>
-							</a>
-						</div>
-						
-						<div class="col l11 s10 editable " >
-							<div class="row m-0 valign-wrapper">
-								<div class="col s8 m8 l8">
-									<input type="hidden" value="" class="shift_id" >
-									<input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
-									
-									<a href="#" data-toggle="popover" title="Click to edit the Client detail" data-content="TEST" >
-										<h5 class="project-title black-text flow-text truncate line-height-35">
-											<span class="project-name shift_name font-size-14" contenteditable="true" > client 1</span>
-										</h5>
-									</a>
-								</div>
-								
-								<div class="col s4 m4 l4 right-align">
-									{{-- <div class="switch">
-									    <label>
-											
-												@if($val->status == '0')
-													<input type="checkbox">
-												@else
-													<input type="checkbox" checked="checked">
-												@endif
-											
-									      <span class="lever"></span>
-									      
-									    </label>
-									  </div> --}}
-								</div>
-							</div>
-						</div>
-					</div>
-						
-				</div> -->
-				
+				</div>
 			</div>
 		</div>
 

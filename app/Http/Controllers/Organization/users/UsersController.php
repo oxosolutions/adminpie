@@ -19,12 +19,47 @@ class UsersController extends Controller
     {
         $this->userRepo = $userRepo;
     }
-    public function index(){
+    public function index(Request $request){
+        $datalist = [];
+        /*$data = DEP::all();
+        return view('organization.department.list_department',['data'=>$data]);*/
+        if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
+        $sortedBy = @$request->sort_by;
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = org_user::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                  $model = org_user::where('name','like','%'.$request->search.'%')->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = org_user::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                   $model = org_user::paginate($perPage);
+              }
+          }
+          $datalist =  [
+                          'datalist'=>$model,
+                          'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                          'actions' => [
+                                          'edit'    => ['title'=>'Edit','route'=>'info.user','class'=>'edit'],
+                                          // 'delete'  => ['title'=>'Delete','route'=>'delete.department']
+                                       ]
+                      ];
         $plugins = [
                         'js' => ['select2','custom'=>['users']]
                     ];
-    	$userList = org_user::orderBy('id','desc')->get();
-    	return view('organization.user.list')->with(['userList'=>$userList,'plugins'=>$plugins]);
+    	// $userList = org_user::orderBy('id','desc')->get();
+        return view('organization.user.list',$datalist)->with(['plugins'=>$plugins]);
+
+    	// return view('organization.user.list')->with(['userList'=>$userList,'plugins'=>$plugins]);
     }
     public function create(Request $request)
     {
@@ -63,45 +98,23 @@ class UsersController extends Controller
         return view('organization.user.edit_employee');
     }
 
-    public function user_info($id)
-    {   
-        $data = [];
-        $k = [];
-        $v = [];
+    public function user_info($id){   
 
-        $userMeta = UsersMeta::where('user_id',$id)->get();
-        $index = 0;
-        foreach ($userMeta as $key => $value) {
-            $k[]= $value->key;
-            $v[] = $value->value;
-            $index++;
-        }
-        $UM= array_combine($k ,$v );
-        $designation = null;
-        $types = org_user::where('id',$id)->first()->user_type;
-        $type_array =  json_decode($types,true);
-        $send_data =  ['user_id'=>$id , 'type'=>$type_array];
-        if(in_array(2,$type_array))
-        {
-         $designation = Designation::pluck('name','id');
-         $send_data =  array_add($send_data, 'designation',$designation);
-         $des_id =   $this->userRepo->employee_designation($id);
-         $send_data = array_add($send_data,'designation_id',$des_id);
-         $user_info =   org_user::where('id',$id)->first();
-         $send_data = array_add($send_data,'user_info',$user_info);
-         $user_meta = $UM;
-         $send_data = array_add($send_data,'user_meta',$user_meta);
-        }
-        return view('organization.user.info',['plugins'=>['js'=>['custom'=>['users']]]])->with('send_data',[$send_data]);
+        $model = org_user::find($id);
+        return view('organization.user.info',['model'=>$model]);
     }
-    public function user_meta(Request $request)
+    public function user_meta(Request $request, $id)
     {
-        $this->userRepo->user_meta($request->all());
-        return redirect()->route('list.users');
+        $model = org_user::find($id);
+        $model->name = $request->name;
+        $model->email = $request->email;
+        $model->role_id = $request->role_id;
+        $model->user_type = json_encode($request->user_type);
+        $model->save();
+        return redirect()->route('list.user');
     }
 
     public function update(Request $request){
-
         try{
             $model = org_user::find($request->user_id);
             $model->name = $request->name;

@@ -7,6 +7,7 @@ use Session;
 
 class CategoryMeta extends Model
 {
+	public static $breadCrumbColumn = 'id';
 	protected $fillable = [ 'category_id', 'key', 'value'];
 
      public function __construct()

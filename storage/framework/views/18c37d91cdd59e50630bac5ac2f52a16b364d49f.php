@@ -1,10 +1,25 @@
 <?php $__env->startSection('content'); ?>
-
+<?php 
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Tasks',
+    'add_new' => '+ Add Tasks'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 	<div class="row">
 		<?php echo $__env->make('organization.project._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<div class="row">
-			<a href="#modal1" class="btn-flat">Add task</a>
-			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add Task','button_title'=>'Save task','section'=>'tassec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			
+            <?php echo Form::open(['route'=>'create.tasks','method'=>'POST','files'=>true]); ?>
+
+                <?php if(array_key_exists('id',request()->route()->parameters())): ?>
+                    <input type="hidden" name="project_id" value="<?php echo e(request()->route()->parameters()['id']); ?>">
+                <?php endif; ?>
+                <?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Task','button_title'=>'Save task','section'=>'tassec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+             <?php echo Form::close(); ?> 
 			<?php echo $__env->make('common.tasks', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		</div>
 	</div>
@@ -18,6 +33,14 @@
 	.hover-me:hover .options{
 		display: block
 	}
+    .progress{
+        position: absolute;
+        z-index: 999;
+        width: 700px;
+        top: 60%;
+        left: 30%;
+        display: none;
+    }
 
 	 .task-font{
         font-size: 13px !important;padding-top: 10px !important;

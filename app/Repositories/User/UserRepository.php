@@ -2,7 +2,6 @@
 namespace App\Repositories\User;
 use App\Model\Organization\User;
 use App\Model\Organization\UsersMeta;
-
 use Hash;
 
 class UserRepository implements UserRepositoryContract
@@ -17,6 +16,7 @@ class UserRepository implements UserRepositoryContract
 			$user->fill($data);
 			$user->password = Hash::make($data['password']);
 			$user->user_type = json_encode([$type]);
+			$user->role_id = $data['role_id'];
 			$user->save();
 			return $user->id;
 		}else{

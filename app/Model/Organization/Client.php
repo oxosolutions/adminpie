@@ -7,6 +7,7 @@ use Session;
 
 class Client extends Model
 {
+	public static $breadCrumbColumn = 'id';
 	public function __construct()
 	{
 		if(!empty(Session::get('organization_id')))
@@ -16,4 +17,9 @@ class Client extends Model
 	}
    protected $fillable =['user_id','name', 'company_name', 'address', 'country', 'state', 'city', 'email', 'phone', 'additional_info'];
 
+   //one to one relation between client and user
+   public function getUserDataByUser_id()
+   {
+   	return $this->belongsTo('App\Model\Organization\User','user_id','id');
+   }
 }

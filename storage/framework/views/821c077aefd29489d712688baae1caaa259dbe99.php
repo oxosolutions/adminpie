@@ -1,6 +1,22 @@
 
 <?php $__env->startSection('content'); ?>
-	<div>
+
+<?php 
+
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Dashboard',
+	'add_new' => '+ Add Widget'
+	); 
+ ?>
+
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+<div>
 		<div class="row">
 			<?php $__currentLoopData = $model; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 				<div class="col l3 pr-7">
@@ -42,189 +58,23 @@
 					</span>
 				</button>
 			</div>
-			<div class="card" >
-				<div>
-					<div class="row">
-						<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
-							Projects
-						</div>
-					</div>
-					<div class="row">
-						<ul class="collapsible " data-collapsible="accordion"  style="margin:0px;border:none !important;box-shadow: none !important;">
-						    <li class="active">
-						      	<div class="collapsible-header active">
-									<div class="row valign-wrapper">
-										<div class="col" >
-											<span class="blue white-text" style="display:block;width: 30px;line-height: 30px;text-align: center;font-size: 22px;border-radius: 50%">S</span>
-										</div>
-										<div class="col pl-7" >
-											Smaartframework.com
-										</div>
-										<div class="col l2 right-align">
-											<div class="row valign-wrapper">
-												<div class="col l8">
-													<div class="aione-progress-bar"><div class="aione-progress-bg"><div class="aione-progress-inside" ></div></div></div>		
-												</div>
-												<div class="col l4 pl-7">
-													80%
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-						      	<div class="collapsible-body" style="padding: 10px">
-						      		<div>
-						      			<div class="row">
-						      				<div class="col l6 pr-7">
-						      					<div style="background-color: #7E7E7E;padding: 6px" class="white-text center-align">
-						      						Start Date: 00:00:00
-						      					</div>
-						      				</div>
-						      				<div class="col l6 pl-7">
-						      					<div style="background-color:#2978A2;padding: 6px" class="white-text center-align">
-						      						Due Date: 00:00:00
-						      					</div>
-						      				</div>
-						      			</div>
-						      			<div class="row" style="margin: 10px 0px ">
-						      				<div class="col l6 pr-7">
-						      					<div class="row" style="padding: 10px 0px;">
-						      						<div class="col l4">
-						      							<img src="<?php echo e(asset('assets/images/sgs_sandhu.jpg')); ?>" style="width:60px;border-radius: 50%">
-						      						</div>
-						      						<div class="col l8">
-						      							<div class="row">
-						      								<span class="teal darken-2 white-text" style="padding: 0px 5px">Client</span>
-						      							</div>
-						      							<div class="row">
-						      								Sandeep Singh
-						      							</div>
-						      							<div class="row" style="font-weight: 300">
-						      								tel: 1800 281 2300
-						      							</div>
-						      						</div>
-						      					</div>
-						      				</div>
-						      				<div class="col l6 pl-7">
-						      					<div class="row" style="padding: 10px 0px;">
-						      						<div class="col l4">
-						      							<img src="<?php echo e(asset('assets/images/sgs_sandhu.jpg')); ?>" style="width:60px;border-radius: 50%">
-						      						</div>
-						      						<div class="col l8">
-						      							<div class="row">
-						      								<span class="teal darken-2 white-text" style="padding: 0px 5px">Project Manager</span>
-						      							</div>
-						      							<div class="row">
-						      								Rahul sharma
-						      							</div>
-						      							<div class="row" style="font-weight: 300">
-						      								tel: 1800 281 6301
-						      							</div>
-						      						</div>
-						      					</div>
-						      				</div>
-						      			</div>
-						      			<div class="row">
-						      				<div class="col l12">
-						      					<h5>Project Details</h5>
-						      				</div>
-						      				<div class="col l12">
-						      					<div class="row" style="margin: 10px 0px">
-						      						<div class="col l5">
-						      							Website Url
-						      						</div>
-						      						<div class="col l7">
-						      							www.smaartframework.com
-						      						</div>
-						      					</div>
-						      					<div class="row" style="margin: 10px 0px">
-						      						<div class="col l5">
-						      							Username
-						      						</div>
-						      						<div class="col l7">
-						      							admin@hotmail.com
-						      						</div>
-						      					</div>
-						      					<div class="row" style="margin: 10px 0px">
-						      						<div class="col l5">
-						      							password
-						      						</div>
-						      						<div class="col l7">
-						      							******
-						      						</div>
-						      					</div>
-						      				</div>
-						      			</div>
-						      			<div class="row" style=" margin:15px 0px ">
-						      				<div class="col l6 pr-7 center-align">
-						      					<a href="" class="btn blue">Edit project details</a>
-						      				</div>
-						      				<div class="col l6 pl-7 center-align">
-						      					<a href="" class="btn grey"> close project</a>
-						      				</div>
-						      			</div>
-						      		</div>
-						      	</div>
-						    </li>
-						    <li>
-								<div class="collapsible-header">
-
-									<div class="row valign-wrapper">
-										<div class="col" >
-											<span class="blue white-text" style="display:block;width: 30px;line-height: 30px;text-align: center;font-size: 22px;border-radius: 50%">A</span>
-										</div>
-										<div class="col pl-7" >
-											Admin Pie
-										</div>
-										<div class="col l2 right-align">
-											<div class="row valign-wrapper">
-												<div class="col l8">
-													<div class="aione-progress-bar"><div class="aione-progress-bg"><div class="aione-progress-inside" style="width: 39%"></div></div></div>		
-												</div>
-												<div class="col l4 pl-7">
-													39%
-												</div>
-											</div>
-											
-										</div>
-									</div>
-								</div>
-								<div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-						    </li>
-						    <li>
-						      <div class="collapsible-header">
-						      		<div class="row valign-wrapper">
-										<div class="col" >
-											<span class="blue white-text" style="display:block;width: 30px;line-height: 30px;text-align: center;font-size: 22px;border-radius: 50%">O</span>
-										</div>
-										<div class="col pl-7" >
-											OCRM
-										</div>
-										<div class="col l2 right-align">
-											<div class="row valign-wrapper">
-												<div class="col l8">
-													<div class="aione-progress-bar"><div class="aione-progress-bg"><div class="aione-progress-inside" style="width: 15%"></div></div></div>		
-												</div>
-												<div class="col l4 pl-7">
-													15%
-												</div>
-											</div>
-										</div>
-									</div>
-						      </div>
-						      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-						    </li>
-						  </ul>
-					</div>
-				</div>
-			</div>
+			
 		</div>
 		
 		
 	</div>
 	
 
-	<style type="text/css">
+	
+
+
+
+
+
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+<style type="text/css">
 		.aione-widget-header{
 			border-bottom: 1px solid #e8e8e8;cursor: pointer;
 		}
@@ -367,5 +217,8 @@
  //    }
 	</script>
 
+
+<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

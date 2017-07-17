@@ -1,11 +1,25 @@
 @extends('layouts.main')
 @section('content')
-
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Tasks',
+    'add_new' => '+ Add Tasks'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 	<div class="row">
 		@include('organization.project._tabs')
 		<div class="row">
-			<a href="#modal1" class="btn-flat">Add task</a>
-			@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add Task','button_title'=>'Save task','section'=>'tassec1']])
+			
+            {!!Form::open(['route'=>'create.tasks','method'=>'POST','files'=>true])!!}
+                @if(array_key_exists('id',request()->route()->parameters()))
+                    <input type="hidden" name="project_id" value="{{request()->route()->parameters()['id']}}">
+                @endif
+                @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Task','button_title'=>'Save task','section'=>'tassec1']])
+             {!!Form::close()!!} 
 			@include('common.tasks')
 		</div>
 	</div>
@@ -19,6 +33,14 @@
 	.hover-me:hover .options{
 		display: block
 	}
+    .progress{
+        position: absolute;
+        z-index: 999;
+        width: 700px;
+        top: 60%;
+        left: 30%;
+        display: none;
+    }
 
 	 .task-font{
         font-size: 13px !important;padding-top: 10px !important;

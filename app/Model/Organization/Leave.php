@@ -24,9 +24,16 @@ class Leave extends Model
         $user_list = User::where('user_type','[2]')->pluck('name','id');
         return $user_list;
     }
-
+    public function categories_rel(){
+    	return $this->belongsTo('App\Model\Organization\Category','leave_category_id','id')->where('type','leave');
+    }
     public function categories(){
     	return CAT::where('type','leave')->pluck('name','id');
+    }
+
+    public function employee_info(){
+
+    	return $this->belongsTo('App\Model\Organization\Employee','employee_id','id');
     }
    
 }

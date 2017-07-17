@@ -57,12 +57,14 @@ class ShiftsController extends Controller
     $valid_fields = [
                             'name' => 'required|unique:'.$tbl.'_shifts',
                             'from' => 'required',
-                            'to'   => 'required'
+                            'to'   => 'required',
+                            'working_days' => 'required'
                         ];
       $this->validate($request , $valid_fields);
 
       $sh = new Shift();
       $sh->fill($request->all());
+      $sh->working_days = json_encode($request->working_days);
       $sh->save();
      return redirect()->route('shifts');
    }
@@ -75,7 +77,7 @@ class ShiftsController extends Controller
          }
       else if($request['status'] == 'false')
       {
-             echo   $request['status'] =0;
+        echo   $request['status'] =0;
       }
       $sh->fill($request->all());
       $sh->save();
@@ -100,11 +102,13 @@ class ShiftsController extends Controller
         $valid_fields = [
                             'name' => 'required',
                             'from' => 'required',
-                            'to'   => 'required'
+                            'to'   => 'required',
+                            'working_days' => 'required'
                         ];
       $this->validate($request , $valid_fields);
 
-      $data = $request->except('_token','id');
+      $data = $request->except('_token','id','action','working_days');
+      $data['working_days'] = json_encode($request->working_days);
       $model = Shift::where('id',$request->id)->update($data);
       return redirect()->route('shifts');
     }

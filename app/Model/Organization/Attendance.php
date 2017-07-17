@@ -8,6 +8,7 @@ use Session;
 
 class Attendance extends Model
 {
+	public static $breadCrumbColumn = 'employee_id';
 	public function __construct()
 	{
 

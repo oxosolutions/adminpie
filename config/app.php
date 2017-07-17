@@ -238,6 +238,7 @@ return [
         'EmployeeHelper' => App\Helpers\EmployeeHelper::class,
         'FormGenerator' => App\Helpers\FormGenerator::class,
         'MySQLWrapper' => PHPMySQLWrapper\MySQLWrapper\Wrapper::class,
+        'drawSidebar' => App\Helpers\draw_sidebar::class,
 
     ],
 

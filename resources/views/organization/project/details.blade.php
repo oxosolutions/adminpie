@@ -1,5 +1,15 @@
 @extends('layouts.main')
 @section('content')
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Project Details',
+    'add_new' => ''
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 <div>
     @include('organization.project._tabs')
     <div class="col l2  pr-7 center-align " style="margin-top: 14px" >
@@ -51,30 +61,10 @@
                                 </div>
                                 <div class="col l6 right-align" >
                                     <a href="#modal3" class="btn">Edit</a>
-                                    <div id="modal3" class="modal modal-fixed-footer left-align">
-                                        <div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-                                            <div class="row" style="padding:15px 10px">
-                                                <div class="col l7">
-                                                    <h5 style="margin:0px">Project detail</h5> 
-                                                </div>
-                                                <div class="col l5 right-align">
-                                                    <a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-                                                </div>
-                                                    
-                                            </div>
-                                    
-                                        </div>
-                                        {!!Form::model($model,['route'=>['update.project',$model->id],'method'=>'POST'])!!}
-                                            <div class="modal-content" style="background-color: white">
-                                                {!!FormGenerator::GenerateSection('prosec3',['type'=>'inset'])!!}
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn blue" type="submit">Save
-                                                    <i class="material-icons right">save</i>
-                                                </button>
-                                            </div>
-                                        {!!Form::close()!!}
-                                    </div>
+                                    {!!Form::model($model,['route'=>['update.project',$model->id],'method'=>'POST'])!!}
+                                   
+                                    @include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Project detail','button_title'=>'Save','section'=>'prosec3']])
+                                     {!!Form::close()!!}
                                 </div>
                                     
                             </div>
@@ -158,77 +148,7 @@
                     @endforeach
                 @endif
                 <div class="col s12 m12 l12 pv-5">
-                   {{--  <a href="#modal1" style="font-size: 10px">View or Edit Team Menbers</a> --}}
-                    {{-- <div id="modal1" class="modal modal-fixed-footer left-align">
-                        <div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-                            <div class="row" style="padding:15px 10px">
-                                <div class="col l7">
-                                    <h5 style="margin:0px">Assign team to this project</h5> 
-                                </div>
-                                <div class="col l5 right-align">
-                                    <a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-                                </div>
-                                    
-                            </div>
-                    
-                        </div>
-                        <div class="modal-content" style="background-color: white">
-                            <div>
-                                project name:   smaartframework.com
-                            </div>
-                            <div>
-                                <select multiple>
-                                      <option value="" disabled selected>Choose your option</option>
-                                      <option value="1">Option 1</option>
-                                      <option value="2">Option 2</option>
-                                      <option value="3">Option 3</option>
-                                </select>
-                                 <label>Select Members</label>
-                            </div>
-                            <div class="row">
-                                 <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                                <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                                <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                                <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                                <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                                <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                                <div class="chip">
-                                    <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                                    Ashish Joshi
-                                </div>
-                            </div>
-                            <div>
-                                <input type="text" name="" placeholder="Enter Team Title">
-                            </div>
-                          
-                        </div>
-                        <div class="modal-footer">
-                          
-                            <button class="btn blue" type="submit">Save
-                                <i class="material-icons right">save</i>
-                            </button>
-                        </div>
-                       
-                    </div> --}}
-                    {{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'This is Heading','button_title'=>'Save Data','section'=>'holidayadd']]) --}}
+                  
                 </div>
                  
                 {{-- <strong>OR</strong> --}}
@@ -334,9 +254,7 @@
    .progress-bar-wrapper > .accomplished{
         background-color: #2196F3;line-height: 5px;font-size:10px;width: 10%;color: white;text-align: right;padding-right: 10px
    }
-   /*.progress-bar-wrapper:hover .accomplished{
-    line-height: 10px
-   }*/
+
    .progress-bar-wrapper:hover .percent{
         display: flex;
         padding: 8px 0px 2px 0px;

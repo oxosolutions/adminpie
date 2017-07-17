@@ -15,6 +15,9 @@
     <link href="{{ asset('assets/css/fullcalendar.min.css') }}" rel='stylesheet' />
 	<link href="{{ asset('assets/css/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/sweetalert/dist/sweetalert.css') }}">
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css?ref='.rand(544,44)) }}">
+
     
 	<script src="{{ asset('assets/js/moment.min.js')}}"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -29,17 +32,14 @@
    
     
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
-	
+
 	<script type="text/javascript">
         function route(){
             return '{{url('/')."/".Request::route()->getPrefix()}}';
         }
-
         function csrf(){
-
             return '{{csrf_token()}}';
         }
-
     </script>
 	@if(@$plugins)
 	    @foreach(@$plugins as $key => $plugin)

@@ -1,81 +1,61 @@
 @extends('layouts.main')
 @section('content')
 
-	@php
+@php
+
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Designations',
+	'add_new' => '+ Add Designation'
+); 
+
 	$id = "";
-		if(@$data){
-			foreach(@$data as $k => $v){
-				$newData = $v->name;
-				$id = $v->id;
-			}
-		}
-		@$model = ['name' => @$newData];
 	@endphp	
-<div class="fade-background">
-</div>
 
-<div id="projects" class="projects list-view">
-	
-	<div class="row">
-				<a id="add_new" href="#modal1" class="btn-flat waves-effect waves-light-blue" style="border: 1px solid #a8a8a8;">
-					Add Designation
-				</a>
-				<div id="modal1" class="modal modal-fixed-footer">
-				@if(@$newData == 'undefined' || @$newData == '' || @$newData == null)
-					{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
-				@else
-					{!! Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
-					<input type="hidden" name="id" value="{{$id}}">
-				@endif
-					<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-				    	<div class="row" style="padding:15px 10px">
-				    		<div class="col l7">
-				    			<h5 style="margin:0px">Add designation</h5>	
-				    		</div>
-				    		<div class="col l5 right-align">
-				    			<a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-				    		</div>
-				    			
-				    	</div>
-				    	
-				    </div>
-				    <div class="modal-content" style="background-color: white">
-				    	
-				    	{!!FormGenerator::GenerateField('designation',['type' => 'inset'])!!}
-				    </div>
-				    <div class="modal-footer">
-				    	{{-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Save</a> --}}
-				    	<button class="btn blue" type="submit">Save Designation
-									<i class="material-icons right">save</i>
-								</button>
-				    </div>
-				    {!!Form::close()!!}
-				</div>
-		<div class="col s12 m9 l12 pr-7" style="margin-top: 14px">
+		@if(@$data)
+			@foreach(@$data as $k => $v)
+				@php
+					$newData = $v->name;
+					$id = $v->id;
+				@endphp
+			@endforeach
 			
-			@include('common.list.datalist')
-		</div>
-
-		<div class="col s12 m3 l3 pl-7" >
+				<script type="text/javascript">
+				$(window).load(function(){
+					document.getElementById('modal-edit').click();
+				});
+			</script>
+		@endif
+		@php
+			@$model = ['name' => @$newData];
 			
-			
-		</div>
-	</div>
-</div>
+	@endphp
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+		
 
-<script type="text/javascript">
-	$(document).ready(function(){
-	    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-	  $('#modal1').modal();
+@include('common.page_content_primary_start')
 
-	 if($('input[name=name]').val() != ''){
-	 	$('.display-form-button').click();
-	 }
-  });
-</script>
-<style type="text/css">
-	.closeDialog{
-		color: #fff;
-	}
-</style>
+	@include('common.list.datalist')
+
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
+	@if(@$newData == 'undefined' || @$newData == '' || @$newData == null)
+		{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
+
+	@endif
+	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add designation','button_title'=>'Save Designation','section'=>'titlesection']])
+	 {!!Form::close()!!}
+	@if(@$model)
+		{!! Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
+			<input type="hidden" name="id" value="{{$id}}">
+			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
+			@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit designation','button_title'=>'update Designation','section'=>'titlesection']])
+		{!!Form::close()!!}
+	@endif
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

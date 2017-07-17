@@ -25,9 +25,7 @@
 .row.app-footer .col {
     padding: 0;
 }
-.side-bar-submenu{
-    display: none;
-} 
+
 .aione-field-wrapper input:not([type]), 
 .aione-field-wrapper input[type=text], 
 .aione-field-wrapper input[type=password], 
@@ -248,17 +246,6 @@
 .ml-4{
     margin-left: 4px !important;
 }
-    input[type=search]{
-        margin: 0px;
-        border: 1px solid #ecf0f1;
-        margin: 2px;
-        height: 2rem;
-       background-color: #ecf0f1;
-       border-radius: 20px;
-       margin-top: 3px;
-       padding-left: 5px;
-       float: left;
-    }
     #date
     {
         margin-top:70px;
@@ -279,19 +266,11 @@
         width:700px;
         margin-left:150px;
     }
-    .top-bar-color{
-        position: fixed;
-    }
+   
     .content-section{
         margin-top: 45px
     }
-    .side-bar-submenu:after{
-       
-        border-top: 10px solid transparent;
-        border-bottom: 10px solid transparent; 
-
-        border-right:10px solid blue; 
-    }
+    
     .management-tabs{
         padding:15px 20px !important;
     }
@@ -341,110 +320,14 @@ padding:0px;
     line-height: 48px !important;
     font-size: 14px !important;
 }
-.mdi-navigation-menu{
-    color: white
-}
+
 .top-bar-color{
     background-color: #373C47;
 }
-.row{
-    margin-bottom: 0px !important;
-}
-
-.side-nav{
-    top: 46px;
-   
-}
-.side-nav a{
-    padding:0px !important;
-}
-.side-bar-text{
-    margin-left: 10px !important;
-}
-.side-bar-icon-bg{
-    line-height: 32px !important;width: 32px;font-size: 18px !important;color:#fff
-}
-/*.side-bar-submenu{
-    display: none;
-    background-color: #fff;
-    margin-left: -15px;
-    margin-right: -15px;
-}*/
-.side-nav{
-    left: 0px !important
-}
-.side-bar-submenu li{
-   
-        padding-left: 44px;
-}
-.side-bar-half{
-    
-    width:62px;
-}
-.side-bar-full{
-    left:0px !important;
-
-}
 
 
-.arrow{
-    float: right;
-    font-size: 9px;
-    margin-right: 14px;
-    color: #444;
-}
-.icon-rotate{
-    transform: rotate(90deg);
-    transition:transform .3s;
-}
-.side-nav{
-    background-color: #2D323E;
-    height: 95%;
-    width:230px !important;
-}
-.side-nav.mini{
-    width:50px !important;
-}
-.side-nav li{
-        padding-left: 8px;
-}
-.side-nav a{
-    color: #fff !important;
-}
-.side-bar-text , .arrow{
-    color: white
-}
 
-.side-nav li:hover, .side-nav li.active{
-    background-color: #242832
-}
-.side-bar-submenu{
-    background: #282C37;
-    color: white;
-    width: 90%;
-}
 
-#slide-out{
-    overflow-x: hidden;
-}
-#slide-out::-webkit-scrollbar-track
-{
-    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-    background-color: transparent;
-}
-
-#slide-out::-webkit-scrollbar
-{
-    width: 5px;
-    background-color: transparent;
-   
-}
-
-#slide-out::-webkit-scrollbar-thumb
-{
-    background-color: #787A7E;
-     border-radius: 6px;
-}
 .pl-280{
     padding-left: 268px !important;
 }
@@ -497,21 +380,7 @@ padding:0px;
    margin: 10px 0px;
    margin-bottom: 20px;
 }
-.mini-side-bar{
-    position: absolute;
-    width: 250px !important;
-    background-color: #282c37;
-    padding: 10px;
-}
-.mini-side-bar:before {
-    content:"\A";
-    border-style: solid;
-    border-width: 10px 15px 10px 0;
-    border-color: transparent #282c37 transparent transparent;
-    position: absolute;
-    left: -15px;
-    margin-top: -10px;
-}
+
 .chip{
     margin-top: 5px;
 }
@@ -620,43 +489,14 @@ padding:0px;
             padding-left: 10px !important;
         }
     }
-    .aione-switch-view{
-        border:1px solid #e8e8e8;padding: 5.5px
-    }
-    .aione-switch-view ul{
-        width: 100% !important;text-align: center;
-    }
-    .aione-switch-view > ul > li{
-        border:1px solid #e8e8e8;line-height: 0px;padding:2px;width: 31%;text-align: center;
-    }
-    .aione-switch-view > ul > li > a{
-        display: block;
-    }
-    .aione-switch-view i{
-        color:#434c47;
-    }
-    .aione-switch-view > ul > li:hover{
-        background-color: #0288D1;
-        color:#fff !important;
-    }
-    .aione-switch-view > ul > li:hover i{
-        color: #fff;
-    }
-    .aione-sort{
-        border:1px solid #e8e8e8;padding: 7px
-    }
-    .aione-sort select{
-        height:30px;width: 75%;
-    }
-    .aione-sort i{
-        line-height: 28px;float: right;width: 100%;
-    }
+    
 	
 
 
 /*end new css for final design*/
 
 /*search bar start*/
+/*
     nav{
         height:46px !important;
     }
@@ -672,6 +512,7 @@ padding:0px;
     .icon-search{
         color:#444 !important;line-height: 49px !important;
     }
+	/
 /*search bar end*/
 
 /*start BreadCrumb*/

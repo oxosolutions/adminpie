@@ -7,7 +7,7 @@ use Route;
 
 class GlobalModule extends Model
 {
-    protected $fillable = ['name', 'route_data', 'status'];   
+    protected $fillable = ['name', 'route', 'status'];   
 
      public static function getRouteListArray()
     {
@@ -18,21 +18,28 @@ class GlobalModule extends Model
             }
            else{
                 $rout =  str_replace('/{id}','',$route->uri);
-                $routeList[$rout] = $rout;
+                $newRoute = str_replace('/{id?}','',$rout);
+                $routeList[$newRoute] = $newRoute;
             }
         }
         return $routeList;
     }
 
-	public function route()
+    // public function permissons()
+    // {
+    //     return $this->morphMany('App\Model\Organization\RolePermisson', 'permisson');
+    // }
+
+	public function subModule()
 	{
-		return $this->hasMany('App\Model\Admin\GlobalModuleRoute','module_id','id');
+		return $this->hasMany('App\Model\Admin\GlobalSubModule','module_id','id');
 	}
 
-    public function module_role_permisson()
-    {
-        return $this->hasMany('App\Model\Organization\RolePermisson','module_id','id');
-    }
+
+    // public function module_role_permisson()
+    // {
+    //     return $this->hasMany('App\Model\Organization\RolePermisson','module_id','id');
+    // }
 
 
 	// public function permisson()

@@ -53,22 +53,91 @@
 				{!!Form::text('apply_before',@$data['data']['apply_before'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
 			</div>
 		</div>
-		
 		<div class="row" style="padding-bottom: 15px">
-			
 			<div class="col l3" style="line-height: 30px">
-				Applicable	Designation
+				Applicable	Include Roles
 			</div>
 			<div class="col l9">
-				{{Form::select('designation[]',$data['designationData'],@json_decode($data['data']['designation']),array('multiple'=>'multiple', 'placeHolder'=>"Select Designation"))}}
+				@php
+					if(isset($data['data']['role_include'])){
+						
+						$data['role_include'] = array_map('intval',json_decode($data['data']['role_include']));
+					}
+				@endphp
+				{{Form::select('role_include[]',$data['roles'],@$data['role_include'],array('multiple'=>'multiple', 'placeholder'=>"Select Role"))}}
 			</div>
 		</div>
 		<div class="row" style="padding-bottom: 15px">
 			<div class="col l3" style="line-height: 30px">
-				Applicable Users
+				Applicable Exclude Roles
 			</div>
 			<div class="col l9">
-				{{Form::select('user[]',$data['userData'],@json_encode($data['data']['user']),array('multiple'=>'multiple', 'placeHolder'=>"Select User"))}}
+				@php
+					if(isset($data['data']['roles_exclude'])){
+						
+						$data['data']['roles_exclude'] = array_map('intval',json_decode($data['data']['roles_exclude']));
+					}
+				@endphp
+				{{Form::select('roles_exclude[]',$data['roles'],@$data['data']['roles_exclude'],array('multiple'=>'multiple', 'placeholder'=>"Select Role"))}}
+			</div>
+		</div>
+		
+		<div class="row" style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Applicable Incldue Designation
+			</div>
+			<div class="col l9">
+				@php
+					if(isset($data['data']['include_designation'])){
+
+						$data['data']['include_designation'] = array_map('intval',json_decode($data['data']['include_designation']));
+					}
+				@endphp
+				{{Form::select('include_designation[]',$data['designationData'],@$data['data']['include_designation'],array('multiple'=>'multiple', 'placeholder'=>"Select Designation"))}}
+			</div>
+		</div>
+
+		<div class="row" style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Applicable Exclude	Designation
+			</div>
+			<div class="col l9">
+				@php
+					if(isset($data['data']['exclude_designation'])){
+
+						$data['data']['exclude_designation'] = array_map('intval',json_decode($data['data']['exclude_designation']));
+					}
+				@endphp
+				{{Form::select('exclude_designation[]',$data['designationData'],@$data['data']['exclude_designation'],array('multiple'=>'multiple', 'placeholder'=>"Select Designation"))}}
+			</div>
+		</div>
+		<div class="row" style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Include Users
+			</div>
+			<div class="col l9">
+			@php
+					if(isset($data['data']['user_include'])){
+						
+						$data['user_include'] = array_map('intval',json_decode($data['data']['user_include']));
+					}
+				@endphp
+				{{Form::select('user_include[]',$data['userData'],@$data['user_include'],array('multiple'=>'multiple', 'placeholder'=>"Select User"))}}
+			</div>
+		</div>
+
+		<div class="row" style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Applicable Exclude Users
+			</div>
+			<div class="col l9">
+			@php
+					if(isset($data['data']['user_exclude'])){
+						
+						$data['user_exclude'] = array_map('intval',json_decode($data['data']['user_exclude']));
+					}
+				@endphp
+				{{Form::select('user_exclude[]',$data['userData'],@$data['user_exclude'],array('multiple'=>'multiple', 'placeholder'=>"Select User"))}}
 			</div>
 		</div>
 

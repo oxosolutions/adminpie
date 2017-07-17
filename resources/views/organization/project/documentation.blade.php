@@ -1,5 +1,15 @@
 @extends('layouts.main')
 @section('content')
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Documentation',
+    'add_new' => '+ Add Documentation'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 <div>
     @include('organization.project._tabs')
     <div class="col l12">
@@ -143,9 +153,7 @@
 						
 
 					</div>
-					<div class="card-panel shadow mt-22" >
-						clients
-					</div>
+					
 				</div>
 			</div>
 		</div>

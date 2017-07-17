@@ -1,6 +1,15 @@
 @extends('layouts.main')
 @section('content')
-
+@php
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Attendence',
+	'add_new' => '+ Import Attendence'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 <script type="text/javascript">
 	
 </script>
@@ -60,6 +69,9 @@
 					
 					<a  href="{{route('import.form.attendance')}}" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
 						Import Attendence
+					</a>
+					<a  href="{{route('hr.attendance')}}" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
+						Mark Attendence
 					</a>
 				</div>
 			</div>

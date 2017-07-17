@@ -15,13 +15,13 @@
 	@endif
 @else
 	<div class="row" style="padding:10px 0px">
-			<div class="col l3" style="line-height: 30px">
-				{{$collection->field_title}}
-			</div>
-			<div class="col l9">
-				{!!Form::time(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'timepicker'])!!}
-			</div>
+		<div class="col l3" style="line-height: 30px">
+			{{$collection->field_title}}
 		</div>
+		<div class="col l9">
+			{!!Form::time(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'timepicker'])!!}
+		</div>
+	</div>
 @endif
 
 <script type="text/javascript">

@@ -5,7 +5,7 @@
 		<div class="col l9 pr-7">
 			<div class="card" style="margin-top: 14px">
 				<div class="row">
-					<div class="col l3" style="padding:14px;">
+					<div class="col l3" style="padding:14px;position: relative;">
 						<?php echo Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1']); ?>
 
 							<div class="abc" style="position: relative;">
@@ -13,13 +13,58 @@
 								<img src="<?php echo e(asset('ProfilePicture/'.$model->profilePic)); ?>" style="width: 100%">
 							<?php else: ?>
 								<img src="<?php echo e(asset('ProfilePicture/default-user.jpg')); ?>" style="width: 100%">
+
 							<?php endif; ?>
 								<a href="" class="upload-image">Change Image</a>	
 								<input type="file" name="aione-dp"
 								onchange="document.getElementById('form1').submit()" class="chooser">
+
+
 							</div>
+							
 						<?php echo Form::close(); ?>
 
+						<div class="preloader-wrapper image-spinner big active" style="position: absolute;top: 50%;left: 50%;margin-top: -17px;margin-left: -17px;width: 34px;height: 34px;display: none">
+							      <div class="spinner-layer spinner-blue">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+
+							      <div class="spinner-layer spinner-red">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+
+							      <div class="spinner-layer spinner-yellow">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+
+							      <div class="spinner-layer spinner-green">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+							    </div>
 					</div>
 					<style type="text/css">
 						.chooser { position: absolute; z-index: 1; opacity: 0; cursor: pointer;margin-top: -36px}
@@ -49,7 +94,7 @@
 								<?php echo Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH',]); ?>
 
 								<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-								
+							
 								<?php echo Form::close(); ?>
 
 							</div>
@@ -119,9 +164,12 @@
 		<div class="col l3 pl-7">
 			<div class="card"  style="margin-top: 14px">
 				<div class="row center-align" style="padding:10px 0px">
-					<a href="#modal10" class="btn blue">Change Password</a>	
-					
-					<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal10','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>	
+					<?php echo Form::open(['route' => 'change.password' , 'method' => 'post']); ?>
+
+					<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+					<?php echo Form::close(); ?>
+
 				</div>
 				
 			</div>
@@ -160,6 +208,7 @@
 							<?php echo Form::close(); ?>
 
 						</div>
+					
 					</div>
 					
 				</div>
@@ -241,8 +290,9 @@
 									<?php if($field == 'designation'): ?>
 										&nbsp;<?php echo e(@App\Model\Organization\Designation::find($model[strtolower($field)])->name); ?>
 
-									<?php elseif($field == 'department'): ?>
-										&nbsp;<?php echo e(@App\Model\Organization\Department::find($model[strtolower($field)])->name); ?>
+								<?php elseif($field == 'department'): ?>
+										&nbs	<?php echo Form::close(); ?>p;<?php echo e(@App\Model\Organization\Department::find($model[strtolower($field)])->
+											name); ?>
 
 									<?php else: ?>
 										&nbsp;&nbsp;<?php echo e($model[strtolower($field)]); ?>
@@ -251,7 +301,7 @@
 								</div>
 							</div>
 						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-						
+					
 					</div>
 				</div>
 				<div class="card" style="margin-top: 14px">
@@ -304,7 +354,7 @@
 								</div>
 							</div>
 						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-						
+				
 					</div>
 				</div>
 			<?php endif; ?>
@@ -415,12 +465,33 @@
 		   }
 	</style>
 	<script type="text/javascript">
-		  $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal').modal();
+		
+	$(document).ready(function(){
+		$('#modal2').modal({
+			 dismissible: false
+		});
+		$('#modal3').modal({
+			 dismissible: false
+		});
+		$('#modal4').modal({
+			 dismissible: false
+		});
 
-  });
+	})
+	$(document).on('click','closeDialog',function(){
+		$('#modal1').modal('close');
+	})
+	$(document).on('click','.fa-close',function(){
+		$('#modal9').modal('close');
+	});
+	$(document).on('click','.chooser',function(){
+									$('.image-spinner').show();
+								});
 	</script>
+	
+								
+							
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

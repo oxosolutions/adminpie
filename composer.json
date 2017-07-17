@@ -25,7 +25,7 @@
             "App\\": "app/",
             "PHPMySQLWrapper\\MySQLWrapper\\" : "packages/phpmysqlwrapper/mysqlwrapper/src"
         },
-        "files": ["app/Helpers/widget_function.php"]
+        "files": ["app/Helpers/widget_function.php", "app/Helpers/global_helper.php"]
     },
     "autoload-dev": {
         "psr-4": {

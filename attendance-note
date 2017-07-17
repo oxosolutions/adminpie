@@ -1,3 +1,53 @@
+	global helper
+-------------------
+1. setting_val_by_key('setting key');
+2.  user_info()
+3. role_id()
+
+
+attendance
+---------------
+by hr - move to - attendance as mark attendance
+
+
+
+		Widget
+-------------------------
+widget relate to module
+
+
+
+
+
+
+
+
+Role Permisson
+-------------------------
+Role id 
+permisson_to -- module-route , submodule-route , submodule-next 
+permisson_id -
+permisson 
+
+
+-----------------------------
+
+MOdule 
+id  Route 
+
+sub-module
+ id  module_id route 
+
+route
+sub-id   route type 
+
+
+
+
+
+
+
+
 ATTENDANCE 
 
 1. submit  by hr one by one or all 

@@ -1,5 +1,15 @@
 @extends('layouts.main')
 @section('content')
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Notes',
+    'add_new' => '+ Add Note'
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 <div>
     @include('organization.project._tabs')
     <div class="col l12">
@@ -58,52 +68,6 @@
 	h2{
 		margin: 0px !important
 	}
-	
-/*	 #notes  ul li p{
-	  font-family:"Reenie Beanie",arial,sans-serif;
-	  font-size:180%;
-	}
-	 #notes  ul li a{
-	  -webkit-transform: rotate(-6deg);
-	  -o-transform: rotate(-6deg);
-	  -moz-transform:rotate(-6deg);
-	}
-	 #notes  ul li:nth-child(even) a{
-	  -o-transform:rotate(4deg);
-	  -webkit-transform:rotate(4deg);
-	  -moz-transform:rotate(4deg);
-	  position:relative;
-	  top:5px;
-	  background:#cfc;
-	}
-	 #notes  ul li:nth-child(3n) a{
-	  -o-transform:rotate(-3deg);
-	  -webkit-transform:rotate(-3deg);
-	  -moz-transform:rotate(-3deg);
-	  position:relative;
-	  top:-5px;
-	  background:#ccf;
-	}
-	 #notes  ul li:nth-child(5n) a{
-	  -o-transform:rotate(5deg);
-	  -webkit-transform:rotate(5deg);
-	  -moz-transform:rotate(5deg);
-	  position:relative;
-	  top:-10px;
-	}
-	 #notes  ul li a:hover,ul li a:focus{
-	  box-shadow:10px 10px 7px rgba(0,0,0,.7);
-	  -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
-	  -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
-	  -webkit-transform: scale(1.25);
-	  -moz-transform: scale(1.25);
-	  -o-transform: scale(1.25);
-	  position:relative;
-	  z-index:5;
-	}
-	 #notes  ol{text-align:center;}
-	 #notes  ol li{display:inline;padding-right:1em;}
-	 #notes  ol li a{color:#fff;}*/
 </style>
 
 @endsection	

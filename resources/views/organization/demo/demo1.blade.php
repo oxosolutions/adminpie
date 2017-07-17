@@ -12,7 +12,7 @@
                     <div class="col l2 right-align">
                         <div class="row">
                             <div class="col l8">
-                                <input class="checkbox select_all1" type="checkbox" id="select_all1" />
+                                <input class="checkbox checkAll" type="checkbox" id="select_all1" />
                                 <label for="select_all1">Select All</label>      
                             </div>
                             <div class="col l4 right-align">
@@ -375,16 +375,18 @@
     }
 </style>
 <script type="text/javascript">
-$(document).ready(function () {
-    $(".select_all1").click(function () {
-        $(".sub-check1").prop('checked', $(this).prop('checked'));
-    });
-    $(".select_all2").click(function () {
-        $(".sub-check2").prop('checked', $(this).prop('checked'));
-    });
-     $(".select_all3").click(function () {
-        $(".sub-check3").prop('checked', $(this).prop('checked'));
-    });
+$('.checkAll').on('click',function(){
+    // console.log('hello');
+    if($(this).is(':checked')){
+        console.log('hello1');
+        $(this).parents('.collapsible-header').siblings().find('input[type="checkbox"]').prop('checked','checked');
+       // $(this).closest('div').find('input[type="checkbox"]').prop('checked','checked');
+      
+        }else{        
+            console.log('hello122');
+             $(this).parents('.collapsible-header').siblings().find('input[type="checkbox"]').prop('checked','');
+
+    }
 });
 </script>
 <style type="text/css">

@@ -1,6 +1,15 @@
 @extends('layouts.main')
 @section('content')
-
+@php
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Attendence',
+	'add_new' => '+ Import Attendence'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 <style type="text/css">
 
 	body{
@@ -227,7 +236,7 @@
 
 						<td>{{$attValue['employee']['designations']['name']}}</td>
 					
-							<td>--</td>
+							<td>{{$attValue['employee']['department_rel']['name']}}</td>
 						@if(@$attValue['lock_status']==1)
 
 						<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],$attendance_status	,['class' => '']) !!}</td>

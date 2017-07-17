@@ -1,4 +1,14 @@
 <?php $__env->startSection('content'); ?>
+<?php 
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Project Details',
+    'add_new' => ''
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <div>
     <?php echo $__env->make('organization.project._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <div class="col l2  pr-7 center-align " style="margin-top: 14px" >
@@ -51,33 +61,12 @@
                                 </div>
                                 <div class="col l6 right-align" >
                                     <a href="#modal3" class="btn">Edit</a>
-                                    <div id="modal3" class="modal modal-fixed-footer left-align">
-                                        <div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-                                            <div class="row" style="padding:15px 10px">
-                                                <div class="col l7">
-                                                    <h5 style="margin:0px">Project detail</h5> 
-                                                </div>
-                                                <div class="col l5 right-align">
-                                                    <a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-                                                </div>
-                                                    
-                                            </div>
-                                    
-                                        </div>
-                                        <?php echo Form::model($model,['route'=>['update.project',$model->id],'method'=>'POST']); ?>
+                                    <?php echo Form::model($model,['route'=>['update.project',$model->id],'method'=>'POST']); ?>
 
-                                            <div class="modal-content" style="background-color: white">
-                                                <?php echo FormGenerator::GenerateSection('prosec3',['type'=>'inset']); ?>
+                                   
+                                    <?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Project detail','button_title'=>'Save','section'=>'prosec3']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                                     <?php echo Form::close(); ?>
 
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn blue" type="submit">Save
-                                                    <i class="material-icons right">save</i>
-                                                </button>
-                                            </div>
-                                        <?php echo Form::close(); ?>
-
-                                    </div>
                                 </div>
                                     
                             </div>
@@ -167,9 +156,7 @@
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <?php endif; ?>
                 <div class="col s12 m12 l12 pv-5">
-                   
-                    
-                    
+                  
                 </div>
                  
                 
@@ -277,9 +264,7 @@
    .progress-bar-wrapper > .accomplished{
         background-color: #2196F3;line-height: 5px;font-size:10px;width: 10%;color: white;text-align: right;padding-right: 10px
    }
-   /*.progress-bar-wrapper:hover .accomplished{
-    line-height: 10px
-   }*/
+
    .progress-bar-wrapper:hover .percent{
         display: flex;
         padding: 8px 0px 2px 0px;

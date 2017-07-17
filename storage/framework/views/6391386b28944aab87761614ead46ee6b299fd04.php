@@ -1,5 +1,14 @@
 <?php $__env->startSection('content'); ?>
-
+<?php 
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Attendence',
+	'add_new' => '+ Import Attendence'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <style type="text/css">
 
 	body{
@@ -219,7 +228,7 @@
 
 						<td><?php echo e($attValue['employee']['designations']['name']); ?></td>
 					
-							<td>--</td>
+							<td><?php echo e($attValue['employee']['department_rel']['name']); ?></td>
 						<?php if(@$attValue['lock_status']==1): ?>
 
 						<td> <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],$attendance_status	,['class' => '']); ?></td>

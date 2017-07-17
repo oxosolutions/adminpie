@@ -4,8 +4,7 @@
 {{-- {{dump($type)}} --}}
 <div class="row">
 	<div class="">
-	{!! Form::open(['route'=>'save.user_meta', 'class'=> 'form-horizontal','method' => 'post','id'=>'save-user-details'])!!}
-		<input type="hidden" name="user_id" value="{{$send_data[0]['user_id']}}">
+	{!! Form::model($model,['route'=>['save.user.profile',$model->id]], ['class'=> 'form-horizontal','method' => 'post','id'=>'save-user-details'])!!}
 			
 						@include ('organization.user._form_employee')
 

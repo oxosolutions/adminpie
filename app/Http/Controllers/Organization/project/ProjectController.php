@@ -16,6 +16,8 @@ use App\Model\Organization\Todo as TD;
 use App\Model\Organization\Tasks;
 use Carbon\Carbon;
 use Artisan;
+use App\Model\Organization\ProjectAttachment;
+use App\Model\Organization\ProjectCredentials;
 
 class ProjectController extends Controller
 {
@@ -27,10 +29,10 @@ class ProjectController extends Controller
         $this->user = $user;
         $this->client = $client;
     }
-	public function create()
-	{
-		return view('organization.project.create');
-	}
+  	public function create()
+  	{
+  		return view('organization.project.create');
+  	}
     public function validation(Request $request)
     {
         $pro_table = Session::get('organization_id');
@@ -42,7 +44,7 @@ class ProjectController extends Controller
     }
     public function save(Request $request)
     {
-        $this->validation($request);
+      $this->validation($request);
     	$project = new Project();
     	$project->fill($request->all());
         $project->tags = json_encode(['abc','cde']);
@@ -66,13 +68,13 @@ class ProjectController extends Controller
         }
         $datalist= [];
           if($request->has('per_page')){
-                $perPage = $request->per_page;
-                if($perPage == 'all'){
-                  $perPage = 999999999999999;
-                }
-              }else{
-                $perPage = 5;
-              }
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
           $sortedBy = @$request->sort_by;
           if($request->has('search')){
               if($sortedBy != ''){
@@ -100,12 +102,12 @@ class ProjectController extends Controller
                       ];
                   // dd($datalist);
       return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
-        /*$categories =  CAT::all();
-        $clients = $this->client->get_client();
-        $plugins = [
-                'js' => ['custom'=>['list']]
-        ];
-        return view('organization.project.list',['clients'=>@$clients,'categories'=>@$categories, 'tags' => @$tag_final_data,'plugins'=>$plugins]);*/
+      /*$categories =  CAT::all();
+      $clients = $this->client->get_client();
+      $plugins = [
+              'js' => ['custom'=>['list']]
+      ];
+      return view('organization.project.list',['clients'=>@$clients,'categories'=>@$categories, 'tags' => @$tag_final_data,'plugins'=>$plugins]);*/
     }
 
     /*
@@ -334,9 +336,9 @@ class ProjectController extends Controller
         $model->save();
         return $request->value;
     }
-    public function tasks()
+    public function tasks($id = null)
     {
-      $model = Tasks::all();
+      $model = Tasks::where('project_id',$id)->get();
       $plugins = [
 
       			'js' => ['custom'=>['tasks']]
@@ -361,15 +363,7 @@ class ProjectController extends Controller
         }
         return view('organization.project.details',['model'=>$model]);
     }
-    public function credentials(){
-       /*Artisan::call('make:migration:schema',[
-                                  '--model'=>false,
-                                  'name'=>'create_employeestest',
-                                  '--schema'=>'user_id:integer, employee_id:integer, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
-                              ]);
-       Artisan::call('migrate');*/
-        return view('organization.project.credentials');
-    }
+
     public function activities(){
          return view('organization.project.activities');
     }
@@ -402,6 +396,202 @@ class ProjectController extends Controller
             $model->save();
         }
         return back();
+    }
+
+
+
+    //attachment 
+    public function attachments(Request $request)
+    {
+      $project_id = request()->route()->parameters()['id'];
+
+        $datalist= [];
+          if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
+          $sortedBy = @$request->sort_by;
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = ProjectAttachment::where(['project_id' => $project_id ,'name','like','%'.$request->search.'%'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                  $model = ProjectAttachment::where(['project_id' => $project_id ,'name','like','%'.$request->search.'%'])->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = ProjectAttachment::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                   $model = ProjectAttachment::paginate($perPage);
+              }
+          }
+          $datalist =  [
+                      'datalist'=>  $model,
+                      'showColumns' => ['name'=>'Name','description' => 'Description','type' => ['title' => 'Type','type' => 'image','imagePath' => 'images/fileIcons/'],'file'=>'file','created_at'=>'Created At'],
+                      // 'columnType' => ['type' => 'image'],
+                      'actions' => [
+                                      'download' => ['title'=>'Download', 'route'=>'redirect.back' ,'class' => 'download' ,'destinationPath' => 'projectAttachments'],
+                                      // 'edit' => ['title'=>'Edit','route'=>'details.project' , 'class' => 'edit'],
+                                      'delete'=>['title'=>'Delete','route'=>'delete.attachment']
+                                   ],
+                      'js'  =>  ['custom'=>['list-designation']],
+                      'css'=> ['custom'=>['list-designation']]
+                  ];
+                  // dd($datalist);
+      return view('organization.project.Attachemnts',$datalist)->with(['categories' => CAT::all() ]);
+    }
+    
+    //save Attachment
+    public function saveAttachment(Request $request)
+    {
+
+      $file = $request->file;
+      $fileName = $request->project_id.'_'.$file->getClientOriginalName();
+      $allowedExtension = ['jpg','jpeg','pdf','png','doc','docx'];
+      $fileExtention = $file->getClientOriginalExtension();
+      
+      if($fileExtention == 'jpg' || $fileExtention == 'jpeg'){
+        $type = 'jpg.png';
+      }elseif($fileExtention == 'png'){
+        $type = 'png.png';
+      }elseif($fileExtention == 'doc'){
+        $type = 'doc.jpg';
+      }elseif($fileExtention == 'docx'){
+        $type = 'docx.png';
+      }
+
+      $destinatinPath = 'projectAttachments';
+      if(in_array($fileExtention, $allowedExtension)){
+        $file->move($destinatinPath , $fileName);
+        $model = new ProjectAttachment;
+        $model->project_id = $request->project_id;
+        $model->name = $request->name;
+        $model->description = $request->description;
+        $model->type = $fileExtention;
+        $model->file = $fileName;
+        $model->save();
+        return back();
+      }else{
+        dd('file format not valid');
+      }
+    } 
+    public function deleteAttachment($id)
+    {
+      $model = ProjectAttachment::find($id)->delete();
+      return back();
+    }
+
+    //credientals
+    public function saveCredientals(Request $request)
+    {
+      // dd($request->all());
+
+      $data = [] ;
+      $data2 = [] ;
+
+      foreach($request->all() as $k => $val){
+        if(is_array($val)){
+          $data[$k] = $val;
+        }
+      }
+      // dd($data);
+      $userDataArray = [];
+      for($index = 0; $index < count($data['title']); $index++){
+        $tempArray = [];
+        foreach ($data as $key => $vals) {
+            $tempArray[$key] = $vals[$index];
+        }
+        $userDataArray[] = $tempArray;
+      }
+      $model = new ProjectCredentials;
+      $model->fill($request->except('_token','action','email','password','title'));
+      $model->data = json_encode($userDataArray);
+      $model->save();
+      return back();
+    }
+    public function credentials(Request $request)
+    {
+      $project_id = request()->route()->parameters()['id'];
+
+        $datalist= [];
+          if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
+          $sortedBy = @$request->sort_by;
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = ProjectCredentials::where(['project_id' => $project_id ,'name','like','%'.$request->search.'%'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                  $model = ProjectCredentials::where(['project_id' => $project_id ,'name','like','%'.$request->search.'%'])->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = ProjectCredentials::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              }else{
+                   $model = ProjectCredentials::paginate($perPage);
+              }
+          }
+          // dump($model);
+          $datalist =  [
+                      'datalist'=>  $model,
+                      'showColumns' => ['website_title' =>'Title','created_at'=>'Created At'],
+                      'actions' => [
+                                      'edit' => ['title'=>'Edit','route'=>'details.crediental' , 'class' => 'edit'],
+                                      'delete'=>['title'=>'Delete','route'=>'delete.crediental']
+                                   ],
+                      'js'  =>  ['custom'=>['list-designation']],
+                      'css'=> ['custom'=>['list-designation']]
+                  ];
+                  // dd($datalist);
+
+      return view('organization.project.credentials',$datalist)->with(['categories' => CAT::all() ]);
+    }
+    public function deleteCredentials($id)
+    {
+      $model = ProjectCredentials::find($id)->delete();
+      return back();
+    }
+    public function editCrediental($id)
+    {
+      $model = ProjectCredentials::where('id',$id)->get();
+      return view('organization.project.editCredentials',['model'=>$model]);
+    }
+    public function updateCredientals(Request $request)
+    {
+
+      $data = [] ;
+      $data2 = [] ;
+
+      foreach($request->all() as $k => $val){
+        if(is_array($val)){
+          $data[$k] = $val;
+        }
+      }
+      // dd($data);
+      $userDataArray = [];
+      for($index = 0; $index < count($data['title']); $index++){
+        $tempArray = [];
+        foreach ($data as $key => $vals) {
+            $tempArray[$key] = $vals[$index];
+        }
+        $userDataArray[] = $tempArray;
+      }
+      $request['data'] = json_encode($userDataArray);
+      // dd($request->all());
+      $model = ProjectCredentials::where('id',$request->id)->update($request->except('submit','_token','action','email','password','title'));
+      // $model = new ProjectCredentials;
+      // $model->fill($request->except('_token','action','email','password','title'));
+      // $model->data = json_encode($userDataArray);
+      // $model->save();
+      return back();
     }
 
 }

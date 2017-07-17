@@ -62,23 +62,26 @@
       
     </div>
   </div>
-  <div class="row">
+
+  <div class="row" id="sortable">
+    @php
+      $index = 0;
+    @endphp
     @foreach($listModule as $key => $val)
+    <div id="item-{{$index}}">
       <div class="list" id="list">
      
         <div class="card-panel shadow white z-depth-1 hoverable project"  >
 
           <div class="row valign-wrapper no-margin-bottom">
-            <div class="col l1 s2 center-align project-image-wrapper">
+            <div class="col l5 s5 center-align project-image-wrapper">
               
               {{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
               <div class="defualt-logo"  data-toggle="popover" title="Click to view details" >
                {{ucwords(substr($val->name, 0, 1))}} 
               </div>
-                <a href="{{route('edit.module',['id'=>$val->id])}}"> edit</a>
-              
+                <a href="{{route('edit.module',['id'=>$val->id])}}"> Edit</a>
             </div>
-            
             <div class="col l11 s10 editable " >
               <div class="row m-0 valign-wrapper">
                 <div class="col s8 m8 l8">
@@ -125,7 +128,11 @@
       
         
       </div>
-      @endforeach
+    @php
+      $index++;
+    @endphp  
+    </div>
+    @endforeach
   </div>
 </div>
 
@@ -147,6 +154,36 @@
       });
       $('.editable h5 ,.editable p').removeClass('edit-fields');
     });
+  $( function() {
+    $( "#sortable" ).sortable();
+    $( "#sortable" ).disableSelection();
+  });
+ $(document).ready(function () {
+    $('#sortable').sortable({
+        axis: 'y',
+        update: function (event, ui) {
+          var module_id = [];
+          var sort_id = [];
+          var data = $(this).sortable('serialize');
+
+          $('.module_id').each(function($v){
+            module_id.push($(this).val());
+          });
+          $('.ui-sortable-handle').each(function($v){
+            sort_id.push($(this).attr('id'));
+          });
+
+          $.ajax({
+            url: route()+'/sort/module',
+            type: 'POST',
+            data: {module_id : module_id , sort_id : sort_id  , _token : $('.module_token').val()},
+            success:function(){
+              console.log()
+            }
+        });
+      }
+    });
+});
 </script>
 
 

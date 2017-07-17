@@ -389,7 +389,7 @@
 		$(".datepicker").pickadate({
 			selectMonths:true,
 			selectYear:15,
-			min: new Date(new Date().getFullYear(),new Date().getMonth()+1,new Date().getDate())
+			min: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())
 		});
 
 	</script>

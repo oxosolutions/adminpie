@@ -82,7 +82,7 @@ class AttendanceController extends Controller
 		$emp_attendance->date	=		$date;
 		$emp_attendance->day	=		$day; 	
 		$emp_attendance->month_week_no	= $time->weekOfMonth;
-		$emp_attendance->ip_address	= $ip;
+		//$emp_attendance->ip_address	= $ip;
 		$emp_attendance->attendance_status = 'present';
 		$emp_attendance->check_for_checkin_checkout = $status;
 		$emp_attendance->submited_by ='self';
@@ -233,14 +233,14 @@ class AttendanceController extends Controller
 												'date'=>$dates ,
 												'day'=> $day,
 												'month_week_no' => $month_week_no,
-												'in_time' => $in_time,
-												'out_time' => $out_time,
-												'actual_hour' => $actual_hour,
-												'total_hour' => $total_time,
-												'over_time'  => $over_time,
-												'due_time' => $due_time,
+												// 'in_time' => $in_time,
+												// 'out_time' => $out_time,
+												// 'actual_hour' => $actual_hour,
+												// 'total_hour' => $total_time,
+												// 'over_time'  => $over_time,
+												// 'due_time' => $due_time,
 												'attendance_status' => $attendance_status,
-												'push_in_out'=> $pus_in_out,
+												'punch_in_out'=> $pus_in_out,
 												'import_data' => $attendanceValue,
 												'submited_by' => "import"];
 						$attendance_query = Attendance::where(['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates]);
@@ -306,25 +306,16 @@ class AttendanceController extends Controller
 			return $where;
 	}
 
-	Public function list_attendance(Request $request)
+	public function list_attendance(Request $request)
 	{
-	//dump(123)
-
-		//echo Auth::User()->id;
-		//
-		//
-		//
+		// dd('ajaaax');
 		//dd(EmployeeHelper::employ_info(40095065));
-
 		$plugins = [
-
 				'js' => ['custom'=>['attendance']],
 				'css' => ['custom'=>['attendance']]
-		];
-		
-		
+		];		
  		return view('organization.attendance.attendance',['plugins'=>$plugins]);
-		 // return view('common.Attendance',['attendance_data'=>$attendance_data, 'chunk'=>$chunk , 'total_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data]);
+		 return view('common.Attendance',['attendance_data'=>$attendance_data, 'chunk'=>$chunk , 'total_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data]);
 
 
 	}
@@ -448,7 +439,7 @@ class AttendanceController extends Controller
 			//dump($filter_dates , $employee_ids);
 			 // $attendance_check  = Attendance::with('employee.employ_info', 'employee.designations', 'employee.department', 'employee.department')->where($request->except(['_token']))->whereIn('employee_id',$employee_ids);
 			
-			$employee_data = Employee::with(['employ_info', 'designations', 'department', 'department','attendance'=>function($q) use($filter_dates, $employee_ids){
+			$employee_data = Employee::with(['employ_info', 'designations', 'department_rel','attendance'=>function($q) use($filter_dates, $employee_ids){
 						$q->where($filter_dates)->whereIn('employee_id',$employee_ids);
 			}])->where(function($subQuery) use ($filter_dates, $employee_ids){
 					$subQuery->whereHas('attendance', function($query) use ($filter_dates, $employee_ids){

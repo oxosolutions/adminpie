@@ -15,14 +15,30 @@ use App\Model\Organization\ProjectTask as ProjectTask;
 use App\Model\Organization\Project as Project;
 use App\Model\Organization\User as User;
 use App\Model\Organization\UsersRole as Role;
+use App\Model\Organization\RolePermisson as Permisson;
+use App\Model\Admin\GlobalWidget;
+
+
+//use App\App\Helpers\draw_sidebar as drawSidebar;
 
 
 
 class DashboardController extends Controller
 {
+	protected function widget_permisson(){
+		$widgetPermisson = Permisson::select('permisson_id')->where(['role_id'=>role_id(), 'permisson_type'=>'widget','permisson'=>'on'])->get();
+    	$permissonWidgetId = $widgetPermisson->mapWithKeys(function ($item) {
+    		return [$item['permisson_id'] => $item['permisson_id']];
+			});
+    	$permissonWidgetIdZeroIndex = array_values($permissonWidgetId->toArray());
+		$widgets = GlobalWidget::select(['slug','id'])->whereIn('id',$permissonWidgetIdZeroIndex)->get();
+		$widgetSlug =	$widgets->mapWithKeys(function ($item) {
+    		return [$item['id'] => $item['slug']];
+			});
+		$allowWidgetSlug = array_values($widgetSlug->toArray());
+		return $allowWidgetSlug; 
+	}
     public function index(){
-
-
     	$time = Carbon::now('Asia/Calcutta');
 		$current_time =  gmdate('H:i:s',strtotime($time));
 			//echo $time->format('l jS \\of F Y h:i:s A');
@@ -44,11 +60,11 @@ class DashboardController extends Controller
 		}else{
 			$check_in_out_status ="not_employ";
 		}
-
 		//widgets
 		$widget_data = [];
 		$allow = [];
 		$slug = [];
+	//	dump(role_id());
 		$rid = Auth::guard('org')->user()->role_id;
 		$widget = Role::with(['role_widget'=> function($query){
 			$query->with('widget')->where('permisson','on');
@@ -67,44 +83,65 @@ class DashboardController extends Controller
 			}
 		}
 		$dashboardData = [];
-		$keys = ['client' 	=> [
+		$keys = ['clients' 	=> [
 								'model' => 'App\Model\Organization\Client',
 								'route' => 'list.client'
 								],
-				'employee' 	=> ['model' => 'App\Model\Organization\Employee',
+				'employees' 	=> ['model' => 'App\Model\Organization\Employee',
 								'route' => 'list.employee'
 								],
-				'project' 	=> ['model' => 'App\Model\Organization\Project',
+				'projects' 	=> ['model' => 'App\Model\Organization\Project',
 								'route' => 'list.project'
 								],
 				'tasks' 	=> ['model' => 'App\Model\Organization\ProjectTask',
 								'route' => 'account.tasks'
 								],
-				'user' 		=> ['model' => 'App\Model\Organization\User',
+				'users' 		=> ['model' => 'App\Model\Organization\User',
 								'route' => 'list.user'
 								],
 
 				];
+				if(role_id()!=1){
+					$permissonWidget = $this->widget_permisson();
+				}
 		foreach ($keys as $key => $arrayKey) {
-// condition commented by sandeep .reason. role system is not working correctly
+					// condition commented by sandeep .reason. role system is not working correctly
+					 
+				if(role_id()!=1){	
+					if(in_array($key, $permissonWidget)){
+						$dashboardData[$key] = [
+															'count' => $arrayKey['model']::get()->count(),
+															'list' => $arrayKey['model']::get()->take(6),
+															'route' => $arrayKey['route']
+														];
+					}
 
+				}else{
+				$dashboardData[$key] = [
+															'count' => $arrayKey['model']::get()->count(),
+															'list' => $arrayKey['model']::get()->take(6),
+															'route' => $arrayKey['route']
+														];
+
+				}
+		}
 			// if(Auth::guard('org')->user()->id==1)
 			// {
-				$dashboardData[$key] = [
-										'count' => $arrayKey['model']::get()->count(),
-										'list' => $arrayKey['model']::get()->take(6),
-										'route' => $arrayKey['route']
-									];
+			// 	$dashboardData[$key] = [
+			// 							'count' => $arrayKey['model']::get()->count(),
+			// 							'list' => $arrayKey['model']::get()->take(6),
+			// 							'route' => $arrayKey['route']
+			// 						];
 			// }
 			// elseif(in_array($key, $allow))
 			//  {
-					// $dashboardData[$key] =  [
-					// 					'count' => $arrayKey['model']::get()->count(),
-					// 					'list' => $arrayKey['model']::get()->take(6),
-					// 					'route' => $arrayKey['route']
-					// 				];
-			 // }
-		}
+			// 		$dashboardData[$key] =  [
+			// 							'count' => $arrayKey['model']::get()->count(),
+			// 							'list' => $arrayKey['model']::get()->take(6),
+			// 							'route' => $arrayKey['route']
+			// 						];
+			//  }
+		
 		return view('organization.dashboard.index',['check_in_out_status'=>$check_in_out_status ,'model' => $dashboardData, 'widget_data'=>$widget_data , 'slug'=>$slug]);
     }
 }

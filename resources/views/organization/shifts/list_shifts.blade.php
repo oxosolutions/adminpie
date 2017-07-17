@@ -6,70 +6,48 @@
 				$model = [
 						'name' 	=>	$value->name ,
 						'from' 	=>	$value->from ,
-						'to'	=>	$value->to
+						'to'	=>	$value->to,
+						'working_days' => json_decode($value->working_days)
 					];
 			@endphp
 		@endforeach
 		<script type="text/javascript">
 			$(window).load(function(){
-				document.getElementById('add_new').click();
+				document.getElementById('modal-edit').click();
 			});
 		</script>
 	@endif
 
+@if(@$errors->has())
+	<script type="text/javascript">
+		$(window).load(function(){
+			alert("hello");
+		});
+	</script>
+@endif
 
-<div class="fade-background">
-</div>
-<div id="projects" class="projects list-view">
-	<div class="row">
-		<div class="col s12 m12 l3 offset-l9 ">
-			<a id="add_new" href="#modal1" class="btn add-new display-form-button" >
-				Add Shift
-			</a>
-			<div id="modal1" class="modal modal-fixed-footer">
-				@if(@$data)
-					{!! Form::model($model,['route'=>'edit.shifts' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-					<input type="hidden" name="id" value="{{@$data[0]->id}}">
-				@else
-					{!! Form::open(['route'=>'store.shifts' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-				@endif
-					<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-						<div class="row" style="padding:15px 10px">
-							<div class="col l7">
-								<h5 style="margin:0px">Add Shift</h5>	
-							</div>
-							<div class="col l5 right-align">
-								<a href="javascript:;" class="closeDialog" style="color: white"><i class="fa fa-close"></i></a>
-							</div>
-								
-						</div>
-						
-					</div>
-					<div class="modal-content" style="padding: 30px">
-						
-						{!!FormGenerator::GenerateSection('addshiftsec1',['type'=>'inset'])!!}
-						
-					</div>
-					<div class="modal-footer">
-						<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Shift
-							<i class="material-icons right">save</i>
-						</button>
-					</div>
-				{!!Form::close()!!}
-			</div>
-			
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m12 l12 " >
-			
-			@include('common.list.datalist')
-		</div>
+@php
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Shift',
+	'add_new' => '+ Add Shift'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
+{!! Form::open(['route'=>'store.shifts' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Shift','button_title'=>'Save Shift','section'=>'addshiftsec1']])
+{!!Form::close()!!}
+@if(@$data)
+	{!! Form::model($model,['route'=>'edit.shifts' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+	<input type="hidden" name="id" value="{{@$data[0]->id}}">
+	<a href="#modal_edit" style="display: none" id="modal-edit"></a>
+	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Shift','button_title'=>'update Shift','section'=>'addshiftsec1']])
 
-		
-
-	</div>
-</div>
+	{!!Form::close()!!}
+@endif
+@include('common.list.datalist')
 
 
 	<script type="text/javascript">

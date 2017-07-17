@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notes extends Model
 {
+	public static $breadCrumbColumn = 'id';
 	protected $fillable = ['project_id','title','description'];
 
 	function __construct()

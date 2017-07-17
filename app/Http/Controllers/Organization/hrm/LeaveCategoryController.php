@@ -10,6 +10,7 @@ use App\Model\Organization\CategoryMeta as CM;
 use App\Repositories\Category\CategoryRepositoryContract;
 use App\Model\Organization\Leave as LV; 
 use App\Model\Organization\Category as CAT;
+use App\Model\Organization\UsersRole as Role;
 
 /**
  *  @last_modified 2017-06-11 Day sunday
@@ -66,17 +67,20 @@ class LeaveCategoryController extends Controller
       */
     public function categoryMeta(Request $request , $id=null)
      {  
-     		if($request->isMethod('post')){
+
+    if($request->isMethod('post')){
+          //dd($request->all());
           $this->catRepo->category_meta_save($request);  
           return back();			
   		  }
   		$select =[];
-      $data['cat'] = $this->catRepo->category_data_by_id($id);
+      	$data['cat'] = $this->catRepo->category_data_by_id($id);
   		$cm = CM::where('category_id',$id)->get();
   		$data['data'] = $cm->pluck('value','key')->toArray();
      	$data['id'] =$id;
    		$data['userData']= User::pluck('name','id');
-   		$data['designationData'] = DES::where('status',1)->pluck('name','id');
+     	$data['designationData'] = DES::where('status',1)->pluck('name','id');
+   		$data['roles'] = Role::where('status',1)->pluck('name','id');
       return view('organization.leave_category.leave_rule',['data'=>$data ,'select'=>$select]);
      }
 
@@ -84,11 +88,16 @@ class LeaveCategoryController extends Controller
         CAT::where('id',$id)->delete();
         return back();
     }
+
     public function editLeaveCat(Request $request){
-      $newData = $request->except('_token','id','number_of_day','apply_before','valid_for','user','designation');
-        CAT::where('id' , $request->id)->update($newData);
-      $newMeta = $request->except('name','description');
+ 
+     // $newData = $request->except('_token','id','number_of_day','apply_before','valid_for','user','designation');
+      unset($request['_token']);
+      CAT::where('id' , $request->id)->update(['name'=>$request['name'] , 'description'=>$request['description']]);
+      $newMeta = $request->except('id','name','description');
         CM::where('category_id', $request->id)->delete();
+
+        dump(array_map('intval', $newMeta));
         foreach($newMeta as $key => $value){
           $data = new CM;
           $data->category_id = $request->id;

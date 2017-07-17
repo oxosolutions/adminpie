@@ -23,7 +23,7 @@
         <li class="tab col <?php echo e(strpos($link, 'demo1')?'one-active':''); ?>""><a href="<?php echo e(route('tasks.project',[$project_id])); ?>">Tasks</a></li>
         <li class="tab col <?php echo e(strpos($link, 'credentials')?'one-active':''); ?>""><a href="<?php echo e(route('credentials.project',[$project_id])); ?>">Credentials</a></li>
         <li class="tab col <?php echo e(strpos($link, 'documentation')?'one-active':''); ?>""><a href="<?php echo e(route('documentation.project',[$project_id])); ?>">Documentation</a></li>
-        <li class="tab col <?php echo e(strpos($link, 'attachemnts')?'one-active':''); ?>""><a href="#test4">Attachemnts</a></li>
+        <li class="tab col <?php echo e(strpos($link, 'attachemnts')?'one-active':''); ?>""><a href="<?php echo e(route('attachment.project',[$project_id])); ?>">Attachemnts</a></li>
         <li class="tab col <?php echo e(strpos($link, 'todo')?'one-active':''); ?>""><a href="<?php echo e(route('todo.project',[$project_id])); ?>"><span>To do</span></a></li>
         <li class="tab col <?php echo e(strpos($link, 'notes')?'one-active':''); ?>""><a href="<?php echo e(route('notes.project',[$project_id])); ?>">Notes</a></li>
         <li class="tab col <?php echo e(strpos($link, 'discussion')?'one-active':''); ?>""><a href="#test4">Discussion</a></li>

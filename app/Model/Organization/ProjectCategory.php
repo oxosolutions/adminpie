@@ -7,6 +7,7 @@ use Session;
 
 class ProjectCategory extends Model
 {
+   public static $breadCrumbColumn = 'id';
    public function __construct()
    {	
 	   	if(!empty(Session::get('organization_id')))

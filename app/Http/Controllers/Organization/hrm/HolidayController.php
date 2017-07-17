@@ -29,6 +29,11 @@ class HolidayController extends Controller
     	$holiday->save();
     	return redirect()->route('list.holidays');
     }
+    public function holidayList()
+    {
+        $model = Holiday::all();
+        return view('organization.holiday.list_only')->with(['model'=>$model]);
+    }
     public function listHoliday(Request $request , $id = null)
     {
 
@@ -78,13 +83,12 @@ class HolidayController extends Controller
     }
     public function update(Request $request)
     {
-    	dump($request->all());
     	if($request['status'] == 'true'){
             $request['status'] = '1';
         }else{
             $request['status'] = '0';
         }
-    	$request['date_of_holiday'] =  date('Y-m-d', strtotime($request['date_of_holiday']));
+    	$request['date_of_holiday'] =  Carbon::parse($request['date_of_holiday'])->format('Y-m-d');
 		Holiday::where('id',$request->id)->update($request->except(['_token','id']));
 		//return redirect()->route('list.holiday');
 
@@ -103,31 +107,18 @@ class HolidayController extends Controller
     public function editHoliday(Request $request)
     {
         $model = Holiday::where('id',$request->id)->get();
-        if($model[0]->title == $request->title){
-            $tbl = Session::get('organization_id');
-            $valid_fields = [
-                                'from'          => 'required',
-                                'description'   => 'required'
-                            ];
-            $this->validate($request , $valid_fields);
+        $tbl = Session::get('organization_id');
+        $valid_fields = [
+                            'date_of_holiday'   => 'required',
+                            'description'       => 'required'
+                        ];
 
-            $newdata = $request->except('_token','from','action');
-            $newdata['date_of_holiday']= $this->date_format($request['from']);
-            $model = Holiday::where('id',$request->id)->update($newdata);
-            return redirect()->route('list.holidays');
-        }else{
-            $tbl = Session::get('organization_id');
-            $valid_fields = [
-                                'title'         => 'required|unique:'.$tbl.'_holidays',
-                                'from'          => 'required|unique:'.$tbl.'_holidays',
-                                'description'   => 'required'
-                            ];
-            $this->validate($request , $valid_fields);
-            $newdata = $request->except('_token','from','action');
-            $newdata['date_of_holiday']= $this->date_format($request['from']);
-            $model = Holiday::where('id',$request->id)->update($newdata);
-            return redirect()->route('list.holidays');
-        }
+        $this->validate($request , $valid_fields);
+
+        $newdata = $request->except('_token','date_of_holiday','action');
+        $newdata['date_of_holiday']= $this->date_format($request['date_of_holiday']);
+        $model = Holiday::where('id',$request->id)->update($newdata);
+        return redirect()->route('list.holidays');
     }
     public function deleteHoliday($id)
     {

@@ -1,6 +1,22 @@
 @extends('layouts.main')
 @section('content')
-	<div>
+
+@php
+
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Dashboard',
+	'add_new' => '+ Add Widget'
+	); 
+@endphp
+
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+
+<div>
 		<div class="row">
 			@foreach($model as $key => $value)
 				<div class="col l3 pr-7">
@@ -42,7 +58,7 @@
 					</span>
 				</button>
 			</div>
-			<div class="card" >
+			{{-- <div class="card" >
 				<div>
 					<div class="row">
 						<div class="col l12 title" style="padding: 10px;font-size:20px;border-bottom: 1px solid #e8e8e8">
@@ -217,14 +233,23 @@
 						  </ul>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 		</div>
 		
 		
 	</div>
 	
 
-	<style type="text/css">
+	
+
+
+
+
+
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
+<style type="text/css">
 		.aione-widget-header{
 			border-bottom: 1px solid #e8e8e8;cursor: pointer;
 		}
@@ -367,4 +392,7 @@
  //    }
 	</script>
 
+
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

@@ -7,11 +7,9 @@
 	{!!Form::model($org_data, ['route' => ['edit.organization', $org_data->id]])!!}
         @include('admin.organization._form')                
         <div class="row right-align pv-10">
-            <button type="submit" class="btn btn-primary blue"> Edit Organization <i class="icon-arrow-right14 position-right"></i></button>  
-        </div>                      
-        
-                            
-                        
+            <button type="submit" class="btn btn-primary blue">Update Organization<i class="icon-arrow-right14 position-right"></i>
+            </button>  
+        </div>    
     {!! Form::close() !!}        
     </div>
 

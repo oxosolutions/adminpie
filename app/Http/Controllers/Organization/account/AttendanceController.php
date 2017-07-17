@@ -42,6 +42,8 @@ class AttendanceController extends Controller
     	
     	$attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
     	$attendance_data = $attendance->groupBy('month')->toArray();
+
+        dd($attendance_data);
         return view('organization.profile.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
     }
 

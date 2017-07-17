@@ -4,6 +4,16 @@
 <style type="text/css">
 
 </style>
+@php
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Leave',
+	'add_new' => '+ Add Leave'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 @if($data)
 	@foreach(@$data as $key => $value)
 		@php
@@ -13,64 +23,23 @@
 	@endforeach
 	<script type="text/javascript">
 		$(window).load(function(){
-			document.getElementById('add_new').click();
+			document.getElementById('modal-edit').click();
 		});
 	</script>
-@endif
-<div class="fade-background">
-</div>
+@endif	
+{!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
-<div id="projects" class="projects list-view">
-	<div class="row">
-		<div class="col l9">
-			
-		</div>
+@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leaves','button_title'=>'Save','section'=>'leavesection']])
+{!!Form::close()!!}
+@if(@$model)
+	{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+	<input type="hidden" name="id" value="{{$id}}">
+	<a href="#modal_edit" style="display: none" id="modal-edit"></a>
+	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','section'=>'leavesection']])
+	{!!Form::close()!!}
+@endif	
+@include('common.list.datalist')
 		
-		<div class="col s12 m12 l3 pl-7">
-			
-			<a id="add_new" href="#modal1" class="btn add-new display-form-button" >
-				Add Leave
-			</a>
-			@if(@$model)
-				{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-				<input type="hidden" name="id" value="{{$id}}">
-			@else
-				{!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-			@endif	
-			@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add leaves','button_title'=>'Save','section'=>'leavesection']])
-			{{-- <div id="modal1" class="modal modal-fixed-footer">
-				
-				<div class="modal-header">
-			    	<h5 style="padding:0px 10px">Add leaves</h5>
-			    	<a href="{{route('leaves')}}" class="close-model"><i class="fa fa-close"></i></a>
-			    </div>
-				<div class="modal-content" style="padding: 30px">
-					{!!FormGenerator::GenerateSection('leavesection',['type'=>'inset'])!!}
-				</div>
-				<div class="modal-footer">
-					<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save leave
-						<i class="material-icons right">save</i>
-					</button>
-				</div>
-				
-			</div> --}}
-			{!!Form::close()!!}
-          
-			
-			
-
-		</div>
-	</div>
-	<div class="row">
-		<div class="col s12 m12 l12 " >
-			
-			@include('common.list.datalist')
-		</div>
-
-
-	</div>
-</div>
-
 <style type="text/css">
 .add-new-wrapper{
 	display:none;
@@ -132,15 +101,8 @@
 
 	<script type="text/javascript">
 	$(document).ready(function(){
+
 		
-
-		 $('#modal1').modal({
-		 	 dismissible: false
-		 }); 
-		 $('.close-model').click(function(){
-		 	$('#modal1').modal('close');
-
-		 });
 		$(document).on('blur', '.edit-fields',function(e){
 			e.preventDefault();
 			var postedData = {};

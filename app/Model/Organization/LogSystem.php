@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Session;
 class LogSystem extends Model
 {
+	public static $breadCrumbColumn = 'id';
     protected $fillable = [ 'user_id', 'type', 'route_name', 'text', 'ip_address'];
     public function __construct()
     {

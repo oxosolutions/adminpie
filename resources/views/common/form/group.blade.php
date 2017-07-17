@@ -13,20 +13,49 @@
 	}
 </style>
 <div class="repeater-group">
-	<div class="row repeat-row" style="border:1px dashed #e8e8e8; margin-top: 1%;">
-		<div class="row">
-			<div class="col l1 offset-l11 right-align">
-				<i class="fa fa-close close-delete"></i>
+	@if($model != null)
+		@foreach($model as $key => $value)
+			@php
+				$defaulValues = [];
+			@endphp
+			<div class="row repeat-row" style="border:1px dashed #e8e8e8; margin-top: 1%;">
+				<div class="row">
+					<div class="col l1 offset-l11 right-align">
+						<i class="fa fa-close close-delete"></i>
+					</div>
+				</div>
+				<div class="row" style="padding:15px 10px; ">
+					<div class="col l12">
+						@php
+							$defaulValues[] = $key;
+							$defaulValues[] = $value;
+						@endphp
+						@foreach($collection->fields as $secKey => $field)
+								@php
+									$options['default_value'] = $defaulValues[$secKey];
+								@endphp
+								{!!FormGenerator::GenerateField($field->field_slug, $options)!!}
+						@endforeach
+					</div>
+				</div>
+			</div>
+		@endforeach
+	@else
+		<div class="row repeat-row" style="border:1px dashed #e8e8e8; margin-top: 1%;">
+			<div class="row">
+				<div class="col l1 offset-l11 right-align">
+					<i class="fa fa-close close-delete"></i>
+				</div>
+			</div>
+			<div class="row" style="padding:15px 10px; ">
+				<div class="col l12">
+					@foreach($collection->fields as $secKey => $field)
+							{!!FormGenerator::GenerateField($field->field_slug, $options)!!}
+					@endforeach
+				</div>
 			</div>
 		</div>
-		<div class="row" style="padding:15px 10px; ">
-			<div class="col l12">
-				@foreach($collection->fields as $secKey => $field)
-						{!!FormGenerator::GenerateField($field->field_slug, $options)!!}
-				@endforeach
-			</div>
-		</div>
-	</div>
+	@endif
 </div>
 <div class="row" style="margin-top: 1%;">
 	<div class="col l3 offset-l9 right-align">

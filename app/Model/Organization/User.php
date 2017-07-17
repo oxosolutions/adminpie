@@ -32,10 +32,10 @@ class User extends Authenticatable
       return $this->hasOne('App\Model\Organization\Employee','user_id','id');
    }
    public static function getTeamById($data = null){
-      $array = [];
-      foreach ($data as $key => $id) {
-         $array = self::where('id',$id)->get();
-      }
+         $array = self::where('id',$data)->get();
       return $array;
+   }
+   public static function getAdmin($data = null){
+      return User::where('user_type','[1]')->pluck('name','id');
    }
 }

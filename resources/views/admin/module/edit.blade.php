@@ -23,93 +23,116 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
     $('select').material_select();
   });*/
 
-  function apnd_row()
-  {
+  // function apnd_row()
+  // {
 
-   // $("#content").clone().appendTo("#apnd");
-   var res="";
-    $.ajax({
-      url:route()+"/module/add_route_row",
-      type:'GET',
-      success: function(res){
-        //data = $("#content").html();
-        console.log(res);
+  //  // $("#content").clone().appendTo("#apnd");
+  //  var res="";
+  //   $.ajax({
+  //     url:route()+"/module/add_route_row",
+  //     type:'GET',
+  //     success: function(res){
+  //       //data = $("#content").html();
+  //       console.log(res);
 
-            $("#apnd").append('<div >'+res+'</div>');
-            $('select').material_select();
-      }
-    });
-  }
+  //           $("#apnd").append('<div >'+res+'</div>');
+  //           $('select').material_select();
+  //     }
+  //   });
+  // }
 
 // $('body').on('click','.fa-trash',function(){
 //     $(this).parents('.appended-div').hide();
 // });
 </script>
     <div class="card" style="margin-top: 0px;padding: 10px">
-        {!! Form::open(['route' => 'edit.module']) !!}
+        {!! Form::open(['route' => ['edit.module',request()->route()->parameters()['id']]]) !!}
 
+        <div class="col s12 m2 l12 aione-field-wrapper">
+            <label>Name</label>
+            <input type="text" name="name" value="{{$module->name}}" class="no-margin-bottom aione-field" >
+        </div>
+        <div class="col s12 m2 l12 aione-field-wrapper">
+            <label>Route</label>
+            {!!Form::select('route',App\Model\Admin\GlobalModule::getRouteListArray(),$module->route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
+        </div>
+     
         <div class="row">
-            <div class="col l12" style="padding: 10px 0px;">
-                name
-            </div>
-            <div class="col l12">
-            <input type="hidden" name="id" value="{{$module['id']}}">
-              <input type="text" name="name" value="{{$module['name']}}" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ">
-            </div>
+          <div class="col l6" style="margin-top: 14px">
+            <label style="font-size: 14px !important; margin-top: 2% !important;">Sub-Module Details</label>   
+          </div>
+          <div class="col l6" style="margin-top: 14px;">
+            <a href="javascript:void(0)" class="btn blue add-submodule" style="font-size: 15px;float: right">Add Sub-Module Details</a>    
+          </div>
         </div>
-        <div id="apnd" class="row">
-        @foreach($module['route'] as $modulekey =>$moduleVal)
-            <div id="content">
-                <div class="col l4 pr-7">
-                    <div class="col l12" style="padding: 10px 0px;">
-                        Route
-                    </div>
-                    <div class="col l12">
-                    <input type="hidden" name="route_edit[{{$loop->index}}][id]" value="{{$moduleVal['id']}}">
-                    {!!Form::select("route_edit[".$loop->index."][route]",App\Model\Admin\GlobalModule::getRouteListArray(),$moduleVal['route'], ['class'=>'form-control sel','placeholder'=>'url ']) !!}
+        
+        <div id="sortable" class="repeat-submodule">
+            @foreach($module->subModule as $key => $submodule)
+                <div style="background-color:white;width: 100%; border: 1px dotted #CCC; margin-top: 1%; padding-left: 2%; padding-right: 2%; padding-bottom: 2%;" class="row sub-div">
+                    <a href="javascript:void(0)" style="float: right; margin-top: 0.5%;" class="delete-submodule"><i class="fa fa-close"></i></a>
+                    <div class="col s12 m2 l12 aione-field-wrapper">
+                        <div class="row">
+                            <div class="col l6">
+                                <label>Sub Module name</label>
+                                <input type="hidden" name="submodule[{{$loop->index}}][submodule_id]" value="{{$submodule->id}}" placeholder="Enter sub-module name" />          
 
+                                <input type="text" name="submodule[{{$loop->index}}][submodule_name]" value="{{$submodule->name}}" placeholder="Enter sub-module name" />          
+                            </div>
+                            <div class="col l6">
+                                 <label>Sub Module Route</label>
+                                {!!Form::select('submodule['.$loop->index.'][sub_module_route]',App\Model\Admin\GlobalModule::getRouteListArray(),$submodule->sub_module_route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
+                                <input type="hidden" name="submoduleNumber" value="{{$loop->index}}" />
+                            </div>
+                            
+                        </div>
+                      
                     </div>
-                </div>
-                <div class="col l4 pl-7 pr-7">
-                    <div class="col l12" style="padding: 10px 0px;">
-                        Route For
+                    <div class="row">
+                        <div class="col l6">
+                            Routes For Permission
+                        </div>
+                        <div class="col l6 right-align">
+                            <a href="" class="btn green add-route-permission">add</a>
+                        </div>
                     </div>
-                    <div class="col l12">
-                        <select name='route_edit[{{$loop->index}}][route_for]' >
-                            @foreach($opt_route_for as $key =>$val)
-                                @if( $key ==$moduleVal['route_for'])
-                                    <option selected value="{{$key}}">{{$val}}</option>
-                                @else
-                                    <option value="{{$key}}">{{$val}}</option>
-                                @endif
-                            @endforeach
-                        </select>
+                    <div class="repeat_route_permission">
+                        @foreach($submodule->moduleRoute as $routeKey => $route)
+                            <div class="row repeat-sub-row">
+                                <div class="col s12 m2 l12 aione-field-wrapper" style="border: 1px solid #e8e8e8;padding: 14px; margin-top: 1%;">
+
+                                    <div class="row valign-wrapper">
+                                        <div class="col l5 pr-7">
+                                            <label>Route name</label>
+                                            <input type="hidden" name="submodule[{{$loop->parent->index}}][route_id][]" value="{{$route->id}}" placeholder="Enter route name" />
+                                            <input type="text" name="submodule[{{$loop->parent->index}}][perm_route_name][]" value="{{$route->route_name}}" placeholder="Enter route name" />
+                                        </div>
+                                        <div class="col l6 pl-7 pr-7">
+                                            <label>Route</label>
+                                            {!!Form::select('submodule['.$loop->parent->index.'][perm_route][]',App\Model\Admin\GlobalModule::getRouteListArray(),$route->route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
+                                        </div>
+                                        <div class="col l1 pl-7">
+                                            <a href="" class="  delete-reoute-permission"><i class="fa fa-close"></i></a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                               
+                                <hr class="style2">
+                            </div>
+                        @endforeach
                     </div>
-                </div>
-                
-                <div class="col l3">
-                    <div class="col l12" style="padding: 10px 0px;">
-                        Route Name
-                    </div>
-                    <div class="col l12">
-                        <input type="text" name="route_edit[{{$loop->index}}][route_name]" value="{{$moduleVal['route_name']}}" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ">
-                    </div>
-                </div>
-                <div class="col l1">
                     
-                    <a href="{{route('delete.route',['id'=>$moduleVal['id']])}}"><i class="fa fa-trash red-text" style="line-height: 30px"></i></a>
-                </div>
-            </div>
-    @endforeach
+               </div>
+           @endforeach
+       </div>
 
-        </div>
         <div class="row" style="padding: 10px 0px">
             <div class="col l6">
-                 {!! Form::submit('Save Permission', ['class' => 'btn btn-primary']) !!}
+                 {!! Form::submit('Save Module', ['class' => 'btn btn-primary']) !!}
             </div>
-            <div class="col l6 right-align">
+            {{-- <div class="col l6 right-align">
                 <a onclick="apnd_row()" class="btn"><i class="fa fa-plus"></i><a>
-            </div>
+            </div> --}}
         </div>
 
      
@@ -143,5 +166,49 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
     .select-dropdown{
     }
 </style>
+<script type="text/javascript">
+    $(function(){
+        $('.add-submodule').click(function(){
+            $.ajax({
+                url: route()+'singlemodule',
+                type: 'GET',
+                data: {moduleCount: $('.sub-div').length},
+                success: function(result){
+                    $('.repeat-submodule').append(result);
+                    $('select').material_select();
+                } 
+            });
+        });
+        $('body').on('click','.delete-submodule', function(){
+            if($('.sub-div').length > 1){
+                $(this).parent('.sub-div').remove(); 
+            }
+        });
+        $('body').on('click','.add-route-permission', function(e){
+            var elem = $(this);
+            e.preventDefault();
+            $.ajax({
+                url: route()+'single/route/permission',
+                type: 'GET',
+                data: {routeCount: elem.parents('.sub-div').find('input[name=submoduleNumber]').val()},
+                success: function(result){
+                    elem.parents('.sub-div').find('.repeat_route_permission').append(result);
+                    $('select').material_select();
+                } 
+            });
+        });
+        $('body').
+        on('click','.delete-reoute-permission', function(e){
+            e.preventDefault();
+            if($('.repeat-sub-row').length > 1){
+                $(this).parents('.repeat-sub-row').remove();
+            }
+        });
+    });
+      $( function() {
+            $( "#sortable" ).sortable();
+            $( "#sortable" ).disableSelection();
+          });
+</script>
 @endsection
 

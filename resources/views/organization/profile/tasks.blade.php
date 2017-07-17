@@ -1,10 +1,20 @@
 @extends('layouts.main')
 @section('content')
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Tasks',
+    'add_new' => '+ Add Task'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row">
-			<a href="#modal11" class="btn-flat">Add task</a>
-			<div id="modal11" class="modal modal-fixed-footer">
+			<!-- <a href="#modal11" class="btn-flat">Add task</a> -->
+			<div id="add_new_model" class="modal modal-fixed-footer">
                 <div class="modal-header white-text  blue darken-1" ">
                     <div class="row" style="padding:15px 10px">
                         <div class="col l7 left-align">
@@ -88,8 +98,15 @@
 	.hover-me:hover .options{
 		display: block
 	}
-
-	 .task-font{
+    .progress{
+        position: absolute;
+        z-index: 999;
+        width: 700px;
+        top: 60%;
+        left: 30%;
+        display: none;
+    }
+	.task-font{
         font-size: 13px !important;padding-top: 10px !important;
     }
     .mt-10{
@@ -140,8 +157,9 @@
 	</style>
     <script type="text/javascript">
 
-                $(document).ready(function(){
-                        $('#modal11').modal(); 
-                 })
-            </script>
+        $(document).ready(function(){
+                $('#add_new_model').modal(); 
+         });
+        
+    </script>
 @endsection

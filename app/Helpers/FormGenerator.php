@@ -9,7 +9,7 @@ class FormGenerator{
 	 * will generate the form according to the slug
 	 * @param [string] $form_slug 
 	 */
-	public static function GenerateForm($form_slug){
+	public static function GenerateForm($form_slug, Array $Options = []){
 		$FormDetails = Forms::where('form_slug',$form_slug)->with(['section'=>function($query){
 
 			return $query->with(['fields'=>function($query){
@@ -20,7 +20,7 @@ class FormGenerator{
 
 		},'formsMeta'])->first();
 		if($FormDetails != null){
-			$HTMLContent = self::GetHTMLForm($FormDetails);
+			$HTMLContent = self::GetHTMLForm($FormDetails, $Options);
 			return $HTMLContent;
 		}else{
 			dd('No form found!');
@@ -45,16 +45,17 @@ class FormGenerator{
 	 * @param [type]      $section_slug [description]
 	 * @param Array|array $Options      [description]
 	 */
-	public static function GenerateSection($section_slug, Array $Options = []){
+	public static function GenerateSection($section_slug, Array $Options = [], $model = null){
 		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
 		if($SectionCollection == null){
 			dd('No section found');
 		}
 		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
 		if($sectionType == 'Repeater'){
-			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options);
+			$Options['field_type'] = 'array';
+			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $model);
 		}else{
-			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options);
+			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options, $model);
 		}
 		return $HTMLContent;
 	}
@@ -72,8 +73,8 @@ class FormGenerator{
 	 * @param [type] $collection [description]
 	 * @param [type] $Options    [description]
 	 */
-	public static function GetHTMLGroup($collection, $Options){
-		return view('common.form.group',['collection'=>$collection,'options'=>$Options])->render();
+	public static function GetHTMLGroup($collection, $Options, $model){
+		return view('common.form.group',['collection'=>$collection,'options'=>$Options,'model'=>$model])->render();
 	}
 
 	/**
@@ -92,9 +93,9 @@ class FormGenerator{
 	 * Will render the html content for form template
 	 * @param [form object] $collection have all data and realtions of form
 	 */
-	public static function GetHTMLForm($collection){
+	public static function GetHTMLForm($collection, $options){
 
-		return view('common.form.form',['collection'=>$collection])->render();
+		return view('common.form.form',['collection'=>$collection, 'options'=>$options])->render();
 	}
 
 	public static function GetMetaValue($metaCollection, $metaKey){

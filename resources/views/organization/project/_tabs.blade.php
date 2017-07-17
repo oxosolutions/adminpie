@@ -23,7 +23,7 @@
         <li class="tab col {{strpos($link, 'demo1')?'one-active':''}}""><a href="{{route('tasks.project',[$project_id])}}">Tasks</a></li>
         <li class="tab col {{strpos($link, 'credentials')?'one-active':''}}""><a href="{{route('credentials.project',[$project_id])}}">Credentials</a></li>
         <li class="tab col {{strpos($link, 'documentation')?'one-active':''}}""><a href="{{route('documentation.project',[$project_id])}}">Documentation</a></li>
-        <li class="tab col {{strpos($link, 'attachemnts')?'one-active':''}}""><a href="#test4">Attachemnts</a></li>
+        <li class="tab col {{strpos($link, 'attachemnts')?'one-active':''}}""><a href="{{route('attachment.project',[$project_id])}}">Attachemnts</a></li>
         <li class="tab col {{strpos($link, 'todo')?'one-active':''}}""><a href="{{route('todo.project',[$project_id])}}"><span>To do</span></a></li>
         <li class="tab col {{strpos($link, 'notes')?'one-active':''}}""><a href="{{route('notes.project',[$project_id])}}">Notes</a></li>
         <li class="tab col {{strpos($link, 'discussion')?'one-active':''}}""><a href="#test4">Discussion</a></li>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Organization\hrm;
 use Yajra\Datatables\Datatables;
 use Illuminate\Http\Request;
 use App\RolePermissonMapping as RP;
@@ -10,6 +10,8 @@ use App\PermissonRole;
 use Session;
 Use DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use App\Model\Organization\OrganizationSetting;
 
 class SettingController extends Controller
 {
@@ -172,8 +174,52 @@ class SettingController extends Controller
 
     public function modelValidation($request)
     {
-
     	$rules = ['role_id'=>'required'];
 		$this->validate($request, $rules);
+    }
+    public function orgSetting(){
+    	$model = OrganizationSetting::get();
+    	$settingsModel = [];
+    	foreach($model as $key => $value){
+    		$settingsModel[$value->key] = $value->value;
+    	}
+    	// return view('organization.settings._form',['model'=>$settingsModel]);
+    	return view('organization.settings.basic',['model'=>$settingsModel]);
+    }
+
+    public function saveOrganizationSettings(Request $request){
+    	foreach($request->except(['_token']) as $key => $value){
+    		if($key == 'logo'){
+    			$filename = date('Y-m-d-H-i-s')."-".$request->file('logo')->getClientOriginalName();
+                $uploadFile = $request->file('logo')->move('images', $filename);
+                $model = OrganizationSetting::firstOrNew(['key'=>$key]);
+	    		$model->key = $key;
+	    		$model->value = $filename;
+	    		$model->save();
+    		}else{
+    			$model = OrganizationSetting::firstOrNew(['key'=>$key]);
+	    		$model->key = $key;
+	    		$model->value = $value;
+	    		$model->save();
+    		}
+    	}
+
+    	return back();
+    }
+    public function attendanceSetting()
+    {
+    	return view('organization.settings.attendance');
+    }
+    public function employeeSetting()
+    {
+    	return view('organization.settings.employee-settings');
+    }
+    public function roleSetting()
+    {
+    	return view('organization.settings.role');
+    }
+    public function leaveSetting()
+    {
+    	return view('organization.settings.leaves');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Session;
 class EmployeeMeta extends Model
 {
+	public static $breadCrumbColumn = 'id';
     public function __construct()
     {
     	if(!empty(Session::get('organization_id')))

@@ -6,12 +6,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalModule as Module;
 use App\Model\Admin\GlobalModuleRoute as Route;
-
+use App\Model\Admin\GlobalSubModule;
 class ModuleController extends Controller
 {
     public function listModule()
     {
-    	$model  = Module::with('route')->get();
+    	$model  = Module::orderBy('orderBy','asc')->get();
         // dd($model);
     	return view('admin.module.index',['listModule'=>$model]);
     }
@@ -31,19 +31,35 @@ class ModuleController extends Controller
             if(isset($request['route_name'][$key]))
             {
                         $add_route->route_name = $request['route_name'][$key];
-    
             }
             $add_route->save();
         }   
     }
     public function save(Request $request)
     {
-        $add = new Module();
-    	$add->fill($request->all());
-    	$add->save();
-    	$module_id =  $add->id;
-    	$this->save_module_route($request , $module_id);
-
+        // dd($request->all());
+        $mainModule = new Module();
+        $mainModule->name = $request->name;
+        $mainModule->route = $request->route;
+        $mainModule->save();
+        foreach($request->submodule as $key => $submodule){
+            $globalSubModule = new GlobalSubModule;
+            $globalSubModule->name = $submodule['submodule_name'];
+            $globalSubModule->sub_module_route = $submodule['sub_module_route'];
+            $globalSubModule->module_id = $mainModule->id;
+            $globalSubModule->status = 1;
+            $globalSubModule->save();
+            foreach($submodule['perm_route_name'] as $routeKey => $rouetValue){
+            	if($rouetValue != null){
+            		$globalModuleRoute = new Route;
+	                $globalModuleRoute->sub_module_id = $globalSubModule->id;
+	                $globalModuleRoute->route = $submodule['perm_route'][$routeKey];
+	                $globalModuleRoute->route_name = $submodule['perm_route_name'][$routeKey];
+	                $globalModuleRoute->status = 1;
+	                $globalModuleRoute->save();
+            	}
+            }
+        }
     	return redirect()->route('list.module');
     	
     }
@@ -55,28 +71,78 @@ class ModuleController extends Controller
     }
 
 
-
+    /**
+     * [edit description]
+     * @param  Request $request [form data]
+     * @param  [int]  $id      [description]
+     * @return [type]           [description]
+     */
     public function edit(Request $request, $id=null)
     { 
-        if($request->isMethod('post'))
-        {
-            $module_id = $request['id'];
-            Module::where('id',$request['id'])->update(['name'=>$request['name']]);
-            foreach ($request['route_edit'] as $key => $value) {
-               $mid=$value['id'];
-               unset($value['id']);
-               Route::where('id',$mid)->update($value);
+        if($request->isMethod('post')){  
+            $mainModule = Module::with(['subModule'=>function($query){
+            $query->with('moduleRoute');
+            }])->find($id);
+            
+	        $mainModule->name = $request->name;
+	        $mainModule->route = $request->route;
+	        $mainModule->save();
+            $subModulesCheck = GlobalSubModule::where('module_id',$id);
+            if($subModulesCheck->exists()){
+             $subModules = GlobalSubModule::where('module_id',$id)->select('id')->get()->keyBy('id')->toArray();
             }
-            if(!empty($request['route']))
-            {
-                $this->save_module_route($request , $module_id);
-            }
-        return back(); 
+
+            foreach($request->submodule as $key => $submodule){
+               if(isset($submodule['submodule_id'])){
+                unset($subModules[$submodule['submodule_id']]);
+                    $globalSubModule = GlobalSubModule::find($submodule['submodule_id']);
+                }else{
+	               $globalSubModule = new GlobalSubModule;
+                }
+	            $globalSubModule->name = $submodule['submodule_name']; 
+	            $globalSubModule->sub_module_route = $submodule['sub_module_route'];
+	            $globalSubModule->module_id = $mainModule->id;
+	            $globalSubModule->status = 1;
+	            $globalSubModule->save();
+                $routeCheck =  Route::where('sub_module_id',$globalSubModule->id);
+                $routes = $routeCheck->select('id')->get()->keyBy('id')->toArray();
+               if($routeCheck->exists()){
+                $routes = $routeCheck->select('id')->get()->keyBy('id')->toArray();
+               }
+
+	            if(isset($submodule['perm_route_name'])){
+	            	foreach($submodule['perm_route_name'] as $routeKey => $rouetValue){
+		            	if($rouetValue != null){
+                            if(isset($submodule['route_id'][$routeKey])){
+                                unset($routes[$submodule['route_id'][$routeKey]]);
+                                $globalModuleRoute = Route::find($submodule['route_id'][$routeKey]);
+                            }else{
+		            		        $globalModuleRoute = new Route;
+                                }
+			                $globalModuleRoute->sub_module_id = $globalSubModule->id;
+			                $globalModuleRoute->route = $submodule['perm_route'][$routeKey];
+			                $globalModuleRoute->route_name = $submodule['perm_route_name'][$routeKey];
+			                $globalModuleRoute->status = 1;
+			                $globalModuleRoute->save();
+		            	}
+                    }
+	            }
+               if(!empty($routes)){
+                    $flattenRoute =collect($routes)->flatten()->all();
+                    Route::whereIn('id',$routes)->delete();
+                }
+	        }
+                $flattenModule = collect($subModules)->flatten()->all();
+                GlobalSubModule::with('moduleRoute')->whereIn('id',$flattenModule)->delete();
+                Route::whereIn('sub_module_id',$flattenModule)->delete();
+            return redirect()->route('list.module');
         }
         $module =[];
         if(!empty($id))
         {
-        $module = Module::with('route')->where('id',$id)->first();
+            $module = Module::with(['subModule'=>function($query){
+                $query->with('moduleRoute');
+            }])->where('id',$id)->first();
         }
         return view('admin.module.edit',['module'=>$module]);
     }
@@ -87,13 +153,11 @@ class ModuleController extends Controller
        return back();
     }
     
-    public function update(Request $request)
-    {
-    	
-    }
 	public function delete($id)
     {     
-         Module::find($id)->delete();
+         Module::with(['subModule'=>function($query){
+                $query->with('moduleRoute');
+            }])->find($id)->delete();
          return back();
     }
 
@@ -109,4 +173,63 @@ class ModuleController extends Controller
       
     }
 
+    public function createSubmodule($moduleID){
+       return view('admin.module.submodule.create');
+    }
+
+    public function submoduleList($moduleID){
+
+        $subModule = GlobalSubModule::where('module_id',$moduleID)->get();
+        return view('admin.module.submodule.index',['submodule'=>$subModule]);
+    }
+
+    public function saveSubModule(Request $request, $moduleID){
+
+        $model = new GlobalSubModule;
+        $model->name = $request->name;
+        $model->status = 1;
+        $model->module_id = $moduleID;
+        $model->save();
+        return redirect()->route('submodule.list');
+    }
+
+
+    /*************** Ajax Functions *****************/
+
+    public function getSingleModule(Request $request, $id = null){
+        if($id != null){
+
+        }else{
+            $moduleCount = $request->moduleCount;
+            return view('admin.module.sub-module.module',['count'=>$moduleCount])->render();
+        }
+    }
+
+    public function getSingleRoutePermission(Request $request){
+        $routeCount = $request->routeCount;
+        return view('admin.module.sub-module.route-perm',['count'=>$routeCount]);
+    }
+    public function sortModule(Request $request)
+    {
+        //get value of module and arrange it by sort 
+       $module_id = $request->module_id;
+        $new_array = [];
+        $index = 1;
+       foreach($module_id as $key => $value){
+            $new_array[$value] = $index;
+            $index++;
+       }
+        foreach($new_array as $module_id => $order_id){
+            Module::where('id',$module_id)->update(['orderBy'=>$order_id]);
+        }
+
+    }
+
 }
+// $keyBy = Module::select('id')->get()->keyBy('id')->toArray();
+        // $mids = collect($keyBy)->flatten()->toArray();
+        // GlobalSubModule::whereNotIn('module_id',$mids)->delete();
+
+        // $subkeyBy = GlobalSubModule::select('id')->get()->keyBy('id')->toArray();
+        // $submids = collect($subkeyBy)->flatten()->toArray();
+        // Route::whereNotIn('sub_module_id',$submids)->delete();

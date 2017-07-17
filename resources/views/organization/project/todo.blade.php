@@ -1,21 +1,19 @@
 @extends('layouts.main')
 @section('content')
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'To Do',
+    'add_new' => '+ Add To Do'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 	<div>
 		@include('organization.project._tabs')
 		@include('common.todos')
 	</div>
-	<script type="text/javascript">
-	$('.add-new').off().click(function(e){
-			e.preventDefault();
-			$('.add-new-wrapper').toggleClass('active');
-			$('.fade-background').fadeToggle(300);
-		});
-		
-		$('.fade-background').click(function(){
-			$('.fade-background').fadeToggle(300);
-			$('.add-new-wrapper').toggleClass('active');
-		});
-	</script>
 	<style type="text/css">
 		.defualt-logo-todo{
 			    width: 36px;
@@ -27,12 +25,7 @@
 		}
 		.fa-close{
 			display: none
-		}
-		/*.fa-close:hover{
-			color: white !important;
-			background-color: red;
-			border-color: red;
-		}*/
+		
 		
 		.todo_list:hover .fa-close{
 			display: inline-block;
@@ -69,9 +62,5 @@
 
 		}
 	</style>
-	<script type="text/javascript">
-		 $(document).ready(function() {
-    $('select').material_select();
-  });
-	</script>
+
 @endsection

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderMeta extends Model
 {
+	public static $breadCrumbColumn = 'id';
   public function __construct()
    {	
 	   	if(!empty(Session::get('organization_id')))

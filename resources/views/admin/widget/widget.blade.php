@@ -33,7 +33,7 @@ $url = url()->current();
         <div class="col l12" style="padding: 10px 0px;">
             Module
         </div>
-       {!! Form::select('module_id',$module_data,@$data->module_id,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
+       {!! Form::select('module_id',array_add($module_data,0,'default module'),@$data->module_id,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
     </div>
     <div class="col s12 m2 l12 " style="padding: 10px 0px">
                             Description

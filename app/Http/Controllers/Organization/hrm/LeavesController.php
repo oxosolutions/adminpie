@@ -45,20 +45,29 @@ class LeavesController extends Controller
           $sortedBy = @$request->sort_by;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = LV::where('reason_of_leave','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = LV::with(['employee_info'=>function($query){
+                      $query->with('employ_info');
+                  },'categories_rel'])->where('reason_of_leave','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                  $model = LV::where('reason_of_leave','like','%'.$request->search.'%')->paginate($perPage);
+                  $model = LV::with(['employee_info'=>function($query){
+                      $query->with('employ_info');
+                  },'categories_rel'])->where('reason_of_leave','like','%'.$request->search.'%')->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = LV::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = LV::with(['employee_info'=>function($query){
+                      $query->with('employ_info');
+                  },'categories_rel'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                   $model = LV::paginate($perPage);
+                   $model = LV::with(['employee_info'=>function($query){
+                      $query->with('employ_info');
+                  },'categories_rel'])->paginate($perPage);
               }
           }
+          // dd($model);
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['employee_id' => 'Employee Id'  , 'reason_of_leave'=>'Reason of Leave','from'=>'From','to'=>'To','created_at'=>'Created At','id'=>'ID','updated_at'=>'Updated At'],
+                          'showColumns' => ['employee_id' => 'Employee Id'  , 'reason_of_leave'=>'Reason of Leave','categories_rel.name'=>'Category','from'=>'From','to'=>'To','created_at'=>'Created At','updated_at'=>'Updated At'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'leaves','class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.leave']
@@ -133,5 +142,9 @@ class LeavesController extends Controller
 
       $model = LV::where('id',$request->id)->update($updateArray);
       return redirect()->route('leaves');
+    }
+    public function approve_leave(Request $request )
+    {
+        LV::where('id',$request->id)->update(['status'=>1]);
     }
 }

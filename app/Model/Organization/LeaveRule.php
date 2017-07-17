@@ -7,6 +7,7 @@ use Session;
 
 class LeaveRule extends Model
 {
+	public static $breadCrumbColumn = 'id';
 	protected $fillable = ['name', 'designation_id', 'user_id', 'leave_category_id', 'number_of_day', 'apply_before', 'status'];
     public function __construct()
 	{

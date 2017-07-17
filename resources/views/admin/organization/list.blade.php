@@ -7,15 +7,21 @@
 	</script>	 --}}
 @endif
 
+@if(!empty(Session::get('error')))
+	<div id="card-alert" class="card red lighten-5"><div class="card-content red-text">{{Session::get('error')}}</div></div>
+	{{-- <script type="text/javascript">
+		  Materialize.toast('I am a toast!', 4000);
+	</script>	 --}}
+@endif
+
 <div class="fade-background">
 
 </div>
 <div id="search" class="projects list-view">
 	<div class="row" id="find-project">
 		<div class="col s12 m12 l12 " >
-			<div class="row no-margin-bottom">
+			{{-- <div class="row no-margin-bottom">
 				<div class="col s12 m12 l6  pr-7 tab-mt-10" >
-					<!-- <input class="search aione-field" placeholder="Search" /> -->
 					<nav>
 					    <div class="nav-wrapper">
 					      	<form>
@@ -55,58 +61,12 @@
 						</ul>
 					</div>
 				</div>
-			</div>
+			</div> --}}
 			<div class="list" id="list">
-			@foreach($org_list as $key =>$val)
-
-				<div class="card-panel shadow white z-depth-1 hoverable project"  >
-
-					<div class="row valign-wrapper no-margin-bottom">
-						<div class="col l1 s2 center-align project-image-wrapper">
-							
-							{{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
-							<div class="defualt-logo"  data-toggle="popover" title="Click to view details" >
-								{{ucwords(substr($val->name, 0, 1))}}
-							</div>
-							
-						</div>
-						
-						<div class="col l11 s10 editable " >
-							<div class="row m-0 valign-wrapper">
-								<div class="col s8 m8 l5">
-									
-									<a href="#" data-toggle="popover" title="Click here to edit the organization name" data-content="TEST" >
-										<h5 class="project-title black-text flow-text truncate line-height-35">
-											<span class="project-name shift_name font-size-14 name" contenteditable="true" > {{$val->name}}</span>
-										</h5>
-									</a>
-								</div>
-								<div class="col s8 m8 l3">
-									
-									<a href="#" data-toggle="popover" title="Organization slug" data-content="TEST" >
-										<h5 class="project-title black-text flow-text truncate line-height-35">
-											<span class="project-name shift_name font-size-14 name" > {{$val->slug}}</span>
-										</h5>
-									</a>
-								</div>
-								<div class="col s4 m4 l4 right-align">
-									<div class="switch">
-										<a  href="{{route('edit.organization', ['id'=>$val->id])}}" data-toggle="popover" title="Click here to edit this Organization">  edit</a>
-									    
-									 </div>
-								</div>
-								<div class="col s4 m4 l4 right-align">
-									<div class="switch">
-										<a onclick="return confirm('Are your sure to Delete Organization?')"  href="{{route('delete.organization', ['id'=>$val->id])}}" data-toggle="popover" title="Click here to delete this Organization">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
-									    
-									 </div>
-								</div>
-							</div>
-						</div>
-					</div>
-						
+				<div class="row">
+					@include('common.list.datalist')
 				</div>
-			@endforeach
+			
 				
 			</div>
 		</div>

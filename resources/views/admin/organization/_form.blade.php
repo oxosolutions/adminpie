@@ -48,6 +48,7 @@
   </div>
  --}}
 <div>  
+
     <div class="row">
         <h5 style="margin-top: 0px">Add new Organization</h5>
         @if(@$errors->has())
@@ -98,20 +99,17 @@
               Modules
            </div>
            <div class="col l9">
-              {{--  <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
-
-             {{--  @foreach($modules as $moduleKey => $moduleVal)
-              {
-               {{ Form::label($moduleVal, null, ['class' => 'control-label']) }}
-                {!! Form::checkbox('modules[]', 'moduleKey', true) !!}
+            @php
+              $selectedModule =null;
+              if(!empty($org_data)){
+                if(!empty($org_data['modules'])){
+                 $selectedModule['module'] = array_map('intval', json_decode($org_data['modules']));
+                }
               }
-              @endforeach --}}
+            @endphp
                   
-               {!! Form::select('modules[]',$modules,null,['multiple'=>'multiple', 'class' => 'browser-default', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
-             
-
-
-           </div>
+               {!! Form::select('modules[]',$modules, $selectedModule['module'],['multiple'=>'multiple', 'class' => '', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
+             </div>
         </div>
         <div class="row pv-10">
            <div class="col l3" style="line-height: 32px">
@@ -176,3 +174,9 @@
         box-shadow: none !important;
     }
 </style>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('select').material_select();
+  })
+  
+</script>

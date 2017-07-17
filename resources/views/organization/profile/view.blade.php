@@ -6,19 +6,64 @@
 		<div class="col l9 pr-7">
 			<div class="card" style="margin-top: 14px">
 				<div class="row">
-					<div class="col l3" style="padding:14px;">
+					<div class="col l3" style="padding:14px;position: relative;">
 						{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
 							<div class="abc" style="position: relative;">
 							@if($model->profilePic != null || $model->profilePic != "" || !empty($model->profilePic))
 								<img src="{{ asset('ProfilePicture/'.$model->profilePic) }}" style="width: 100%">
 							@else
 								<img src="{{ asset('ProfilePicture/default-user.jpg') }}" style="width: 100%">
+
 							@endif
 								<a href="" class="upload-image">Change Image</a>	
 								<input type="file" name="aione-dp"
 								onchange="document.getElementById('form1').submit()" class="chooser">
+
+
 							</div>
+							
 						{!!Form::close()!!}
+						<div class="preloader-wrapper image-spinner big active" style="position: absolute;top: 50%;left: 50%;margin-top: -17px;margin-left: -17px;width: 34px;height: 34px;display: none">
+							      <div class="spinner-layer spinner-blue">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+
+							      <div class="spinner-layer spinner-red">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+
+							      <div class="spinner-layer spinner-yellow">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+
+							      <div class="spinner-layer spinner-green">
+							        <div class="circle-clipper left">
+							          <div class="circle"></div>
+							        </div><div class="gap-patch">
+							          <div class="circle"></div>
+							        </div><div class="circle-clipper right">
+							          <div class="circle"></div>
+							        </div>
+							      </div>
+							    </div>
 					</div>
 					<style type="text/css">
 						.chooser { position: absolute; z-index: 1; opacity: 0; cursor: pointer;margin-top: -36px}
@@ -47,28 +92,11 @@
 								<a href="#modal1" class=""><i class="fa fa-pencil"></i></a>
 								{!!Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH',])!!}
 								@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']])
-								{{-- <div id="modal1" class="modal">
-									<div class="modal-header">
-										<h5>Add department</h5>
-									</div>
-									
-										<div class="modal-content">
-											{!!FormGenerator::GenerateSection('editempsec1',['type' => 'inset'])!!}
-										</div>
-										<div class="modal-footer">
-											<button class="ml-4 btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save Department
-												<i class="material-icons right">save</i>
-											</button>
-										</div>
-									
-								</div> --}}
+							
 								{!!Form::close()!!}
 							</div>
 						</div>
-						{{-- <div class="row" style="padding:5px 0px">
-							<div class="col l3"><strong>Designation</strong></div>
-							<div class="col l9">{{@App\Model\Organization\Designation::find($model->designation)->name}}</div>
-						</div> --}}
+						
 						<div class="row" style="padding:5px 0px 0px 0px">
 							<div class="col l3"><strong>About Me</strong></div>
 							<div class="col l9">{{@$model->about_me}}</div>
@@ -78,20 +106,7 @@
 				</div>
 			</div>
 			<div class="card" style="margin-top: 14px">
-				{{-- <div class="row">
-					<ul class="aione-tabs">
-				        <li class="tab col aione-active "><a href="{{route('list.settings')}}">Recent Activities</a></li>
-				        <li class="tab col "><a href="javascript:;">Attendence</a></li>
-				        <li class="tab col "><a href="javascript:;">Performence</a></li>
-				        <li class="tab col "><a href="javascript:;">Salary</a></li>
-				        <li class="tab col "><a href="javascript:;">Projects</a></li>
-				        
-				       
-				        <div style="clear: both">
-				          
-				        </div>
-				    </ul>
-				</div> --}}
+				
 				<div class="row ">
 					<div class="row ">
 						<div class="activity-header">						
@@ -142,9 +157,10 @@
 		<div class="col l3 pl-7">
 			<div class="card"  style="margin-top: 14px">
 				<div class="row center-align" style="padding:10px 0px">
-					<a href="#modal10" class="btn blue">Change Password</a>	
-					
-					@include('common.modal-onclick',['data'=>['modal_id'=>'modal10','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
+					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>	
+					{!! Form::open(['route' => 'change.password' , 'method' => 'post']) !!}
+					@include('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
+					{!! Form::close() !!}
 				</div>
 				
 			</div>
@@ -173,13 +189,14 @@
 							    	{!!FormGenerator::GenerateSection('empsec2',['type' => 'inset'])!!}
 							    </div>
 							    <div class="modal-footer">
-							    	{{-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Save</a> --}}
+							    	
 							    	<button class="btn blue" type="submit">Save
 												<i class="material-icons right">save</i>
 											</button>
 							    </div>
 							{!!Form::close()!!}
 						</div>
+					
 					</div>
 					
 				</div>
@@ -255,38 +272,16 @@
 								<div class="col l8">
 									@if($field == 'designation')
 										&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
-									@elseif($field == 'department')
-										&nbsp;{{@App\Model\Organization\Department::find($model[strtolower($field)])->name}}
+								@elseif($field == 'department')
+										&nbs	{!! Form::close() !!}p;{{@App\Model\Organization\Department::find($model[strtolower($field)])->
+											name}}
 									@else
 										&nbsp;&nbsp;{{$model[strtolower($field)]}}
 									@endif
 								</div>
 							</div>
 						@endforeach
-						{{-- <div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								Designation
-							</div>
-							<div class="col l8">
-								<a>{{@App\Model\Organization\Designation::find($model->designation)->name}}</a>
-							</div>
-						</div>
-						<div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								Department
-							</div>
-							<div class="col l8">
-								{{@App\Model\Organization\Department::find($model->department)->name}}
-							</div>
-						</div>
-						<div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								DOJ
-							</div>
-							<div class="col l8">
-								{{@$model->date_of_joining}}
-							</div>
-						</div> --}}
+					
 					</div>
 				</div>
 				<div class="card" style="margin-top: 14px">
@@ -335,46 +330,7 @@
 								</div>
 							</div>
 						@endforeach
-						{{-- <div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								Branch.
-							</div>
-							<div class="col l8">
-								<a>{{@$model->branch}}</a>
-							</div>
-						</div>
-						<div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								Account Name.
-							</div>
-							<div class="col l8">
-								{{@$model->account_name}}
-							</div>
-						</div>
-						<div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								Account No.
-							</div>
-							<div class="col l8">
-								<a>{{@$model->account_no}}</a>
-							</div>
-						</div>
-						<div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								IFSC Code.
-							</div>
-							<div class="col l8">
-								<a>{{@$model->ifsc}}</a>
-							</div>
-						</div>
-						<div class="row" style="padding: 5px 0px ">
-							<div class="col l4">
-								Nominee.
-							</div>
-							<div class="col l8">
-								<a>{{@$model->nominee}}</a>
-							</div>
-						</div> --}}
+				
 					</div>
 				</div>
 			@endif
@@ -485,10 +441,31 @@
 		   }
 	</style>
 	<script type="text/javascript">
-		  $(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal').modal();
+		
+	$(document).ready(function(){
+		$('#modal2').modal({
+			 dismissible: false
+		});
+		$('#modal3').modal({
+			 dismissible: false
+		});
+		$('#modal4').modal({
+			 dismissible: false
+		});
 
-  });
+	})
+	$(document).on('click','closeDialog',function(){
+		$('#modal1').modal('close');
+	})
+	$(document).on('click','.fa-close',function(){
+		$('#modal9').modal('close');
+	});
+	$(document).on('click','.chooser',function(){
+									$('.image-spinner').show();
+								});
 	</script>
+	
+								
+							
+
 @endsection

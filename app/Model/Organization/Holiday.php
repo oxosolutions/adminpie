@@ -9,7 +9,7 @@ use Session;
 
 class Holiday extends Model
 {
-
+	public static $breadCrumbColumn = 'title';
 	public function __construct()
 	{
 		if(!empty(Session::get('organization_id')))

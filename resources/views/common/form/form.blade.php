@@ -3,12 +3,12 @@
 	<div>
 		<div class="row">
 			<div class="col l12">
-				<h5>General</h5>
+				<h5>{{@$options['title']}}</h5>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col l12">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam bibendum erat urna, vitae malesuada ipsum mattis ac. Vivamus porttitor, enim at tempus consequat, diam nisl lacinia elit, id varius magna sapien vel neque.
+				{{@$options['details']}}
 			</div>
 		</div>
 		<div class="row pv-10" >
@@ -24,7 +24,7 @@
 			@endforeach
 		</div>
 		<div class="row right-align pv-10"  >
-			<a class="btn">save</a>
+			<button type="submit" class="btn">save</button>
 			<a class="btn grey darken-2">reset to default</a>
 		</div>
 	</div>

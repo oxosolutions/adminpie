@@ -1,5 +1,14 @@
 <?php $__env->startSection('content'); ?>
-
+<?php 
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Attendence',
+	'add_new' => '+ Import Attendence'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <script type="text/javascript">
 	
 </script>
@@ -23,6 +32,9 @@
 					
 					<a  href="<?php echo e(route('import.form.attendance')); ?>" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
 						Import Attendence
+					</a>
+					<a  href="<?php echo e(route('hr.attendance')); ?>" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
+						Mark Attendence
 					</a>
 				</div>
 			</div>

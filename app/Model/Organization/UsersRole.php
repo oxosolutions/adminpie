@@ -7,6 +7,7 @@ use Session;
 
 class UsersRole extends Model
 {	
+   public static $breadCrumbColumn = 'id';
    protected $fillable = [ 'name', 'description', 'status'];
 
    public function __construct()
@@ -25,4 +26,13 @@ class UsersRole extends Model
       return $this->hasMany('App\Model\Organization\WidegetPermisson','role_id','id');
    }
 
+   public static function roles(){
+
+      return self::orderBy('id','asc')->pluck('name','id');
+   }
+   //function used where role  delete and assign to another role.
+   public static function getRoles()
+   {
+      return self::whereNotIn('name',['Super Admin','Employee','Client'])->get();
+   }
 }

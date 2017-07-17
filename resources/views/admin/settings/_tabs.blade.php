@@ -7,20 +7,16 @@
   
 @endphp
 
-<div class="col l12"  >
+<div class="col l12" style="margin-bottom: 14px"  >
     <ul class="aione-tabs">
-        <li class="tab col aione-active {{strpos($link, 'settings')?'aione-active':''}}"><a href="{{route('list.settings')}}">General</a></li>
-        <li class="tab col {{strpos($link, 'demo1')?'one-active':''}}""><a href="javascript:;">Two</a></li>
-        <li class="tab col {{strpos($link, 'credentials')?'one-active':''}}""><a href="javascript:;">Three</a></li>
-        <li class="tab col {{strpos($link, 'documentation')?'one-active':''}}""><a href="javascript:;">Four</a></li>
-        <li class="tab col {{strpos($link, 'attachemnts')?'one-active':''}}""><a href="javascript:;">Five</a></li>
-        <li class="tab col {{strpos($link, 'todo')?'one-active':''}}""><a href="javascript:;"><span>Six</span></a></li>
-        <li class="tab col {{strpos($link, 'notes')?'one-active':''}}""><a href="javascript:;">Seven</a></li>
-        <li class="tab col {{strpos($link, 'discussion')?'one-active':''}}""><a href="javascript:;">Eight</a></li>
-        <li class="tab col {{strpos($link, 'activities')?'one-active':''}}""><a href="javascript:;">Ten</a></li>
-        <li class="tab col {{strpos($link, 'milestones')?'one-active':''}}""><a href="javascript:;">Nine</a></li>
-        <li class="tab col {{strpos($link, 'calender')?'one-active':''}}""><a href="javascript:;">Eleven</a></li>
-        <li class="tab col {{strpos($link, 'chat')?'one-active':''}}""><a href="javascript:;">Chat</a></li>
+       {{--  <li class="tab col aione-active {{strpos($link, 'settings')?'aione-active':''}}"><a href="{{route('list.settings')}}">Designation</a></li>
+        <li class="tab col {{strpos($link, 'department')?'one-active':''}}""><a href="{{route('department.settings')}}">Department</a></li>
+        <li class="tab col {{strpos($link, 'shifts')?'one-active':''}}""><a href="{{route('shifts.settings')}}">Shifts</a></li>
+        <li class="tab col {{strpos($link, 'holidays')?'one-active':''}}""><a href="{{route('holidays.settings')}}">Holidays</a></li>
+        <li class="tab col {{strpos($link, 'leave category')?'one-active':''}}""><a href="{{route('leave.settings')}}">Leave category</a></li>
+        <li class="tab col {{strpos($link, 'roles')?'one-active':''}}""><a href="{{route('role.settings')}}"><span>Roles</span></a></li> --}}
+        <li class="tab col {{strpos($link, 'organization')?'aione-active':''}}""><a href="{{route('organization.settings')}}">Organization</a></li>
+ 
         <div style="clear: both">
           
         </div>

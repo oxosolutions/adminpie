@@ -7,6 +7,7 @@ use Session;
 
 class Designation extends Model
 {
+	public static $breadCrumbColumn = 'name';
 	public function __construct()
 	{
 	    if(!empty(Session::get('organization_id')))
