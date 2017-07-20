@@ -60,7 +60,7 @@
       margin: 0px;
    }
    .aione-tabs > .tab{
-     
+     display: inline-block;
 
    }
    .aione-tabs > .tab:hover{

@@ -1,20 +1,27 @@
 @extends('layouts.main')
 @section('content')
-@php
-    $page_title_data = array(
-    'show_page_title' => 'yes',
-    'show_add_new_button' => 'yes',
-    'show_navigation' => 'yes',
-    'page_title' => 'Tasks',
-    'add_new' => '+ Add Task'
-); 
-@endphp
+    @php
+        $page_title_data = array(
+        'show_page_title' => 'yes',
+        'show_add_new_button' => 'yes',
+        'show_navigation' => 'yes',
+        'page_title' => 'Tasks',
+        'add_new' => '+ Add Task'
+    ); 
+    @endphp
+    @if(@$errors->has())
+        <script type="text/javascript">
+            $(window).load(function(){
+                $('.add-new-button').click();
+            });
+        </script>
+    @endif
 @include('common.pageheader',$page_title_data) 
 	<div class="row">
-		@include('organization.profile._tabs')
+	
 		<div class="row">
 			<!-- <a href="#modal11" class="btn-flat">Add task</a> -->
-			<div id="add_new_model" class="modal modal-fixed-footer">
+			<div id="add_new_model" class="tasks_add modal modal-fixed-footer">
                 <div class="modal-header white-text  blue darken-1" ">
                     <div class="row" style="padding:15px 10px">
                         <div class="col l7 left-align">

@@ -11,32 +11,41 @@ class TasksController extends Controller
 {
     public function index(){
         $model = Tasks::all();
-        foreach ($model as $key => $value) {
-            $data[] = [
-                        'data' => json_decode($value->assign_to)->user,
-                        'id' => $value->id
-                        ];
-        }   
-        foreach($data as $k => $val){
-            if(in_array(Auth::guard('org')->user()->id,$val['data'])){
-                $id[] = $val['id'];
+        $data = [];
+            foreach ($model as $key => $value) {
+                $data[] = [
+                            'data' => json_decode($value->assign_to)->user,
+                            'id' => $value->id
+                            ];
+            }   
+        if($data != null || $data != "" || !empty($data)){
+            foreach($data as $k => $val){
+                if(in_array(Auth::guard('org')->user()->id,$val['data'])){
+                    $id[] = $val['id'];
+                }
             }
+            if(@$id){
+                $model = Tasks::with('users')->find($id);
+            }
+        }else{
+            $model = "";
         }
-        if(@$id){
-            $model = Tasks::with('users')->find($id);
-            $plugins = [
+        $plugins = [
                 'js' => ['custom'=>['tasks']]
             ];
             return view('organization.profile.tasks',['plugins'=>$plugins,'model'=>$model]);
-        }else{
-             $plugins = [
-                'js' => ['custom'=>['tasks']]
-            ];
-            return view('organization.profile.tasks',['plugins'=>$plugins]);
-        }
     }
 
     public function create(Request $request){
+        $validate = [
+                        'title' =>'required',
+                        'description' => 'required',
+                        'priority'=>'required',
+                        'due_date'=>'required',
+                        'team' => 'required'
+
+                    ];
+        $this->validate($request, $validate);
         $assignTo = [];
         if(@$request->team != null || @$request->team != "" || !empty(@$$request->team)){
             foreach ($request->team as $key => $value) {

@@ -5,7 +5,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Department',
+	'page_title' => 'Departments',
 	'add_new' => '+ Add Department'
 ); 
 @endphp
@@ -24,24 +24,28 @@
 	@endif
 
 @include('common.pageheader',$page_title_data) 
-{!! Form::open(['route'=>'store.department' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-	
+@include('common.pagecontentstart')
+	@include('common.page_content_primary_start')
+		@include('common.list.datalist')
+	@include('common.page_content_primary_end')
+	@include('common.page_content_secondry_start')
+		{!! Form::open(['route'=>'store.department' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+			
 
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Department','button_title'=>'Save Department','section'=>'adddepartment']])
-{!!Form::close()!!}
-@if(@$model)
-	{!! Form::model($model ,['route'=>'edit.department' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-	<input type="hidden" name="id" value="{{$data[0]['id']}}">
-	<a href="#modal_edit" style="display: none" id="modal-edit"></a>
-	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Department','button_title'=>'update Department','section'=>'adddepartment']])
-{!!Form::close()!!}
-@endif
-				@include('common.list.datalist')
+		@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Department','button_title'=>'Save Department','section'=>'adddepartment']])
+		{!!Form::close()!!}
+		@if(@$model)
+			{!! Form::model($model ,['route'=>'edit.department' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+			<input type="hidden" name="id" value="{{$data[0]['id']}}">
+			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
+			@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Department','button_title'=>'update Department','section'=>'adddepartment']])
+		{!!Form::close()!!}
+		@endif
+	@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
+
 <script type="text/javascript">
 	$(document).ready(function(){
-	 
-
-	
 		$(document).on('blur', '.edit-fields',function(e){
 			e.preventDefault();
 			var postedData = {};
@@ -84,8 +88,6 @@
 		    }
 			$(this).addClass('edit-fields');
 		});
-		
-	});
-		
+	});	
 </script>
 @endsection

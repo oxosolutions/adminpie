@@ -24,37 +24,30 @@
 			});
 		</script>
 	@endif
-<div id="projects" class="projects list-view">
-	<div class="row">
-		<div class="col s12 m12 l3 offset-l9">
-			
-			<a id="add_new" href="#modal1" class="btn add-new display-form-button" >
-				Add New team
-			</a>
-			@if($data)
-				{!!Form::model($data,['route'=>'edit.team','method'=>'POST'])!!}
-				<input type="hidden" name="id" value="{{$id}}">
-			@else
-				{!!Form::open(['route'=>'save.team'	,'method'=>'POST'])!!}
-			@endif	
-		
-			@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add New Team','button_title'=>'Save','section'=>'prosec2']])
-			{!!Form::close()!!}
-	
-			
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Teams',
+	'add_new' => '+ Add New Team' 
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+@include('common.list.datalist')
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@if($data)
+	{!!Form::model($data,['route'=>'edit.team','method'=>'POST'])!!}
+	<input type="hidden" name="id" value="{{$id}}">
+@else
+	{!!Form::open(['route'=>'save.team'	,'method'=>'POST'])!!}
+@endif	
 
-		</div>
-
-	</div>
-	<div class="row">
-		<div class="col s12 m12 l12" >
-			
-			@include('common.list.datalist')
-		</div>
-
-		
-	</div>
-</div>
-
-
+@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Team','button_title'=>'Save','section'=>'prosec2']])
+{!!Form::close()!!}	
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

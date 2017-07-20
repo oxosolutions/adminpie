@@ -1,21 +1,62 @@
-<div>
-	<div >
-		<div >
-			<form action="" method="GET" name="form1">
-				<?php if(Request::get('page')): ?>
-					<input type="hidden" name="page" value="1">
-				<?php endif; ?>
-				
+<?php 
+	//$userMeta = 'App\\Model\\Organization\\UsersMeta';
+	//$queryString = explode('?',request()->fullUrl());
+	
+	//$userMeta::saveDataListSetting(request()->route()->uri,$queryString);
+	
+	
+	// if($pageSettings != null){
+	// 	$sessionSettings = session()->get('pageSettings');
+	// 	if($sessionSettings != $pageSettings){
+	// 		dump(url(request()->route()->uri));
+	// 		header('Location:'.url(request()->route()->uri.'?'.$pageSettings));
+	// 		session()->put('pageSettings',$pageSettings);
+	// 	}
+	// }
+	// $newvalue = $userMeta::getDataListSettings(request()->route()->uri);
+	// session()->put('pageSettings',$newvalue);
+
+	//
+	
+/*
+$pageSettings = $userMeta::getDataListSettings(request()->route()->uri);
+
+echo "<br>From URL=====";
+echo "<pre>";
+print_r($queryString);
+echo "</pre>";
+
+echo "<br>From Database=====";
+echo "<pre>";
+print_r($pageSettings);
+echo "</pre>";
+
+echo "<br>temp=====";
+echo "<pre>";
+print_r(request()->fullUrl());
+echo "</pre>";
+*/
+ ?>
+
+<div id="aione_datalist" class="aione-datalist">
+	<div class="aione-row">
+	
+		<form action="" method="GET" name="form1">
+		<?php if(Request::get('page')): ?>
+			<input type="hidden" name="page" value="1">
+		<?php endif; ?>
+		
+		<div id="aione_datalist_header" class="aione-datalist-header">
+			<div class="aione-row">
+			
+				<!---------------- AIONE FILTERS ---------------->
 				<div id="aione_filters" class="aione-filters">
-					<div class="aione-filter aione-search-field">
-						<input id="search" class="browser-default" type="search" placeholder="Search" name="search" value="<?php echo e(Request::get('search')); ?>">
-					</div> <!-- .aione-filter -->
 					<div class="aione-filter aione-select-view">
 						<div class="aione-switch-view">
 							<ul class="views" >
-								<li class="inline-block" ><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
-								<li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
-								<li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
+								<li class="view"><a href="#list-view" class="view-selector" title="List View" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
+								<li class="view"><a href="#detail-view" class="view-selector" title="Detail View" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
+								<li class="view"><a href="#grid-view" class="view-selector" title="Grid View" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
 							</ul>
 						</div>
 						
@@ -33,79 +74,23 @@
 						</select>
 						
 					</div> <!-- .aione-filter -->
+					<div class="aione-filter aione-search-field">
+						<input id="search" class="browser-default" type="search" placeholder="Search" name="search" value="<?php echo e(Request::get('search')); ?>">
+					</div> <!-- .aione-filter -->
 					<div class="clear"></div> <!-- .clear -->
 				</div> <!-- #aione_filters -->
-
-<style>
-.aione-filters{
-	
-}
-.aione-filters .aione-filter{
-	
-}
-.aione-filters .aione-filter.aione-search-field{
-	
-}
-.aione-filters .aione-filter.aione-select-view{
-	width:200px;
-	float:right;
-}
-.aione-filters .aione-filter.aione-page-items{
-	width:200px;
-	float:right;
-	margin-right: 10px;
-}
-
-
-.aione-switch-view{
-	border:1px solid #e8e8e8;
-	padding: 5.5px
-}
-.aione-switch-view ul{
-	width: 100% !important;
-	text-align: center;
-}
-.aione-switch-view > ul > li{
-	border:1px solid #e8e8e8;
-	line-height: 0px;
-	padding:2px;
-	width: 31%;
-	text-align: center;
-}
-.aione-switch-view > ul > li > a{
-	display: block;
-}
-.aione-switch-view i{
-	color:#434c47;
-}
-.aione-switch-view > ul > li:hover{
-	background-color: #0288D1;
-	color:#fff !important;
-}
-.aione-switch-view > ul > li:hover i{
-	color: #fff;
-}
-.aione-sort{
-	border:1px solid #e8e8e8;
-	padding: 7px
-}
-.aione-sort select{
-	height:30px;width: 75%;
-}
-.aione-sort i{
-	line-height: 28px;
-	float: right;
-	width: 100%;
-}
-</style>
-
-				
-				
-				<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10" style="display: none;">
+				<!---------------- END AIONE FILTERS ---------------->
+			
+			</div> <!-- .aione-row -->
+		</div> <!-- #aione_datalist_header -->
+		<div id="aione_datalist_content" class="aione-datalist-content">
+			<div class="aione-row">
+			
+			
+			<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10" style="display: none;">
 					<div class="row aione-sort" onchange="document.form1.submit();">
 						<select class="col  browser-default aione-field" name="sort_by" >
 							<option value="" disabled selected>Sort By</option>
-
 							<?php if(isset($showColumns)): ?>
 								<?php $__currentLoopData = $showColumns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 									<?php 
@@ -136,14 +121,19 @@
 				
 
 			</form>
-		</div>
-	</div>
-	<ul class="list" id="list" style="min-height: 400px;margin-top: 14px;border:1px solid #e8e8e8;">
-		<li class="row" style="padding:5px 10px;font-size: 13px;font-weight: 500;">
+			
+			
+			
+			
+			
+			
+			
+	<ul id="list" class="aione-datalist-items" >
+		<li class="aione-datalist-item aione-datalist-header-item" >
 			<?php $__currentLoopData = $showColumns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 				<?php if($loop->index == 0): ?>
 
-					<div class="col" style="width: <?php echo e(100/count($showColumns)); ?>%"><span class="column-order" column-key="<?php echo e($k); ?>" style="cursor: pointer;">
+					<div class="column" style="width: <?php echo e(100/count($showColumns)); ?>%"><span class="column-order" column-key="<?php echo e($k); ?>" style="cursor: pointer;">
 						<?php if(is_array($column)): ?>
 							<?php echo e($column['title']); ?>
 
@@ -159,7 +149,7 @@
 							$k = $explodedKey[count($explodedKey)-1];
 						}
 					 ?>
-					<div class="col" style="width: <?php echo e(100/count($showColumns)); ?>%">
+					<div class="column" style="width: <?php echo e(100/count($showColumns)); ?>%">
 						<span style="cursor: pointer;" class="column-order" column-key="<?php echo e($k); ?>">
 							<?php if(is_array($column)): ?>
 								<?php echo e($column['title']); ?>
@@ -173,16 +163,18 @@
 							<?php endif; ?>
 						</span>
 					</div>
+					
 				<?php endif; ?>
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			<div class="clear"></div> <!-- .clear -->
 		</li>
-		<div class="divider"></div>
+		
 		<?php $__currentLoopData = $datalist; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dataset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-			<li class="row hover-me" style="padding:14px">
-				<div class="row valign-wrapper">
+			<li class="aione-datalist-item" >
+				<div class="">
 					<?php $__currentLoopData = $showColumns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 						<?php if($loop->index == 0): ?>
-							<div class="col" style="width: <?php echo e(100/count($showColumns)); ?>%">
+							<div class="column" style="width: <?php echo e(100/count($showColumns)); ?>%">
 								<div class="row valign-wrapper">
 									<div class="col">
 										<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
@@ -203,14 +195,17 @@
 														<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" style="padding-right:10px" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
 													<?php endif; ?>
 												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
 											</div>
 										<?php endif; ?>
+
 									</div>
 								</div>
 
 							</div>
+
 						<?php else: ?>
-							<div class="col " style="width: <?php echo e(100/count($showColumns)); ?>%">
+							<div class="column " style="width: <?php echo e(100/count($showColumns)); ?>%">
 								<?php 
 									$relations = explode('.',$k);
 									$getRelations = $dataset;
@@ -246,6 +241,22 @@
 											$columnType = $column['type'];
 											if($columnType == 'image'){
 												echo '<img src="'.asset($column['imagePath'].''.$dataset->{$k}).'" style="width:30px" >';
+											}elseif($columnType == 'switch'){
+												echo '<div class="switch"><label>';
+												if($dataset->status == '0'){
+													echo '<input type="checkbox" class="'.$column['class'].'">';
+												}
+												else{
+													echo '<input type="checkbox" class="'.$column['class'].'" checked="checked">';
+												}
+												echo '<span class="lever"></span></label><input type="hidden" name="id" value="'.$dataset->id.'"></div>';
+											}
+											if($columnType == 'json'){
+												$days = [];
+												foreach (json_decode($dataset->{$k}) as $key => $value) {
+													$days[] = ucfirst(substr($value, 0 , 2));
+												}
+												echo implode(',',$days);
 											}
 										}else{
 											echo $dataset->{$k};
@@ -254,14 +265,35 @@
 								<?php endif; ?>
 							</div>	
 						<?php endif; ?>
+
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				</div>
+				<div class="clear"></div> <!-- .clear -->
 			</li>			
 		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-	</ul>
-	<?php echo e($datalist->appends(request()->input())->render()); ?>
 
-</div>
+	</ul>
+	
+	
+	
+	
+			
+			
+			
+
+			</div> <!-- .aione-row -->
+		</div> <!-- #aione_datalist_content -->
+		<div id="aione_datalist_footer" class="aione-datalist-footer">
+			<div class="aione-row">
+				<!----------------  AIONE PAGINATION ---------------->
+				<?php echo e($datalist->appends(request()->input())->render()); ?>
+
+				<!---------------- END AIONE PAGINATION ---------------->
+
+			</div> <!-- .aione-row -->
+		</div> <!-- #aione_datalist_footer -->
+	</div> <!-- .aione-row -->
+</div> <!-- #aione_datalist -->
 
 <script type="text/javascript">
 

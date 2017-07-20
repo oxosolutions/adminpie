@@ -1,12 +1,18 @@
 @extends('layouts.main')
 @section('content')
-
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Leaves',
+	'add_new' => '+ Apply leave'
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row">
-		{{-- {{dump($leave_rule)}} --}}
-		
-				
 			<div class="fade-background">
 			</div>
 			<div id="projects" class="projects list-view">
@@ -14,7 +20,6 @@
 					<div class="col s12 m9 l9 pr-7" >
 						<div class="row no-margin-bottom">
 							<div class="col s12 m12 l6  pr-7 tab-mt-10" >
-								<!-- <input class="search aione-field" placeholder="Search" /> -->
 								<nav>
 								    <div class="nav-wrapper">
 								      	<form>
@@ -44,12 +49,7 @@
 								<div class="row aione-switch-view">
 									<ul class="right  views m-0" >
 										<li class="inline-block" sty><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
-										
-										
-
 										<li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
-
-
 										<li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
 									</ul>
 								</div>
@@ -72,9 +72,7 @@
 							                    <div style="font-weight: 500;" class="">{{$val->reason_of_leave}}</div>
 							                    <div class="project-description"></div>
 							                    <div class="aione-list-options">
-							                        {{-- <a style="padding-right:10px" href=""  class="edit" data-toggle="popover" title="Click here to update this Module">Edit</a> --}}
 							                        <a href="" style="padding-right:10px">View</a>
-							                       {{--  <a style="padding-right:10px;color: red" href="javascript:;" onclick="return confirm('Are you sure?')"  class="delete" data-toggle="popover" title="Click here to delete this Module">Delete</a> --}}
 							                    </div>
 							                </div>
 							            </div>
@@ -83,11 +81,9 @@
 							         <div class="col s3">
 							            {{$val->total_days}} Days
 							        </div>
-							        
 							        <div class="col s3">
 							            {{$val->from}} to {{$val->to}}
 							        </div>
-
 							        @if($val->status ==1)
 								        <div class="col s2 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Approved</span>
@@ -98,45 +94,37 @@
 								        </div>
 								    @endif  
 							    </div>
-							    
 							</div>
-						
 						</div>
 						@endforeach
 					</div>
-					
 					<div class="col s12 m3 l3 pl-7" >
-						<a id="add_new" href="#" class="btn add-new display-form-button" >
+						<a id="add_new" href="#modal4" class="btn add-new display-form-button" >
 							Apply Leave
 						</a>
-						<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-						
-
+						{!! Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+								<input type="hidden" name="apply_by" value="employee">
+						@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
+						{!!Form::close()!!}
+						{{-- <div id="add_new_wrapper" class="add-new-wrapper add-form ">
 								{!! Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 								<input type="hidden" name="apply_by" value="employee">
 								<div class="row no-margin-bottom">
 									<div class="col s12 m2 l12 aione-field-wrapper">
 										<input name="reason_of_leave" class="no-margin-bottom aione-field " type="text" placeholder="Reason of leave" />
 									</div>
-
 									<div class="col s12 m2 l12 aione-field-wrapper">
 									{!! Form::textarea('description',null,['rows'=>'5', "class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Description'])!!}
-									
 									</div>
-
 									<div class="col s12 m2 l12 aione-field-wrapper">
 									{!! Form::select('leave_category_id',$leave_rule->pluck('name','id'),null,["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select leave Type'])!!}
-									
 									</div>
-
 									<div class="col s12 m2 l12 aione-field-wrapper">
 										<input  type="date" class="datepicker" name="from" class="no-margin-bottom aione-field " type="text" placeholder="From dd-mm-year" />
 									</div>
 									<div class="col s12 m2 l12 aione-field-wrapper">
 										<input name="to" class="datepicker no-margin-bottom aione-field"  type="date" placeholder="To dd-mm-year" />
 									</div>
-									
-
 									<div class="col s12 m3 l12 aione-field-wrapper">
 										<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save leave
 											<i class="material-icons right">save</i>
@@ -144,10 +132,7 @@
 									</div>
 								</div>
 							{!!Form::close()!!}
-						
-						</div>
-
-					
+						</div> --}}
 						<div class="row" style="padding-top: 10px">
 							<div class="card" style="margin: 0px;margin-bottom: 5px">
 								<div class="row" style="padding: 10px;font-weight: 500;">
@@ -169,7 +154,6 @@
 											$used_leave = $leave_count_by_cat[$ruleVal->id]->sum('total_days');
 										}
 									@endphp
-
 									<div class="row">
 									@if($metaVal['key'] =="number_of_day")
 										<div class="col l4" style="border-right:1px solid #e8e8e8">
@@ -197,11 +181,6 @@
 											</div>
 										</div>
 									@endif
-									
-										
-									
-									
-										
 									
 									</div>
 									@if($metaVal['key'] =="apply_before" )
@@ -264,7 +243,6 @@
 									</div>
 								</div>
 							</div>
-							
 							<div class="card" style="margin: 0px;margin-bottom: 5px">
 								<div class="row" style="padding: 10px;">
 									Nunc pellentesque quam vel arcu dictum, non posuere eros ultricies.
@@ -370,16 +348,6 @@
         </div>
 	</div>
 	<script type="text/javascript">
-		$('.add-new').off().click(function(e){
-			e.preventDefault();
-			$('.add-new-wrapper').toggleClass('active');
-			$('.fade-background').fadeToggle(300);
-		});
-		
-		$('.fade-background').click(function(){
-			$('.fade-background').fadeToggle(300);
-			$('.add-new-wrapper').toggleClass('active');
-		});
 
 		$(".datepicker").pickadate({
 			selectMonths:true,

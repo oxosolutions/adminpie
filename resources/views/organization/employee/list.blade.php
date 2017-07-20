@@ -1,13 +1,5 @@
 @extends('layouts.main')
 @section('content')
-	<style type="text/css">
-		.error-red{
-			color: red
-		}
-		.display_block{
-			display: block !important;
-		}
-	</style>
 	@if(@$errors->has())
 	<script type="text/javascript">
 		$(window).load(function(){
@@ -24,11 +16,21 @@
 	'page_title' => 'Employees',
 	'add_new' => '+ Add Employee'
 ); 
+
+	 if(check_route_permisson('hrm/employee/save')==false){
+	 	$page_title_data['show_add_new_button'] ='no';
+	 }
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+@include('common.list.datalist')
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
 {!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Employee','button_title'=>'Save Employee','section'=>'addempsec1']])
 {!!Form::close()!!}
-@include('common.list.datalist')
-
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

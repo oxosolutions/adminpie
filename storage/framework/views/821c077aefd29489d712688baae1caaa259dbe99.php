@@ -5,7 +5,7 @@
 
 	$page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'yes',
+	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
 	'page_title' => 'Dashboard',
 	'add_new' => '+ Add Widget'
@@ -58,7 +58,7 @@
 					</span>
 				</button>
 			</div>
-			
+
 		</div>
 		
 		

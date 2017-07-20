@@ -25,33 +25,6 @@
 	font-size: 16px !important;
 }
 </style>
-<!-- PROJECTS -->
-{{-- <div id="users">
-  <input class="search" placeholder="Search" />
-  <button class="sort" data-sort="name">
-    Sort
-  </button>
-
-	<div class="list">
-		<div>
-			<h3 class="name">Jonny Stromberg</h3>
-			<p class="born">1986</p>
-		</div>
-		<div>
-			<h3 class="name">Jonas Arnklint</h3>
-			<p class="born">1985</p>
-		</div>
-		<div>
-			<h3 class="name">Martina Elm</h3>
-			<p class="born">1986</p>
-		</div>
-		<div>
-			<h3 class="name">Gustaf Lindqvist</h3>
-			<p class="born">1983</p>
-		</div>
-	</div>
-
-</div> --}}
 <script type="text/javascript">
     var options = {
 	  valueNames: [ 'project-name']
@@ -75,8 +48,7 @@
 			</button>
 		</div>
 	</div>
-			{!!Form::close()!!}
-
+{!!Form::close()!!}
 </div>
 <div id="projects" class="projects list-view">
 	<div class="row"  id="find-project">

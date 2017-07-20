@@ -9,6 +9,8 @@ use Session;
 use File;
 use DB;
 use MySQLWrapper;
+use Excel;
+use Auth;
 class DatasetController extends Controller
 {
     public function importDataset(){
@@ -39,21 +41,13 @@ class DatasetController extends Controller
 
 
     function uploadDataset(Request $request){
-
-	    /*$validate = $this->validateRequst($request);
-        
-    	if($validate['status'] == 'false'){
-    		$response = ['status'=>'error','errors'=>$validate['errors']];
-    		return $response;
-    	}*/
-
         if($request->import_source == 'file'){
            
              if($request->file('file')->getClientOriginalExtension()=='sql' )
              {
                     $path = 'sql'; 
              }else{
-                    $path = 'datasets';
+                    $path = 'datasets_files';
                 }
             try {
                  if(!in_array($request->file('file')->getClientOriginalExtension(),['csv','sql','xlsx','xls'])){
@@ -83,12 +77,12 @@ class DatasetController extends Controller
             $filename = $filep[count($filep)-1];
         }
         if($request->import_source != 'import_survey'){
-            if(@$request->action_type == 'new'){
+            if(@$request->add_replace == 'new'){
                 $result = $this->storeInDatabase($filePath, $request->datasetName, $request->import_source, $filename);
             }elseif(@$request->add_replace == 'append'){
                 $result = $this->appendDataset($request->dataset_name, $request->import_source, $filename, $filePath, $request);
             }elseif(@$request->add_replace == 'replace'){
-                //$result = $this->replaceDataset($request, $request->dataset_name, $filePath);
+                $result = $this->replaceDataset($request, $request->dataset_name, $filePath);
             }
         }
 
@@ -226,7 +220,7 @@ class DatasetController extends Controller
         }       
     }
 
-    protected function storeInDatabase($filename, $origName, $source, $orName){
+    protected function storeInDatabase($filename, $origName, $source, $orName, $tableNameFrom = null){
         
         $filePath = $filename;
         $org_id =  Session::get('organization_id');
@@ -275,22 +269,31 @@ class DatasetController extends Controller
                     continue;
                 }
             }
+            // dd($tableName);
             $headers = array_combine($assoc, array_values($headers));
-            DB::select("CREATE TABLE `{$tableName}` ( " . implode(', ', $columns) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-            DB::select("ALTER TABLE `{$tableName}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+            if($tableNameFrom == null){
+                DB::select("CREATE TABLE `{$tableName}` ( " . implode(', ', $columns) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+                DB::select("ALTER TABLE `{$tableName}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+            }
+            if($tableNameFrom != null){
+                $tableName = str_replace('ocrm_', '', $tableNameFrom);
+            }else{
+                $tableName = str_replace('ocrm_', '', $tableName);
+            }
             DB::table($tableName)->insert($headers);
             DB::connection()->disableQueryLog();
             DB::table($tableName)->insert($finalArray);
-            $model = new DL;
-            $model->dataset_table = $tableName;
-            $model->dataset_name = $origName;
-            $model->dataset_file = $filePath;
-            $model->dataset_file_name = $orName;
-            $model->user_id = Auth::user()->id;
-            $model->uploaded_by = Auth::user()->name;
-            $model->dataset_records = '{}';
-            $model->save();
-            return ['status'=>'true','id'=>$model->id,'message'=>'Dataset upload successfully!'];
+            if($tableNameFrom == null){
+                $model = new Dataset;
+                $model->dataset_table = $tableName;
+                $model->dataset_name = $origName;
+                $model->dataset_file = $filePath;
+                $model->dataset_file_name = $orName;
+                $model->user_id = Auth::guard('org')->user()->id;
+                $model->uploaded_by = Auth::guard('org')->user()->name;
+                $model->save();
+            }
+            return ['status'=>'true','id'=>@$model->id,'message'=>'Dataset upload successfully!'];
         }else{
 
             DB::beginTransaction();
@@ -298,16 +301,14 @@ class DatasetController extends Controller
             $tableName = DB::getTablePrefix().$org_id.'_data_table_'.time();
             
             $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\n');
-            
             if($result){
                 $model = new Dataset;
                 $model->dataset_table = $tableName;
-                $model->dataset_name  = $origName;
-                /*$model->dataset_file  = $filePath;
-                $model->dataset_file_name = $orName;*/
-                //$model->user_id = Auth::user()->id;
-                //$model->uploaded_by = Auth::user()->name;
-                //$model->dataset_records = '{}';
+                $model->dataset_name = $origName;
+                $model->dataset_file = $filePath;
+                $model->dataset_file_name = $orName;
+                $model->user_id = Auth::guard('org')->user()->id;
+                $model->uploaded_by = Auth::guard('org')->user()->name;
                 $model->save();
                 DB::commit();
                 Session::flash('message','Dataset upload successfully!');
@@ -317,6 +318,90 @@ class DatasetController extends Controller
                 return ['status'=>'false','id'=>'','message'=>$result['error']];
             }
         }
+    }
+
+    protected function replaceDataset($request, $origName, $filename){
+        // dd($request->all());
+        ini_set('memory_limit', '2048M');
+        $model = Dataset::find($request->replace_or_append);
+        DB::select('TRUNCATE TABLE ocrm_'.$model->dataset_table);
+        //dd($model->dataset_table);
+        $this->storeInDatabase($filename, $origName, $request->import_source, $orName = '', $model->dataset_table);
+        if($model){
+            return ['status'=>'true','id'=>$model->id,'message'=>'Dataset replaced successfully!'];
+        }else{
+            return ['status'=>'false','message'=>'unable to replace dataset!'];
+        }
+    }
+
+    protected function appendDataset($datasetName, $source, $filename, $filePath, $request){
+        if($source == 'url'){
+            $randName = 'downloaded_dataset_'.time().'.csv';
+            $path = 'datasets_file/';
+            copy($filename, $path.$randName);
+            $filePath = 'datasets_files/'.$randName;
+        }
+
+        if(!File::exists($filePath)){
+            return ['status'=>'false','id'=>'','message'=>'File not found on given path!'];
+        }
+
+        $tableName = 'table_temp_'.rand(5,1000);
+        $model_DL = Dataset::find($request->replace_or_append);
+        $oldTable = DB::table($model_DL->dataset_table)->get();
+        
+        if(File::extension($filePath)=="xlsx" || File::extension($filePath)=="xls"){
+            $assoc = [];
+            $finalArray = [];
+            $headers = [];
+            $data = Excel::load($filePath, function($reader){ })->get();
+            foreach($data as $key => $value){
+                $FileData[] = $value->all();
+            }
+            $i = 1;
+            foreach($FileData[0] as $key  => $value){
+                $headers['column_'.$i] = $key;
+                $c = 'column_' . $i;
+                $assoc[] = $c;
+                $i++;
+            }
+            
+            foreach($FileData as $values){
+                $finalArray[] = array_combine($assoc, array_values($values));
+            }
+            unset($oldTable[0]->id);
+            $new = (array)$headers;
+            $old = (array)$oldTable[0];
+            $new = preg_replace("/[^a-zA-Z 0-9]+/", "", $new );
+            $old = preg_replace("/[^a-zA-Z 0-9]+/", "", $old );
+            if($new != $old){
+                return ['status'=>'false','message'=>'File columns are note same!'];
+            }
+            DB::table($model_DL->dataset_table)->insert($finalArray);
+        }else{
+            $model = new MySQLWrapper;
+            $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\r\n');
+            $tempTableData = DB::table($tableName)->get();
+            
+            $oldColumns = [];
+            unset($oldTable[0]->id);
+            unset($tempTableData[0]->id);
+            $new = (array)$tempTableData[0];
+            $old = (array)$oldTable[0];
+            $new = preg_replace("/[^a-zA-Z 0-9]+/", "", $new );
+            $old = preg_replace("/[^a-zA-Z 0-9]+/", "", $old );
+            if($new != $old){
+                DB::select('DROP TABLE '.$tableName);
+                return ['status'=>'false','message'=>'File columns are note same!'];
+            }
+            unset($new['id']);
+
+            $appendColumns = implode(',', array_keys($new));
+            DB::select('INSERT INTO `'.$model_DL->dataset_table.'` ('.$appendColumns.') SELECT '.$appendColumns.' FROM '.$tableName.' WHERE id != 1;');
+            DB::select('DROP TABLE '.$tableName);
+        }
+        
+        return ['status'=>'true','message'=>'Dataset updated successfully!!', 'id'=>$model_DL->id];
     }
 
     protected function validateStoreRequest($request){

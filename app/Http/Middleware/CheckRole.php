@@ -22,10 +22,10 @@ class CheckRole
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
-    {         
+    public function handle($request, Closure $next, $role = null)
+    {  
       $current_route =  $request->route();
-      $uri =str_replace('/{id}','',$current_route->uri); 
+      $uri =str_replace('/{id}','',$current_route->uri);
       $current_uri = str_replace('/{id?}','',$uri);
       $current_role_id = Auth::guard('org')->user()->role_id;
       if($current_role_id !=1){

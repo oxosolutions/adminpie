@@ -1,6 +1,16 @@
 @extends('layouts.main')
 @section('content')
 {{-- @include('organization.profile._header') --}}
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Projects',
+	'add_new' => ''
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row">

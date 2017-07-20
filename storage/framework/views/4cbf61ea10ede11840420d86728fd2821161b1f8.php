@@ -19,7 +19,7 @@
 		</div>
 		
 	</div>
-	<div class="modal-content" style="padding: 30px;">
+	<div class="modal-content" style="padding: 30px;padding-bottom: 60px">
 		<?php if(isset($data['section'])): ?>
 			<?php echo FormGenerator::GenerateSection($data['section'],['type'=>'inset']); ?>
 

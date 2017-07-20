@@ -29,10 +29,11 @@
  						
 				</div>
 				<div class="col s12 m12 l6 right-align">
-					
+				<?php if(check_route_permisson('hrm/attendance/import')==true): ?>
 					<a  href="<?php echo e(route('import.form.attendance')); ?>" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
 						Import Attendence
 					</a>
+				<?php endif; ?>
 					<a  href="<?php echo e(route('hr.attendance')); ?>" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
 						Mark Attendence
 					</a>
@@ -159,7 +160,7 @@
 	function attendance_list()
 	{
 		$.ajax({
-				url:route()+'/attendance/list',
+				url:route()+'/attendance/list/ajax',
 				type:'Get',
 				success: function(res){
 					
@@ -182,7 +183,7 @@
 		postData['years'] = yr;
 		postData['_token'] = $("#token").val();
 		$.ajax({
-				url:route()+'/attendance/list',
+				url:route()+'/attendance/list/ajax',
 				type:'POST',
 				data:postData,
 				success: function(res){

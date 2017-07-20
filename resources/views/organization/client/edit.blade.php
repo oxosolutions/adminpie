@@ -1,5 +1,15 @@
 @extends('layouts.main')
 @section('content')
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Edit Customer',
+	'add_new' => ''
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 <div class="row">
 	<div class="col-md-12">
 	 <?php echo Form::model($model, ['route'=>['update.client',$model->id ], 'class'=> 'form-horizontal','method' => 'post']); ?>

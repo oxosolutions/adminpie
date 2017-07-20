@@ -23,41 +23,33 @@
 			});
 		</script>
 	<?php endif; ?>
-<div id="projects" class="projects list-view">
-	<div class="row">
-		<div class="col s12 m12 l3 offset-l9">
-			
-			<a id="add_new" href="#modal1" class="btn add-new display-form-button" >
-				Add New team
-			</a>
-			<?php if($data): ?>
-				<?php echo Form::model($data,['route'=>'edit.team','method'=>'POST']); ?>
+<?php 
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Teams',
+	'add_new' => '+ Add New Team' 
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php if($data): ?>
+	<?php echo Form::model($data,['route'=>'edit.team','method'=>'POST']); ?>
 
-				<input type="hidden" name="id" value="<?php echo e($id); ?>">
-			<?php else: ?>
-				<?php echo Form::open(['route'=>'save.team'	,'method'=>'POST']); ?>
+	<input type="hidden" name="id" value="<?php echo e($id); ?>">
+<?php else: ?>
+	<?php echo Form::open(['route'=>'save.team'	,'method'=>'POST']); ?>
 
-			<?php endif; ?>	
-		
-			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Add New Team','button_title'=>'Save','section'=>'prosec2']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-			<?php echo Form::close(); ?>
+<?php endif; ?>	
 
-	
-			
-
-		</div>
-
-	</div>
-	<div class="row">
-		<div class="col s12 m12 l12" >
-			
-			<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-		</div>
-
-		
-	</div>
-</div>
-
-
+<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Team','button_title'=>'Save','section'=>'prosec2']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo Form::close(); ?>	
+<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

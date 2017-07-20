@@ -2,7 +2,7 @@
 	{{$collection->field_title}}
 </div>
 <div class="col l9">
-	<div class="row">
+	<div class="row" style="margin-bottom: 20px">
 		@php
 			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'));
 			// dd($optionValues);

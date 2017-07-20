@@ -1,21 +1,62 @@
-<div>
-	<div >
-		<div >
-			<form action="" method="GET" name="form1">
-				@if(Request::get('page'))
-					<input type="hidden" name="page" value="1">
-				@endif
-				
+@php
+	//$userMeta = 'App\\Model\\Organization\\UsersMeta';
+	//$queryString = explode('?',request()->fullUrl());
+	
+	//$userMeta::saveDataListSetting(request()->route()->uri,$queryString);
+	
+	
+	// if($pageSettings != null){
+	// 	$sessionSettings = session()->get('pageSettings');
+	// 	if($sessionSettings != $pageSettings){
+	// 		dump(url(request()->route()->uri));
+	// 		header('Location:'.url(request()->route()->uri.'?'.$pageSettings));
+	// 		session()->put('pageSettings',$pageSettings);
+	// 	}
+	// }
+	// $newvalue = $userMeta::getDataListSettings(request()->route()->uri);
+	// session()->put('pageSettings',$newvalue);
+
+	//
+	
+/*
+$pageSettings = $userMeta::getDataListSettings(request()->route()->uri);
+
+echo "<br>From URL=====";
+echo "<pre>";
+print_r($queryString);
+echo "</pre>";
+
+echo "<br>From Database=====";
+echo "<pre>";
+print_r($pageSettings);
+echo "</pre>";
+
+echo "<br>temp=====";
+echo "<pre>";
+print_r(request()->fullUrl());
+echo "</pre>";
+*/
+@endphp
+
+<div id="aione_datalist" class="aione-datalist">
+	<div class="aione-row">
+	
+		<form action="" method="GET" name="form1">
+		@if(Request::get('page'))
+			<input type="hidden" name="page" value="1">
+		@endif
+		
+		<div id="aione_datalist_header" class="aione-datalist-header">
+			<div class="aione-row">
+			
+				<!---------------- AIONE FILTERS ---------------->
 				<div id="aione_filters" class="aione-filters">
-					<div class="aione-filter aione-search-field">
-						<input id="search" class="browser-default" type="search" placeholder="Search" name="search" value="{{Request::get('search') }}">
-					</div> <!-- .aione-filter -->
 					<div class="aione-filter aione-select-view">
 						<div class="aione-switch-view">
 							<ul class="views" >
-								<li class="inline-block" ><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
-								<li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
-								<li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
+								<li class="view"><a href="#list-view" class="view-selector" title="List View" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
+								<li class="view"><a href="#detail-view" class="view-selector" title="Detail View" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
+								<li class="view"><a href="#grid-view" class="view-selector" title="Grid View" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
 							</ul>
 						</div>
 						
@@ -33,79 +74,23 @@
 						</select>
 						
 					</div> <!-- .aione-filter -->
+					<div class="aione-filter aione-search-field">
+						<input id="search" class="browser-default" type="search" placeholder="Search" name="search" value="{{Request::get('search') }}">
+					</div> <!-- .aione-filter -->
 					<div class="clear"></div> <!-- .clear -->
 				</div> <!-- #aione_filters -->
-
-<style>
-.aione-filters{
-	
-}
-.aione-filters .aione-filter{
-	
-}
-.aione-filters .aione-filter.aione-search-field{
-	
-}
-.aione-filters .aione-filter.aione-select-view{
-	width:200px;
-	float:right;
-}
-.aione-filters .aione-filter.aione-page-items{
-	width:200px;
-	float:right;
-	margin-right: 10px;
-}
-
-
-.aione-switch-view{
-	border:1px solid #e8e8e8;
-	padding: 5.5px
-}
-.aione-switch-view ul{
-	width: 100% !important;
-	text-align: center;
-}
-.aione-switch-view > ul > li{
-	border:1px solid #e8e8e8;
-	line-height: 0px;
-	padding:2px;
-	width: 31%;
-	text-align: center;
-}
-.aione-switch-view > ul > li > a{
-	display: block;
-}
-.aione-switch-view i{
-	color:#434c47;
-}
-.aione-switch-view > ul > li:hover{
-	background-color: #0288D1;
-	color:#fff !important;
-}
-.aione-switch-view > ul > li:hover i{
-	color: #fff;
-}
-.aione-sort{
-	border:1px solid #e8e8e8;
-	padding: 7px
-}
-.aione-sort select{
-	height:30px;width: 75%;
-}
-.aione-sort i{
-	line-height: 28px;
-	float: right;
-	width: 100%;
-}
-</style>
-
-				
-				
-				<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10" style="display: none;">
+				<!---------------- END AIONE FILTERS ---------------->
+			
+			</div> <!-- .aione-row -->
+		</div> <!-- #aione_datalist_header -->
+		<div id="aione_datalist_content" class="aione-datalist-content">
+			<div class="aione-row">
+			
+			
+			<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10" style="display: none;">
 					<div class="row aione-sort" onchange="document.form1.submit();">
 						<select class="col  browser-default aione-field" name="sort_by" >
 							<option value="" disabled selected>Sort By</option>
-
 							@if(isset($showColumns))
 								@foreach($showColumns as $key => $column)
 									@php
@@ -134,14 +119,19 @@
 				
 
 			</form>
-		</div>
-	</div>
-	<ul class="list" id="list" style="min-height: 400px;margin-top: 14px;border:1px solid #e8e8e8;">
-		<li class="row" style="padding:5px 10px;font-size: 13px;font-weight: 500;">
+			
+			
+			
+			
+			
+			
+			
+	<ul id="list" class="aione-datalist-items" >
+		<li class="aione-datalist-item aione-datalist-header-item" >
 			@foreach($showColumns as $k => $column)
 				@if($loop->index == 0)
 
-					<div class="col" style="width: {{100/count($showColumns)}}%"><span class="column-order" column-key="{{$k}}" style="cursor: pointer;">
+					<div class="column" style="width: {{100/count($showColumns)}}%"><span class="column-order" column-key="{{$k}}" style="cursor: pointer;">
 						@if(is_array($column))
 							{{$column['title']}}
 						@else
@@ -155,7 +145,7 @@
 							$k = $explodedKey[count($explodedKey)-1];
 						}
 					@endphp
-					<div class="col" style="width: {{100/count($showColumns)}}%">
+					<div class="column" style="width: {{100/count($showColumns)}}%">
 						<span style="cursor: pointer;" class="column-order" column-key="{{$k}}">
 							@if(is_array($column))
 								{{$column['title']}}
@@ -167,16 +157,18 @@
 							@endif
 						</span>
 					</div>
+					
 				@endif
 			@endforeach
+			<div class="clear"></div> <!-- .clear -->
 		</li>
-		<div class="divider"></div>
+		
 		@foreach($datalist as $dataset)
-			<li class="row hover-me" style="padding:14px">
-				<div class="row valign-wrapper">
+			<li class="aione-datalist-item" >
+				<div class="">
 					@foreach($showColumns as $k => $column)
 						@if($loop->index == 0)
-							<div class="col" style="width: {{100/count($showColumns)}}%">
+							<div class="column" style="width: {{100/count($showColumns)}}%">
 								<div class="row valign-wrapper">
 									<div class="col">
 										<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
@@ -196,14 +188,17 @@
 														<a href="{{route($action_value['route'],$dataset->id)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
 													@endif
 												@endforeach
+
 											</div>
 										@endif
+
 									</div>
 								</div>
 
 							</div>
+
 						@else
-							<div class="col " style="width: {{100/count($showColumns)}}%">
+							<div class="column " style="width: {{100/count($showColumns)}}%">
 								@php
 									$relations = explode('.',$k);
 									$getRelations = $dataset;
@@ -237,6 +232,22 @@
 											$columnType = $column['type'];
 											if($columnType == 'image'){
 												echo '<img src="'.asset($column['imagePath'].''.$dataset->{$k}).'" style="width:30px" >';
+											}elseif($columnType == 'switch'){
+												echo '<div class="switch"><label>';
+												if($dataset->status == '0'){
+													echo '<input type="checkbox" class="'.$column['class'].'">';
+												}
+												else{
+													echo '<input type="checkbox" class="'.$column['class'].'" checked="checked">';
+												}
+												echo '<span class="lever"></span></label><input type="hidden" name="id" value="'.$dataset->id.'"></div>';
+											}
+											if($columnType == 'json'){
+												$days = [];
+												foreach (json_decode($dataset->{$k}) as $key => $value) {
+													$days[] = ucfirst(substr($value, 0 , 2));
+												}
+												echo implode(',',$days);
 											}
 										}else{
 											echo $dataset->{$k};
@@ -245,13 +256,34 @@
 								@endif
 							</div>	
 						@endif
+
 					@endforeach
 				</div>
+				<div class="clear"></div> <!-- .clear -->
 			</li>			
 		@endforeach
+
 	</ul>
-	{{$datalist->appends(request()->input())->render()}}
-</div>
+	
+	
+	
+	
+			
+			
+			
+
+			</div> <!-- .aione-row -->
+		</div> <!-- #aione_datalist_content -->
+		<div id="aione_datalist_footer" class="aione-datalist-footer">
+			<div class="aione-row">
+				<!----------------  AIONE PAGINATION ---------------->
+				{{$datalist->appends(request()->input())->render()}}
+				<!---------------- END AIONE PAGINATION ---------------->
+
+			</div> <!-- .aione-row -->
+		</div> <!-- #aione_datalist_footer -->
+	</div> <!-- .aione-row -->
+</div> <!-- #aione_datalist -->
 
 <script type="text/javascript">
 

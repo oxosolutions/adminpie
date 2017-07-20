@@ -21,26 +21,33 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Holiday',
-	'add_new' => '+ Add New Holiday'
+	'page_title' => 'Holidays',
+	'add_new' => '+ Add Holiday'
 ); 
  ?>
-<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 			
-<?php echo Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 	
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>	
+	<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>	
+		<?php echo Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-	<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php echo Form::close(); ?>
+			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo Form::close(); ?>
 
-<?php if(@$data): ?>
-	<?php echo Form::model($model , ['route'=>'edit.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
+		<?php if(@$data): ?>
+			<?php echo Form::model($model , ['route'=>'edit.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-		<input type="hidden" name="id" value="<?php echo e(@$data[0]->id); ?>">
-		<a href="#modal_edit" style="display: none" id="modal-edit"></a>
-		<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Holiday','button_title'=>'update Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<?php echo Form::close(); ?>
+				<input type="hidden" name="id" value="<?php echo e(@$data[0]->id); ?>">
+				<a href="#modal_edit" style="display: none" id="modal-edit"></a>
+				<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Holiday','button_title'=>'update Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php echo Form::close(); ?>
 
-<?php endif; ?>
-<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php endif; ?>
+	<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
 
 <script type="text/javascript">
 	$(document).ready(function(){

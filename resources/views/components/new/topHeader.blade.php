@@ -10,6 +10,9 @@
                     <img src="{{asset('images')}}/{{App\Model\Organization\OrganizationSetting::getSettings('logo')}}" style="width: 100%;" />
                 </div>
             @endif
+            <div>
+                 <h5><i style="font-size: 18px; color: #FFF;">{{App\Model\Organization\OrganizationSetting::getSettings('title')}}</i></h5>
+            </div>
             @if(App\Model\Organization\OrganizationSetting::getSettings('show_tagline') == 'yes')
                 <i style="font-size: 18px; color: #FFF;">{{App\Model\Organization\OrganizationSetting::getSettings('tagline')}}</i>
             @endif

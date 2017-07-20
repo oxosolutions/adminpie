@@ -1,20 +1,20 @@
 $(document).ready(function(){
   
-  // $(document).on('click','.deleteTask',function(){
+  $(document).on('click','.deleteTask',function(){
     
-  //   $(this).parents('li').hide();
+    $(this).parents('li').hide();
 
-  //   var id = $(this).parents('li').find('input[name=id]').val();
-  //   var token = $(this).parents('li').find('input[name=_token]').val();
-  //   $.ajax({
-  //     url   : route()+'account/tasks/delete',
-  //     type  : 'POST',
-  //     data  : {id : id,_token : token},
-  //     success : function(){
-  //       count();
-  //     }
-  //   });
-  // });
+    var id = $(this).parents('li').find('input[name=id]').val();
+    var token = $(this).parents('li').find('input[name=_token]').val();
+    $.ajax({
+      url   : route()+'account/tasks/delete',
+      type  : 'POST',
+      data  : {id : id,_token : token},
+      success : function(){
+        count();
+      }
+    });
+  });
   function count(){
         var pendingCount = $('#sortable1').children().length;
         var workingCount = $('#sortable2').children().length;

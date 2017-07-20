@@ -19,7 +19,7 @@
 		</div>
 		
 	</div>
-	<div class="modal-content" style="padding: 30px;">
+	<div class="modal-content" style="padding: 30px;padding-bottom: 60px">
 		@if(isset($data['section']))
 			{!!FormGenerator::GenerateSection($data['section'],['type'=>'inset'])!!}
 		@endif

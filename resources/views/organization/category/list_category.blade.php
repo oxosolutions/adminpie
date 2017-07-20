@@ -130,18 +130,5 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	$('.add-new').off().click(function(e){
-			e.preventDefault();
-			$('.add-new-wrapper').toggleClass('active');
-			$('.fade-background').fadeToggle(300);
-		});
-		
-		$('.fade-background').click(function(){
-			$('.fade-background').fadeToggle(300);
-			$('.add-new-wrapper').toggleClass('active');
-		});
-
-</script>
 
 @endsection

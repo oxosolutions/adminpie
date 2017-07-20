@@ -21,7 +21,7 @@
 @if(@$errors->has())
 	<script type="text/javascript">
 		$(window).load(function(){
-			alert("hello");
+			$('#add_new_model').modal('open');
 		});
 	</script>
 @endif
@@ -31,11 +31,16 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Shift',
+	'page_title' => 'Shifts',
 	'add_new' => '+ Add Shift'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+@include('common.list.datalist')
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
 {!! Form::open(['route'=>'store.shifts' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Shift','button_title'=>'Save Shift','section'=>'addshiftsec1']])
 {!!Form::close()!!}
@@ -47,8 +52,9 @@
 
 	{!!Form::close()!!}
 @endif
-@include('common.list.datalist')
 
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 
 	<script type="text/javascript">
 	$(document).ready(function(){
@@ -102,7 +108,9 @@
 		    }
 			$(this).addClass('edit-fields');
 		});
-		
+		$('.fa-close').click(function(){
+			location.reload();
+		});
 	});
 
 		

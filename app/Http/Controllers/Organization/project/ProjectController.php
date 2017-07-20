@@ -29,10 +29,6 @@ class ProjectController extends Controller
         $this->user = $user;
         $this->client = $client;
     }
-  	public function create()
-  	{
-  		return view('organization.project.create');
-  	}
     public function validation(Request $request)
     {
         $pro_table = Session::get('organization_id');
@@ -470,7 +466,7 @@ class ProjectController extends Controller
         $model->project_id = $request->project_id;
         $model->name = $request->name;
         $model->description = $request->description;
-        $model->type = $fileExtention;
+        $model->type = $type;
         $model->file = $fileName;
         $model->save();
         return back();

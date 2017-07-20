@@ -15,6 +15,10 @@ class User extends Authenticatable
 	       $this->table = Session::get('organization_id').'_users';
 	   	}
    }
+
+   public function applicant_rel(){
+    return $this->hasOne('App\Model\Organization\Applicant','user_id','id');
+   }
    
    protected $fillable = ['name', 'email', 'password', 'api_token', 'remember_token'];
 
@@ -38,4 +42,15 @@ class User extends Authenticatable
    public static function getAdmin($data = null){
       return User::where('user_type','[1]')->pluck('name','id');
    }
+   public function department_rel(){ //due to wrong function name i just created new function to use in employee profile
+        return $this->belongsTo('App\Model\Organization\Department','department','id');
+    }
+
+    public function designation_rel(){
+        return $this->belongsTo('App\Model\Organization\Designation','designation','id');
+    }
+    public function employeeMeta(){
+
+        return $this->hasMany('App\Model\Organization\EmployeeMeta','employee_id','user_id');
+    }
 }

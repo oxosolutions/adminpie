@@ -1,5 +1,14 @@
 <?php $__env->startSection('content'); ?>
-
+<?php 
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Profile',
+	'add_new' => ''
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<div class="row">
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<div class="col l9 pr-7">
@@ -241,7 +250,7 @@
 					</div>
 				</div>
 			</div>
-			<?php if(count(array_intersect(json_decode($model->user_type), [2,4])) != 0): ?>
+			<?php if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0): ?>
 				<div class="card" style="margin-top: 14px">
 					<div class="row">
 						<div class="col l10" style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Employee Detail</div>
@@ -291,7 +300,7 @@
 										&nbsp;<?php echo e(@App\Model\Organization\Designation::find($model[strtolower($field)])->name); ?>
 
 								<?php elseif($field == 'department'): ?>
-										&nbs	<?php echo Form::close(); ?>p;<?php echo e(@App\Model\Organization\Department::find($model[strtolower($field)])->
+										&nbsp;	<?php echo Form::close(); ?><?php echo e(@App\Model\Organization\Department::find($model[strtolower($field)])->
 											name); ?>
 
 									<?php else: ?>
@@ -433,37 +442,6 @@
 			</div>
 		</div>
 	</div>
-	<style type="text/css">
-		 .aione-tabs{
-		      border-bottom: 1px solid #e8e8e8;
-		      padding-bottom: 4px;
-		      padding: 0px;
-		      margin: 0px;
-		   }
-		   .aione-tabs > .tab{
-		     
-
-		   }
-		   .aione-tabs > .tab:hover{
-		      background-color: #e8e8e8;
-		          border-bottom: 1px solid #EEE;
-		   }
-		   .aione-tabs > .tab > a{
-		    padding: 0px 20px; 
-		    line-height: 40px;
-		    display: inline-block; 
-		    color: #0073aa;
-		   }
-		   .aione-active{
-		      border: 1px solid #e8e8e8;
-		      border-bottom: 1px solid #fff;
-		      margin-bottom: -1px;
-		   }
-		   .aione-active a{
-		      color: black !important;
-		      font-weight: 500
-		   }
-	</style>
 	<script type="text/javascript">
 		
 	$(document).ready(function(){

@@ -273,11 +273,11 @@ class OrganizationController extends Controller
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_users_types',
                                 '--schema'=>'type:string, status:integer:default(0)'
-                            ]);
+                            ]); 
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_users_roles',
-                                '--schema'=>'name:string, description:text:nullable, status:integer:default(0)'
+                                '--schema'=>'name:string, description:text:nullable, status:integer:default(1)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -288,7 +288,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_users_metas',
-                                '--schema'=>'user_id:integer , key:string, value:text, type:string:nullable'
+                                '--schema'=>'user_id:integer , key:string, value:text:nullable, type:string:nullable'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -333,7 +333,7 @@ class OrganizationController extends Controller
 			Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_pages',
-                                '--schema'=>'title:string:nullable, sub_title:string:nullable, slug:string:nullable, content:text:nullable, tags:text:nullable, categories:string:nullable, post_type:string:nullable, attachments:string:nullable, version:string:nullable, revision:string:nullable, created_by:string:nullable, post_status:string:nullable, status:integer:default(1)'
+                                '--schema'=>'title:string:nullable, sub_title:string:nullable, slug:string:nullable, content:text:nullable, tags:text:nullable, categories:string:nullable, post_type:string:nullable, attachments:string:nullable, version:string:nullable, revision:string:nullable, created_by:string:nullable, post_status:string:nullable, status:integer:default(1), type:string'
                             ]);
 				Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -464,7 +464,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_organization_settings',
-                                '--schema'=>'key:string , value:text'
+                                '--schema'=>'key:string , value:text:nullable'
                             ]);
 //ORGANIZATION METAS
 		
@@ -491,7 +491,30 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_datasets',
-                                '--schema'=>'dataset_name:string, description:string, datatset_table:string'
+                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, uploaded_by:string'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_maps',
+                                '--schema'=>'table_code:string, code:string, code_albha_2:string, code_albha_3:string, code_numeric:string, parent:integer, title:string, description:text, map_data:longText, status:boolean'
+                            ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_visualization_charts',
+                                '--schema'=>'visualization_id:integer, chart_title:text, primary_column:string, secondary_column:text, chart_type:string, status:string'
+                            ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_visualization_chart_metas',
+                                '--schema'=>'visualization_id:integer, chart_id:integer, key:text, value:text'
+                            ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_visualization_metas',
+                                '--schema'=>'visualization_id:integer, key:text, value:text'
                             ]);
 		Artisan::call('migrate');
 
@@ -505,7 +528,11 @@ class OrganizationController extends Controller
             $roleData[] =   ['name'=>'Super Admin', 'description'=>'organization admin', 'status'=>1];
             $roleData[] =   ['name'=>'Employee', 'description'=>'Employee', 'status'=>1];
             $roleData[] =   ['name'=>'Client', 'description'=>'client', 'status'=>1];
-        Role::insert($roleData);
+            foreach ($roleData as $key => $value) {
+               $roles = new Role();
+               $roles->fill($value);
+               $roles->save();
+            }
         $org_setting =[['key'=>'employee_role', 'value'=>2],['key'=>'client_role', 'value'=>3]];
         org_setting::insert($org_setting);
     }	

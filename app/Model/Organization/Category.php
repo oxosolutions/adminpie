@@ -8,7 +8,7 @@ use Session;
 class Category extends Model
 {
 	public static $breadCrumbColumn = 'name';
-     public function __construct()
+    public function __construct()
 	{
 	    if(!empty(Session::get('organization_id')))
 	    {
@@ -20,5 +20,13 @@ class Category extends Model
 	public function meta()
     {
     	return $this->hasMany('App\Model\Organization\CategoryMeta','category_id','id');
+    }
+    public function getList()
+    {
+    	return self::pluck('name','id');
+    }
+    public static function getListByTypePage()
+    {
+    	return self::where('type','page')->pluck('name','id');
     }
 }

@@ -1,6 +1,7 @@
 @extends('admin.layouts.main')
 
 @section('content')
+
 <div class="fade-background">
 
 </div>

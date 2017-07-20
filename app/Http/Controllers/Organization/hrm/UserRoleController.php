@@ -12,13 +12,45 @@ use App\Model\Admin\GlobalOrganization as ORG;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\User;
 use Session;
+use DB;
 
 class UserRoleController extends Controller{
    
-    public function listRole()
+    public function listRole(Request $request)
     {
-       $all_role = Role::all();
-       return view('organization.role.list',['data'=>$all_role]);
+        if($request->has('per_page')){
+          $perPage = $request->per_page;
+          if($perPage == 'all'){
+            $perPage = 999999999999999;
+          }
+        }else{
+          $perPage = 5;
+        }
+        $sortedBy = @$request->sort_by;
+        if($request->has('search')){
+            if($sortedBy != ''){
+                $model = Role::where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                $model = Role::where('title','like','%'.$request->search.'%')->paginate($perPage);
+            }
+        }else{
+            if($sortedBy != ''){
+                $model = Role::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                 $model = Role::paginate($perPage);
+            }
+        }
+        $datalist =  [
+                        'datalist'=>$model,
+                        'showColumns' => ['name'=>'Name','description'=>'Description','created_at'=>'Created At'],
+                        'actions' => [
+                                        'edit' => ['title'=>'Assign Role','route'=>'role.assign'],
+                                        'delete'=>['title'=>'Delete','route'=>'role.delete']
+                                     ]
+                    ];
+
+        return view('organization.role.list' , $datalist); 
+
     }
     // public function create()
     // {
@@ -39,28 +71,47 @@ class UserRoleController extends Controller{
     }
     public function Delete(Request $request , $id = null)
     {   
+        if($request->isMethod('POST'))
+         {   
+            try{
+                DB::beginTransaction();
+                    Role::where('id',$request['old_role_id'])->delete();
+                    if(!empty($request['user'])){
+                        $checkUserExist = user::whereIn('id',$request['user'])->update(['role_id'=>$request['new_role_id']]);
+                    }
+                    Permisson::where('role_id',$request['old_role_id'])->delete();
+                    
+                DB::commit();
+            }catch(Exception $e) {
+                DB::rollback();
+                }
+            return redirect()->route('list.role');    
+        }
         if(!empty($id) && $id==1){
             return redirect()->route('access.denied');
         }else{
             $roleUser = User::where('role_id',$id)->get();
-            dd($roleUser);
-
+            $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
+            $roleData = compact("roleUser", "roleList" ,'id');
+          return view('organization.role.roleUser', $roleData);
         }
         // $model = OrganizationSetting::where(['value'=>$id , 'type' => 'role'])->first();
-        $model = OrganizationSetting::select(['value','key'])->whereIn('key',['employee_role','client_role'])->get()->keyBy('value')->toArray();
-        $ids = array_keys($model);
-        if(in_array($id, $ids))
-        {
-          $data['key']  = $model[$id]['key'];
-          $data['id']  =$id;
-          $data['id']  =$id;
-           return $data;
-        }else{
-           // Role::where('id',$id)->delete();
-            return 'false';
-        }
-        // dd($request->all());
+        // $model = OrganizationSetting::select(['value','key'])->whereIn('key',['employee_role','client_role'])->get()->keyBy('value')->toArray();
+        // $ids = array_keys($model);
+        // if(in_array($id, $ids))
+        // {
+        //   $data['key']  = $model[$id]['key'];
+        //   $data['id']  =$id;
+        //   $data['id']  =$id;
+        //    return $data;
+        // }else{
+        //    // Role::where('id',$id)->delete();
+        //     return 'false';
+        // }
+       
     }
+
+
 
     
    /**

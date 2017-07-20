@@ -13,7 +13,6 @@
         @endphp
     @endforeach
 @endif
-
 <style type="text/css">
     .display-none{
         display: none;
@@ -81,9 +80,9 @@
                     @if(@$model)
                         <div class="row task-font" >
                             <ul id="sortable1" status="pending" class="col l4 droptrue" style="min-height: 400px">
-                                @foreach(@$model as $key => $tasks)
+                                @foreach(@$model as @$key => @$tasks)
 
-                                    @if($tasks->status == 0) 
+                                    @if(@$tasks->status == 0) 
                                         <li class="ui-state-default col l12">
                                            <div class=" col l12 pr-7 pending" id="pending">    
                                                 <div class="card p-10" >

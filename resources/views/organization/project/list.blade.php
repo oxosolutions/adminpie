@@ -27,12 +27,12 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
-<div id="projects" class="projects list-view">
-	<div class="row" >
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 	
 		@include('common.list.datalist')
-	</div>
-	<div class="row" >
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
 		
 		@if(@$data)
 			{!! Form::model(@$data,['route'=>'update.project', 'class'=> 'form-horizontal','method' => 'post'])!!} 
@@ -43,6 +43,6 @@
 		@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Projects','button_title'=>'Save','section'=>'prosec1']])
 	
 		{!!Form::close()!!}
-	</div>
-</div>	
+	@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

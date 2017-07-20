@@ -7,8 +7,7 @@ use App\Http\Controllers\Controller;
 
 class ApplicationController extends Controller
 {
-	public function index()
-	    {
-	    	
-	    }    
+	public function index(){
+    	
+    }    
 }

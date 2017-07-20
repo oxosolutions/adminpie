@@ -61,9 +61,7 @@ img{
 }
 
 
-/***************************************
-AIONE DATALIST 
-***************************************/
+
 
 
 	
@@ -78,6 +76,11 @@ COMMON
 				color: red;
 			}
 
+
+.display_block{
+	display: block !important;
+}
+		
 			
 ::-webkit-scrollbar {
     width: 8px;
@@ -370,6 +373,170 @@ PAGE HEADER
 
 
 
+
+/***************************************
+AIONE DATALIST
+***************************************/
+
+.aione-datalist-header{
+		margin-bottom:20px;
+}
+.aione-datalist-content{
+		margin-bottom:20px;
+		min-height:400px;
+		border: 1px solid #e8e8e8;
+}
+.aione-datalist-footer{
+		margin-bottom:20px;
+}
+.aione-datalist-items{
+	padding:0;
+	margin:0;
+	
+}
+.aione-datalist-header-item,
+.aione-datalist-item{
+	padding:10px;
+	margin:0;
+}
+.aione-datalist-header-item .column,
+.aione-datalist-item .column{
+	float:left;
+}
+.aione-datalist-header-item{
+	border-bottom: 1px solid #e8e8e8
+}
+.aione-datalist-item{
+	
+}
+
+/* To be REMOVED */
+.aione-datalist-item  .row{
+	margin-bottom:0;
+}
+/* To be REMOVED */
+
+.aione-filters{
+	
+}
+.aione-filters .aione-filter{
+	
+}
+.aione-filters .aione-filter.aione-search-field{
+	width: 74%;
+	width: calc(100% - 293px);
+}
+.aione-filters .aione-filter.aione-search-field input{
+	background-color: #FFFFFF;
+    width: 100%;
+    padding: 0;
+	text-indent:15px;
+    border: 1px solid #e8e8e8;
+    border-radius: 0;
+    height: 41px;
+}
+
+.aione-filters .aione-filter.aione-page-items{
+	width:160px;
+	float:right;
+	margin-right: 10px;
+}
+.aione-filters .aione-filter.aione-page-items select.browser-default{
+    background-color: #FFFFFF;
+    width: 100%;
+    padding: 0 6px;
+    border: 1px solid #e8e8e8;
+    border-radius: 0;
+    height: 43px;
+}
+
+.aione-filters .aione-filter.aione-select-view{
+	width:113px;
+	float:right;
+}
+.aione-switch-view{
+	border:1px solid #e8e8e8;
+}
+.aione-switch-view ul{
+	padding:0;
+	margin:0;
+	padding:5px;
+}
+.aione-switch-view > ul > li{
+	display:inline-block;
+	border:1px solid #e8e8e8;
+	padding:0;
+	margin-right:1px;
+	width: 30px;
+	height:30px;
+	text-align: center;
+}
+.aione-switch-view > ul > li:last-child{
+	margin-right:0;
+}
+.aione-switch-view > ul > li:hover{
+	background-color: #454545;
+	border:1px solid #454545;
+}
+.aione-switch-view > ul > li > a{
+	display: block;
+	color:#888888;
+	font-size:24px;
+	line-height: 28px;
+}
+.aione-switch-view > ul > li > a.active{
+	color:#FFFFFF;
+	background-color:#168dc5;
+	border:1px solid #1570a6;
+}
+.aione-switch-view > ul > li:hover a{
+	color: #FFFFFF;
+}
+.aione-switch-view > ul > li > a .material-icons{
+	font-size: 24px;
+    line-height: 28px;
+}
+
+
+
+
+
+.aione-sort{
+	border:1px solid #e8e8e8;
+	padding: 7px
+}
+.aione-sort select{
+	height:30px;width: 75%;
+}
+.aione-sort i{
+	line-height: 28px;
+	float: right;
+	width: 100%;
+}
+
+/*************** DATALIST PAGINATION*******************/
+	
+	.pagination li.active{
+		background-color:#2196F3;
+		color: white;
+	}
+	.pagination li{
+		    padding: 0 10px;
+    line-height: 30px;
+
+	}
+	.options{
+		position: absolute;
+		font-size: 14px;
+		margin-top:-3px;
+	}
+	.hover-me:hover .options{
+		display: block;
+	}
+	#list li:nth-child(even) {background: #F9F9F9}
+	#list li:nth-child(odd) {background: #FFF}
+	
+
 /***************************************
 NAVIGATION
 ***************************************/
@@ -508,7 +675,21 @@ NAVIGATION
 .aione-main.sidebar-small .aione-nav > ul > li > a .nav-item-arrow{
 	display:none;
 }
-
+.aione-main.sidebar-small .aione-nav > ul > li.nav-item-current > ul,
+.aione-main.sidebar-small .aione-nav > ul > li.nav-item-selected > ul{
+	display:none;
+}
+.aione-main.sidebar-small .aione-nav > ul > li.nav-item-current:hover > ul,
+.aione-main.sidebar-small .aione-nav > ul > li.nav-item-selected:hover > ul{
+	display:block;
+}
+.aione-main.sidebar-small .aione-nav > ul > li:hover > ul {
+    width: 200px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 999;
+}
 	
 /***************************************
 page-content
@@ -558,27 +739,3 @@ TO BE CHANGED
     .divider{
         padding: 0px !important;
     }
-	
-	
-	
-	/*************** DATALIST PAGINATION*******************/
-	
-	.pagination li.active{
-		background-color:#2196F3;
-		color: white;
-	}
-	.pagination li{
-		    padding: 0 10px;
-    line-height: 30px;
-
-	}
-	.options{
-		position: absolute;
-		font-size: 14px;
-		margin-top:-3px;
-	}
-	.hover-me:hover .options{
-		display: block;
-	}
-	#list li:nth-child(even) {background: #F9F9F9}
-	#list li:nth-child(odd) {background: #FFF}

@@ -1,17 +1,15 @@
 @extends('layouts.main')
 @section('content')
-
-<!-- @foreach($user_log as $key => $value)
-
-	@php
-		$textData = json_decode($value->text);
-	@endphp
-
-	@foreach($textData as $ky => $val)
-		{{dump($val)}}
-	@endforeach
-
-@endforeach -->
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Recent Activities',
+	'add_new' => ''
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row ">
@@ -43,9 +41,7 @@
 					<div class="col l2">
 						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">{{$value->type}}</span>
 					</div>
-					<!-- <div class="col l2">
-						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-					</div> -->
+					
 					<div class="col l2 grey-text center-align" style="font-size: 13px">
 						2 hour ago
 					</div>	

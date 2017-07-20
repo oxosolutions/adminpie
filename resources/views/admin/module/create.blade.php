@@ -42,11 +42,11 @@
 
     <div class="col s12 m2 l12 aione-field-wrapper">
         <label>Name</label>
-        <input class="no-margin-bottom aione-field" placeholder="Name" name="name" type="text" value="AdminPie">
+        <input class="no-margin-bottom aione-field" placeholder="Module Name" name="name" type="text">
     </div>
     <div class="col s12 m2 l12 aione-field-wrapper">
         <label>Route</label>
-        {!!Form::select('route',App\Model\Admin\GlobalModule::getRouteListArray(),null, ["class"=>"form-control sel browser-default",'placeholder'=>'url ']) !!}
+        {!!Form::select('route',App\Model\Admin\GlobalModule::getRouteListArray(),null, ["class"=>"form-control sel browser-default"]) !!}
     </div>
     <div class="row">
         <div class="col l6" style="margin-top: 14px;line-height: 36px">
@@ -69,7 +69,7 @@
                     </div>
                     <div class="col l6 pl-7">
                         <label>Sub Module Route</label>
-                        {!!Form::select('submodule[0][sub_module_route]',App\Model\Admin\GlobalModule::getRouteListArray(),null, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
+                        {!!Form::select('submodule[0][sub_module_route]',App\Model\Admin\GlobalModule::getRouteListArray(),null, ['class'=>'form-control sel browser-default']) !!}
                         <input type="hidden" name="submoduleNumber" value="0" />
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                             </div>
                             <div class="col l6 pl-7 pr-7">
                                 <label>Route</label>
-                                {!!Form::select('submodule[0][perm_route][]',App\Model\Admin\GlobalModule::getRouteListArray(),null, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
+                                {!!Form::select('submodule[0][perm_route][]',App\Model\Admin\GlobalModule::getRouteListArray(),null, ['class'=>'form-control sel browser-default']) !!}
                             </div>
                             <div class="col l1 pl-7">
                                 <a href="" class="  delete-reoute-permission"><i class="fa fa-close"></i></a>

@@ -197,6 +197,9 @@ class SettingController extends Controller
 	    		$model->value = $filename;
 	    		$model->save();
     		}else{
+    			if($value == '' || $value == null){
+    				$value = '';
+    			}
     			$model = OrganizationSetting::firstOrNew(['key'=>$key]);
 	    		$model->key = $key;
 	    		$model->value = $value;
@@ -205,6 +208,10 @@ class SettingController extends Controller
     	}
 
     	return back();
+    }
+    public function departmentSetting()
+    {
+    
     }
     public function attendanceSetting()
     {

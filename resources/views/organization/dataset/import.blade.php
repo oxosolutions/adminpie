@@ -91,7 +91,7 @@
 					Add, Replace or Append?
 				</div>
 				<div class="col l9">
-					<select class="action_type" name="action_type">
+					<select class="action_type" name="add_replace">
 						<option value="new">Add New</option>
 						<option value="append">Append</option>
 						<option value="replace">Replace</option>

@@ -1,6 +1,15 @@
 @extends('layouts.main')
 @section('content')
-
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Profile',
+	'add_new' => ''
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="col l9 pr-7">
@@ -227,7 +236,7 @@
 					</div>
 				</div>
 			</div>
-			@if(count(array_intersect(json_decode($model->user_type), [2,4])) != 0)
+			@if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0)
 				<div class="card" style="margin-top: 14px">
 					<div class="row">
 						<div class="col l10" style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Employee Detail</div>
@@ -273,7 +282,7 @@
 									@if($field == 'designation')
 										&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
 								@elseif($field == 'department')
-										&nbs	{!! Form::close() !!}p;{{@App\Model\Organization\Department::find($model[strtolower($field)])->
+										&nbsp;	{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->
 											name}}
 									@else
 										&nbsp;&nbsp;{{$model[strtolower($field)]}}
@@ -409,37 +418,6 @@
 			</div>
 		</div>
 	</div>
-	<style type="text/css">
-		 .aione-tabs{
-		      border-bottom: 1px solid #e8e8e8;
-		      padding-bottom: 4px;
-		      padding: 0px;
-		      margin: 0px;
-		   }
-		   .aione-tabs > .tab{
-		     
-
-		   }
-		   .aione-tabs > .tab:hover{
-		      background-color: #e8e8e8;
-		          border-bottom: 1px solid #EEE;
-		   }
-		   .aione-tabs > .tab > a{
-		    padding: 0px 20px; 
-		    line-height: 40px;
-		    display: inline-block; 
-		    color: #0073aa;
-		   }
-		   .aione-active{
-		      border: 1px solid #e8e8e8;
-		      border-bottom: 1px solid #fff;
-		      margin-bottom: -1px;
-		   }
-		   .aione-active a{
-		      color: black !important;
-		      font-weight: 500
-		   }
-	</style>
 	<script type="text/javascript">
 		
 	$(document).ready(function(){

@@ -128,5 +128,11 @@ class UsersController extends Controller
             throw $e;
         }
     }
+    
+    public function deleteUser(){
+      //client Delete
 
+      //employee delete
+
+    }
 }

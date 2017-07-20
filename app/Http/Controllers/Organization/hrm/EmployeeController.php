@@ -71,6 +71,12 @@ class EmployeeController extends Controller
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
                       ];
+              if(check_route_permisson('hrm/employee/update')==false){
+                unset($datalist['actions']['edit']);
+              }
+              if(check_route_permisson('hrm/employee/delete')==false){
+                unset($datalist['actions']['delete']);
+              }
         if(!empty($id) || $id != null || $id != ''){
           $data['data'] = EMP::where('id',$id)->first();
         }
@@ -110,7 +116,7 @@ class EmployeeController extends Controller
         $valid_fields = [
                             'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
-                            'password'      => 'required|regex:/^[a-z0-9]+$/|min:8',
+                            'password'      => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/|min:8',
                             'employee_id'   => 'required|min:4|max:300|unique:'.$tbl.'_employees'
                         ];
         $this->validate($request , $valid_fields);

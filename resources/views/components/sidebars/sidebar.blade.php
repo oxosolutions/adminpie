@@ -26,7 +26,11 @@
               @if(@$sidebar->subModule[0] != null)
                 <a href="javascript:;">
               @else
-                <a href="{{Url($sidebar['route'])}}">
+                @if($sidebar['route'] != null)
+                    <a href="{{@Url($sidebar['route'])}}">
+                @else
+                    <a href="javascript:void(0)">
+                @endif
                 @endif
                     @php
                         $colors =["teal darken-1"=>"teal darken-1","light-blue"=>"light-blue","cyan"=> "cyan","green darken-1"=>"green darken-1","orange darken-1"=>"orange darken-1"];
@@ -54,7 +58,7 @@
                         <li class="aione-nav-item level1 {{Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''}}">
                             <a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route)) }}">
                                 <span class="nav-item-icon">{{@$subModule['name'][0]}}</span>
-								<span class="nav-item-text">{{$subModule['name']}}</span>
+								<span class="nav-item-text">{{@$subModule['name']}}</span>
                             </a>
                         </li>
                         @endif
@@ -66,119 +70,5 @@
             $index++;
           @endphp
         @endforeach 
-        <li class="aione-nav-item level0 root has-children {{-- {{in_array(Request::path(),array('crm/client/list'))?'active-state':''}}" --}}">
-            <a href="javascript:;">
-                <span class="side-bar-icon fa fa-cogs red center-align side-bar-icon-bg white-text">
-                </span>
-                <span class="side-bar-text ">
-                    Settings
-                </span>
-                <span class="nav-item-arrow">
-                        <i class="fa fa-angle-right" ></i>
-                    </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li class="aione-nav-item level1 ">
-                    <a href="javascript:;">
-                        <span class="side-bar-icon fa fa-tachometer orange darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Projects
-                        </span>
-                    </a>
-                </li>
-               <li class="aione-nav-item level1 ">
-                    <a href="javascript:;">
-                        <span class="side-bar-icon fa fa-tachometer blue darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            CRM
-                        </span>
-                    </a>
-                </li>
-               <li class="aione-nav-item level1 ">
-                    <a href="javascript:;">
-                        <span class="side-bar-icon fa fa-tachometer green darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            HRM
-                        </span>
-                    </a>
-                </li>
-               <li class="aione-nav-item level1 ">
-                    <a href="javascript:;">
-                        <span class="side-bar-icon fa fa-tachometer grey darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Support
-                        </span>
-                    </a>
-                </li>
-               <li class="aione-nav-item level1 ">
-                    <a href="">
-                        <span class="side-bar-icon fa fa-tachometer deep-orange darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Users
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="aione-nav-item level0 root has-children {{-- {{in_array(Request::path(),array('crm/client/list'))?'active-state':''}}" --}}">
-            <a href="javascript:;">
-                <span class="side-bar-icon fa fa-check red center-align side-bar-icon-bg white-text">
-                </span>
-                <span class="side-bar-text ">
-                    Survey
-                </span>
-                <span class="nav-item-arrow">
-                            <i class="fa fa-angle-right" ></i>
-                        </span>
-            </a>
-            <ul class="side-bar-submenu " >
-               <li class="aione-nav-item level1 ">
-                    <a href="javascript:;">
-                        <span class="side-bar-icon fa fa-leanpub orange darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            list
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="aione-nav-item level0 root has-children {{in_array(Request::path(),array('dataset/list','dataset/import'))?'active-state':''}}">
-            <a href="javascript:;">
-                <span class="side-bar-icon fa fa-table red center-align side-bar-icon-bg white-text">
-                </span>
-                <span class="side-bar-text ">
-                  Dataset
-                </span>
-                <span class="nav-item-arrow">
-                    <i class="fa fa-angle-right" ></i>
-                </span>
-            </a>
-            <ul class="side-bar-submenu">
-               <li class="aione-nav-item level1 {{Request::is('dataset/list')?'active-state':''}}">
-                    <a href="{{route('list.dataset')}}">
-                        <span class="side-bar-icon fa fa-tachometer orange darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            All Datasets
-                        </span>
-                    </a>
-                </li>
-                <li class="aione-nav-item level1 {{Request::is('dataset/import')?'active-state':''}}">
-                    <a href="{{route('import.dataset')}}">
-                        <span class="side-bar-icon fa fa-tachometer orange darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Import
-                        </span>
-                    </a>
-                </li>
-            </ul>
-        </li>
     </ul>
 </nav>

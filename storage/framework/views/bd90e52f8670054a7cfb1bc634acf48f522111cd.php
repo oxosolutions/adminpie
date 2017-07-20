@@ -10,6 +10,9 @@
                     <img src="<?php echo e(asset('images')); ?>/<?php echo e(App\Model\Organization\OrganizationSetting::getSettings('logo')); ?>" style="width: 100%;" />
                 </div>
             <?php endif; ?>
+            <div>
+                 <h5><i style="font-size: 18px; color: #FFF;"><?php echo e(App\Model\Organization\OrganizationSetting::getSettings('title')); ?></i></h5>
+            </div>
             <?php if(App\Model\Organization\OrganizationSetting::getSettings('show_tagline') == 'yes'): ?>
                 <i style="font-size: 18px; color: #FFF;"><?php echo e(App\Model\Organization\OrganizationSetting::getSettings('tagline')); ?></i>
             <?php endif; ?>

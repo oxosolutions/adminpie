@@ -1,4 +1,14 @@
 <?php $__env->startSection('content'); ?>
+<?php 
+$page_title_data = array(
+'show_page_title' => 'yes',
+'show_add_new_button' => 'no',
+'show_navigation' => 'yes',
+'page_title' => 'Edit leave category',
+'add_new' => '+ Add Role'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <div class="row">
 	<?php echo Form::open(['route'=>'edit.category' ,	'class'=> 'form-horizontal', 'method' => 'post']); ?>
 

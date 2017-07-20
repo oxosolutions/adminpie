@@ -44,7 +44,7 @@
          width: 100%
    }
    .one-tabs > .tab{
-        font-size: 10px; border-bottom: 1px solid #a8a8a8;background-color: white;
+        font-size: 10px; border-bottom: 1px solid #a8a8a8;background-color: white;display: inline-block;
    }
    .one-tabs > .tab:hover{
        background-color: #e8e8e8;

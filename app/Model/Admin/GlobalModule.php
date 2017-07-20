@@ -14,6 +14,7 @@ class GlobalModule extends Model
         $routes = Route::getRoutes();
         foreach($routes as $route)
         {
+            $routeList[NULL]= "Select Route";
            if(substr($route->uri ,0,1)=='_'){
             }
            else{

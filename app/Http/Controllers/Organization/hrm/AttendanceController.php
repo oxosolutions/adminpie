@@ -31,10 +31,7 @@ class AttendanceController extends Controller
 	{
 		return view('common.Designattendances');
 	}
-	public function upload_attendence_form()
-	{
-		return view('common.create');
-	}
+	
 	public function check_in_out(Request $request)
 	{
 		$u_id = Auth::guard('org')->user()->id;
@@ -53,7 +50,7 @@ class AttendanceController extends Controller
 
 		// }
 		$day 	=  	$time->format('l');
-		$data = Attendance::select(['id','check_in','check_out','check_for_checkin_checkout','in_out_data'])->where([ 'user_id'=> $u_id , 'year'=>$year ,'date'=>$date , 'month'=>$month ]);
+		$data = Attendance::select(['id','check_for_checkin_checkout','in_out_data'])->where([ 'user_id'=> $u_id , 'year'=>$year ,'date'=>$date , 'month'=>$month ]);
 		if($data->count() > 0)
 		{
 			$att_data = $data->first();

@@ -8,7 +8,7 @@
 		<label for="first_name">Page Name</label>
     </div>
     <div class="input-field col l12">
-				 <?php echo Form::select('categories', ['L' => 'sports', 'S' => 'entertainment'],null); ?>
+				 <?php echo Form::select('categories', App\Model\Organization\Category::getListByTypePage(),null); ?>
 
 	</div>
 	 <div class="input-field col l12">
@@ -37,24 +37,11 @@
       <img src="<?php echo e(asset('pages_data/').'/'.$model->page_image); ?>" width="160px" />
     </div><br/>
     <?php else: ?>
-     <div class="input-group input-group-sm">
      
-      <img src="<?php echo e(asset('/No_Image_Available.png')); ?>" width="100px" />
-    </div><br/>
+    <br/>
    
   <?php endif; ?>
-  <div class="<?php echo e($errors->has('page_image') ? ' has-error' : ''); ?> input-group input-group-sm">
-    <?php echo Form::label('page_image','Image'); ?>
-
-    <?php echo Form::file('page_image',['class'=>'form-control','id'=>'file-3']); ?>
-
-    <?php if($errors->has('page_image')): ?>
-      <span class="help-block">
-            <?php echo e($errors->first('page_image')); ?>
-
-      </span>
-    <?php endif; ?>
-  </div>
+  
 
 </div>
 	

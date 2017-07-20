@@ -36,11 +36,15 @@ class AccountController extends Controller
         $user_log = $this->listActivities();
     	if($id == null){
     		$id = Auth::guard('org')->user()->id;
-    	}
-    	$userDetails = User::with(['employee_rel'=>function($query){
-            $query->with(['department_rel','designation_rel','employeeMeta']);
-        },'metas'])->find($id);
-        // dd($userDetails);
+            $userDetails = User::with(['employee_rel'=>function($query){
+                $query->with(['department_rel','designation_rel','employeeMeta']);
+            },'metas'])->find($id);
+    	}else{
+            $userDetails = Employee::with(['employ_info'=>function($query){
+                $query->with(['department_rel','designation_rel','employeeMeta']);
+            },'metas'])->find($id);
+        }
+        
         $userDetails->password = '';
         if($userDetails->employee_rel != null){
             @$userDetails->employee_id = $userDetails->employee_rel->employee_id;
@@ -62,7 +66,6 @@ class AccountController extends Controller
                 $userDetails->{$value->key} = $value->value;
             }
         }
-        // dd($userDetails);
     	return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }
 
@@ -122,6 +125,7 @@ class AccountController extends Controller
                         $employeeModel->department = $value;
                         $employeeModel->save();
                     }
+                    $model = Employee::where('id',$id)->update(['employee_id'=>$request['employee_id']]);
                     $metaModel = EmployeeMeta::firstOrNew(['employee_id'=>$id,'key'=>$key]);
                     $metaModel->key = $key;
                     $metaModel->value = $value;

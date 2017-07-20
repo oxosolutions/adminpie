@@ -54,6 +54,9 @@ class Employee extends Model
 
         return $this->hasMany('App\Model\Organization\EmployeeMeta','employee_id','user_id');
     }
-
+    public function metas()
+   {
+    return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');
+   }
 
 }

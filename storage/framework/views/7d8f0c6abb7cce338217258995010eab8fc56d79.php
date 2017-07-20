@@ -28,7 +28,7 @@
                             <span class="nav-item-icon side-bar-icon fa fa-list grey darken-1 center-align side-bar-icon-bg">
                             </span>
                             <span class="side-bar-text">
-                                All Organizations
+                                Organizations
                             </span>
                         </a>
                     </li>
@@ -38,7 +38,7 @@
                             <span class="nav-item-icon side-bar-icon fa fa-plus cyan darken-1 center-align side-bar-icon-bg">
                             </span>
                             <span class="side-bar-text">
-                                Add New Organization
+                                Add Organization
                             </span>
                         </a>
                     </li>
@@ -61,7 +61,7 @@
                         <span class="nav-item-icon side-bar-icon fa fa-list blue darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">
-                            All Forms
+                            Forms
                         </span>
                         </a>
                     </li>
@@ -70,7 +70,7 @@
                         <span class="nav-item-icon side-bar-icon fa fa-plus green darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">
-                            Add New Form
+                            Add Form
                         </span>
                         </a>
                     </li>
@@ -93,7 +93,7 @@
                         <span class="nav-item-icon side-bar-icon fa fa-list blue darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">
-                            All Modules
+                            Modules
                         </span>
                         </a>
                     </li>
@@ -102,7 +102,7 @@
                         <span class="nav-item-icon side-bar-icon fa fa-plus green darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">
-                            Add New Module
+                            Add Module
                         </span>
                         </a>
                     </li>
@@ -125,7 +125,7 @@
                         <span class="nav-item-icon side-bar-icon fa fa-list blue darken-1 center-align side-bar-icon-bg" >
                         </span>
                         <span class="side-bar-text">
-                            All Widgets
+                            Widgets
                         </span>
                         </a>
                     </li>
@@ -134,7 +134,7 @@
                         <span class="nav-item-icon side-bar-icon fa fa-plus green darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">
-                            Add New Widget
+                            Add Widget
                         </span>
                         </a>
                     </li>
@@ -177,16 +177,39 @@
                         </span>
                 </a>
                 <ul class="side-bar-submenu" >
-                   <li class="aione-nav-item level1 <?php echo e(Request::is('users')?'active-state':''); ?>">
+                    <li class="aione-nav-item level1 <?php echo e(Request::is('users')?'active-state':''); ?>">
                         <a href="<?php echo e(route('admin_users')); ?>">
                         <span class="nav-item-icon side-bar-icon fa fa-pencil red darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">
-                            All Users
+                            Users
                         </span>
                         </a>
                     </li>
                 </ul>
             </li> 
+            <li class="aione-nav-item level0 has-children <?php echo e(in_array(Request::path(),array('users'))?'active-state':''); ?>">
+                <a href="#">
+                    <span class="nav-item-icon side-bar-icon fa fa-users green darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Maps
+                    </span>
+                    <span class="nav-item-arrow">
+                        <i class="fa fa-angle-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu" >
+                    <li class="aione-nav-item level1 <?php echo e(Request::is('custom-maps')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('custom.maps')); ?>">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil red darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Custom Maps
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
 </nav>

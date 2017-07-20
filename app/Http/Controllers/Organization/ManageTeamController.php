@@ -46,7 +46,7 @@ class ManageTeamController extends Controller
                           'datalist'=>  $model,
                           'showColumns' => ['title'=>'Title','created_at'=>'Created At'],
                           'actions' => [
-                                          'edit' => ['title'=>'Edit','route'=>'list.team' , 'class' => 'edit'],
+                                          'edit' => ['title'=>'Edit','route'=>'editinfo.team' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.team']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
@@ -63,6 +63,11 @@ class ManageTeamController extends Controller
                     ];
     	$team_data = Team::orderBy('id','desc')->get();
     	return view('organization.team.list',['team_data'=>$team_data,'plugins'=>$plugins]);*/
+    }
+    public function getTeamById($id)
+    {
+      $data = Team::find($id);
+      return view('organization.team.edit',compact('data'));
     }
     public function save(Request $request)
     {   

@@ -3,6 +3,10 @@
 
 use app\Model\Organization\User;
 use App\Model\Organization\OrganizationSetting as org_setting;
+use App\Model\Organization\UsersRole as Role;
+use App\Model\Admin\GlobalModuleRoute as route;
+use App\Model\Organization\RolePermisson as Permisson;
+
 
 
 
@@ -33,11 +37,44 @@ function setting_val_by_key($key)
 {
 	$setting = org_setting::where('key',$key);
 	if($setting->exists()){
-		return $setting->first()->value;
-	}else{
-		return false;
+	 if(Role::where('id',$setting->first()->value)->exists()){
+	 	return $setting->first()->value;
+	 }
 	}
+	 return Null;
 }
 
+function check_route_permisson($url)
+{
+	//dump($url);
+	if(role_id()==1){
+		return true;
+		}else{
+			$routeCheck = route::where('route',$url);
+		 	if($routeCheck->exists()){
+			 	$route_id = $routeCheck->select('id')->first()->id;
+			 	$check =  Permisson::where(['role_id'=>role_id(), 'permisson_id'=>$route_id, 'permisson_type'=>'route'])->whereNotNull('permisson');
+			 	if($check->exists())
+			 	{
+			 		return true;
+			 	}
+		}
+	 return false;
+	
+	}
+}
+// if(role_id()==2){
+	// 	return True;	
+	// 	}else{
+	// 			// $routeData = route::where('route',$url)->first();
+	// 			// dd($routeData);
+
+
+	// 			// $route = Permisson::where(['role_id'=>4, 'permisson_type'=>'route'])->whereNotNull('permisson')->select(['permisson_id'])->get();
+	// 			//  dump($route);
+ //    //           if($route->exists()){
+ //    //            $routes[]= $route->first()->route;
+ //              }
+	//     }	
 
 ?>

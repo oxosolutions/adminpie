@@ -1,18 +1,15 @@
 <?php $__env->startSection('content'); ?>
-	
-<style type="text/css">
-
-</style>
 <?php 
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Leave',
+	'page_title' => 'Leaves',
 	'add_new' => '+ Add Leave'
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+
 <?php if($data): ?>
 	<?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 		<?php 
@@ -26,6 +23,11 @@
 		});
 	</script>
 <?php endif; ?>	
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 
@@ -41,8 +43,9 @@
 	<?php echo Form::close(); ?>
 
 <?php endif; ?>	
-<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-		
+	
+	<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <style type="text/css">
 .add-new-wrapper{
 	display:none;

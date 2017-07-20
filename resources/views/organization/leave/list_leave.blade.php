@@ -1,19 +1,16 @@
 @extends('layouts.main')
 @section('content')
-	
-<style type="text/css">
-
-</style>
 @php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Leave',
+	'page_title' => 'Leaves',
 	'add_new' => '+ Add Leave'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+
 @if($data)
 	@foreach(@$data as $key => $value)
 		@php
@@ -27,6 +24,11 @@
 		});
 	</script>
 @endif	
+@include('common.pagecontentstart')
+	@include('common.page_content_primary_start')
+		@include('common.list.datalist')
+	@include('common.page_content_primary_end')
+	@include('common.page_content_secondry_start')
 {!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
 @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leaves','button_title'=>'Save','section'=>'leavesection']])
@@ -38,8 +40,9 @@
 	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','section'=>'leavesection']])
 	{!!Form::close()!!}
 @endif	
-@include('common.list.datalist')
-		
+	
+	@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <style type="text/css">
 .add-new-wrapper{
 	display:none;

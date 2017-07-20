@@ -1,7 +1,6 @@
 <div id="aione_page_header" class="aione-page-header">
   <div class="aione-row">
     <div class="aione-page-title-container">
-		
 		@if(@$show_page_title != 'no')
 			@if(!empty(@$page_title))
 				<h3 class="aione-page-title">{{@$page_title}}</h3>
@@ -9,8 +8,12 @@
 		@endif
 		@if(@$show_add_new_button  != 'no')
 			@if(!empty(@$add_new))
-				<a id="add_designation_button" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" data-target="add_new_model" href="#">{{@$add_new}}</a>
-			@endif
+      @if(array_key_exists('route', @$page_title_data))
+        <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['route'])}}">{{@$add_new}}</a>
+			@else
+        <a id="add_designation_button" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" data-target="add_new_model" href="#">{{@$add_new}}</a>
+      @endif
+      @endif
 		@endif
       <div class="clear"></div>
     </div> <!-- .aione-page-title-container -->

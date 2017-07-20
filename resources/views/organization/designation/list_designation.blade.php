@@ -1,8 +1,6 @@
 @extends('layouts.main')
 @section('content')
-
 @php
-
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -10,7 +8,6 @@ $page_title_data = array(
 	'page_title' => 'Designations',
 	'add_new' => '+ Add Designation'
 ); 
-
 	$id = "";
 	@endphp	
 
@@ -34,15 +31,10 @@ $page_title_data = array(
 	@endphp
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
-		
-
 @include('common.page_content_primary_start')
-
 	@include('common.list.datalist')
-
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
-
 	@if(@$newData == 'undefined' || @$newData == '' || @$newData == null)
 		{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 

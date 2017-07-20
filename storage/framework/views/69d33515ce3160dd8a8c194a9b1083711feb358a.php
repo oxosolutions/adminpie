@@ -1,18 +1,15 @@
 
 <?php $__env->startSection('content'); ?>
-
-<!-- <?php $__currentLoopData = $user_log; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-
-	<?php 
-		$textData = json_decode($value->text);
-	 ?>
-
-	<?php $__currentLoopData = $textData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ky => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-		<?php echo e(dump($val)); ?>
-
-	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> -->
+<?php 
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Recent Activities',
+	'add_new' => ''
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<div class="row">
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<div class="row ">
@@ -48,9 +45,7 @@
 					<div class="col l2">
 						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text"><?php echo e($value->type); ?></span>
 					</div>
-					<!-- <div class="col l2">
-						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
-					</div> -->
+					
 					<div class="col l2 grey-text center-align" style="font-size: 13px">
 						2 hour ago
 					</div>	

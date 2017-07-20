@@ -1,3 +1,250 @@
+Personal Info{
+First name
+Last name 
+email
+phone
+gender
+Dob
+Domicile
+Maritual status
+Address Line 1
+Address Line 2
+Zip
+City
+Country
+}
+Acadmic Info{
+repeat{
+Qualification
+percentage
+board/university
+Date of passing
+}
+}
+Employee history{
+repeat{
+Job title
+Company name
+address
+from
+to
+responsiblity
+}
+}
+experience{
+reapeat{
+year of experience
+Experience field
+}
+}
+-----------------------------------
+job
+-------
+Applicants
+
+
+Applications
+
+
+Opening
+
+	JOB
+---------------
+	Title 
+	department :  IT , MEDical
+	designation : Project manager
+	Skills :  php laravel , surgeon 
+	job type : full time , part time 
+	Description: 
+	location : city, state , country
+	Number of  post: 
+	minium qualification : Ba, ma 
+	experience :  fresher /  month , year
+	working days: 5 / 6 
+	working hours  :
+	start time : 9am
+	end time  :6pm
+	Package type :   monthly / annually
+	mininmum pacakage : 100000 / 
+	max package : 1000000
+	minimum_age
+	max_age
+	interview mode:  telephonic / on venue / 
+	opening_open 
+	opening_close
+	email
+	phone
+	hr_name
+
+------------------------------------------------
+	Applications
+		resume
+		dob
+		experience
+		department
+		designation
+		skill
+		latest education 
+
+	
+
+-----------------------------------------------
+	APPLICANTS
+		Name
+		email
+		password
+
+		Applicant Info 
+			address
+
+			personal info 
+
+			academic 
+
+			Experience
+
+			Employer history
+
+
+----------------------------------------------				
+job_type : full time , part time 
+	Description: 
+	location : city, state , country
+	number_of_post: 
+	minium_qualification 
+	experience :  fresher /  month , year
+	working days: 5 / 6 
+	working hours  :
+	start time : 9am
+	end time  :6pm
+	Package type :   monthly / annually
+	mininmum pacakage : 100000 / 
+	max package : 1000000
+	minimum_age
+	max_age
+	interview mode:  telephonic / on venue / 
+	opening_open 
+	opening_close
+	email
+	phone
+	hr_name
+
+ocrm_175_openings
+ocrm_175_applicants
+ocrm_175_applicantions
+
+
+CREATE TABLE `ocrm_175_opening_applicant_mapping` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `applicant_id` int(11) NOT NULL,
+  `opening_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+CREATE TABLE `ocrm_175_applicants` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ocrm_175_applicantions` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ocrm_175_openings` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `department` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `designation` int(11) NOT NULL,
+  `Skills` int(11) NOT NULL DEFAULT '1',
+  `job_type` int(11) NOT NULL DEFAULT '1',
+  `location` int(11) NOT NULL DEFAULT '1',
+  `number_of_post` int(11) NOT NULL DEFAULT '1',
+  `minium_qualification` int(11) NOT NULL DEFAULT '1',
+  `experience` int(11) NOT NULL DEFAULT '1',
+  `working_day` int(11) NOT NULL DEFAULT '1',
+  `working_hour` int(11) NOT NULL DEFAULT '1',
+  `office_hour_start` int(11) NOT NULL DEFAULT '1',
+  `office_hour_end` int(11) NOT NULL DEFAULT '1',
+  `package_type` int(11) NOT NULL DEFAULT '1',
+  `minimum_package` int(11) NOT NULL DEFAULT '1',
+  `maximum_package` int(11) NOT NULL DEFAULT '1',
+  `minimum_age_for_apply` int(11) NOT NULL DEFAULT '1',
+  `maximum_age_for_apply` int(11) NOT NULL DEFAULT '1',
+  `interview_mode` int(11) NOT NULL DEFAULT '1',
+  `opening_open` int(11) NOT NULL DEFAULT '1',
+  `opening_close` int(11) NOT NULL DEFAULT '1',
+  `email` int(11) NOT NULL DEFAULT '1',
+  `phone` int(11) NOT NULL DEFAULT '1',
+  `hr_name` int(11) NOT NULL DEFAULT '1',
+  `description` int(11) NOT NULL DEFAULT '1',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+  ALTER TABLE `ocrm_175_openings`
+  ADD PRIMARY KEY (`id`);
+
+  ALTER TABLE `ocrm_175_openings`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+Attendance
+---------------------
+monthly
+
+
+weekly 
+
+
+day by day 
+
+
+
+mark attendance
+
+
+Import Attendance 
+
+
+
+Holidays 
+
+
+
+
+leave 
+
+
+create organization
+---------------------------
+created at -- issue
+
+
 	global helper
 -------------------
 1. setting_val_by_key('setting key');
