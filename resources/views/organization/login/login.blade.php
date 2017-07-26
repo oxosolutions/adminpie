@@ -1,12 +1,23 @@
 @extends('layouts.app')
 @section('content')
+@if(Session::has('login_fails'))
+	<div class="login-error">
+		{{Session::get('login_fails')}}
+	</div>
+@endif
 	{{-- <form class="modal-body"> --}}
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 		<div class="text-center">
 			
 			<h5 class="content-group" style="font-size: 26px;font-weight: 900;color: grey;margin-top: 0px">Admin<span style="color: #03A9F4">Pie</span></h5>
 		</div>
-
+		
+		@if(Session::has('password-changed'))
+		<span style="background-color: #CDF3CD;display: inline-block;width: 100%;padding: 10px;">
+			{{Session::get('password-changed')}}
+			</span>
+		@endif
+		
 		<div class="form-group has-feedback has-feedback-left">
 			{{-- <input type="text" class="form-control" placeholder="Username"> --}}
 			{!! Form::email('email',null,['class' => 'form-control' , 'placeholder' => 'Username']) !!}
@@ -38,7 +49,7 @@
 				</div>
 
 				<div class="col-sm-6 text-right">
-					<a href="">Forgot password?</a>
+					<a href="{{ route('forgot.password') }}">Forgot password?</a>
 				</div>
 			</div>
 		</div>
@@ -72,6 +83,11 @@
     color: white;
         background-color: hsla(0,0%,0%,0.3);
     padding: 10px;
+		}
+		.login-error{
+		    background-color: #F7D4D4;
+			padding: 10px;
+			border-left: 3px solid #E26262;
 		}
 	</style>
 @endsection

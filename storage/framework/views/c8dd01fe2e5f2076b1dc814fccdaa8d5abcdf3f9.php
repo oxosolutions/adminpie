@@ -17,7 +17,19 @@
     <?php endif; ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 	<div class="row">
-	
+
+<?php 
+ 
+  $link=$_SERVER['REQUEST_URI'];
+  $route = explode('/',$link);
+
+  
+ ?>
+    <?php if(in_array('account', $route)): ?>
+    	<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php elseif(in_array('project', $route)): ?>
+
+    <?php endif; ?>
 		<div class="row">
 			<!-- <a href="#modal11" class="btn-flat">Add task</a> -->
 			<div id="add_new_model" class="tasks_add modal modal-fixed-footer">
@@ -176,7 +188,9 @@
         $(document).ready(function(){
                 $('#add_new_model').modal(); 
          });
-        
+        $('.closeDialog').click(function(){
+            $("#add_new_model").modal('close');
+        });
     </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,3 +1,6 @@
+working_day:string:nullable, working_hour:string:nullable, office_hour_start:string:nullable, office_hour_end:string:nullable, package_type:string:nullable, minimum_package:string:nullable, maximum_package:string:nullable, minimum_age_for_apply:string:nullable, maximum_age_for_apply:string:nullable, interview_mode:string:nullable, opening_open:string:nullable, opening_close:string:nullable, email:string:nullable, phone:string:nullable, hr_name:string:nullable, description:text:nullable, status:integer:default(1), experience_month:string:nullable, experience_year:string:nullable
+
+
 Personal Info{
 First name
 Last name 

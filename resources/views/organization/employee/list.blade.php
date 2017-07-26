@@ -1,11 +1,11 @@
 @extends('layouts.main')
 @section('content')
 	@if(@$errors->has())
-	<script type="text/javascript">
-		$(window).load(function(){
-			document.getElementById('add_new').click();
-		});
-	</script>
+		<script type="text/javascript">
+			$(window).load(function(){
+				document.getElementById('add_designation_button').click();
+			});
+		</script>
 	@endif
 	
 @php

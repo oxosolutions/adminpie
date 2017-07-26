@@ -9,7 +9,11 @@ use App\Model\Admin\GlobalOrganization;
 use Auth;
 use Session;
 use Route;
+use Mail;
+use Hash;
 use App\Model\Organization\User;
+use App\Mail\forgetPassword;
+
 class LoginController extends Controller
 {
     /*
@@ -68,10 +72,40 @@ class LoginController extends Controller
         Session::put('organization_id',$model->id);
         return view('organization.login.login');
     }
+    public function showLoginFormv1()
+    {
+        return view('organization.login.login-v1');
+    }
 
     protected function guard()
     {
         return Auth::guard('org');
+    }
+
+    public function login(Request $request){
+        $model = User::where('email',$request->email)->first();
+        if(count(@$model) > 0){
+            if(@$model->status == 1){
+                $credentials = [
+                    'email' => $request->input('email'),
+                    'password' => $request->input('password'),
+                    'status' => 1
+                ];
+                if(Auth::guard('org')->attempt($credentials)) {
+                    return redirect('/'); 
+                }else{
+                    Session::flash('login_fails' , 'wrong user credientals.');
+                    return back();
+                }
+            }else{
+                Session::flash('login_fails' , 'Your account is temporary Blocked , please contact the Organization Admin');
+                return back();
+            }
+        }else{
+            Session::flash('login_fails' , 'wrong user credientals. ');
+            return back();
+        }
+        
     }
 
     public function logout(Request $request){
@@ -80,6 +114,51 @@ class LoginController extends Controller
         $request->session()->flush();
         $request->session()->regenerate();
         return redirect()->route('org.login');
+    }
+    public function forgotPassword()
+    {
+        return view('organization.login.forgot-password');
+    }
+    public function forgotMail(Request $request)
+    {
+        $model = User::where('email',$request->email)->first();
+        if(count($model) > 0){
+            User::where('id',$model->id)->update(['remember_token'=>Hash::make(rand(15,1500))]);
+            Session::put('reset_token',User::where('id',$model->id)->first()->remember_token);
+            $to_email = $request->email;
+            Mail::to($to_email)->send(new forgetPassword);
+            return view('success-msgs.email-success');
+        }else{
+            Session::flash('forgot-error','email not correct');
+            return back();
+        }
+    }
+    public function changePass()
+    {
+        if(Session::has('reset_token')){
+            return view('organization.login.reset-password');
+        }else{
+            return redirect()->route('org.login');
+        }
+    }
+    public function updatePass(Request $request)
+    {
+        $model = User::where('remember_token',Session::get('reset_token'))->first();
+        $check = Hash::check($request->password , Hash::make($request->confirmPassword));
+
+        $validate = [
+                        'password'      => 'required|min:6',
+                        'confirmPassword'  => 'required|same:password|min:6'
+                    ];
+        $this->validate($request , $validate);
+       
+    $model = User::where('remember_token',Session::get('reset_token'))->update(['password' => Hash::make($request->confirmPassword)]);
+        if($model){
+            Session::flash('password-changed','Password change Successfully.');
+            return redirect()->route('org.login');
+        }else{
+            echo "nai hoiya";
+        }
     }
     
 }

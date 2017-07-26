@@ -1,7 +1,7 @@
 
 <?php $__currentLoopData = $model; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 	<div class="card-panel shadow white z-depth-1 hoverable project todo_list add-details">
-		<div class="row valign-wrapper no-margin-bottom ">
+		<div class="row valign-wrapper mb-0 ">
 			<div class="col l1 s2 center-align project-image-wrapper">
 				<a href="" data-toggle="popover" title=" " data-content="TEST">
 					<div class="defualt-logo"><?php echo e(ucfirst(mb_substr($value->title, 0, 1))); ?></div>

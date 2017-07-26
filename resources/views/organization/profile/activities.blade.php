@@ -1,5 +1,25 @@
 @extends('layouts.main')
 @section('content')
+<style type="text/css">
+		.activities .month{
+		 font-size: 16px ;font-weight: 700
+	}
+	.activities .date{
+		padding:4px 18px;
+	}
+	.activites .day{
+		font-size: 28px;line-height: 30px;font-weight: 700
+	}
+	.activites .box{
+		padding: 4px 8px; font-size: 10px;border-radius: 3px
+	}
+	.mb-0{
+		margin-bottom: 0px
+	}
+	.pv-5{
+		padding:5px 0px
+	}
+</style>
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
@@ -10,40 +30,36 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
-	<div class="row">
+	<div class="row mb-0">
 		@include('organization.profile._tabs')
-		<div class="row ">
+		<div class="row activities mb-0">
 			recent activities
+
 			@foreach($user_log as $key => $value)
-				<div class="row valign-wrapper" style="padding:5px 0px">
-					<div class="col l1 blue white-text center-align">
-						<div class="row " style="font-size: 16px ;font-weight: 700">
+				<div class="row valign-wrapper  mb-0 pv-5" >
+					<div class="col l1 blue white-text center-align date">
+						<div class="row month mb-0" >
 							{{date_format($value->created_at , "M")}}
 						</div>
-						<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+						<div class="row day mb-0" >
 							{{date_format($value->created_at , "d")}}
 						</div>
 					</div>
 					<div class="col l6 pl-7 truncate">
-						@foreach(json_decode($value->text) as $k => $val)
-							@if($loop->index == 0)
-								{{$val}}
-							@endif
-						@endforeach
+						<div class="row month mb-0" >
+						{{ activity_log($value['slug'],'EN')}}
+						</div>
+
 					</div>
 					<div class="col l3 pl-7 truncate">
-						@foreach(json_decode($value->text) as $k => $val)
-							@if($loop->index == 2)
-								{{$val}}
-							@endif
-						@endforeach
+						
 					</div>
 					<div class="col l2">
-						<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">{{$value->type}}</span>
+						<span class="box green white-text"></span>
 					</div>
 					
 					<div class="col l2 grey-text center-align" style="font-size: 13px">
-						2 hour ago
+					{{Carbon\Carbon::parse($value->created_at)->diffForHumans()}}
 					</div>	
 				</div>
 			@endforeach

@@ -11,7 +11,7 @@ class VisualizationChartMeta extends Model
 
 	   	if(!empty(Session::get('organization_id')))
 	   	{
-	       $this->table = Session::get('organization_id').'_visualization_chart_metas';
+	       $this->table = Session::get('organization_id').'_visualization_chart_meta';
 	   	}
    }
 }

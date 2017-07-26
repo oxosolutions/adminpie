@@ -124,20 +124,17 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-                   
-                   
                 </div>
             </div>
         </div>
     </div>
-    <div class="col l2  pl-7  center-align " style="margin-top: 14px">
+    <div class="col l2  pl-7" style="margin-top: 14px">
         
-        <div class="card p-15" style="margin-bottom: 10px !important;">
+        <div class="card" style="margin-bottom: 10px !important;">
             <div class="col s12 m12 l12" style="border-bottom: 1px solid #e8e8e8;">
-                <h6 style="margin-top: 0px;">Team assigned</h6>
+                <span>Team assigned</span>
             </div>
             <div class="col l12">
                 @if($model->teams != null)
@@ -145,8 +142,83 @@
                         @php
                            $team =  App\Model\Organization\Team::find($value);
                         @endphp
-                        <div class="col s12 m12 l12 pv-5 ">{{$team ->title}}</span></div>
-                        <div class="col s12 m12 l12 pv-5"> <strong>{{count(json_decode($team->member_ids))}}</strong><span class="grey-text pl-7">Members</span></div>
+                        <div class="col s10 m10 l10 p-10 grey-text fs-13">{{$team ->title}}</span></div>
+                        <div class="col s2 m2 l2 p-10"> <strong>{{count(json_decode($team->member_ids))}}</strong></div>
+                    @endforeach
+                @endif
+                <div class="col s12 m12 l12 pv-5">
+                  
+                </div>
+                 
+                {{-- <strong>OR</strong> --}}
+                <div class="col s12 m12 l12 pv-5">
+                    <?php
+                        if($model->teams != null){
+                            $model->teams = array_map('intval', $model->teams);
+                        }
+                    ?>
+                    {{-- <a href="#modal2" style="font-size: 10px">Assign another team</a> --}}
+                    {{-- {!!Form::model($model,['route'=>['update.team',$model->id]])!!}
+                        @include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'This is Heading','button_title'=>'Save Data','section'=>'prosec4']])
+                    {!!Form::close()!!} --}}
+                </div>
+            </div>
+            <div style="clear: both">  
+            </div>
+            <div class="col s12 m12 l12" style="border-bottom: 1px solid #e8e8e8;">
+                <span">Users assigned</span>
+            </div>
+            <div class="col l12">
+                @if($model->users != null)
+                    @foreach(@$model->users as $key => $value)
+                        @php
+                           $users =  App\Model\Organization\User::with('metas')->find($value);
+                        @endphp
+                           {{-- @foreach ($users->metas as $key => $val)
+                                @if($val->key == 'profilePic')
+                                    <img src='{{asset('ProfilePicture/'.$val->value)}}' alt='' style="width:20%">
+                                @endif                          
+                           @endforeach --}}
+                        <div class="col s12 m12 l12 pv-5 ">{{$users ->name}}</span></div>
+                        {{-- <div class="col s12 m12 l12 pv-5"> <strong>{{count(json_decode($team->member_ids))}}</strong><span class="grey-text pl-7">Members</span></div> --}}
+                    @endforeach
+                @endif
+                <div class="col s12 m12 l12 pv-5">
+                  
+                </div>
+                 
+                {{-- <strong>OR</strong> --}}
+                <div class="col s12 m12 l12 pv-5">
+                    <?php
+                        if($model->teams != null){
+                            $model->teams = array_map('intval', $model->teams);
+                        }
+                        if($model->users != null){
+                            $model->users = array_map('intval', $model->teams);
+                        }
+                    ?>
+                    <a href="#modal2" style="font-size: 10px">Assign another team</a>
+                    {!!Form::model($model,['route'=>['update.team',$model->id]])!!}
+                        @include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'This is Heading','button_title'=>'Save Data','section'=>'prosec4']])
+                    {!!Form::close()!!}
+                </div>
+            </div>
+            <div style="clear: both">
+                
+            </div>
+        </div>
+        <div class="card p-15" style="margin-bottom: 10px !important;">
+            <div class="col s12 m12 l12" style="border-bottom: 1px solid #e8e8e8;">
+                <h6 style="margin-top: 0px;">Users assigned</h6>
+            </div>
+            <div class="col l12">
+                @if($model->users != null)
+                    @foreach(@$model->users as $key => $value)
+                        @php
+                           $users =  App\Model\Organization\User::find($value);
+                        @endphp
+                        <div class="col s12 m12 l12 pv-5 ">{{$users ->name}}</span></div>
+                        {{-- <div class="col s12 m12 l12 pv-5"> <strong>{{count(json_decode($team->member_ids))}}</strong><span class="grey-text pl-7">Members</span></div> --}}
                     @endforeach
                 @endif
                 <div class="col s12 m12 l12 pv-5">
@@ -165,11 +237,6 @@
                         @include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'This is Heading','button_title'=>'Save Data','section'=>'prosec4']])
                     {!!Form::close()!!}
                 </div>
-                
-                
-               
-
-                
             </div>
             <div style="clear: both">
                 
@@ -203,7 +270,6 @@
                      <div class="col s12 m12 l12 pv-5"> <strong>98</strong><span class="grey-text pl-7">Credenatials</span></div>
                      <div class="col s12 m12 l12 pv-5"> <strong>8</strong><span class="grey-text pl-7">Attachments</span></div>
                 </div>
-                
             </div>
             <div style="clear: both">
                 
@@ -265,7 +331,15 @@
         display: flex;
         padding: 8px 0px 2px 0px;
    }
- 
+    .select-wrapper .dropdown-content{
+        max-height: 300px !important
+    }
+    .fs-13{
+        font-size:13px;
+    }
+    .p-10{
+        padding: 10px;
+    }
 </style>
 <script type="text/javascript">
     $(document).ready(function(){

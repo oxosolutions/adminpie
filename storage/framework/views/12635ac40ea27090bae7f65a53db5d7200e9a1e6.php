@@ -42,7 +42,7 @@ $page_title_data = array(
         data:postedData,
         success: function(res){
           if(res == 'true'){
-          	Materialize.toast('Status Changed', 4000);
+          	Materialize.toast('Status Changed', 4000000);
           }
         }
       });
@@ -60,5 +60,11 @@ $page_title_data = array(
 		$('.add-new-wrapper').toggleClass('active');
 	});
 </script>
+<style type="text/css">
+   .toast{
+        top: 10px;
+        left: 80px;
+    }
+</style>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

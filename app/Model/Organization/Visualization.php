@@ -54,5 +54,15 @@ class Visualization extends Model
       ];
    }
 
+   public function meta(){
+
+      return $this->hasMany('App\Model\Organization\VisualizationMeta','visualization_id','id');
+   }
+
+   public function charts(){
+
+      return $this->hasMany('App\Model\Organization\VisualizationCharts','visualization_id','id');
+   }
+
 
 }

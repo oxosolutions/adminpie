@@ -8,12 +8,21 @@ use Session;
 class Application extends Model
 {
     public static $breadCrumbColumn = 'id';
-   public function __construct()
-   {	
-	   	if(!empty(Session::get('organization_id')))
-	   	{
+   protected $fillable = [ 'applicant_id', 'opening_id', 'status'];
+   public function __construct(){	
+	   	if(!empty(Session::get('organization_id'))){
 	       $this->table = Session::get('organization_id').'_applications';
 	   	}
    }
-   protected $fillable = [ 'applicant_id', 'opening_id', 'status'];
+	public function jobs(){
+   	
+   	return $this->belongsTo('App\Model\Organization\JobOpening','opening_id','id');
+   }
+   public function applicant(){
+	
+	return $this->belongsTo('App\Model\Organization\Applicant','opening_id','id');
+   }
+   public function application_meta(){
+     return $this->hasMany('App\Model\Organization\ApplicationMeta', 'application_id', 'id');
+   }
 }

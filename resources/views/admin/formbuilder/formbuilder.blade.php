@@ -36,7 +36,18 @@ input{
 </style>
 <!-- main-content-->
 {{-- {{dd($model)}} --}}
-
+@php
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Fields',
+    'add_new' => '+ Add Designation'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
 <div class="card" style="margin-top: 0px;">
 	<div class="content-wrapper">
   @if(!empty($model))
@@ -45,14 +56,12 @@ input{
       {!!Form::open(['route'=>['form.store','form_id'=>request()->form_id,'section_id'=>request()->section_id]])!!}
   @endif
 		<section class="section-header">
-			<div class="" style="padding: 10px 5px;">
-				Create Field
-			</div>
+		
 			<div>
             <div class="bordered centered" style="background-color: transparent;">
                 <div>
                   <div class="top-header row" style="background-color: #24425C;color: white;padding: 15px 10px">
-                    <div class="col l2" >Field Order1</div>
+                    <div class="col l2" >Field Order</div>
                     <div class="left-align col l4 ">Field Label</div>
                     <div class="col l4">Field Slug </div>
                     <div class="col l2">Field Type</div>
@@ -92,6 +101,11 @@ input{
   {!!Form::close()!!}
 	</div>
 </div>
+    @include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <style type="text/css">
   .options{
     display: none;

@@ -16,7 +16,7 @@
 		}
 
 		.square{
-		width: 2.1%;
+		width: 15px;
 		height: 15px;
 		display: block;
 		float: left;
@@ -100,18 +100,30 @@
 		//$dt = Carbon\Carbon::create($now->year, $now->month, 1);
 		//$beforeDay = $dt->dayOfWeek;
 	@endphp
+	@php
+        $page_title_data = array(
+        'show_page_title' => 'yes',
+        'show_add_new_button' => 'no',
+        'show_navigation' => 'yes',
+        'page_title' => 'My Attendance',
+        'add_new' => '+ Add Task'
+    ); 
+    @endphp
+    @include('common.pageheader',$page_title_data) 
+    @include('common.pagecontentstart')
+	@include('common.page_content_primary_start')
 	<div class="row">
 		@include('organization.profile._tabs')
 		<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 
 		<div class="row">
-			<div class="col l9 pr-7">
+			<div class="col l12 pr-7">
 				<div class="card">
-					<div class="row" style="margin-top: 14px ">
+					<div class="row mt-14" >
 						<div class="col l6">
 							<h5>Attendence (Yearly)</h5>
 						</div>
-						<div class="col l6">
+						<div class="col l6 right-align">
 							<a href="javascript:;" onclick="attendance_weekly_filter('1', {{$month}}, {{$year}})" class="btn blue" id="weekly">Weekly</a>
 							<a href="javascript:;" onclick="attendance_monthly_filter({{$month}}, {{$year}})" class="btn blue" id="monthly">monthly</a>
 							<a href="javascript:;" class="btn blue" id="yearly">Yearly</a>
@@ -121,12 +133,12 @@
 						
 					{{--- YEARLY STARTS --}}
 		<div class="row year-view">
-			<div class="row" style="margin: 20px">
+			<div class="row m-20" >
 				<div class=" col l5 right-align">
-					<i class="fa fa-arrow-left" style="line-height: 44px"></i>
+					<i class="fa fa-arrow-left lh-44" ></i>
 				</div>
 				<div class="col l2 center-align">
-					<h5><a class='dropdown-button' href='#' data-activates='dropdown1'>{{$filter['year']}}</a></h5>
+					<h5><a class='dropdown-button' href='#' data-activates='dropdown1'>{{@$filter['year']}}</a></h5>
 					 
 
 					  <!-- Dropdown Structure -->
@@ -148,11 +160,11 @@
 					  </ul>
 				</div>
 				<div class="col l5">
-					<i class="fa fa-arrow-right" style="line-height: 44px"></i>
+					<i class="fa fa-arrow-right lh-44" ></i>
 				</div>
 			</div>	
 		
-			<div id="attendance-data" class="row center-align" style="margin-top: 30px">
+			<div id="attendance-data" class="row center-align mt-30" >
 			<div class="line"><div class='mo'>Day</div>
 			@for($i=1; $i<=31; $i++)
 				<div class='square days'>{{$i}}</div>
@@ -223,27 +235,33 @@
 					@php
 					$now = Carbon\Carbon::now();
 			       echo  $where['year'] = $now->year;
-			         $month = '06';//.$now->month;
+			         $month = $now->month;
+			        if(strlen($month)==1)
+						{
+							$month = '0'.$month;
+						}
 			       $dayInMonth = $now->daysInMonth;
 
 			        $dt = Carbon\Carbon::create($now->year, $now->month, 1);
 			       $beforeDay = $dt->dayOfWeek;
-
-			       							$val = collect($attendance_data[$month]);
-											$data = $val->keyBy('date')->toArray();
+			       		if(!empty($attendance_data)){
+       							$val = collect($attendance_data[$month]);
+								$data = $val->keyBy('date')->toArray();
+							}
+					
 					@endphp
-					<div id="monthly-attendance" class="row month-view" style="padding: 20px 40px">
+					<div id="monthly-attendance" class="row month-view ph-40 pv-20" >
 						<div class="row">
 							
 						</div>
-						<div class="row" style="border: 1px solid #CCC">
+						<div class="row " style="border: 1px solid #CCC">
 							<div class="month">      
 							  <ul>
 							    <li class="prev"><i class="fa fa-arrow-left" ></i></li>
 							    <li class="next"><i class="fa fa-arrow-right" ></i></li>
-							    <li style="text-align:center">
+							    <li class="center-align">
 							      {{$now->format('F')}},
-							      <span style="font-size:18px">{{$now->year}}</span>
+							      <span  class="fs-18">{{$now->year}}</span>
 							    </li>
 							  </ul>
 							</div>
@@ -260,7 +278,7 @@
 
 							<ul class="days">  
 							@for($i=1; $i<$beforeDay; $i++)
-							<li style="color:white;">.</li>
+							<li class="white-text">.</li>
 							@endfor
 							
 							@for($j=1; $j<=$dayInMonth; $j++ )
@@ -275,14 +293,14 @@
 
 					{{-- WEEKLY STARTS --}}
 					<div id="attendance-weekly" class="row week-view">
-						<div class="row center-align" style="margin-top: 40px">
-							<span><i class="fa fa-arrow-left" style="margin-right: 10px;line-height: 36px"></i></span>
+						<div class="row center-align mt-40" >
+							<span><i class="fa fa-arrow-left mr-10 lh-36" ></i></span>
 							<span>04-Jun-2017 - 10-Jun-2017</span>
-							<span><i class="fa fa-arrow-right" style="margin-left: 10px"></i></span>
-							<span><a href="" class="btn-flat" style="position: absolute;right: 0px;border: 1px solid #e8e8e8;margin-right: 14px;">Check In</a></span>
+							<span><i class="fa fa-arrow-right ml-10" ></i></span>
+							<span><a href="" class="btn-flat mr-14" style="position: absolute;right: 0px;border: 1px solid #e8e8e8;">Check In</a></span>
 						</div>
 						<div class="row" >
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10">
 								<div class="col l2">
 									Mon,05
 								</div>
@@ -295,7 +313,7 @@
 									08:12Hrs
 								</div>
 							</div>
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10" >
 								<div class="col l2 ">
 									Tues,06
 								</div>
@@ -308,7 +326,7 @@
 									08:12Hrs
 								</div>
 							</div>
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10" >
 								<div class="col l2">
 									Wed,07
 								</div>
@@ -321,7 +339,7 @@
 									08:12Hrs
 								</div>
 							</div>
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10" >
 								<div class="col l2">
 									Thru,08
 								</div>
@@ -334,7 +352,7 @@
 									08:12Hrs
 								</div>
 							</div>
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10">
 								<div class="col l2">
 									Fri,09
 								</div>
@@ -347,7 +365,7 @@
 									08:12Hrs
 								</div>
 							</div>
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10" >
 								<div class="col l2">
 									Sat,10
 								</div>
@@ -360,7 +378,7 @@
 									08:12Hrs
 								</div>
 							</div>
-							<div class="row center-align" style="padding:10px ">
+							<div class="row center-align p-10" >
 								<div class="col l2">
 									Sun,11
 								</div>
@@ -380,51 +398,13 @@
 					
 				</div>
 			</div>
-			<div class="col l3 pl-7">
-				<div class="card" style="margin-top: 14px">
-					<div class="row">
-						<span style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Attendence Stats</span>
-					</div>
-					<div class="row">
-						<div class="row" style="padding: 10px 5px;">
-							<div class="col l9">
-								Leaves	
-							</div>
-							<div class="col l3 center-align">
-								<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="red white-text ">32</span>
-							</div>
-							
-						</div>
-						<div class="divider">
-							
-						</div>
-						<div class="row" style="padding: 10px 5px;">
-							<div class="col l9">
-								Extra Time	
-							</div>
-							<div class="col l3 center-align">
-								<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="orange white-text ">187 Hours</span>
-							</div>
-							
-						</div>
-						<div class="divider">
-							
-						</div>
-						<div class="row" style="padding: 10px 5px;">
-							<div class="col l9">
-								Working Days
-							</div>
-							<div class="col l3 center-align">
-								<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text ">189</span>
-							</div>
-							
-						</div>
-					</div>
-				</div>
-					
-			</div>
+			
 		</div>
 	</div>
+	@include('common.page_content_primary_end')
+	@include('common.page_content_secondry_start')
+	@include('common.page_content_secondry_end')
+	@include('common.pagecontentend')
 	<style type="text/css">
 		td, th{
 			padding: 0px !important;
@@ -537,6 +517,53 @@
 		}
 
 		/**********************************ENDS Css for month view in attendence  *********************************************/
+
+
+
+
+
+.p-10{
+	padding:10px 
+}
+.mt-14{
+	margin-top: 14px 
+}
+.m-20{
+	margin: 20px
+}
+.lh-44{
+	line-height: 44px
+}
+.mt-30{
+	margin-top: 30px
+}
+.ph-40{
+	padding-left: 40px;
+	padding-right: 40px
+}
+.pv-20{
+	padding-top: 20px;
+	padding-bottom: 20px
+}
+.ml-20{
+	margin-left: 10px
+}
+.mr-14{
+	margin-right: 14px
+}
+.mr-10{
+	margin-right: 10px
+}
+.lh-36{
+
+line-height: 36px
+}
+.mt-40{
+	margin-top: 40px
+}
+.fs-18{
+	font-size:18px
+}
 	</style>
 
 	<script>

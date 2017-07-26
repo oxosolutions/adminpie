@@ -1,24 +1,29 @@
 <script type="text/javascript">
 	$(document).ready(function() {
-		
 		/*****************************************************
-		/*  Unknown code from topHeader.blade.php
+		/*  Header Right Menu Toggles
 		/*****************************************************/
-		/*****************************************************
-		/*  Identified as logout menu show hide
-		/*****************************************************/
-		$('.dropdown-list').hide();
-		$('.dropdown-button1').click(function(){
-			$('.dropdown-list').toggle();
+		$('body').on('click','#aione_header_right .aione-header-item > a',function(e){
+			e.preventDefault();
+			$(this).parent().toggleClass('active').siblings().removeClass('active');
 		});
-		
 		
 		/*****************************************************
 		/*  Navigation Layout Toggle Switch Header
 		/*****************************************************/
 		$('body').on('click','.nav-toggle',function(e){
 			e.preventDefault();
+			$(this).toggleClass('active');
 			$('.aione-main').toggleClass('sidebar-small');
+			var classStatus = ($(this).hasClass('active'))?1:0;
+			$.ajax({
+				type:'GET',
+				url: '<?php echo e(url('sidebar/status')); ?>/'+classStatus,
+				data: {},
+				success: function(result){
+					console.log(result)
+				}
+			});
 		});
 		
 		/*****************************************************
@@ -31,25 +36,29 @@
 		});
 		
 		/*****************************************************
+		/*  Navigation fixed on complete scroll
+		/*****************************************************/
+		
+		if($('#aione_sidebar').height() > $(window).height()){
+			$(window).scroll(function(){
+				var scrollOffset = $('#aione_sidebar li:last').offset();
+				if(scrollOffset.top >= 215){
+					$('#aione_sidebar').addClass('fixed-sidebar');
+				}else{
+					$('#aione_sidebar').removeClass('fixed-sidebar');
+				}
+			});
+		}
+		/*****************************************************
 		/*  Breadcrumbs(Page Header) Show Hide Sub Menu
 		/*****************************************************/
-		/*****************************************************/
-		$('.bread-list').hide();
-		/*****************************************************/
-		$( ".bread-list" ).menu();
-		/*****************************************************/
-		$('body').on('click','.popup_drop',function(e){
+		$('body').on('click','.aione-breadcrumbs > li > a',function(e){
 			e.preventDefault();
-			e.stopPropagation();
-			$(this).parent().find('.bread-list').show();
-			$(this).parent().siblings().find('.bread-list').hide();
+		}); 
+		
+		$('body').on('click','.aione-breadcrumbs > li',function(e){
+			$(this).toggleClass('active').siblings().removeClass('active');
 		});
-		/*****************************************************/
-		$('body').click(function(e){
-			$('.bread-list').hide();
-		});
-	   
-	   
 		
 		/*****************************************************
 		/*  Materialize Date Picker
@@ -66,12 +75,6 @@
 			aftershow: function(){} //Function for after opening timepicker  
 		});
 			  
-			  
-			  
-			  
-			  
-			  
-			  
-			  
+
 	});
 </script>

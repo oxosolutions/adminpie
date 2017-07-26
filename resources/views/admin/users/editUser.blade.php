@@ -1,5 +1,15 @@
 @extends('admin.layouts.main')
 @section('content')
+{{-- @php
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Edit Organization',
+    'add_new' => '+ Add Designation'
+); 
+@endphp
+@include('common.pageheader',$page_title_data)  --}}
 @foreach($plugins['model'] as $key => $value)
 	<div class="row">
 		<form method="POST" action="{{route('user.edit',$value->id)}}">
@@ -44,6 +54,7 @@
 		</form>
 	</div>
 @endforeach
+
 	<style type="text/css">
 		.aione-setting-field:focus{
 		border-bottom: 1px solid #a8a8a8 !important;

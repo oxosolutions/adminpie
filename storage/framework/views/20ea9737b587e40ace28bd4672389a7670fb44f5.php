@@ -1,5 +1,17 @@
 <?php $__env->startSection('content'); ?>
 <?php 
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Sections',
+    'add_new' => '+ Add Designation'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php 
 	$section_id = ""; 
  ?>
 <div class="fade-background">
@@ -9,7 +21,6 @@
 		<div class="col s12 m9 l9 pr-7" >
 			<div class="row no-margin-bottom">
 				<div class="col s12 m12 l6  pr-7 tab-mt-10" >
-					<!-- <input class="search aione-field" placeholder="Search" /> -->
 					<nav>
 					    <div class="nav-wrapper">
 					      	<form>
@@ -161,6 +172,11 @@
 		</div>
 	</div>
 </div>
+    <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+    <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <script type="text/javascript">
 	
   $('.add-new').off().click(function(e){

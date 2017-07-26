@@ -18,7 +18,19 @@
     @endif
 @include('common.pageheader',$page_title_data) 
 	<div class="row">
-	
+
+@php
+ 
+  $link=$_SERVER['REQUEST_URI'];
+  $route = explode('/',$link);
+
+  
+@endphp
+    @if(in_array('account', $route))
+    	@include('organization.profile._tabs')
+    @elseif(in_array('project', $route))
+
+    @endif
 		<div class="row">
 			<!-- <a href="#modal11" class="btn-flat">Add task</a> -->
 			<div id="add_new_model" class="tasks_add modal modal-fixed-footer">
@@ -167,6 +179,8 @@
         $(document).ready(function(){
                 $('#add_new_model').modal(); 
          });
-        
+        $('.closeDialog').click(function(){
+            $("#add_new_model").modal('close');
+        });
     </script>
 @endsection

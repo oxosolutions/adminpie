@@ -83,6 +83,8 @@
                                 <option value="password" <?php echo e((@$value->field_type == 'password')?'selected':''); ?>>Password</option>
                                 <option value="datepicker" <?php echo e((@$value->field_type == 'datepicker')?'selected':''); ?>>Datepicker</option>
                                 <option value="timepicker" <?php echo e((@$value->field_type == 'timepicker')?'selected':''); ?>>Timepicker</option>
+                                <option value="switch" <?php echo e((@$value->field_type == 'switch')?'selected':''); ?>>Switch</option>
+                                <option value="editor" <?php echo e((@$value->field_type == 'editor')?'selected':''); ?>>Editor</option>
                             </optgroup>
                             <optgroup label="Content">
                                 <option value="image" <?php echo e((@$value->field_type == 'image')?'selected':''); ?>>Image</option>

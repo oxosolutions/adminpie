@@ -1,5 +1,5 @@
 <li class="repeater-li">
-    <div class="collapsible-header">first chart</div>
+    <div class="collapsible-header">first chart<i class="fa fa-trash"></i></div>
     <div class="collapsible-body">
           <div class="row mb-0">
                <label>Chart Title</label>

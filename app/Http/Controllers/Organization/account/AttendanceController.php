@@ -14,8 +14,6 @@ use Auth;
 
 class AttendanceController extends Controller
 {
-    
-
     public function myattendance(Request $request){
         $where['year'] = $year = Carbon::now()->year;
         $user_id = Auth::guard('org')->user()->id;
@@ -41,9 +39,8 @@ class AttendanceController extends Controller
         }
     	
     	$attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
+        // dd($attendance);
     	$attendance_data = $attendance->groupBy('month')->toArray();
-
-        dd($attendance_data);
         return view('organization.profile.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
     }
 

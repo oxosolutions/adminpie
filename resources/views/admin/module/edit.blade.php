@@ -4,9 +4,7 @@
 @php
    $option ="";
     $data = App\Model\Admin\GlobalModule::getRouteListArray();
-//     foreach ($data as $key => $value) {
-//     $option .="<option value='$key'>$value</option>";
-// }
+
 
 $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
                             
@@ -18,33 +16,19 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
     });
       
   });
-
-/*$(document).ready(function() {
-    $('select').material_select();
-  });*/
-
-  // function apnd_row()
-  // {
-
-  //  // $("#content").clone().appendTo("#apnd");
-  //  var res="";
-  //   $.ajax({
-  //     url:route()+"/module/add_route_row",
-  //     type:'GET',
-  //     success: function(res){
-  //       //data = $("#content").html();
-  //       console.log(res);
-
-  //           $("#apnd").append('<div >'+res+'</div>');
-  //           $('select').material_select();
-  //     }
-  //   });
-  // }
-
-// $('body').on('click','.fa-trash',function(){
-//     $(this).parents('.appended-div').hide();
-// });
 </script>
+@php
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Edit Module',
+    'add_new' => '+ Add Designation'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
     <div class="card" style="margin-top: 0px;padding: 10px">
         {!! Form::open(['route' => ['edit.module',request()->route()->parameters()['id']]]) !!}
 
@@ -130,19 +114,19 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
             <div class="col l6">
                  {!! Form::submit('Save Module', ['class' => 'btn btn-primary']) !!}
             </div>
-            {{-- <div class="col l6 right-align">
-                <a onclick="apnd_row()" class="btn"><i class="fa fa-plus"></i><a>
-            </div> --}}
+         
         </div>
 
      
 
         {!! Form::close() !!}
-          <div class="row">
-            
-          </div>
+         
     </div>
+    @include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
 
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <style type="text/css">
     .aione-setting-field:focus{
         border-bottom: 1px solid #a8a8a8 !important;

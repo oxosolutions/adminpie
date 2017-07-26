@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+@include('organization.profile._tabs')
 <div id="projects" class="projects list-view">
 	<div class="row">
 

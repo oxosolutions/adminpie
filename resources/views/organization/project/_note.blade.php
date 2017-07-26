@@ -5,7 +5,7 @@
 	@foreach($modal as $key => $value)
 	<li>
 	<a href="javascript:;">
-		<span><i class="fa fa-times" style="float: right;"></i></span>
+		<span><i class="fa fa-times delete_note" style="float: right;"></i></span>
 		<input type="hidden" name="id" value="{{$value->id}}">
 		<h2>#{{$index++}}<span class="notes_title">{{$value->title}}</span> </h2>
 		<p class="notes_desc">{{$value->description}}</p>

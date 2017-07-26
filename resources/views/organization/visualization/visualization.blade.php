@@ -9,15 +9,15 @@ $meta = $visualizations['visualization_meta'];
 $charts = $visualizations['visualizations'];
 $visualization_theme = 'minimal';
 
-if(isset($meta['theme']) && $meta['theme'] != ''){
-	$visualization_theme = $meta['theme'];
+if(isset($meta['select_theme']) && $meta['select_theme'] != ''){
+	$visualization_theme = $meta['select_theme'];
 }
 $sidebar_class="no-sidebar";
 if(
-	isset($meta['filters_position']) 
-	&& ($meta['filters_position'] == 'left' || $meta['filters_position'] == 'right') 
+	isset($meta['filter_position']) 
+	&& ($meta['filter_position'] == 'left' || $meta['filter_position'] == 'right') 
 ){
-	$sidebar_class = $meta['filters_position']."-sidebar";
+	$sidebar_class = $meta['filter_position']."-sidebar";
 }
 
 
@@ -59,7 +59,7 @@ echo "</pre>";
 			</div> <!-- aione_topbar -->
 		@endif
 
-		@if(isset($meta['show_header']) && $meta['show_header'] == 1)
+		@if(isset($meta['enable_header']) && $meta['enable_header'] == 1)
 			<!--==============================-->
 			<div id="aione_header_{{$visualization_id}}" class="aione-box aione-header">
 				<div class="wrapper-row ">
@@ -75,8 +75,8 @@ echo "</pre>";
 		<div id="aione_content_{{$visualization_id}}" class="aione-box aione-content aione-content-{{$sidebar_class}}">
 			<div class="wrapper-row padding-0">
 
-				@if(isset($meta['filters_position']) && $meta['filters_position'] != 'bottom')
-					@include('web_visualization.filters')
+				@if(isset($meta['filter_position']) && $meta['filter_position'] != 'bottom')
+					@include('organization.visualization.filters')
 				@endif
 				<!--==============================-->
 				<div id="aione_content_main_{{$visualization_id}}" class="aione-box aione-content-main">
@@ -100,15 +100,15 @@ echo "</pre>";
 							@foreach($charts as $chart_key => $chart)
 								
 								@if(isset($chart['error']))
-									@include('web_visualization.errors',['errors'=>[$chart['error']]])
+									@include('organization.visualization.errors',['errors'=>[$chart['error']]])
 								@else
 									<?php
 										$chart_id = $chart_key;
 										$chart_type = $chart['chart_type'];
 										$chart_title = $chart['title'];
-										$chart_enabled = $chart['enableDisable'];
-										$chart_width = $chart['chart_width'];
-										$chart_settings = json_decode($chart['chart_settings'], true);
+										$chart_enabled = 1;//$chart['enableDisable'];
+										$chart_width = @$chart['chart_width'];
+										$chart_settings = json_decode(@$chart['chart_settings'], true);
 										
 										if(empty($chart_settings['custom_map_theme'])){
 											$chart_settings['custom_map_theme'] = "PuBu";
@@ -128,7 +128,7 @@ echo "</pre>";
 
 									@if($chart_enabled == 1)
 										<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}}">
-											@if(isset($meta['show_chart_title']) && $meta['show_chart_title'] == 1)
+											@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
 											<div class="aione-section-header aione-topbar-header">
 												<div class="aione-section-header-title">
 													@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
@@ -138,7 +138,7 @@ echo "</pre>";
 													<div class="aione-section-title">{{$chart_title}}</div>
 												</div>
 												<div class="aione-section-header-actions">
-													@if(isset($meta['collapsable_chart_widgets']) && $meta['collapsable_chart_widgets'] == 1)
+													@if(isset($meta['collapsible_chart_widgets']) && $meta['collapsible_chart_widgets'] == 1)
 													<span class="aione-section-header-action aione-widget-toggle aione-widget-collapse"></span>
 													@endif
 													@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
@@ -235,9 +235,9 @@ echo "</pre>";
 					</div> <!-- wrapper-row -->
 				</div> <!-- aione_content_main -->
 				<div class="clear"></div>
-
-				@if(isset($meta['filters_position']) && $meta['filters_position'] == 'bottom')
-					@include('web_visualization.filters')
+					
+				@if(isset($meta['filter_position']) && $meta['filter_position'] == 'bottom')
+					@include('organization.visualization.filters')
 				@endif
 
 			</div> <!-- wrapper-row -->
@@ -255,7 +255,7 @@ echo "</pre>";
 			@endif
 		@endif
 
-		@if(isset($meta['show_copyright']) && $meta['show_copyright'] == 1)
+		@if(isset($meta['enable_copyright']) && $meta['enable_copyright'] == 1)
 			<!--==============================-->
 			<div id="aione_copyright_{{$visualization_id}}" class="aione-box aione-copyright">
 				<div class="wrapper-row ">
@@ -264,7 +264,7 @@ echo "</pre>";
 			</div> <!-- aione_copyright -->
 		@endif
 
-		@if(isset($meta['show_loader']) && $meta['show_loader'] == 1)
+		@if(isset($meta['show_loading_animation']) && $meta['show_loading_animation'] == 1)
 			<!--==============================-->
 			<div id="aione_loader_{{$visualization_id}}" class="aione-loader">
 				<div class="loading-animation">
@@ -282,7 +282,7 @@ echo "</pre>";
     </div>
 
 </div>
-<script src="{{asset('/bower_components/admin-lte/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
+<script src="{{asset('/js/jquery-2.2.3.min.js')}}"></script>
 <script src="{{asset('/js/ion.rangeSlider.js')}}" type="text/javascript"></script>
 <script src="{{asset('/js/classybrew.js')}}" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
@@ -348,13 +348,13 @@ echo "</pre>";
 					var chart_data_array = $.map(JSON.parse(chart_view_data), function(value, index) {
 					    return [value];
 					});
-					if(themeSubString != 'theme'){
+					if(themeSubString != 'select_theme'){
 						var colors = cb.getColorCodes();
 						quantile.setSeries(chart_data_array);
 						quantile.setColorCode(theme);
 						quantile.classify(data_classification_method,6);
 					}
-					if(themeSubString != 'theme'){
+					if(themeSubString != 'select_theme'){
 						var legend = '<div class="aione-lagend">';
 						$.each(quantile.getColors(), function(k, v){
 							legend += '<div style="background-color:'+v+'"></div>';
@@ -365,7 +365,7 @@ echo "</pre>";
 					var index = 0;
 					//quantile.setColorCode(colors[3])
 					$.each(JSON.parse(chart_view_data), function(key, value){
-						if(themeSubString == 'theme'){
+						if(themeSubString == 'select_theme'){
 							elem.find('#'+key).attr('class','mapArea');
 						}else{
 							elem.find('#'+key).css({fill:quantile.getColorInRange(chart_data_array[index])}).attr('class','mapArea');

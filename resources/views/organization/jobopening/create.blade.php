@@ -8,7 +8,7 @@
 					<div class="panel panel-flat">
 
 						<div class="panel-body">
-							{!! FormGenerator::GenerateSection('opening',['type'=>'inset'])!!}
+							{!! FormGenerator::GenerateSection('opening')!!}
 							{{-- {!! FormGenerator::GenerateField('des123123',['type'=>'inset'])!!} --}}
 							<div class="text-right">
 								<button type="submit" class="btn btn-primary">Submit form <i class="icon-arrow-right14 position-right"></i></button>

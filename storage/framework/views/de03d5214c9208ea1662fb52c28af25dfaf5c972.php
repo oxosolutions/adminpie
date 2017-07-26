@@ -10,9 +10,9 @@
 <div class="col l12" style="margin-top: 14px"  >
 
     <ul class="aione-tabs">
-        <li class="tab col <?php echo e(strpos($link, 'edit')?'aione-active':''); ?>"><a href="<?php echo e(Route('edit.visual',['id'=>1])); ?>">Charts</a></li>
-        <li class="tab col <?php echo e(strpos($link, 'setting')?'aione-active':''); ?>""><a href="<?php echo e(Route('setting.visualization',['id'=>1])); ?>">Settings</a></li>
-        <li class="tab col <?php echo e(strpos($link, 'users')?'aione-active':''); ?>""><a href="<?php echo e(Route('user.visualization',['id'=>1])); ?>">Users</a></li>
+        <li class="tab col <?php echo e(strpos($link, 'edit')?'aione-active':''); ?>"><a href="<?php echo e(Route('edit.visual',['id'=>request()->route()->parameters()['id']])); ?>">Charts</a></li>
+        <li class="tab col <?php echo e(strpos($link, 'setting')?'aione-active':''); ?>""><a href="<?php echo e(Route('setting.visualization',['id'=>request()->route()->parameters()['id']])); ?>">Settings</a></li>
+        <li class="tab col <?php echo e(strpos($link, 'users')?'aione-active':''); ?>""><a href="<?php echo e(Route('user.visualization',['id'=>request()->route()->parameters()['id']])); ?>">Users</a></li>
         <li class="tab col <?php echo e(strpos($link, 'leaves')?'aione-active':''); ?>""><a href="<?php echo e(Route('account.leaves')); ?>">Reports</a></li>   
         <div style="clear: both">
           

@@ -85,6 +85,8 @@
                                 <option value="password" {{(@$value->field_type == 'password')?'selected':''}}>Password</option>
                                 <option value="datepicker" {{(@$value->field_type == 'datepicker')?'selected':''}}>Datepicker</option>
                                 <option value="timepicker" {{(@$value->field_type == 'timepicker')?'selected':''}}>Timepicker</option>
+                                <option value="switch" {{(@$value->field_type == 'switch')?'selected':''}}>Switch</option>
+                                <option value="editor" {{(@$value->field_type == 'editor')?'selected':''}}>Editor</option>
                             </optgroup>
                             <optgroup label="Content">
                                 <option value="image" {{(@$value->field_type == 'image')?'selected':''}}>Image</option>

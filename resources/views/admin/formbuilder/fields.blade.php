@@ -35,7 +35,7 @@ input{
 }
 </style>
 
-<!-- main-content-->
+
 <div class="card" style="margin-top: 0px;">
     <div class="content-wrapper">
   {!!Form::open(['route'=>'form.store'])!!}
@@ -47,7 +47,7 @@ input{
             <div class="bordered centered" style="background-color: transparent;">
                 <div>
                   <div class=" row" style="background-color: #24425C;color: white;padding: 15px 10px">
-                    <div class="col l2" >Field Order1</div>
+                    <div class="col l2" >Field Order</div>
                     <div class="left-align col l4 ">Field Label</div>
                     <div class="col l4">Field Slug </div>
                     <div class="col l2">Created at</div>

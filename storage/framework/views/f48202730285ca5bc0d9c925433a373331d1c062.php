@@ -16,8 +16,20 @@
 
 <?php echo Form::open(['route' => 'credientals.save' , 'type' => 'POST']); ?>
 
-	<div id="add_new_model" class="modal">
-		<div class="modal-header">CREATE CREDENTIAL</div>
+	<div id="add_new_model" class="modal modal-fixed-footer">
+		
+		<div class="modal-header white-text  blue darken-1" ">
+		<div class="row" style="padding:15px 10px">
+			<div class="col l7 left-align">
+				<h5 style="margin:0px">CREATE CREDENTIAL</h5>	
+			</div>
+			<div class="col l5 right-align">
+				<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+			</div>
+				
+		</div>
+		
+	</div>
 		<div class="modal-content">
 		<?php echo FormGenerator::GenerateSection('cresec1',['type'=>'inset',@$model]); ?>
 

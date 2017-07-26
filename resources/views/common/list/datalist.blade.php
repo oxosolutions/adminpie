@@ -35,9 +35,29 @@ echo "<br>temp=====";
 echo "<pre>";
 print_r(request()->fullUrl());
 echo "</pre>";
-*/
-@endphp
 
+
+echo "<br>temp=====";
+echo "<pre>";
+print_r($showColumns);
+echo "</pre>";
+*/
+
+$columns = $showColumns;
+
+$total_columns = count($columns);
+$column_classes = "column aione-column columns-".$total_columns;
+$class_list = array();
+foreach($columns as $column){
+	if(is_array($column)){
+		$class_list[] = "aione-column-".strtolower(str_replace(' ', '-', $column['title']));
+	} else {
+		$class_list[] = "aione-column-".strtolower(str_replace(' ', '-', $column));
+	}
+	
+}
+
+@endphp
 <div id="aione_datalist" class="aione-datalist">
 	<div class="aione-row">
 	
@@ -62,17 +82,16 @@ echo "</pre>";
 						
 					</div> <!-- .aione-filter -->
 					<div class="aione-filter aione-page-items">
-						<select class="browser-default aione-field" name="per_page" onchange="document.form1.submit();">
+						<select class="browser-default aione-field" name="items" onchange="document.form1.submit();">
 							<option value="" disabled selected>Items</option>
-							<option value="5" {{(Request::get('per_page') && Request::get('per_page') == '5')?'selected':''}}>5</option>
-							<option value="10" {{(Request::get('per_page') && Request::get('per_page') == '10')?'selected':''}}>10</option>
-							<option value="25" {{(Request::get('per_page') && Request::get('per_page') == '25')?'selected':''}}>25</option>
-							<option value="50" {{(Request::get('per_page') && Request::get('per_page') == '50')?'selected':''}}>50</option>
-							<option value="75" {{(Request::get('per_page') && Request::get('per_page') == '75')?'selected':''}}>75</option>
-							<option value="100" {{(Request::get('per_page') && Request::get('per_page') == '100')?'selected':''}}>100</option>
-							<option value="all" {{(Request::get('per_page') && Request::get('per_page') == 'all')?'selected':''}}>All</option> 				
+							<option value="5" {{(Request::get('items') && Request::get('items') == '5')?'selected':''}}>5</option>
+							<option value="10" {{(Request::get('items') && Request::get('items') == '10')?'selected':''}}>10</option>
+							<option value="25" {{(Request::get('items') && Request::get('items') == '25')?'selected':''}}>25</option>
+							<option value="50" {{(Request::get('items') && Request::get('items') == '50')?'selected':''}}>50</option>
+							<option value="75" {{(Request::get('items') && Request::get('items') == '75')?'selected':''}}>75</option>
+							<option value="100" {{(Request::get('items') && Request::get('items') == '100')?'selected':''}}>100</option>
+							<option value="all" {{(Request::get('items') && Request::get('items') == 'all')?'selected':''}}>All</option> 				
 						</select>
-						
 					</div> <!-- .aione-filter -->
 					<div class="aione-filter aione-search-field">
 						<input id="search" class="browser-default" type="search" placeholder="Search" name="search" value="{{Request::get('search') }}">
@@ -89,7 +108,7 @@ echo "</pre>";
 			
 			<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10" style="display: none;">
 					<div class="row aione-sort" onchange="document.form1.submit();">
-						<select class="col  browser-default aione-field" name="sort_by" >
+						<select class="col  browser-default aione-field" name="orderby" >
 							<option value="" disabled selected>Sort By</option>
 							@if(isset($showColumns))
 								@foreach($showColumns as $key => $column)
@@ -99,7 +118,7 @@ echo "</pre>";
 											$key = $explodedKey[count($explodedKey)-1];
 										}
 									@endphp
-									<option value="{{$key}}" {{(Request::get('sort_by') && Request::get('sort_by') == $key)?'selected':''}}>
+									<option value="{{$key}}" {{(Request::get('orderby') && Request::get('orderby') == $key)?'selected':''}}>
 										@if(is_array($column))
 											{{$column['title']}}
 										@else
@@ -111,33 +130,26 @@ echo "</pre>";
 							@endif
 						</select>
 						<div class="col alpha-sort" style="width: 25%;padding-left:7px;">
-							<input type="hidden" name="desc_asc" value="{{@Request::get('desc_asc')}}" />
-							<a href="javascript:;" class="sort"><i class="fa fa-sort-alpha-{{(Request::get('desc_asc')!= '')?Request::get('desc_asc'):'asc'}} arrow_sort white" ></i></a>
+							<input type="hidden" name="order" value="{{@Request::get('order')}}" />
+							<a href="javascript:;" class="sort"><i class="fa fa-sort-alpha-{{(Request::get('order')!= '')?Request::get('order'):'asc'}} arrow_sort white" ></i></a>
 						</div>
 					</div>
 				</div>
-				
-
 			</form>
-			
-			
-			
-			
-			
-			
-			
+	
+	
 	<ul id="list" class="aione-datalist-items" >
 		<li class="aione-datalist-item aione-datalist-header-item" >
 			@foreach($showColumns as $k => $column)
 				@if($loop->index == 0)
-
-					<div class="column" style="width: {{100/count($showColumns)}}%"><span class="column-order" column-key="{{$k}}" style="cursor: pointer;">
+					<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
+					<span class="column-order" column-key="{{$k}}" style="cursor: pointer;">
 						@if(is_array($column))
 							{{$column['title']}}
 						@else
 							{{$column}}
 						@endif
-					<i class="fa fa-sort{{(Request::get('desc_asc') != '' && Request::get('sort_by') == $k )?'-'.Request::get('desc_asc'):''}}" aria-hidden="true" style="margin-left: 10px"></i></span></div>
+					<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k )?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px"></i></span></div>
 				@else
 					@php
 						$explodedKey = explode('.',$k);
@@ -145,30 +157,32 @@ echo "</pre>";
 							$k = $explodedKey[count($explodedKey)-1];
 						}
 					@endphp
-					<div class="column" style="width: {{100/count($showColumns)}}%">
-						<span style="cursor: pointer;" class="column-order" column-key="{{$k}}">
+					<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
+						<span class="column-order " column-key="{{$k}}" >
 							@if(is_array($column))
 								{{$column['title']}}
 							@else
+
 								{{$column}}
 							@endif
 							@if($k != 'created_at' && $k != 'updated_at')
-								<i class="fa fa-sort{{(Request::get('desc_asc') != '' && Request::get('sort_by') == $k)?'-'.Request::get('desc_asc'):''}}" aria-hidden="true" style="margin-left: 10px; cursor: pointer;"></i>
+								<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k)?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px; cursor: pointer;"></i>
 							@endif
 						</span>
 					</div>
 					
 				@endif
+				
+				
 			@endforeach
 			<div class="clear"></div> <!-- .clear -->
-		</li>
-		
+		</li> 	<!-- .aione-datalist-header-item -->
 		@foreach($datalist as $dataset)
 			<li class="aione-datalist-item" >
-				<div class="">
+				<div class="aione-datalist-item-wrapper">
 					@foreach($showColumns as $k => $column)
 						@if($loop->index == 0)
-							<div class="column" style="width: {{100/count($showColumns)}}%">
+							<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
 								<div class="row valign-wrapper">
 									<div class="col">
 										<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
@@ -178,14 +192,32 @@ echo "</pre>";
 									<div class="col" style="padding-left: 10px">
 										<div> {!! ($dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
 										@if(isset($actions))
-											<div class="options">
+											<div class="options" style=" display:{!! ($dataset->{$k} == "Super Admin")?'none':''!!}">
 												@foreach($actions as $action_key => $action_value)
 													@if($action_key == 'download')
 														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
 													@elseif($action_key == 'delete')
-														<a href="javascript:;" data-value="{{route($action_value['route'],$dataset->id)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item">{{$action_value['title']}}</a>
+														<a href="javascript:;" data-value="{{route($action_value['route'],$dataset->id)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red-text">{{$action_value['title']}}</a>
+													@elseif($action_key == 'model')
+														<a href="#" data-target="{{$action_value['data-target']}}" class="{{$action_value['class']}}" id="{{$dataset->id}}" style="padding-right:10px">{{$action_value['title']}}</a>
+													@elseif($action_key == 'status_option')
+														@if($dataset->status == 0)
+															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Activate</a>
+														@else
+															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Deactivate</a>
+														@endif
 													@else
-														<a href="{{route($action_value['route'],$dataset->id)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
+														@php
+															if(is_array($action_value['route'])){
+																$explodedRoute = explode('.',$action_value['route']['id']);
+																$route = $action_value['route']['route'];
+																$routeId = $dataset[$explodedRoute[0]]['id'];
+															}else{
+																$route = $action_value['route'];
+																$routeId = $dataset->id;
+															}
+														@endphp
+														<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
 													@endif
 												@endforeach
 
@@ -198,79 +230,86 @@ echo "</pre>";
 							</div>
 
 						@else
-							<div class="column " style="width: {{100/count($showColumns)}}%">
+							<div  class="{{$column_classes}} {{$class_list[$loop->index]}}">
 								@php
 									$relations = explode('.',$k);
 									$getRelations = $dataset;
 								@endphp
-								@if(count($relations)>1)
-									@foreach($relations as $relKey => $relation)
-										@php
-											try{
-												$getRelations = $getRelations[$relation];
-											}catch(\Exception $e){
+									@if(count($relations)>1)
+										@foreach($relations as $relKey => $relation)
+											@php
 												try{
-													$getRelations = FormGenerator::GetMetaValue($getRelations, $relation);
+													$getRelations = $getRelations[$relation];
 												}catch(\Exception $e){
-													$getRelations = 'Unable to get value';
+													try{
+														$getRelations = FormGenerator::GetMetaValue($getRelations, $relation);
+													}catch(\Exception $e){
+														$getRelations = 'Unable to get value';
+													}
 												}
+											@endphp
+										@endforeach
+										@if($getRelations == null || $getRelations == "")
+											--------------
+										@elseif($getRelations === FALSE)
+											--------------
+										@else
+											<span class="truncate"> {{$getRelations}}</span>
+										@endif
+
+									@elseif($k == 'created_at' || $k == 'updated_at')
+											{{ $dataset->{$k}->diffForHumans() }}
+									@else
+										@php
+											$options = explode(':',$k);
+											$colType = [];
+											if(@$options[1] != null){
+												if($options[1] == 'human_readable'){
+													echo Carbon\Carbon::parse($dataset->{$options[0]})->format('d M');
+												}
+											}elseif(is_array($column)){
+												$columnType = $column['type'];
+												if($columnType == 'image'){
+													echo '<img src="'.asset($column['imagePath'].''.$dataset->{$k}).'" style="width:30px" >';
+												}elseif($columnType == 'switch'){
+													echo '<div class="switch"><label>';
+													if($dataset->status == '0'){
+														echo '<input type="checkbox" class="'.$column['class'].'">';
+													}
+													else{
+														echo '<input type="checkbox" class="'.$column['class'].'" checked="checked">';
+													}
+													echo '<span class="lever"></span></label><input type="hidden" name="id" value="'.$dataset->id.'"></div>';
+												}
+												if($columnType == 'json'){
+													$days = [];
+													foreach (json_decode($dataset->{$k}) as $key => $value) {
+														$days[] = ucfirst(substr($value, 0 , 2));
+													}
+													echo implode(',',$days);
+												}
+											}elseif($k == 'status'){
+												if($dataset->{$k} == 1){
+													$sts = 'active';
+												}else{
+													$sts = '';
+												}
+												echo '<span class="aione-status '.$sts.'"></span>';
+											}else{
+												echo $dataset->{$k};
 											}
 										@endphp
-									@endforeach
-									{{$getRelations}}
-								@elseif($k == 'created_at' || $k == 'updated_at')
-									{{ $dataset->{$k}->diffForHumans() }}
-								@else
-									@php
-										$options = explode(':',$k);
-										$colType = [];
-										if(@$options[1] != null){
-											if($options[1] == 'human_readable'){
-												echo Carbon\Carbon::parse($dataset->{$options[0]})->format('d M');
-											}
-										}elseif(is_array($column)){
-											$columnType = $column['type'];
-											if($columnType == 'image'){
-												echo '<img src="'.asset($column['imagePath'].''.$dataset->{$k}).'" style="width:30px" >';
-											}elseif($columnType == 'switch'){
-												echo '<div class="switch"><label>';
-												if($dataset->status == '0'){
-													echo '<input type="checkbox" class="'.$column['class'].'">';
-												}
-												else{
-													echo '<input type="checkbox" class="'.$column['class'].'" checked="checked">';
-												}
-												echo '<span class="lever"></span></label><input type="hidden" name="id" value="'.$dataset->id.'"></div>';
-											}
-											if($columnType == 'json'){
-												$days = [];
-												foreach (json_decode($dataset->{$k}) as $key => $value) {
-													$days[] = ucfirst(substr($value, 0 , 2));
-												}
-												echo implode(',',$days);
-											}
-										}else{
-											echo $dataset->{$k};
-										}
-									@endphp
-								@endif
+									@endif
+
 							</div>	
 						@endif
 
 					@endforeach
-				</div>
-				<div class="clear"></div> <!-- .clear -->
-			</li>			
+					<div class="clear"></div> <!-- .clear -->
+				</div>	<!-- .aione-datalist-item-wrapper -->
+			</li>	<!-- .aione-datalist-item -->
 		@endforeach
-
-	</ul>
-	
-	
-	
-	
-			
-			
-			
+	</ul> 	<!-- .aione-datalist-items -->
 
 			</div> <!-- .aione-row -->
 		</div> <!-- #aione_datalist_content -->
@@ -288,18 +327,18 @@ echo "</pre>";
 <script type="text/javascript">
 
 	$(function(){
-		if($('input[name=desc_asc]').val() == ''){
-			$('input[name=desc_asc]').val('asc');
+		if($('input[name=order]').val() == ''){
+			$('input[name=order]').val('asc');
 		}
 		$('.delete-datalist-item').click(function(){
 				var elemValue = $(this).attr('data-value');
 				swal({  
 						title: "Are you sure?",
-						text: "You will not be able to recover this imaginary file!",
+						text: "You will not be able to recover once deleted!", 
 						type: "warning",
 						showCancelButton: true,
 						confirmButtonColor: "#DD6B55",
-						confirmButtonText: "Yes, delete it!",
+						confirmButtonText: "Delete",
 						closeOnConfirm: false }, function(){
 						// swal("Deleted!", "Your imaginary file has been deleted.", "success");
 						window.location.href = elemValue;
@@ -310,9 +349,9 @@ echo "</pre>";
 			if($(this).find('i').hasClass('fa-sort-alpha-asc')){
 				$(this).find('i').removeClass('fa-sort-alpha-asc');
 				$(this).find('i').addClass('fa-sort-alpha-desc');
-				$('input[name=desc_asc]').val('desc');
+				$('input[name=order]').val('desc');
 			}else{
-				$('input[name=desc_asc]').val('asc');
+				$('input[name=order]').val('asc');
 				$(this).find('i').removeClass('fa-sort-alpha-desc');
 				$(this).find('i').addClass('fa-sort-alpha-asc');
 			}
@@ -322,13 +361,13 @@ echo "</pre>";
 			if($(this).find('i').hasClass('fa-sort-asc')){
 				$(this).find('i').removeClass('fa-sort-asc');
 				$(this).find('i').addClass('fa-sort-desc');
-				$('input[name=desc_asc]').val('desc');
+				$('input[name=order]').val('desc');
 				$('.col').val($(this).attr('column-key'));
 				$('.col').change();
 			}else{
 				$(this).find('i').removeClass('fa-sort-desc');
 				$(this).find('i').addClass('fa-sort-asc');
-				$('input[name=desc_asc]').val('asc');
+				$('input[name=order]').val('asc');
 				$('.col').val($(this).attr('column-key'));
 				$('.col').val($(this).attr('column-key'));
 				$('.col').change();

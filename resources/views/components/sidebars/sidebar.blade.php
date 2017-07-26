@@ -45,9 +45,7 @@
 					</span>
 					
 					@if(@$sidebar->subModule[0] != null) 
-						<span class="nav-item-arrow">
-							<i class="fa fa-angle-right" ></i>
-						</span>
+						<span class="nav-item-arrow"></span>
 					@endif
 				  
                 </a>

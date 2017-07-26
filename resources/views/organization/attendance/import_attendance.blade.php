@@ -41,12 +41,10 @@
 
 <div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2 p-20 ml-10 mr-10 mb-20">
 	{!! Form::open(['class'=> 'form-horizontal','method' => 'post'])!!}
-
 		<div class="row no-margin-bottom">
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Attendence Title" />
 			</div>
-			
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Holiday Description" /></input>
 			</div>
@@ -61,7 +59,6 @@
 					</div>
 			    </div>
 			</div>
-
 			<div class="col s12 m3 l12 aione-field-wrapper right-align">
 				<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" name="action">Save
 					<i class="material-icons right">save</i>

@@ -11,8 +11,9 @@ use App\Model\Organization\Category as CAT;
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\User;
 use App\Model\Organization\OrganizationSetting as org_setting;
-
+use App\Model\Organization\UsersMeta;
 use Session;
+use Auth;
 class EmployeeController extends Controller
 {
     protected $user;
@@ -23,65 +24,87 @@ class EmployeeController extends Controller
     }
     public function index(Request $request, $id=null)
     {
+        $search = $this->saveSearch($request);
+        if($search != false && is_array($search)){
+            $request->request->add(['items'=>$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+        }
         $datalist= [];
         $data= [];
-          if($request->has('per_page')){
-                $perPage = $request->per_page;
-                if($perPage == 'all'){
-                  $perPage = 999999999999999;
-                }
-              }else{
-                $perPage = 5;
+        if($request->has('items')){
+              $perPage = $request->items;
+              if($perPage == 'all'){
+                $perPage = 999999999999999;
               }
-          $sortedBy = @$request->sort_by;
-          if($request->has('search')){
-              if($sortedBy != ''){
-                  $model = EMP::with(['employ_info'=>function($query) use ($request){
-                        $query->with(['metas']);
-                  },'designations','department_rel'])->whereHas('employ_info', function($query) use ($request){
-                      $query->where('name','like','%'.$request->search.'%');
-                  })->orWhere('employee_id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                  $model = EMP::with(['employ_info'=>function($query) use ($request){
-                        $query->with(['metas']);
-                  },'designations','department_rel'])->whereHas('employ_info', function($query) use ($request){
-                      $query->where('name','like','%'.$request->search.'%');
-                  })->orWhere('employee_id','like','%'.$request->search.'%')->paginate($perPage);
-              }
-          }else{
-              $orgId = Session::get('organization_id');
-              if($sortedBy != ''){
-                  $model = EMP::with(['employ_info'=>function($query){
-                        $query->with(['metas']);
-                  },'designations','department_rel'])->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                   $model = EMP::with(['employ_info'=>function($query){
-                        $query->with(['metas']);
-                  },'designations','department_rel'])->paginate($perPage);
-              }
-          }
-          // dd($model);
-          $datalist =  [
-                          'datalist'=>  $model,
-                          'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.name'=>'Department','designations.name'=>'Designation','employ_info.metas.contact_no'=>'Contact No','employ_info.email'=>'Email ID','created_at'=>'Created At'],
-                          'actions' => [
-                                          'edit' => ['title'=>'Edit','route'=>'account.profile' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.employee']
-                                       ],
-                          'js'  =>  ['custom'=>['list-designation']],
-                          'css'=> ['custom'=>['list-designation']]
-                      ];
-              if(check_route_permisson('hrm/employee/update')==false){
-                unset($datalist['actions']['edit']);
-              }
-              if(check_route_permisson('hrm/employee/delete')==false){
-                unset($datalist['actions']['delete']);
-              }
-        if(!empty($id) || $id != null || $id != ''){
-          $data['data'] = EMP::where('id',$id)->first();
+            }else{
+              $perPage = 5;
+            }
+        $sortedBy = @$request->orderby;
+        $orgId = Session::get('organization_id');
+        if($request->has('search')){
+            if($sortedBy != ''){
+                $model = EMP::with(['employ_info'=>function($query) use ($request){
+                      $query->with(['metas']);
+                },'designations','department_rel'])->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')->where('users.name','like','%'.$request->search.'%')->orWhere($orgId.'_employees.employee_id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
+            }else{
+                $model = EMP::with(['employ_info'=>function($query) use ($request){
+                      $query->with(['metas']);
+                },'designations','department_rel'])->whereHas('employ_info', function($query) use ($request){
+                    $query->where('name','like','%'.$request->search.'%');
+                })->orWhere('employee_id','like','%'.$request->search.'%')->paginate($perPage);
+            }
+        }else{
+            if($sortedBy != ''){
+                $model = EMP::with(['employ_info'=>function($query){
+                      $query->with(['metas']);
+                },'designations','department_rel'])->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')->orderBy($sortedBy,$request->order)->paginate($perPage);
+            }else{
+                 $model = EMP::with(['employ_info'=>function($query){
+                      $query->with(['metas']);
+                },'designations','department_rel'])->paginate($perPage);
+            }
         }
-       
+        // dd($model);
+        $datalist =  [
+                      'datalist'=>  $model,
+                      'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.name'=>'Department','designations.name'=>'Designation','employ_info.metas.contact_no'=>'Contact No','employ_info.email'=>'Email ID','created_at'=>'Created At'],
+                      'actions' => [
+                                      'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'=>'employ_info.id'] , 'class' => 'edit'],
+                                      // 'delete'=>['title'=>'Delete','route'=>'delete.employee']
+                                   ],
+                      'js'  =>  ['custom'=>['list-designation']],
+                      'css'=> ['custom'=>['list-designation']]
+                    ];
+            if(check_route_permisson('hrm/employee/update')==false){
+              unset($datalist['actions']['edit']);
+            }
+            if(check_route_permisson('hrm/employee/delete')==false){
+              unset($datalist['actions']['delete']);
+            }
+      if(!empty($id) || $id != null || $id != ''){
+        $data['data'] = EMP::where('id',$id)->first();
+      }
+
     	return view('organization.employee.list',$datalist)->with(['data' => $data]);;
+    }
+
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
+        }
     }
 
     public function getEmployeeList(Request $request){
@@ -116,8 +139,8 @@ class EmployeeController extends Controller
         $valid_fields = [
                             'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
-                            'password'      => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/|min:8',
-                            'employee_id'   => 'required|min:4|max:300|unique:'.$tbl.'_employees'
+                            'password'      => 'required|min:8',
+                            'employee_id'   => 'required|min:4|max:256|unique:'.$tbl.'_employees'
                         ];
         $this->validate($request , $valid_fields);
         $request['role_id'] =  setting_val_by_key('employee_role');

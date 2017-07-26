@@ -9,6 +9,7 @@ $page_title_data = array(
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
 	<div class="row">
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<div class="row">
@@ -58,7 +59,7 @@ $page_title_data = array(
 						<div class="list" id="list">
 							<div class="card-panel shadow white z-depth-1 hoverable project"  >
 							    <div class="row valign-wrapper">
-							        <div class="col s7">
+							        <div class="col s4">
 							            <div class="row valign-wrapper">
 							                <div class="col">
 							                    <div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
@@ -77,7 +78,7 @@ $page_title_data = array(
 							            </div>
 
 							        </div>
-							         <div class="col s3">
+							         <div class="col s2">
 							            <?php echo e($val->total_days); ?> Days
 							        </div>
 							        <div class="col s3">
@@ -85,11 +86,11 @@ $page_title_data = array(
 
 							        </div>
 							        <?php if($val->status ==1): ?>
-								        <div class="col s2 right-align">
+								        <div class="col s3 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Approved</span>
 								        </div>
 								    <?php else: ?>
-											 <div class="col s2 right-align">
+											 <div class="col s3 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Un-Approved</span>
 								        </div>
 								    <?php endif; ?>  
@@ -99,26 +100,24 @@ $page_title_data = array(
 						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 					</div>
 					<div class="col s12 m3 l3 pl-7" >
-						<a id="add_new" href="#modal4" class="btn add-new display-form-button" >
-							Apply Leave
-						</a>
+						
 						<?php echo Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 								<input type="hidden" name="apply_by" value="employee">
-						<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+						<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 						<?php echo Form::close(); ?>
 
+					
 						
-						<div class="row" style="padding-top: 10px">
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;font-weight: 500;">
+							<div class="card title-card" >
+								
 									Leave rules for you
-								</div>
+								
 							</div>
 						<?php $__currentLoopData = $leave_rule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ruleKey => $ruleVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									<div class="row">
+							<div class="card">
+								<div class="row mb-0" >
+									<div class="row mb-0 p-10">
 										<div class="col l6">Title</div>
 										<div class="col l6"><?php echo e($ruleVal['name']); ?></div>
 									</div>
@@ -130,30 +129,30 @@ $page_title_data = array(
 											$used_leave = $leave_count_by_cat[$ruleVal->id]->sum('total_days');
 										}
 									 ?>
-									<div class="row">
+									<div class="row mb-0" >
 									<?php if($metaVal['key'] =="number_of_day"): ?>
 										<div class="col l4" style="border-right:1px solid #e8e8e8">
-											<div style="font-weight: 500;padding: 6px">
+											<div class="center-align" style="font-weight: 500;padding: 6px">
 												Total
 											</div>
-											<div style="padding: 6px">
+											<div class="center-align" style="padding: 6px">
 												<?php echo e($metaVal['value']); ?>
 
 											</div>
 										</div>
 										<div class="col l4" style="border-right:1px solid #e8e8e8">
-											<div style="font-weight: 500;padding: 6px">
+											<div class="center-align" style="font-weight: 500;padding: 6px">
 												Used
 											</div>
-											<div style="padding: 6px">
+											<div class="center-align" style="padding: 6px">
 												<span class="green white-text" style="padding: 2px 5px;border-radius: 4px"><?php echo e($used_leave); ?></span>
 											</div>
 										</div>
 										<div class="col l4">
-											<div style="font-weight: 500;padding: 6px">
+											<div class="center-align" style="font-weight: 500;padding: 6px">
 												left
 											</div>
-											<div style="padding: 6px">
+											<div class="center-align" style="padding: 6px">
 												<span class="orange white-text" style="padding: 2px 5px;border-radius: 4px"><?php echo e(@$metaVal['value'] - $used_leave); ?></span>
 											</div>
 										</div>
@@ -162,14 +161,14 @@ $page_title_data = array(
 									</div>
 									<?php if($metaVal['key'] =="apply_before" ): ?>
 										<div class="divider"></div>
-										<div class="row">
+										<div class="row mb-0 p-10" >
 											<div class="col l6">Apply Before</div>
 											<div class="col l6"><?php echo e($metaVal['value']); ?> Days</div>
 										</div>
 									<?php endif; ?>
 									<?php if($metaVal['key'] =="valid_for" ): ?>
 										<div class="divider"></div>
-										<div class="row">
+										<div class="row mb-0 p-10" style="">
 											<div class="col l6">Yearly/Monthly</div>
 											<div class="col l6"><?php echo e(ucfirst($metaVal['value'])); ?></div>
 										</div>
@@ -178,84 +177,8 @@ $page_title_data = array(
 								</div>
 							</div>
 						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									<div class="row">
-										<div class="col l6">Title</div>
-										<div class="col l6">Dummy static</div>
-									</div>
-									<div class="divider"></div>
-									<div class="row">
-										<div class="col l4" style="border-right:1px solid #e8e8e8">
-											<div style="font-weight: 500;padding: 6px">
-												Total
-											</div>
-											<div style="padding: 6px">
-												54
-											</div>
-										</div>
-										<div class="col l4" style="border-right:1px solid #e8e8e8">
-											<div style="font-weight: 500;padding: 6px">
-												Used
-											</div>
-											<div style="padding: 6px">
-												<span class="green white-text" style="padding: 2px 5px;border-radius: 4px">6</span>
-											</div>
-										</div>
-										<div class="col l4">
-											<div style="font-weight: 500;padding: 6px">
-												left
-											</div>
-											<div style="padding: 6px">
-												<span class="orange white-text" style="padding: 2px 5px;border-radius: 4px">6</span>
-											</div>
-										</div>
-									</div>
-									<div class="divider"></div>
-									<div class="row">
-										<div class="col l6">Apple Before</div>
-										<div class="col l6">6 days</div>
-										<div class="col l6">Apple Before</div>
-										<div class="col l6">6 days</div>
-									</div>
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Nunc pellentesque quam vel arcu dictum, non posuere eros ultricies.
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Pellentesque ornare augue egestas lacus elementum, eget eleifend eros pharetra.
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Suspendisse vel massa sed nulla pretium eleifend in vel orci.
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Suspendisse vel massa sed nulla pretium eleifend in vel orci.
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Suspendisse vel massa sed nulla pretium eleifend in vel orci.
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Suspendisse vel massa sed nulla pretium eleifend in vel orci.
-								</div>
-							</div>
-							<div class="card" style="margin: 0px;margin-bottom: 5px">
-								<div class="row" style="padding: 10px;">
-									Suspendisse vel massa sed nulla pretium eleifend in vel orci.
-								</div>
-							</div>
-						</div>
+							
+						
 						
 					</div>
 				</div>
@@ -263,67 +186,7 @@ $page_title_data = array(
 		</div>
 	
 	</div>
-	<div class="row">
-		<div class="row">
-		
-
-
-        	<div class="col l9">
-        		<div class="" style="border:1px solid #e8e8e8">
-        			<div class="row" style="font-size: 20px;padding:10px">
-	        			Leave Detail
-	        		</div>
-	        		<div class="divider"></div>
-	        		<div class="row" style="padding: 10px">
-	        			<div class="col l4" style="font-weight: 500">Leave type</div>
-	        			<div class="col l8">Medical leave</div>
-	        		</div>
-	        		<div class="row"  style="padding: 10px">
-	        			<div class="col l4"  style="font-weight: 500">From</div>
-	        			<div class="col l8">12 march 2017</div>
-	        		</div>
-	        		<div class="row" style="padding: 10px">
-	        			<div class="col l4"  style="font-weight: 500">To</div>
-	        			<div class="col l8">18 march 2017</div>
-	        		</div>
-	        		<div class="row" style="padding: 10px">
-	        			<div class="col l4"  style="font-weight: 500">Reason</div>
-	        			<div class="col l8">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut eu nisi porttitor, porta dui id, consequat tortor. Praesent tempus arcu a massa porta venenatis. Cras dignissim luctus leo, at varius metus laoreet nec.</div>
-	        		</div>
-	        		<div class="row" style="padding: 10px">
-	        			<div class="col l4" style="font-weight: 500">Link to sent mail</div>
-	        			<div class="col l8"><a href="https://docs.google.com/spreadsheets/d/1T5KjGZAj9cf4nEwiTVHU9IsfA-z-SpLL1qoeSUP97Cs/edit#gid=2012486982" class="truncate">https://docs.google.com/spreadsheets/d/1T5KjGZAj9cf4nEwiTVHU9IsfA-z-SpLL1qoeSUP97Cs/edit#gid=2012486982</a></div>
-	        		</div>
-        		</div>
-	        		
-        	</div>
-        
-        	<div class="col l3">
-        		<div class="row" style="border: 1px solid #e8e8e8">
-        			<div class="row" style="padding: 10px;font-size: 20px">
-        				Leaves Stats
-        			</div>
-        			<div class="divider"></div>
-        			<div class="row">
-        				<div class="col l4" style="padding: 5px">Leaves</div>
-        				<div class="col l4" style="padding: 5px">Used</div>
-        				<div class="col l4" style="padding: 5px">left</div>
-        			</div>
-        			<div class="row">
-        				<div class="col l4" style="padding: 5px">EL (12)</div>
-        				<div class="col l4 " style="padding: 5px"><span class="red white-text" style="padding: 2px 5px;border-radius: 4px">6</span></div>
-        				<div class="col l4" style="padding: 5px"><span class="green white-text" style="padding: 2px 5px;border-radius: 4px">6</span></div>
-        			</div>
-        			<div class="row">
-        				<div class="col l4" style="padding: 5px">EL (12)</div>
-        				<div class="col l4 " style="padding: 5px"><span class="red white-text" style="padding: 2px 5px;border-radius: 4px">6</span></div>
-        				<div class="col l4" style="padding: 5px"><span class="green white-text" style="padding: 2px 5px;border-radius: 4px">6</span></div>
-        			</div>
-        		</div>
-        	</div>
-        
-        </div>
-	</div>
+	
 	<script type="text/javascript">
 
 		$(".datepicker").pickadate({
@@ -333,5 +196,19 @@ $page_title_data = array(
 		});
 
 	</script>
+	<style type="text/css">
+		.title-card{
+			padding:10px;
+		}
+		.card{
+			margin: 0px;margin-bottom: 10px
+		}
+		.mb-0{
+			margin-bottom: 0px;
+		}
+		.p-10{
+			padding: 10px
+		}
+	</style>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -10,28 +10,18 @@ $page_title_data = array(
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<div class="row">
-	<div class="col-md-12">
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	 <?php echo Form::model($model, ['route'=>['update.client',$model->id ], 'class'=> 'form-horizontal','method' => 'post']); ?>
-			<div class="row">
-				<div class="col-md-12 ">
-					<div class="panel panel-flat">
+		<?php echo FormGenerator::GenerateSection('clisec2',['type' => 'inset']); ?>
 
-						<div class="panel-body">
-							<?php echo FormGenerator::GenerateSection('clisec2',['type' => 'inset']); ?>
+		<input type="hidden" name="user_id" value="<?php echo e($model->user_id); ?>">
+		<button type="submit" class="btn blue " style="float: right">Submit form <i class="icon-arrow-right14 position-right"></i></button>
+	<?php echo Form::close(); ?>
 
-							<input type="hidden" name="user_id" value="<?php echo e($model->user_id); ?>">
-							<div class="text-right">
-								<button type="submit" class="btn btn-primary">Submit form <i class="icon-arrow-right14 position-right"></i></button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		<?php echo Form::close(); ?>
-
-	</div>
-</div>
-
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -7,7 +7,7 @@
   
  ?>
 
-<div class="col l12" style="margin-top: 14px"  >
+<div class="col l12"  >
 
     <ul class="aione-tabs">
         <li class="tab col aione-active <?php echo e(strpos($link, 'org')?'aione-active':''); ?>"><a href="<?php echo e(Route('setting.org')); ?>">Basic Settings</a></li>

@@ -16,7 +16,10 @@ class EmployeeLeaveController extends Controller
 
 	Public function index(Request $request, $id=null)
 	{ 
-		
+
+		if(role_id()==1){
+			return redirect()->route('access.denied');
+		}
 		$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->get();
 		$emp_id = Auth::guard('org')->user()->id;
 
@@ -235,6 +238,7 @@ class EmployeeLeaveController extends Controller
 				$request['employee_id'] = EMP::where('user_id', $user['id'])->select('employee_id')->first()->employee_id;
 				$leave->fill($request->all());
 				$leave->save();
+				save_activity('apply_leave');
 			}
 		 }
 		else if($request->isMethod('patch')){

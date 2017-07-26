@@ -20,8 +20,8 @@
 		<div class="row">
 			@foreach($model as $key => $value)
 				<div class="col l3 pr-7">
-					<div class="card shadow" style="margin-top: 0px;">
-						<div class="row center-align aione-widget-header" ><h5 style="margin: 0px"><a href="{{route($value['route'])}}" style="display: block">{{ucfirst($key)}}</a></h5></div>
+					<div class="card shadow mt-0" style="">
+						<div class="row center-align aione-widget-header" ><h5 class="m-0"><a href="{{route($value['route'])}}">{{ucfirst($key)}}</a></h5></div>
 						<div class="row center-align aione-widget-content" >{{$value['count']}} </div>
 						<div class="row center-align aione-widget-footer" >
 							<a href="{{route($value['route'])}}" class="btn" style="background-color: #005A8B">All {{$key}}</a>
@@ -33,10 +33,10 @@
 	</div> 
 	<div class="row">	
 		<div class="col l6 pr-7">
-			<div class="card center-align chk-n-out" style="padding: 14px">
+			<div class="card center-align chk-n-out" >
 				<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 				<input type="hidden" class="status" value="{{$check_in_out_status}}" >
-				<button href="javascript:;" status="check_in" class="checkInOut blue" id="check_in" style="display: inline-block;color: white;margin: 0 auto;padding: 8px 20px">
+				<button href="javascript:;" status="check_in" class="checkInOut blue aione-btn" id="check_in" style="">
 					<span>
 						<span >
 							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
@@ -79,7 +79,7 @@
 			border-bottom: 1px solid #e8e8e8;cursor: pointer;
 		}
 		.aione-widget-header a{
-			padding: 10px;color: black
+			padding: 10px;color: black;display: block
 		}
 		.aione-widget-content{
 			border-bottom: 1px solid #e8e8e8;padding: 10px;font-size: 72px
@@ -87,65 +87,14 @@
 		.aione-widget-footer{
 			padding: 10px
 		}
-		.my-stats li{
-			padding: 10px
+		.mt-0{
+			margin-top: 0px;
 		}
-		.my-stats ul{
-			margin-top: 0px !important
+		.m-0{
+			margin: 0px;
 		}
-		.collapsible{
-			
-		}
-		.aione-progress-bg {
-		    background: #f2f2f2;
-		    min-height: 10px;
-		    border:1px solid #a8a8a8;
-		}
-
-
-		.aione-progress-inside {
-		    width: 80%;
-		    height: 10px;
-		    background: #22adba;
-		    background-color: #2978A2;
-		    background-size: 10% 100%, 100% 100%;
-		}
-		li.active{
-			box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2)
-		}
-		.fc-toolbar{
-			display: none;
-		}
-		table{
-			border-collapse: separate !important;
-		}
-		.fc-basic-view .fc-body .fc-row{
-			min-height: 1px;
-		}
-		.fc-scroller{
-			height:174px !important;
-		}
-		td{
-			text-align: center
-		}
-		.switch label .lever{
-			width: 30px !important;
-			height:16px !important;
-		}
-		.switch label .lever:after{
-			width: 14px !important;
-			height: 14px !important;
-			left: 1px ;
-			top:1px !important;
-		}
-		.switch label input[type=checkbox]:checked+.lever:after{
-			    background-color: white !important;
-		}
-		.switch label input[type=checkbox]:checked+.lever:after{
-			left: 15px;
-		}
-		.switch label input[type=checkbox]:checked+.lever{
-			background-color: #6DAD25 !important;
+		.aione-btn{
+			display: inline-block;color: white;margin: 0 auto;padding: 8px 20px;
 		}
 	</style>
 	<script type="text/javascript">

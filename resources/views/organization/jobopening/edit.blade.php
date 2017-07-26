@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
 	<div class="col-md-12">
-	{!! Form::model($model, ['route'=>['opening.update',$model->id], 'class'=> 'form-horizontal','method' => 'post'])!!}
+	{!! Form::model($model, ['route'=>['opening.update',$model['id']], 'class'=> 'form-horizontal','method' => 'post'])!!}
 			<div class="row">
 				<div class="col-md-12 ">
 					<div class="panel panel-flat">

@@ -212,7 +212,8 @@ $page_title_data = array(
 								</div>
 							
 							
-								
+							@include('common.list.datalist')
+	
 						</div>
 					</div>
 

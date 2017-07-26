@@ -54,15 +54,7 @@
 .add-new-wrapper.active{
 	display:block;
 }
-/*.add-new-wrapper:after{
-    content: "";
-    position: absolute;
-    bottom: -16px;
-    right: 100px;
-    border-right: 12px solid transparent;
-    border-left: 12px solid transparent;
-    border-top: 16px solid #0288d1;
-}*/
+
 .modal-dialog{
 	margin: 0px !important;
 	width: 100%;

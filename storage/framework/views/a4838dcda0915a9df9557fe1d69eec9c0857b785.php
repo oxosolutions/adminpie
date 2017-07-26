@@ -25,91 +25,180 @@ $page_title_data = array(
                       <div class="card-v2-content" style="padding: 8px">
                         
                           <ul class="collapsible" data-collapsible="accordion">
-                              <li class="repeater-li">
-                                <div class="collapsible-header">first chart</div>
-                                <div class="collapsible-body">
-                                      <div class="row mb-0">
-                                           <label>Chart Title</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                               <?php echo Form::text('chart_title[chart_0]',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Chart Title']); ?>
+                              <?php if(!$charts->isEmpty()): ?>
+                                <?php $__currentLoopData = $charts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $chartKey => $chart): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                  <li class="repeater-li">
+                                    <input type="hidden" value="<?php echo e($chart->id); ?>" name="chart_id[chart_<?php echo e($loop->index); ?>]" />
+                                    <div class="collapsible-header"><?php echo e($chart->chart_title); ?><i class="fa fa-trash"></i></div>
+                                    <div class="collapsible-body">
+                                          <div class="row mb-0">
+                                               <label>Chart Title</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                   <?php echo Form::text('chart_title[chart_'.$loop->index.']',$chart->chart_title,['class'=>'no-margin-bottom aione-field','placeholder'=>'Chart Title']); ?>
+
+                                              </div>
+                                          </div>
+                                          <div class="row mb-0">
+                                              <label>Chart Type</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('chart_type[chart_'.$loop->index.']',App\Model\Organization\Visualization::chartTypes(),$chart->chart_type,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Chart Type','id'=>'chart_type']); ?>
+
+                                              </div>
+                                          </div>
+                                          <div class="row mb-0 non-custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'none':'block'); ?>">
+                                              <label>Select Variable for x-axis</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('variable_x_axis[chart_'.$loop->index.']',$columns,$chart->primary_column,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'']); ?>
+
+                                              </div>
+                                          </div>
+                                          <div class="row mb-0 non-custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'none':'block'); ?>">
+                                              <label>Select Variable for y-axis</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('variable_y_axis[chart_'.$loop->index.'][]',$columns,json_decode($chart->secondary_column),["class"=>"no-margin-bottom aione-field select_2 browser-default   ",'multiple']); ?>
+
+                                              </div>
+                                          </div>
+                                          <div class="row mb-0 custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'block':'none'); ?>">
+                                              <label>Select Map</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('mapArea[chart_'.$loop->index.']',App\Model\Admin\CustomMaps::getMapsList(),@getMetaValue($chart->meta,'mapArea'),["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Select Map']); ?>
+
+                                              </div>
+                                          </div>
+                                          <div class="row mb-0 custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'block':'none'); ?>">
+                                              <label>Select area code of map</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('area_code[chart_'.$loop->index.']',$columns,@getMetaValue($chart->meta,'area_code'),["class"=>"no-margin-bottom aione-field select_2 browser-default  "]); ?>
+
+                                              </div>
+                                          </div>
+                                          <div class="row mb-0 custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'block':'none'); ?>">
+                                              <label>Select data to display on map</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('viewData[chart_'.$loop->index.']',$columns,@getMetaValue($chart->meta,'viewData'),["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Select data to display on map']); ?>
+
+                                              </div>
 
                                           </div>
-                                      </div>
-                                      <div class="row mb-0">
-                                          <label>Chart Type</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('chart_type[chart_0]',App\Model\Organization\Visualization::chartTypes(),null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Chart Type','id'=>'chart_type']); ?>
+                                          <div class="row mb-0 custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'block':'none'); ?>">
+                                              <label>Value for display on tooltip</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('tooltip_data[chart_'.$loop->index.'][]',$columns,json_decode($chart->secondary_column),["class"=>"no-margin-bottom aione-field select_2 browser-default  ",'multiple']); ?>
 
+                                              </div>
                                           </div>
-                                      </div>
-                                      <div class="row mb-0 non-custom">
-                                          <label>Select Variable for x-axis</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('variable_x_axis[chart_0]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'']); ?>
+                                          <div class="row mb-0 custom" style="display: <?php echo e(($chart->chart_type == 'CustomMap')?'block':'none'); ?>">
+                                              <label>Load custom data</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('customData[chart_'.$loop->index.'][]',$columns,json_decode(@getMetaValue($chart->meta,'customData')),["class"=>"no-margin-bottom aione-field select_2 browser-default  " ,'multiple']); ?>
 
+                                              </div>
                                           </div>
-                                      </div>
-                                      <div class="row mb-0 non-custom">
-                                          <label>Select Variable for y-axis</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('variable_y_axis[chart_0][]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default   ",'multiple']); ?>
+                                          <div class="row mb-0">
+                                              <label>Select formula</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('formula[chart_'.$loop->index.']',App\Model\Organization\Visualization::formulas(),@getMetaValue($chart->meta,'formula'),["class"=>"no-margin-bottom aione-field select_2 browser-default  " ]); ?>
 
+                                              </div>
                                           </div>
-                                      </div>
-                                      <div class="row mb-0 custom">
-                                          <label>Select Map</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('custom_map[chart_0]',App\Model\Admin\CustomMaps::getMapsList(),null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Select Map']); ?>
+                                          <div class="row mb-0">
+                                              <label>Chart width</label>
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('chartWidth[chart_'.$loop->index.']',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],@getMetaValue($chart->meta,'chartWidth'),["class"=>"no-margin-bottom aione-field select_2 browser-default  "]); ?>
 
-                                          </div>
-                                      </div>
-                                      <div class="row mb-0 custom">
-                                          <label>Select area code of map</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('area_code[chart_0]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  "]); ?>
-
-                                          </div>
-                                      </div>
-                                      <div class="row mb-0 custom">
-                                          <label>Select data to display on map</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('data_to_display_on_map[chart_0]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Select data to display on map']); ?>
-
+                                              </div>
                                           </div>
 
-                                      </div>
-                                      <div class="row mb-0 custom">
-                                          <label>Value for display on tooltip</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('tooltip_data[chart_0][]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  ",'multiple']); ?>
+                                    </div>
+                                  </li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                              <?php else: ?>
+                                <li class="repeater-li">
+                                  <div class="collapsible-header">first chart</div>
+                                  <div class="collapsible-body">
+                                        <div class="row mb-0">
+                                             <label>Chart Title</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                 <?php echo Form::text('chart_title[chart_0]',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Chart Title']); ?>
 
-                                          </div>
-                                      </div>
-                                      <div class="row mb-0 custom">
-                                          <label>Load custom data</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('custom_data[chart_0][]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " ,'multiple']); ?>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0">
+                                            <label>Chart Type</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('chart_type[chart_0]',App\Model\Organization\Visualization::chartTypes(),null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Chart Type','id'=>'chart_type']); ?>
 
-                                          </div>
-                                      </div>
-                                      <div class="row mb-0">
-                                          <label>Select formula</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('formula[chart_0]',App\Model\Organization\Visualization::formulas(),null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " ]); ?>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 non-custom">
+                                            <label>Select Variable for x-axis</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('variable_x_axis[chart_0]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'']); ?>
 
-                                          </div>
-                                      </div>
-                                      <div class="row mb-0">
-                                          <label>Chart width</label>
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('chart_width[chart_0]',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],null,["class"=>"no-margin-bottom aione-field select_2 browser-default  "]); ?>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 non-custom">
+                                            <label>Select Variable for y-axis</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('variable_y_axis[chart_0][]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default   ",'multiple']); ?>
 
-                                          </div>
-                                      </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 custom">
+                                            <label>Select Map</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('custom_map[chart_0]',App\Model\Admin\CustomMaps::getMapsList(),null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Select Map']); ?>
 
-                                </div>
-                              </li>
-                            
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 custom">
+                                            <label>Select area code of map</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('area_code[chart_0]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  "]); ?>
+
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 custom">
+                                            <label>Select data to display on map</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('data_to_display_on_map[chart_0]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>'Select data to display on map']); ?>
+
+                                            </div>
+
+                                        </div>
+                                        <div class="row mb-0 custom">
+                                            <label>Value for display on tooltip</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('tooltip_data[chart_0][]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  ",'multiple']); ?>
+
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0 custom">
+                                            <label>Load custom data</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('custom_data[chart_0][]',$columns,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " ,'multiple']); ?>
+
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0">
+                                            <label>Select formula</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('formula[chart_0]',App\Model\Organization\Visualization::formulas(),null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " ]); ?>
+
+                                            </div>
+                                        </div>
+                                        <div class="row mb-0">
+                                            <label>Chart width</label>
+                                            <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('chart_width[chart_0]',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],null,["class"=>"no-margin-bottom aione-field select_2 browser-default  "]); ?>
+
+                                            </div>
+                                        </div>
+
+                                  </div>
+                                </li>
+                              <?php endif; ?>
                           </ul>
                           <div>
                               <a href="#" class="btn blue add-more-chart">Add more chart</a>
@@ -124,22 +213,43 @@ $page_title_data = array(
                       </div>
                       <div class="card-v2-content p-8">
                           <ul class="filters">
-                              <li class="repeater-filter">
-                                  <div class="row">
-                                      <div class="col l6 pr-7">
-                                          <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('filter_columns[]',$columns,null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Column']); ?>
+                              <?php if(!empty(@json_decode($filters))): ?>
+                                <?php $__currentLoopData = json_decode($filters); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $filter): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                  <li>
+                                      <div class="row">
+                                          <div class="col l6 pr-7">
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('filter_columns[]',$columns,$filter->column,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Column']); ?>
 
+                                              </div>
                                           </div>
+                                          <div class="col l6">
+                                                <div class="col s12 m2 l12 aione-field-wrapper">
+                                                  <?php echo Form::select('filter_type[]',App\Model\Organization\Visualization::filterTypes(),$filter->type,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Filter Type']); ?>
+
+                                              </div>
+                                          </div>        
                                       </div>
-                                      <div class="col l6">
+                                  </li>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                              <?php else: ?>
+                                <li>
+                                    <div class="row">
+                                        <div class="col l6 pr-7">
                                             <div class="col s12 m2 l12 aione-field-wrapper">
-                                              <?php echo Form::select('filter_type[]',App\Model\Organization\Visualization::filterTypes(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Filter Type']); ?>
+                                                <?php echo Form::select('filter_columns[]',$columns,null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Column']); ?>
 
-                                          </div>
-                                      </div>        
-                                  </div>
-                              </li>
+                                            </div>
+                                        </div>
+                                        <div class="col l6">
+                                              <div class="col s12 m2 l12 aione-field-wrapper">
+                                                <?php echo Form::select('filter_type[]',App\Model\Organization\Visualization::filterTypes(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Filter Type']); ?>
+
+                                            </div>
+                                        </div>        
+                                    </div>
+                                </li>
+                              <?php endif; ?>
                           </ul>
                           <div>
                               <a href="#" class="btn blue add-filter">Add more filters</a>

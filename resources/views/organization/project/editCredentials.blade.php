@@ -1,12 +1,23 @@
 @extends('layouts.main')
 @section('content')
-<div>
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Edit Credentials',
+    'add_new' => '+ Add Credentials'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
 @php
 // dd($model);
 	$data = [];
 	$index = 0;
 	$model2 = [];
 @endphp
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
     @include('organization.project._tabs')
     	@php
     		$model2['website_title'] = $model[0]->website_title;
@@ -77,7 +88,12 @@
 			</div>
 		</div>
 	</div>
-</div>
+	@include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
+
 <style type="text/css">
 	   
     .projects-logo{

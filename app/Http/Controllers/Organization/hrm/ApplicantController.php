@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\Applicant;
 use App\Model\Organization\ApplicantMeta; 
 use App\Repositories\User\UserRepositoryContract;
+use App\Model\Organization\Application;
+use App\Model\Organization\ApplicationMeta;
+
 use Session;
 
 class ApplicantController extends Controller
@@ -19,14 +22,49 @@ class ApplicantController extends Controller
 
     }
     /**
+     * [apply description]
+     * @param  [int] $id [job opening id]
+     * @return [type]     [description]
+     */
+    public function apply(Request $request, $id=null)
+    {
+      if($request->isMethod('post')){
+        $tbl = Session::get('organization_id');
+        $valid_fields = [   'name'          => 'required',
+                            'email'         => 'required|email|unique:'.$tbl.'_users',
+                            'password'      => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/|min:8'
+                        ];
+        $this->validate($request , $valid_fields);
+        $request['role_id'] = setting_val_by_key('applicant_role');
+        $user_id = $this->user->create($request->all(), 2);
+        $applicant = new Applicant();
+        $applicant->user_id = $user_id;
+        $applicant->status = 1;
+        $applicant->save();
+
+        $application = new Application();
+        $application->opening_id = $request['opening_id'];
+        $application->applicant_id = $applicant->id;
+        $application->save();
+        unset($request['_token'], $request["opening_id"],$request["name"], $request["email"], $request["password"], $request['role_id']);
+
+        foreach ($request->all() as $key => $value) {
+          $applicationMeta = new ApplicationMeta();
+          $applicationMeta->application_id = $application->id;
+          $applicationMeta->key = $key;
+          $applicationMeta->value = $value;
+          $applicationMeta->save();
+        }
+      }
+         return view('organization.applicant.apply',compact('id'));
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {
-       
-       //dump(Applicant::with('user_relation')->get());
         $datalist= [];
         $data= [];
           if($request->has('per_page')){
@@ -51,9 +89,7 @@ class ApplicantController extends Controller
                    $model = Applicant::with('user_relation')->paginate($perPage);
               }
           }
-
-         
-            $datalist =  [
+                  $datalist =  [
                           'datalist'=>  $model,
                           'showColumns' => ['id'=>'id', 'user_relation.name'=>'Name','created_at'=>'Created At'],
                           'actions' => [
@@ -73,6 +109,7 @@ class ApplicantController extends Controller
      */
     public function create(Request $request)
     {
+
         if($request->isMethod('post')){
         $tbl = Session::get('organization_id');
         $valid_fields = [   'name'          => 'required',
@@ -80,49 +117,15 @@ class ApplicantController extends Controller
                             'password'      => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/|min:8'
                         ];
         $this->validate($request , $valid_fields);
-        $request['role_id'] =  38; //setting_val_by_key('applicant_role');
+        $request['role_id'] = setting_val_by_key('applicant_role');
         $user_id = $this->user->create($request->all(), 2);
         $applicant = new Applicant();
         $applicant->user_id = $user_id;
         $applicant->status = 1;
         $applicant->save();
         }
-        return redirect()->route('list.applicant');
+      return redirect()->route('list.applicant');
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -132,16 +135,18 @@ class ApplicantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $appCheckFirst = ApplicantMeta::where(['applicant_id'=>$id]);
+        $appCheckFirst = ApplicationMeta::where(['applicant_id'=>$id]);
         if($appCheckFirst->exists()){
            $data =  $appCheckFirst->get()->keyBy('key');
            $collection = collect($data->toArray());
             $keyed = $collection->mapWithKeys(function ($item) {
                 return [$item['key'] => $item['value']];
             });
-$keyed['id'] = $id;
+              $keyed['id'] = $id;
           $model =  $keyed->all();
-          //dump($model);
+          
+        }else{
+          $model= ['id'=>$id];
         }
 
         if($request->isMethod('post')){
@@ -150,11 +155,11 @@ $keyed['id'] = $id;
                 if(is_array($value)){
                     $value = json_encode($value);
                 }
-               $applicantCheck =  ApplicantMeta::where(['applicant_id'=>$id, 'key'=>$key]);
+               $applicantCheck =  ApplicationMeta::where(['applicant_id'=>$id, 'key'=>$key]);
                if($applicantCheck->exists()){
                     $applicantCheck->update(['value'=>$value]);
                 }else{
-                  $appMeta =  new ApplicantMeta();
+                  $appMeta =  new ApplicationMeta();
                   $appMeta->applicant_id = $id;
                   $appMeta->key = $key;
                   $appMeta->value = $value;
@@ -163,7 +168,7 @@ $keyed['id'] = $id;
             }
                   return redirect()->route('list.applicant');
             }
-      //  dd($model);
+    
          return view('organization.applicant.edit', compact('model'));
     }
 

@@ -1,10 +1,9 @@
-
 <div>  
 
     <div class="row">
-        <h5 style="margin-top: 0px">Add new Organization</h5>
-        <?php if(@$errors->has()): ?>
-           <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+        
+        <?php if(@$errors->has()): ?> 
+          <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
               <div style="color:red;"><?php echo e($error); ?></div>
           <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         <?php endif; ?>
@@ -15,7 +14,7 @@
                Organization Title
            </div>
            <div class="col l9">
-                              <?php echo Form::text('name',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']); ?>
+                <?php echo Form::text('name',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']); ?>
 
            </div>
         </div>
@@ -24,7 +23,7 @@
                Slug
            </div>
            <div class="col l9">
-              
+             
                <?php echo Form::text('slug',null,[ 'class' => 'aione-setting-field', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']); ?>
 
            </div>
@@ -34,7 +33,7 @@
                Primary Domain
            </div>
            <div class="col l9">
-              
+             
                <?php echo Form::text('primary_domain',null,['class' => 'aione-setting-field', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']); ?>
 
            </div>
@@ -44,7 +43,7 @@
                Seondary Domains
            </div>
            <div class="col l9">
-              
+             
                <?php echo Form::text('secondary_domains',null,['class' => 'aione-setting-field', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']); ?>
 
            </div>
@@ -55,14 +54,16 @@
            </div>
            <div class="col l9">
             <?php 
-              $selectedModule =null;
+              $selectedModule['module'] =null;
               if(!empty($org_data)){
                 if(!empty($org_data['modules'])){
                  $selectedModule['module'] = array_map('intval', json_decode($org_data['modules']));
                 }
               }
+              // else{
+              //   $selectedModule['module'] = array_map('intval',Session::get('module_data'));
+              // }
              ?>
-                  
                <?php echo Form::select('modules[]',$modules, $selectedModule['module'],['multiple'=>'multiple', 'class' => '', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']); ?>
 
              </div>
@@ -72,7 +73,7 @@
                Organization Description
            </div>
            <div class="col l9">
-              
+             
                <?php echo Form::textarea('description',null,['rows' => '5' ,'class' => 'materialize-textarea', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']); ?>
 
            </div>
@@ -93,7 +94,7 @@
                Password
            </div>
            <div class="col l9">
-               
+             
                 <?php echo Form::password('password',['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']); ?>
 
            </div>
@@ -106,7 +107,7 @@
               Confirm Password
            </div>
            <div class="col l9">
-               
+             
                 <?php echo Form::password('confirm_password',['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px; ']); ?>
 
            </div>

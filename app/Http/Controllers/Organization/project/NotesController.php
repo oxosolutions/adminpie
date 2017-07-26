@@ -40,7 +40,13 @@ class NotesController extends Controller
                 ];
         $modal = NT::where('id',$id)->update($data);
         return 'update successfully';
-        
-
+    }
+    public function delete(Request $request)
+    {
+        $delete = NT::where('id',$request->id)->delete();
+        if($delete){
+            $modal = NT::all();
+            return view('organization.project._note',['modal'=>$modal])->render();
+        }
     }
 }

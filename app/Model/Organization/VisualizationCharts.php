@@ -13,7 +13,12 @@ class VisualizationCharts extends Model
 	   	{
 	       $this->table = Session::get('organization_id').'_visualization_charts';
 	   	}
-   }
+   	}
 
+   	public function meta(){
 
+   		return $this->hasMany('App\Model\Organization\VisualizationChartMeta','chart_id','id');
+   	}
+
+   	
 }

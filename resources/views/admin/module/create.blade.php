@@ -13,18 +13,14 @@
     $(document).on('click','.remove_row',function(e){
       $(this).parent().remove();
     });
-      
   });
-
   function apnd_row()
   {
-    // $("#content").clone().appendTo("#apnd");
    var res="";
     $.ajax({
       url:route()+"/module/add_route_row",
       type:'GET',
       success: function(res){
-        //data = $("#content").html();
         console.log(res);
 
             $("#apnd").append('<div >'+res+'</div>');
@@ -32,11 +28,19 @@
       }
     });
   }
-
-// $('body').on('click','.fa-trash',function(){
-//     $(this).parents('.appended-div').hide();
-// });
 </script>
+@php
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Create Module',
+    'add_new' => '+ Add Designation'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
 <div class="card" style="margin-top: 0px;padding: 10px">
     {!! Form::open(['route' => 'save.module']) !!}
 
@@ -57,7 +61,6 @@
             <a href="javascript:void(0)" class="btn blue add-submodule right-align" style="font-size: 15px;float: right">Add More Sub-Module</a>
         </div>
     </div>
-
     <div id="sortable" class="repeat-submodule">
         <div style="width: 100%; border: 1px dotted #CCC; margin-top: 1%; padding-left: 2%; padding-right: 2%; padding-bottom: 2%;" class="row sub-div">
             <a href="javascript:void(0)" style="float: right; margin-top: 0.5%;" class="delete-submodule"><i class="fa fa-close"></i></a>
@@ -122,6 +125,11 @@
     </div>
 </div>
 
+    @include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <style type="text/css">
     .aione-setting-field:focus{
         border-bottom: 1px solid #a8a8a8 !important;

@@ -50,6 +50,23 @@
 		</div>
 
 		<?php endif; ?>
+
+	<?php elseif($options['type'] == 'inline'): ?>
+		<div class="row" style="margin-bottom: 0px;padding: 14px">
+            <div class="col l6" style="line-height: 48px;">
+                <?php echo e(ucfirst($collection->field_title)); ?>
+
+            </div>
+            <div class="col l6 right-align aione-field-wrapper">
+               	<?php 
+					$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
+					$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
+				 ?>
+               <?php echo Form::select(str_replace(' ','_',strtolower($collection->field_title)),$arrayOptions,null,["class"=>"no-margin-bottom aione-field select_2 browser-default  " , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder')]); ?>
+
+               
+            </div>
+        </div>
 	<?php else: ?>
 		<?php 
 			$selectedArray = null;

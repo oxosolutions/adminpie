@@ -9,6 +9,10 @@ use App\Model\Admin\GlobalModuleRoute as Route;
 use App\Model\Admin\GlobalSubModule;
 class ModuleController extends Controller
 {
+    public function style()
+    {
+        return view('admin.module.style');
+    }
     public function listModule()
     {
     	$model  = Module::orderBy('orderBy','asc')->get();

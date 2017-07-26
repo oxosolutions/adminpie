@@ -1,5 +1,101 @@
 @extends('layouts.main')
 @section('content')
+<style type="text/css">
+	.edit-button{
+		display: block;width: 30px;line-height: 30px;text-align: center;float: right;
+	}
+	.mb-0{
+		margin-bottom: 0px
+	}
+	.mt-14{
+		margin-top: 14px;
+	}
+	.subhead{
+		position: relative;
+	}
+	.subhead:after{
+		 content: '';position: absolute;left: 0;display: inline-block;height: 1em;width: 100%;border-bottom: 2px solid #BDBDBD;margin-top: 6px;
+	}
+	.activity-header{
+		padding: 10px;
+	}
+	.activity-header > h5,a{
+		display: inline-block;
+
+	}
+	.activity-header > a{
+		float:right;
+
+	}
+	.chooser { position: absolute; z-index: 1; opacity: 0; cursor: pointer;margin-top: -36px}
+	.upload-image{
+		position: absolute;
+	 	display: block;
+	    background-color: rgba(33, 150, 243, 0.8);
+	    color: white;
+	    width: 100%;
+	    text-align: center;
+	    
+	    padding: 4px;-webkit-transition: all 0.3s ease-in-out 0.5s;
+	}
+	.abc{
+		overflow: hidden
+	}
+	.abc:hover .upload-image{
+		margin-top: -32px
+	}
+	.basic-details .profile-pic{
+		padding:14px;position: relative;
+	}
+	.basic-details .abc{
+		position: relative;
+	}
+	.basic-details img{
+		width:100%;
+	}
+	.basic-details .preloader-wrapper{
+		position: absolute;top: 50%;left: 50%;margin-top: -17px;margin-left: -17px;width: 34px;height: 34px;display: none
+	}
+	.p-14{
+		padding: 14px !important;
+	}
+	.pb-5{
+		padding:0px 0px 5px 0px;
+	}
+	.pt-5{
+		padding:5px 0px 0px 0px
+	}
+	.mt{
+		margin-top: 14px
+	}
+	.pv-5{
+		padding:5px 0px
+	}
+	.activities .month{
+		 font-size: 16px ;font-weight: 700
+	}
+	.activities .date{
+		padding:4px 18px;
+	}
+	.activites .day{
+		font-size: 28px;line-height: 30px;font-weight: 700
+	}
+	.activites .box{
+		padding: 4px 8px; font-size: 10px;border-radius: 3px
+	}
+	.pv-10{
+		padding:10px 0px
+	}
+	.info-card{
+		margin-top: 14px
+	}
+	.info-card .subhead-wrapper,.details-wrapper{
+		padding: 5px !important;
+	}
+	.info-card .headline-text{
+		font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8;
+	}
+</style>
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
@@ -10,19 +106,30 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
-	<div class="row">
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
 		@include('organization.profile._tabs')
+		
+		<div class="row">
 		<div class="col l9 pr-7">
-			<div class="card" style="margin-top: 14px">
-				<div class="row">
-					<div class="col l3" style="padding:14px;position: relative;">
+			<div class="card mt-14">
+				<div class="row basic-details">
+					<div class="col l3 profile-pic">
 						{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
-							<div class="abc" style="position: relative;">
+							<div class="abc" >
 							@if($model->profilePic != null || $model->profilePic != "" || !empty($model->profilePic))
-								<img src="{{ asset('ProfilePicture/'.$model->profilePic) }}" style="width: 100%">
+								<img src="{{ asset('ProfilePicture/'.$model->profilePic) }}" >
 							@else
-								<img src="{{ asset('ProfilePicture/default-user.jpg') }}" style="width: 100%">
-
+								<img src="{{ asset('ProfilePicture/default-user.jpg') }}">
+							@endif
+							@php
+								$parameters = request()->route()->parameters();
+							@endphp
+							@if(count($parameters) > 0)
+								@php
+						            $id = request()->route()->parameters()['id'];
+							   	@endphp
+							   	<input type="hidden" name="user_id" value="{{request()->route()->parameters()['id']}}">
 							@endif
 								<a href="" class="upload-image">Change Image</a>	
 								<input type="file" name="aione-dp"
@@ -32,7 +139,7 @@ $page_title_data = array(
 							</div>
 							
 						{!!Form::close()!!}
-						<div class="preloader-wrapper image-spinner big active" style="position: absolute;top: 50%;left: 50%;margin-top: -17px;margin-left: -17px;width: 34px;height: 34px;display: none">
+						<div class="preloader-wrapper image-spinner big active" style="">
 							      <div class="spinner-layer spinner-blue">
 							        <div class="circle-clipper left">
 							          <div class="circle"></div>
@@ -74,31 +181,13 @@ $page_title_data = array(
 							      </div>
 							    </div>
 					</div>
-					<style type="text/css">
-						.chooser { position: absolute; z-index: 1; opacity: 0; cursor: pointer;margin-top: -36px}
-						.upload-image{
-							position: absolute;
-						 	display: block;
-						    background-color: rgba(33, 150, 243, 0.8);
-						    color: white;
-						    width: 100%;
-						    text-align: center;
-						    
-						    padding: 4px;-webkit-transition: all 0.3s ease-in-out 0.5s;
-						}
-						.abc{
-							overflow: hidden
-						}
-						.abc:hover .upload-image{
-							margin-top: -36px
-						}
-					</style>
-					<div class="col l9" style="padding:14px">
-						<div class="row" style="padding:0px 0px 5px 0px">
+					
+					<div class="col l9 p-14">
+						<div class="row pb-5" >
 							<div class="col l3"><strong>Name:</strong></div>
-							<div class="col l5">{{$model->name}}</div>
+							<div class="col l5">{{@$model->name}}</div>
 							<div class="col l4 right-align">
-								<a href="#modal1" class=""><i class="fa fa-pencil"></i></a>
+								<a href="#modal1" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 								{!!Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH',])!!}
 								@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']])
 							
@@ -106,7 +195,7 @@ $page_title_data = array(
 							</div>
 						</div>
 						
-						<div class="row" style="padding:5px 0px 0px 0px">
+						<div class="row pt-5" >
 							<div class="col l3"><strong>About Me</strong></div>
 							<div class="col l9">{{@$model->about_me}}</div>
 						</div>
@@ -114,22 +203,22 @@ $page_title_data = array(
 					</div>
 				</div>
 			</div>
-			<div class="card" style="margin-top: 14px">
+			<div class="card mt-14" >
 				
 				<div class="row ">
-					<div class="row ">
+					<div class="row activities">
 						<div class="activity-header">						
 							<h5>Recent Activities</h5>
-							<a href="{{route('account.activities')}}" class="btn btn-success">View All</a>
+							<a href="{{route('account.activities')}}" class=" btn-success" style="">View All</a>
 						</div>
-
+						
 						@foreach($user_log as $key => $value)
-							<div class="row valign-wrapper" style="padding:5px 0px">
-								<div class="col l1 blue white-text center-align">
-									<div class="row " style="font-size: 16px ;font-weight: 700">
+							<div class="row valign-wrapper mb-0 pv-5" >
+								<div class="col l1 blue white-text center-align date" >
+									<div class="row mb-0 month ">
 										{{date_format($value->created_at , "M")}}
 									</div>
-									<div class="row" style="font-size: 28px;line-height: 30px;font-weight: 700">
+									<div class="row mb-0 day" >
 										{{date_format($value->created_at , "d")}}
 									</div>
 								</div>
@@ -148,7 +237,7 @@ $page_title_data = array(
 									@endforeach
 								</div>
 								<div class="col l2">
-									<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">{{$value->type}}</span>
+									<span class="green white-text box">{{$value->type}}</span>
 								</div>
 								<!-- <div class="col l2">
 									<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
@@ -164,8 +253,8 @@ $page_title_data = array(
 			</div>
 		</div>
 		<div class="col l3 pl-7">
-			<div class="card"  style="margin-top: 14px">
-				<div class="row center-align" style="padding:10px 0px">
+			<div class="card mt-14 " >
+				<div class="row center-align mb-0 pv-10" >
 					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>	
 					{!! Form::open(['route' => 'change.password' , 'method' => 'post']) !!}
 					@include('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
@@ -173,251 +262,113 @@ $page_title_data = array(
 				</div>
 				
 			</div>
-			<div class="card" style="margin-top: 14px">
-				<div class="row">
-					<div class="col l10" style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Contact Detail</div>
+			<div class="card info-card" >
+				<div class="row valign-wrapper mb-0">
+					<div class="col l10 headline-text" >Contact Detail</div>
 					<div class="col l2">
-						<a href="#modal2"><span><i class="fa fa-pencil"></i></span></a>
-						<div id="modal2" class="modal modal-fixed-footer">
-							<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-						    	<div class="row" style="padding:15px 10px">
-						    		<div class="col l7">
-						    			<h5 style="margin:0px">Contact Details</h5>	
-						    		</div>
-						    		<div class="col l5 right-align">
-						    			<a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-						    		</div>
-						    			
-						    	</div>
-						    	
-						    </div>
-						    {!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
-						    	<input type="hidden" name="meta_table" value="usermeta" />
-							    <div class="modal-content" style="background-color: white">
-							    	
-							    	{!!FormGenerator::GenerateSection('empsec2',['type' => 'inset'])!!}
-							    </div>
-							    <div class="modal-footer">
-							    	
-							    	<button class="btn blue" type="submit">Save
-												<i class="material-icons right">save</i>
-											</button>
-							    </div>
-							{!!Form::close()!!}
-						</div>
-					
+						<a href="#modal2" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+						{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+						<input type="hidden" name="meta_table" value="usermeta" />
+						@include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'Contact Details','button_title'=>'Save ','section'=>'empsec2']])
+						{!!Form::close()!!}
 					</div>
 					
 				</div>
-				<div class="row" style="padding: 0px 5px">
-					<div class="row" style="padding: 5px 0px ">
-						<div class="col l4">
-							Contact no.
-						</div>
-						<div class="col l8">
-							{{$model->contact_no}}
-						</div>
+				@if(!$model->metas->isEmpty())
+					<div class="row" >
+						@foreach($model->metas as $k => $v)
+							@if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address')
+								<div class="row mb-0" >
+									<div class="col l12 subhead-wrapper" >
+										<span class="subhead">{{$v->key}}</span>
+									</div>
+									<div class="col l12 details-wrapper" >
+										{{$v->value}}
+									</div>
+								</div>
+							@endif
+						@endforeach
 					</div>
-					<div class="row" style="padding: 5px 0px ">
-						<div class="col l4">
-							Email.
-						</div>
-						<div class="col l8">
-							<a>{{@$model->email}}</a>
-						</div>
-					</div>
-					<div class="row" style="padding: 5px 0px ">
-						<div class="col l4">
-							Address
-						</div>
-						<div class="col l8">
-							{{@$model->permanent_address}}
-						</div>
-					</div>
-				</div>
+				@endif
 			</div>
-			@if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0)
-				<div class="card" style="margin-top: 14px">
-					<div class="row">
-						<div class="col l10" style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Employee Detail</div>
-						<div class="col l2">
-							<a href="#modal3"><span><i class="fa fa-pencil"></i></span></a>
-							<div id="modal3" class="modal modal-fixed-footer">
-								<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-							    	<div class="row" style="padding:15px 10px">
-							    		<div class="col l7">
-							    			<h5 style="margin:0px">Employee Details</h5>	
-							    		</div>
-							    		<div class="col l5 right-align">
-							    			<a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-							    		</div>
-							    			
-							    	</div>
-							    	
-							    </div>
-							    {!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
-							    	<input type="hidden" name="meta_table" value="employeemeta" />
-								    <div class="modal-content" style="background-color: white">
-								    	
-								    	{!!FormGenerator::GenerateSection('empsec7',['type' => 'inset'])!!}
-								    </div>
-								    <div class="modal-footer">
-								    	{{-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Save</a> --}}
-								    	<button class="btn blue" type="submit">Save
-													<i class="material-icons right">save</i>
-												</button>
-								    </div>
-								{!!Form::close()!!}
-							</div>
-						</div>
-						
-					</div>
-					<div class="row" style="padding: 0px 5px">
-						@foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
-							<div class="row" style="padding: 5px 0px ">
-								<div class="col l4">
-									{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
-								</div>
-								<div class="col l8">
-									@if($field == 'designation')
-										&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
-								@elseif($field == 'department')
-										&nbsp;	{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->
-											name}}
-									@else
-										&nbsp;&nbsp;{{$model[strtolower($field)]}}
-									@endif
-								</div>
-							</div>
-						@endforeach
-					
-					</div>
-				</div>
-				<div class="card" style="margin-top: 14px">
-					<div class="row">
-						<div class="col l10" style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Bank Details</div>
-						<div class="col l2">
-							<a href="#modal4"><span><i class="fa fa-pencil"></i></span></a>
-							<div id="modal4" class="modal modal-fixed-footer">
-								<div class="modal-header white-text" style="background-color: rgb(2,136,209)">
-							    	<div class="row" style="padding:15px 10px">
-							    		<div class="col l7">
-							    			<h5 style="margin:0px">Bank Details</h5>	
-							    		</div>
-							    		<div class="col l5 right-align">
-							    			<a href="javascript:;" class="closeDialog"><i class="fa fa-close"></i></a>
-							    		</div>
-							    			
-							    	</div>
-							    	
-							    </div>
-							    {!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
-							    	<input type="hidden" name="meta_table" value="employeemeta" />
-								    <div class="modal-content" style="background-color: white">
-								    	
-								    	{!!FormGenerator::GenerateSection('empsec6',['type' => 'inset'])!!}
-								    </div>
-								    <div class="modal-footer">
-								    	{{-- <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Save</a> --}}
-								    	<button class="btn blue" type="submit">Save
-													<i class="material-icons right">save</i>
-												</button>
-								    </div>
-								{!!Form::close()!!}
-							</div>
-						</div>
-						
-					</div>
-					<div class="row" style="padding: 0px 5px">
-						@foreach(FormGenerator::GetSectionFieldsName('empsec6') as $key => $field)
-							<div class="row" style="padding: 5px 0px ">
-								<div class="col l4">
-									{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
-								</div>
-								<div class="col l8">
-									{{$model[strtolower($field)]}}
-								</div>
-							</div>
-						@endforeach
-				
-					</div>
-				</div>
-			@endif
+				@if(in_array(4, json_decode($model['user_type'])))
+					<div class="card info-card" >
 
-			<div class="card" style="margin-top: 14px">
-				<div class="row">
-					<span style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">Task Assigned</span>
-				</div>
-				<div class="row">
-					<div class="row" style="padding: 10px 5px;">
-						<div class="col l9">
-							Design Issue	
+							<div class="row valign-wrapper mb-0">
+								<div class="col l10 headline-text" >Employee Detail</div>
+								<div class="col l2">
+									<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+									{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+									<input type="hidden" name="meta_table" value="employeemeta" />
+									@include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
+									{!!Form::close()!!}
+								</div>
+								
+							</div>
+							<div class="row" >
+								@foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
+									<div class="row mb-0" >
+										<div class="col l12 subhead-wrapper" >
+											<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
+										</div>
+										<div class="col l12 details-wrapper" >
+											@if($field == 'designation')
+												&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
+										@elseif($field == 'department')
+												&nbsp;	{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->
+													name}}
+											@else
+												&nbsp;&nbsp;{{$model[strtolower($field)]}}
+											@endif
+										</div>
+									</div>
+								@endforeach
+							</div>
+					</div>
+					<div class="card info-card" >
+						<div class="row valign-wrapper mb-0">
+							<div class="col l10 headline-text" >Bank Details</div>
+							<div class="col l2">
+								<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+								{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+							
+								<input type="hidden" name="meta_table" value="employeemeta" />
+								@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
+								{!!Form::close()!!}
+							</div>
+							
 						</div>
-						<div class="col l3 center-align">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="red white-text ">High</span>
+						<div class="row" >
+							@foreach(FormGenerator::GetSectionFieldsName('empsec6') as $key => $field)
+								<div class="row mb-0">
+									<div class="col l12 subhead-wrapper" >
+										<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
+									</div>
+									<div class="col l12 details-wrapper" >
+										{{$model[strtolower($field)]}}
+									</div>
+								</div>
+							@endforeach
+					
 						</div>
-						
 					</div>
-					<div class="divider">
+				@endif
+	
+				@if(@$model['employ_info'])
+					@if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0)
 						
-					</div>
-					<div class="row" style="padding: 10px 5px;">
-						<div class="col l9">
-							Backend task	
-						</div>
-						<div class="col l3 center-align">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="orange white-text ">Medium</span>
-						</div>
-						
-					</div>
-					<div class="divider">
-						
-					</div>
-					<div class="row" style="padding: 10px 5px;">
-						<div class="col l9">
-							Testing in html	
-						</div>
-						<div class="col l3 center-align">
-							<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text ">Low</span>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<div class="card">
-				<div class="row">
-					<span style="font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8">My Projects</span>
-				</div>
-				<div class="row">
-					<div class="row" style="padding: 10px 5px;">
-						<div class="col l12">
-							Project 1	
-						</div>
-						
-					</div>
-					<div class="divider">
-						
-					</div>
-					<div class="row" style="padding: 10px 5px;">
-						<div class="col l12">
-							Project 2	
-						</div>
-						
-						
-					</div>
-					<div class="divider">
-						
-					</div>
-					<div class="row" style="padding: 10px 5px;">
-						<div class="col l12">
-							Project #
-						</div>
-						
-					</div>
-				</div>
-			</div>
+					@endif
+				@endif
+
+			
+			
 		</div>
 	</div>
+	@include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 	<script type="text/javascript">
 		
 	$(document).ready(function(){

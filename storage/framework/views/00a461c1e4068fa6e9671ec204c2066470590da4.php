@@ -2,9 +2,7 @@
 <?php 
    $option ="";
     $data = App\Model\Admin\GlobalModule::getRouteListArray();
-//     foreach ($data as $key => $value) {
-//     $option .="<option value='$key'>$value</option>";
-// }
+
 
 $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
                             
@@ -16,33 +14,19 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
     });
       
   });
-
-/*$(document).ready(function() {
-    $('select').material_select();
-  });*/
-
-  // function apnd_row()
-  // {
-
-  //  // $("#content").clone().appendTo("#apnd");
-  //  var res="";
-  //   $.ajax({
-  //     url:route()+"/module/add_route_row",
-  //     type:'GET',
-  //     success: function(res){
-  //       //data = $("#content").html();
-  //       console.log(res);
-
-  //           $("#apnd").append('<div >'+res+'</div>');
-  //           $('select').material_select();
-  //     }
-  //   });
-  // }
-
-// $('body').on('click','.fa-trash',function(){
-//     $(this).parents('.appended-div').hide();
-// });
 </script>
+<?php 
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Edit Module',
+    'add_new' => '+ Add Designation'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <div class="card" style="margin-top: 0px;padding: 10px">
         <?php echo Form::open(['route' => ['edit.module',request()->route()->parameters()['id']]]); ?>
 
@@ -133,18 +117,20 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
                  <?php echo Form::submit('Save Module', ['class' => 'btn btn-primary']); ?>
 
             </div>
-            
+         
         </div>
 
      
 
         <?php echo Form::close(); ?>
 
-          <div class="row">
-            
-          </div>
+         
     </div>
+    <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
+    <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <style type="text/css">
     .aione-setting-field:focus{
         border-bottom: 1px solid #a8a8a8 !important;

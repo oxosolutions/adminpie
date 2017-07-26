@@ -44,7 +44,7 @@ class UserRoleController extends Controller{
                         'datalist'=>$model,
                         'showColumns' => ['name'=>'Name','description'=>'Description','created_at'=>'Created At'],
                         'actions' => [
-                                        'edit' => ['title'=>'Assign Role','route'=>'role.assign'],
+                                        'edit' => ['title'=>'Assign Permission','route'=>'role.assign'],
                                         'delete'=>['title'=>'Delete','route'=>'role.delete']
                                      ]
                     ];
@@ -90,7 +90,7 @@ class UserRoleController extends Controller{
         if(!empty($id) && $id==1){
             return redirect()->route('access.denied');
         }else{
-            $roleUser = User::where('role_id',$id)->get();
+            $roleUser = User::with('metas')->where('role_id',$id)->get();
             $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
             $roleData = compact("roleUser", "roleList" ,'id');
           return view('organization.role.roleUser', $roleData);

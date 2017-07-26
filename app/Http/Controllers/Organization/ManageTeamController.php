@@ -42,15 +42,19 @@ class ManageTeamController extends Controller
                    $model = Team::paginate($perPage);
               }
           }
+          // foreach($model as $key => $value){
+          //   $user_data = User::whereIn('id',json_decode($value->member_ids))->get();
+          //   $model[] = $user_data;
+          // }
           $datalist =  [
-                          'datalist'=>  $model,
-                          'showColumns' => ['title'=>'Title','created_at'=>'Created At'],
-                          'actions' => [
-                                          'edit' => ['title'=>'Edit','route'=>'editinfo.team' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.team']
-                                       ],
-                          'js'  =>  ['custom'=>['list-designation']],
-                          'css'=> ['custom'=>['list-designation']]
+                        'datalist'=>  $model,
+                        'showColumns' => ['title'=>'Title','created_at'=>'Created At'],
+                        'actions' => [
+                                        'edit' => ['title'=>'Edit','route'=>'editinfo.team' , 'class' => 'edit'],
+                                        'delete'=>['title'=>'Delete','route'=>'delete.team']
+                                     ],
+                        'js'  =>  ['custom'=>['list-designation']],
+                        'css'=> ['custom'=>['list-designation']]
                       ];
         // $id = null;
         if(!empty($id) || $id != null || $id != ''){

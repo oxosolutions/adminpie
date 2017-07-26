@@ -49,8 +49,8 @@
 				
 			</div>
 		</div>
-		<div class="col s12 m3 l3 pl-7" >
-			<a id="add_new" href="#" class="btn add-new display-form-button" >
+		<!-- <div class="col s12 m3 l3 pl-7" >
+			<a id="add_new" href="#" class="btn add-new display-form-button">
 				Add Note
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form " style="background-color: #ffc;">
@@ -65,9 +65,11 @@
 					</div>
 				</div>
 			</div>
-			
-		</div>
-		
+		</div> -->
+		<input type="hidden" name="_token" value="{{csrf_token()}}">
+		{{-- <input type="text" name="title" placeholder="Title "> --}}
+		@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Notes','button_title'=>'Save','class'=>'save-note','section'=>'notsec1']])
+	
 	</div>
 </div>
 <style type="text/css">

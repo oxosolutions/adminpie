@@ -52,4 +52,9 @@ class UsersMeta extends Model
    		}
    }
 
+   public static function getUserMeta($metaKey){
+		$model = self::where(['user_id'=>Auth::guard('org')->user()->id,'key'=>$metaKey])->first();
+		return @$model->value;
+   }
+
 }

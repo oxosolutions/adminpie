@@ -15,5 +15,11 @@ class JobOpening extends Model
 	       $this->table = Session::get('organization_id').'_openings';
 	   	}
    }
-   protected $fillable = [  'title', 'department', 'designation', 'skills', 'job_type', 'location', 'number_of_post', 'minimum_qualification', 'experience_month', 'experience_year', 'working_day', 'working_hour', 'office_hour_start', 'office_hour_end', 'package_type', 'minimum_package', 'maximum_package', 'minimum_age_for_apply', 'maximum_age_for_apply', 'interview_mode', 'opening_open', 'opening_close', 'email', 'phone', 'hr_name', 'description'];
+   protected $fillable = [ 'title', 'department', 'designation', 'skills', 'job_type', 'location', 'number_of_post', 'eligiblity'];
+   public function applications(){
+   	return $this->hasMany('App\Model\Organization\Application','opening_id','id');
+   }
+   public function opening_meta(){
+      return $this->hasMany('App\Model\Organization\JobOpeningMeta','opening_id','id');
+   }
 }

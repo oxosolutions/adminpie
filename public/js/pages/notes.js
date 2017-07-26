@@ -2,7 +2,7 @@ $(document).ready(function () {
 	$('.save-note').click(function(){
 		var data = {
 						title 	: $('input[name=title]').val(),
-						description : $('.materialize-textarea').val(),
+						description : $('textarea[name=description]').val(),
 						_token	: $('input[name=_token]').val()
 					};
 		$.ajax({
@@ -31,8 +31,8 @@ $(document).ready(function () {
 		$(this).attr('contenteditable',true);
 	});
 
-	$(document).on('keyup','.notes_title , .notes_desc',function(e){
-		if (e.keyCode == 13){
+	$(document).on('focusout','.notes_title , .notes_desc',function(e){
+		// if (e.keyCode == 13){
 			var title 		= $(this).parents('a').find('.notes_title').html();
 			var description = $(this).parents('a').find('.notes_desc').html();
 			var id = $(this).parents('a').find('input[name=id]').val();
@@ -52,23 +52,24 @@ $(document).ready(function () {
 						$('.notes_title , .notes_desc').attr('contenteditable',false);
 					}
 				});
-		}
+		// }
 	});
 
 	// $('#notes > ul > li').mouseover(function(){
 	// 	alert("hello");
 	// });
 
-	// $(document).on('click','delete_note',function(){
-	// 	var id = $(this).parents('a').find('input[name=id]').val();
-	// 		$.ajax({
-	// 			url		: route()+'/project/notes/edit',
-	// 			type	: 'POST',
-	// 			data	: id,
-	// 			success	: function(res){
-	// 				console.log("hello");
-	// 			}
-	// 		});
-	// });
+	$(document).on('click','.delete_note',function(){
+		var id = $(this).parents('a').find('input[name=id]').val();
+		$(this).parents('li').remove();
+			$.ajax({
+				url		: route()+'/project/notes/delete',
+				type	: 'POST',
+				data	: {id: id,_token : $('input[name=_token]').val()},
+				success	: function(res){
+					$('#notes').html(res);
+				}
+			});
+	});
 
 });

@@ -117,7 +117,7 @@ $(document).ready(function(){
 
 	// append div of new data
 	$('.priority-error').hide();
-	$(document).on('keydown','.todo-names',function(e){
+/*	$(document).on('keydown','.todo-names',function(e){
 		if(e.keyCode == 13){
 			if($('.select-dropdown').val() == 'Select Priority'){
 				$('.priority-error').show(function(){
@@ -144,6 +144,39 @@ $(document).ready(function(){
 			}
 			
 		}
+	});*/
+	
+	$(document).on('click','.add-new-todo',function(){
+		
+		if($('.select-dropdown').val() == 'Select Priority'){
+			$('.priority-error').show(function(){
+				$('.priority-error').delay(3000).fadeOut();
+			});
+		}else{
+			var array = {
+						project_id 	: $('.project_id').val(),
+						user_id 	: $('input[name=user_id]').val(),
+						title 		: $('.todo-names').val(),
+						priority	: $('.priority_select').val(),
+						_token		: $('.shift_token').val(),
+					};
+			// console.log(array);
+			$.ajax({
+				url:route()+'/project/todo/create',
+				type:'POST',
+				data: array,
+				success: function (res) {
+					console.log('hello');
+					$(this).parent().parent().find('.todo-names').hide();
+					Materialize.toast('Success',4000);
+					$('#list_todo').html(res);
+				}
+			});
+		
+			$(this).parents('.row').find('.todo-names').val('');
+		}
+			
+		
 	});
 	//add todo to database
 			

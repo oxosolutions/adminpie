@@ -193,13 +193,6 @@ class OrganizationController extends Controller
     }
 	public function save(Request $request)
 	{
-
-        //  foreach ($request['modules'] as $key => $value) {
-        //     echo $value.', ';
-        //  }
-        // dd($request['modules']);
-        // $moduleRequestData = $request['modules'];
-        Session::put('module_data',$request['modules']);
         $this->validate($request, $this->valid_fields);
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
@@ -224,9 +217,7 @@ class OrganizationController extends Controller
         $org_usr->user_type = json_encode([1]);
         $org_usr->password = Hash::make($request->password);
         $org_usr->save(); 
-        
-       
-       Session::flash('success', 'Organization create successfully');
+        Session::flash('success', 'Organization create successfully');
         return redirect()->route('list.organizations');
     }
 
@@ -255,6 +246,11 @@ class OrganizationController extends Controller
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_widget_permissons',
                                 '--schema'=>'role_id:integer, widget_id:integer:nullable, permisson:string:nullable'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_activity_logs',
+                                '--schema'=>'user_id:integer, name:string:nullable, slug:string:nullable'
                             ]);
     
 	// USERS
@@ -344,7 +340,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_employees',
-                                '--schema'=>'user_id:integer, employee_id:integer, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
+                                '--schema'=>'user_id:integer, employee_id:string:nullable, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0)'
                             ]);
 	//Department
 		Artisan::call('make:migration:schema',[
@@ -501,20 +497,56 @@ class OrganizationController extends Controller
 
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
+                                'name'=>'create_'.$org_id.'_visualizations',
+                                '--schema'=>'dataset_id:integer, name:string, description:text, created_by:string'
+                            ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
                                 'name'=>'create_'.$org_id.'_visualization_charts',
                                 '--schema'=>'visualization_id:integer, chart_title:text, primary_column:string, secondary_column:text, chart_type:string, status:string'
                             ]);
 
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
-                                'name'=>'create_'.$org_id.'_visualization_chart_metas',
+                                'name'=>'create_'.$org_id.'_visualization_chart_meta',
                                 '--schema'=>'visualization_id:integer, chart_id:integer, key:text, value:text'
                             ]);
 
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
-                                'name'=>'create_'.$org_id.'_visualization_metas',
+                                'name'=>'create_'.$org_id.'_visualization_meta',
                                 '--schema'=>'visualization_id:integer, key:text, value:text'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_applicants',
+                                '--schema'=>'user_id:integer, status:integer:default(1)'
+                            ]);
+         Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_applicant_metas',
+                                '--schema'=>'applicant_id:integer, key:string, value:text' 
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_openings',
+                                '--schema'=>'title:string:nullable, minimum_qualification:string:nullable, eligiblity:string:nullable,department:string:nullable, designation:string:nullable, skills:string:nullable, job_type:string:nullable, location:string:nullable, number_of_post:string:nullable'
+                            ]);
+          Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_opening_meta',
+                                '--schema'=>'opening_id:integer, key:string, value:text'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_applications',
+                                '--schema'=>'applicant_id:integer, opening_id:integer, status:integer:default(1)'
+                            ]);
+         Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_application_meta',
+                                '--schema'=>'application_id:integer, key:string, value:text'
                             ]);
 		Artisan::call('migrate');
 
@@ -528,12 +560,13 @@ class OrganizationController extends Controller
             $roleData[] =   ['name'=>'Super Admin', 'description'=>'organization admin', 'status'=>1];
             $roleData[] =   ['name'=>'Employee', 'description'=>'Employee', 'status'=>1];
             $roleData[] =   ['name'=>'Client', 'description'=>'client', 'status'=>1];
+            $roleData[] =   ['name'=>'Applicant', 'description'=>'Applicant', 'status'=>1];
             foreach ($roleData as $key => $value) {
                $roles = new Role();
                $roles->fill($value);
                $roles->save();
             }
-        $org_setting =[['key'=>'employee_role', 'value'=>2],['key'=>'client_role', 'value'=>3]];
+        $org_setting =[['key'=>'employee_role', 'value'=>2],['key'=>'client_role', 'value'=>3], ['key'=>'applicant_role', 'value'=>4]];
         org_setting::insert($org_setting);
     }	
 

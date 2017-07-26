@@ -10,7 +10,7 @@ class VisualizationMeta extends Model
 
 	   	if(!empty(Session::get('organization_id')))
 	   	{
-	       $this->table = Session::get('organization_id').'_visualization_metas';
+	       $this->table = Session::get('organization_id').'_visualization_meta';
 	   	}
    }
 }

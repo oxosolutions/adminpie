@@ -1,6 +1,15 @@
 @extends('layouts.main')
 @section('content')
-
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Import Attendance',
+	'add_new' => '+ Add Designation'
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
 
 
 
@@ -41,20 +50,20 @@
 		</div>
 	{!!Form::close()!!}
 </div> --}}
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 <div class="row">
 	{!! Form::open(['route'=>'upload.attendance', "files"=>true , 'class'=> 'form-horizontal','method' => 'post'])!!}
 	<div class="row" style="padding:10px 0px">
-		<div class="col l3" style="line-height: 30px">
-			Enter title
-		</div>
-		<div class="col l9">
+		
+		<div class="col l12 aione-field-wrapper">
 			{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
-			{!!Form::text('title',null,['class' => 'aione-setting-field','id'=>'attendence-title','style'=>'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px'])!!}
+			{!!Form::text('title',null,['class' => 'aione-field','id'=>'attendence-title','placeholder'=>'Enter title'])!!}
 		</div>
 	</div>
 
 	<div class="row pv-10" >
-		<div class="col l3" style="line-height: 46px">
+		{{-- <div class="col l3" style="line-height: 46px">
 			Upload
 		</div>
 		<div class="col l9">
@@ -64,19 +73,23 @@
 					<input type="file" name="attendance_file">
 				</div>
 				<div class="file-path-wrapper">
-					{{-- <input class="file-path validate" type="text"> --}}
 					{!!Form::text('file',null,['class' => 'file-path validate'])!!}
 				</div>
 			</div>	
-		</div>
+		</div> --}}
+		{!!Form::file('file',null,['class'=>'no-margin-bottom aione-field file-path validate','placeholder'=>'Select File to Upload','style'=>'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px'])!!}
 	</div>
 	<div  class="row">
 		<button class="btn blue" type="submit" name="action" style="margin-top: 10px;">Upload Attendance
-		<i class="material-icons right">save</i>
+		
 		</button>
 	</div>
 	{!!Form::close()!!}
 </div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <style type="text/css">
 	
 		.aione-setting-field:focus{

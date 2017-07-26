@@ -34,7 +34,7 @@ class DatasetController extends Controller
         $dataset =  [
                         'datalist'=>$datasetList,
                         'showColumns' => ['dataset_name'=>'Name','dataset_table'=>'Dataset Table','description'=>'Description','created_at'=>'Created At'],
-                        // 'actions' => ['edit'=>'test.route','view'=>'view.list','delete'=>'delete.item']
+                        'actions' => ['view'=>['route'=>'view.dataset','title'=>'View']]
                     ];
     	return view('organization.dataset.list',$dataset);
     }
@@ -285,7 +285,7 @@ class DatasetController extends Controller
             DB::table($tableName)->insert($finalArray);
             if($tableNameFrom == null){
                 $model = new Dataset;
-                $model->dataset_table = $tableName;
+                $model->dataset_table = 'ocrm_'.$tableName;
                 $model->dataset_name = $origName;
                 $model->dataset_file = $filePath;
                 $model->dataset_file_name = $orName;
@@ -429,5 +429,13 @@ class DatasetController extends Controller
             Session::flash('message','Unable to create dataset!');
             throw $e;
         }
+    }
+    public function viewDataset()
+    {
+       return view('organization.dataset.view');
+    }
+
+    public function updateRecords(Request $request){
+        dd($request->all());
     }
 }

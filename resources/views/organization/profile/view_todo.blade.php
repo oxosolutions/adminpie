@@ -7,7 +7,7 @@
 			<div id="projects" class="projects list-view">
 				<div class="row">
 					<div class="col s12 m9 l12 pr-7" >
-						<div class="row no-margin-bottom">
+						<div class="row">
 							<div class="col s12 m12 l6  pr-7 tab-mt-10" >
 								<!-- <input class="search aione-field" placeholder="Search" /> -->
 								<nav>

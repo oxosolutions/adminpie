@@ -22,7 +22,7 @@
     {{-- <script type="text/javascript" src="{{ asset('assets/js/materialize.min.js')}}"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
     <script type="text/javascript" src="{{ asset('js/common.js?')}}<?php echo rand(4524,28282); ?>"></script>
-    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js"></script>
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
 	<script type="text/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/sweetalert/dist/sweetalert.css') }}">

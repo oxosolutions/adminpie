@@ -4,6 +4,7 @@ namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
+use App\Model\Organization\User;
 
 class Team extends Model
 {
@@ -23,8 +24,11 @@ class Team extends Model
    }
    public static function getTeamById($data=null){
    // dd($data);
-         $model = self::where('id',$data)->get();
+      $model = self::where('id',$data)->get();
       return $model;
-
+   }
+   public function getTeamMembers()
+   {
+      return $this->hasMany(App\Model\Organization\User , 'member_ids','id');
    }
 }

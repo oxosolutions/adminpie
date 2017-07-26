@@ -68,6 +68,8 @@
                             <option value="password">Password</option>
                             <option value="datepicker">Datepicker</option>
                             <option value="timepicker">Timepicker</option>
+                            <option value="switch">Switch</option>
+                            <option value="editor">Editor</option>
                         </optgroup>
                         <optgroup label="Content">
                             <option value="image">Image</option>

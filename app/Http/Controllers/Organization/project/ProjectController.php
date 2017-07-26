@@ -382,7 +382,7 @@ class ProjectController extends Controller
     }
 
     public function updateTeam(Request $request, $id){
-
+     
         foreach($request->except(['_token','action']) as $key => $value){
             $model = PM::firstOrNew(['project_id'=>$id,'key'=>$key]);
             $model->project_id = $id;

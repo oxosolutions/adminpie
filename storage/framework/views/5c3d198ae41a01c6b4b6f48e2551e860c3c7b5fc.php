@@ -5,40 +5,27 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Attendence',
-	'add_new' => '+ Import Attendence'
+	'add_new' => '+ Import Attendence',
+	'route' => 'upload.attendance',
+	'second_button_route' => 'hr.attendance',
+	'second_button_title' => 'Mark Attendence'
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
-<script type="text/javascript">
-	
-</script>
 <?php if(Session::has('success')): ?>
 <p class="alert"><?php echo e(Session::get('success')); ?></p>
 <?php endif; ?>
-
-
 <?php if(Session::has('error')): ?>
 <p class="alert"><?php echo e(Session::get('error')); ?></p>
 <?php endif; ?>
-	<div id="att_data" class="card" style="margin-top: 0px;padding:10px">
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+	<div id="att_data" >
 		<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
 			
 		<div id="projects" class="projects list-view">
-			<div class="row ">
-				 			<div class="col l6">
- 						
-				</div>
-				<div class="col s12 m12 l6 right-align">
-				<?php if(check_route_permisson('hrm/attendance/import')==true): ?>
-					<a  href="<?php echo e(route('import.form.attendance')); ?>" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
-						Import Attendence
-					</a>
-				<?php endif; ?>
-					<a  href="<?php echo e(route('hr.attendance')); ?>" class="btn" style="width: 50%;margin-top: 4px;background-color: #0288D1">
-						Mark Attendence
-					</a>
-				</div>
-			</div>
+		
 		</div>
 	
 		<div id="main" class="main-container">
@@ -46,6 +33,11 @@
 		</div>
 		
 	</div>
+
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<style type="text/css">
 #att_data .active
 {
@@ -66,11 +58,7 @@
 	font-size: 25px;
 
 }
-#att_data .main-container
-{
-	border-top:1px solid #e8e8e8;
-	margin-top:15px;
-}
+
 #att_data .design-style
 {
 	font-size: 18px;
@@ -85,12 +73,12 @@
 	border-radius: 0px;
 	box-shadow: none;
 }
-#att_data a{
-	color:black;
+#att_data .nav{
+	color: #757575;
 }
 #att_data .nav:hover
 {
-	color:#2196F3;
+	color:#505050;
 
 }
 /*Div table*/
@@ -98,17 +86,17 @@
 #att_data .row
 {
 	width:100%;
-	border: none;
+	
 }
 #att_data .content
 {
-	width:10%;
+	width:12%;
 	float:left;
 	background-color: white;
 } 
 #att_data .column
 {
-	width: 2.66%;
+	width: 2.50%;
     float: left;
     border-top:0.1px solid #e8e8e8;
     border-left:0.1px solid #e8e8e8;
@@ -135,21 +123,7 @@
 	$(document).ready(function(){
 		attendance_list();
 
-		$(".monthly").click(function(){
-			$(this).addClass("active");
-			$(".weekly").removeClass("active");
-			$(".daily").removeClass("active");
-		});
-			$(".weekly").click(function(){
-			$(this).addClass("active");
-			$(".monthly").removeClass("active");
-			$(".daily").removeClass("active");
-		});
-			$(".daily").click(function(){
-			$(this).addClass("active");
-			$(".monthly").removeClass("active");
-			$(".weekly").removeClass("active");
-		});
+	
 
 	});
 	function showHide(show)
@@ -166,6 +140,7 @@
 					
 					$("#main").html(res);
 					console.log('data sent successfull');
+					$(".monthly").addClass("aione-active");
 					$("#week ,#days").hide();
 					$('select').material_select();
 				}
@@ -194,14 +169,21 @@
 					if(date)
 					{
 						$("#days").show();
+						console.log('day');
+						$(".daily").addClass("aione-active");
+
 					}else if(week){
 						$("#week").show();
+						console.log('week');
+						$(".weekly").addClass("aione-active");
 					}else{
 						$("#month").show();
+						console.log('month');
+						$(".monthly").addClass("aione-active");
 					}
 					$('select').material_select();
 				
-					console.log('data sent successfull');
+					console.log('data sent successfull ');
 				}
 			});
 		}
@@ -241,7 +223,7 @@
 			$('.editable h5 ,.editable p').removeClass('edit-fields');
 		});
 
-function unlock(month, year)
+	function unlock(month, year)
 		{
 			var datas ={};
 			datas['month'] =month;

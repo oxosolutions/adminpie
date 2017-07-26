@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-@include('organization.profile._tab2')
+
 	<div class="row" style="border:1px solid #e8e8e8;">
 		
 		<div class="row" style="margin-top: 50px">

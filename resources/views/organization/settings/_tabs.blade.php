@@ -7,7 +7,7 @@
   
 @endphp
 
-<div class="col l12" style="margin-top: 14px"  >
+<div class="col l12"  >
 
     <ul class="aione-tabs">
         <li class="tab col aione-active {{strpos($link, 'org')?'aione-active':''}}"><a href="{{Route('setting.org')}}">Basic Settings</a></li>

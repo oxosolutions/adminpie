@@ -5,8 +5,19 @@
 	Route::group(['domain' => 'manage.adminpie.com'], function () {
 		Route::group(['namespace'=>'Admin'], function(){
 			Route::group(['middleware' => 'auth.admin'], function(){
+//Activity 
+				Route::get('activities', ['as'=>'activities' , 'uses'=>'ActivityTemplateController@index']);
+				Route::match(['get','post'], 'activity/template', ['as'=>'activity.template' , 'uses'=>'ActivityTemplateController@create']);
+				Route::match(['get','post'], 'activity/edit', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
+				Route::get('activity/delete/{id?}', ['as'=>'activity.delete' , 'uses'=>'ActivityTemplateController@delete']);
+//Notification
+			Route::match(['get','post'], 'notification/template', ['as'=>'notification.template' , 'uses'=>'ActivityTemplateController@create_notification']);
+// 				
 				//Widget Route
+				//
+				
 				Route::get('widgets', ['as'=>'index.widget' , 'uses'=>'WidgetController@index']);
+
 				Route::get('widget/delete/{id}', ['as'=>'delete.widget' , 'uses'=>'WidgetController@delete']);
 
 				Route::match(['get', 'post'],'widget/create', ['as'=>'create.widget' , 'uses'=>'WidgetController@create']);
@@ -22,6 +33,7 @@
 				Route::match(['get','post'],'/module/edit/{id?}',['as'=>'edit.module' , 'uses'=>'ModuleController@edit']);
 				Route::post('/module/update/{id}',['as'=>'update.module' , 'uses'=>'ModuleController@update']);
 				Route::get('/module/delete/{id}',['as'=>'delete.module' , 'uses'=>'ModuleController@delete']);
+				Route::get('/module/style',['as'=>'style.module' , 'uses'=>'ModuleController@style']);
 				Route::get('/modules',['as'=>'list.module' , 'uses'=>'ModuleController@listModule']);
 				Route::get('module/add_route_row',['as'=>'route_row.module' , 'uses'=>'ModuleController@add_route_row']);
 				Route::get('module/route/delete/{id}',['as'=>'delete.route' , 'uses'=>'ModuleController@delete_route']);
@@ -118,9 +130,17 @@
 
 	/******************************* All Routes For Organization ************************************/
 		Route::group(['namespace'=>'Organization'], function(){
-			Route::get('logout',['as'=>'org.logout','uses'=>'Auth\LoginController@logout']);
+			Route::match(['get','post'],'apply/{id?}',['as'=>'apply', 'uses'=>'hrm\ApplicantController@apply']);
+
+			Route::get('jobs',['as'=>'openingss', 'uses'=>'hrm\JobOpeningController@public_view_jobs']);
+			Route::get('logout',			['as'=>'org.logout','uses'=>'Auth\LoginController@logout']);
 			Route::get('login/{id?}',		['as'=>'org.login','uses'=>'Auth\LoginController@showLoginForm']);
-			Route::post('login',	['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
+			Route::get('login-v1/{id?}',	['as'=>'org.login-v1','uses'=>'Auth\LoginController@showLoginFormv1']);
+			Route::post('login',			['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
+			Route::get('forgot-password',	['as'=>'forgot.password','uses'=>'Auth\LoginController@forgotpassword']);
+			Route::post('forgot',			['as'=>'forgot','uses'=>'Auth\LoginController@forgotMail']);
+			Route::get('reset-password/UfcZNQ0sU5w52FoXk28', ['as'=>'edit.password' ,'uses' => 'Auth\LoginController@changePass']);
+			Route::post('update-password', ['as'=>'update.pass' ,'uses' => 'Auth\LoginController@updatePass']);
 			
 			Route::group(['middleware' => ['auth.org']], function(){
 
@@ -144,6 +164,7 @@
 				Route::get('account/notes/list',	['as'=>'account.notes.list.ajax','uses'=>'project\NotesController@listNotes']);
 				Route::post('account/notes/save',	['as'=>'save.account.notes','uses'=>'project\NotesController@createNotes']);
 				Route::post('account/notes/edit',	['as'=>'edit.account.notes','uses'=>'project\NotesController@edit']);
+				Route::post('account/notes/delete',	['as'=>'delete.account.notes','uses'=>'project\NotesController@delete']);
 
 				Route::post('account/tasks/status/update',['as'=>'task.status.update','uses'=>'account\TasksController@changeStatus']);
 				Route::get('account/tasks',			['as'=>'account.tasks','uses'=>'account\TasksController@index']);
@@ -198,9 +219,7 @@
 					Route::get('/performance',['as'=>'account.performance','uses'=>function(){
 						return view('organization.profile.performance');
 					}]);
-					Route::get('/projects',[ 'as'=>'account.projects','uses'=>function(){
-						return view('organization.profile.projects');
-					}]);
+					Route::get('/projects/{id?}',[ 'as'=>'account.projects','uses'=>'AccountController@listProjects']);
 					
 					Route::get('/salary',['as'=>'account.salary','uses'=>function(){
 						return view('organization.profile.salary');
@@ -242,7 +261,7 @@
 
 					Route::get('log',['as'=>'list.log', 'uses'=>'LogsystemController@viewLog']);
 					Route::post('log',['as'=>'search.log', 'uses'=>'LogsystemController@search_log']);
-	
+					Route::get('application/{id}',['as'=>'applied.application', 'uses'=>'JobOpeningController@applied_application']);
 					
 					Route::group(['middleware'=>'log'],function(){
 
@@ -273,6 +292,8 @@
 						Route::get('openings',['as'=>'list.opening', 'uses'=>'JobOpeningController@index']);
 						Route::match(['get','post'],'opening/update/{id?}',['as'=>'opening.update', 'uses'=>'JobOpeningController@update']);
 						Route::get('opening/delete/{id}',['as'=>'delete.opening', 'uses'=>'JobOpeningController@destroy']);
+						
+						Route::get('application/apply/{id}',['as'=>'application', 'uses'=>'JobOpeningController@application']);
 
 						Route::any('employee/leave/{id?}',['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@index']);
 						//Route::get('employee/leave',['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@index']);
@@ -346,7 +367,7 @@
 							Route::get('/holiday/delete/{id}',	['as' => 'delete.holiday' , 'uses' => 'HolidayController@deleteHoliday']);
 
 						//Application
-							Route::get('/applications',		['as' => 'applications' , 'uses' => 'ApplicationController@index']);
+							// Route::get('/applications',		['as' => 'applications' , 'uses' => 'ApplicationController@index']);
 
 						//Mail
 							Route::get('/mails',		['as' => 'mails' , 'uses' => 'MailController@index']);
@@ -414,6 +435,7 @@
 				Route::get('project/notes/{id}',	['as'=>'notes.project','uses'=>'project\NotesController@index']);
 				Route::post('project/notes/save',	['as'=>'save.notes','uses'=>'project\NotesController@createNotes']);
 				Route::post('project/notes/edit',	['as'=>'edit.notes','uses'=>'project\NotesController@edit']);
+				Route::post('project/notes/delete',	['as'=>'delete.account.notes','uses'=>'project\NotesController@delete']);
 				// end notes
 
 
@@ -477,8 +499,10 @@
 				Route::group(['namespace' => 'dataset'],function(){
 					Route::get('/datasets',['as' => 'list.dataset','uses' => 'DatasetController@listDataset']);
 					Route::get('/dataset/import',['as' => 'import.dataset','uses' => 'DatasetController@importDataset']);
+					Route::get('/dataset/{id}',['as' => 'view.dataset','uses' => 'DatasetController@viewDataset']);
 					Route::post('/import/dataset', ['as'=>'upload.dataset','uses'=>'DatasetController@uploadDataset']);
 					Route::post('/dataset/save',['as'=>'save.dataset','uses'=>'DatasetController@store']);
+					Route::post('/dataset/update/{id}',['as'=>'update.dataset','uses'=>'DatasetController@updateRecords']);
 				});
 				Route::group(['prefix'=>'cms','namespace' => 'cms'],function(){
 					//Pages 
@@ -516,12 +540,20 @@
 
 				Route::group(['namespace'=>'users'],function(){
 					//Users
-					Route::get('/users', 			['as'=>'list.user','uses'=>'UsersController@index']);
-					Route::post('/user/store',		['as'=>'store.user','uses'=>'UsersController@store']);
-					Route::get('/user/edit/{id}',	['as'=>'edit.user','uses'=>'UsersController@edit']);
-					Route::get('/user/{id}',		['as'=>'info.user','uses'=>'UsersController@user_info']);
-					Route::post('/user/profile/update/{id}',['as'=>'save.user.profile','uses'=>'UsersController@user_meta']);
-					Route::post('/user/update',		['as'=>'update.user','uses'=>'UsersController@update']);
+					Route::group(['middleware'=>'role'],function(){
+						Route::get('/users', 			['as'=>'list.user','uses'=>'UsersController@index']);
+						
+					});
+						Route::post('/user/store',		['as'=>'store.user','uses'=>'UsersController@store']);
+						Route::get('/user/edit/{id}',	['as'=>'edit.user','uses'=>'UsersController@edit']);
+						Route::get('/user/{id}',		['as'=>'info.user','uses'=>'UsersController@user_info']);
+						Route::get('/delete/{id}',		['as'=>'delete.user','uses'=>'UsersController@deleteUser']);
+						Route::get('/changeStatus/{id}',['as'=>'change.user.status','uses'=>'UsersController@changeStatus']);
+						Route::post('/user/profile/update/{id}',['as'=>'save.user.profile','uses'=>'UsersController@user_meta']);
+						Route::post('/user/update',		['as'=>'update.user','uses'=>'UsersController@update']);
+						Route::POST('/change/password',	['as'=>'change.pass' , 'uses' => 'UsersController@changePassword']);
+						Route::get('/sidebar/status/{status}',['as'=>'sidebar.active.inactive','uses'=>'UsersController@saveSideBarActiveStats']);
+					
 				});
 			});
 		// visualization
@@ -539,6 +571,9 @@
 
 			Route::post('/visualization/update/{id}',['as'=>'update.visualization','uses'=>'visualization\VisualisationController@updateVizDetails']);
 
+			Route::match(['get','post'],'/visualization/view/{id}',['as'=>'visualization.view','uses'=>'visualization\VisualisationController@embedVisualization']);
+			Route::post('/visualization/settings/save/{id}',['as'=>'visualization.settings.save','uses'=>'visualization\VisualisationController@saveVisualizationSettings']);
+
 		});
 
 	Route::get('404',['as' => 'demo5','uses' => function(){
@@ -546,6 +581,9 @@
 	}]);
 	Route::get('access_denied',['as' => 'access.denied','uses' => function(){
 		return View::make('errors.accessdenied');
+	}]);
+	Route::get('email-template',['as' => 'email.template','uses' => function(){
+		return View::make('organization.login.reset-email-template');
 	}]);
 	
 	/****************************************** All Routes For Organization *************************************************/

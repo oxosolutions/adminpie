@@ -1,23 +1,26 @@
-<div class="col l12">
+<div class="col l12 mt-14">
 	<div class="fade-background">
 	</div>
 	<div id="projects" class="projects list-view">
 	    <div class="row">
 			<div class="col s12 m9 l9 pr-7" >
-				<div class="row no-margin-bottom">
-					<div class="col s12 m12 l6  pr-7 tab-mt-10" >
+				<div class="row mb-0">
+					<div class="col s12 m12 l6  pr-7 tab-mt-10 aione-field-wrapper" >
 						<!-- <input class="search aione-field" placeholder="Search" /> -->
-						<nav>
+						{{-- <nav>
 						    <div class="nav-wrapper">
 						      	<form>
 							        <div class="input-field">
 							          	<input id="search" type="search" required style="background-color: #ffffff">
 							          	<label class="label-icon" for="search" style=""><i class="material-icons icon-search" >search</i></label>
-							          	<a href=""><i class="material-icons icon-close">close</i></a>
+							          	<i class="material-icons icon-close">close</i>
 							        </div>
 						      	</form>
 						    </div>
-						</nav>
+						</nav> --}}
+						<div class="aione-filter aione-search-field">
+							<input id="search" class="aione-field" type="search" placeholder="Search" name="search" >
+						</div>
 					</div>
 					<div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10">
 						<div class="row aione-sort" style="">
@@ -26,7 +29,7 @@
 								<option value="1">Name</option>
 								<option value="2">Date</option>
 							</select>
-							<div class="col alpha-sort" style="width: 25%;padding-left:7px;">
+							<div class="col alpha-sort" style="">
 								<a href="javascript:;" class="sort" ><i class="fa fa-sort-alpha-asc arrow_sort white" ></i></a>
 							</div>
 						</div>
@@ -49,18 +52,11 @@
 				</div>
 				<div class="list " id="list">
 					<div class="card-panel shadow white z-depth-1 hoverable project"  >
-						<div class="row valign-wrapper no-margin-bottom">
-							<div class="col l1 s2 center-align project-image-wrapper">
-								
-								{{-- <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="" class="project-image circle responsive-img">  --}}
-								<div class="defualt-logo-todo">
-									x
-								</div>
-								</a>
-							</div>					
-							<div class="col l11 s10 editable " >
-								<div class="row m-0 valign-wrapper">
-									<div class="col s8 m8 l8">
+						<div class="row valign-wrapper mb-0">
+							
+							<div class="col l12 s10 editable " >
+								<div class="row m-0 valign-wrapper ">
+									<div class="col s6 m6 l6 aione-field-wrapper pr-7">
 										@php
 											$url = $_SERVER['REQUEST_URI'];
 											$pathArray = explode('/',$url);
@@ -70,19 +66,22 @@
 											<input type="hidden" name="project_id" value="{{@$pathArray[3]}}" class="project_id" >
 										<input type="hidden" name="user_id" value="{{Auth::guard('org')->user()->id}}" class="user_id" >
 											<h5 class="project-title black-text flow-text truncate line-height-35">
-												<input type="text" name="todo-name" style="margin-bottom: 0px;font-size: 24px" placeholder="What need to be done?" class="todo-names">
+												<input type="text" name="todo-name"  placeholder="What need to be done?" class="todo-names aione-field mb-0">
 											</h5>
 									</div>
 									
-									<div class="col s4 m4 l4 right-align ph-20 priority_level">
-										<select >
+									<div class="col s3 m3 l3 right-align ph-20 priority_level pr-7">
+										<select class="browser-default priority_select">
 											<option disabled selected>Select Priority</option>
 											<option value="Low">Low</option>
 											<option value="Medium">Medium</option>
 											<option value="High">High</option>
 									    </select>
-										<div class="priority-error" style="position: absolute;border: 1px solid #e8e8e8;background-color: #e8e8e8;padding:10px;box-shadow: 3px 5px 17px #e8e8e8;margin-top: 10px;">Please Select Priority ..!
+										<div class="priority-error" >Please Select Priority ..!
 										</div>
+									</div>
+									<div class="col s3 m3 l3">
+										<button class="btn blue add-new-todo">Add</button>
 									</div>
 								</div>
 							</div>
@@ -90,8 +89,8 @@
 							
 					</div>
 					<div id="list_todo"></div>
-					<div style="padding: 20px 0px;display: none;" class="empty-records">
-						<div style="padding: 20px;text-align: center;font-size: 28px;color: #e8e8e8;border:2px dashed  #e8e8e8; ">
+					<div class="empty-records">
+						<div>
 							<span>No Result Found</span>
 						</div>
 					</div>
@@ -105,7 +104,7 @@
 				<div id="add_new_wrapper" class="add-new-wrapper add-form ">
 					
 
-					<div class="row no-margin-bottom">
+					<div class="row">
 						<div class="col s12 m2 l12 aione-field-wrapper">
 							<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Note Title" />
 						</div>
@@ -123,95 +122,125 @@
 				
 
 				</div>
-				<div class="card" style="padding: 12px 0px 0px 0px;margin: 0px" >
-					<center style="border-bottom: 1px solid #e8e8e8;padding-bottom: 12px;">Categories</center>
-					<div>
-						<div>
-
-							<div class="row waves-effect " style="padding:5px 10px;width: 100%;">
-								<label class="">
-									<div class="col l10" style="font-size: 15px;color: black;line-height: 30px">
-										All
-									</div>
-									<div class="col l2 ">
-										<input name="categories" type="radio" id="all" />
-										<label for="all"></label>
-									</div>
-								</label>
+				<div class="card filters">
+					<center>Categories</center>
+					<div class="row waves-effect">
+						<label class="">
+							<div class="col l10 label">
+								All
 							</div>
-							
-							<div class="divider"></div>
-							<div class="row waves-effect" style="padding:5px 10px;width: 100%;">
-								<label>
-									<div class="col l10" style="font-size: 15px;color: black;line-height: 30px">
-										Completed
-									</div>
-									<div class="col l2 ">
-										<input name="categories" type="radio" id="completed" />
-										<label for="completed"></label>
-									</div>
-								</label>
+							<div class="col l2 ">
+								<input name="categories" type="radio" id="all" />
+								<label for="all"></label>
 							</div>
-							<div class="divider"></div>
-							<div class="row waves-effect" style="padding:5px 10px;width: 100%;">
-								<label>
-									<div class="col l10" style="font-size: 15px;color: black;line-height: 30px">
-										In-Completed
-									</div>
-									<div class="col l2 ">
-										<input name="categories" type="radio" id="in-completed" />
-										<label for="in-completed"></label>
-									</div>
-								</label>
+						</label>
+					</div>
+					<div class="divider"></div>
+					<div class="row waves-effect" >
+						<label>
+							<div class="col l10 label" >
+								Completed
 							</div>
-						</div>
+							<div class="col l2 ">
+								<input name="categories" type="radio" id="completed" />
+								<label for="completed"></label>
+							</div>
+						</label>
+					</div>
+					<div class="divider"></div>
+					<div class="row waves-effect" >
+						<label>
+							<div class="col l10 label" >
+								In-Completed
+							</div>
+							<div class="col l2 ">
+								<input name="categories" type="radio" id="in-completed" />
+								<label for="in-completed"></label>
+							</div>
+						</label>
 					</div>
 				</div>
-				<div class="card" style="padding: 12px 0px 0px 0px;margin: 0px;margin-top: 14px" >
-					<center style="border-bottom: 1px solid #e8e8e8;padding-bottom: 12px;">Priority</center>
-					<div >
-						<div>
-
-							<div class="row waves-effect" style="padding:5px 10px; width: 100%;">
-								<label>
-									<div class="col l10" style="font-size: 15px;color: black;line-height: 30px">
-										High
-									</div>
-									<div class="col l2">
-										<input name="priority" type="radio" id="high" />
-										<label for="high"></label>
-									</div>
-								</label>
+				<div class="card filters"  >
+					<center>Priority</center>
+					<div class="row waves-effect" >
+						<label>
+							<div class="col l10 label" >
+								High
 							</div>
-							
-							<div class="divider"></div>
-							<div class="row waves-effect" style="padding:5px 10px; width: 100%;">
-								<label>
-									<div class="col l10" style="font-size: 15px;color: black;line-height: 30px">
-										medium
-									</div>
-									<div class="col l2 ">
-										<input name="priority" type="radio" id="medium" />
-										<label for="medium"></label>
-									</div>
-								</label>
+							<div class="col l2">
+								<input name="priority" type="radio" id="high" />
+								<label for="high"></label>
 							</div>
-							<div class="divider"></div>
-							<div class="row waves-effect" style="padding:5px 10px; width: 100%;">
-								<label>
-									<div class="col l10" style="font-size: 15px;color: black;line-height: 30px">
-										low
-									</div>
-									<div class="col l2 ">
-										<input name="priority" type="radio" id="low" />
-										<label for="low"></label>
-									</div>
-								</label>
+						</label>
+					</div>
+					<div class="divider"></div>
+					<div class="row waves-effect" >
+						<label>
+							<div class="col l10 label">
+								medium
 							</div>
-						</div>
+							<div class="col l2 ">
+								<input name="priority" type="radio" id="medium" />
+								<label for="medium"></label>
+							</div>
+						</label>
+					</div>
+					<div class="divider"></div>
+					<div class="row waves-effect" >
+						<label>
+							<div class="col l10 label">
+								low
+							</div>
+							<div class="col l2 ">
+								<input name="priority" type="radio" id="low" />
+								<label for="low"></label>
+							</div>
+						</label>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+<style type="text/css">
+	.mt-14{
+		margin-top: 14px;
+	}
+	.mb-0{
+		margin-bottom: 0px;
+	}
+	.alpha-sort{
+		width: 25%;padding-left:7px;
+	}
+	.todo-names{
+		width: 99% !important
+	}
+	.priority-error{
+		position: absolute;border: 1px solid #e8e8e8;background-color: #e8e8e8;padding:10px;box-shadow: 3px 5px 17px #e8e8e8;margin-top: 10px;
+	}
+	.empty-records{
+		padding: 20px 0px;display: none;
+	}
+	.empty-records > div{
+	padding: 20px;text-align: center;font-size: 28px;color: #e8e8e8;border:2px dashed  #e8e8e8;
+	} 
+	.filters{
+		padding: 12px 0px 0px 0px;margin: 0px;margin-bottom: 14px;
+	}
+	.filters center{
+		border-bottom: 1px solid #e8e8e8;padding-bottom: 12px;
+	}
+	.filters .row{
+		margin-bottom: 0px;width: 100%;padding: 5px;
+	}
+	.filters .label{
+		font-size: 15px;color: black;line-height: 30px
+	}
+	.mb-0{
+		margin-bottom: 0px !important;
+	}
+	.add-new-todo{
+		width: 100%;    height: 48px;
+    line-height: 48px;
+	}
+</style>

@@ -1,14 +1,18 @@
 
 <?php $__env->startSection('content'); ?>
-
-<div>
-  <div class="card" style="margin-top: 0px;padding: 14px">  
-
- 
-    <div class="row">
-        <h5 style="margin-top: 0px">Add new Form</h5>
-
-    </div>
+<?php 
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'no',
+    'show_navigation' => 'yes',
+    'page_title' => 'Add New Form',
+    'add_new' => '+ Add Designation'
+); 
+ ?>
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  
     <div class="row">
     <?php echo Form::open([ 'method' => 'POST', 'route' => 'create.forms' ,'class' => 'form-horizontal']); ?>
 
@@ -17,7 +21,7 @@
                Form name
            </div>
            <div class="col l9">
-              
+             
                 <?php echo Form::text('form_title',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ']); ?>
 
                 
@@ -57,8 +61,11 @@
      
     <?php echo Form::close(); ?> 
     </div>
-    
-</div>
+    <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+    <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <style type="text/css">
     .h-30{
         height: 30px;
@@ -76,7 +83,7 @@
         box-shadow: none !important;
     }
 </style>
-</div>
+
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('admin.layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

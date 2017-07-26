@@ -1,7 +1,7 @@
 
 <?php if(@$options['type'] == 'inset'): ?>
 	<div class="col s12 m2 l12 aione-field-wrapper">
-			<?php echo Form::textarea(str_replace(' ','_',strtolower($collection->field_title)),null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'rows'=>'8','style'=>'height: 100px']); ?>
+			<?php echo Form::textarea(str_replace(' ','_',strtolower($collection->field_title)),null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'rows'=>'8','style'=>'height: 100px;margin-bottom:10px']); ?>
 
 	</div>
 	<div class="error-red">	

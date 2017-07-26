@@ -1,4 +1,5 @@
 <?php $__env->startSection('content'); ?>
+<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <div id="projects" class="projects list-view">
 	<div class="row">
 

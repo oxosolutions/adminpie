@@ -53,4 +53,7 @@ class User extends Authenticatable
 
         return $this->hasMany('App\Model\Organization\EmployeeMeta','employee_id','user_id');
     }
+    public function client_rel(){
+      return $this->hasOne('App\Model\Organization\Client','user_id','id');
+    }
 }

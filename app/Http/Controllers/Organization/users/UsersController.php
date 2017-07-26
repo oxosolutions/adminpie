@@ -8,7 +8,7 @@ use App\Model\Organization\User as org_user;
 use App\Model\Organization\Designation;
 use App\Model\Organization\UsersMeta;
 use App\Repositories\User\UserRepositoryContract;
-
+use Auth;
 use Hash;
 use Session;
 
@@ -29,7 +29,7 @@ class UsersController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 5;
+            $perPage = 10;
           }
         $sortedBy = @$request->sort_by;
           if($request->has('search')){
@@ -47,10 +47,12 @@ class UsersController extends Controller
           }
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status'],
                           'actions' => [
-                                          'edit'    => ['title'=>'Edit','route'=>'info.user','class'=>'edit'],
-                                          // 'delete'  => ['title'=>'Delete','route'=>'delete.department']
+                                          'edit'   => ['title'=>'Edit','route'=>'account.profile','class'=>'edit'],
+                                          'delete' => ['title'=>'Delete','route'=>'delete.user'],
+                                          'model'  =>  ['title'=>'change Password','data-target' => 'change_password','class'=>'change_password'],
+                                          'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.status']
                                        ]
                       ];
         $plugins = [
@@ -67,15 +69,21 @@ class UsersController extends Controller
     }
 
     public function store(Request $request){
+      $model = org_user::where(['email'=>$request->email])->first();
+      if(count($model) > 0){
+        Session::flash('exist_email','Email already exist');
+        return back();
+      }else{
+        $this->validateForm($request);
+        $model = new org_user;
+        $model->fill($request->except('_token','password','user_type'));
+        $model->password = Hash::make($request->password);
+        $model->user_type = json_encode($request->user_type);
+        $model->save();
+        Session::flash('success','Created Successfully!!');
+        return redirect()->route('info.user',['id'=>$model->id]);
 
-    	$this->validateForm($request);
-    	$model = new org_user;
-    	$model->fill($request->except('_token','password','user_type'));
-    	$model->password = Hash::make($request->password);
-    	$model->user_type = json_encode($request->user_type);
-    	$model->save();
-    	Session::flash('success','Created Successfully!!');
-    	return redirect()->route('info.user',['id'=>$model->id]);
+      }
     }
     public function FunctionName(Request $request )
     {
@@ -128,11 +136,49 @@ class UsersController extends Controller
             throw $e;
         }
     }
-    
-    public function deleteUser(){
-      //client Delete
+    /**
+     * [deleteUser now just change the status of user to 0] 
+     * @return [type] [description]
+     */
+    public function deleteUser($id){
+      $model = org_user::where('id',$id)->update(['status'=>'0']);
+      return back();
+    }
+    public function changePassword(Request $request)
+    {
+      $model = org_user::where('id',$request->user_id)->first();
+      $check = Hash::check( Hash::make($request->password) , $model->password);
+      // dd($check);
 
-      //employee delete
+      $validate = [
+                      'new_password'      => 'required|min:6',
+                      'confirm_password'  => 'required|same:new_password|min:6'
+                  ];
+      $this->validate($request , $validate);
 
+      $model = org_user::where('id',$request->user_id)->update(['password' => Hash::make($request->new_password)]);
+      if($model){
+          echo "<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>";
+          return back();
+      }
+    }
+    public function changeStatus($id)
+    {
+      $model = org_user::where('id',$id)->first();
+      if($model['status'] == 0){
+        org_user::where('id',$id)->update(['status' => 1]);
+      }else{
+        org_user::where('id',$id)->update(['status' => 0]);
+      }
+      return back();
+    }
+
+    public function saveSideBarActiveStats($status){
+        $model = UsersMeta::firstOrNew(['user_id'=>Auth::guard('org')->user()->id,'key'=>'layout_sidebar_small']);
+        $model->key = 'layout_sidebar_small';
+        $model->user_id = Auth::guard('org')->user()->id;
+        $model->value = $status;
+        $model->save();
     }
 }
+

@@ -1,8 +1,24 @@
 @extends('layouts.main')
 @section('content')
-<div class="row">
+@php
+$page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Notes',
+    'add_new' => '+ Add Notes'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
 	@include('organization.profile._tabs')
 	@include('common.notes')
+	@include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 </div>
 <script type="text/javascript">
 	$('.add-new').off().click(function(e){
