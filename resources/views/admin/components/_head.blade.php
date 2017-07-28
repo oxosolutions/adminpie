@@ -14,7 +14,8 @@
     <link href="{{ asset('assets/css/fullcalendar.min.css') }}" rel='stylesheet' />
 	<link href="{{ asset('assets/css/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
 	<link href="{{ asset('assets/css/style.css') }}" rel='stylesheet' />
-
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/spectrum.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('css/simple-iconpicker.min.css') }}">
     
 	<script src="{{ asset('assets/js/moment.min.js')}}"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -24,7 +25,15 @@
     <script type="text/javascript" src="{{ asset('js/common.js?')}}<?php echo rand(4524,28282); ?>"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js"></script>
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
+	<script type="text/javascript" src="{{ asset('js/spectrum.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('js/simple-iconpicker.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
+	{{-- script for code editor start --}}
+	<script src="{{ asset('js/jquery.scrollto.js') }}"></script>
+	<script src="{{ asset('js/pagedown.js') }}"></script>
+	<script src="{{ asset('js/pagedown-extra.js') }}"></script>
+	<script src="{{ asset('js/diff.js') }}"></script>
+	{{-- end --}}
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/sweetalert/dist/sweetalert.css') }}">
 
     <script src="{{ asset('bower_components/sweetalert/dist/sweetalert.min.js') }}"></script>

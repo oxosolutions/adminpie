@@ -1,17 +1,36 @@
+@php
+	$ArrayData = App\Model\Organization\Dataset::getDatasetTableData(request()->route()->parameters()['id']);
+	$records = $ArrayData['records'];
+	$headers = $ArrayData['headers'];
+	@$tableheaders->id = 'id';
+@endphp
 @extends('layouts.main')
 @section('content')
 @php
-$page_title_data = array(
-'show_page_title' => 'yes',
-'show_add_new_button' => 'no',
-'show_navigation' => 'yes',
-'page_title' => 'Dataset: name of dataset',
-'add_new' => '+ Add Role'
-); 
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Dataset: name of dataset',
+	'add_new' => '+ Add Role'
+	); 
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+	{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
+		<div class="row">
+			<div class="col s12 m2 l3 aione-field-wrapper">
+				 {!!Form::text('column_name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter Column Name'])!!}
+			</div>
+			<div class="col s12 m2 l3 aione-field-wrapper">
+				 {!!Form::select('after_column',$tableheaders,null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter After Column'])!!}
+			</div>
+			<div class="col s12 m2 l3">
+				<button class="btn blue">Create Column</button>
+			</div>
+		</div>
+	{!!Form::close()!!}
 	<div id="example2" style="width: 100%; font-size: 14px;">
 		
 	</div>
@@ -41,11 +60,7 @@ $page_title_data = array(
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Save</a>
     </div>
 </div>
-@php
-	$ArrayData = App\Model\Organization\Dataset::getDatasetTableData(request()->route()->parameters()['id']);
-	$records = $ArrayData['records'];
-	$headers = $ArrayData['headers'];
-@endphp
+
 {!!$ArrayData['tableRecords']->render()!!}
 <script type="text/javascript">
 	window.changedDataRecords = [];
@@ -68,9 +83,7 @@ $page_title_data = array(
 	    contextMenu: ['row_above','row_below','---------','col_right','---------','remove_row','remove_row','---------','undo','redo','---------','make_read_only','alignment'],
 	    afterChange: function(changes, source){
 	    	if(source == 'edit'){
-	    		//console.log(changes);
 	    		changedDataRecords.push(hot2.getData()[changes[0][0]]);
-	    		console.log(changedDataRecords);
 	    		$('.save_dataset').fadeIn(200);
 	    	}
 	    }
@@ -102,7 +115,7 @@ $page_title_data = array(
 	    		url: '{{url('dataset/update')}}/{{request()->route()->parameters()['id']}}',
 	    		data: { '_token': '{{csrf_token()}}','records': changedDataRecords },
 	    		success: function(result){
-	    			console.log(result);
+	    			$('.save_dataset').fadeOut(200);
 	    		}
 	    	});
 	    });

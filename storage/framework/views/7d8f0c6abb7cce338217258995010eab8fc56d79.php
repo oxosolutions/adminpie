@@ -106,15 +106,6 @@
                         </span>
                         </a>
                     </li>
-                    <li class="aione-nav-item level1 <?php echo e(Request::is('module/style')?'active-state':''); ?>">
-                        <a href="<?php echo e(Route('style.module')); ?>">
-                        <span class="nav-item-icon side-bar-icon fa fa-plus green darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Module style
-                        </span>
-                        </a>
-                    </li>
                 </ul>
             </li>
             <li class="aione-nav-item level0 has-children <?php echo e(in_array(Request::path(),array('widgets','widget/create'))?'active-state':''); ?>">
@@ -247,6 +238,61 @@
                         </span>
                         <span class="side-bar-text">
                             Add Template
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="aione-nav-item level0 has-children <?php echo e(in_array(Request::path(),array('users'))?'active-state':''); ?>">
+                <a href="#">
+                    <span class="nav-item-icon side-bar-icon fa fa-bell green darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Notification 
+                    </span>
+                    <span class="nav-item-arrow">
+                        <i class="fa fa-angle-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu" >
+                    <li class="aione-nav-item level1 <?php echo e(Request::is('custom-maps')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('notifications')); ?>">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil red darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Notifications
+                        </span>
+                        </a>
+                    </li>
+                     <li class="aione-nav-item level1 <?php echo e(Request::is('custom-maps')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('notification.template')); ?>">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil red darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Add Notification
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="aione-nav-item level0 has-children ">
+                <a href="#">
+                    <span class="nav-item-icon side-bar-icon fa fa-puzzle-piece green darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Templates 
+                    </span>
+                    <span class="nav-item-arrow">
+                        <i class="fa fa-angle-right" ></i>
+                    </span>
+                </a>
+                <ul class="side-bar-submenu" >
+                    <li class="aione-nav-item level1 <?php echo e(Request::is('custom-maps')?'active-state':''); ?>">
+                        <a href="<?php echo e(route('emails')); ?>">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil red darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Email
                         </span>
                         </a>
                     </li>

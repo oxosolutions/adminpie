@@ -9,6 +9,9 @@ Homestead.yaml
 /htaccess
 /bak
 
+# Gulp build
+/build
+ 
 # Build and Release Folders
 bin/
 bin-debug/

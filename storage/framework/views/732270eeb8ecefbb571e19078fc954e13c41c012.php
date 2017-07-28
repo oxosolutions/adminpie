@@ -257,9 +257,10 @@ foreach($columns as $column){
 											 ?>
 										<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 										<?php if($getRelations == null || $getRelations == ""): ?>
-											--------------
+											<div>&nbsp;</div>
 										<?php elseif($getRelations === FALSE): ?>
-											--------------
+											<div>&nbsp;</div>
+										
 										<?php else: ?>
 											<span class="truncate"> <?php echo e($getRelations); ?></span>
 										<?php endif; ?>

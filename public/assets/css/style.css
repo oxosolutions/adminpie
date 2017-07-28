@@ -624,7 +624,11 @@ AIONE DATALIST
 }
 .aione-datalist-item{
 	
+	
 }
+.aione-datalist-item:nth-child(even) {background-color: #f2f2f2; }
+.aione-datalist-item:nth-child(odd) {background-color: #FFFFFF; }
+
 
 .aione-datalist-item .aione-column.columns-1{ width:100%; }
 .aione-datalist-item .aione-column.columns-2{ width:50%; }
@@ -783,8 +787,7 @@ line-height: 30px;
 .hover-me:hover .options{
 	display: block;
 }
-#list li:nth-child(even) {background: #F9F9F9}
-#list li:nth-child(odd) {background: #FFF}
+
 	
 
 /***************************************

@@ -17,6 +17,7 @@ use App\Model\Admin\GlobalSetting;
 use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Organization\OrganizationSetting as org_setting;
+use App\Model\Organization\UserRoleMapping;
 
 
 
@@ -211,12 +212,21 @@ class OrganizationController extends Controller
         if(!$checkMaster->exists() || $return=='table_not_exist'){
             $this->create_db_through_migration($org_id);
             $org_usr = new User();
+           
         }
-        $org_usr->fill($request->all()); 
-        $org_usr->role_id = 1;
-        $org_usr->user_type = json_encode([1]);
+        $org_usr->fill($request->all());
+
+        // $org_usr->role_id = 1;
+        // $org_usr->user_type = json_encode([1]);
         $org_usr->password = Hash::make($request->password);
         $org_usr->save(); 
+        $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
+        if(!$userRoleMapping->exists()){
+            $userRoleMapping = new UserRoleMapping();
+            $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
+            $userRoleMapping->save();
+        }
+
         Session::flash('success', 'Organization create successfully');
         return redirect()->route('list.organizations');
     }
@@ -255,9 +265,14 @@ class OrganizationController extends Controller
     
 	// USERS
 		Artisan::call('make:migration:schema',[
-								'--model'=>false,
+                                '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users',
-                                '--schema'=>'name:string, email:string, password:string, api_token:char(60), remember_token:string, user_type:string, role_id:integer:nullable, status:integer:default(0)'
+                                '--schema'=>'name:string, email:string, password:string, api_token:char(60), remember_token:string, status:integer:default(1)'
+                            ]);
+        Artisan::call('make:migration:schema',[
+								'--model'=>false,
+                                'name'=>'create_'.$org_id.'_user_role_mappings',
+                                '--schema'=>'user_id:interger, role_id:integer, status:integer:default(1)'
                             ]);
           Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -348,11 +363,11 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_departments',
                                 '--schema'=>'name:string, description:text:nullable, status:integer:default(1)'
                             ]);
-		Artisan::call('make:migration:schema',[
+		/*Artisan::call('make:migration:schema',[ // No need to generate
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_employee_meta',
                                 '--schema'=>'employee_id:integer , key:string, value:text'
-                            ]);
+                            ]);*/
 	//STUDENT
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -360,11 +375,11 @@ class OrganizationController extends Controller
                                 '--schema'=>'user_id:integer, student_id:integer:nullable, dob:string:nullable,  qualification:string:nullable, college_university:string:nullable, joining_date:dateTime:nullable, status:integer:default(0)'
                             ]);
 
-		Artisan::call('make:migration:schema',[
+		/*Artisan::call('make:migration:schema',[ // No need to generate
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_student_meta',
                                 '--schema'=>'student_id:integer, key:string, value:text'
-                            ]);
+                            ]);*/
 
 	//TEAM MIGRATION
 		Artisan::call('make:migration:schema',[
@@ -399,11 +414,11 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_clients',
                                 '--schema'=>'name:string, company_name:string:nullable, address:string:nullable, country:string:nullable, state:string:nullable, city:string:nullable, user_id:integer:nullable, phone:string:nullable, additional_info:text:nullable'
                             ]);
-		Artisan::call('make:migration:schema',[
+		/*Artisan::call('make:migration:schema',[ //No need to generate
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_client_metas',
                                 '--schema'=>'client_id:integer, key:string , value:text, type:string'
-                            ]);
+                            ]);*/
 
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -523,11 +538,11 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_applicants',
                                 '--schema'=>'user_id:integer, status:integer:default(1)'
                             ]);
-         Artisan::call('make:migration:schema',[
+         /*Artisan::call('make:migration:schema',[ // No need to generate
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_applicant_metas',
                                 '--schema'=>'applicant_id:integer, key:string, value:text' 
-                            ]);
+                            ]);*/
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_openings',
@@ -550,13 +565,13 @@ class OrganizationController extends Controller
                             ]);
 		Artisan::call('migrate');
 
-        $userTypes = [
-            ['type'=>'Admin','status'=>1],
-            ['type'=>'Employee','status'=>1],
-            ['type'=>'Customer','status'=>1],
-            ['type'=>'Student','status'=>1],
-        ];
-        UsersType::insert($userTypes);
+        // $userTypes = [
+        //     ['type'=>'Admin','status'=>1],
+        //     ['type'=>'Employee','status'=>1],
+        //     ['type'=>'Customer','status'=>1],
+        //     ['type'=>'Student','status'=>1],
+        // ];
+        // UsersType::insert($userTypes);
             $roleData[] =   ['name'=>'Super Admin', 'description'=>'organization admin', 'status'=>1];
             $roleData[] =   ['name'=>'Employee', 'description'=>'Employee', 'status'=>1];
             $roleData[] =   ['name'=>'Client', 'description'=>'client', 'status'=>1];

@@ -3,6 +3,7 @@ namespace App\Repositories\User;
 use App\Model\Organization\User;
 use App\Model\Organization\UsersMeta;
 use Hash;
+use App\Model\Organization\UserRoleMapping;
 
 class UserRepository implements UserRepositoryContract
 {
@@ -15,16 +16,20 @@ class UserRepository implements UserRepositoryContract
 			$user = new User();
 			$user->fill($data);
 			$user->password = Hash::make($data['password']);
-			$user->user_type = json_encode([$type]);
-			$user->role_id = $data['role_id'];
 			$user->save();
+			$userRole = new UserRoleMapping;
+			$userRole->user_id = $user->id;
+			$userRole->role_id = $type;
+			$userRole->status = 1;
+			$userRole->save();
 			return $user->id;
 		}else{
 
-				$array = json_decode($check->first()->user_type);
+				dd('Not yet set, from repository of user create system');
+				/*$array = json_decode($check->first()->user_type);
 				$pusharray = array_push($array,$type);
 				$query = user::where('email',$data['email'])->update(['user_type' => json_encode($array)]);
-				return $check->first()->id;
+				return $check->first()->id;*/
 		}
 		
 	}

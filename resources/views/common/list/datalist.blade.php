@@ -250,9 +250,10 @@ foreach($columns as $column){
 											@endphp
 										@endforeach
 										@if($getRelations == null || $getRelations == "")
-											--------------
+											<div>&nbsp;</div>
 										@elseif($getRelations === FALSE)
-											--------------
+											<div>&nbsp;</div>
+										
 										@else
 											<span class="truncate"> {{$getRelations}}</span>
 										@endif

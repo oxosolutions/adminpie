@@ -2,7 +2,7 @@
 
 <?php echo Form::open(['route'=>'activity.template']); ?>
 
-<input type="text" name="use_for"  value="notification">
+<input type="hidden" name="use_for"  value="notification">
 <ul>
 	<li><label for="">Language</label><?php echo Form::select('language',['EN'=>'EN','FR'=>'FR'],NULL,['class'=>'','placeholder'=>'select Language']); ?></li>
 	<li><label for="">slug</label><input name="slug"  type="text"></li>

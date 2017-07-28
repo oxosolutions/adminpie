@@ -8,10 +8,19 @@
 //Activity 
 				Route::get('activities', ['as'=>'activities' , 'uses'=>'ActivityTemplateController@index']);
 				Route::match(['get','post'], 'activity/template', ['as'=>'activity.template' , 'uses'=>'ActivityTemplateController@create']);
-				Route::match(['get','post'], 'activity/edit', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
+				Route::match(['get','post'], 'activity/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
 				Route::get('activity/delete/{id?}', ['as'=>'activity.delete' , 'uses'=>'ActivityTemplateController@delete']);
 //Notification
-			Route::match(['get','post'], 'notification/template', ['as'=>'notification.template' , 'uses'=>'ActivityTemplateController@create_notification']);
+				Route::get('notifications', ['as'=>'notifications' , 'uses'=>'ActivityTemplateController@notificationList']);
+				Route::match(['get','post'], 'notification/template', ['as'=>'notification.template' , 'uses'=>'ActivityTemplateController@create_notification']);
+//Email Template
+				Route::get('emails', ['as'=>'emails' , 'uses'=>'EmailTemplateController@index']);
+
+				Route::match(['get','post'], 'email/template', ['as'=>'manage.email.template' , 'uses'=>'EmailTemplateController@create']);
+				Route::match(['get','post'], 'email/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'EmailTemplateController@edit']);
+
+				// Route::match(['get','post'], 'activity/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
+				// Route::get('activity/delete/{id?}', ['as'=>'activity.delete' , 'uses'=>'ActivityTemplateController@delete']);
 // 				
 				//Widget Route
 				//
@@ -33,7 +42,11 @@
 				Route::match(['get','post'],'/module/edit/{id?}',['as'=>'edit.module' , 'uses'=>'ModuleController@edit']);
 				Route::post('/module/update/{id}',['as'=>'update.module' , 'uses'=>'ModuleController@update']);
 				Route::get('/module/delete/{id}',['as'=>'delete.module' , 'uses'=>'ModuleController@delete']);
-				Route::get('/module/style',['as'=>'style.module' , 'uses'=>'ModuleController@style']);
+				Route::get('/module/style/{id}',['as'=>'style.module' , 'uses'=>'ModuleController@style']);
+				Route::post('/module/style/save',['as'=>'save.style.module' , 'uses'=>'ModuleController@saveStyle']);
+				Route::post('/subModule/style/save',['as'=>'save.style.subModule' , 'uses'=>'ModuleController@saveStyleModule']);
+				Route::get('/submodule/{id}',['as'=>'get.submodule' , 'uses'=>'ModuleController@getSubmodules']);
+
 				Route::get('/modules',['as'=>'list.module' , 'uses'=>'ModuleController@listModule']);
 				Route::get('module/add_route_row',['as'=>'route_row.module' , 'uses'=>'ModuleController@add_route_row']);
 				Route::get('module/route/delete/{id}',['as'=>'delete.route' , 'uses'=>'ModuleController@delete_route']);
@@ -136,6 +149,7 @@
 			Route::get('logout',			['as'=>'org.logout','uses'=>'Auth\LoginController@logout']);
 			Route::get('login/{id?}',		['as'=>'org.login','uses'=>'Auth\LoginController@showLoginForm']);
 			Route::get('login-v1/{id?}',	['as'=>'org.login-v1','uses'=>'Auth\LoginController@showLoginFormv1']);
+			Route::get('login-v2/{id?}',	['as'=>'org.login-v2','uses'=>'Auth\LoginController@showLoginFormv2']);
 			Route::post('login',			['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
 			Route::get('forgot-password',	['as'=>'forgot.password','uses'=>'Auth\LoginController@forgotpassword']);
 			Route::post('forgot',			['as'=>'forgot','uses'=>'Auth\LoginController@forgotMail']);
@@ -503,6 +517,7 @@
 					Route::post('/import/dataset', ['as'=>'upload.dataset','uses'=>'DatasetController@uploadDataset']);
 					Route::post('/dataset/save',['as'=>'save.dataset','uses'=>'DatasetController@store']);
 					Route::post('/dataset/update/{id}',['as'=>'update.dataset','uses'=>'DatasetController@updateRecords']);
+					Route::post('/dataset/create/column/{id}',['as'=>'create.column','uses'=>'DatasetController@createColumn']);
 				});
 				Route::group(['prefix'=>'cms','namespace' => 'cms'],function(){
 					//Pages 

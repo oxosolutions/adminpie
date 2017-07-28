@@ -24,6 +24,8 @@ class EmployeeController extends Controller
     }
     public function index(Request $request, $id=null)
     {
+
+        dump(test());
         $search = $this->saveSearch($request);
         if($search != false && is_array($search)){
             $request->request->add(['items'=>$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);

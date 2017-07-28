@@ -30,14 +30,9 @@
                     <a href="javascript:void(0)">
                 <?php endif; ?>
                 <?php endif; ?>
-                    <?php 
-                        $colors =["teal darken-1"=>"teal darken-1","light-blue"=>"light-blue","cyan"=> "cyan","green darken-1"=>"green darken-1","orange darken-1"=>"orange darken-1"];
-                        $rand_color = array_rand($colors,1);
-						
-						
-                     ?>
+                    
 					
-					<span class="nav-item-icon <?php echo e($rand_color); ?>"><?php echo e(@$sidebar['name'][0]); ?></span>
+					<span class="nav-item-icon " style="background:<?php echo e(@$sidebar['color']); ?>"><i class="fa <?php echo e(@$sidebar['icon']); ?>"></i></span>
 					<span class="nav-item-text">
 						<?php echo e(@$sidebar['name']); ?>
 

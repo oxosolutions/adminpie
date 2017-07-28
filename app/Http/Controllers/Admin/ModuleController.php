@@ -9,13 +9,10 @@ use App\Model\Admin\GlobalModuleRoute as Route;
 use App\Model\Admin\GlobalSubModule;
 class ModuleController extends Controller
 {
-    public function style()
-    {
-        return view('admin.module.style');
-    }
+    
     public function listModule()
     {
-    	$model  = Module::orderBy('orderBy','asc')->get();
+    	$model  = Module::orderBy('orderBy','asc')->with('subModule')->get();
         // dd($model);
     	return view('admin.module.index',['listModule'=>$model]);
     }
@@ -197,6 +194,11 @@ class ModuleController extends Controller
         return redirect()->route('submodule.list');
     }
 
+    public function saveStyleModule(Request $request)
+    {
+        $model = Module::where('id',$request->modules_id)->update($request->except('_token','modules_id'));
+        return back();  
+    }
 
     /*************** Ajax Functions *****************/
 
@@ -227,6 +229,21 @@ class ModuleController extends Controller
             Module::where('id',$module_id)->update(['orderBy'=>$order_id]);
         }
 
+    }
+    public function style($id)
+    {
+        $model = GlobalSubModule::where('id',$id)->first();
+        return view('admin.module.style',compact('model'));
+    }
+    public function getSubmodules($id)
+    {
+        $model = GlobalSubModule::where('module_id',$id)->get();
+        return view('admin.module.getSubModule',compact('model'));
+    }
+    public function saveStyle(Request $request)
+    {   
+        $model = GlobalSubModule::where('id',$request->sub_modules_id)->update($request->except('_token','sub_modules_id'));
+        return back();
     }
 
 }

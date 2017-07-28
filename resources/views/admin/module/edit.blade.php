@@ -14,7 +14,6 @@ $opt_route_for =['read'=>'Read', 'write'=>'Write', 'delete'=>'Delete'];
     $(document).on('click','.remove_row',function(e){
       $(this).parent().remove();
     });
-      
   });
 </script>
 @php
@@ -29,6 +28,39 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
+    {{-- {{dd($module)}} --}}
+   @if(@$module)
+                {!! Form::model($module,['route' => 'save.style.subModule' , 'method' => 'post'])!!} 
+            @else
+                {!! Form::open(['route' => 'save.style.subModule' , 'method' => 'post'])!!}
+            @endif
+            <div class="row">
+                <div class="col l6">
+                    <label>
+                        Select a color
+                    </label>
+                    <div class="col l12">
+                        {{-- <input type='color' name="color" />     --}}
+                        <input type="text" id="custom">
+                        {!! Form::hidden('color', null,['class' => 'color_picker']) !!}
+                    </div>
+                </div>
+                <div class="col l6">
+                    <label>
+                        Select an icon
+                    </label>
+                    <div class="col l12 aione-field-wrapper">
+                        <input type="text" class="input1 input font-awesome" placeholder="Pick an icon" />  
+                        {{-- <input type="text" name="icon" class="font-awesome-text" value=""> --}}
+                        {!! Form::hidden('icon', null,['class' => 'font-awesome-text']) !!}                     
+                        <input type="hidden" name="modules_id" value="{{request()->route()->parameters()['id']}}">                                  
+                    </div>
+                </div>
+                                        <button class="btn blue save-settings" type="submit">Save Settings</button>
+
+            </div>
+
+    {!! Form::close() !!}
     <div class="card" style="margin-top: 0px;padding: 10px">
         {!! Form::open(['route' => ['edit.module',request()->route()->parameters()['id']]]) !!}
 
@@ -149,6 +181,34 @@ $page_title_data = array(
     }
     .select-dropdown{
     }
+    .howl-iconpicker .geticonval{
+        width: 52px;
+        height: 48px;
+    }
+    .howl-iconpicker-close{
+        width: 260px;
+    }
+    .custom-code .editor{
+        height: 200px;margin: 5px 10px
+    }
+    .sp-preview{
+        width: 400px;
+        height: 28px;
+    }
+    ..sp-replacer{
+        display: block;
+    }
+    .custom-code .col{
+        margin-bottom: 10px
+    }
+    button.save-settings{
+        float: right;
+    }
+    input[type='color']{
+         display: block;
+         width: 98%;
+         height: 48px;
+    }
 </style>
 <script type="text/javascript">
     $(function(){
@@ -193,6 +253,33 @@ $page_title_data = array(
             $( "#sortable" ).sortable();
             $( "#sortable" ).disableSelection();
           });
+        $("#custom").spectrum({
+            color: '#000',
+            showAlpha: true,
+        });
+        $(document).ready(function(){
+            $('.input1').iconpicker(".input1");
+
+            $('#custom').change(function(){
+                $('.color_picker').val($("#custom").spectrum('get').toRgbString());             
+            });
+            $('.font-awesome').change(function(){
+                $('.font-awesome-text').val($(this).val());
+            });
+            if($('input[name=icon]').val() != ""){
+                $('.geticonval > i').each(function(){
+                    if($(this).attr('class') == 'fa '+$('input[name=icon]').val()){
+                        $(this).parent().addClass('geticonval selectedicon');
+                        $('.font-awesome').val($('input[name=icon]').val());
+                    }else{
+                        console.log("not in class");
+                    }
+                });
+            }
+            if($('input[name=color]').val() != ""){
+                $('.sp-preview-inner').css({'background-color': $('input[name=color]').val()});
+            }
+        });
 </script>
 @endsection
 

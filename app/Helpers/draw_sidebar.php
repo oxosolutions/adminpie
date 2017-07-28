@@ -5,6 +5,7 @@ namespace App\Helpers;
 	use App\Model\Admin\GlobalModuleRoute as Route;
 	use App\Model\Admin\GlobalSubModule;
     use App\Model\Organization\RolePermisson as Permisson;
+    use App\Model\Organization\User;
     use Auth;
     use Session;
 
@@ -38,8 +39,9 @@ class draw_sidebar{
 
     static function checkPermisson(){
         
+         $current_role_id =1;
     if(Auth::guard('org')->check()){
-         $current_role_id =Auth::guard('org')->user()->role_id;
+       
          if($current_role_id==1)
             {
                 $data = [];

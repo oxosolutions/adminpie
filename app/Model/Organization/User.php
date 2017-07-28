@@ -15,6 +15,9 @@ class User extends Authenticatable
 	       $this->table = Session::get('organization_id').'_users';
 	   	}
    }
+   public function user_role_rel(){
+      return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','id');
+   }
 
    public function applicant_rel(){
     return $this->hasOne('App\Model\Organization\Applicant','user_id','id');
@@ -55,5 +58,13 @@ class User extends Authenticatable
     }
     public function client_rel(){
       return $this->hasOne('App\Model\Organization\Client','user_id','id');
+    }
+    public function userRole()
+    {
+      return $this->hasOne('App\Model\Organization\UsersRole','id','role_id');
+    }
+    public function userType()
+    {
+      return $this->hasMany('App\Model\Organization\UsersType','id','user_type');
     }
 }

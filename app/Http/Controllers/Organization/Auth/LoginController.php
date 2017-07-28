@@ -76,7 +76,10 @@ class LoginController extends Controller
     {
         return view('organization.login.login-v1');
     }
-
+    public function showLoginFormv2()
+    {
+        return view('organization.login.login-v2');
+    }
     protected function guard()
     {
         return Auth::guard('org');

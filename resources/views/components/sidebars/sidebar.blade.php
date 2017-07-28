@@ -32,14 +32,14 @@
                     <a href="javascript:void(0)">
                 @endif
                 @endif
-                    @php
+                    {{-- @php
                         $colors =["teal darken-1"=>"teal darken-1","light-blue"=>"light-blue","cyan"=> "cyan","green darken-1"=>"green darken-1","orange darken-1"=>"orange darken-1"];
                         $rand_color = array_rand($colors,1);
 						
 						
-                    @endphp
+                    @endphp --}}
 					
-					<span class="nav-item-icon {{$rand_color}}">{{@$sidebar['name'][0]}}</span>
+					<span class="nav-item-icon " style="background:{{@$sidebar['color']}}"><i class="fa {{@$sidebar['icon']}}"></i></span>
 					<span class="nav-item-text">
 						{{@$sidebar['name']}}
 					</span>

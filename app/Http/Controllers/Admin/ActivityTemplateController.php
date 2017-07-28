@@ -21,6 +21,21 @@ class ActivityTemplateController extends Controller
      return view('admin/activity-template/create_notification');
 	}
 
+	public function notificationList(Request $request){
+		$model = $this->dataView($request,'notification');
+		$datalist =  [
+                      'datalist'=>  $model,
+                      'showColumns' => ['slug'=>'slug', 'type'=>'type', 'gender'=>'gender', 'language'=>'language', 'created_at'=>'Created At'],
+                      'actions' => [
+                                      'edit'    =>  ['title'=>'Edit','route'=>'activity.edit' , 'class' => 'edit'],
+                                      'delete'  =>  ['title'=>'Delete','route'=>'activity.delete']
+                                   ],
+                      'js'  =>  ['custom'=>['list-designation']],
+                      'css'=> ['custom'=>['list-designation']]
+                  ];
+		return view('admin.activity-template.notificationlist',$datalist);
+	}
+
 	protected function dataView($request,$use_for){
 		$datalist= [];
         if($request->has('per_page')){
@@ -34,18 +49,27 @@ class ActivityTemplateController extends Controller
         $sortedBy = @$request->sort_by;
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = GlobalActivityTemplate::where(['slug','like','%'.$request->search.'%'])->orderBy($sortedBy,$request->ORGc_asc)->paginate($perPage);
+                $model = GlobalActivityTemplate::where(['slug'=>'like','%'.$request->search.'%','use_for'=>$use_for])->orderBy($sortedBy,$request->ORGc_asc)->paginate($perPage);
             }else{
-                $model = GlobalActivityTemplate::where('slug','like','%'.$request->search.'%')->paginate($perPage);
+                $model = GlobalActivityTemplate::where(['slug'=>'like','%'.$request->search.'%','use_for'=>$use_for])->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = GlobalActivityTemplate::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                $model = GlobalActivityTemplate::where(['use_for'=>$use_for])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
             }else{
-                $model = GlobalActivityTemplate::paginate($perPage);
+                $model = GlobalActivityTemplate::where(['use_for'=>$use_for])->paginate($perPage);
             }
         }
-        $datalist =  [
+
+        return $model;
+        
+        
+
+	}
+	public function index(Request $request){
+		
+		$model = $this->dataView($request, 'activity');
+		$datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['slug'=>'slug', 'type'=>'type', 'gender'=>'gender', 'language'=>'language', 'created_at'=>'Created At'],
                       'actions' => [
@@ -55,12 +79,6 @@ class ActivityTemplateController extends Controller
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                   ];
-        return $datalist;
-
-	}
-	public function index(Request $request){
-		
-		$datalist = $this->dataView($request, 'activity');
         return view('admin.activity-template.list',$datalist);
 
         
@@ -122,8 +140,24 @@ class ActivityTemplateController extends Controller
     	
      return view('admin/activity-template/create');
     }
-    public function edit(){
+    public function edit(Request $request , $id=null){
+    	$data = GlobalActivityTemplate::where('id',$id);
+    	if($data->exists()){
+    		$condition = $data->first();
+    	$datas = GlobalActivityTemplate::where(['slug'=>$condition['slug'], 'language'=>$condition['language'] , 'use_for'=>$condition['use_for']])->get();
+    	}
 
+    	if($request->isMethod('post'))
+    	{
+    		//dd($request->all());
+    		foreach ($request->template as $key => $value) {
+    			dump($value);
+    			GlobalActivityTemplate::where('id',$key)->update(['template'=>$value['template']]);
+    		}
+    		
+    	}
+    	return view('admin.activity-template.edit',compact('datas'));
+    	// dump($data);
     }
     public function delete($id){
     		GlobalActivityTemplate::where('id',$id)->delete();

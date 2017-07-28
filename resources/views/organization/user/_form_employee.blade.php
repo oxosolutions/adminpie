@@ -9,7 +9,7 @@
 		 {!!Form::select('role_id',App\Model\Organization\UsersRole::roles(),null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Select Role'])!!}
 	</div>
 	<div class="row  aione-field-wrapper" style="margin-bottom: 0px">
-		{!! Form::select('user_type[]',App\Model\Organization\UsersType::userTypes(),json_decode($model->user_type),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Type ','multiple'])!!}
+		{!! Form::select('user_type[]',App\Model\Organization\UsersType::userTypes(),array_map('intval',json_decode($model->user_type)),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Type ','multiple'])!!}
 	</div>
 	<div class="row">
 		<button type="submit" class="btn blue">Update</button>

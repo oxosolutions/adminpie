@@ -23,33 +23,34 @@ class UsersController extends Controller
         $datalist = [];
         /*$data = DEP::all();
         return view('organization.department.list_department',['data'=>$data]);*/
-        if($request->has('per_page')){
-            $perPage = $request->per_page;
+        if($request->has('items')){
+            $perPage = $request->items;
             if($perPage == 'all'){
               $perPage = 999999999999999;
             }
           }else{
             $perPage = 10;
           }
-        $sortedBy = @$request->sort_by;
+        $sortedBy = @$request->orderby;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = org_user::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['userRole','userType'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                  $model = org_user::where('name','like','%'.$request->search.'%')->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['userRole','userType'])->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = org_user::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->desc_asc)->with(['userRole','userType'])->paginate($perPage);
               }else{
-                   $model = org_user::paginate($perPage);
+                   $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->with(['userRole','userType'])->paginate($perPage);
               }
           }
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status'],
+                          'showColumns' => ['name'=>'Name','email'=>'Email','userRole.name' => 'Role','status' => 'Status'],
                           'actions' => [
-                                          'edit'   => ['title'=>'Edit','route'=>'account.profile','class'=>'edit'],
+                                          'view'   => ['title'=>'View','route'=>'account.profile','class'=>'view'],
+                                          'edit'   => ['title'=>'Edit','route'=>'info.user','class'=>'edit'],
                                           'delete' => ['title'=>'Delete','route'=>'delete.user'],
                                           'model'  =>  ['title'=>'change Password','data-target' => 'change_password','class'=>'change_password'],
                                           'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.status']
@@ -60,7 +61,6 @@ class UsersController extends Controller
                     ];
     	// $userList = org_user::orderBy('id','desc')->get();
         return view('organization.user.list',$datalist)->with(['plugins'=>$plugins]);
-
     	// return view('organization.user.list')->with(['userList'=>$userList,'plugins'=>$plugins]);
     }
     public function create(Request $request)

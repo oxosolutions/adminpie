@@ -5,6 +5,7 @@ namespace App\Model\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Session;
 use App\Model\Organization\User;
+use App\Model\Organization\UserRoleMapping;
 class Employee extends Model
 {
     public static $breadCrumbColumn = 'employee_id';
@@ -47,7 +48,11 @@ class Employee extends Model
 
     public static function employees()
     {
-        return User::where('user_type','[2]')->pluck('name','id');
+        $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
+            $query->where('role_id',2);
+        })->pluck('name','id');
+        return $model;
+        //return User::where('role','[2]')->pluck('name','id');
     }
 
     public function employeeMeta(){

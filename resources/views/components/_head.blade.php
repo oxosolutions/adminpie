@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{ asset('css/ocrm.css?ref='.rand(544,44)) }}" type="text/css" rel="stylesheet"  media="screen,projection"/>
     <link href="{{ asset('assets/css/fullcalendar.min.css') }}" rel='stylesheet' />
-	<link href="{{ asset('assets/css/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
+	{{-- <link href="{{ asset('assets/css/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />  --}}
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/sweetalert/dist/sweetalert.css') }}">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/style.css?ref='.rand(544,44)) }}">

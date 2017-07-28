@@ -63,6 +63,29 @@
 		
 		
 	</div>
+	<div class="row">
+		<div class="col l3">
+			<div class="card shadow mt-0" style="border:1px solid #e1e1e1">
+				<div class="center-align aione-widget-header" ><h5 class="m-0"><a href="#">Working Hours</a></h5></div>
+				<div class="count">
+					<span>11:02:06 Hrs</span>
+				</div>
+				<div class="in-out-button">
+					<a href="">
+						<i class="material-icons dp48">access_alarm</i>
+						<div>
+							<div style="font-size: 26px;color: white">
+								Check In
+							</div>
+							<div style="color: white;font-size: 14px;line-height: 7px;">
+								11:20:00 AM
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 	
 
 	
@@ -75,6 +98,32 @@
 @include('common.page_content_secondry_start')
 
 <style type="text/css">
+		.count span{
+			font-size: 32px;
+			font-weight: 900;
+			color: #8E8E8E;
+			padding: 20px 0px;
+			display: block;
+    		text-align: center;
+    		border-bottom: 1px solid #e8e8e8;
+		}
+		.in-out-button{
+			padding: 14px;
+			
+		}
+		.in-out-button a{
+			display: block;
+   			background-color: #00BC9B;
+   			padding: 7px 30px;
+		}
+		.in-out-button a i{
+			color: white;
+			    font-size: 50px;
+		}
+		.in-out-button a > div{
+			display: block;
+			float: right;
+		}
 		.aione-widget-header{
 			border-bottom: 1px solid #e8e8e8;cursor: pointer;
 		}
@@ -96,6 +145,7 @@
 		.aione-btn{
 			display: inline-block;color: white;margin: 0 auto;padding: 8px 20px;
 		}
+		
 	</style>
 	<script type="text/javascript">
 		 

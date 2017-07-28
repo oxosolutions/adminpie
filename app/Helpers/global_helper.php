@@ -12,6 +12,7 @@ use App\Model\Admin\GlobalActivityTemplate;
 
 
 
+
 	/**
 	 * [user_info to get current user information & employee Info]
 	 * @return [collection] [user information]
@@ -19,8 +20,20 @@ use App\Model\Admin\GlobalActivityTemplate;
 	function user_info()
 	{
 		$id = Auth::guard('org')->user()->id;
-		$user = User::where(['id'=>$id])->select(['name','email', 'user_type' ,'role_id','id'])->with('employee_rel')->first();
+		$user = User::where(['id'=>$id])->select(['name','email','id'])->with('employee_rel')->first();
 		return $user;
+	}
+
+	function test(){
+		 $userData = user_info();
+		 $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
+       	 $collection =  $userInfo['user_role_rel'];
+         $keyed = $collection->mapWithKeys(function ($item) {
+             return [$item['role_id'] => $item['role_id']];
+          });
+        dd(array_values($keyed->all()));
+        dd($userInfo);
+
 	}
 
 	function getMetaValue($metaArray, $metaKey){
@@ -39,7 +52,25 @@ use App\Model\Admin\GlobalActivityTemplate;
 	 */
 	function role_id()
 	{
-		return Auth::guard('org')->user()->role_id;
+
+		return 1;
+			// $userData = user_info();
+       
+   //      $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
+   //     $collection =  $userInfo['user_role_rel'];
+   //      $keyed = $collection->mapWithKeys(function ($item) {
+   //           return [$item['role_id'] => $item['role_id']];
+   //        });
+   //      dd($keyed->all());
+   //      dd($userInfo);
+
+
+
+		 // $userData = user_info();
+   //       $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
+   //      dd($userInfo);
+		//$roles = Auth::guard('org')->user()->with('user_role_rel')->get();
+		//dd($roles);
 	}
 	/**
 	 * [setting_val_by_key description]

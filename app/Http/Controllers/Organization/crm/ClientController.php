@@ -27,7 +27,6 @@ class ClientController extends Controller
     public function save(Request $request){
         //entry in user table with user_type 3
         $request['role_id'] = org_setting::where('key','client_role')->first()->value;
-
         $user_id = $this->user->create($request->all(), 3);
 
         //created into client rst data

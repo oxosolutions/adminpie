@@ -303,7 +303,10 @@ $page_title_data = array(
 					</div>
 				<?php endif; ?>
 			</div>
-				<?php if(in_array(4, json_decode($model['user_type']))): ?>
+				<?php 
+					$roles = array_keys($model->user_role_rel->groupBy('role_id')->toArray());
+				 ?>
+				<?php if(in_array(2, $roles)): ?>
 					<div class="card info-card" >
 
 							<div class="row valign-wrapper mb-0">

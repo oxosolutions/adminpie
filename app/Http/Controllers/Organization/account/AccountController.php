@@ -38,34 +38,11 @@ class AccountController extends Controller
         $user_log = $this->listActivities();
     	if($id == null){
     		 $id = Auth::guard('org')->user()->id;
-      //       $userDetails = User::with(['employee_rel'=>function($query){
-      //           $query->with(['department_rel','designation_rel','employeeMeta']);
-      //       },'metas'])->find($id);
     	}
-        // else{
-
-        //      $userDetails = User::with(['employee_rel'=>function($query){
-        //         $query->with(['department_rel','designation_rel','employeeMeta']);
-        //     },'metas','applicant_rel','client_rel'])->find($id);
-
-             
-
-        //     // $userDetails = Employee::with(['employ_info'=>function($query){
-        //     //     $query->with(['department_rel','designation_rel','employeeMeta']);
-        //     // },'metas'])->find($id);
-        // }
-
         $userDetails = User::with(['employee_rel'=>function($query){
                 $query->with(['department_rel','designation_rel','employeeMeta']);
-            },'metas','applicant_rel','client_rel'])->find($id);
-// dump($userDetails);
-//         $data = $userDetails['metas']->keyBy('key');
-//         dump($data);
-//         $new = $data->mapWithKeys(function($items){
-//             return [$items['key'] => $items['value'] ];
-//         });
+            },'metas','applicant_rel','client_rel','user_role_rel'])->find($id);
 
-//         dd($new);
         
         $userDetails->password = '';
         if($userDetails->employee_rel != null){
@@ -88,7 +65,7 @@ class AccountController extends Controller
                 $userDetails->{$value->key} = $value->value;
             }
         }
-           // dd($userDetails);
+           
         	return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }
 

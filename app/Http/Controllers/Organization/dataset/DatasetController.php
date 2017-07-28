@@ -430,12 +430,30 @@ class DatasetController extends Controller
             throw $e;
         }
     }
-    public function viewDataset()
-    {
-       return view('organization.dataset.view');
+    public function viewDataset($id){
+        $datasetTable = Dataset::find($id)->dataset_table;
+        $tableHeader = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id',1)->first();
+        return view('organization.dataset.view',['tableheaders'=>$tableHeader]);
     }
 
-    public function updateRecords(Request $request){
-        dd($request->all());
+    public function createNewfunction(Request $request){
+        
+    }
+
+    public function updateRecords(Request $request, $id){
+        $dataset = Dataset::find($id);
+        $datasetHeaders = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',1)->first();
+        foreach($request->records as $key => $record){
+            $recordArray = array_combine(array_keys($datasetHeaders), $record);
+            DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->update($recordArray);
+        }
+    }
+
+    public function createColumn(Request $request, $id){
+        $datasetTable = Dataset::find($id)->dataset_table;
+        $columnName = 'column_'.rand(111,999);
+        DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
+        DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->update([$columnName=>$request->column_name]);
+        return back();
     }
 }
