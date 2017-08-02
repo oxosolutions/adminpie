@@ -10,44 +10,50 @@ USE App\Model\Organization\Employee as EMP;
 USE App\Model\Organization\CategoryMeta as catMeta;
 use Auth;
 use Carbon\Carbon;
+use Session;
 
 class EmployeeLeaveController extends Controller
 {
 
-	Public function index(Request $request, $id=null)
-	{ 
+	public function leave_listing(){
 
-		if(role_id()==1){
+		if(in_array(1, role_id())){
 			return redirect()->route('access.denied');
 		}
-		$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->get();
-		$emp_id = Auth::guard('org')->user()->id;
-
 		$user = user_info()->toArray();	
-
+		$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->get();
+		// dump($leave_rule);
 		$leavesData = EMP_LEV::where('employee_id',$user['employee_rel']['employee_id'])->get();
 		$leave_count_by_cat = $leavesData->groupBy('leave_category_id');
-		
-		// $start_Date='2016-06-02';
-		// $end_Date='2016-06-06';
-		// $start = Carbon::parse($start_Date);
-		// $end = Carbon::parse($end_Date);
-	
+		// DUMP($leave_count_by_cat);
+		// dump($leavesData);
+		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat]);
+	}
+
+	Public function store(Request $request, $id=null)
+	{ 
+		$user = user_info()->toArray();		
 		if($request->isMethod('post')){
 			$current = Carbon::now();
 			$from = Carbon::parse($request->from);
+			
 			$before = $from->diffInDays($current);
-			//echo "year".$from->year;
-			//echo "<br>month".$from->month;
 			$to = Carbon::parse($request->to);
+
+			if($to->month < $from->month )
+			{
+				$error['from_greater_than_to'] = 'from date must be less than to date.';
+				Session::flash('error',$error);
+				return redirect()->route('listing.employeeleave');
+			}
+
+
 			$request['total_days'] = $from->diffInDays($to) + 1; 
 			
 			$rules = catMeta::where('category_id', $request['leave_category_id']);
 			if($rules->exists())
 			{	
-				dump($user);		
 				$rule_check = json_decode($rules->get()->keyBy('key'),true);
-				//dump($rule_check);
 			if(!empty($rule_check['include_designation']['value']))
 				{
 					$include_designation = array_map('intval',json_decode($rule_check['include_designation']['value'],true));
@@ -86,7 +92,8 @@ class EmployeeLeaveController extends Controller
 				if(!empty($rule_check['role_include']['value']))
 				{
 					$role_include = array_map('intval',json_decode($rule_check['role_include']['value'],true));
-					if(!in_array($user['role_id'], $role_include))
+					$roleIdExistingVal = array_intersect($role_include,role_id());
+					if(empty($roleIdExistingVal))
 					{
 						$error['role_include'] = "Role not Includes"; 
 					}
@@ -94,12 +101,11 @@ class EmployeeLeaveController extends Controller
 /*Role Include Check*/
 				elseif(!empty($rule_check['roles_exclude']['value'])){
 					$roles_exclude = array_map('intval',json_decode($rule_check['roles_exclude']['value'],true));
-					if(in_array($user['role_id'], $roles_exclude))
+					$roleIdExcludeExistingVal = array_intersect($roles_exclude,role_id());
+					if(empty($roleIdExcludeExistingVal))
 					{
 						$error['roles_exclude'] = "Exclude Role"; 
-					}
-
-					
+					}					
 				}
 
 
@@ -110,18 +116,10 @@ class EmployeeLeaveController extends Controller
 
 				if($rule_check['valid_for']['value'] == "monthly")
 				{
-						// if($from->month == $to->month)
-						// {
-							
-							$leaveFrm = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($from->month))->get()->keyBy('id');
+						$leaveFrm = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($from->month))->get()->keyBy('id');
 
 							$leaveTo = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($from->month))->get()->keyBy('id');
 							$leaveData = $leaveFrm->merge($leaveTo);//->toArray();
-						// }
-						// elseif($from->month != $to->month)
-						// {
-
-						// }
 					if($from->month != $to->month)
 					{
 						$leaveToFormReq = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($to->month))->get()->keyBy('id');
@@ -129,17 +127,11 @@ class EmployeeLeaveController extends Controller
 						$leaveToReq = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($to->month))->get()->keyBy('id');
 							$data = $leaveToFormReq->merge($leaveToReq);
 							$leaveData = $data->merge($leaveData);
-							//dump($leaveData);
-						
-
 					}				
 
-					//$leaveData = $leave->WhereMonth('to',array($from->month))->get()->toArray();
-					//dump($leaveData);
 					foreach($leaveData->toArray() as $key => $val){
 						$fromMo = Carbon::parse($val['from']);
 						$toMo = Carbon::parse($val['to']);
-						//dump('frm mo'.$fromMo.' to month --->'.$toMo);
 						if($fromMo->month != $toMo->month){
 							if($from->month == $fromMo->month ){
 								$totalMoDay = $from->daysInMonth;
@@ -153,18 +145,16 @@ class EmployeeLeaveController extends Controller
 							$total_days[$toMo->month][] = $val['total_days'];
 						}
 					 }
-
-					// dump($total_days);
+					 dump($from->month,  $to->month);
 					if(!empty($total_days))
 					 {
 					 	if($from->month == $to->month)
 						{
 								$takenLeave = collect($total_days[$from->month])->sum();
 								$sumAll = $request['total_days'] + $takenLeave;
-								//dump($sumAll);
 								if($sumAll >$rule_check['number_of_day']['value'])
 								{
-									$error['exceed_number_of_day'] = "You already taken leave  ".$takenLeave." applied leave".$request['total_days']; 
+									$error['exceed_number_of_day'] = "You already taken leave  ".$takenLeave."&&  applied leave for".$request['total_days'].' day'; 
 								}
 						}
 						elseif($from->month != $to->month){
@@ -181,8 +171,6 @@ class EmployeeLeaveController extends Controller
 
 									$totalFrm = $from->daysInMonth - $from->day;
 									$totalSumFrom = $fromTakenLeave + $totalFrm;
-									//echo "sum from";
-							//dump($totalSumFrom);
 									if($totalSumFrom > $rule_check['number_of_day']['value'])
 									{
 										 $error['exceed_number_of_day'][] = "you exceed leave limit in month ".$from->month;
@@ -190,9 +178,7 @@ class EmployeeLeaveController extends Controller
 								}
 							$toTakenLeave = collect($total_days[$to->month])->sum();
 							$totalTo = $to->day + $toTakenLeave;
-							//echo "total to";
 
-							//dump($totalTo);
 							if($totalTo > $rule_check['number_of_day']['value'])
 									{
 										 $error['exceed_number_of_day'][] = "you exceed leave limit in month ".$to->month;
@@ -222,15 +208,10 @@ class EmployeeLeaveController extends Controller
 
 				if($rule_check['apply_before']['value'] > $before)
 				{
-					$error['apply_before'] = "Apply leave before ".$rule_check['apply_before']['value']; 
+					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
 				}	
 				dump(@$error);
 			}
-			//dd($request->all());
-			//$from = Carbon::parse($request->from);
-			//$to = Carbon::parse($request->to);
-			//$request['total_days'] = $from->diffInDays($to) + 1;
-			//$user_id = Auth::guard('org')->user()->id;
 			if(empty($error)) {
 				$request['from'] =	$from->toDateString();
 				$request['to'] = $to->toDateString();
@@ -239,19 +220,28 @@ class EmployeeLeaveController extends Controller
 				$leave->fill($request->all());
 				$leave->save();
 				save_activity('apply_leave');
+				//Session::flash('sucessful', 'Successfully Apply Leave ');
+
+			}else{
+				//Session::flash('error', $error);
+
+
 			}
 		 }
-		else if($request->isMethod('patch')){
-			$leave_id = $request['leave_id'];
-			unset( $request['leave_id'] , $request['_method'] , $request['_token']);
-			EMP_LEV::where('id', $leave_id)->update($request->all());
-		}
-		elseif($request->isMethod('DELETE')){
-			$data = EMP_LEV::find($request['delete_id']);
-			$data->delete();
-		}
 		
-		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat]);
+
+		
+		return redirect()->route('listing.employeeleave');
 	}
     
 }
+
+// else if($request->isMethod('patch')){
+// 			$leave_id = $request['leave_id'];
+// 			unset( $request['leave_id'] , $request['_method'] , $request['_token']);
+// 			EMP_LEV::where('id', $leave_id)->update($request->all());
+// 		}
+// 		elseif($request->isMethod('DELETE')){
+// 			$data = EMP_LEV::find($request['delete_id']);
+// 			$data->delete();
+// 		}

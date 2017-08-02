@@ -28,12 +28,6 @@
 	<script type="text/javascript" src="<?php echo e(asset('js/spectrum.js')); ?>"></script>
 	<script type="text/javascript" src="<?php echo e(asset('js/simple-iconpicker.min.js')); ?>"></script>
 	<script type="text/javascript" src="<?php echo e(asset('js/jquery-ui.min.js')); ?>"></script>
-	
-	<script src="<?php echo e(asset('js/jquery.scrollto.js')); ?>"></script>
-	<script src="<?php echo e(asset('js/pagedown.js')); ?>"></script>
-	<script src="<?php echo e(asset('js/pagedown-extra.js')); ?>"></script>
-	<script src="<?php echo e(asset('js/diff.js')); ?>"></script>
-	
 	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('bower_components/sweetalert/dist/sweetalert.css')); ?>">
 
     <script src="<?php echo e(asset('bower_components/sweetalert/dist/sweetalert.min.js')); ?>"></script>

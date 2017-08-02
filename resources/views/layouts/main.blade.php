@@ -18,7 +18,6 @@
 				<div class="aione-row">
 					<div id="aione_sidebar" class="aione-sidebar">
 						<div class="aione-row">
-						
 							@include('components.sidebars.sidebar')
 						
 						</div><!-- .aione-row -->

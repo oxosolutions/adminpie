@@ -5,23 +5,22 @@
 	Route::group(['domain' => 'manage.adminpie.com'], function () {
 		Route::group(['namespace'=>'Admin'], function(){
 			Route::group(['middleware' => 'auth.admin'], function(){
-//Activity 
+				//Activity 
 				Route::get('activities', ['as'=>'activities' , 'uses'=>'ActivityTemplateController@index']);
 				Route::match(['get','post'], 'activity/template', ['as'=>'activity.template' , 'uses'=>'ActivityTemplateController@create']);
 				Route::match(['get','post'], 'activity/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
 				Route::get('activity/delete/{id?}', ['as'=>'activity.delete' , 'uses'=>'ActivityTemplateController@delete']);
-//Notification
+				//Notification
 				Route::get('notifications', ['as'=>'notifications' , 'uses'=>'ActivityTemplateController@notificationList']);
 				Route::match(['get','post'], 'notification/template', ['as'=>'notification.template' , 'uses'=>'ActivityTemplateController@create_notification']);
-//Email Template
-				Route::get('emails', ['as'=>'emails' , 'uses'=>'EmailTemplateController@index']);
+
 
 				Route::match(['get','post'], 'email/template', ['as'=>'manage.email.template' , 'uses'=>'EmailTemplateController@create']);
 				Route::match(['get','post'], 'email/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'EmailTemplateController@edit']);
 
 				// Route::match(['get','post'], 'activity/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
 				// Route::get('activity/delete/{id?}', ['as'=>'activity.delete' , 'uses'=>'ActivityTemplateController@delete']);
-// 				
+				// 				
 				//Widget Route
 				//
 				
@@ -137,14 +136,15 @@
 	});
 
 	/******************************* All Routes For Admin *******************************************/
-			//demo form route for setting
-			
-
-
+		//demo form route for setting
 	/******************************* All Routes For Organization ************************************/
 		Route::group(['namespace'=>'Organization'], function(){
-			Route::match(['get','post'],'apply/{id?}',['as'=>'apply', 'uses'=>'hrm\ApplicantController@apply']);
+			Route::group(['middleware'=>'role'],function(){
+				Route::get('settings/department', ['as' => 'department.settings' , 'uses' => 'hrm\SettingController@departmentSetting']);
+				Route::get('settings/organization' , ['as'=>'setting.org' , 'uses' => 'hrm\SettingController@orgSetting']);
 
+			});
+			Route::match(['get','post'],'apply/{id?}',['as'=>'apply', 'uses'=>'hrm\ApplicantController@apply']);
 			Route::get('jobs',['as'=>'openingss', 'uses'=>'hrm\JobOpeningController@public_view_jobs']);
 			Route::get('logout',			['as'=>'org.logout','uses'=>'Auth\LoginController@logout']);
 			Route::get('login/{id?}',		['as'=>'org.login','uses'=>'Auth\LoginController@showLoginForm']);
@@ -152,16 +152,36 @@
 			Route::get('login-v2/{id?}',	['as'=>'org.login-v2','uses'=>'Auth\LoginController@showLoginFormv2']);
 			Route::post('login',			['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
 			Route::get('forgot-password',	['as'=>'forgot.password','uses'=>'Auth\LoginController@forgotpassword']);
+			Route::get('forgot-password-v1',['as'=>'forgot.password-v1','uses'=>'Auth\LoginController@forgotpasswordv1']);
 			Route::post('forgot',			['as'=>'forgot','uses'=>'Auth\LoginController@forgotMail']);
 			Route::get('reset-password/UfcZNQ0sU5w52FoXk28', ['as'=>'edit.password' ,'uses' => 'Auth\LoginController@changePass']);
 			Route::post('update-password', ['as'=>'update.pass' ,'uses' => 'Auth\LoginController@updatePass']);
 			
+			//Email Template
+				Route::get('emails',['as'=>'emails' , 'uses'=>'templates\EmailTemplateController@index']);
+			//new emails route by ashish
+				Route::get('email',					['as'=>'emails' , 'uses'=>'email\EmailController@index']);
+				Route::get('email/send', 			['as'=>'email.send' , 'uses'=>'email\EmailController@sendEmail']);
+				Route::get('email/templates', 		['as'=>'email.templates' , 'uses'=>'email\EmailController@templates']);
+				Route::get('email/create-template', ['as'=>'create.template' , 'uses'=>'email\EmailController@createTemplates']);
+				Route::get('email/edit-template/{id}',	['as'=>'edit.template' , 'uses'=>'email\EmailController@getInfoTemplates']);
+				Route::POST('email/update-template',	['as'=>'update.template' , 'uses'=>'email\EmailController@updateTemplates']);
+				Route::get('email/layouts', 		['as'=>'email.layouts' , 'uses'=>'email\EmailController@layouts']);
+				Route::get('email/layout/delete/{id}', ['as'=>'email.layout.delete' , 'uses'=>'email\EmailController@deleteLayout']);
+				Route::get('email/edit-layout/{id}',	['as'=>'edit.layout' , 'uses'=>'email\EmailController@getInfolayout']);
+				Route::POST('email/update-layout',	['as'=>'update.layout' , 'uses'=>'email\EmailController@updatelayout']);
+				Route::get('email/template/delete/{id}', ['as'=>'email.templates.delete' , 'uses'=>'email\EmailController@deleteTemplates']);
+				Route::get('email/create-layouts', 	['as'=>'create.layouts' , 'uses'=>'email\EmailController@createLayouts']);
+				Route::post('layout/save', 			['as'=>'save.layout' , 'uses'=>'email\EmailController@saveLayout']);
+				Route::post('template/save', 			['as'=>'save.template' , 'uses'=>'email\EmailController@saveTemplate']);
+
+				Route::get('documents', ['as'=>'documents' , 'uses'=>'document\DocumentController@index']);
+				Route::get('document/templates', ['as'=>'document.templates' , 'uses'=>'document\DocumentController@templates']);
+				Route::get('document/layouts', ['as'=>'document.layouts' , 'uses'=>'document\DocumentController@layouts']);
+
 			Route::group(['middleware' => ['auth.org']], function(){
 
-				Route::get('/holiday/list',['as'=>'holiday.list','uses'=>'hrm\HolidayController@holidayList']);
 
-				Route::get('settings/department', ['as' => 'department.settings' , 'uses' => 'hrm\SettingController@departmentSetting']);
-				Route::get('settings/organization' , ['as'=>'setting.org' , 'uses' => 'hrm\SettingController@orgSetting']);
 				Route::post('organization/settings/save',['as'=>'save.organization.settings','uses'=>'hrm\SettingController@saveOrganizationSettings']);
 				Route::get('settings/attendance' , ['as'=>'setting.attendance' , 'uses'=>'hrm\SettingController@attendanceSetting']);
 				Route::get('settings/emp' , ['as'=>'setting.employee' , 'uses' => 'hrm\SettingController@employeeSetting']);
@@ -170,18 +190,23 @@
 				
 				
 				Route::group(['middleware'=>'role'],function(){
-					Route::get('/',['as'=>'organization.dashboard','uses'=>'DashboardController@index']);
+					Route::get('/holiday/list',['as'=>'holiday.list','uses'=>'hrm\HolidayController@holidayList']);
+						Route::get('/',['as'=>'organization.dashboard','uses'=>'DashboardController@index']);
+					
+					Route::any('/account/leaves',['middleware'=>'role', 'as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@leave_listing']);
+					Route::any('account/leave/{id?}',['as'=>'store.employeeleave' , 'uses'=>'hrm\EmployeeLeaveController@store']);
+					Route::get('account/todo',	['as'=>'account.todo','uses'=>'project\ProjectController@todo']);
+					Route::get('account/tasks',			['as'=>'account.tasks','uses'=>'account\TasksController@index']);
+					Route::get('account/notes',['as'=>'account.notes','uses'=>'project\NotesController@index']);
 
 					});
 				//Notes
-				Route::get('account/notes',['as'=>'account.notes','uses'=>'project\NotesController@index']);
 				Route::get('account/notes/list',	['as'=>'account.notes.list.ajax','uses'=>'project\NotesController@listNotes']);
 				Route::post('account/notes/save',	['as'=>'save.account.notes','uses'=>'project\NotesController@createNotes']);
 				Route::post('account/notes/edit',	['as'=>'edit.account.notes','uses'=>'project\NotesController@edit']);
 				Route::post('account/notes/delete',	['as'=>'delete.account.notes','uses'=>'project\NotesController@delete']);
 
 				Route::post('account/tasks/status/update',['as'=>'task.status.update','uses'=>'account\TasksController@changeStatus']);
-				Route::get('account/tasks',			['as'=>'account.tasks','uses'=>'account\TasksController@index']);
 				Route::post('account/tasks/create',	['as'=>'create.tasks','uses'=>'account\TasksController@create']);
 				Route::post('account/tasks/delete',	['as'=>'delete.tasks','uses'=>'account\TasksController@deleteTasks']);
 				Route::get('account/tasks/edit/{id}',['as'=>'edit.task','uses'=>'account\TasksController@editTask']);
@@ -197,16 +222,29 @@
 				Route::post('project/tasks/update',	['as'=>'update.tasks','uses'=>'account\TasksController@updateTask']);
 				Route::post('project/tasks/priority/filter',['as'=>'filterPriority.tasks','uses'=>'account\TasksController@filterPriority']);
 				// Route::post('project/tasks/employee/filter',['as'=>'filterEmployee.tasks','uses'=>'account\TasksController@filterEmployee']);
-				
-				Route::any('/account/leaves',['middleware'=>'role', 'as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@index']);
-				Route::get('account/todo',	['as'=>'account.todo','uses'=>'project\ProjectController@todo']);
 
+				
 				//profile
 				Route::group(['prefix' => 'account','namespace' => 'account'],function(){
 					//change password
 					Route::group(['middleware'=>'role'],function(){
 						Route::get('/activities',['as'=>'account.activities','uses'=>'AccountActivityController@listActivities']);
 						Route::any('/attendance',['as'=>'account.attandance','uses'=>'AttendanceController@myattendance']);
+						Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
+						Route::get('/performance',['as'=>'account.performance','uses'=>function(){
+							return view('organization.profile.performance');
+						}]);
+						Route::get('/emails',['as'=>'account.emails','uses'=>'AccountController@emailsList']);
+						Route::get('/salary',['as'=>'account.salary','uses'=>function(){
+							return view('organization.profile.salary');
+						}]);
+						Route::get('/chat',['as'=>'account.chat','uses'=>function(){
+							return view('organization.profile.chat');
+						}]);
+						Route::get('/discussion',['as'=>'account.discussion','uses'=>function(){
+							return view('organization.profile.discussion');
+						}]);
+					Route::get('/projects/{id?}',[ 'as'=>'account.projects','uses'=>'AccountController@listProjects']);
 
 					});
 
@@ -214,9 +252,8 @@
 					Route::post('change/password' , ['as' => 'change.password' , 'uses' => 'AccountController@changePassword']);
 
 					//upload profile image
-					Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
 					Route::post('/profile/upload',['as'=>'profile.picture','uses'=>'AccountController@uploadProfile']);
-					Route::get('/emails',['as'=>'account.emails','uses'=>'AccountController@emailsList']);
+					Route::get('/profile-picture/remove/{id}',['as'=>'profile.picture.delete','uses'=>'AccountController@deleteProfilePicture']);
 					Route::patch('/profile/update/{id}',['as'=>'update.profile','uses'=>'AccountController@update']);
 					Route::patch('/profile/storeMeta/{id}',['as'=>'update.profile.meta','uses'=>'AccountController@storeMeta']);
 					Route::post('/attandance_monthly',['as'=>'account.attendance_monthly','uses'=>'AttendanceController@attendance_monthly']);
@@ -230,20 +267,7 @@
 				/*******************************************************************************************/
 				
 
-					Route::get('/performance',['as'=>'account.performance','uses'=>function(){
-						return view('organization.profile.performance');
-					}]);
-					Route::get('/projects/{id?}',[ 'as'=>'account.projects','uses'=>'AccountController@listProjects']);
 					
-					Route::get('/salary',['as'=>'account.salary','uses'=>function(){
-						return view('organization.profile.salary');
-					}]);
-					Route::get('/chat',['as'=>'account.chat','uses'=>function(){
-						return view('organization.profile.chat');
-					}]);
-					Route::get('/discussion',['as'=>'account.discussion','uses'=>function(){
-						return view('organization.profile.discussion');
-					}]);
 					Route::get('/profile/edit',['as'=>'profile.edit','uses'=>function(){
 						return view('organization.profile.edit');
 					}]);
@@ -292,26 +316,25 @@
 							Route::get('/attendance/import',		['as' => 'import.form.attendance' , 'uses' => 'AttendanceController@import_form']);
 							Route::post('employee/update', 			['as' => 'update.employee' , 'uses' => 'EmployeeController@update']);
 							Route::get('employee/delete/{id}', 			['as' => 'delete.employee' , 'uses' => 'EmployeeController@delete']);
+							Route::get('/designations/{id?}',	[  'as' => 'designations' , 'uses' => 'DesignationsController@index']);
+							Route::get('/departments/{id?}',	['as' => 'departments' , 'uses' => 'DepartmentsController@index']);
+							Route::get('shifts/{id?}',		['as' => 'shifts' , 'uses' =>'ShiftsController@index']);
+							Route::get('openings',['as'=>'list.opening', 'uses'=>'JobOpeningController@index']);
+							Route::get('applicants',['as'=>'list.applicant', 'uses'=>'ApplicantController@index']);
 
 						});
 
 
 						Route::match(['get','post'],'applicant/create',['as'=>'applicant.create', 'uses'=>'ApplicantController@create']);
-						Route::get('applicants',['as'=>'list.applicant', 'uses'=>'ApplicantController@index']);
 						Route::match(['get','post'],'applicant/edit/{id?}',['as'=>'edit.applicant', 'uses'=>'ApplicantController@update']);
 						Route::get('applicant/delete/{id}',['as'=>'delete.applicant', 'uses'=>'ApplicantController@destroy']);
 
 
 						Route::match(['get','post'],'opening/create',['as'=>'opening.create', 'uses'=>'JobOpeningController@create']);
-						Route::get('openings',['as'=>'list.opening', 'uses'=>'JobOpeningController@index']);
 						Route::match(['get','post'],'opening/update/{id?}',['as'=>'opening.update', 'uses'=>'JobOpeningController@update']);
 						Route::get('opening/delete/{id}',['as'=>'delete.opening', 'uses'=>'JobOpeningController@destroy']);
 						
 						Route::get('application/apply/{id}',['as'=>'application', 'uses'=>'JobOpeningController@application']);
-
-						Route::any('employee/leave/{id?}',['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@index']);
-						//Route::get('employee/leave',['as'=>'list.employeeleave' , 'uses'=>'EmployeeLeaveController@index']);
-
 
 						//ROLE PERMISSON ROUTE
 						// Route::get('role/create',['as'=>'create.role', 'uses'=>'UserRoleController@create']);
@@ -347,7 +370,6 @@
 
 
 						//shifts
-							Route::get('shifts/{id?}',		['as' => 'shifts' , 'uses' =>'ShiftsController@index']);
 							Route::post('shifts/save',	['as' => 'store.shifts' , 'uses' =>'ShiftsController@save']);
 							Route::post('shifts/update',['as' => 'update.shifts' , 'uses' =>'ShiftsController@update']);
 							Route::get('shifts/delete/{id}',	['as' => 'delete.shifts' , 'uses' =>'ShiftsController@delete']);		
@@ -390,14 +412,12 @@
 							// Route::get('/applicants',		['as' => 'applicants' , 'uses' => 'ApplicantsController@index']);
 
 						//Designation
-							Route::get('/designations/{id?}',	[  'as' => 'designations' , 'uses' => 'DesignationsController@index']);
 							Route::post('/designation/save',			['as' => 'store.designation' , 'uses' => 'DesignationsController@save']);
 							Route::post('/designation/update',			['as' => 'update.designation' , 'uses' => 'DesignationsController@update']);
 							Route::post('edit/designation',			['as' => 'edit.designation','uses'=> 'DesignationsController@editUserDesignation']);
 							Route::get('delete/designation/{id}',		['as' => 'delete.designation','uses'=> 'DesignationsController@deleteUserDesignation']);
 
 						//Department
-							Route::get('/departments/{id?}',	['as' => 'departments' , 'uses' => 'DepartmentsController@index']);
 							Route::post('/department/save',		['as' => 'store.department' , 'uses' => 'DepartmentsController@save']);
 							Route::get('/department/update',	['as' => 'update.department' , 'uses' => 'DepartmentsController@update']);
 							Route::post('/department/edit',	['as' => 'edit.department' , 'uses' => 'DepartmentsController@editDepartment']);
@@ -423,14 +443,27 @@
 					Route::get('client/delete/{id}',	['as'=>'delete.client','uses'=>'ClientController@delete']);
 					//Services
 						Route::get('/services',['as'=>'list.services','uses'=>'ServicesController@index']);
+						Route::match(['get','post'],'/service/save',['as'=>'save.service','uses'=>'ServicesController@create']);
+
 					//customer
 						Route::get('/customer',['as'=>'list.customer','uses'=>'CustomerController@index']);
 					//Invoice
-						Route::get('/invoices',['as'=>'list.invoice','uses'=>'BillingController@invoice']);
+						Route::get('/invoices',['as'=>'list.invoice','uses'=>'BillingController@index']);
 					//billing
 						Route::get('/billings',['as'=>'list.billing','uses'=>'BillingController@billing']);
 					//products
 						Route::get('/products',['as'=>'list.products','uses'=>'ProductsController@index']);
+						Route::get('/product/delete/{id}',['as'=>'delete.products','uses'=>'ProductsController@delete']);
+						Route::match(['get','post'],'/product/save',['as'=>'save.product','uses'=>'ProductsController@create']);
+						Route::match(['get','post'],'/product/price/{id?}',['as'=>'price.products','uses'=>'ProductsController@prices']);
+					//Category price.products
+						Route::get('product/category',['as'=>'list.product.category','uses'=>'CategoryController@product_category_listing']);
+						Route::post('/category/save',['as'=>'save.crm.category','uses'=>'CategoryController@save_category']);
+						Route::get('/category/delete/{id}',['as'=>'delete.crm.category','uses'=>'CategoryController@delete']);
+					//service category
+						Route::get('/service/category',['as'=>'list.service.category','uses'=>'CategoryController@service_category_listing']);
+
+
 					//Leads
 						Route::get('/leads',['as'=>'leads','uses'=>'LeadsController@index']);
 					//sales
@@ -438,7 +471,11 @@
 					//pricing
 						Route::get('/pricing',['as'=>'pricing','uses'=>'BillingController@pricing']);
 					//pricing
-						Route::get('/payment-methods',['as'=>'payment-methods','uses'=>'BillingController@payment_method']);
+						Route::get('/payment-methods',['as'=>'payment-methods','uses'=>'PaymentMethodController@index']);
+						Route::post('/payment-method/save',['as'=>'save.payment.method','uses'=>'PaymentMethodController@create']);
+						Route::get('/payment-method/delete/{id}',['as'=>'delete.payment.method','uses'=>'PaymentMethodController@delete']);
+						
+						
 				});
 
 
@@ -511,17 +548,30 @@
 				
 
 				Route::group(['namespace' => 'dataset'],function(){
+					Route::group(['middleware'=>'role'],function(){
+
 					Route::get('/datasets',['as' => 'list.dataset','uses' => 'DatasetController@listDataset']);
 					Route::get('/dataset/import',['as' => 'import.dataset','uses' => 'DatasetController@importDataset']);
+					Route::get('/dataset/create',['as' => 'create.dataset','uses' => 'DatasetController@craeteDataset']);
+					});
+
 					Route::get('/dataset/{id}',['as' => 'view.dataset','uses' => 'DatasetController@viewDataset']);
 					Route::post('/import/dataset', ['as'=>'upload.dataset','uses'=>'DatasetController@uploadDataset']);
 					Route::post('/dataset/save',['as'=>'save.dataset','uses'=>'DatasetController@store']);
 					Route::post('/dataset/update/{id}',['as'=>'update.dataset','uses'=>'DatasetController@updateRecords']);
 					Route::post('/dataset/create/column/{id}',['as'=>'create.column','uses'=>'DatasetController@createColumn']);
+					Route::get('/delete/dataset/{id}',['as'=>'delete.dataset','uses'=>'DatasetController@deleteDataset']);
 				});
 				Route::group(['prefix'=>'cms','namespace' => 'cms'],function(){
+
+					Route::group(['middleware'=>'role'],function(){
+						Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@listPage' ]);
+						Route::get('/categories/{id?}',['as'=>'categories','uses'=>'categoriesController@listdata']);
+						Route::get('/posts',		['as'=>'list.posts' , 'uses'=>'PagesController@listposts']);
+
+						
+					});
 					//Pages 
-					Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@listPage' ]);
 					Route::get('/page/{id}',	['as'=>'edit.pages' , 'uses'=>'PagesController@edit' ]);
 					Route::post('/page/save',	['as'=>'store.page' , 'uses'=>'PagesController@save' ]);
 					Route::post('/page/update',	['as'=>'update.page', 'uses'=>'PagesController@update' ]);
@@ -530,7 +580,6 @@
 					Route::post('/pages/status/update',['as'=>'update.status','uses'=>'PagesController@updateStatus']);
 
 					// posts
-					Route::get('/posts',		['as'=>'list.posts' , 'uses'=>'PagesController@listposts']);
 					Route::get('/posts/{id}',	['as'=>'edit.posts' , 'uses'=>'PagesController@editposts' ]);
 					Route::post('/posts/save',	['as'=>'store.posts' , 'uses'=>'PagesController@savePosts' ]);
 					Route::post('/posts/update',	['as'=>'update.posts', 'uses'=>'PagesController@updatePosts' ]);
@@ -538,7 +587,6 @@
 					Route::post('/posts/status/update',['as'=>'update.status.posts','uses'=>'PagesController@updateStatusPosts']);
 					// Route::get('/posts',['as'=>'posts','uses'=>'PostsController@index']);
 
-					Route::get('/categories/{id?}',['as'=>'categories','uses'=>'categoriesController@listdata']);
 					Route::post('/save/categories',['as' => 'category.save' , 'uses' => 'categoriesController@save']);
 					Route::get('/delete/categories/{id}',['as' => 'category.delete' , 'uses' => 'categoriesController@delete']);
 					Route::get('/edit/categories/{id}',['as' => 'category.edit' , 'uses' => 'categoriesController@getDataById']);
@@ -572,7 +620,11 @@
 				});
 			});
 		// visualization
+		// 
+				Route::group(['middleware'=>'role'],function(){
+					
 			Route::get('create/visualization' , ['as' => 'create.visual' , 'uses' => 'visualization\VisualisationController@create']);
+				});
 			Route::get('visualization/edit/charts/{id?}' , ['as' => 'edit.visual' , 'uses' => 'visualization\VisualisationController@edit']);
 			Route::post('/visualization/save', ['as'=>'save.visualization','uses' => 'visualization\VisualisationController@createVisualization']);
 			Route::get('/visualization/delete/{id}',['as'=>'delete.visualization','uses'=>'visualization\VisualisationController@delete_visualization']);
@@ -614,7 +666,23 @@
 		}]);
 
 	});
-
+	//forms
+		Route::POST('/create/form',					['as'=>'org.create.forms','uses'=>'Admin\FormBuilderController@createForm']);
+		Route::get('/forms/list',				['as'=>'org.list.forms','uses'=>'Admin\FormBuilderController@listForm']);
+		Route::get('/form/delete/{id}',			['as'=>'org.delete.form','uses'=>'Admin\FormBuilderController@deleteForm']);
+		Route::get('/forms/sections/{form_id}',	['as'=>'org.list.sections','uses'=>'Admin\FormBuilderController@sectionsList']);
+		Route::post('/create/section/{id}',		['as'=>'org.create.sections','uses'=>'Admin\FormBuilderController@createSection']);
+		Route::get('/delete/section/{id}',		['as'=>'org.del.section','uses'=>'Admin\FormBuilderController@deleteSection']);
+		Route::get('/forms/create',				['as'=>'org.create.form','uses'=>'Admin\FormBuilderController@index']);
+		Route::get('/form/fields/{form_id}/{section_id}',['as'=>'org.list.field','uses'=>'Admin\FormBuilderController@listFields']);
+		Route::get('/delete/field',				['as'=>'org.del.field','uses'=>'Admin\FormBuilderController@deleteField']);
+		Route::post('/update/field/{form_id}/{section_id}',['as'=>'org.update.field','uses'=>'Admin\FormBuilderController@updateField']);
+		Route::get('/form/row',					['as'=>'org.form.row','uses'=>'Admin\FormBuilderController@addRow']);
+		Route::post('/form/store/{form_id}/{section_id}',['as'=>'org.form.store','uses'=>'Admin\FormBuilderController@store']);
+		Route::get('/form/field',				['as'=>'org.form.field','uses'=>'Admin\FormBuilderController@formFields']);
+		Route::get('/form/edit/{id}',			['as'=>'org.form.edit','uses'=>'Admin\FormBuilderController@editForm']);
+		Route::get('/form/update/{id}',			['as'=>'org.form.udpate','uses'=>'Admin\FormBuilderController@updateForm']);
+		Route::get('/field/delete/{id}',		['as'=>'org.field.delete','uses'=>'Admin\FormBuilderController@deletefield']);
 
 	/***************************************** Public Route for Share Data ******************************************/
 

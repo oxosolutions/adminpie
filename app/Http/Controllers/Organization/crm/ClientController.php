@@ -27,7 +27,11 @@ class ClientController extends Controller
     public function save(Request $request){
         //entry in user table with user_type 3
         $request['role_id'] = org_setting::where('key','client_role')->first()->value;
+        $request->request->add(['status'=>1]);
         $user_id = $this->user->create($request->all(), 3);
+        if($user_id == false){
+            dd('Client already exist with this email id');
+        }
 
         //created into client rst data
             $data = new Client;

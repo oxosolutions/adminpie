@@ -13,6 +13,7 @@ use Mail;
 use Hash;
 use App\Model\Organization\User;
 use App\Mail\forgetPassword;
+use App\Model\Organization\UserRoleMapping;
 
 class LoginController extends Controller
 {
@@ -53,11 +54,16 @@ class LoginController extends Controller
                 $organizationToken->auth_login_token = '';
                 $organizationToken->save();
                 try{
-                    $model = User::where('user_type','[1]')->first();
+
+                    $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
+                        $query->where('role_id',1);
+                    })->first();
                     Auth::guard('org')->loginUsingId($model->id);
+                    $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
+                    Session::put('user_role',$putRole->role_id);
                     return redirect()->route('org.login');
                 }catch(\Exception $e){
-
+                    //throw $e;
                 }
             }
         }
@@ -95,6 +101,8 @@ class LoginController extends Controller
                     'status' => 1
                 ];
                 if(Auth::guard('org')->attempt($credentials)) {
+                    $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
+                    @Session::put('user_role',@$putRole->role_id);
                     return redirect('/'); 
                 }else{
                     Session::flash('login_fails' , 'wrong user credientals.');
@@ -122,6 +130,10 @@ class LoginController extends Controller
     {
         return view('organization.login.forgot-password');
     }
+     public function forgotPasswordv1()
+    {
+        return view('organization.login.forgot-password-v1');
+    }
     public function forgotMail(Request $request)
     {
         $model = User::where('email',$request->email)->first();
@@ -143,6 +155,12 @@ class LoginController extends Controller
         }else{
             return redirect()->route('org.login');
         }
+    }
+     public function changePassv1()
+    {
+       
+            return view('organization.login.reset-password-v1');
+       
     }
     public function updatePass(Request $request)
     {

@@ -171,15 +171,12 @@ foreach($columns as $column){
 								<?php echo e($column); ?>
 
 							<?php endif; ?>
-							<?php if($k != 'created_at' && $k != 'updated_at'): ?>
+							
 								<i class="fa fa-sort<?php echo e((Request::get('order') != '' && Request::get('orderby') == $k)?'-'.Request::get('order'):''); ?>" aria-hidden="true" style="margin-left: 10px; cursor: pointer;"></i>
-							<?php endif; ?>
+							
 						</span>
 					</div>
-					
 				<?php endif; ?>
-				
-				
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 			<div class="clear"></div> <!-- .clear -->
 		</li> 	<!-- .aione-datalist-header-item -->
@@ -241,12 +238,23 @@ foreach($columns as $column){
 								<?php 
 									$relations = explode('.',$k);
 									$getRelations = $dataset;
+									$multipleValues = [];
+									$multipleValuesForLoop = [];
 								 ?>
 									<?php if(count($relations)>1): ?>
 										<?php $__currentLoopData = $relations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $relKey => $relation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 											<?php 
 												try{
-													$getRelations = $getRelations[$relation];
+													@$getRelations = $getRelations[$relation];
+													/*if($getRelations instanceof Illuminate\Database\Eloquent\Collection){
+														$multipleValuesForLoop[$relation] = $getRelations;
+														continue;
+													}else{
+														foreach($multipleValuesForLoop as $relation => $multiVal){
+															dump($multiVal);
+															//$multipleValues[] = $multiVal->{$relation};
+														}
+													}*/
 												}catch(\Exception $e){
 													try{
 														$getRelations = FormGenerator::GetMetaValue($getRelations, $relation);
@@ -256,7 +264,7 @@ foreach($columns as $column){
 												}
 											 ?>
 										<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-										<?php if($getRelations == null || $getRelations == ""): ?>
+										<?php if(($getRelations == null || $getRelations == "") && empty($multipleValues)): ?>
 											<div>&nbsp;</div>
 										<?php elseif($getRelations === FALSE): ?>
 											<div>&nbsp;</div>

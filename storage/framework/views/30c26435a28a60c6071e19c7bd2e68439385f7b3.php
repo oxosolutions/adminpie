@@ -3,7 +3,7 @@
     <ul id="aione_menu" class="aione-menu">
     <?php 
     $index = 0;
-     $permisson = drawSidebar::checkPermisson();
+    $permisson = drawSidebar::checkPermisson();
      ?>
         <?php $__currentLoopData = drawSidebar::drawSidebar(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $sidebar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
         

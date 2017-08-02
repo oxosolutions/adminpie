@@ -1,4 +1,19 @@
-@extends('admin.layouts.main')
+@if(Auth::guard('admin')->check() == true)
+	@php
+		$layout = 'admin.layouts.main';
+		$route = 'create.sections';
+		$routeDelSec = 'del.section';
+		$routeListField = 'list.field';
+	@endphp
+@else
+	@php
+		$layout = 'layouts.main';
+		$route = 'org.create.sections';
+		$routeDelSec = 'org.del.section';
+		$routeListField = 'org.list.field';
+	@endphp
+@endif
+@extends($layout)
 @section('content')
 @php
 $page_title_data = array(
@@ -64,7 +79,7 @@ $page_title_data = array(
 				Add Section
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-				{!! Form::open(['route'=>['create.sections' , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
+				{!! Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
 				
 					<div class="row no-margin-bottom">
 			            <div class="input-field col l12">
@@ -151,8 +166,8 @@ $page_title_data = array(
 										<div class="col l4">
 											<a class='dropdown-button btn blue ' href='javascript:;' data-activates='d{{$index}}'>Actions</a>
 											<ul id='d{{$index}}' class='dropdown-content'>
-											    <li><a href="{{ route('del.section',['id'=>$value->id]) }}">Delete</a></li>
-											    <li><a class="field" href="{{route('list.field',['form_id'=>$value->form_id,'section_id'=>$value->id])}}">Fields</a></li>
+											    <li><a href="{{ route($routeDelSec,['id'=>$value->id]) }}">Delete</a></li>
+											    <li><a class="field" href="{{route($routeListField,['form_id'=>$value->form_id,'section_id'=>$value->id])}}">Fields</a></li>
 											</ul>
 										</div>
 

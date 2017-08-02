@@ -28,12 +28,6 @@
 	<script type="text/javascript" src="{{ asset('js/spectrum.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/simple-iconpicker.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('js/jquery-ui.min.js') }}"></script>
-	{{-- script for code editor start --}}
-	<script src="{{ asset('js/jquery.scrollto.js') }}"></script>
-	<script src="{{ asset('js/pagedown.js') }}"></script>
-	<script src="{{ asset('js/pagedown-extra.js') }}"></script>
-	<script src="{{ asset('js/diff.js') }}"></script>
-	{{-- end --}}
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/sweetalert/dist/sweetalert.css') }}">
 
     <script src="{{ asset('bower_components/sweetalert/dist/sweetalert.min.js') }}"></script>

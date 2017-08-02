@@ -30,6 +30,8 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 	<div class="row mb-0">
 		@include('organization.profile._tabs')
 		<div class="row activities mb-0">
@@ -66,4 +68,8 @@ $page_title_data = array(
 			{{$user_log->render()}}
 		</div>
 	</div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

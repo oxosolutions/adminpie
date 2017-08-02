@@ -26,14 +26,12 @@ class CheckRole
      */
     public function handle($request, Closure $next, $role = null)
     {  
-        $current_role_id=1;
         
       $current_route =  $request->route();
       $uri =str_replace('/{id}','',$current_route->uri);
       $current_uri = str_replace('/{id?}','',$uri);
-      $current_role_id =1;// Auth::guard('org')->user()->role_id;
-      if($current_role_id !=1){
-        $permisson = Permisson::where('role_id',$current_role_id)->whereNotNull('permisson')->get();
+      if(!in_array(1, role_id())){
+        $permisson = Permisson::whereIn('role_id',role_id())->whereNotNull('permisson')->get();
         foreach ($permisson as $key => $value) {
           if($value['permisson_type']=='module'){
                   $route = module::where('id',$value['permisson_id'])->whereNotNull('route');
@@ -54,7 +52,7 @@ class CheckRole
           }
         }
       }
-      elseif($current_role_id==1){
+      elseif(in_array(1, role_id())){
         $route = draw_sidebar::checkPermisson();
        
         $routes = $route['url'];

@@ -1,4 +1,13 @@
-@extends('admin.layouts.main')
+@if(Auth::guard('admin')->check() == true)
+	@php
+		$layout = 'admin.layouts.main';
+	@endphp
+@else
+	@php
+		$layout = 'layouts.main';
+	@endphp
+@endif
+@extends($layout)
 @section('content')
 @php
 $page_title_data = array(

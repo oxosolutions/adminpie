@@ -22,10 +22,6 @@ class Applicant extends Model
    public function user_relation(){
       return $this->belongsTo('App\Model\Organization\User','user_id');
    }
-
-  public function applicant_meta(){
-    return $this->hasMany('App\Model\Organization\ApplicantMeta','applicant_id','id');
-  }
   
   public function application_rel(){
     return $this->hasMany('App\Model\Organization\Application','applicant_id','id');

@@ -26,7 +26,7 @@ use App\Model\Admin\GlobalWidget;
 class DashboardController extends Controller
 {
 	protected function widget_permisson(){
-		$widgetPermisson = Permisson::select('permisson_id')->where(['role_id'=>role_id(), 'permisson_type'=>'widget','permisson'=>'on'])->get();
+		$widgetPermisson = Permisson::select('permisson_id')->whereIn('role_id',role_id())->where([ 'permisson_type'=>'widget','permisson'=>'on'])->get();
     	$permissonWidgetId = $widgetPermisson->mapWithKeys(function ($item) {
     		return [$item['permisson_id'] => $item['permisson_id']];
 			});
@@ -40,6 +40,14 @@ class DashboardController extends Controller
 	}
     public function index(){
     	$time = Carbon::now('Asia/Calcutta');
+    	$userRole = Session::get('user_role');
+    	// dd($userRole);
+    	$widgets = Permisson::with(['widgets'])->where(['permisson_type'=>'widget','role_id'=>$userRole,'permisson'=>'on'])->get();
+    	return view('organization.dashboard.index',['widgets'=>$widgets,'model'=>[],'check_in_out_status'=>'0']);
+
+
+
+
 		$current_time =  gmdate('H:i:s',strtotime($time));
 			//echo $time->format('l jS \\of F Y h:i:s A');
 			$ip =  \Request::ip();
@@ -101,13 +109,13 @@ class DashboardController extends Controller
 								],
 
 				];
-				if(role_id()!=1){
+				if(!in_array(1,role_id())){
 					$permissonWidget = $this->widget_permisson();
 				}
 		foreach ($keys as $key => $arrayKey) {
 					// condition commented by sandeep .reason. role system is not working correctly
 					 
-				if(role_id()!=1){	
+				if(!in_array(1,role_id())){	
 					if(in_array($key, $permissonWidget)){
 						$dashboardData[$key] = [
 															'count' => $arrayKey['model']::get()->count(),

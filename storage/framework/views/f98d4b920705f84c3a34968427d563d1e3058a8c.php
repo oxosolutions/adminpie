@@ -18,7 +18,6 @@
 				<div class="aione-row">
 					<div id="aione_sidebar" class="aione-sidebar">
 						<div class="aione-row">
-						
 							<?php echo $__env->make('components.sidebars.sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 						
 						</div><!-- .aione-row -->

@@ -9,6 +9,12 @@ $page_title_data = array(
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php if(Session::has('error')): ?>
+	 
+		<?php $__currentLoopData = Session::get('error'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+		<div class="alert alert-info" style="color:red;"><?php echo e($value); ?> </div>
+		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+	<?php endif; ?>
 
 	<div class="row">
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -101,7 +107,7 @@ $page_title_data = array(
 					</div>
 					<div class="col s12 m3 l3 pl-7" >
 						
-						<?php echo Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'post']); ?>
+						<?php echo Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 								<input type="hidden" name="apply_by" value="employee">
 						<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -126,6 +132,7 @@ $page_title_data = array(
 									<?php $__currentLoopData = $ruleVal['meta']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $metakey =>$metaVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 									<?php 	$used_leave =0;
 										if(!empty($leave_count_by_cat[$ruleVal->id])){
+											
 											$used_leave = $leave_count_by_cat[$ruleVal->id]->sum('total_days');
 										}
 									 ?>

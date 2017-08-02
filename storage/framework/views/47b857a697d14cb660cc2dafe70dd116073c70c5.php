@@ -7,12 +7,15 @@
 		<?php echo Form::text('email',null , ['class'=>'no-margin-bottom aione-field','placeholder'=>'Email','required']); ?>
 
 	</div>
+	<?php 
+		$userRoles = $model->user_role_rel;
+		if(!$userRoles->isEmpty()){
+			$selectedRoles = $userRoles->groupBy('role_id')->toArray();
+			$selectedRoles = @array_keys($selectedRoles);
+		}
+	 ?>
 	<div class="row  aione-field-wrapper" style="margin-bottom: 0px">
-		 <?php echo Form::select('role_id',App\Model\Organization\UsersRole::roles(),null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Select Role']); ?>
-
-	</div>
-	<div class="row  aione-field-wrapper" style="margin-bottom: 0px">
-		<?php echo Form::select('user_type[]',App\Model\Organization\UsersType::userTypes(),array_map('intval',json_decode($model->user_type)),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Type ','multiple']); ?>
+		 <?php echo Form::select('role_id[]',App\Model\Organization\UsersRole::roles(),@$selectedRoles,['class'=>'no-margin-bottom aione-field','placeholder'=>'Select Role','multiple']); ?>
 
 	</div>
 	<div class="row">

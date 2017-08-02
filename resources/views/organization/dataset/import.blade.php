@@ -1,5 +1,19 @@
 @extends('layouts.main')
 @section('content')
+
+@php
+
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Import Dataset',
+	'add_new' => '+ Create Dataset',
+	'route' => 'create.dataset'
+	); 
+@endphp
+
+@include('common.pageheader',$page_title_data) 
 	<div class="card" style="margin-top: 0px;padding: 14px;">
 		{!!Form::open(['route'=>'upload.dataset','files'=>true])!!}
 		<div class="row no-margin-bottom">
@@ -36,10 +50,10 @@
 						{!! Form::radio('import_source','file_on_server',false,['id' => 'test3' ]) !!}
 				    	<label for="test3">File on server</label>    
 					</div>
-					<div class="col l12">
-						{{-- <input name="group1" type="radio" value="import_from_survey" id="test4" /> --}}
+					{{-- <div class="col l12">
+						<input name="group1" type="radio" value="import_from_survey" id="test4" />
 						{!! Form::radio('import_source','import_from_survey',false,['id' => 'test4' ]) !!}
-				     	<label for="test4">Import from survey</label>
+				     	<label for="test4">Import from survey</label> --}}
 					</div>
 				</div>
 			</div>

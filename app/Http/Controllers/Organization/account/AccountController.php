@@ -8,12 +8,12 @@ use Auth;
 use App\Model\Organization\User;
 use Hash;
 use Carbon\Carbon;
-use App\Model\Organization\EmployeeMeta;
 use App\Model\Organization\Employee;
 use App\Model\Organization\User as US;
 use App\Model\Organization\UsersMeta as UM;
 use App\Model\Organization\LogSystem as LS;
 use App\Model\Organization\ProjectMeta;
+use Session;
 
 class AccountController extends Controller
 {
@@ -40,10 +40,9 @@ class AccountController extends Controller
     		 $id = Auth::guard('org')->user()->id;
     	}
         $userDetails = User::with(['employee_rel'=>function($query){
-                $query->with(['department_rel','designation_rel','employeeMeta']);
+                $query->with(['department_rel','designation_rel']);
             },'metas','applicant_rel','client_rel','user_role_rel'])->find($id);
 
-        
         $userDetails->password = '';
         if($userDetails->employee_rel != null){
             @$userDetails->employee_id = $userDetails->employee_rel->employee_id;
@@ -55,18 +54,13 @@ class AccountController extends Controller
         // dd($userDetails);
         @$userDetails->marital_status = $userDetails->employee_rel->marital_status;
         @$userDetails->date_of_joining = Carbon::parse($userDetails->employee_rel->joining_date)->format('Y-m-d');
-        if($userDetails->employee_rel != null){
-            foreach(@$userDetails->employee_rel->employeeMeta as $key => $value){
-                $userDetails->{$value->key} = $value->value;
-            }
-        }
         if(!$userDetails->metas->isEmpty()){
             foreach($userDetails->metas as $key => $value){
                 $userDetails->{$value->key} = $value->value;
             }
         }
            
-        	return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
+        return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }
 
     /**
@@ -99,8 +93,9 @@ class AccountController extends Controller
 
     public function storeMeta(Request $request, $id){
         $request = $request->except([
-                            '_method','_token'
+                            '_method','_token','action'
                         ]);
+
         if($request['meta_table'] == 'usermeta'){
             foreach($request as $key => $value){
                 if($value != null && $value != ''){
@@ -113,26 +108,21 @@ class AccountController extends Controller
             }
         }
         if($request['meta_table'] == 'employeemeta'){
-
             foreach($request as $key => $value){
                 if($value != null && $value != ''){
                     if($key == 'designation'){
-                        // $employeeModel = Employee::find($id);
-                        // $employeeModel['designation'] = $value;
-                        // $employeeModel->save();
-                        $employeeModel = Employee::where('id',$id)->update(['designation' => $value]);
+                        $employeeModel = Employee::where('user_id',$id)->update(['designation' => $value]);
                     }
                     if($key == 'department'){
-                        // $employeeModel = Employee::find($id);
-                        // $employeeModel['department'] = $value;
-                        // $employeeModel->save();
-                        $employeeModel = Employee::where('id',$id)->update(['department' => $value]);
+                        $employeeModel = Employee::where('user_id',$id)->update(['department' => $value]);
                     }
-                    // $model = Employee::where('id',$id)->update(['employee_id' => $request['employee_id']]);
-                    $metaModel = EmployeeMeta::firstOrNew(['employee_id'=>$id,'key'=>$key]);
+                    if($key == 'employee_id'){
+                        $employeeModel = Employee::where('user_id',$id)->update(['employee_id' => $value]);
+                    }
+                    $metaModel = UM::firstOrNew(['key'=>$key]);
                     $metaModel->key = $key;
                     $metaModel->value = $value;
-                    $metaModel->employee_id = $id;
+                    $metaModel->user_id = $id;
                     $metaModel->save();
                 }
             }
@@ -165,6 +155,11 @@ class AccountController extends Controller
         return back();
 
     }
+    public function deleteProfilePicture($id)
+    {
+        $model = UM::where('key' , 'profilePic')->delete();
+        return back();
+    }
     public function uploadimage($id , $fileName)
     {
         $model          = new UM;
@@ -182,22 +177,15 @@ class AccountController extends Controller
         }else{
             $id = Auth::guard('org')->user()->id;
         }
-        $model = US::where('id',$id)->first();
-        $check = Hash::check( Hash::make($request->password) , $model->password);
-        // dd($check);
-
         $validate = [
-                        'current_password'  => 'required',
                         'new_password'      => 'required|min:6',
                         'confirm_password'  => 'required|same:new_password|min:6'
                     ];
         $this->validate($request , $validate);
-       
-
         $model = US::where('id',$id)->update(['password' => Hash::make($request->new_password)]);
 
         if($model){
-            echo "<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>";
+            Session::flash('success-password' , 'Password change successfully');
             return back();
         }
     }

@@ -13,6 +13,7 @@
 	}
 </style>
 <div class="repeater-group">
+
 	@if($model != null)
 		@foreach($model as $key => $value)
 			@php
@@ -34,7 +35,7 @@
 								@php
 									$options['default_value'] = $defaulValues[$secKey];
 								@endphp
-								{!!FormGenerator::GenerateField($field->field_slug, $options)!!}
+								{!!FormGenerator::GenerateField($field->field_slug, $options,'', $formFrom)!!}
 						@endforeach
 					</div>
 				</div>
@@ -50,7 +51,7 @@
 			<div class="row" style="padding:15px 10px; ">
 				<div class="col l12">
 					@foreach($collection->fields as $secKey => $field)
-							{!!FormGenerator::GenerateField($field->field_slug, $options)!!}
+							{!!FormGenerator::GenerateField($field->field_slug, $options,'', $formFrom)!!}
 					@endforeach
 				</div>
 			</div>

@@ -11,6 +11,8 @@ use App\Repositories\User\UserRepositoryContract;
 use Auth;
 use Hash;
 use Session;
+use App\Model\Organization\UserRoleMapping;
+use App\Model\Organization\OrganizationSetting;
 
 class UsersController extends Controller
 {
@@ -34,20 +36,24 @@ class UsersController extends Controller
         $sortedBy = @$request->orderby;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['userRole','userType'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['userRole','userType'])->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->desc_asc)->with(['userRole','userType'])->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->desc_asc)->with(['user_role_rel'=>function($query){
+                      $query->with('roles');
+                  },'userType'])->paginate($perPage);
               }else{
-                   $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->with(['userRole','userType'])->paginate($perPage);
+                   $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->with(['user_role_rel'=>function($query){
+                      $query->with('roles');
+                  },'userType'])->paginate($perPage);
               }
           }
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name','email'=>'Email','userRole.name' => 'Role','status' => 'Status'],
+                          'showColumns' => ['name'=>'Name','email'=>'Email','user_role_rel.roles.name' => 'Role','status' => 'Status'],
                           'actions' => [
                                           'view'   => ['title'=>'View','route'=>'account.profile','class'=>'view'],
                                           'edit'   => ['title'=>'Edit','route'=>'info.user','class'=>'edit'],
@@ -76,10 +82,19 @@ class UsersController extends Controller
       }else{
         $this->validateForm($request);
         $model = new org_user;
-        $model->fill($request->except('_token','password','user_type'));
+        $model->fill($request->except('_token','password','user_role'));
         $model->password = Hash::make($request->password);
-        $model->user_type = json_encode($request->user_type);
+        $model->status = 1;
         $model->save();
+        if($request->has('user_role')){
+            foreach($request->user_role as $key => $role){
+                $roleMapping = new UserRoleMapping;
+                $roleMapping->user_id = $model->id;
+                $roleMapping->role_id = $role;
+                $roleMapping->status = 1;
+                $roleMapping->save();
+            }
+        }
         Session::flash('success','Created Successfully!!');
         return redirect()->route('info.user',['id'=>$model->id]);
 
@@ -95,7 +110,7 @@ class UsersController extends Controller
     			'name' => 'required',
     			'email'	=>	'required',
     			'password' => 'required',
-    			'user_type' => 'required'
+    			'user_role' => 'required'
     	];
 
     	$this->validate($request,$rules);
@@ -108,7 +123,7 @@ class UsersController extends Controller
 
     public function user_info($id){   
 
-        $model = org_user::find($id);
+        $model = org_user::with(['user_role_rel'])->find($id);
         return view('organization.user.info',['model'=>$model]);
     }
     public function user_meta(Request $request, $id)
@@ -116,13 +131,22 @@ class UsersController extends Controller
         $model = org_user::find($id);
         $model->name = $request->name;
         $model->email = $request->email;
-        $model->role_id = $request->role_id;
-        $model->user_type = json_encode($request->user_type);
         $model->save();
+        $notToDeleteIds = [];
+        foreach($request->role_id as $key => $role){
+            $mappingModel = UserRoleMapping::firstOrNew(['user_id'=>$id,'role_id'=>$role]);
+            $mappingModel->user_id = $id;
+            $mappingModel->role_id = $role;
+            $mappingModel->status = 1;
+            $mappingModel->save();
+            $notToDeleteIds[] = $mappingModel->id;
+        }
+        UserRoleMapping::whereNotIn('id',$notToDeleteIds)->where('user_id',$id)->delete();
         return redirect()->route('list.user');
     }
 
     public function update(Request $request){
+
         try{
             $model = org_user::find($request->user_id);
             $model->name = $request->name;

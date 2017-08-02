@@ -1,3 +1,19 @@
+<?php if(Auth::guard('admin')->check() == true): ?>
+	<?php 
+		$layout = 'admin.layouts.main';
+		$route = 'create.sections';
+		$routeDelSec = 'del.section';
+		$routeListField = 'list.field';
+	 ?>
+<?php else: ?>
+	<?php 
+		$layout = 'layouts.main';
+		$route = 'org.create.sections';
+		$routeDelSec = 'org.del.section';
+		$routeListField = 'org.list.field';
+	 ?>
+<?php endif; ?>
+
 <?php $__env->startSection('content'); ?>
 <?php 
 $page_title_data = array(
@@ -63,7 +79,7 @@ $page_title_data = array(
 				Add Section
 			</a>
 			<div id="add_new_wrapper" class="add-new-wrapper add-form ">
-				<?php echo Form::open(['route'=>['create.sections' , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
+				<?php echo Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 				
 					<div class="row no-margin-bottom">
@@ -154,8 +170,8 @@ $page_title_data = array(
 										<div class="col l4">
 											<a class='dropdown-button btn blue ' href='javascript:;' data-activates='d<?php echo e($index); ?>'>Actions</a>
 											<ul id='d<?php echo e($index); ?>' class='dropdown-content'>
-											    <li><a href="<?php echo e(route('del.section',['id'=>$value->id])); ?>">Delete</a></li>
-											    <li><a class="field" href="<?php echo e(route('list.field',['form_id'=>$value->form_id,'section_id'=>$value->id])); ?>">Fields</a></li>
+											    <li><a href="<?php echo e(route($routeDelSec,['id'=>$value->id])); ?>">Delete</a></li>
+											    <li><a class="field" href="<?php echo e(route($routeListField,['form_id'=>$value->form_id,'section_id'=>$value->id])); ?>">Fields</a></li>
 											</ul>
 										</div>
 
@@ -192,4 +208,4 @@ $page_title_data = array(
 
 </script>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('admin.layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make($layout, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

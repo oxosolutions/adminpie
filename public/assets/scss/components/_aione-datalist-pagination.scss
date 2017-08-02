@@ -1,0 +1,22 @@
+.pagination {
+	li.active {
+		background-color: #2196F3;
+		color: white;
+	}
+	li {
+		padding: 0 10px;
+		line-height: 30px;
+	}
+}
+.options {
+	position: absolute;
+	font-size: 14px;
+	margin-top: -3px;
+}
+.hover-me {
+	&:hover {
+		.options {
+			display: block;
+		}
+	}
+}

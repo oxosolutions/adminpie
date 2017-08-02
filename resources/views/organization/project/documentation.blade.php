@@ -10,6 +10,8 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 <div>
     @include('organization.project._tabs')
     <div class="col l12">
@@ -159,6 +161,11 @@
 		</div>
     </div>
 </div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <script type="text/javascript">
 	$('.add-new').off().click(function(e){
 			e.preventDefault();

@@ -14,6 +14,8 @@ use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersMeta;
 use Session;
 use Auth;
+use App\Model\Organization\OrganizationSetting;
+
 class EmployeeController extends Controller
 {
     protected $user;
@@ -24,11 +26,9 @@ class EmployeeController extends Controller
     }
     public function index(Request $request, $id=null)
     {
-
-        dump(test());
         $search = $this->saveSearch($request);
         if($search != false && is_array($search)){
-            $request->request->add(['items'=>$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+            $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
         }
         $datalist= [];
         $data= [];
@@ -46,7 +46,28 @@ class EmployeeController extends Controller
             if($sortedBy != ''){
                 $model = EMP::with(['employ_info'=>function($query) use ($request){
                       $query->with(['metas']);
-                },'designations','department_rel'])->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')->where('users.name','like','%'.$request->search.'%')->orWhere($orgId.'_employees.employee_id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
+                },'designations'=>function($query){
+                	$query->select(['name as designation_name','id']);
+                },'department_rel'=>function($query){
+                	$query->select(['name as department_name','id']);
+                }])
+                ->select(
+                			[
+                				'users.created_at as crt',
+                				'users.name',
+                				$orgId.'_employees.*',
+                				$orgId.'_designations.name as designation_name',
+                				$orgId.'_designations.id',
+                				$orgId.'_departments.name as department_name',
+                			]
+                		)
+                ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
+                ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
+                ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
+                ->where('users.name','like','%'.$request->search.'%')
+                ->orWhere($orgId.'_employees.employee_id','like','%'.$request->search.'%')
+                ->orderBy($sortedBy,$request->order)
+                ->paginate($perPage);
             }else{
                 $model = EMP::with(['employ_info'=>function($query) use ($request){
                       $query->with(['metas']);
@@ -58,17 +79,35 @@ class EmployeeController extends Controller
             if($sortedBy != ''){
                 $model = EMP::with(['employ_info'=>function($query){
                       $query->with(['metas']);
-                },'designations','department_rel'])->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')->orderBy($sortedBy,$request->order)->paginate($perPage);
+                },'designations'=>function($query){
+                	$query->select(['name as designation_name','id']);
+                },'department_rel'=>function($query){
+                	$query->select(['name as department_name','id']);
+                }])
+                ->select(
+                			[
+                				'users.created_at as crt',
+                				'users.name',
+                				$orgId.'_employees.*',
+                				$orgId.'_designations.name as designation_name',
+                				$orgId.'_designations.id',
+                				$orgId.'_departments.name as department_name',
+                			]
+                		)
+                ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
+                ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
+                ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
+                ->orderBy($sortedBy,$request->order)
+                ->paginate($perPage);
             }else{
                  $model = EMP::with(['employ_info'=>function($query){
                       $query->with(['metas']);
                 },'designations','department_rel'])->paginate($perPage);
             }
         }
-        // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.name'=>'Department','designations.name'=>'Designation','employ_info.metas.contact_no'=>'Contact No','employ_info.email'=>'Email ID','created_at'=>'Created At'],
+                      'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.department_name'=>'Department','designations.designation_name'=>'Designation','employ_info.metas.contact_no'=>'Contact No','employ_info.email'=>'Email ID','created_at'=>'Created At'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'=>'employ_info.id'] , 'class' => 'edit'],
                                       // 'delete'=>['title'=>'Delete','route'=>'delete.employee']
@@ -85,8 +124,7 @@ class EmployeeController extends Controller
       if(!empty($id) || $id != null || $id != ''){
         $data['data'] = EMP::where('id',$id)->first();
       }
-
-    	return view('organization.employee.list',$datalist)->with(['data' => $data]);;
+    	return view('organization.employee.list',$datalist)->with(['data' => $data]);
     }
 
     protected function saveSearch($request){
@@ -137,6 +175,13 @@ class EmployeeController extends Controller
 
     public function save(Request $request)
     {
+        $model = OrganizationSetting::where('key' , 'employee_role')->first();
+        if(count($model) > 0){
+            $employee_id = $model->value;
+        }else{
+            $employee_id = 2;
+        }
+
         $tbl = Session::get('organization_id');
         $valid_fields = [
                             'name'          => 'required',
@@ -146,7 +191,7 @@ class EmployeeController extends Controller
                         ];
         $this->validate($request , $valid_fields);
         $request['role_id'] =  setting_val_by_key('employee_role');
-        $user_id = $this->user->create($request->all(), 2);
+        $user_id = $this->user->create($request->all(), $employee_id);
         $emp = new EMP();
         $emp->user_id = $user_id;
         $emp->status = 1;

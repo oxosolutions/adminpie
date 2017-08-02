@@ -10,10 +10,17 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+	@include('common.page_content_primary_start')
 	<div>
 		@include('organization.project._tabs')
 		@include('common.todos')
 	</div>
+	@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 	<style type="text/css">
 		.defualt-logo-todo{
 			    width: 36px;

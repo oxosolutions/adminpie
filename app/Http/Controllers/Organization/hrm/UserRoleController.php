@@ -130,7 +130,7 @@ class UserRoleController extends Controller{
         }
         
         $orgModule = ORG::organization_module();
-        $widget = Widget::whereIn('module_id',array_collapse([$orgModule , [0]]))->get();
+        $widget = Widget::whereStatus(1)->whereIn('module_id',array_collapse([$orgModule , [0]]))->get();
         $role_data = Role::with(['permisson'])->where('id',$id)->get();
         $data = collect($role_data[0]['permisson']);
         $filled_data = $data->groupBy('permisson_type');

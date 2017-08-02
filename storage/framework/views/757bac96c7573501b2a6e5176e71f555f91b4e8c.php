@@ -5,9 +5,10 @@
 
 		</div>
 		<div class="error-red">	
-				<?php if(@$errors->has()): ?>
+				<?php if(@$errors->has() || Session::has('date_error')): ?>
 					<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
 
+					<span class="red-color"><?php echo e(Session::get('has-error')); ?></span>
 				<?php endif; ?>
 			</div>
 	<?php else: ?>
@@ -21,9 +22,10 @@
 
 			</div>
 			<div class="error-red">	
-				<?php if(@$errors->has()): ?>
+				<?php if(@$errors->has() || Session::has('date_error')): ?>
 					<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
 
+					<span class="red-color"><?php echo e(Session::get('has-error')); ?></span>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -39,13 +41,18 @@
 
 			</div>
 			<div class="error-red">	
-				<?php if(@$errors->has()): ?>
+				<?php if(@$errors->has() || Session::has('date_error')): ?>
 					<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
+
+					<span class="red-color"><?php echo e(Session::get('date_error')); ?></span>
 
 				<?php endif; ?>
 			</div>
 		</div>
 <?php endif; ?>
+	<?php if(Session::has('date_error')): ?>
+		<script type='text/javascript'>Materialize.toast('Date is already in use', 5000)</script>
+	<?php endif; ?>
 
 <script type="text/javascript">
 	  $('.datepicker').pickadate({

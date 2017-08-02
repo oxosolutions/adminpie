@@ -9,12 +9,14 @@
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <div>
     <?php echo $__env->make('organization.project._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	
 	<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-<?php echo Form::open(['route' => 'credientals.save' , 'type' => 'POST']); ?>
+	<?php echo Form::open(['route' => 'credientals.save' , 'type' => 'POST']); ?>
 
 	<div id="add_new_model" class="modal modal-fixed-footer">
 		
@@ -73,10 +75,15 @@
 		</div>
 	</div>
 	
-<?php echo Form::close(); ?>
+	<?php echo Form::close(); ?>
 
 		
 </div>
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <style type="text/css">
 	   
     .projects-logo{

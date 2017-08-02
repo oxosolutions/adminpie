@@ -9,10 +9,6 @@ use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Organization\ActivityLog;
 use App\Model\Admin\GlobalActivityTemplate;
 
-
-
-
-
 	/**
 	 * [user_info to get current user information & employee Info]
 	 * @return [collection] [user information]
@@ -22,18 +18,6 @@ use App\Model\Admin\GlobalActivityTemplate;
 		$id = Auth::guard('org')->user()->id;
 		$user = User::where(['id'=>$id])->select(['name','email','id'])->with('employee_rel')->first();
 		return $user;
-	}
-
-	function test(){
-		 $userData = user_info();
-		 $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
-       	 $collection =  $userInfo['user_role_rel'];
-         $keyed = $collection->mapWithKeys(function ($item) {
-             return [$item['role_id'] => $item['role_id']];
-          });
-        dd(array_values($keyed->all()));
-        dd($userInfo);
-
 	}
 
 	function getMetaValue($metaArray, $metaKey){
@@ -50,27 +34,15 @@ use App\Model\Admin\GlobalActivityTemplate;
 	 * [role_id current login role ID]
 	 * @return [type] [description]
 	 */
-	function role_id()
-	{
+	function role_id(){
 
-		return 1;
-			// $userData = user_info();
-       
-   //      $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
-   //     $collection =  $userInfo['user_role_rel'];
-   //      $keyed = $collection->mapWithKeys(function ($item) {
-   //           return [$item['role_id'] => $item['role_id']];
-   //        });
-   //      dd($keyed->all());
-   //      dd($userInfo);
-
-
-
-		 // $userData = user_info();
-   //       $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
-   //      dd($userInfo);
-		//$roles = Auth::guard('org')->user()->with('user_role_rel')->get();
-		//dd($roles);
+		$userData = user_info();
+		 $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
+       	 $collection =  $userInfo['user_role_rel'];
+         $keyed = $collection->mapWithKeys(function ($item) {
+             return [$item['role_id'] => $item['role_id']];
+          });
+		return array_values($keyed->all());		
 	}
 	/**
 	 * [setting_val_by_key description]
@@ -90,14 +62,13 @@ use App\Model\Admin\GlobalActivityTemplate;
 
 	function check_route_permisson($url)
 	{
-		//dump($url);
-		if(role_id()==1){
+		if(in_array(1, role_id())){
 			return true;
 			}else{
 				$routeCheck = route::where('route',$url);
 			 	if($routeCheck->exists()){
 				 	$route_id = $routeCheck->select('id')->first()->id;
-				 	$check =  Permisson::where(['role_id'=>role_id(), 'permisson_id'=>$route_id, 'permisson_type'=>'route'])->whereNotNull('permisson');
+				 	$check =  Permisson::whereIn('role_id',role_id())->where(['permisson_id'=>$route_id, 'permisson_type'=>'route'])->whereNotNull('permisson');
 				 	if($check->exists())
 				 	{
 				 		return true;

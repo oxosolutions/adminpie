@@ -1,5 +1,11 @@
 <?php $__env->startSection('content'); ?>
-	
+	<?php if(@$errors->has() || Session::has('date_error')): ?>
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('.modal').modal('open');
+			});
+		</script>
+	<?php endif; ?>
 <?php if(@$data): ?>
 	<?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kay => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 		<?php 
@@ -28,9 +34,10 @@
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 	
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-		<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>	
+	<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>	
+	<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
 		<?php echo Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -1,0 +1,158 @@
+Product Type
+	1. Name  2. use_for 3. status
+
+Products 
+
+	1 Titel  2. product type 3. Description  4. status 
+
+Pricing 
+
+	1. Product Id  2. real price  3. our price  4.tenure   5. date time 6. Status 
+
+Promotions
+	
+	1 promo code   2. value   3.from  4.to  5. status 
+
+Serives 
+
+	1. Title 2.  Type  3. description 4. status 
+
+Customer 
+
+	name  address phone already 
+
+Invoices
+	
+	1. id  	2. Invoice no 	3. customer Id  4. total	5 status 
+
+Order Detail
+
+	1. id 	2. Invoice Id  	3. Item Id  	4. units  5 unit price 	5. total 
+
+Billing
+
+	1. 
+
+ 
+
+
+
+
+
+Products
+services
+Invoices
+Billing
+Leads
+contacts
+Sales
+Pricing
+Payment Methods
+Front Store
+
+
+1 Payment Methods
+2 product
+3 product_meta
+4 Service
+5 Invoice
+6 Order Detail
+7 Pricing
+
+
+----------------------------------------------------------------------------------------------------
+pay
+
+CREATE TABLE `ocrm_175_payment_methods` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+     `name` VARCHAR(45) NOT NULL,
+     `status` VARCHAR(45) NOT NULL,
+     `created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL
+	PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `ocrm_175_products` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `type` INT(11) NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `description` VARCHAR(255) DEFAULT NULL,
+    `created_by` INT(11) DEFAULT NULL,
+    `status` VARCHAR(45) NOT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE `ocrm_175_product_meta` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+     `product_id` INT(11) NOT NULL,
+     `key` VARCHAR(45) NOT NULL,
+     `value` VARCHAR(45) NULL DEFAULT NULL,
+     `status` VARCHAR(45) NOT NULL,
+     `created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL,
+	PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ocrm_175_services` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `type` INT(11) NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `description` VARCHAR(255) DEFAULT NULL,
+    `created_by` INT(11) DEFAULT NULL,
+    `status` VARCHAR(45) NOT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ocrm_175_invoices` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+    `invoice_no` INT(11) NOT NULL,
+    `customer_id` INT(11) NOT NULL,
+    `payment_method_id` int(11) DEFAULT NULL,
+    `total` INT(11) DEFAULT NULL,
+    `status` VARCHAR(45) NOT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL,
+    PRIMARY KEY (`id`),
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ocrm_175_order_details` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+	`invoice_id` INT(11) NOT NULL,
+	`item_id` INT(11) NOT NULL,
+	`units` INT(11) NOT NULL,
+	`unit_price` INT(11) NOT NULL,
+	`total` INT(11) NOT NULL,
+	`created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL
+	PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `ocrm_175_pricings` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+     `item_id` VARCHAR(45) NOT NULL,
+     `price` VARCHAR(45) NOT NULL,
+     `use_for` VARCHAR(45) NOT NULL,
+	 `created_at` timestamp NULL DEFAULT NULL,
+  	`updated_at` timestamp NULL DEFAULT NULL
+	PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+CREATE TABLE `product_custom_attribute` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `product_id` INT NOT NULL,
+    `name` VARCHAR(45) NOT NULL,
+    `value` VARCHAR(45) NOT NULL,
+    PRIMARY KEY (`id`),
+    INDEX `FK product_custom_attribute product_id  product id_idx` (`product_id` ASC),
+    CONSTRAINT `FK product_custom_attribute product_id  product id` FOREIGN KEY (`product_id`)
+        REFERENCES `product` (`id`)
+        ON DELETE CASCADE ON UPDATE NO ACTION
+);

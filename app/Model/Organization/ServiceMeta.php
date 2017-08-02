@@ -14,7 +14,7 @@ class ServiceMeta extends Model
 	       $this->table = Session::get('organization_id').'_services';
 	   	}
    }
-   protected $fillable = [ 'service_id', 'key', 'value'];
+   protected $fillable = [ 'service_id', 'key', 'value','status'];
 
 
 }

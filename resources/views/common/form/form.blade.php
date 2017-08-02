@@ -17,9 +17,7 @@
 					<div class="row">
 						<h5>{{$section->section_name}}</h5> 
 					</div>
-					@foreach($section->fields as $secKey => $field)
-							{!!FormGenerator::GenerateField($field->field_slug)!!}
-					@endforeach
+						{!!FormGenerator::GenerateSection($section->section_slug, $options,'', $formFrom)!!}
 				</div>
 			@endforeach
 		</div>

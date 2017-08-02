@@ -3,7 +3,7 @@
 	@if(@$errors->has())
 		<script type="text/javascript">
 			$(window).load(function(){
-				document.getElementById('add_designation_button').click();
+				$('.modal').modal('open');
 			});
 		</script>
 	@endif
@@ -21,6 +21,7 @@
 	 	$page_title_data['show_add_new_button'] ='no';
 	 }
 @endphp
+
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')

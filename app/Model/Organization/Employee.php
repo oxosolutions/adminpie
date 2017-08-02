@@ -14,8 +14,6 @@ class Employee extends Model
     	if(!empty(Session::get('organization_id')))
     	{
             $this->table = Session::get('organization_id').'_employees'; 
-    		//$this->table = '_employees'; 
-
     	}
     }
 
@@ -52,13 +50,14 @@ class Employee extends Model
             $query->where('role_id',2);
         })->pluck('name','id');
         return $model;
-        //return User::where('role','[2]')->pluck('name','id');
+    }
+    public static function listEmployees()
+    {
+        return [];
+        $model = User::where('role_id',2)->pluck('name','id');
+        return $model;
     }
 
-    public function employeeMeta(){
-
-        return $this->hasMany('App\Model\Organization\EmployeeMeta','employee_id','user_id');
-    }
     public function metas()
    {
     return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');

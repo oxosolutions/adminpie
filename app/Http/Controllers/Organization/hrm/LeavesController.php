@@ -9,7 +9,8 @@ use App\Model\Organization\Category as CAT;
 use App\Model\Organization\Employee as EMP;
 use App\Repositories\User\UserRepositoryContract;
 use Carbon\Carbon;
-
+use App\Model\Organization\UsersMeta;
+use Auth;
 class LeavesController extends Controller
 {
     protected $user;
@@ -18,36 +19,29 @@ class LeavesController extends Controller
         $this->user = $user;
     }
 	public function index(Request $request , $id = null){
-
+        $search = $this->saveSearch($request);
+        if($search != false && is_array($search)){
+            $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+        }
         if($id){
             $data = $this->getById($id);
         }else{
           $data = "";
         }
-           // $emp_data =  $this->user->get_user_by_type('[2]');
-           // foreach ($emp_data as $key => $value) {
-           //     dump($value->employee_rel);
-           // }
-           // dump($emp_data);
-        /*$employee = $this->user->user_pluck_type('[2]');
-        $data = LV::all();
-        //EMP::where
-        $leave_cat = CAT::where('type','leave')->pluck('name','id');
-        return view('organization.leave.list_leave',['data'=>$data , 'leave_cat'=>$leave_cat,'employee'=>$employee]);*/
-          if($request->has('per_page')){
-            $perPage = $request->per_page;
+          if($request->has('items')){
+            $perPage = $request->items;
             if($perPage == 'all'){
               $perPage = 999999999999999;
             }
           }else{
             $perPage = 5;
           }
-          $sortedBy = @$request->sort_by;
+          $sortedBy = @$request->orderby;
           if($request->has('search')){
               if($sortedBy != ''){
                   $model = LV::with(['employee_info'=>function($query){
                       $query->with('employ_info');
-                  },'categories_rel'])->where('reason_of_leave','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  },'categories_rel'])->where('reason_of_leave','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
               }else{
                   $model = LV::with(['employee_info'=>function($query){
                       $query->with('employ_info');
@@ -57,7 +51,7 @@ class LeavesController extends Controller
               if($sortedBy != ''){
                   $model = LV::with(['employee_info'=>function($query){
                       $query->with('employ_info');
-                  },'categories_rel'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  },'categories_rel'])->orderBy($sortedBy,$request->order)->paginate($perPage);
               }else{
                    $model = LV::with(['employee_info'=>function($query){
                       $query->with('employ_info');
@@ -146,5 +140,25 @@ class LeavesController extends Controller
     public function approve_leave(Request $request )
     {
         LV::where('id',$request->id)->update(['status'=>1]);
+    }
+
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
+        }
     }
 }

@@ -618,6 +618,7 @@ AIONE DATALIST
 .aione-datalist-header-item .column,
 .aione-datalist-item .column{
 	float:left;
+	min-height: 20px;
 }
 .aione-datalist-header-item{
 	border-bottom: 1px solid #e8e8e8
@@ -646,6 +647,9 @@ AIONE DATALIST
 
 .aione-datalist-item  .options{
 	display:none;
+	position: absolute;
+	font-size: 14px;
+	margin-top:-3px;
 }
 .aione-datalist-item:hover  .options{
 	display:block;
@@ -769,24 +773,57 @@ AIONE DATALIST
 }
 
 /*************** DATALIST PAGINATION*******************/
-	
-.pagination li.active{
-	background-color:#2196F3;
-	color: white;
-}
 .pagination li{
-		padding: 0 10px;
-line-height: 30px;
+    padding: 0;
+    margin: 0;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 0;
+	background-color:#ffffff;
+    border: 1px solid #e8e8e8;
+	-webkit-transition: all 150ms ease-out;
+    -moz-transition: all 150ms ease-out;
+    -o-transition: all 150ms ease-out;
+    transition: all 150ms ease-out;
+}
+.pagination li:hover{
+	background-color:#f8f8f8;
+}
+.pagination li a,
+.pagination li span{
+	color:#666666;
+	display:block;
+	padding:0;
+	font-size:16px;
+	line-height: 40px;
+    text-align: center;
+	-webkit-transition: all 150ms ease-out;
+    -moz-transition: all 150ms ease-out;
+    -o-transition: all 150ms ease-out;
+    transition: all 150ms ease-out;
+}
+.pagination li.disabled{
+	background-color:#f8f8f8;
+	border: 1px solid #e8e8e8;
+	cursor: no-drop; 
+}
+.pagination li.disabled span{
+	color:#999999;
+}
+.pagination li.active{
+	background-color:#168dc5;
+	border: 1px solid #168dc5;
+}
+.pagination li.active:hover{
+	background-color:#1570a6;
+	border: 1px solid #1570a6;
+}
+.pagination li.active span{
+	color: #FFFFFF;
+}
 
-}
-.options{
-	position: absolute;
-	font-size: 14px;
-	margin-top:-3px;
-}
-.hover-me:hover .options{
-	display: block;
-}
 
 	
 
@@ -982,7 +1019,7 @@ Aione Tabs
 }
 .aione-tabs > .aione-tab > a{
 	color:#666666;
-	padding:0 15px;
+	padding:0 10px;
 }
 .aione-tabs > .aione-tab > a:hover{
 	color:#666666;

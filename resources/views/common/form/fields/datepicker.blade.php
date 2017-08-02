@@ -4,8 +4,9 @@
 				{!!Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker'])!!}
 		</div>
 		<div class="error-red">	
-				@if(@$errors->has())
+				@if(@$errors->has() || Session::has('date_error'))
 					{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+					<span class="red-color">{{Session::get('has-error')}}</span>
 				@endif
 			</div>
 	@else
@@ -17,8 +18,9 @@
 				{!!Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker'])!!}
 			</div>
 			<div class="error-red">	
-				@if(@$errors->has())
+				@if(@$errors->has() || Session::has('date_error'))
 					{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+					<span class="red-color">{{Session::get('has-error')}}</span>
 				@endif
 			</div>
 		</div>
@@ -32,12 +34,17 @@
 				{!!Form::date(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'datepicker'])!!}
 			</div>
 			<div class="error-red">	
-				@if(@$errors->has())
+				@if(@$errors->has() || Session::has('date_error'))
 					{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+					<span class="red-color">{{Session::get('date_error')}}</span>
+
 				@endif
 			</div>
 		</div>
 @endif
+	@if(Session::has('date_error'))
+		<script type='text/javascript'>Materialize.toast('Date is already in use', 5000)</script>
+	@endif
 
 <script type="text/javascript">
 	  $('.datepicker').pickadate({

@@ -3,14 +3,25 @@ namespace App\Helpers;
 use App\Model\Admin\FormBuilder as Fields;
 use App\Model\Admin\forms as Forms;
 use App\Model\Admin\section as Section;
+
+use App\Model\Organization\FormBuilder as OrgFields;
+use App\Model\Organization\forms as OrgForms;
+use App\Model\Organization\section as OrgSection;
+use DB;
 class FormGenerator{
 
 	/**
 	 * will generate the form according to the slug
 	 * @param [string] $form_slug 
 	 */
-	public static function GenerateForm($form_slug, Array $Options = []){
-		$FormDetails = Forms::where('form_slug',$form_slug)->with(['section'=>function($query){
+	public static function GenerateForm($form_slug, Array $Options = [], $model = null, $formFrom = 'admin'){
+		$model = '';
+		if($formFrom == 'admin'){
+			$model = 'App\\Model\\Admin\\forms';
+		}else{
+			$model = 'App\\Model\\Organization\\forms';
+		}
+		$FormDetails = $model::where('form_slug',$form_slug)->with(['section'=>function($query){
 
 			return $query->with(['fields'=>function($query){
 
@@ -20,7 +31,7 @@ class FormGenerator{
 
 		},'formsMeta'])->first();
 		if($FormDetails != null){
-			$HTMLContent = self::GetHTMLForm($FormDetails, $Options);
+			$HTMLContent = self::GetHTMLForm($FormDetails, $Options, $formFrom);
 			return $HTMLContent;
 		}else{
 			dd('No form found!');
@@ -31,13 +42,21 @@ class FormGenerator{
 	 * This function will return the filed according to its slug
 	 * @param [string] $field_slug 
 	 */
-	public static function GenerateField($field_slug, Array $Options = []){
-		
-		$FieldsCollection = Fields::where('field_slug',$field_slug)->with(['fieldMeta'])->first();
-		
-		$HTMLField = self::GetHTMLField($FieldsCollection->field_type, $FieldsCollection, $Options);
+	public static function GenerateField($field_slug, Array $Options = [], $model = null, $formFrom = 'admin'){
+		$model = '';
+		if($formFrom == 'admin'){
+			$model = 'App\\Model\\Admin\\FormBuilder';
+		}else{
+			$model = 'App\\Model\\Organization\\FormBuilder';
+		}
+		$FieldsCollection = $model::where('field_slug',$field_slug)->with(['fieldMeta'])->first();
+		if($FieldsCollection != null){
+			$HTMLField = self::GetHTMLField($FieldsCollection->field_type, $FieldsCollection, $Options);
 			
-		return $HTMLField;
+			return $HTMLField;
+		}else{
+			dd('No field found');
+		}
 	}
 
 	/**
@@ -45,17 +64,23 @@ class FormGenerator{
 	 * @param [type]      $section_slug [description]
 	 * @param Array|array $Options      [description]
 	 */
-	public static function GenerateSection($section_slug, Array $Options = [], $model = null){
-		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
+	public static function GenerateSection($section_slug, Array $Options = [], $datamodel = null, $formFrom = 'admin'){
+		$model = '';
+		if($formFrom == 'admin'){
+			$model = 'App\\Model\\Admin\\section';
+		}else{
+			$model = 'App\\Model\\Organization\\section';
+		}
+		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
 		if($SectionCollection == null){
 			dd('No section found');
 		}
 		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
 		if($sectionType == 'Repeater'){
 			$Options['field_type'] = 'array';
-			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $model);
+			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $datamodel, $formFrom);
 		}else{
-			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options, $model);
+			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options, $datamodel, $formFrom);
 		}
 		return $HTMLContent;
 	}
@@ -64,8 +89,8 @@ class FormGenerator{
 	 * [GetHTMLSection description]
 	 * @param [type] $collection [description]
 	 */
-	public static function GetHTMLSection($collection, $Options){
-		return view('common.form.section',['collection'=>$collection,'options'=>$Options])->render();
+	public static function GetHTMLSection($collection, $Options, $model, $formFrom){
+		return view('common.form.section',['collection'=>$collection,'options'=>$Options,'formFrom'=>$formFrom])->render();
 	}
 
 	/**
@@ -73,8 +98,8 @@ class FormGenerator{
 	 * @param [type] $collection [description]
 	 * @param [type] $Options    [description]
 	 */
-	public static function GetHTMLGroup($collection, $Options, $model){
-		return view('common.form.group',['collection'=>$collection,'options'=>$Options,'model'=>$model])->render();
+	public static function GetHTMLGroup($collection, $Options, $model, $formFrom){
+		return view('common.form.group',['collection'=>$collection,'options'=>$Options,'model'=>$model,'formFrom'=>$formFrom])->render();
 	}
 
 	/**
@@ -93,9 +118,9 @@ class FormGenerator{
 	 * Will render the html content for form template
 	 * @param [form object] $collection have all data and realtions of form
 	 */
-	public static function GetHTMLForm($collection, $options){
+	public static function GetHTMLForm($collection, $options, $formFrom){
 
-		return view('common.form.form',['collection'=>$collection, 'options'=>$options])->render();
+		return view('common.form.form',['collection'=>$collection, 'options'=>$options, 'formFrom'=>$formFrom])->render();
 	}
 
 	public static function GetMetaValue($metaCollection, $metaKey){
@@ -107,7 +132,7 @@ class FormGenerator{
 		return $metaValue;
 	}
 
-	public static function GetSectionFieldsName($section_slug){
+	public static function GetSectionFieldsName($section_slug, $formFrom = 'admin'){
 		$SectionCollection = Section::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
 		$fields = [];
 		foreach($SectionCollection->fields as $key =>  $field){

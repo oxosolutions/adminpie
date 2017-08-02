@@ -18,7 +18,7 @@
  ?>
 
 <div class="col l12">
-    <ul class="one-tabs">
+    <ul class="one-tabs" style="margin-top: 14px">
         <li class="tab col <?php echo e(strpos($link, 'details')?'one-active':''); ?>"><a href="<?php echo e(route('details.project',[$project_id])); ?>">Info</a></li>
         <li class="tab col <?php echo e(strpos($link, 'demo1')?'one-active':''); ?>""><a href="<?php echo e(route('tasks.project',[$project_id])); ?>">Tasks</a></li>
         <li class="tab col <?php echo e(strpos($link, 'credentials')?'one-active':''); ?>""><a href="<?php echo e(route('credentials.project',[$project_id])); ?>">Credentials</a></li>

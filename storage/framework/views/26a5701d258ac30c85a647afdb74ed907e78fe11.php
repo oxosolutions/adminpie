@@ -1,3 +1,12 @@
+<?php if(Auth::guard('admin')->check() == true): ?>
+  <?php 
+    $layout = 'admin.layouts.main';
+   ?>
+<?php else: ?>
+  <?php 
+    $layout = 'layouts.main';
+   ?>
+<?php endif; ?>
 
 <?php $__env->startSection('content'); ?>
 
@@ -51,9 +60,27 @@ $page_title_data = array(
 <div class="card" style="margin-top: 0px;">
 	<div class="content-wrapper">
   <?php if(!empty($model)): ?>
-      <?php echo Form::open(['route'=>['update.field','form_id'=>request()->form_id,'section_id'=>request()->section_id]]); ?>
+      <?php if(Auth::guard('admin')->check() == true): ?>
+        <?php 
+          $route = 'update.field';
+         ?>
+      <?php else: ?>
+        <?php 
+          $route = 'org.update.field';
+         ?>
+      <?php endif; ?>
+      <?php echo Form::open(['route'=>[$route,'form_id'=>request()->form_id,'section_id'=>request()->section_id]]); ?>
 
   <?php else: ?>
+      <?php if(Auth::guard('admin')->check() == true): ?>
+        <?php 
+          $route = 'form.store';
+         ?>
+      <?php else: ?>
+        <?php 
+          $route = 'org.form.store';
+         ?>
+      <?php endif; ?>
       <?php echo Form::open(['route'=>['form.store','form_id'=>request()->form_id,'section_id'=>request()->section_id]]); ?>
 
   <?php endif; ?>
@@ -124,4 +151,4 @@ $page_title_data = array(
 </style>
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('admin.layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make($layout, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -5,31 +5,35 @@ namespace App\Http\Controllers\Organization\hrm;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Department as DEP; 
+use App\Model\Organization\UsersMeta;
 use Session;
+use Auth;
 class DepartmentsController extends Controller
 {
    public function index(Request $request , $id = null){
+    $search = $this->saveSearch($request);
+    if($search != false && is_array($search)){
+        $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+    }
     $datalist = [];
-    /*$data = DEP::all();
-   	return view('organization.department.list_department',['data'=>$data]);*/
-    if($request->has('per_page')){
-        $perPage = $request->per_page;
+    if($request->has('items')){
+        $perPage = $request->items;
         if($perPage == 'all'){
           $perPage = 999999999999999;
         }
       }else{
         $perPage = 5;
       }
-    $sortedBy = @$request->sort_by;
+    $sortedBy = @$request->orderby;
       if($request->has('search')){
           if($sortedBy != ''){
-              $model = DEP::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              $model = DEP::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
           }else{
               $model = DEP::where('name','like','%'.$request->search.'%')->paginate($perPage);
           }
       }else{
           if($sortedBy != ''){
-              $model = DEP::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+              $model = DEP::orderBy($sortedBy,$request->order)->paginate($perPage);
           }else{
                $model = DEP::paginate($perPage);
           }
@@ -108,4 +112,24 @@ class DepartmentsController extends Controller
           return back();
         }
    } 
+   
+   protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
+        }
+    }
 }

@@ -31,7 +31,7 @@
 	@include('common.page_content_secondry_start')
 {!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leaves','button_title'=>'Save','section'=>'leavesection']])
+@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','section'=>'leavesection']])
 {!!Form::close()!!}
 @if(@$model)
 	{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}

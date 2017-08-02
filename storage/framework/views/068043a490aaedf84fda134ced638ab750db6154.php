@@ -31,7 +31,7 @@
 <?php echo Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 
-<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leaves','button_title'=>'Save','section'=>'leavesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','section'=>'leavesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo Form::close(); ?>
 
 <?php if(@$model): ?>

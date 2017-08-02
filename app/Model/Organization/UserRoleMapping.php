@@ -13,4 +13,9 @@ class UserRoleMapping extends Model
 	    	$this->table = Session::get('organization_id').'_user_role_mappings';
 	    }
 	}
+
+	public function roles(){
+
+		return $this->belongsTo('App\Model\Organization\UsersRole','role_id','id');
+	}
 }

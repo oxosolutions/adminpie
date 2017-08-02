@@ -1,4 +1,15 @@
-@extends('admin.layouts.main')
+@if(Auth::guard('admin')->check())
+  @php
+    $layout = 'admin.layouts.main';
+    $route = 'create.forms';
+  @endphp
+@else
+  @php
+    $layout = 'layouts.main';
+    $route = 'org.create.forms';
+  @endphp
+@endif
+@extends($layout)
 @section('content')
 @php
 $page_title_data = array(
@@ -14,7 +25,7 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
   
     <div class="row">
-    {!! Form::open([ 'method' => 'POST', 'route' => 'create.forms' ,'class' => 'form-horizontal']) !!}
+    {!! Form::open([ 'method' => 'POST', 'route' => $route ,'class' => 'form-horizontal']) !!}
         <div class="row pv-10">
            <div class="col l3" style="line-height: 32px">
                Form name

@@ -3,7 +3,7 @@
 	<?php if(@$errors->has()): ?>
 		<script type="text/javascript">
 			$(window).load(function(){
-				document.getElementById('add_designation_button').click();
+				$('.modal').modal('open');
 			});
 		</script>
 	<?php endif; ?>
@@ -21,6 +21,7 @@
 	 	$page_title_data['show_add_new_button'] ='no';
 	 }
  ?>
+
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

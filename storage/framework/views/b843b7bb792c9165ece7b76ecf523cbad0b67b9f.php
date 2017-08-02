@@ -1,5 +1,14 @@
 <?php $__env->startSection('content'); ?>
-	
+	<?php if(@$errors->has()): ?>
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('.modal').modal('open');
+				$('#modal-edit').modal({
+					dismissible : true
+				});
+			});
+		</script>
+	<?php endif; ?>
 <?php 
 	$page_title_data = array(
 	'show_page_title' => 'yes',

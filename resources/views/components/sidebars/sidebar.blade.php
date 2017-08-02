@@ -3,7 +3,7 @@
     <ul id="aione_menu" class="aione-menu">
     @php
     $index = 0;
-     $permisson = drawSidebar::checkPermisson();
+    $permisson = drawSidebar::checkPermisson();
     @endphp
         @foreach(drawSidebar::drawSidebar() as $key => $sidebar)
         {{-- {{dump($sidebar->subModule)}} --}}

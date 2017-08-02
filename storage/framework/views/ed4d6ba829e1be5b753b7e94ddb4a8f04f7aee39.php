@@ -1,3 +1,14 @@
+<?php if(Auth::guard('admin')->check()): ?>
+  <?php 
+    $layout = 'admin.layouts.main';
+    $route = 'create.forms';
+   ?>
+<?php else: ?>
+  <?php 
+    $layout = 'layouts.main';
+    $route = 'org.create.forms';
+   ?>
+<?php endif; ?>
 
 <?php $__env->startSection('content'); ?>
 <?php 
@@ -14,7 +25,7 @@ $page_title_data = array(
     <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
   
     <div class="row">
-    <?php echo Form::open([ 'method' => 'POST', 'route' => 'create.forms' ,'class' => 'form-horizontal']); ?>
+    <?php echo Form::open([ 'method' => 'POST', 'route' => $route ,'class' => 'form-horizontal']); ?>
 
         <div class="row pv-10">
            <div class="col l3" style="line-height: 32px">
@@ -86,4 +97,4 @@ $page_title_data = array(
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('admin.layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make($layout, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

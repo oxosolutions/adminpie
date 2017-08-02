@@ -90,7 +90,6 @@ class OrganizationController extends Controller
             $organization->auth_login_token = $tokenString;
             $organization->save();
             Session::put('organization_id','');
-            // dd($tokenString);
             return redirect()->to('http://'.$organization->slug.'.adminpie.com/login/'.$tokenString);
         }
     }
@@ -558,13 +557,27 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_applications',
                                 '--schema'=>'applicant_id:integer, opening_id:integer, status:integer:default(1)'
                             ]);
-         Artisan::call('make:migration:schema',[
+        Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_application_meta',
                                 '--schema'=>'application_id:integer, key:string, value:text'
                             ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_email_layout',
+                                '--schema'=>'name:string, content:text, order:integer, slug:string'
+                            ]);
+      /*  Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_email',
+                                '--schema'=>'name:string, content:text, order:integer, slug:string'
+                            ]);*/
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_email_template',
+                                '--schema'=>'name:string, content:text, subject:string, status:integer, order:integer, slug:string'
+                            ]);
 		Artisan::call('migrate');
-
         // $userTypes = [
         //     ['type'=>'Admin','status'=>1],
         //     ['type'=>'Employee','status'=>1],

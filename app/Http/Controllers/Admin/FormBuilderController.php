@@ -11,6 +11,7 @@ use App\Model\Admin\section as sec;
 use App\Model\Admin\SectionMeta as SM;
 use App\Model\Admin\FieldMeta as FM;
 use Session;
+use Auth;
 
 class FormBuilderController extends Controller
 {
@@ -37,18 +38,24 @@ class FormBuilderController extends Controller
 
     public function createForm(Request $request)
     {
+        $modelName = $this->assignModel('forms');
         $this->validate($request, $this->valid_fields);
-        $model = new forms;
+        $model = new $modelName;
         $model->fill($request->all());
         $model->save();
-        return redirect()->route('list.forms');
+        if(Auth::guard('admin')->check()){
+            return redirect()->route('list.forms');
+        }else{
+            return redirect()->route('org.list.forms');
+        }
     }
 
     public function listForm(Request $request)
     {
-        $sortedBy = @$request->sort_by;
-        if($request->has('per_page')){
-          $perPage = $request->per_page;
+        $modelName = $this->assignModel('forms');
+        $sortedBy = @$request->orderby;
+        if($request->has('items')){
+          $perPage = $request->items;
           if($perPage == 'all'){
             $perPage = 999999999999999;
           }
@@ -57,31 +64,43 @@ class FormBuilderController extends Controller
         }
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = forms::where('form_title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->with(['section'])->paginate($perPage);
+                $model = $modelName::where('form_title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->with(['section'])->paginate($perPage);
             }else{
-                $model = forms::where('form_title','like','%'.$request->search.'%')->with(['section'])->paginate($perPage);
+                $model = $modelName::where('form_title','like','%'.$request->search.'%')->with(['section'])->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = forms::orderBy($sortedBy,$request->desc_asc)->with(['section'])->paginate($perPage);
+                $model = $modelName::orderBy($sortedBy,$request->order)->with(['section'])->paginate($perPage);
             }else{
-                 $model = forms::paginate($perPage);
+                 $model = $modelName::paginate($perPage);
             }
+        }
+        if(Auth::guard('admin')->check()){
+            $deleteRoute = 'delete.form';
+            $sectionRoute = 'list.sections';
+        }else{
+            $deleteRoute = 'org.delete.form';
+            $sectionRoute = 'org.list.sections';
         }
         $datalist =  [
                         'datalist'=>$model,
                         'showColumns' => ['form_title'=>'Form Title','form_slug'=>'Form Slug','created_at'=>'Created At','section[1].id'=>'Section Count'],
-                        'actions' => ['delete'=>['title'=>'Delete','route'=>'delete.form'],'section'=>['title'=>'Sections','route'=>'list.sections']]
+                        'actions' => ['delete'=>['title'=>'Delete','route'=>$deleteRoute],'section'=>['title'=>'Sections','route'=>$sectionRoute]]
                     ];
 
         // $model = forms::with(['section'])->get();
         return view('admin.formbuilder.list',$datalist);
     }
-
+    
     public function deleteForm($id)
     {
-        $model = forms::where('id',$id)->delete();
-        return redirect()->route('list.forms');
+        $modelName = $this->assignModel('forms');
+        $model = $modelName::where('id',$id)->delete();
+        if(Auth::guard('admin')->check()){
+            return redirect()->route('list.forms');
+        }else{
+            return redirect()->route('org.list.forms');
+        }
     }
 
     // end form 
@@ -90,24 +109,29 @@ class FormBuilderController extends Controller
     public function createSection(Request $request , $id){
     	$newData = $request->except('section_type');
         $this->validate($request, $this->valid_sections);
-
-        $model = new sec;
+        $modelName = $this->assignModel('section');
+        $model = new $modelName;
         $model->fill($newData);
         $model->form_id = $id;
         $model->save();
         if($model){
-        	$section_id = sec::select('id')->orderBy('id','DESC')->limit('1')->get();
+        	$section_id = $modelName::select('id')->orderBy('id','DESC')->limit('1')->get();
         	$section_id = $section_id[0]->id;
         	$newMeta = $request->except('section_name','section_slug','section_description','_token');
 	  		foreach($newMeta as $key => $value){
-	  			$sectionMeta = new SM;
+                $modelName = $this->assignModel('SectionMeta');
+	  			$sectionMeta = new $modelName;
 	  			$sectionMeta->section_id = $section_id;
 	  			$sectionMeta->key = $key;
 	  			$sectionMeta->value = $value;
 	  			$sectionMeta->save();
 	  		}
         }
-        return redirect()->route('list.sections',['form_id' => $id]);
+        if(Auth::guard('admin')->check()){
+            return redirect()->route('list.sections',['form_id' => $id]);
+        }else{
+            return redirect()->route('org.list.sections',['form_id' => $id]);
+        }
     } 
 
     /*
@@ -120,13 +144,15 @@ class FormBuilderController extends Controller
          $plugins = [
                         'js' => ['custom'=>['builder']],
                    ];
-        $model = sec::where('form_id',$form_id)->with(['fields'])->get();
+        $modelName = $this->assignModel('section');
+        $model = $modelName::where('form_id',$form_id)->with(['fields'])->get();
         return view('admin.formbuilder.sections')->with([ 'section' => $model,'plugins'=> $plugins]);
     }
 
     public function deleteSection($id)
     {
-        $model = sec::where('id',$id)->delete();
+        $modelName = $this->assignModel('section');
+        $model = $modelName::where('id',$id)->delete();
         return back();
     }
 
@@ -139,8 +165,8 @@ class FormBuilderController extends Controller
 
     public function listFields(Request $request , $form_id, $section_id)
     {  
-
-    	$model = FormBuilder::where(['section_id' => $section_id,'form_id'=>$form_id])->with([
+        $modelName = $this->assignModel('FormBuilder');
+    	$model = $modelName::where(['section_id' => $section_id,'form_id'=>$form_id])->with([
                 'fieldMeta'=>function($query) use ($form_id, $section_id){
                     $query->where(['form_id'=>$form_id,'section_id'=>$section_id]);
                 }])->get();
@@ -152,7 +178,7 @@ class FormBuilderController extends Controller
         $slug_data=[];
         $existSlug = '';
         Session::put('sameSlugmessage', "");
-        $checkExstingSlug = FormBuilder::select('field_slug')->where(['form_id'=> $form_id,'section_id' => $section_id])->get();
+        $checkExstingSlug = $modelName::select('field_slug')->where(['form_id'=> $form_id,'section_id' => $section_id])->get();
             foreach($checkExstingSlug  as $key => $array){
                 $slug_data[] = $array->field_slug;
             }
@@ -171,33 +197,35 @@ class FormBuilderController extends Controller
 
     public function fieldMeta(Request $request)
     {
-        $meta = FM::select('key','value')->where('field_id',$request->id)->get();
-
+        $modelName = $this->assignModel('FieldMeta');
+        $meta = $modelName::select('key','value')->where('field_id',$request->id)->get();
         return view('admin.formbuilder._row')->with(['model'=> $meta]);
     }
     public function fieldList(Request $request , $id)
     {
-    	dd("hello");
 
        	$plugins = [
                         'js' => ['custom'=>['builder']],
                    ];
-        $sections = sec::where('id',$id)->first();
+        $modelName = $this->assignModel('section');
+        $sections = $modelName::where('id',$id)->first();
         return view('admin.formbuilder.formbuilder')->with(['plugins'=> $plugins,'section' => $sections]);
     }
 
 //previous code
 
     public function store(Request $request){
-        $model = new FormBuilder;   
+        $modelName = $this->assignModel('FormBuilder');
+        $model = new $modelName;   
         $model->fill($request->all());
         $model->save(); 
-        $field_id = formbuilder::where(['field_slug' => $request->field_slug])->first();
+        $modelName = $this->assignModel('formbuilder');
+        $field_id = $modelName::where(['field_slug' => $request->field_slug])->first();
             unset($request['field_slug'],$request['field_title'],$request['field_type'],$request['field_description'],$request['_token']); 
             if($model){
                 foreach ($request->all() as $key => $value) {
-
-                    $meta = new FM;
+                    $modelName = $this->assignModel('FieldMeta');
+                    $meta = new $modelName;
                     $meta->form_id = $request->form_id;
                     $meta->section_id = $request->section_id;
                     $meta->field_id = $field_id->id;
@@ -219,13 +247,15 @@ class FormBuilderController extends Controller
     	return view('admin.formbuilder._fields')->render();
     }
     public function formsList(){
-        $model = FormBuilder::get();
+        $modelName = $this->assignModel('FormBuilder');
+        $model = $modelName::get();
         dd($model);
         return view('admin.formbuilder.list',['model'=>$model]);
     }
     public function deleteField(Request $request){
         $id = $request->id;
-        FormBuilder::where('id',$id)->delete();
+        $modelName = $this->assignModel('FormBuilder');
+        $modelName::where('id',$id)->delete();
         return back();  
     }
     public function updateField(Request $request, $form_id, $section_id){
@@ -238,23 +268,25 @@ class FormBuilderController extends Controller
             $dataArray['field_type'] = $request->field_type[$k];
             $dataArray['field_description'] = $request->field_description[$k];
             $dataArray['field_order'] = $request->field_order[$k];
-            $ifExist = FormBuilder::where(['form_id'=>$form_id,'section_id' =>$section_id, 'id'=>$request->field_id[$k]])->first();
+            $modelName = $this->assignModel('FormBuilder');
+            $ifExist = $modelName::where(['form_id'=>$form_id,'section_id' =>$section_id, 'id'=>$request->field_id[$k]])->first();
             if($ifExist != null){
                 $status = 'false';
-                $model = FormBuilder::where(['form_id'=>$form_id,'section_id' =>$section_id, 'id'=>$request->field_id[$k]])->update($dataArray);
+                $model = $modelName::where(['form_id'=>$form_id,'section_id' =>$section_id, 'id'=>$request->field_id[$k]])->update($dataArray);
             }else{
                 $status = 'true';
                 $dataArray['section_id'] = $section_id;
                 $dataArray['form_id'] = $form_id;
-                $model = FormBuilder::insertGetId($dataArray);
+                $model = $modelName::insertGetId($dataArray);
             }
             if($status == 'false'){
                 $model = $request->field_id[$k];
             }
-            $del_meta = FM::where(['form_id'=>$form_id,'section_id' => $section_id ,'field_id' => $model])->delete();
+            $modelName = $this->assignModel('FieldMeta');
+            $del_meta = $modelName::where(['form_id'=>$form_id,'section_id' => $section_id ,'field_id' => $model])->delete();
             $newRequest = $request->except('field_slug','_token','field_title','field_type','field_description','field_id');
             foreach ($newRequest as $key => $value) {
-                $meta = new FM;
+                $meta = new $modelName;
                 $meta->form_id = $form_id;
                 $meta->section_id = $section_id;
                 $meta->field_id = $model;
@@ -277,7 +309,8 @@ class FormBuilderController extends Controller
         //check if the existing field data has same slug
         $slug_data=[];
         $existSlug = '';
-        $checkExstingSlug = FormBuilder::select('field_slug')->where(['form_id'=> $form_id])->get();
+        $modelName = $this->assignModel('FormBuilder');
+        $checkExstingSlug = $modelName::select('field_slug')->where(['form_id'=> $form_id])->get();
             foreach($checkExstingSlug  as $key => $array){
                 $slug_data[] = $array->field_slug;
             }
@@ -289,6 +322,18 @@ class FormBuilderController extends Controller
             $existSlug = "";
         }
         Session::put('sameSlugmessage', $existSlug);
-        return redirect()->route('list.field',['form_id' => $form_id,'section_id' => $section_id]);        
+        if(Auth::guard('admin')->check()){
+            return redirect()->route('list.field',['form_id' => $form_id,'section_id' => $section_id]);
+        }else{
+            return redirect()->route('org.list.field',['form_id' => $form_id,'section_id' => $section_id]);
+        }  
+    }
+
+    protected function assignModel($model){
+        if(Auth::guard('admin')->check()){
+            return 'App\\Model\\Admin\\'.$model;
+        }else{
+            return 'App\\Model\\Organization\\'.$model;
+        }
     }
 }

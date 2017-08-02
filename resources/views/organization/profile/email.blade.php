@@ -10,6 +10,8 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 	<div class="row">
 		@include('organization.profile._tabs')
 		<div class="row">
@@ -185,6 +187,10 @@ $page_title_data = array(
 			</div>
 		</div>
 	</div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 	<style type="text/css">
 		.options{
 		position: absolute;

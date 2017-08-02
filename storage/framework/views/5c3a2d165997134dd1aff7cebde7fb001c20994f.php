@@ -12,11 +12,12 @@
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="<?php echo e(asset('css/ocrm.css?ref='.rand(544,44))); ?>" type="text/css" rel="stylesheet"  media="screen,projection"/>
+    
     <link href="<?php echo e(asset('assets/css/fullcalendar.min.css')); ?>" rel='stylesheet' />
 	
 	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('bower_components/sweetalert/dist/sweetalert.css')); ?>">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
-	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/style.css?ref='.rand(544,44))); ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/style.css?ref='.rand(544,44))); ?>"> 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 
     
@@ -41,6 +42,7 @@
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/handsontable.full.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/jqueryHandsontable.js"></script>
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/removeRow/handsontable.removeRow.js"></script>
+	<script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
 	
 
 	<script type="text/javascript">
@@ -76,5 +78,4 @@
 			<?php endif; ?>
 	    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 	<?php endif; ?>
-
 	

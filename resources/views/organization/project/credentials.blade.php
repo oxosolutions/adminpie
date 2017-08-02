@@ -10,12 +10,14 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 <div>
     @include('organization.project._tabs')
 	
 	@include('common.list.datalist')
 
-{!! Form::open(['route' => 'credientals.save' , 'type' => 'POST']) !!}
+	{!! Form::open(['route' => 'credientals.save' , 'type' => 'POST']) !!}
 	<div id="add_new_model" class="modal modal-fixed-footer">
 		{{-- <div class="modal-header">CREATE CREDENTIAL</div> --}}
 		<div class="modal-header white-text  blue darken-1" ">
@@ -72,9 +74,14 @@
 		</div>
 	</div>
 	
-{!! Form::close() !!}
+	{!! Form::close() !!}
 		
 </div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <style type="text/css">
 	   
     .projects-logo{

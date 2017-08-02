@@ -165,15 +165,12 @@ foreach($columns as $column){
 
 								{{$column}}
 							@endif
-							@if($k != 'created_at' && $k != 'updated_at')
+							
 								<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k)?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px; cursor: pointer;"></i>
-							@endif
+							
 						</span>
 					</div>
-					
 				@endif
-				
-				
 			@endforeach
 			<div class="clear"></div> <!-- .clear -->
 		</li> 	<!-- .aione-datalist-header-item -->
@@ -234,12 +231,23 @@ foreach($columns as $column){
 								@php
 									$relations = explode('.',$k);
 									$getRelations = $dataset;
+									$multipleValues = [];
+									$multipleValuesForLoop = [];
 								@endphp
 									@if(count($relations)>1)
 										@foreach($relations as $relKey => $relation)
 											@php
 												try{
-													$getRelations = $getRelations[$relation];
+													@$getRelations = $getRelations[$relation];
+													/*if($getRelations instanceof Illuminate\Database\Eloquent\Collection){
+														$multipleValuesForLoop[$relation] = $getRelations;
+														continue;
+													}else{
+														foreach($multipleValuesForLoop as $relation => $multiVal){
+															dump($multiVal);
+															//$multipleValues[] = $multiVal->{$relation};
+														}
+													}*/
 												}catch(\Exception $e){
 													try{
 														$getRelations = FormGenerator::GetMetaValue($getRelations, $relation);
@@ -249,11 +257,12 @@ foreach($columns as $column){
 												}
 											@endphp
 										@endforeach
-										@if($getRelations == null || $getRelations == "")
+										@if(($getRelations == null || $getRelations == "") && empty($multipleValues))
 											<div>&nbsp;</div>
 										@elseif($getRelations === FALSE)
 											<div>&nbsp;</div>
-										
+										{{-- @elseif(!empty($multipleValues))
+											<span class="truncate"> {{implode(',',$multipleValues)}}</span> --}}
 										@else
 											<span class="truncate"> {{$getRelations}}</span>
 										@endif

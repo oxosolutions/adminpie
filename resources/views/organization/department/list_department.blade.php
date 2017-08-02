@@ -9,6 +9,16 @@
 	'add_new' => '+ Add Department'
 ); 
 @endphp
+	@if(@$errors->has())
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('.modal').modal('open');
+				$('#modal-edit').modal({
+					dismissible : true
+				});
+			});
+		</script>
+	@endif
 	@if(@$data)
 		@foreach(@$data as $key => $value)
 			@php

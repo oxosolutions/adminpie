@@ -2,7 +2,8 @@
 namespace App\Repositories\Category;
 use App\Model\Organization\Category;
 use App\Model\Organization\CategoryMeta as CM;
-
+use App\Model\Organization\UsersMeta;
+use Auth;
 class CategoryRepository implements CategoryRepositoryContract
 {
 	public function create($data=null)
@@ -13,25 +14,29 @@ class CategoryRepository implements CategoryRepositoryContract
 	}
 	public function list_category($type,$request = null)
 	{
+		$search = $this->saveSearch($request);
+	    if($search != false && is_array($search)){
+	        $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+	    }
 		if($request != null){
-			if($request->has('per_page')){
-            $perPage = $request->per_page;
+			if($request->has('items')){
+            $perPage = $request->items;
             if($perPage == 'all'){
               $perPage = 999999999999999;
             }
           }else{
             $perPage = 5;
           }
-          $sortedBy = @$request->sort_by;
+          $sortedBy = @$request->orderby;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = Category::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = Category::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
               }else{
                   $model = Category::where('name','like','%'.$request->search.'%')->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = Category::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = Category::orderBy($sortedBy,$request->order)->paginate($perPage);
               }else{
                    $model = Category::paginate($perPage);
               }
@@ -86,6 +91,26 @@ class CategoryRepository implements CategoryRepositoryContract
           }
          Category::where('id', $request['id'])->update(['status'=>$status]);
          return true;
+    }
+
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
+        }
     }
 
 }

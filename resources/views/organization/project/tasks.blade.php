@@ -10,6 +10,8 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 	<div class="row">
 		@include('organization.project._tabs')
 		<div class="row">
@@ -23,6 +25,11 @@
 			@include('common.tasks')
 		</div>
 	</div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')    
 	<style type="text/css">
 		.options{
 		position: absolute;

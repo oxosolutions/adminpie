@@ -1,0 +1,61 @@
+Changes,Status
+,
+Table Responsive,DONE
+Show recent 3 record and rest will be Hidden (Show/Hide Toggle),DONE
+Add Data Form : -  Num and Den box should be small in size and float left. On the right side Defination text will be displayed ,DONE
+Add Data Form : -  Format of Dates will be as mentioned in document,DONE
+Edit Data,DONE
+Remove share data LTRA column (not needed),DONE
+Indicate the date that a row’s data was last changed (In Action Column),PENDING
+Only show up to one decimal place in the percentage column,DONE
+Add Data Form: Title of the measure should be on the top of measure,DONE
+"Add Data Form: At the bottom of form, there will be link “Measure Notes”. When user click on link a popup image will be displayed",DONE
+Remove the spinning effect from ‘X’ close button ,DONE
+Error Message Popup on Add Data Form,DONE
+Validation and Flagged Data,DONE
+,
+,
+,
+,
+,
+,
+Above Changes (3-13) For All Measures,
+,
+Validations,
+,
+Display Error if : ,
+1.        Numerator larger than denominator ,
+2. Whole number (2.5) in numerator and denominator,
+"3. Text, symbol and special character in numerator and denomirator",
+,
+,
+Flagged data rules for each measure: ,
+Data will be flagged if : ,
+,
+ Linkage,
+a. Denominator greater than 5,DONE
+,
+,
+Retention,
+a. Denominator less than 15,DONE
+b. Percentage > 90%,DONE
+c. Identical denominator or numerator for 3 consecutive submissions periods.,PENDING
+"d. If denominator value increases or decreases by at least 50% from previous submission period (for example, March 2016 denominator is 150 and then the June denominator is 250)",PENDING
+,
+,
+ New Patient Retention,
+a. Denominator greater than 60,DONE
+b. Percentage > 85%,DONE
+c. Identical denominator or numerator for past 3 submissions.,
+d. If denominator value increases or decreases by at least 100% from previous submission period,
+,
+,
+Clinical Engagement,
+a. Identical denominator or numerator for past 3 submissions,
+,
+,
+Viral Load Suppression,
+a. Denominator less than 15,DONE
+b. Percentage > 90%,DONE
+c. Identical denominator or numerator for 3 consecutive submissions.,
+d. If denominator value increases or decreases by at least 50% from previous submission period (e.g. December denominator is 150 and then in March denominator is 250),

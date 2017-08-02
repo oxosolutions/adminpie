@@ -1,6 +1,11 @@
     @php
-        @$keys = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->key;
-        @$values = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))->value;
+        if(Auth::guard('admin')->check()){
+            $namespace = 'App\\Model\\Admin\\FieldMeta';
+        }else{
+            $namespace = 'App\\Model\\Organization\\FieldMeta';;
+        }
+        @$keys = json_decode($namespace::getMetaByKey(@$value->fieldMeta,'field_options'))->key;
+        @$values = json_decode($namespace::getMetaByKey(@$value->fieldMeta,'field_options'))->value;
         if(!empty($keys) || $keys != null){
             $combine_array = array_combine($keys, $values);            
         }
@@ -126,8 +131,8 @@
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
                         <select name="field_required[{{$rowCount}}]">
-                           <option value="yes" {{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_required') == 'yes')?'selected':''}}>Yes</option>
-                            <option value="no" {{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_required') == 'no')?'selected':''}}>No</option>
+                           <option value="yes" {{($namespace::getMetaByKey(@$value->fieldMeta,'field_required') == 'yes')?'selected':''}}>Yes</option>
+                            <option value="no" {{($namespace::getMetaByKey(@$value->fieldMeta,'field_required') == 'no')?'selected':''}}>No</option>
                         </select>
                     </div>  
                 </div>
@@ -138,7 +143,8 @@
                     </div>
                     <div class="col l6 form-group messages" style="padding:5px">
                     	@php  
-                            $errorMessages = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_error_message'));
+                            $errorMessages = json_decode($namespace::getMetaByKey(@$value->fieldMeta,'field_error_message'));
+                            if($errorMessages != null):
 	                    @endphp
 	                    @foreach(@$errorMessages as $error => $message)
                     		<div class="appended_error">
@@ -146,6 +152,9 @@
 	                    		<a href="javascript:;" style="float:right;" class="delete_message"><span class=" fa fa-trash"></span></a>
                     		</div>
 	                    @endforeach
+                        @php
+                            endif;
+                        @endphp
                     </div>  
                     <div class="col l1 form-group" style="padding:5px">
                         <a href="javascript:;" class="add_message" data-count="{{$rowCount}}">Add</a>
@@ -158,7 +167,8 @@
                     </div>
                     <div class="col l6 form-group validations" style="padding:10px">
                     @php  
-                        $validation = json_decode(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_validation'));
+                        $validation = json_decode($namespace::getMetaByKey(@$value->fieldMeta,'field_validation'));
+                        if($validation != null):
 					@endphp
                     @foreach(@$validation as $keyValidation => $validationList)
                     	<div class="appended_vallidation">
@@ -166,10 +176,13 @@
                         	<a href="javascript:;" style="float:right;" class="delete_validation"><span class=" fa fa-trash"></span></a>
                     	</div>
                     @endforeach
+                    @php
+                        endif;
+                    @endphp
                     </div>
                     <a href="javascript:;" class="btn add_validation" data-count="{{$rowCount}}">Add</a>
                 </div>
-                {{-- {{dump(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_options'))}} --}}
+                {{-- {{dump($namespace::getMetaByKey(@$value->fieldMeta,'field_options'))}} --}}
                     <div class="row field_row main-option-row">
                         <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
                             <span class="field-title">Field options</span><br>
@@ -229,7 +242,7 @@
                         <span class="field-description">Enter the model name which one is associate with this dropdown</span> 
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
-                        <input type="text" name="choice_model[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'choice_model')}}">
+                        <input type="text" name="choice_model[{{$rowCount}}]" class="form-control" value="{{$namespace::getMetaByKey(@$value->fieldMeta,'choice_model')}}">
                     </div>  
                 </div>
 
@@ -241,8 +254,8 @@
                     <div class="col l8 form-group" style="padding:10px">
                         <select name="field_format[{{$rowCount}}]">
                             <option value="" disabled selected>Choose your option</option>
-                           <option value="plain" selected="{{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_format') == 'plain')?'checked':''}}">Plain</option>
-                            <option value="text" selected="{{(App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_format') == 'text')?'checked':''}}">HTML</option>
+                           <option value="plain" selected="{{($namespace::getMetaByKey(@$value->fieldMeta,'field_format') == 'plain')?'checked':''}}">Plain</option>
+                            <option value="text" selected="{{($namespace::getMetaByKey(@$value->fieldMeta,'field_format') == 'text')?'checked':''}}">HTML</option>
                         </select>
                     </div>  
                 </div>        
@@ -252,7 +265,7 @@
                         <span class="field-description">Appears within the input</span> 
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
-                        <input type="text" name="field_placeholder[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_placeholder')}}">
+                        <input type="text" name="field_placeholder[{{$rowCount}}]" class="form-control" value="{{$namespace::getMetaByKey(@$value->fieldMeta,'field_placeholder')}}">
                     </div>  
                 </div>
                 <div class="row field_row">
@@ -261,7 +274,7 @@
                         <span class="field-description">Appears on hover</span> 
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
-                        <input type="text" name="field_tooltip[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_tooltip')}}">
+                        <input type="text" name="field_tooltip[{{$rowCount}}]" class="form-control" value="{{$namespace::getMetaByKey(@$value->fieldMeta,'field_tooltip')}}">
                     </div>  
                 </div>
                 <div class="row field_row">
@@ -270,7 +283,7 @@
                         <span class="field-description">Appears</span> 
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
-                        <input type="text" name="field_value[{{$rowCount}}]" class="form-control" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_value')}}">
+                        <input type="text" name="field_value[{{$rowCount}}]" class="form-control" value="{{$namespace::getMetaByKey(@$value->fieldMeta,'field_value')}}">
                     </div>  
                 </div>
                 <div class="row field_row">
@@ -279,7 +292,7 @@
                         <span class="field-description">Appears</span> 
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
-                        <input type="text" name="field_class[{{$rowCount}}]" value="{{App\Model\Admin\FieldMeta::getMetaByKey(@$value->fieldMeta,'field_class')}}" class="form-control">
+                        <input type="text" name="field_class[{{$rowCount}}]" value="{{$namespace::getMetaByKey(@$value->fieldMeta,'field_class')}}" class="form-control">
                     </div>  
                 </div>
                 {{-- <div class="row field_row">

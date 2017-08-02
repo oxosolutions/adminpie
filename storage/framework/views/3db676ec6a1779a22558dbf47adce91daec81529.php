@@ -1,4 +1,18 @@
 <?php $__env->startSection('content'); ?>
+
+<?php 
+
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Import Dataset',
+	'add_new' => '+ Create Dataset',
+	'route' => 'create.dataset'
+	); 
+ ?>
+
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 	<div class="card" style="margin-top: 0px;padding: 14px;">
 		<?php echo Form::open(['route'=>'upload.dataset','files'=>true]); ?>
 
@@ -40,11 +54,7 @@
 
 				    	<label for="test3">File on server</label>    
 					</div>
-					<div class="col l12">
-						
-						<?php echo Form::radio('import_source','import_from_survey',false,['id' => 'test4' ]); ?>
-
-				     	<label for="test4">Import from survey</label>
+					
 					</div>
 				</div>
 			</div>

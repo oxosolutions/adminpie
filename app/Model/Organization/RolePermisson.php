@@ -24,6 +24,20 @@ class RolePermisson extends Model
 		return $this->belongsTo('App\Model\Admin\GlobalModule','module_id');
 	}
 
+	public static function hasPermission($roleId, $widgetId){
+
+		$model = self::where(['role_id'=>$roleId,'permisson_type'=>'widget','permisson_id'=>$widgetId])->first();
+		if($model == null || $model->permisson != 'on'){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+	public function widgets(){
+		return $this->belongsTo('App\Model\Admin\GlobalWidget','permisson_id','id');
+	}
+
 	// public function permisson()
  //    {
  //        return $this->morphTo();

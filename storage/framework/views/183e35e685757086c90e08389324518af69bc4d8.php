@@ -39,7 +39,7 @@
 		/*  Navigation fixed on complete scroll
 		/*****************************************************/
 		
-		if($('#aione_sidebar').height() > $(window).height()){
+		/*if($('#aione_sidebar').height() > $(window).height()){
 			$(window).scroll(function(){
 				var scrollOffset = $('#aione_sidebar li:last').offset();
 				if(scrollOffset.top >= 215){
@@ -48,7 +48,7 @@
 					$('#aione_sidebar').removeClass('fixed-sidebar');
 				}
 			});
-		}
+		}*/
 		/*****************************************************
 		/*  Breadcrumbs(Page Header) Show Hide Sub Menu
 		/*****************************************************/
@@ -78,3 +78,8 @@
 
 	});
 </script>
+<?php if(Session::get('success')): ?>
+	<script type="text/javascript">
+		swal("Success!", "<?php echo e(Session::get('success')); ?>", "success")
+	</script>
+<?php endif; ?>

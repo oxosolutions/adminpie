@@ -29,4 +29,10 @@ class Category extends Model
     {
     	return self::where('type','page')->pluck('name','id');
     }
+
+    public static function category_list_by_type($type)
+    {
+            return self::whereType($type)->pluck('name','id');
+
+    }
 }

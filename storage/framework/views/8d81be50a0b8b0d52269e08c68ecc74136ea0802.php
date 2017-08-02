@@ -9,26 +9,28 @@ $page_title_data = array(
 	'add_new' => '+ Add Designation'
 ); 
 	$id = "";
+  
 	 ?>	
 
-		<?php if(@$data): ?>
-			<?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<?php 
-					$newData = $v->name;
-					$id = $v->id;
-				 ?>
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			
-				<script type="text/javascript">
-				$(window).load(function(){
-					document.getElementById('modal-edit').click();
-				});
-			</script>
-		<?php endif; ?>
-		<?php 
-			@$model = ['name' => @$newData];
-			
-	 ?>
+  <?php if(@$errors->has()): ?>
+    <script type="text/javascript">
+      $(window).load(function(){
+        $('.modal').modal('open');
+      });
+    </script>
+  <?php endif; ?>
+  <?php if(@$data): ?>
+    <?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+      <?php 
+        $model = ['name' => $value['name'],'id' => $value['id']];
+       ?>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+    <script type="text/javascript">
+      $(window).load(function(){
+        document.getElementById('modal-edit').click();
+      });
+    </script>
+  <?php endif; ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -47,7 +49,7 @@ $page_title_data = array(
 	<?php if(@$model): ?>
 		<?php echo Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-			<input type="hidden" name="id" value="<?php echo e($id); ?>">
+			<input type="hidden" name="id" value="<?php echo e($data["data"]->id); ?>">
 			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
 			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit designation','button_title'=>'update Designation','section'=>'titlesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo Form::close(); ?>
@@ -55,57 +57,6 @@ $page_title_data = array(
 	<?php endif; ?>
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<a href="#" class="btn sign-in"></a>
-	<?php echo $__env->make('common.confirm-alert',['message'=>'My Message','sub_message'=>'You clicked the button!...'], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-  <!-- Modal Trigger -->
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
-
-  <!-- Modal Structure -->
-  <div id="modal1" class="modal modal-fixed-footer">
-  	<div class="modal-header" style="padding: 15px;border-bottom: 1px solid #e8e8e8">
-  		<h5 style="display: inline-block;">Heading Area</h5>
-  		<i class="material-icons dp32" style="float: right">clear</i>
-  	</div>
-    <div class="modal-content scrollbar" id="style-2">
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-      a<br>
-    </div>
-    <div class="modal-footer">
-    	<a href=""  >Cancel</a>
-      	<a href="#!" class="save" >Save Changes</a>
-    </div>
-  </div>
-  <script type="text/javascript">
-  	 $(document).ready(function(){
-	    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
-	    $('.modal').modal();
-	  });
-         
-  </script>
   <style type="text/css">
   	.modal-footer a{
   		font-size: 13px;margin: 8px;display: inline-block;

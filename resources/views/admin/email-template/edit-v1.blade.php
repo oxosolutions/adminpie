@@ -22,11 +22,12 @@
 				</div>
 			</div>
 			<div class="col l12">
-				<textarea style="height: 400px" autocomplete="off" id="text" name="text" class="markdown-textarea"></textarea>
+				 
 			</div>
 		</div>
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+
 @endsection

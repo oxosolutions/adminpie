@@ -1,17 +1,35 @@
 <?php $__env->startSection('content'); ?>
-	
-<div class="fade-background">
-</div>
+<?php 
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Datasets',
+	'add_new' => '+ Create Dataset'
+); 
+ ?>	
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+
 <div id="projects" class="projects list-view">
 	<div class="row">
 		<div class="col l3  pl-7" style="float: right;margin-bottom: 14PX;">
 			
-				<a id="add_new" href="#" class="btn add-new display-form-button" >
-					Create Dataset
-				</a>
-				<div id="add_new_wrapper" class="add-new-wrapper add-form ">
+				
+				<div id="add_new_model" class="modal modal-fixed-footer ">
 					<?php echo Form::open(['route'=>'save.dataset' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
+					<div class="modal-header white-text  blue darken-1">
+						<div class="row" style="padding:15px 10px;margin: 0px">
+							<div class="col l7 left-align">
+								<h5 style="margin:0px">Create Dataset</h5>	
+							</div>
+							<div class="col l5 right-align">
+								<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+							</div>	
+						</div>
+					</div>
+					<div class="modal-content">
+					
 
 						<div class="row no-margin-bottom">
 							
@@ -43,13 +61,16 @@
 							</div>
 							
 							<div class="col s12 m6 l12 aione-field-wrapper">
-								<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save
-									<i class="material-icons right">save</i>
-								</button>
+								
 							</div>
 						</div>
-					<?php echo Form::close(); ?>
-
+					
+				    </div>
+				    <div class="modal-footer">
+				      	<button class="btn blue" type="submit">Save
+						</button>
+				    </div>
+				    <?php echo Form::close(); ?>
 
 				</div>
 				
@@ -62,20 +83,17 @@
 </div>
 
 <script type="text/javascript">
-		$('.add-new').off().click(function(e){
-			e.preventDefault();
-			$('.add-new-wrapper').toggleClass('active');
-			$('.fade-background').fadeToggle(300);
-		});
-		
-		$('.fade-background').click(function(){
-			$('.fade-background').fadeToggle(300);
-			$('.add-new-wrapper').toggleClass('active');
-		});
+		  $(document).ready(function(){
+		    // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+		    $('.modal').modal();
+		  });
 		$(document).ready(function(){
 			$('#test1').change(function(){
-alert("chamnges");
+			alert("chamnges");
 			});
+		});
+		$('.close-model-button').click(function(){
+			$("#add_new_model").modal('close');
 		});
 </script>
 <style type="text/css">
@@ -102,6 +120,7 @@ alert("chamnges");
 	.file-path{
 		margin-bottom: 0px !important
 	}
+
 </style>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

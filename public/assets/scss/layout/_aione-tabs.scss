@@ -1,0 +1,29 @@
+.aione-account-tabs {
+	padding: 0;
+	margin: 0 0 20px 0;
+	background-color: #FFFFFF;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+.aione-tabs {
+	>.aione-tab {
+		border-bottom: 1px solid #E8E8E8;
+		>a {
+			color: #666666;
+			padding: 0 15px;
+			&:hover {
+				color: #666666;
+				padding: 0 15px;
+			}
+		}
+	}
+	>.aione-tab.nav-item-current {
+		border: 1px solid #E8E8E8;
+		border-bottom: none;
+		background-color: #FFFFFF;
+		&:hover {
+			background-color: #F2F2F2;
+		}
+	}
+}

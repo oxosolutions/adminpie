@@ -2,6 +2,19 @@
 	$ArrayData = App\Model\Organization\Dataset::getDatasetTableData(request()->route()->parameters()['id']);
 	$records = $ArrayData['records'];
 	$headers = $ArrayData['headers'];
+	if(empty($records)){
+		$tempArray = [];
+		$index = 0;
+		foreach($headers as $header){
+			if($index == 0){
+				$tempArray[] = $ArrayData['firstRecord']+1;
+			}else{
+				$tempArray[] = "";
+			}
+			$index++;
+		}
+		$records[] = $tempArray;
+	}
 	@$tableheaders->id = 'id';
 @endphp
 @extends('layouts.main')
@@ -11,7 +24,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset: name of dataset',
+	'page_title' => 'Dataset: '.$ArrayData['dataset_name'],
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -22,6 +35,9 @@
 		<div class="row">
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				 {!!Form::text('column_name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter Column Name'])!!}
+				 @if($errors->has('column_name'))
+				 	<span style="color: red;">{{$errors->first('column_name')}}</span>
+				 @endif
 			</div>
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				 {!!Form::select('after_column',$tableheaders,null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter After Column'])!!}

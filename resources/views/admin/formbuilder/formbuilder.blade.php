@@ -1,4 +1,13 @@
-@extends('admin.layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+    $layout = 'admin.layouts.main';
+  @endphp
+@else
+  @php
+    $layout = 'layouts.main';
+  @endphp
+@endif
+@extends($layout)
 @section('content')
 
 <style type="text/css">
@@ -51,8 +60,26 @@ $page_title_data = array(
 <div class="card" style="margin-top: 0px;">
 	<div class="content-wrapper">
   @if(!empty($model))
-      {!!Form::open(['route'=>['update.field','form_id'=>request()->form_id,'section_id'=>request()->section_id]])!!}
+      @if(Auth::guard('admin')->check() == true)
+        @php
+          $route = 'update.field';
+        @endphp
+      @else
+        @php
+          $route = 'org.update.field';
+        @endphp
+      @endif
+      {!!Form::open(['route'=>[$route,'form_id'=>request()->form_id,'section_id'=>request()->section_id]])!!}
   @else
+      @if(Auth::guard('admin')->check() == true)
+        @php
+          $route = 'form.store';
+        @endphp
+      @else
+        @php
+          $route = 'org.form.store';
+        @endphp
+      @endif
       {!!Form::open(['route'=>['form.store','form_id'=>request()->form_id,'section_id'=>request()->section_id]])!!}
   @endif
 		<section class="section-header">

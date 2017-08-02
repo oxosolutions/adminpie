@@ -18,7 +18,7 @@
 @endphp
 
 <div class="col l12">
-    <ul class="one-tabs">
+    <ul class="one-tabs" style="margin-top: 14px">
         <li class="tab col {{strpos($link, 'details')?'one-active':''}}"><a href="{{route('details.project',[$project_id])}}">Info</a></li>
         <li class="tab col {{strpos($link, 'demo1')?'one-active':''}}""><a href="{{route('tasks.project',[$project_id])}}">Tasks</a></li>
         <li class="tab col {{strpos($link, 'credentials')?'one-active':''}}""><a href="{{route('credentials.project',[$project_id])}}">Credentials</a></li>

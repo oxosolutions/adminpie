@@ -16,6 +16,7 @@ class UserRepository implements UserRepositoryContract
 			$user = new User();
 			$user->fill($data);
 			$user->password = Hash::make($data['password']);
+			$user->status = 1;
 			$user->save();
 			$userRole = new UserRoleMapping;
 			$userRole->user_id = $user->id;
@@ -24,7 +25,7 @@ class UserRepository implements UserRepositoryContract
 			$userRole->save();
 			return $user->id;
 		}else{
-
+				return false;
 				dd('Not yet set, from repository of user create system');
 				/*$array = json_decode($check->first()->user_type);
 				$pusharray = array_push($array,$type);

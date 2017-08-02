@@ -108,12 +108,25 @@ $page_title_data = array(
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-		
+		<?php if(Session::has('success-password')): ?>
+			<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>
+		<?php endif; ?>
 		<div class="row">
 		<div class="col l9 pr-7">
 			<div class="card mt-14">
 				<div class="row basic-details">
 					<div class="col l3 profile-pic">
+						<?php 
+							if(count(request()->route()->parameters()) > 0){
+								$id = request()->route()->parameters()['id'];
+							}else{
+								if(Auth::guard('admin')->check()){
+									$id = Auth::guard('admin')->user()['id'];
+								}else{
+									$id = Auth::guard('org')->user()['id'];
+								}
+							}
+						 ?>
 						<?php echo Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1']); ?>
 
 							<div class="abc" >
@@ -134,11 +147,14 @@ $page_title_data = array(
 								<a href="" class="upload-image">Change Image</a>	
 								<input type="file" name="aione-dp"
 								onchange="document.getElementById('form1').submit()" class="chooser">
-
-
 							</div>
-							
 						<?php echo Form::close(); ?>
+
+							<?php if($model->profilePic != null || $model->profilePic != "" || !empty($model->profilePic)): ?>
+								<a href="<?php echo e(route('profile.picture.delete',$id)); ?>">Remove Image</a>	
+							<?php endif; ?>
+						
+						
 
 						<div class="preloader-wrapper image-spinner big active" style="">
 							      <div class="spinner-layer spinner-blue">
@@ -288,10 +304,10 @@ $page_title_data = array(
 				<?php if(!$model->metas->isEmpty()): ?>
 					<div class="row" >
 						<?php $__currentLoopData = $model->metas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-							<?php if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address'): ?>
+							<?php if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address' || $v->key == 'present_address'): ?>
 								<div class="row mb-0" >
 									<div class="col l12 subhead-wrapper" >
-										<span class="subhead"><?php echo e($v->key); ?></span>
+										<span class="subhead"><?php echo e(str_replace('_',' ',$v->key)); ?></span>
 									</div>
 									<div class="col l12 details-wrapper" >
 										<?php echo e($v->value); ?>
@@ -305,8 +321,9 @@ $page_title_data = array(
 			</div>
 				<?php 
 					$roles = array_keys($model->user_role_rel->groupBy('role_id')->toArray());
+					//if role has permission to this widget
 				 ?>
-				<?php if(in_array(2, $roles)): ?>
+				<?php if(session()->get('user_role') == 1): ?>
 					<div class="card info-card" >
 
 							<div class="row valign-wrapper mb-0">
@@ -345,16 +362,18 @@ $page_title_data = array(
 								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 							</div>
 					</div>
+
 					<div class="card info-card" >
 						<div class="row valign-wrapper mb-0">
 							<div class="col l10 headline-text" >Bank Details</div>
 							<div class="col l2">
+							
 								<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 								<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
 
 							
 								<input type="hidden" name="meta_table" value="employeemeta" />
-								<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+									<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 								<?php echo Form::close(); ?>
 
 							</div>
@@ -362,6 +381,7 @@ $page_title_data = array(
 						</div>
 						<div class="row" >
 							<?php $__currentLoopData = FormGenerator::GetSectionFieldsName('empsec6'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								
 								<div class="row mb-0">
 									<div class="col l12 subhead-wrapper" >
 										<span class="subhead"><?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;</span>
@@ -375,8 +395,86 @@ $page_title_data = array(
 					
 						</div>
 					</div>
+				<?php else: ?>
+					<?php 
+						$hasPermissionEmployeeDetails = App\Model\Organization\RolePermisson::hasPermission(session()->get('user_role'),25);
+					 ?>
+					<?php if($hasPermissionEmployeeDetails): ?>
+						<div class="card info-card" >
+
+								<div class="row valign-wrapper mb-0">
+									<div class="col l10 headline-text" >Employee Detail</div>
+									<div class="col l2">
+										<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+										<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
+
+										<input type="hidden" name="meta_table" value="employeemeta" />
+										<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+										<?php echo Form::close(); ?>
+
+									</div>
+									
+								</div>
+								<div class="row" >
+									<?php $__currentLoopData = FormGenerator::GetSectionFieldsName('empsec7'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+										<div class="row mb-0" >
+											<div class="col l12 subhead-wrapper" >
+												<span class="subhead"><?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;</span>
+											</div>
+											<div class="col l12 details-wrapper" >
+												<?php if($field == 'designation'): ?>
+													&nbsp;<?php echo e(@App\Model\Organization\Designation::find($model[strtolower($field)])->name); ?>
+
+											<?php elseif($field == 'department'): ?>
+													&nbsp;	<?php echo Form::close(); ?><?php echo e(@App\Model\Organization\Department::find($model[strtolower($field)])->
+														name); ?>
+
+												<?php else: ?>
+													&nbsp;&nbsp;<?php echo e($model[strtolower($field)]); ?>
+
+												<?php endif; ?>
+											</div>
+										</div>
+									<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								</div>
+						</div>
+					<?php endif; ?>
+					<?php 
+						$hasPermissionBankDetails = App\Model\Organization\RolePermisson::hasPermission(session()->get('user_role'),26);
+					 ?>
+					<?php if($hasPermissionBankDetails): ?>
+						<div class="card info-card" >
+							<div class="row valign-wrapper mb-0">
+								<div class="col l10 headline-text" >Bank Details</div>
+								<div class="col l2">
+									<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+									<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
+
+								
+									<input type="hidden" name="meta_table" value="employeemeta" />
+									<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+									<?php echo Form::close(); ?>
+
+								</div>
+								
+							</div>
+							<div class="row" >
+								<?php $__currentLoopData = FormGenerator::GetSectionFieldsName('empsec6'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+									<div class="row mb-0">
+										<div class="col l12 subhead-wrapper" >
+											<span class="subhead"><?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;</span>
+										</div>
+										<div class="col l12 details-wrapper" >
+											<?php echo e($model[strtolower($field)]); ?>
+
+										</div>
+									</div>
+								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+						
+							</div>
+						</div>
+					<?php endif; ?>
 				<?php endif; ?>
-	
 				<?php if(@$model['employ_info']): ?>
 					<?php if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0): ?>
 						

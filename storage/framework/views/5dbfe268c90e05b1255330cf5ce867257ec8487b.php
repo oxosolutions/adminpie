@@ -9,6 +9,16 @@
 	'add_new' => '+ Add Department'
 ); 
  ?>
+	<?php if(@$errors->has()): ?>
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('.modal').modal('open');
+				$('#modal-edit').modal({
+					dismissible : true
+				});
+			});
+		</script>
+	<?php endif; ?>
 	<?php if(@$data): ?>
 		<?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 			<?php 

@@ -1,6 +1,12 @@
 @extends('layouts.main')
 @section('content')
-	
+	@if(@$errors->has() || Session::has('date_error'))
+		<script type="text/javascript">
+			$(window).load(function(){
+				$('.modal').modal('open');
+			});
+		</script>
+	@endif
 @if(@$data)
 	@foreach(@$data as $kay => $value)
 		@php
@@ -29,9 +35,10 @@
 @include('common.pageheader',$page_title_data) 	
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
-		@include('common.list.datalist')	
+	@include('common.list.datalist')
 	@include('common.page_content_primary_end')
-	@include('common.page_content_secondry_start')	
+	@include('common.page_content_secondry_start')
+
 		{!! Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','section'=>'holidayadd']])
 		{!!Form::close()!!}

@@ -1,0 +1,110 @@
+html, body {
+height: 100%;
+width: 100%;
+margin: 0;
+padding: 0;
+}
+.heading{
+font-size: 18px;
+
+}
+.full-width{
+width: 100%
+}
+.login-form{
+height: 100%;
+box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
+padding: 140px 32px 32px 32px !important;
+overflow-y: auto
+}
+.forgot-password{
+line-height: 55px
+}
+.brand-name{
+font-size: 30px;
+font-weight: 400;
+color: white;
+background-color: rgba(0, 0, 0, 0.15);
+position: absolute;
+left: 0;
+right: 33.3333333333%;
+top: 0;
+bottom: 0;
+padding: 20px;
+
+}
+ .brand-name > span{
+color: #03A9F4;
+}
+.left{
+height: 100%;
+background-image: url('../images/coloured-gradient.jpg');
+color: white;
+background-size: cover
+
+}
+.login-fields{
+position: relative;
+}
+.login-fields i{
+position: absolute;
+left: 10px;
+color: #808080;
+font-size: 22px;
+line-height: 46px;
+}
+.login-fields input{
+padding-left: 38px !important;
+}
+.error{
+background-color: #FED0C8;
+padding: 14px;
+position: absolute;
+top: 0;
+right: 0;
+width: 33.3333333333333333%;
+color: #757575;
+}
+.error i{
+        display: inline-block;
+    float: left;
+    font-size: 30px;
+    color: #DA8787;
+    width: 38px;
+        line-height: 42px;
+}
+.error-1{
+background-color: #FFEFBE;
+padding: 14px;
+
+}
+.login-form .display-1{
+        font-size: 30px;
+    font-weight: 300;
+    color: #4e5a64;
+}
+.login-form .sub-title{
+        color: #a0a9b4;
+    font-size: 15px;
+    line-height: 22px;
+    margin-bottom: 50px
+}
+.login-form button{
+    color: #FFF;
+    background-color: #32c5d2;
+    border-color: #32c5d2;
+    line-height: 1.44;
+    outline: 0!important;
+    box-shadow: none!important;
+    display: inline-block;
+    margin-bottom: 0;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    font-size: 14px;
+}

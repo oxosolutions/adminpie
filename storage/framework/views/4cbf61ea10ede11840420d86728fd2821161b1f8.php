@@ -19,11 +19,11 @@
 	</div>
 	<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
 		<?php if(isset($data['section'])): ?>
-			<?php echo FormGenerator::GenerateSection($data['section'],['type'=>'inset']); ?>
+			<?php echo FormGenerator::GenerateSection($data['section'],['type'=>'inset'],'','admin'); ?>
 
 		<?php endif; ?>
 		<?php if(isset($data['group'])): ?>
-			<?php echo FormGenerator::GenerateGroup($data['group'],['type'=>'inset']); ?>
+			<?php echo FormGenerator::GenerateGroup($data['group'],['type'=>'inset'],'','admin'); ?>
 
 		<?php endif; ?>
 	</div>
@@ -53,7 +53,12 @@
 				// console.log(typeof(last_val));
 				window.location.replace(new_route.join('/'));
 		});
-	})
+		$(document).on('click','#add_designation_button',function(){
+			$('.modal').find('input').val("");
+			$('.modal').find('textbox').val("");
+			$('.error-red').hide();
+		});
+	});
 	function close(){
 		alert('hello');
 	}

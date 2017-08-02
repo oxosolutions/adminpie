@@ -3,6 +3,7 @@
 namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
+use Session;
 
 class Service extends Model
 {
@@ -14,5 +15,5 @@ class Service extends Model
 	       $this->table = Session::get('organization_id').'_services';
 	   	}
    }
-   protected $fillable = [  'name', 'description', 'cost'];
+   protected $fillable = [  'type', 'name', 'description', 'created_by', 'status'];
 }

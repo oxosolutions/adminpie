@@ -7,23 +7,31 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\Holiday;
 use Carbon\Carbon;
 use Session;
-
+use App\Model\Organization\UsersMeta;
+use Auth;
 class HolidayController extends Controller
 {
     public function save(Request $request)
     {
-    	$tbl = Session::get('organization_id');
-        $valid_fields = [
-                            'title'             => 'required|unique:'.$tbl.'_holidays',
-                            'date_of_holiday'   => 'required|unique:'.$tbl.'_holidays',
-                            'description'       => 'required'
-                        ];
-        $this->validate($request , $valid_fields);
-        $newaData = [];
+        $newData = [];
         foreach($request->all() as $key => $value){
             $newData[$key] = $value;
             $newData['date_of_holiday'] = Carbon::parse($request['date_of_holiday'])->format('Y-m-d');
         }
+        
+    	$tbl = Session::get('organization_id');
+        $valid_fields = [
+                            'title'             => 'required|unique:'.$tbl.'_holidays',
+                            'description'       => 'required'
+                        ];
+        $this->validate($request , $valid_fields) ;
+
+        $check_date = Holiday::where('date_of_holiday', $newData['date_of_holiday'])->first();
+        if($check_date != null){
+            Session::flash('date_error' , 'Holiday for this date is available');
+            return back();
+        }
+
         $holiday = new Holiday();
         $holiday->fill($newData);
     	$holiday->save();
@@ -36,32 +44,38 @@ class HolidayController extends Controller
     }
     public function listHoliday(Request $request , $id = null)
     {
-
+        $search = $this->saveSearch($request);
+        if($search != false && is_array($search)){
+            $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+        }
         if(@$id){
             $data = $this->getDataById($id);
         }else{
             $data = '';
         }
 
-    	//$data = Holiday::orderBy('id','desc')->get();
-        if($request->has('per_page')){
-          $perPage = $request->per_page;
+        if($request->has('items')){
+          $perPage = $request->items;
           if($perPage == 'all'){
             $perPage = 999999999999999;
           }
         }else{
           $perPage = 5;
         }
-        $sortedBy = @$request->sort_by;
+        $sortedBy = @$request->orderby;
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = Holiday::where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                $model = Holiday::where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
                 $model = Holiday::where('title','like','%'.$request->search.'%')->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = Holiday::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                $exploded = @explode(':',$sortedBy);
+                if(isset($exploded[1])){
+                    $sortedBy = $exploded[0];
+                }
+                $model = Holiday::orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
                  $model = Holiday::paginate($perPage);
             }
@@ -116,7 +130,7 @@ class HolidayController extends Controller
         $this->validate($request , $valid_fields);
 
         $newdata = $request->except('_token','date_of_holiday','action');
-        $newdata['date_of_holiday']= $this->date_format($request['date_of_holiday']);
+        $newdata['date_of_holiday'] = $this->date_format($request['date_of_holiday']);
         $model = Holiday::where('id',$request->id)->update($newdata);
         return redirect()->route('list.holidays');
     }
@@ -125,6 +139,26 @@ class HolidayController extends Controller
         $model = Holiday::where('id',$id)->delete();
         if($model){
             return back();
+        }
+    }
+
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
         }
     }
 }

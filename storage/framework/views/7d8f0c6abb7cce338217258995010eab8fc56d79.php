@@ -19,7 +19,7 @@
                         Organizations
                     </span>
                     <span class="nav-item-arrow">
-                        <i class="fa fa-angle-right" ></i>
+                        
                     </span>
                 </a>
                 <ul class="side-bar-submenu">
@@ -52,7 +52,7 @@
                         Forms
                     </span>
                     <span class="nav-item-arrow">
-                            <i class="fa fa-angle-right" ></i>
+                            
                         </span>
                 </a>
                 <ul class="side-bar-submenu " >
@@ -84,7 +84,7 @@
                         Modules
                     </span>
                     <span class="nav-item-arrow">
-                            <i class="fa fa-angle-right" ></i>
+                            
                         </span>
                 </a>
                 <ul class="side-bar-submenu " >
@@ -116,7 +116,7 @@
                         Widgets
                     </span>
                     <span class="nav-item-arrow">
-                            <i class="fa fa-angle-right" ></i>
+                            
                         </span>
                 </a>
                 <ul class="side-bar-submenu " >
@@ -148,7 +148,7 @@
                         Settings
                     </span>
                     <span class="nav-item-arrow">
-                            <i class="fa fa-angle-right" ></i>
+                            
                         </span>
                  
                 </a>
@@ -173,7 +173,7 @@
                         Users
                     </span>
                     <span class="nav-item-arrow">
-                            <i class="fa fa-angle-right" ></i>
+                            
                         </span>
                 </a>
                 <ul class="side-bar-submenu" >
@@ -196,7 +196,7 @@
                         Maps
                     </span>
                     <span class="nav-item-arrow">
-                        <i class="fa fa-angle-right" ></i>
+                        
                     </span>
                 </a>
                 <ul class="side-bar-submenu" >
@@ -219,7 +219,7 @@
                         Activity 
                     </span>
                     <span class="nav-item-arrow">
-                        <i class="fa fa-angle-right" ></i>
+                        
                     </span>
                 </a>
                 <ul class="side-bar-submenu" >
@@ -251,7 +251,7 @@
                         Notification 
                     </span>
                     <span class="nav-item-arrow">
-                        <i class="fa fa-angle-right" ></i>
+                        
                     </span>
                 </a>
                 <ul class="side-bar-submenu" >
@@ -275,28 +275,6 @@
                     </li>
                 </ul>
             </li>
-            <li class="aione-nav-item level0 has-children ">
-                <a href="#">
-                    <span class="nav-item-icon side-bar-icon fa fa-puzzle-piece green darken-1 center-align side-bar-icon-bg white-text">
-                    </span>
-                    <span class="side-bar-text">
-                        Templates 
-                    </span>
-                    <span class="nav-item-arrow">
-                        <i class="fa fa-angle-right" ></i>
-                    </span>
-                </a>
-                <ul class="side-bar-submenu" >
-                    <li class="aione-nav-item level1 <?php echo e(Request::is('custom-maps')?'active-state':''); ?>">
-                        <a href="<?php echo e(route('emails')); ?>">
-                        <span class="nav-item-icon side-bar-icon fa fa-pencil red darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Email
-                        </span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+            
         </ul>
 </nav>

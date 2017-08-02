@@ -10,6 +10,12 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
+	@if (Session::has('error'))
+	 
+		@foreach(Session::get('error') as $key => $value)
+		<div class="alert alert-info" style="color:red;">{{$value}} </div>
+		@endforeach
+	@endif
 
 	<div class="row">
 		@include('organization.profile._tabs')
@@ -101,7 +107,7 @@ $page_title_data = array(
 					</div>
 					<div class="col s12 m3 l3 pl-7" >
 						
-						{!! Form::open(['route'=>'list.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+						{!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 								<input type="hidden" name="apply_by" value="employee">
 						@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
 						{!!Form::close()!!}
@@ -124,6 +130,7 @@ $page_title_data = array(
 									@foreach($ruleVal['meta'] as $metakey =>$metaVal)
 									@php	$used_leave =0;
 										if(!empty($leave_count_by_cat[$ruleVal->id])){
+											
 											$used_leave = $leave_count_by_cat[$ruleVal->id]->sum('total_days');
 										}
 									@endphp

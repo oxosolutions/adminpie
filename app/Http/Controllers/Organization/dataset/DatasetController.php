@@ -11,22 +11,35 @@ use DB;
 use MySQLWrapper;
 use Excel;
 use Auth;
+use App\Model\Organization\UsersMeta;
 class DatasetController extends Controller
 {
     public function importDataset(){
         return view('organization.dataset.import');
     }
     public function listDataset(Request $request){
-        $sortedBy = @$request->sort_by;
+        $search = $this->saveSearch($request);
+        if($search != false && is_array($search)){
+            $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+        }
+        if($request->has('items')){
+            $perPage = $request->items;
+            if($perPage == 'all'){
+              $perPage = 999999999999999;
+            }
+          }else{
+            $perPage = 5;
+          }
+        $sortedBy = @$request->orderby;
         if($request->has('search')){
             if($sortedBy != ''){
-                $datasetList = Dataset::where('dataset_name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate(3);
+                $datasetList = Dataset::where('dataset_name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
-                $datasetList = Dataset::where('dataset_name','like','%'.$request->search.'%')->paginate(3);
+                $datasetList = Dataset::where('dataset_name','like','%'.$request->search.'%')->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $datasetList = Dataset::orderBy($sortedBy,$request->desc_asc)->paginate(3);
+                $datasetList = Dataset::orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
                  $datasetList = Dataset::paginate(3);
             }
@@ -34,7 +47,7 @@ class DatasetController extends Controller
         $dataset =  [
                         'datalist'=>$datasetList,
                         'showColumns' => ['dataset_name'=>'Name','dataset_table'=>'Dataset Table','description'=>'Description','created_at'=>'Created At'],
-                        'actions' => ['view'=>['route'=>'view.dataset','title'=>'View']]
+                        'actions' => ['view'=>['route'=>'view.dataset','title'=>'View'],'delete'=>['route'=>'delete.dataset','title'=>'Delete']]
                     ];
     	return view('organization.dataset.list',$dataset);
     }
@@ -92,6 +105,7 @@ class DatasetController extends Controller
             $response = ['status'=>'success','message'=>'Dataset created successfully!','id'=>$result['dataset_id']];
             return $response;
         }
+        Session::flash('success','Successfully imported!');
         return back();
 
     }
@@ -419,9 +433,13 @@ class DatasetController extends Controller
 
         $this->validateStoreRequest($request);
         try{
+            $org_id =  Session::get('organization_id');
+            $tableName = DB::getTablePrefix().$org_id.'_data_table_'.time();
+            DB::select("CREATE TABLE `{$tableName}` ( id INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
             $model = new Dataset;
             $model->dataset_name = $request->dataset_name;
             $model->description = $request->dataset_description;
+            $model->dataset_table = $tableName;
             $model->save();
             Session::flash('message','Dataset created successfully!');
             return back();
@@ -441,19 +459,68 @@ class DatasetController extends Controller
     }
 
     public function updateRecords(Request $request, $id){
+        
         $dataset = Dataset::find($id);
-        $datasetHeaders = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',1)->first();
+        $datasetHeaders = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->first();
         foreach($request->records as $key => $record){
             $recordArray = array_combine(array_keys($datasetHeaders), $record);
-            DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->update($recordArray);
+            $isRecordExists = DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->first();
+            if($isRecordExists != null){
+                DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->update($recordArray);
+            }else{
+                DB::table(str_replace('ocrm_','',$dataset->dataset_table))->insert($recordArray);
+            }
         }
     }
 
     public function createColumn(Request $request, $id){
+        $this->validateRequiredColumns($request);
         $datasetTable = Dataset::find($id)->dataset_table;
         $columnName = 'column_'.rand(111,999);
         DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
-        DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->update([$columnName=>$request->column_name]);
+        $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->first();
+        if($ifRecordsExist != null){
+            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->update([$columnName=>$request->column_name]);
+        }else{
+            DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$request->column_name]);
+        }
+        return back();
+    }
+
+    protected function validateRequiredColumns($request){
+
+        $rules = [
+            'column_name' => 'required',
+            'after_column' => 'required'
+        ];
+
+        $this->validate($request, $rules);
+    }
+
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
+        }
+    }
+
+    public function deleteDataset($id){
+        $model = Dataset::find($id);
+        $model->delete();
+
         return back();
     }
 }
