@@ -1,39 +1,700 @@
 <?php
+/************************************************************
+*	@Project AdminPie (adminpie.com)
+*	@package Aione Framework	(aioneframework.com)
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@copyright	(c)Copyright by OXO Solutions
+*	@link	http://oxosolutions.com
+************************************************************/
 
 
-use app\Model\Organization\User;
+use App\Model\Organization\User;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Admin\GlobalModuleRoute as route;
 use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Organization\ActivityLog;
 use App\Model\Admin\GlobalActivityTemplate;
+use App\Model\Organization\UsersMeta;
+use App\Model\Organization\UserRoleMapping;
+
+/************************************************************
+*	@function get_organization_id
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return organization_id [integer]
+************************************************************/
+function get_organization_id(){	
+
+	//Get Organization ID from SESSION
+	//Session variable initialized at app/Http/Middleware/CheckIfOrganizationAuthenticated.php
+	
+	$organization_id = Session::get('organization_id');
+	
+	//Return Organization ID
+	return $organization_id;
+}
+
+
+/************************************************************
+*	@function get_user_id
+*	@description Returns user id of logged in user
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return uid [integer]
+************************************************************/
+function get_user_id(){
+	
+	$uid = Auth::guard('org')->user()->id;
+	
+	//Return User ID
+	return $uid;
+}
+
+
+/************************************************************
+*	@function get_user_id
+*	@description Returns user id of logged in user
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return uid [integer]
+************************************************************/
+
+function get_image($path, $filename, $size = null, $html = false){
+	
+	$ds = directory_separator();
+	$base_file_path = $path.$ds.$filename;
+	
+	if(!File::exists($base_file_path)){
+		return false;
+	}
+	
+	$filename_elements = explode(".",$filename);
+	//First element of Array
+	$output_filename = current($filename_elements);
+	//Last element of Array
+	$output_file_extension = end($filename_elements);
+	
+	$image_size = get_file_size($size);
+	
+	
+	$file_path = $path.$ds.$output_filename.'_'.$image_size.'.'.$output_file_extension;
+	
+	if(!File::exists($file_path)){
+		resize_image($image_size , $filename, $path); 
+	}
+	
+	return $file_path;
+	
+
+}
+
+/************************************************************
+*	@function get_profile_picture
+*	@description Returns user id of logged in user
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm uid		[integer	optional	default	null]
+*	@perm size		[string	optional	default	null]
+*	@perm html		[true/false	optional	default	false]
+*	@return filename [mixed][string/html]
+************************************************************/
+
+function get_profile_picture($uid = null, $size = null, $html = false){
+	if($uid == null){
+		$uid = get_user_id();
+	}
+	if($size == null){
+		$size = 'avatar';
+	}
+	
+	$meta_key = 'user_profile_picture';
+	$user_profile_picture = get_user_meta($uid,$meta_key, true);
+	
+	$user_profile_picture_url = 'assets/images/user.png';
+	
+	 
+	if(empty($user_profile_picture)){
+		return $user_profile_picture_url;
+	} 
+	
+	$profile_picture_path = upload_path('user_profile_picture');
+		
+	if(!File::exists($profile_picture_path.directory_separator().$user_profile_picture)){
+		delete_user_meta('user_profile_picture', $uid); 
+		return $user_profile_picture_url;
+	}
+		
+	$user_profile_picture_url = get_image($profile_picture_path, $user_profile_picture, $size, false);
+	
+	return $user_profile_picture_url;
+
+}
+
+
+
+/************************************************************
+*	@function upload_path
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm path		[string	optional	default	null]
+*	@return upload_path [string]
+************************************************************/
+
+function upload_path($path = null){	
+
+	$directory_separator = '/';
+	
+	//inialize upload_path variable as empty string
+	$upload_path = '';
+	
+	//Get Organization ID
+	$organization_id = get_organization_id();
+	
+	//Get path variable from environment file
+	$upload_path .= env('USER_FILES_PATH');
+	
+	//Append Organization ID
+	$upload_path .= '_'.$organization_id;
+	
+	//Append directory separator 
+	$upload_path .= $directory_separator;
+	
+	if($path != null){
+		//Append provided path
+		$upload_path .= $path;
+	}
+	
+	//Return path of user files directory
+	return $upload_path;
+}
+
+/************************************************************
+*	@function upload_base_path
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return upload_base_path [string]
+************************************************************/
+
+function upload_base_path(){	
+
+	$upload_base_path = upload_path();
+	
+	//Return base path of user files directory
+	return $upload_base_path;
+}
+
+
+
+/************************************************************
+*	@function get_file_size
+*	@description Returns dimensions if file
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm name		[string	required	default	null]
+*	@return size [string]
+************************************************************/
+
+function get_file_size($name = null){
+	
+	$size = '';
+	if($name == 'avatar'){
+		$size = '50x50';
+	}
+	if($name == 'thumbnail'){
+		$size = '100x100';
+	}
+	if($name == 'small'){
+		$size = '150x150';
+	}
+	if($name == 'medium'){
+		$size = '300x300';
+	}
+	if($name == 'large'){
+		$size = '500x500';
+	}
+	
+	//Return Size
+	return $size;
+}
+
+
+/************************************************************
+*	@function generate_filename
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm length		[integer	optional	default	40]
+*	@perm timestamp		[true/false	optional	default	true]
+*	@return filename [string]
+************************************************************/
+function generate_filename($length = 30, $timestamp = true){	
+
+	//Check if non integer value is provided for first argument
+	if(!is_int($length)){
+		$length = intval($length);
+	}
+	
+	//inialize filename variable as empty string
+	$filename = '';
+	
+	//prepend timestamp in filename
+	if($timestamp){
+		$filename .= date('Ymdhis');
+		$filename .= round(microtime(true));
+	}
+	
+	//Check if filename length is achieved or exceeded
+	if( strlen($filename) > $length){
+		$filename = substr($filename, 0, $length);
+	} else {
+		$random_string_length = $length - strlen($filename);
+		for($i = 0; $i < $random_string_length; $i++){
+			$filename .= mt_rand(1,9);
+		}
+	}
+	
+	//Return generated filename
+	return $filename;
+}
+
+/************************************************************
+*	@function resize_image
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm size		[string	optional	default	'thumbnail']
+*	@perm source_path		[string	optional	default	null]
+*	@perm destination_path		[string	optional	default	null]
+*	@perm rename		[true/false	optional	default	false]
+*	@return filename [string]
+************************************************************/
+
+function resize_image($size = 'thumbnail', $filename, $source_path = null, $destination_path = null, $rename = false){	
+	
+	$directory_separator = '/';
+	
+	if(empty($filename)){
+		return false;
+	} else {
+		$filename_elements = explode(".",$filename);
+		//First element of Array
+		$output_filename = current($filename_elements);
+		//Last element of Array
+		$output_file_extension = end($filename_elements);
+	}
+	
+	//generate_filename
+	if($rename){
+		$output_filename = generate_filename();
+	}
+	
+	if($source_path == null){
+		$source_path = upload_base_path();
+	}
+	if($destination_path == null){
+		$destination_path = $source_path;
+	}
+	
+	$source_path = trim($source_path, "/");
+	$destination_path = trim($destination_path, "/");
+	
+	
+	$image_width = 50;
+	$image_height = 50;
+	
+	if($size == 'thumbnail'){
+		$image_width = 150;
+		$image_height = 150;
+	} elseif($size == 'small'){
+		$image_width = 300;
+		$image_height = 300;
+	} else{
+		$size_elements = explode("x",$size);
+		$image_width = $size_elements[0];
+		$image_height = $size_elements[1];
+	}
+	
+	
+	$output_complete_url = $destination_path.$directory_separator.$output_filename.'_'.$image_width.'x'.$image_height.'.'.$output_file_extension;
+	
+	
+	if(!File::exists($source_path.$directory_separator.$filename)){
+		return false;
+	}
+	
+	// open file a image resource
+	$img = Image::make($source_path.$directory_separator.$filename);
+
+	// crop the best fitting 
+	$img->fit($image_width, $image_height);
+	
+	// save image
+	$img->save($output_complete_url);
+
+	//Return True 
+	return true;
+}
+
+
+
+
+/************************************************************
+*	@function get_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm model		[string	required	default	void]
+*	@perm uid		[integer	required	default	void]
+*	@perm key		[string	required	default	void]
+*	@perm array		[true/false	optional	default	false]
+*	@return  		[object/array]
+************************************************************/
+
+function get_meta($model, $uid, $key = null, $column, $array = false){	
+	
+	$meta = array();
+	$model = 'App\\Model\\'.$model;
+	if($key != null){
+		$meta = $model::where([$column => $uid,'key'=>$key])->get();
+	}else{
+		$meta = $model::where([$column => $uid])->get();
+	}
+	$correctedMeta = [];
+	if(!$meta->isEmpty()){
+		foreach($meta as $mkey => $metaValues){
+			$correctedMeta[$metaValues->key] = $metaValues->value;
+		}
+	}
+	$meta = collect($correctedMeta);
+	if($meta->count() == 1){
+		return $meta->toArray()[$key];
+	}
+	if($array){
+		$meta =  $meta->toArray();
+	}
+
+	//Return Meta Object 
+	return $meta;
+}
+
+
+/************************************************************
+*	@function get_user_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm uid		[integer	required	default	void]
+*	@perm key		[string	required	default	void]
+*	@perm array		[true/false	optional	default	false]
+*	@return $meta (use Meta)
+************************************************************/
+
+function get_user_meta($uid, $key = null, $array = false){	
+	
+	$meta = array();
+	
+	$model = "Organization\\UsersMeta";
+	
+	$meta = get_meta($model, $uid, $key, 'user_id', $array);
+
+	//Return Meta Object 
+	return $meta;
+}
+
+
+/************************************************************
+*	@function get_current_user_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[string	optional	default	null]
+*	@perm array		[true/false	optional	default	false]
+*	@return 
+************************************************************/
+
+function get_current_user_meta($key, $array = false){	
+
+	$meta = get_user_meta(Auth::guard('org')->user()->id, $key, $array);
+	//Return Meta Object 
+	return $meta;
+}
+
+/************************************************************
+*	@function get_current_user
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[string	optional	default	null]
+*	@perm array		[true/false	optional	default	false]
+*	@return filename [mixed][object/integer/string]
+************************************************************/
+
+function get_user($meta = true ,$array = false, $id = null){
+	if($meta){
+		$id = ($id != null)?$id:Auth::guard('org')->user()->id;
+		$user = User::find($id);
+		$user->meta = get_user_meta($id);
+	}else{
+		$id = ($id != null)?$id:Auth::guard('org')->user()->id;
+		$user = User::find($id);
+	}
+	if($array){
+		$user->meta = $user->meta->toArray();
+		$user = $user->toArray();
+	}
+	//Return User Object 
+	return $user;
+}
+/************************************************************
+*****************************************/
+
+function update_user_meta($metaKey, $metaValue, $uid = null, $return = false){
+	if($uid == null){
+		$uid = Auth::guard('org')->user()->id;
+	}
+	$meta = [$metaKey=>$metaValue];
+	$updatedMeta = update_user_metas($meta, $uid, $return);
+	if($return){
+		return $updatedMeta;
+	}
+	return true;
+}
+/************************************************************
+*	@function update_user_metas
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[array	optional	default	null]
+*	@perm array		[true/false	optional	default	false]
+*	@return filename [mixed][object/integer/string]
+************************************************************/
+
+function update_user_metas(Array $meta, $uid = null, $return = false){
+	if($uid == null){
+		$uid = Auth::guard('org')->user()->id;
+	}
+	$updatedMeta = [];
+	foreach($meta as $metaKey => $metaValue){
+		$model = UsersMeta::firstOrNew(['key'=>$metaKey,'user_id'=>$uid]);
+		$model->key = $metaKey;
+		$model->value = $metaValue;
+		$model->user_id = $uid;
+		$model->save();
+		$updatedMeta[$metaKey] = $metaValue;
+	}
+	if($return){
+		return $updatedMeta;
+	}
+	return true;
+}
+/************************************************************
+*	@function delete_user_metas
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[array	string/int]-
+*	@perm array		[true-required		true-optional]
+*	@return filename [mixed][object/integer/string]
+************************************************************/
+
+function delete_user_metas(Array $meta, $uid = null){
+	if($uid == null){
+		$uid = Auth::guard('org')->user()->id;
+	}
+	foreach ($meta as $metaKey => $metaValue) {
+		$model = UsersMeta::where(['key'=>$metaValue,'user_id'=>$uid])->delete();
+	}
+	return true;
+}
+/************************************************************
+*	@function delete_user_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[string	string/int]-
+*	@perm array		[required	optional]
+*	@return true
+************************************************************/
+
+
+function delete_user_meta($metaKey, $uid = null){
+	$meta = [$metaKey];
+	delete_user_metas($meta, $uid);
+	return true;
+}
+
+
+if(!function_exists('is_employee')){
+	function is_employee($userId = null){
+		$roles = get_user_roles($userId);
+		if(in_array('employee',$roles)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
+
+if(!function_exists('is_admin')){
+	function is_admin($userId = null){
+		$roles = get_user_roles($userId);
+		if(in_array('administrator',$roles)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
+
+if(!function_exists('get_user_role')){
+	function get_user_roles($userid = null){
+		$role_slugs = [];
+		if($userid == null){
+			$uid = Auth::guard('org')->user()->id;
+		}else{
+			$uid = $userid;
+		}
+		$model = UserRoleMapping::with(['roles'])->where(['user_id'=>$uid])->get();
+		if(!$model->isEmpty()){
+			foreach ($model as $modelKey => $value) {
+				$role_slugs[] = $value->roles->slug;
+			}
+		}
+		return $role_slugs;
+	}
+}
+
+function delete_file($filePath){
+	// File::delete('images/' . $image_url);
+}
+
+function get_media(){
+
+}
+
+
+
+
+
+/************************************************************
+*	@function directory_separator
+*	@description Returns user id of logged in user
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return directory_separator [string]
+************************************************************/
+function directory_separator(){
+	
+	$directory_separator = '/';
+	
+	//Return User ID
+	return $directory_separator;
+}
+
+
+/************************************************************
+*	@Module Tools
+*	@Section Widgets
+************************************************************/
+/************************************************************
+*	@function get_website_alexa_rank
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm url		[string	optional	default	null]
+*	@return filename [array]
+************************************************************/
+function get_website_alexa_rank( $url = null ){
+	
+	$get_website_alexa_rank_data = array();
+	$get_website_alexa_rank = array();
+	
+	$xml = simplexml_load_file("http://data.alexa.com/data?cli=10&url=".$url);
+
+    if(!empty($xml->SD)){
+		
+		$get_website_alexa_rank['status'] = 'success';
+		$get_website_alexa_rank_data['url'] = $xml->SD->POPULARITY->attributes()->URL; 
+		$get_website_alexa_rank_data['rank'] = $xml->SD->POPULARITY->attributes()->TEXT;
+		$get_website_alexa_rank_data['source'] = $xml->SD->POPULARITY->attributes()->SOURCE;
+		$get_website_alexa_rank_data['past'] = $xml->SD->REACH->attributes()->RANK;
+		$get_website_alexa_rank_data['change'] = $xml->SD->RANK->attributes()->DELTA;
+		
+	} else{
+		$get_website_alexa_rank['status'] = 'error';
+	}
+
+	$json = json_encode($get_website_alexa_rank_data);
+	$get_website_alexa_rank_array = json_decode($json,TRUE);
+	
+	foreach($get_website_alexa_rank_array as $key => $value){
+		$get_website_alexa_rank[$key] = $value[0];
+	}
+	
+	//Return Alexa rank Data
+	return json_encode($get_website_alexa_rank);
+}
+
+
+
+
+
+
+
+
+
+
+
 
 	/**
 	 * [user_info to get current user information & employee Info]
 	 * @return [collection] [user information]
 	 */
-	function user_info()
-	{
+	function user_info(){
 		$id = Auth::guard('org')->user()->id;
 		$user = User::where(['id'=>$id])->select(['name','email','id'])->with('employee_rel')->first();
 		return $user;
 	}
+/************************************************************
+*	@function getMetaValue
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[array	string]-
+*	@perm array		[required	optional]
+*	@return true
+************************************************************/
 
 	function getMetaValue($metaArray, $metaKey){
 		$metaArray = collect($metaArray);
 		$metaData = $metaArray->where('key',$metaKey);
 		$metaValue = false;
 		foreach($metaData as $key => $value){
-			$metaValue = $value->value;
+			$metaValue = $value->value; 
 		}
 		return $metaValue;
 	}
 
-	/**
-	 * [role_id current login role ID]
-	 * @return [type] [description]
-	 */
+	/************************************************************
+	*	@function role_id
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm key		[none]
+	*	@perm array		[	]
+	*	@return array
+	************************************************************/
+
 	function role_id(){
 
 		$userData = user_info();
@@ -44,11 +705,16 @@ use App\Model\Admin\GlobalActivityTemplate;
           });
 		return array_values($keyed->all());		
 	}
-	/**
-	 * [setting_val_by_key description]
-	 * @param  [type] $key [description]
-	 * @return [type]      [description]
-	 */
+	/************************************************************
+	*	@function setting_val_by_key
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm key		[$key]
+	*	@perm array		[	]
+	*	@return value or null
+	************************************************************/
+
 	function setting_val_by_key($key)
 	{
 		$setting = org_setting::where('key',$key);
@@ -59,7 +725,15 @@ use App\Model\Admin\GlobalActivityTemplate;
 		}
 		 return Null;
 	}
-
+	/************************************************************
+	*	@function check_route_permisson
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm key		[$url required]
+	*	@perm array		[	]
+	*	@return true or false
+	************************************************************/
 	function check_route_permisson($url)
 	{
 		if(in_array(1, role_id())){
@@ -78,6 +752,15 @@ use App\Model\Admin\GlobalActivityTemplate;
 		
 		}
 	}
+	/************************************************************
+	*	@function save_activity
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm key		[$slug required , $name optional]
+	*	@perm array		[	]
+	*	@return true or false
+	************************************************************/
 
 	function save_activity($slug, $name=null){
 		$user = user_info();
@@ -91,8 +774,17 @@ use App\Model\Admin\GlobalActivityTemplate;
 			$activityLog->save();
 		}
 	}
+	/************************************************************
+	*	@function activity_log
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm key		[$slug required , $slug required]
+	*	@perm array		[	]
+	*	@return template
+	************************************************************/
 
-	function activity_log($slug, $language){
+	function activity_log($slug, $slug){
 		$activity = GlobalActivityTemplate::where(['type'=>'self', 'slug'=>$slug ,'language'=>$language]);
 		if($activity->exists()){
 			return $activity->first()->template;
@@ -113,4 +805,5 @@ use App\Model\Admin\GlobalActivityTemplate;
 	 //              }
 		//     }	
 
+	
 ?>

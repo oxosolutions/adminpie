@@ -114,6 +114,8 @@
 	}
 </style>
 @php 
+$number = 1;
+// dump(@$attendance_data);
 		$holidays =[];
 		if(!empty($holiday_data))
 		{
@@ -124,17 +126,25 @@
 		$postDate = 01;
 		 if(!empty(Session::get('date')))
 		 {
-		 	$postDate = Session::get('date');
+		 	$fdate = $postDate = Session::get('date');
+		 	//dump('session'. $fdate);
 		 }
-			$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 0);
-		 $mo =	$dat->month;
+		 // if(strlen($month)){
+		 // 	$month = "0".$month;
+		 // }
+		
+
+			$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 00);
+			// dump('current'.$month_wise);
+			$mo =	$dat->month; // use for week filter
+			//dump($dat->toDateTimeString());
 
 		 if(!empty($fill_attendance_days)) 
 		 {
 		 	if(!empty($fweek_no) || !empty($fdate))
 		 	{
-		 		$total_days = $fill_attendance_days;
-
+		 		//$total_days = $fill_attendance_days;
+		 		$total_days = $daysInMonth  =$dat->daysInMonth;
 		 	}
 		 	else{
 		 			$total_days = $daysInMonth  =$dat->daysInMonth;
@@ -143,6 +153,10 @@
 		 }else{
 		 $total_days = $daysInMonth  =$dat->daysInMonth;
 		}
+		 $current_month =	$dat->month;
+		 $current_year =	$dat->year;
+		 $current_days = $dat->daysInMonth;
+		 $current_date = $dat->day;
 //dump($fweek_no);
 
 //previous days		 
@@ -150,11 +164,15 @@
 		$pre_date = $dat->day;
 		$pre_month = $dat->month;
 		$pre_year = $dat->year;
+
+		// dump("previous day year month date $pre_year $pre_month $pre_date ");
 //next days 
 		$dat->addDays(2);
 		$nxt_date = $dat->day;
 		$nxt_date_month = $dat->month;
 		$nxt_date_year = $dat->year;
+		// dump("Next day year month date $nxt_date_year $nxt_date_month $nxt_date ");
+
 //week 
 // echo $dat->subWeek();
 		$pre_week = $dat->weekOfMonth;
@@ -162,33 +180,57 @@
 		$pre_week_month = $dat->month;
 		$pre_week_year = $dat->year;
 
-		 $current_month =	$dat->month;
-		 $current_year =	$dat->year;
-
-		 $current_days = $dat->daysInMonth;
 		
 		if(!empty($fweek_no))
 		{
-			$dat->addWeek(); 
-			$nxt_week = $dat->weekOfMonth;
-			$nxt_week_month =	$dat->month;
-			$nxt_week_year =	$dat->year;
-			$dat->subWeeks(2); 
 
-			$prev_month = $dat->weekOfMonth;
-			$prev_week_month =	$dat->month;
-		 	$prev_week_year =	$dat->year;
+
+			$weekDate = Carbon\Carbon::create($year, $month, 1, 00);
+			$current_week = $weekDate->weekOfMonth;
+			if($fweek_no==1)
+			{
+			$weekDate->addWeek(); 
+			}
+			else{
+				$weekDate->addWeeks($fweek_no); 
+			}
+
+
+			$nxt_week = $weekDate->weekOfMonth;
+			$nxt_week_month =	$weekDate->month;
+			$nxt_week_year =	$weekDate->year;
+			// dump("next week $nxt_week  $nxt_week_month $nxt_week_year".  $weekDate->toDateTimeString());
+			// if($fweek_no==1)
+			// {
+				$weekDate->subWeeks(2); 
+				// dump($weekDate->toDateTimeString());
+			// }
+			// else{
+			// 	$wno = $nxt_week - 2;
+			// 	dump($wno);
+			// 	$weekDate->subWeeks($wno); 
+			// }
+			
+
+			$prev_week = $weekDate->weekOfMonth;
+			$prev_week_month =	$weekDate->month;
+		 	$prev_week_year =	$weekDate->year;
+			// dump("previous week $prev_week $prev_week_month $prev_week_year".  $weekDate->toDateTimeString());
 		}		 
 
 			$previous = $dat->subMonth();
 			$previousMonth = $previous->month;
 			$previousYear  =  $previous->year;
 
+			// dump("previous month year $previousMonth  $previousYear");
+
 			$next = $dat->addMonth(2);
 			$nextMonth = $next->month;
 			$nextYear = $next->year;
-	
+				// dump("next month year $nextMonth  $nextYear");
+
 		$week =4;
+		// dump("total day".$total_days);
 		if($total_days >28)
 		{
 			$week =5;
@@ -234,11 +276,10 @@
 
 
 <div class="row">
-
-			<h5 class="text-center"></h5>
+	<h5 class="text-center"></h5>
 </div>
 
-
+{{-- Month trey  --}}
 <div id="month">
 
 					
@@ -325,80 +366,89 @@
 				</div>
 		  	</div>
 </div> 
+{{-- week trey  --}}
 
 <div id="week">
-			<div class="row design-bg valign-wrapper">
-				<div class="col s2">
-					@php  
-					 $dt = '1-'.$month.'-'.$year;
-					// 		$ym = date('Y-m', strtotime($dt));
-					 @endphp
-					<div class="col 14">	
-						<i class="fa fa-angle-left"></i>		
-						<a onclick="attendance_filter(null, 1, {{$mo}} , {{$previousYear}} )" style="cursor:pointer;" class="nav left-align">Previous Week</a>
-					</div>
-				</div>
-				<div class="col s8">
-					<div class="aione aione-heading center-align">
-						<i class="fa fa-calendar-o" aria-hidden="true" style="margin: 0px 10px"></i>
-						<span class="design-style">{{date('W ,F, Y', strtotime($dt))}}</span>
-					</div>
-				</div>
-				
-				<div class="col s2">
-					<div class="right-align">
-						<a onclick="attendance_filter(null, 2, {{$mo}} , {{$previousYear}} )" style="cursor:pointer;" class="nav right-align">Next Week</a>
-						<i class="fa fa-angle-right"></i>
-					</div>
-				</div>	
-				<div style="clear:both;">
-				</div>
-		  	</div>
-		  	<div class="aione-navigation-1">
-								@for($w=1; $w <=$week; $w++)
-								<a href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$previousYear}} )" name="week" > {{$w}}</a>
-								@endfor
-			</div> 
-			
-</div> 
-
-<div id="days">
-			<div class="row design-bg valign-wrapper">
-				<div class="col s2">
-					<?php  
-					 $dt = '1-'.$month.'-'.$year;
-					// 		$ym = date('Y-m', strtotime($dt));
-					 ?>
-					 	<i class="fa fa-angle-left"></i>
-						<a onclick="attendance_filter({{$pre_date}}, null, {{$pre_month}} , {{$pre_year}} )" style="cursor: pointer;" name="date" value="{{$pre_date}}" class="nav left-align">Previous Day</a>
-				</div>
-				<div class="col s8">
-					<div class="aione aione-heading center-align">
-						<i class="fa fa-calendar-o" aria-hidden="true" style="margin: 0px 10px"></i>
-						<span class="design-style">{{date('F, Y', strtotime($dt))}}</span>
-					</div>	
-				</div>
-				
-				<div class="col s2">
-					<div class="right-align">
-						<a onclick="attendance_filter({{$nxt_date}}, null, {{$nxt_date_month}} , {{$nxt_date_year}} )" style="cursor: pointer" name="date" value="{{$nxt_date}}" class="nav right-align">Next Day</a>
-						<i class="fa fa-angle-right"></i>
-					</div>
-				</div>	 
-				<div style="clear: both;">
-				</div>
-		  	</div>
-		  	<div id="dates" class="aione-navigation-1">
-								@for($i=1; $i<=$current_days; $i++)
-
-								<a style="cursor: pointer;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$previousYear}} )" name="date"  > {{$i}}</a>
-								@endfor
+	<div class="row design-bg valign-wrapper">
+		<div class="col s2">
+			@php  
+			 $dt = '1-'.$month.'-'.$year;
+			// 		$ym = date('Y-m', strtotime($dt));
+			 @endphp
+			<div class="col 14">	
+				<i class="fa fa-angle-left"></i>
+				<a onclick="attendance_filter(null, {{@$prev_week}}, {{@$prev_week_month}} , {{@$prev_week_year}} )" style="cursor:pointer;" class="nav left-align">Previous Week</a>
 			</div>
+		</div>
+		<div class="col s8">
+			<div class="aione aione-heading center-align">
+				<i class="fa fa-calendar-o" aria-hidden="true" style="margin: 0px 10px"></i>
+				<span class="design-style">{{date('F, Y', strtotime($dt))}}</span>
+			</div>
+		</div>
+		
+		<div class="col s2">
+			<div class="right-align">
+			
+				<a onclick="attendance_filter(null, {{@$nxt_week}}, {{@$nxt_week_month}} , {{@$nxt_week_year}} )" style="cursor:pointer;" class="nav right-align">Next Week</a>
+				<i class="fa fa-angle-right"></i>
+			</div>
+		</div>	
+		<div style="clear:both;">
+		</div>
+  	</div>
+  	<div class="aione-navigation-1">
+		@for($w=1; $w <=$week; $w++)
+			@if(@$fweek_no==$w)
+				<a style="color:green;" href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$previousYear}} )" name="week" > {{$w}}</a>
+			@else
+				<a  href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$previousYear}} )" name="week" > {{$w}}</a>
+			@endif
+		@endfor
+	</div> 		
+</div> 
+{{-- Day trey  --}}
+<div id="days">
+	<div class="row design-bg valign-wrapper">
+		<div class="col s2">
+			<?php  
+			 $dt = '1-'.$month.'-'.$year;
+			// 		$ym = date('Y-m', strtotime($dt));
+			 ?>
+			 	<i class="fa fa-angle-left"></i>
+				<a onclick="attendance_filter({{$pre_date}}, null, {{$pre_month}} , {{$pre_year}} )" style="cursor: pointer;" name="date" value="{{$pre_date}}" class="nav left-align">Previous Day</a>
+		</div>
+		<div class="col s8">
+			<div class="aione aione-heading center-align">
+				<i class="fa fa-calendar-o" aria-hidden="true" style="margin: 0px 10px"></i>
+				<span class="design-style">{{date('F, Y', strtotime($dt))}}</span>
+			</div>	
+		</div>
+		
+		<div class="col s2">
+			<div class="right-align">
+				<a onclick="attendance_filter({{$nxt_date}}, null, {{$nxt_date_month}} , {{$nxt_date_year}} )" style="cursor: pointer" name="date" value="{{$nxt_date}}" class="nav right-align">Next Day</a>
+				<i class="fa fa-angle-right"></i>
+			</div>
+		</div>	 
+		<div style="clear: both;">
+		</div>
+  	</div>
+  	<div id="dates" class="aione-navigation-1">
+		@for($i=1; $i<=$current_days; $i++)
+			@if($current_date==$i)
+				<a style="cursor: pointer; color:red;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$previousYear}} )" name="date"  > {{$i}}</a>
+
+			@else
+				<a style="cursor: pointer;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$previousYear}} )" name="date"  > {{$i}}</a>
+			@endif
+		@endfor
+	</div>
 </div> 		
 
 <div id="attendance_sheet_container" class="table-responsive">
 			@if(!empty($error))
-			{{-- {{dump($employee_data) }} --}}
+{{-- When Attendance data not available then this portion work --}}
 			<div class="attendance-sheet">
 					<div class="attendance-sheet">
 						<div class="attendanc-sheet content">
@@ -408,21 +458,59 @@
 							<div class="attendanc-sheet content">Name</div>
 						</div>
 						<div>
-								@for($d=1; $d<=$total_days; $d++)
-								@php 
-								$getDay = Carbon\Carbon::create($year, $month, $d, 0);
-								if($getDay->format('l')=="Sunday")
-								{
-									$td .="<div class='attendance-sheet column sunday'>S</div>";
-								}else
-								{
-									$td .="<div class='attendance-sheet column'> - </div>";
+								@php
+								$number=1;
+								if(!empty($fweek_no)){
+									if($fweek_no==5){
+
+										$end_week_day = $total_days;
+										$number = $start_week_day = 29;
+										//dump($end_week_day);
+
+									}else{
+										$total_days = $end_week_day = $fweek_no * 7;
+										$number = $start_week_day = $end_week_day -6;
+									}
+									for($d=$start_week_day; $d<=$end_week_day; $d++){
+										$getDay = Carbon\Carbon::create($year, $month, $d, 0);
+										///echo '<div class="attendance-sheet column">'.$d.'<br>'.substr($getDay->format('l'),0,1).'</div>';
+									}
 								}
+								// dump( @$fdate);
+
 								@endphp
-									<div class="attendance-sheet column">{{$d}}<br> 
-									{{substr($getDay->format('l'),0,1)}} 
-									</div>
-								@endfor
+
+								@if(!empty($fdate))
+									@php
+										$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
+										if($getDay->format('l')=="Sunday")
+									{
+										$td .="<div class='attendance-sheet column sunday'>S</div>";
+									}else
+									{
+										$td .="<div class='attendance-sheet column'>-</div>";
+									}
+									@endphp
+									<div class="attendance-sheet column">{{$fdate}}<br> 
+										{{substr($getDay->format('l'),0,1)}} 
+										</div>
+								@else
+									@for($d=$number; $d<=$total_days; $d++)
+									@php 
+									$getDay = Carbon\Carbon::create($year, $month, $d, 0);
+									if($getDay->format('l')=="Sunday")
+									{
+										$td .="<div class='attendance-sheet column sunday'>S</div>";
+									}else
+									{
+										$td .="<div class='attendance-sheet column'>-</div>";
+									}
+									@endphp
+										<div class="attendance-sheet column">{{$d}}<br> 
+										{{substr($getDay->format('l'),0,1)}} 
+										</div>
+									@endfor
+								@endif
 
 						</div>
 						<div style="clear:both;">
@@ -444,6 +532,7 @@
 						@endforeach
 					<div style="clear: both;"></div>
 			</div>
+
 		
 			
 			@else
@@ -457,8 +546,31 @@
 						{{-- <div class="attendance-sheet column">Attendance %</div>
 						<div class="attendance-sheet column">Total Hours</div>
 						<div class="attendance-sheet column">Over Time Hours</div> --}}
-
 						@if(!empty($fweek_no) || !empty($fdate))
+								@php
+								if(!empty($fweek_no)){
+									if($fweek_no==5){
+
+										$end_week_day = $total_days;
+										$number = $start_week_day = 29;
+										//dump($end_week_day);
+
+									}else{
+										$total_days = $end_week_day = $fweek_no * 7;
+										$number = $start_week_day = $end_week_day -6;
+									}
+									for($d=$start_week_day; $d<=$end_week_day; $d++){
+										$getDay = Carbon\Carbon::create($year, $month, $d, 0);
+										echo '<div class="attendance-sheet column">'.$d.'<br>'.substr($getDay->format('l'),0,1).'</div>';
+									}
+								}
+// day by day attendance
+								if(!empty($fdate)){
+									$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
+										echo '<div class="attendance-sheet column">'.$fdate.'<br>'.substr($getDay->format('l'),0,1).'</div>';	
+								}
+
+								@endphp
 							@if(isset($attendance_data[0]))
 								@foreach($attendance_data[0] as $dateKey =>$dateVal)
 									@if($dateVal['day']=='Sunday')
@@ -473,26 +585,29 @@
 
 							@for($d=1; $d<=$total_days; $d++)
 								@php 
-
 								$getDay = Carbon\Carbon::create($year, $month, $d, 0);
 								if($d > $fill_attendance_days)
 								{
 									if($getDay->format('l')=="Sunday")
 									{
-										$td .="<div  class='attendance-sheet column sunday'>S</div>";
+										$td .="<div  class='attendance-sheet column sunday'>St</div>";
 									}else
 									{
-										$td .="<div class='attendance-sheet column'> - </div>";
+										$td .="<div class='attendance-sheet column'> t- </div>";
 									}
 								}
 								@endphp
-							<div class="attendance-sheet column">{{$d}}<br> 
+							<div class="attendance-sheet column">{{$d}}<br>
 							{{substr($getDay->format('l'),0,1)}} 
 							</div>
 							@endfor
 						@endif
+						<div style="clear: both">
+							
+						</div>
 					</div>
-				</div>
+					</div>
+
 			</div>
 
 			
@@ -500,13 +615,13 @@
 				<div class="attendance-sheet">
 					<div class="attendanc-sheet content">
 					@if(!empty($attendance_data))
-
+						
 						@foreach($attendance_data as $groupkey => $groupVal)
 
 								<?php 
-								$collect = collect($groupVal);
-							 $att_datas =$collect->keyBy('date')->toArray();
-
+								$collect 	= 	collect($groupVal);
+								$att_datas 	=	$collect->keyBy('date')->toArray();
+								//dump($att_datas);
 								
 									$day_count = $chunk - $sunday_count;
 									$employ_info = EmployeeHelper::employ_info($groupVal[0]['employee_id']); 
@@ -551,9 +666,31 @@
 								{{-- <div class="attendance-sheet column"> {{$percent}} </div>
 								<div class="attendance-sheet column"> {{$total_hour[$groupVal[0]['employee_id']]}}</div>
 								<div class="attendance-sheet column"> {{$total_over_time[$groupVal[0]['employee_id']]}}</div>> --}}
-									
+								
+								@if(!empty($fdate))
+									@if(!empty($att_datas[$fdate]))
+										@if(array_key_exists($att_datas[$fdate]['date'], $holidays))
+												<div class="attendance-sheet column absent-bg-color tooltipped"  data-position="bottom" data-tooltip="{{$holidays[$j]}}" style="background-color: #8A91F0;">{{-- {{$holidays[$j][0]}} --}}H</div>
+											@else
+												@if($att_datas[$fdate]['attendance_status']=='present')
+														<div class="attendance-sheet column present-bg-color">P</div>
+												@elseif($att_datas[$fdate]['attendance_status']=='absent')
+													<div class="attendance-sheet column absent-bg-color">A</div>
+												@elseif($att_datas[$fdate]['attendance_status']=='Sunday')
+													<div class="attendance-sheet column sunday">S</div>
+												@elseif($att_datas[$fdate]['attendance_status']=='leave')
+													<div class="attendance-sheet column sunday">L</div>
+												@else
+													<div class="attendance-sheet column sunday">o</div>
+												@endif
+										@endif
+									@else
 
-									@for($j=1; $j<=$total_days; $j++)
+									<div class="attendance-sheet column present-bg-color">--</div>
+									@endif
+									
+								@else
+									@for($j=$number; $j<=$total_days; $j++)
 									@if(isset($att_datas[$j]['attendance_status']))
 
 										@if(array_key_exists($att_datas[$j]['date'], $holidays))
@@ -572,9 +709,11 @@
 												@endif
 										@endif
 									@else
+
 									<div class="attendance-sheet column present-bg-color">--</div>
 									@endif
 									@endfor
+								@endif
 									<br>
 									<div style="clear: both;"></div>
 							</div>
@@ -589,11 +728,7 @@
 			
 
 </div>
-<script type="text/javascript">
-	 $(document).ready(function(){
-    $('.tooltipped').tooltip({delay: 50});
-  });
-</script>
+
 
 
 

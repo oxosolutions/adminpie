@@ -57,6 +57,9 @@ $page_title_data = array(
 	<?php endif; ?>
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php if(Session::has('success-update')): ?>
+    <script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>
+  <?php endif; ?>
   <style type="text/css">
   	.modal-footer a{
   		font-size: 13px;margin: 8px;display: inline-block;

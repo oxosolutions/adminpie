@@ -1,52 +1,41 @@
+
+
+
+
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>AdminPie</title>
-
-	<!-- Global stylesheets -->
-	<link href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900" rel="stylesheet" type="text/css">
-	<link href="<?php echo e(asset('LTR/default/assets/css/icons/icomoon/styles.css')); ?>" rel="stylesheet" type="text/css">
-	<link href="<?php echo e(asset('LTR/default/assets/css/bootstrap.css')); ?>" rel="stylesheet" type="text/css">
-	<link href="<?php echo e(asset('LTR/default/assets/css/core.css')); ?>" rel="stylesheet" type="text/css">
-	<link href="<?php echo e(asset('LTR/default/assets/css/components.css')); ?>" rel="stylesheet" type="text/css">
-	<link href="<?php echo e(asset('LTR/default/assets/css/colors.css')); ?>" rel="stylesheet" type="text/css">
-	<!-- /global stylesheets -->
-
-	<!-- Core JS files -->
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/plugins/loaders/pace.min.js')); ?>"></script>
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/core/libraries/jquery.min.js')); ?>"></script>
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/core/libraries/bootstrap.min.js')); ?>"></script>
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/plugins/loaders/blockui.min.js')); ?>"></script>
-	<!-- /core JS files -->
-
-	<!-- Theme JS files -->
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/plugins/forms/validation/validate.min.js')); ?>"></script>
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/plugins/forms/styling/uniform.min.js')); ?>"></script>
-
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/core/app.js')); ?>"></script>
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/pages/login_validation.js')); ?>"></script>
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/jquery-ui.min.js')); ?>"></script>
-
-	<!-- /theme JS files -->
-
+	<title></title>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+	<link href="<?php echo e(asset('css/auth-v1-style.css?ref='.rand(544,44))); ?>" type="text/css" rel="stylesheet"  />
 </head>
-
-<body class="login-container login-cover">
-	<div class="page-container">
-		<div class="page-content">
-			<div class="content-wrapper">
-				<div class="content pb-20">
-
-					<div class="panel panel-body login-form">
-						<?php echo $__env->yieldContent('content'); ?>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</div>
+<body>
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide aione-theme-arcane">
+		<div class="aione-row">
+			<div id="aione_main" class="aione-main ">
+				<div class="aione-row">
+					<div id="aione_content" class="aione-content">
+						<div class="aione-row">
+							<?php echo $__env->yieldContent('content'); ?>
+						</div><!-- .aione-row -->
+					</div><!-- #aione_content -->
+					<div class="clear"></div><!-- .clear -->
+				</div><!-- .aione-row -->
+			</div><!-- #aione_main -->
+			<div class="clear"></div><!-- .clear -->
+		</div><!-- .aione-row -->
+	</div><!-- #aione_wrapper -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
 </body>
 </html>

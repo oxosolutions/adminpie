@@ -4,31 +4,36 @@
 	<title></title>
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-	<!--Import materialize.css-->
+	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
 	<link href="<?php echo e(asset('css/auth-v1-style.css?ref='.rand(544,44))); ?>" type="text/css" rel="stylesheet"  />
 </head>
 <body style="overflow-y: hidden;">
 	<div class="row " style="margin-bottom: 0px;height: 100vh">
 		<div class="col l8 grey lighten-1 left hide-on-small-only" style="padding: 0px">
-			
 			<div class="  brand-name">
 				ADMIN<span>PIE</span>
 			</div>
 		</div>
 		<div class="col l4 m4 s12 login-form" style="">
 			
-			
+			<div class="row error">
+				<span><i class="fa fa-ban"></i></span>
+				Sorry, that password isn't right. We can help you <a href="">recover your password</a> 
+			</div>
 			<div class="row">
-				<span class="heading">Sign in to your account</span>
+				<span class="display-1">Sign in to your account</span>
+
+			</div>
+			<div class="sub-title">
+				Lorem ipsum dolor sit amet, coectetuer adipiscing elit sed diam nonummy.
 			</div>
 			<div class="row login-fields">
-				<i class="fa fa-user"></i>
+				
 				<input type="email" name="" placeholder="Enter Username">
 			</div>
 			<div class="row login-fields">
-				<i class="fa fa-unlock-alt"></i>
+				
 				<input type="password" name="" placeholder="Enter Password">
 			</div>
 			<div class="row">
@@ -45,9 +50,9 @@
 			<div class="row">
 				<a href="" class="btn blue full-width sign-in" >Sign In</a>	
 			</div>
-			<div>
-				© 2017, All Right Reserved. OXO solutions
-			</div>	
+			<div class="copyright">
+				Copyright © OXO Solutions 2017
+			</div>
 		</div>
 			
 			

@@ -59,7 +59,7 @@
                 </div>
                 <div class="col l8 input-field" style="padding:10px">
                     <select required="required" name="field_type[<?php echo e($rowCount); ?>]" class="field_type">
-                     <optgroup label="Basic">
+                        <optgroup label="Basic">
                             <option value="" selected="selected">Select Type</option>
                             <option value="text" selected="selected">Text</option>
                             <option value="textarea">Text Area</option>
@@ -70,6 +70,7 @@
                             <option value="timepicker">Timepicker</option>
                             <option value="switch">Switch</option>
                             <option value="editor">Editor</option>
+                            <option value="auto-generator">Auto Generator Text</option>
                         </optgroup>
                         <optgroup label="Content">
                             <option value="image">Image</option>
@@ -92,6 +93,33 @@
                 </div>
                 <div class="col l8 form-group" style="padding:10px">
                      <input required="required" type="text" name="field_order[<?php echo e($rowCount); ?>]" class="form-control field-label-input">
+                </div>
+            </div>
+            <div class="row field_row prefix">
+                <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                <span class="field-title">Prefix</span><br>
+                    <span class="field-description">Text will place on starting of random numbers</span>
+                </div>
+                <div class="col l8 form-group" style="padding:10px">
+                     <input type="text" name="prefix[<?php echo e($rowCount); ?>]" class="form-control field-label-input">
+                </div>
+            </div>
+            <div class="row field_row postfix">
+                <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                <span class="field-title">Postfix</span><br>
+                    <span class="field-description">Text will place on end of random numbers</span>
+                </div>
+                <div class="col l8 form-group" style="padding:10px">
+                     <input type="text" name="postfix[<?php echo e($rowCount); ?>]" class="form-control field-label-input">
+                </div>
+            </div>
+            <div class="row field_row postfix">
+                <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                <span class="field-title">Length</span><br>
+                    <span class="field-description">Enter the random number/string length, default value will be 30</span>
+                </div>
+                <div class="col l8 form-group" style="padding:10px">
+                     <input type="text" name="string_length[<?php echo e($rowCount); ?>]" class="form-control field-label-input">
                 </div>
             </div>
             <div class="row field_row">
@@ -224,7 +252,14 @@
     </div>
   </div>
 </div>
-
+<style type="text/css">
+    .prefix{
+        display: none;
+    }
+    .postfix{
+        display: none;
+    }
+</style>
 <script type="text/javascript">
     $(document).ready(function() {
         $('select').material_select();
@@ -236,6 +271,13 @@
                 $('.main-option-row').show();
             }else{
                 $('.main-option-row').hide();
+            }
+            if($(this).val() == 'auto-generator'){
+                $('.prefix').show();
+                $('.postfix').show();
+            }else{
+                $('.prefix').hide();
+                $('.postfix').hide();
             }
         });
 

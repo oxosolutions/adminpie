@@ -14,6 +14,14 @@
     @if(@$existSlug != null || @$existSlug != "" || !empty(@$existSlug) || @$existSlug != "NULL" )
         {{@$existSlug}}
     @endif --}}
+    <style type="text/css">
+        .prefix{
+            display: none;
+        }
+        .postfix{
+            display: {{($value->field_type == 'auto-generator')?'block':'none'}};
+        }
+    </style>
     <div class="main-row">
         <div class="row form-row option-trigger" style="background-color: #fff;padding: 15px 10px">
 
@@ -92,6 +100,7 @@
                                 <option value="timepicker" {{(@$value->field_type == 'timepicker')?'selected':''}}>Timepicker</option>
                                 <option value="switch" {{(@$value->field_type == 'switch')?'selected':''}}>Switch</option>
                                 <option value="editor" {{(@$value->field_type == 'editor')?'selected':''}}>Editor</option>
+                                <option value="auto-generator" {{(@$value->field_type == 'auto-generator')?'selected':''}}>Auto Generator Text</option>
                             </optgroup>
                             <optgroup label="Content">
                                 <option value="image" {{(@$value->field_type == 'image')?'selected':''}}>Image</option>
@@ -116,6 +125,34 @@
                          <input type="text" name="field_order[{{$rowCount}}]" required="required" class="form-control field-label-input" value="{{@$value->field_order}}">
                     </div>
                 </div>
+                <div class="row field_row postfix">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                    <span class="field-title">Prefix</span><br>
+                        <span class="field-description">Text will place on starting of random numbers</span>
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                         <input type="text" name="prefix[{{$rowCount}}]" class="form-control field-label-input" value="{{@$namespace::getMetaByKey(@$value->fieldMeta,'prefix')}}">
+                    </div>
+                </div>
+                <div class="row field_row postfix">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                    <span class="field-title">Postfix</span><br>
+                        <span class="field-description">Text will place on end of random numbers</span>
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                         <input type="text" name="postfix[{{$rowCount}}]" class="form-control field-label-input" value="{{@$namespace::getMetaByKey(@$value->fieldMeta,'postfix')}}">
+                    </div>
+                </div>
+                <div class="row field_row postfix">
+                    <div class="col l4 left-align grey lighten-5" style="padding:20px">
+                    <span class="field-title">Length</span><br>
+                        <span class="field-description">Enter the random number/string length, default value will be 30</span>
+                    </div>
+                    <div class="col l8 form-group" style="padding:10px">
+                         <input  type="text" name="string_length[{{$rowCount}}]" class="form-control field-label-input" value="{{@$namespace::getMetaByKey(@$value->fieldMeta,'string_length')}}">
+                    </div>
+                </div>
+
                 <div class="row field_row">
                     <div class="col l4 left-align grey lighten-5 " style="padding:20px">
                         <span class="field-title">Field Slug*</span><br>
@@ -305,7 +342,7 @@
         </div>
       </div>
     </div>
-    
+
 <script type="text/javascript">
     $(document).ready(function() {
         $('select').material_select();
@@ -317,6 +354,13 @@
                 $('.main-option-row').show();
             }else{
                 $('.main-option-row').hide();
+            }
+            if($(this).val() == 'auto-generator'){
+                $('.prefix').show();
+                $('.postfix').show();
+            }else{
+                $('.prefix').hide();
+                $('.postfix').hide();
             }
         });
 

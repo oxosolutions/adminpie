@@ -194,14 +194,26 @@ foreach($columns as $column){
 										</div>	
 									</div>
 									<div class="col" style="padding-left: 10px">
-										<div> <?php echo ($dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>'; ?></div>
+										<div> <?php echo (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>'; ?></div>
 										<?php if(isset($actions)): ?>
-											<div class="options" style=" display:<?php echo ($dataset->{$k} == "Super Admin")?'none':''; ?>">
+											<div class="options" style=" display:<?php echo (@$dataset->{$k} == "Super Admin")?'none':''; ?>">
 												<?php $__currentLoopData = $actions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $action_key => $action_value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 													<?php if($action_key == 'download'): ?>
 														<a href="<?php echo e(asset($action_value['destinationPath'].'/'.$dataset->file)); ?>" style="padding-right:10px" target="_blank" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
 													<?php elseif($action_key == 'delete'): ?>
-														<a href="javascript:;" data-value="<?php echo e(route($action_value['route'],$dataset->id)); ?>" style="padding-right:10px" id="delete" class="<?php echo e(@$action_value['class']); ?> delete-datalist-item red-text"><?php echo e($action_value['title']); ?></a>
+														<?php 
+															if(is_array($action_value['route'])){
+																$explodedRoute = explode('.',$action_value['route']['id']);
+																$route = $action_value['route']['route'];
+																$routeId = $dataset[$explodedRoute[0]]['id'];
+
+															}else{
+																$route = $action_value['route'];
+																$routeId = $dataset->id;
+															}
+														 ?>
+														
+														<a href="javascript:;" data-value="<?php echo e(route($route,$routeId)); ?>" style="padding-right:10px" id="delete" class="<?php echo e(@$action_value['class']); ?> delete-datalist-item red-text"><?php echo e($action_value['title']); ?></a>
 													<?php elseif($action_key == 'model'): ?>
 														<a href="#" data-target="<?php echo e($action_value['data-target']); ?>" class="<?php echo e($action_value['class']); ?>" id="<?php echo e($dataset->id); ?>" style="padding-right:10px"><?php echo e($action_value['title']); ?></a>
 													<?php elseif($action_key == 'status_option'): ?>
@@ -210,9 +222,20 @@ foreach($columns as $column){
 														<?php else: ?>
 															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Deactivate</a>
 														<?php endif; ?>
+													<?php elseif($action_key == 'approve_status'): ?>
+														<?php if($dataset->status == 0): ?>
+															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Approve</a>
+														<?php elseif($dataset->status == 2): ?>
+															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Approve</a>
+															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Reject</a>
+														<?php else: ?>
+															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Reject</a>
+														<?php endif; ?>
 													<?php else: ?>
 														<?php 
+
 															if(is_array($action_value['route'])){
+																dd($dataset);
 																$explodedRoute = explode('.',$action_value['route']['id']);
 																$route = $action_value['route']['route'];
 																$routeId = $dataset[$explodedRoute[0]]['id'];
@@ -308,6 +331,8 @@ foreach($columns as $column){
 											}elseif($k == 'status'){
 												if($dataset->{$k} == 1){
 													$sts = 'active';
+												}elseif($dataset->{$k} == 2){
+													$sts = 'pending';
 												}else{
 													$sts = '';
 												}
@@ -333,8 +358,10 @@ foreach($columns as $column){
 		<div id="aione_datalist_footer" class="aione-datalist-footer">
 			<div class="aione-row">
 				<!----------------  AIONE PAGINATION ---------------->
-				<?php echo e($datalist->appends(request()->input())->render()); ?>
+				<?php if(!empty($datalist)): ?>
+					<?php echo e($datalist->appends(request()->input())->render()); ?>
 
+				<?php endif; ?>
 				<!---------------- END AIONE PAGINATION ---------------->
 
 			</div> <!-- .aione-row -->

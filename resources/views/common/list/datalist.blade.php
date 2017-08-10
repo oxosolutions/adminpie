@@ -187,14 +187,26 @@ foreach($columns as $column){
 										</div>	
 									</div>
 									<div class="col" style="padding-left: 10px">
-										<div> {!! ($dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
+										<div> {!! (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
 										@if(isset($actions))
-											<div class="options" style=" display:{!! ($dataset->{$k} == "Super Admin")?'none':''!!}">
+											<div class="options" style=" display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">
 												@foreach($actions as $action_key => $action_value)
 													@if($action_key == 'download')
 														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
 													@elseif($action_key == 'delete')
-														<a href="javascript:;" data-value="{{route($action_value['route'],$dataset->id)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red-text">{{$action_value['title']}}</a>
+														@php
+															if(is_array($action_value['route'])){
+																$explodedRoute = explode('.',$action_value['route']['id']);
+																$route = $action_value['route']['route'];
+																$routeId = $dataset[$explodedRoute[0]]['id'];
+
+															}else{
+																$route = $action_value['route'];
+																$routeId = $dataset->id;
+															}
+														@endphp
+														{{-- <a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a> --}}
+														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red-text">{{$action_value['title']}}</a>
 													@elseif($action_key == 'model')
 														<a href="#" data-target="{{$action_value['data-target']}}" class="{{$action_value['class']}}" id="{{$dataset->id}}" style="padding-right:10px">{{$action_value['title']}}</a>
 													@elseif($action_key == 'status_option')
@@ -203,9 +215,20 @@ foreach($columns as $column){
 														@else
 															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Deactivate</a>
 														@endif
+													@elseif($action_key == 'approve_status')
+														@if($dataset->status == 0)
+															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
+														@elseif($dataset->status == 2)
+															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
+															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
+														@else
+															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
+														@endif
 													@else
 														@php
+
 															if(is_array($action_value['route'])){
+																dd($dataset);
 																$explodedRoute = explode('.',$action_value['route']['id']);
 																$route = $action_value['route']['route'];
 																$routeId = $dataset[$explodedRoute[0]]['id'];
@@ -301,6 +324,8 @@ foreach($columns as $column){
 											}elseif($k == 'status'){
 												if($dataset->{$k} == 1){
 													$sts = 'active';
+												}elseif($dataset->{$k} == 2){
+													$sts = 'pending';
 												}else{
 													$sts = '';
 												}
@@ -326,7 +351,9 @@ foreach($columns as $column){
 		<div id="aione_datalist_footer" class="aione-datalist-footer">
 			<div class="aione-row">
 				<!----------------  AIONE PAGINATION ---------------->
-				{{$datalist->appends(request()->input())->render()}}
+				@if(!empty($datalist))
+					{{$datalist->appends(request()->input())->render()}}
+				@endif
 				<!---------------- END AIONE PAGINATION ---------------->
 
 			</div> <!-- .aione-row -->

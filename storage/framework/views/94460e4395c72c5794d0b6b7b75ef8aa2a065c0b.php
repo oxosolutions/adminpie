@@ -1,4 +1,41 @@
 <?php $__env->startSection('content'); ?>
+<?php if(Session::has('forgot-error')): ?>
+	<div class="row error">
+		<span><i class="fa fa-ban"></i></span>
+		<?php echo e(Session::get('forgot-error')); ?>
+
+	</div>
+<?php endif; ?>
+<div class="display-1">
+	Forgot Password
+</div>
+<div class="sub-title">
+	Lorem ipsum dolor sit amet, coectetuer adipiscing elit sed diam nonummy.
+</div>
+<?php echo Form::open(['method' => 'POST','class' => 'modal-body','route' => 'forgot']); ?>
+
+<div>
+	<input type="email" name="email" placeholder="Enter Your Email">
+</div>
+<div class="row">
+	<div class="col l6">
+		<a style="line-height: 34px" href="<?php echo e(route('org.login.post')); ?>">Go to Login page</a>
+	</div>
+	<div class="col l6 right-align">
+		<button type="submit">Reset Password</button>	
+	</div>
+</div>
+<?php echo Form::close(); ?>
+
+<div class="copyright">
+Copyright &copy; OXO Solutions 2017
+</div>
+
+
+
+
+
+<div style="position: absolute;bottom: 0;left: 0;display: none">
 	
 	<?php echo Form::open(['method' => 'POST','class' => 'modal-body','route' => 'forgot']); ?>
 
@@ -45,26 +82,6 @@
 	<div class="footer">
 			© 2017, All Right Reserved. <a href="http://oxosolutions.com/" target="_blank"  style="color: white"><span>OXO solutions</span></a>
 	</div>
-	<style type="text/css">
-		.login-cover{
-			    background: url('<?php echo e(asset('assets/images/cool-bg.jpg')); ?>') no-repeat;
-    background-size: cover;
-		}
-		.panel-body{
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			margin-left: -160px !important;
-			    margin-top: -127px !important;
-		}
-		.footer{
-			    position: fixed;
-    bottom: 20px;
-    text-align: center;
-    color: white;
-        background-color: hsla(0,0%,0%,0.3);
-    padding: 10px;
-		}
-	</style>
+</div>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

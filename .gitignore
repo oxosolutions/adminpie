@@ -10,7 +10,12 @@ Homestead.yaml
 /bak
 
 # Gulp build
-/build
+/public/tools
+/public/tools/build
+/public/buildtools/build
+
+# User Files
+/public/files
  
 # Build and Release Folders
 bin/

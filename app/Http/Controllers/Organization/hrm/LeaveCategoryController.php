@@ -70,9 +70,8 @@ class LeaveCategoryController extends Controller
       * @param  [type]  $id      [description]
       * @return [type]           [description]
       */
-    public function categoryMeta(Request $request , $id=null)
+    public function categoryMeta(Request $request , $cat_id=null)
      {  
-      dd($id);
       if(Auth::guard('org')->check()){
         $id = Auth::guard('org')->user()['id'];
       }else{
@@ -84,14 +83,15 @@ class LeaveCategoryController extends Controller
           return back();			
   		  }
   		$select =[];
-      	$data['cat'] = $this->catRepo->category_data_by_id($id);
-  		$cm = CM::where('category_id',$id)->get();
+      $data['cat'] = $this->catRepo->category_data_by_id($cat_id);
+  		$cm = CM::where('category_id',$cat_id)->get();
   		$data['data'] = $cm->pluck('value','key')->toArray();
-     	$data['id'] =$id;
+     	$data['id'] =$cat_id;
 
-   		$data['userData']= User::where('id','!=',$id)->pluck('name','id');
+   		$data['userData']= User::where('id','!=',$cat_id)->pluck('name','id');
      	$data['designationData'] = DES::where('status',1)->pluck('name','id');
    		$data['roles'] = Role::where('status',1)->pluck('name','id');
+
       return view('organization.leave_category.leave_rule',['data'=>$data ,'select'=>$select]);
      }
 

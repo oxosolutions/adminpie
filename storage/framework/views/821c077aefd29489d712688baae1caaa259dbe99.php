@@ -1,373 +1,5 @@
 
 <?php $__env->startSection('content'); ?>
-
-<?php 
-
-	$page_title_data = array(
-	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
-	'show_navigation' => 'yes',
-	'page_title' => 'Dashboard',
-	'add_new' => '+ Add Widget'
-	); 
- ?>
-
-<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
-<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-<div>
-		<div class="row">
-			
-			
-			<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widgetKey => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<?php if(View::exists('organization.widgets.'.$widget->widgets->slug)): ?>
-					<?php echo $__env->make('organization.widgets.'.$widget->widgets->slug, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-				<?php endif; ?>
-				
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-		</div>
-	</div> 
-	<div class="row">	
-		<div class="col l6 pr-7">
-			<div class="card center-align chk-n-out" >
-				<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
-				<input type="hidden" class="status" value="<?php echo e($check_in_out_status); ?>" >
-				<button href="javascript:;" status="check_in" class="checkInOut blue aione-btn" id="check_in" style="">
-					<span>
-						<span >
-							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
-						</span>
-						<span>
-								<span style="font-size: 18px;margin-left: 5px">Check-In</span>
-						</span>
-					</span>
-				</button>
-				
-				<button  status="check_out" class="checkInOut grey darken-2" id="check_out" style="display: inline-block;color: white;margin: 0 auto;padding: 8px 20px">
-					<span>
-						<span >
-							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
-						</span>
-						<span>
-								<span style="font-size: 18px;margin-left: 5px">Check-Out</span>
-						</span>
-					</span>
-				</button>
-			</div>
-
-		</div>
-		
-		
-	</div>
-	<div class="row">
-		<div class="col l3">
-			<div class="card shadow mt-0" style="border:1px solid #e1e1e1">
-				<div class="center-align aione-widget-header" ><h5 class="m-0"><a href="#">Working Hours</a></h5></div>
-				<div class="count">
-					<span ><time id="timer">00:00:00</time> Hrs</span>
-				</div>
-				<div class="in-out-button">
-
-					<a href="#" id="start">
-						<i class="material-icons dp48">access_alarm</i>
-						<div>
-							<div class="check-in" style="font-size: 26px;color: white">
-								Check In
-							</div>
-							<div class="check-out" style="font-size: 26px;color: white">
-								Check Out
-							</div>
-
-							<div style="color: white;font-size: 14px;line-height: 7px;">
-								
-							</div>
-						</div>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col l3 pr-14">
-			<div id="card_1">
-				<div class="front" >
-					<div class="card shadow mt-0 fix-height" >
-						<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Employees')); ?></a></h5></div>
-						<div class="row center-align aione-widget-content mb-10" >19</div>
-						<div class="row aione-widget-footer mb-10" >
-							<button href="#" class="all blue white-text">All Employees</button>
-							<button href="#" class="recent blue white-text flip-btn-1">Recent Employees</button>
-						</div>
-					</div>
-				</div>	
-				<div class="back" >
-					<div class="card shadow mt-0 fix-height" > 
-						<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Recent Employees')); ?></a></h5>
-							<a href="#" class="btn-unflip-1 btn-unflip"><i class="material-icons dp48">clear</i></a>
-						</div>
-						<div class="row aione-widget-list m-0" >
-							<ul class="recent-five">
-								<li class="waves-effect">
-									Ashish Kumar
-									<a href="#">view</a>
-								</li>
-								<div class="divider"></div>
-								<li class="waves-effect">Sandeep Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Rahul Sharma<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Paljinder Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Nirmal<a href="#">view</a></li>
-
-							</ul>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<script type="text/javascript">
-				$("#card_1").flip({
-					trigger: 'manual'
-				});
-				$(document).on('click','.flip-btn-1',function(){
-					$("#card_1").flip(true);
-				});
-				$(document).on('click','.btn-unflip-1',function(e){
-					e.preventDefault();
-					$("#card_1").flip(false);
-				});
-
-			</script>
-			
-		</div>
-		<div class="col l3 pr-14">
-			<div id="card_2">
-				<div class="front" >
-					<div class="card shadow mt-0 fix-height" >
-						<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Employees')); ?></a></h5></div>
-						<div class="row center-align aione-widget-content mb-10" >19</div>
-						<div class="row aione-widget-footer mb-10" >
-							<button href="#" class="all blue white-text">All Employees</button>
-							<button href="#" class="recent blue white-text flip-btn-2">Recent Employees</button>
-						</div>
-					</div>
-				</div>	
-				<div class="back" >
-					<div class="card shadow mt-0 fix-height" > 
-						<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Recent Employees')); ?></a></h5>
-							<a href="#" class="btn-unflip-2 btn-unflip"><i class="material-icons dp48">clear</i></a>
-						</div>
-						<div class="row aione-widget-list m-0" >
-							<ul class="recent-five">
-								<li class="waves-effect">
-									Ashish Kumar
-									<a href="#">view</a>
-								</li>
-								<div class="divider"></div>
-								<li class="waves-effect">Sandeep Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Rahul Sharma<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Paljinder Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Nirmal<a href="#">view</a></li>
-
-							</ul>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<script type="text/javascript">
-				$("#card_2").flip({
-					trigger: 'manual'
-				});
-				$(document).on('click','.flip-btn-2',function(){
-					$("#card_2").flip(true);
-				});
-				$(document).on('click','.btn-unflip-2',function(e){
-					e.preventDefault();
-					$("#card_2").flip(false);
-				});
-
-			</script>
-			
-		</div>
-		<div class="col l3 pr-14">
-			<div id="card_3">
-				<div class="front" >
-					<div class="card shadow mt-0 fix-height" >
-						<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Employees')); ?></a></h5></div>
-						<div class="row center-align aione-widget-content mb-10" >19</div>
-						<div class="row aione-widget-footer mb-10" >
-							<button href="#" class="all blue white-text">All Employees</button>
-							<button href="#" class="recent blue white-text flip-btn-3">Recent Employees</button>
-						</div>
-					</div>
-				</div>	
-				<div class="back" >
-					<div class="card shadow mt-0 fix-height" > 
-						<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Recent Employees')); ?></a></h5>
-							<a href="#" class="btn-unflip-3 btn-unflip"><i class="material-icons dp48">clear</i></a>
-						</div>
-						<div class="row aione-widget-list m-0" >
-							<ul class="recent-five">
-								<li class="waves-effect">
-									Ashish Kumar
-									<a href="#">view</a>
-								</li>
-								<div class="divider"></div>
-								<li class="waves-effect">Sandeep Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Rahul Sharma<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Paljinder Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Nirmal<a href="#">view</a></li>
-
-							</ul>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<script type="text/javascript">
-				$("#card_3").flip({
-					trigger: 'manual'
-				});
-				$(document).on('click','.flip-btn-3',function(){
-					$("#card_3").flip(true);
-				});
-				$(document).on('click','.btn-unflip-3',function(e){
-					e.preventDefault();
-					$("#card_3").flip(false);
-				});
-
-			</script>
-			
-		</div>
-		<div class="col l3 pr-14">
-			<div id="card_4">
-				<div class="front" >
-					<div class="card shadow mt-0 fix-height" >
-						<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Employees')); ?></a></h5></div>
-						<div class="row center-align aione-widget-content mb-10" >19</div>
-						<div class="row aione-widget-footer mb-10" >
-							<button href="#" class="all blue white-text">All Employees</button>
-							<button href="#" class="recent blue white-text flip-btn-4">Recent Employees</button>
-						</div>
-					</div>
-				</div>	
-				<div class="back" >
-					<div class="card shadow mt-0 fix-height" > 
-						<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Recent Employees')); ?></a></h5>
-							<a href="#" class="btn-unflip-4 btn-unflip"><i class="material-icons dp48">clear</i></a>
-						</div>
-						<div class="row aione-widget-list m-0" >
-							<ul class="recent-five">
-								<li class="waves-effect">
-									Ashish Kumar
-									<a href="#">view</a>
-								</li>
-								<div class="divider"></div>
-								<li class="waves-effect">Sandeep Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Rahul Sharma<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Paljinder Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Nirmal<a href="#">view</a></li>
-
-							</ul>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<script type="text/javascript">
-				$("#card_4").flip({
-					trigger: 'manual'
-				});
-				$(document).on('click','.flip-btn-4',function(){
-					$("#card_4").flip(true);
-				});
-				$(document).on('click','.btn-unflip-4',function(e){
-					e.preventDefault();
-					$("#card_4").flip(false);
-				});
-
-			</script>
-			
-		</div>
-		<div class="col l3 pr-14">
-			<div id="card_5">
-				<div class="front" >
-					<div class="card shadow mt-0 fix-height" >
-						<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Employees')); ?></a></h5></div>
-						<div class="row center-align aione-widget-content mb-10" >19</div>
-						<div class="row aione-widget-footer mb-10" >
-							<button href="#" class="all blue white-text">All Employees</button>
-							<button href="#" class="recent blue white-text flip-btn-5">Recent Employees</button>
-						</div>
-					</div>
-				</div>	
-				<div class="back" >
-					<div class="card shadow mt-0 fix-height" > 
-						<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"><a href="#"><?php echo e(ucfirst('Recent Employees')); ?></a></h5>
-							<a href="#" class="btn-unflip-5 btn-unflip"><i class="material-icons dp48">clear</i></a>
-						</div>
-						<div class="row aione-widget-list m-0" >
-							<ul class="recent-five">
-								<li class="waves-effect">
-									Ashish Kumar
-									<a href="#">view</a>
-								</li>
-								<div class="divider"></div>
-								<li class="waves-effect">Sandeep Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Rahul Sharma<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Paljinder Singh<a href="#">view</a></li>
-								<div class="divider"></div>
-								<li class="waves-effect">Nirmal<a href="#">view</a></li>
-
-							</ul>
-						</div>
-						
-					</div>
-				</div>
-			</div>
-			<script type="text/javascript">
-				$("#card_5").flip({
-					trigger: 'manual'
-				});
-				$(document).on('click','.flip-btn-5',function(){
-					$("#card_5").flip(true);
-				});
-				$(document).on('click','.btn-unflip-5',function(e){
-					e.preventDefault();
-					$("#card_5").flip(false);
-				});
-
-			</script>
-			
-		</div>
-	</div>
-	
-	
-	
-<div class="aione-header-item aione-clock"> 
-	<div class="" id="clock"></div>
-</div> <!-- .aione-header-item -->
-
-
-
-
-<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
 <style type="text/css">
 		.recent-five li{
 			padding: 7px 10px;
@@ -489,9 +121,285 @@
 		.aione-btn{
 			display: inline-block;color: white;margin: 0 auto;padding: 8px 20px;
 		}
+		.add-btn{
+			font-size: 14px;
+			font-weight: 600;
+			padding: 10px 5px;
+			border: 0px;
+			border-radius: 4px;	
+			width: 100%;
+
+		}
+		.add-widget{
+			border:2px dashed #e8e8e8;
+			margin-top: 10px;
+			min-height: 230px;max-height: 230px;
+			padding: 38px 20px;
+			cursor: pointer;
+		}
+		.plus-sign{
+			width: 100%;
+			font-size: 72px;
+			font-weight: 800;
+			color: #676767;
+
+		}
+	</style>
+<?php 
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Dashboard',
+	'add_new' => '+ Add Widget'
+	); 
+ ?>
+
+<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+<div>
+<?php echo $__env->make('organization.dashboard._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<div class="row">
+			<?php 
+				$count = [];
+			 ?>
+			<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widgetKey => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+				<?php 
+					$count[] = $widget->id;
+					// dump($widget['widgets']);
+				 ?>
+			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			<?php 
+				$isAdmin = in_array('administrator',get_user_roles());
+				if(count(request()->route()->parameters()) >0 ){
+					$current_dashboard_id = request()->route()->parameters()['id'];
+				}
+				else{
+					$current_dashboard_id = "";
+				}
+				
+
+				
+			 ?>
+
+			<?php $__currentLoopData = @$dashboard_tabs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $tab): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+			    <?php if($key == $current_dashboard_id): ?>
+			    	
+			    <?php endif; ?>
+			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			<div id="sortable_1">
+			<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widgetKey => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+					<?php 
+						$file = (!$isAdmin)?$widget->widgets->slug:$widget->slug;
+					 ?>
+					<?php if(View::exists('organization.widgets.'.$file)): ?>
+						<?php 
+							if($isAdmin){
+								$widget['widgets'] = $widget;
+							}
+						 ?>
+						
+						<div class="ui-state-default widget-wrapper col l3 pr-14">
+								<?php 
+									$slug = request()->route()->parameters()['id'];
+									if(Auth::guard('admin')->check()){
+										$id = Auth::guard('admin')->user()->id;
+									}else{
+										$id = Auth::guard('org')->user()->id;
+									}
+									$widget_id = $widget['id'];
+								 ?>
+							<?php echo $__env->make('organization.widgets.'.$file , ['data'=>$widget,'count' => count($count),'isAdmin'=>$isAdmin], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+								
+								<input type="hidden" name="slug" value="<?php echo e($slug); ?>">
+								<input type="hidden" name="widget_id" value="<?php echo e($widget_id); ?>">
+							<a href="javascript:;" class="delete-widget"><i class="material-icons dp48">clear</i></a>
+						</div>
+						
+					<?php endif; ?>
+				
+			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			</div>
+			<div class="col l3">
+				<div class="add-widget row" data-target="add-widget">
+					<div class="col l12 center-align plus-sign" style="">
+						+
+					</div>
+					<div class="col l12 center-align">
+						Add New Widget
+					</div>
+				</div>
+			</div>
+			
+			<div id="add-widget" class="modal modal-fixed-footer" style="overflow-y: hidden;">
+				<div class="modal-header white-text  blue darken-1" ">
+					<div class="row" style="padding:15px 10px;margin: 0px">
+						<div class="col l7 left-align">
+							<h5 style="margin:0px">Add Widget</h5>	
+						</div>
+						<div class="col l5 right-align">
+							<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button " style="color: white"><i class="fa fa-close"></i></a>
+						</div>	
+					</div>
+				</div>
+				<?php echo e(Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])); ?>
+
+
+					<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
+						<?php echo Form::select('widget[]',@$listWidget,null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=> 'Select Widget','field_placeholder','multiple'=>true]); ?>
+
+						<input type="hidden" name="slug" value="<?php echo e(Request()->route()->parameters()['id']); ?>">
+						<?php echo csrf_field(); ?>
+
+
+					</div>
+					<div class="modal-footer">
+						<button class="btn blue " type="submit" name="action">Add</button>
+					</div>	
+				<?php echo e(Form::close()); ?>
+
+			</div>
+			
+		</div>
+	</div> 
+	<div class="row">	
+		<div class="col l6 pr-7">
+			<div class="card center-align chk-n-out" >
+				<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
+				<input type="hidden" class="status" value="<?php echo e($check_in_out_status); ?>" >
+				<button href="javascript:;" status="check_in" class="checkInOut blue aione-btn" id="check_in" style="">
+					<span>
+						<span >
+							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
+						</span>
+						<span>
+								<span style="font-size: 18px;margin-left: 5px">Check-In</span>
+						</span>
+					</span>
+				</button>
+				
+				<button  status="check_out" class="checkInOut grey darken-2" id="check_out" style="display: inline-block;color: white;margin: 0 auto;padding: 8px 20px">
+					<span>
+						<span >
+							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
+						</span>
+						<span>
+								<span style="font-size: 18px;margin-left: 5px">Check-Out</span>
+						</span>
+					</span>
+				</button>
+			</div>
+
+		</div>
+		
+		
+	</div>
+	<div class="row">
+		<div class="col l3">
+			<div class="card shadow mt-0" style="border:1px solid #e1e1e1">
+				<div class="center-align aione-widget-header" ><h5 class="m-0"><a href="#">Working Hours</a></h5></div>
+				<div class="count">
+					<span ><time id="timer">00:00:00</time> Hrs</span>
+				</div>
+				<div class="in-out-button">
+
+					<a href="#" id="start">
+						<i class="material-icons dp48">access_alarm</i>
+						<div>
+							<div class="check-in" style="font-size: 26px;color: white">
+								Check In
+							</div>
+							<div class="check-out" style="font-size: 26px;color: white">
+								Check Out
+							</div>
+
+							<div style="color: white;font-size: 14px;line-height: 7px;">
+								<div class="" id="clock_1"></div>
+							</div>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+	<style type="text/css">
+
+		.widget-wrapper {
+			position: relative;
+			display: block;
+		}
+		.widget-wrapper > a{
+			position: absolute;
+			top: 22px;
+			right: 30px;
+			display: none;
+		}
+		.widget-wrapper > a > i{
+			font-size: 20px;
+    		color: #979797;
+    		
+		}
+		.widget-wrapper:hover  a {
+			display: block;
+		}
 		
 	</style>
 	<script type="text/javascript">
+	 $( function() {
+	    $( "#sortable" ).sortable({
+	    	axis: "x",
+	      items: "li:not(.unsortable)",
+	      update : function(){
+	      	var dashboard_index = [];
+	      	$('.dashboard-tab').each(function(){
+	      		dashboard_index.push($(this).attr('dashboard-index'));
+	      	});
+	      	$.ajax({
+	      		url : route()+'sort/dashbaord',
+	      		type : "POST",
+	      		data : {
+	      			data : dashboard_index,
+	      			_token : $("#token").val()
+	      		},
+	      		success : function (res) {
+	      			console.log(res);
+	      		}
+	      	});
+	      }
+	    });
+	  } );
+	 $(document).on('click','.delete-dashboard',function(){
+	 	var tabSlug = $(this).attr('tab-id');
+			      				$(this).parents('.dashboard-tab').remove();
+
+
+	 	$.ajax({
+	      		url : route()+'delete/dashboards',
+	      		type : "POST",
+	      		data : {
+	      			slug : tabSlug,
+	      			_token : $("#token").val()
+	      		},
+	      		success : function (res) {
+	      			if(res == 'true'){
+	      			}
+	      			console.log(res);
+	      		}
+	      	});
+	 });
+
+	 $( function() {
+	    $( "#sortable_1" ).sortable();
+	    $( "#sortable_1" ).disableSelection();
+	  } );
 		 
 	$(document).ready(function() {
 

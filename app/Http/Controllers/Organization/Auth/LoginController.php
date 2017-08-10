@@ -178,8 +178,11 @@ class LoginController extends Controller
             Session::flash('password-changed','Password change Successfully.');
             return redirect()->route('org.login');
         }else{
-            echo "nai hoiya";
+            echo "Not Changed";
         }
     }
-    
+    public function register()
+    {
+        return view('organization.login.register');
+    }
 }

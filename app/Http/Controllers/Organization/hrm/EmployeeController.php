@@ -14,8 +14,11 @@ use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersMeta;
 use Session;
 use Auth;
+use Excel;
+use Crypt;
+use Config;
 use App\Model\Organization\OrganizationSetting;
-
+use Datatables;
 class EmployeeController extends Controller
 {
     protected $user;
@@ -32,7 +35,7 @@ class EmployeeController extends Controller
         }
         $datalist= [];
         $data= [];
-        if($request->has('items')){
+        /*if($request->has('items')){
               $perPage = $request->items;
               if($perPage == 'all'){
                 $perPage = 999999999999999;
@@ -42,32 +45,39 @@ class EmployeeController extends Controller
             }
         $sortedBy = @$request->orderby;
         $orgId = Session::get('organization_id');
+        $datalist['datalist'] = [];
+        $model = [];
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = EMP::with(['employ_info'=>function($query) use ($request){
-                      $query->with(['metas']);
-                },'designations'=>function($query){
-                	$query->select(['name as designation_name','id']);
-                },'department_rel'=>function($query){
-                	$query->select(['name as department_name','id']);
-                }])
-                ->select(
-                			[
-                				'users.created_at as crt',
-                				'users.name',
-                				$orgId.'_employees.*',
-                				$orgId.'_designations.name as designation_name',
-                				$orgId.'_designations.id',
-                				$orgId.'_departments.name as department_name',
-                			]
-                		)
-                ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
-                ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
-                ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
-                ->where('users.name','like','%'.$request->search.'%')
-                ->orWhere($orgId.'_employees.employee_id','like','%'.$request->search.'%')
-                ->orderBy($sortedBy,$request->order)
-                ->paginate($perPage);
+                try{
+                    $model = EMP::with(['employ_info'=>function($query) use ($request){
+                          $query->with(['metas']);
+                    },'designations'=>function($query){
+                        $query->select(['name as designation_name','id']);
+                    },'department_rel'=>function($query){
+                        $query->select(['name as department_name','id']);
+                    }])
+                    ->select(
+                                [
+                                    'users.created_at as crt',
+                                    'users.name',
+                                    $orgId.'_employees.*',
+                                    $orgId.'_designations.name as designation_name',
+                                    $orgId.'_designations.id',
+                                    $orgId.'_departments.name as department_name',
+                                ]
+                            )
+                    ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
+                    ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
+                    ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
+                    ->where('users.name','like','%'.$request->search.'%')
+                    ->orWhere($orgId.'_employees.employee_id','like','%'.$request->search.'%')
+                    ->orderBy($sortedBy,$request->order)
+                    ->paginate($perPage);
+                }catch(\Exception $e){
+                    //throw $e;
+                }
+                
             }else{
                 $model = EMP::with(['employ_info'=>function($query) use ($request){
                       $query->with(['metas']);
@@ -77,56 +87,127 @@ class EmployeeController extends Controller
             }
         }else{
             if($sortedBy != ''){
-                $model = EMP::with(['employ_info'=>function($query){
-                      $query->with(['metas']);
-                },'designations'=>function($query){
-                	$query->select(['name as designation_name','id']);
-                },'department_rel'=>function($query){
-                	$query->select(['name as department_name','id']);
-                }])
-                ->select(
-                			[
-                				'users.created_at as crt',
-                				'users.name',
-                				$orgId.'_employees.*',
-                				$orgId.'_designations.name as designation_name',
-                				$orgId.'_designations.id',
-                				$orgId.'_departments.name as department_name',
-                			]
-                		)
-                ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
-                ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
-                ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
-                ->orderBy($sortedBy,$request->order)
-                ->paginate($perPage);
+                try{
+                    $model = EMP::with(['employ_info'=>function($query){
+                          $query->with(['metas']);
+                    },'designations'=>function($query){
+                        $query->select(['name as designation_name','id']);
+                    },'department_rel'=>function($query){
+                        $query->select(['name as department_name','id']);
+                    }])
+                    ->select(
+                                [
+                                    'users.created_at as crt',
+                                    'users.name',
+                                    $orgId.'_employees.*',
+                                    $orgId.'_designations.name as designation_name',
+                                    $orgId.'_designations.id',
+                                    $orgId.'_departments.name as department_name',
+                                ]
+                            )
+                    ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
+                    ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
+                    ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
+                    ->orderBy($sortedBy,$request->order)
+                    ->paginate($perPage);
+                }catch(\Exception $e){
+                    //throw $e;
+                }
+                
             }else{
                  $model = EMP::with(['employ_info'=>function($query){
-                      $query->with(['metas']);
-                },'designations','department_rel'])->paginate($perPage);
+                          $query->with(['metas']);
+                    },'designations'=>function($query){
+                        $query->select(['name as designation_name','id']);
+                    },'department_rel'=>function($query){
+                        $query->select(['name as department_name','id']);
+                    }])
+                    ->select(
+                                [
+                                    'users.created_at as crt',
+                                    'users.name',
+                                    $orgId.'_employees.*',
+                                    $orgId.'_designations.name as designation_name',
+                                    $orgId.'_designations.id',
+                                    $orgId.'_departments.name as department_name',
+                                ]
+                            )
+                    ->join($orgId.'_designations',$orgId.'_designations.id','=',$orgId.'_employees.designation','left')
+                    ->join($orgId.'_departments',$orgId.'_departments.id','=',$orgId.'_employees.department','left')
+                    ->join($orgId.'_users as users','users.id','=',$orgId.'_employees.user_id')
+                    ->paginate($perPage);
             }
+        }*/
+        $employe_id = '';
+        $department_name = '';
+        $designation_name = '';
+        $model = User::with(['metas'])->where(['user_type'=>'employee'])->get()->toArray();
+        foreach ($model as $key => $record) {
+            $model[$key]['department'] = '';
+            $model[$key]['designation'] = '';
+            $model[$key]['employee_id'] = '';
+            foreach($record['metas'] as $metaKey => $metaValue){
+                if($metaValue['key'] == 'department'){
+                    $department = DEP::find($metaValue['value'])->name;
+                    $model[$key]['department'] = $department;
+                }
+                if($metaValue['key'] == 'designation'){
+                    $designation = DES::find($metaValue['value'])->name;
+                    $model[$key]['designation'] = $designation;
+                }
+                if($metaValue['key'] == 'employee_id'){
+                    $model[$key]['employee_id'] = $metaValue['value'];
+                }
+            }
+            $model[$key] = (object)$model[$key];
         }
+        //dd(collect($model));
+        //'employ_info.metas.contact_no'=>'Contact No',
+        
         $datalist =  [
-                      'datalist'=>  $model,
-                      'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.department_name'=>'Department','designations.designation_name'=>'Designation','employ_info.metas.contact_no'=>'Contact No','employ_info.email'=>'Email ID','created_at'=>'Created At'],
+                      'datalist'=>  collect($model),
+                      'showColumns' => ['employee_id'=>'Employee ID','name'=>'Name','department_name'=>'Department','designation_name'=>'Designation','email'=>'Email ID','created_at'=>'Created At','status'=>'Status'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'=>'employ_info.id'] , 'class' => 'edit'],
-                                      // 'delete'=>['title'=>'Delete','route'=>'delete.employee']
+                                      'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'employ_info.id'] , 'class' => 'delete']
                                    ],
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                     ];
-            if(check_route_permisson('hrm/employee/update')==false){
-              unset($datalist['actions']['edit']);
-            }
-            if(check_route_permisson('hrm/employee/delete')==false){
-              unset($datalist['actions']['delete']);
-            }
+            // if(check_route_permisson('hrm/employee/update')==false){
+            //   unset($datalist['actions']['edit']);
+            // }
+            // if(check_route_permisson('hrm/employee/delete')==false){
+            //   unset($datalist['actions']['delete']);
+            // }
       if(!empty($id) || $id != null || $id != ''){
         $data['data'] = EMP::where('id',$id)->first();
       }
-    	return view('organization.employee.list',$datalist)->with(['data' => $data]);
+        return view('organization.employee.list',$datalist)->with(['data' => $data]);
     }
 
+    public function employeeListDatatable(){
+        $model = EMP::with(['employ_info'=>function($query){
+              $query->with(['metas']);
+        },'designations','department_rel'])->get();
+
+        return Datatables::of($model)
+        ->addColumn('department', function($model){
+            if($model->department_rel != null){
+                return $model->department_rel->name;
+            }else{
+                return '';
+            }
+        })
+        ->addColumn('designation', function($model){
+            if($model->designations != null){
+                return $model->designations->name;
+            }else{
+                return '';
+            }
+        })
+        ->make(true);
+    }
     protected function saveSearch($request){
         $search = $request->except(['page']);
         $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
@@ -175,6 +256,7 @@ class EmployeeController extends Controller
 
     public function save(Request $request)
     {
+        $request['joining_date'] = date("Y-m-d");
         $model = OrganizationSetting::where('key' , 'employee_role')->first();
         if(count($model) > 0){
             $employee_id = $model->value;
@@ -192,11 +274,26 @@ class EmployeeController extends Controller
         $this->validate($request , $valid_fields);
         $request['role_id'] =  setting_val_by_key('employee_role');
         $user_id = $this->user->create($request->all(), $employee_id);
-        $emp = new EMP();
+        foreach($request->all() as $key => $value){
+            if(in_array($key,['designation','department','shift','employee_id'])){
+                $userMeta = new UsersMeta;
+                $userMeta->user_id = $user_id;
+                $userMeta->key = $key;
+                $userMeta->value = $value;
+                $userMeta->save();
+            }
+        }
+        /*$emp = new EMP();
         $emp->user_id = $user_id;
         $emp->status = 1;
         $emp->fill($request->all());
-        $emp->save();
+        $emp->save();*/
+
+        /*$shifts_insert = new UsersMeta;
+        $shifts_insert['user_id']   =  $emp->id;
+        $shifts_insert['key']       = 'shift';
+        $shifts_insert['value']     = $request->shift;
+        $shifts_insert->save();*/
         return redirect()->route('list.employee');
     }
     function editEmployee()
@@ -220,10 +317,13 @@ class EmployeeController extends Controller
     public function delete($id)
     {
         $model = EMP::where('user_id',$id)->delete();
+
         if($model){
+            $model = User::where('id',$id)->delete();
+            $model_meta = UsersMeta::where('user_id',$id)->delete();
             return back();
         }
-    } 
+    }
 
     public function updateEmployeeName(Request $request){
         try{
@@ -257,6 +357,163 @@ class EmployeeController extends Controller
         }catch(\Exception $e){  
             throw $e;
         }
+    }
+
+    public function export(){
+       $model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
+            $query->with('metas');
+       }])->get();
+       $headers = array(
+                    'User.name',
+                    'User.email',
+                    'User.password',
+                    'Employee.id',
+                    'Employee.user_id',
+                    'Employee.employee_id',
+                    'Employee.designation',
+                    'Employee.department',
+                    'Employee.marital_status',
+                    'Employee.experience',
+                    'Employee.blood_group',
+                    'Employee.joining_date',
+                    'Employee.disability_percentage'
+        );
+       $employeeDataArray = [];
+       foreach ($model as $key => $employe) {
+            $singleEmployeeArray = [];
+            $singleEmployeeArray[] = @$employe->employ_info->name;
+            $singleEmployeeArray[] = @$employe->employ_info->email;
+            $singleEmployeeArray[] = @$employe->employ_info->password;
+            $singleEmployeeArray[] = @$employe->id;
+            $singleEmployeeArray[] = @$employe->user_id;
+            $singleEmployeeArray[] = @$employe->employee_id;
+            $singleEmployeeArray[] = @$employe->designation_rel->name;
+            $singleEmployeeArray[] = @$employe->department_rel->name;
+            $singleEmployeeArray[] = @$employe->marital_status;
+            $singleEmployeeArray[] = @$employe->experience;
+            $singleEmployeeArray[] = @$employe->blood_group;
+            $singleEmployeeArray[] = @$employe->joining_date;
+            $singleEmployeeArray[] = @$employe->disability_percentage;
+            foreach($employe->employ_info->metas as $k => $meta){
+                if(!in_array('UsersMeta.'.$meta->key, $headers)){
+                    $headers[] = 'UsersMeta.'.$meta->key;
+                }
+                $singleEmployeeArray[] = $meta->value;
+            }
+            $employeeDataArray[] = $singleEmployeeArray;
+       }
+
+       $data[] = $headers;
+       foreach ($employeeDataArray as $key => $value) {
+            $data[] = $value;
+       }
+       Excel::create('Employees-List-'.date('Y-m-d H i s'), function($excel) use($data) {
+            $excel->sheet('Employees List', function($sheet) use($data) {
+                $sheet->fromArray($data,null,'A1',false,false);
+                $sheet->row(1, function($row){
+                    $row->setFontWeight('bold');
+                });
+            });
+       })->export('xls');
+        
+    }
+
+    public function importEmployee(Request $request){
+        if($request->hasFile('import_employee')){
+            $organizationId = Session::get('organization_id');
+            $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
+            $path = env('USER_FILES_PATH').'_'.$organizationId.'/hrm_employee_import_files';
+            $request->file('import_employee')->move($path,$filename);
+            $sheetCount = 0;
+            $data = Excel::load($path.'/'.$filename, function($reader) use (&$sheetCount){ 
+                $sheetCount = $reader->getSheetCount();
+            })->get();
+            $recordsArray = null;
+            $rowId = 2;
+            $errors = [];
+            foreach($data as $key => $record){
+                foreach($record as $columnHeader => $columnValue){
+                    $explodedHeader = explode('.',$columnHeader);
+                    $recordsArray[$explodedHeader[0]][$explodedHeader[1]] = $columnValue;
+                }
+                $userid = '';
+                foreach($recordsArray as $model => $columns){
+                    switch($model){
+                        case 'user':
+                            $alreadyExists = User::where(['email'=>$columns['email']])->first();
+                            if($alreadyExists == null){
+                                $userModel = new User;
+                                $userModel->fill($columns);
+                                $userModel->status = 1;
+                                $userModel->save();
+                                $userid = $userModel->id;
+                            }else{
+                                $errors[] = ['rowid'=>$rowId,'error'=>'Email id already exists'];
+                            }
+                        break;
+
+                        case'employee':
+                            if($userid != '' && $userid != 0){
+                                $model = EMP::firstOrNew(['employee_id'=>$columns['employee_id']]);
+                                $model->user_id = $userid;
+                                $model->employee_id = $columns['employee_id'];
+                                if($columns['designation'] != null && $columns['designation'] != ''){
+                                    $designation = DES::where('name','like','%'.$columns['designation'].'%')->first();
+                                    if($designation != null){
+                                        $model->designation = $designation->id;
+                                    }else{
+                                        $model->designation = $columns['designation'];
+                                    }
+                                }else{
+                                    $model->designation = null;
+                                }
+                                if($columns['department'] != null && $columns['department'] != ''){
+                                    $department = DEP::where('name','like','%'.$columns['department'].'%')->first();
+                                    if($department != null){
+                                        $model->department = $department->id;
+                                    }else{
+                                        $model->department = $columns['department'];
+                                    }
+                                }else{
+                                    $model->department = null;
+                                }
+                                unset($columns['id']);
+                                unset($columns['user_id']);
+                                unset($columns['employee_id']);
+                                unset($columns['designation']);
+                                unset($columns['department']);
+                                $model->fill($columns);
+                                $model->save();
+                            }
+                        break;
+                        case'usersmeta':
+                            if($userid != '' && $userid != 0){
+                                foreach($columns as $key => $keyValue){
+                                    $model = new UsersMeta;
+                                    $model->key = $key;
+                                    $model->value = $keyValue;
+                                    $model->type = 'employee';
+                                    $model->user_id = $userid;
+                                    $model->save();
+                                }
+                            }
+                        break;
+                    }
+                }
+                $rowId++;
+            }
+            Session::flash('errors',$errors);
+        }
+        return redirect()->route('import.employee');
+    }
+    
+    public function import()
+    {
+        // dd(get_meta('Organization\\UsersMeta',2,'contact_no','user_id',true));
+        // dd(get_user_meta(2,'contact_no',true));
+        // dd(get_user(true,true));
+        dd(get_current_user_meta('contact_no',true));
+        return view('organization.employee.import-employees');
     }
  
 }

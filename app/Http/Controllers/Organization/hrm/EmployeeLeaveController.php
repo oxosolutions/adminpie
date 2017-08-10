@@ -44,7 +44,7 @@ class EmployeeLeaveController extends Controller
 			{
 				$error['from_greater_than_to'] = 'from date must be less than to date.';
 				Session::flash('error',$error);
-				return redirect()->route('listing.employeeleave');
+				return redirect()->route('account.leaves');
 			}
 
 
@@ -211,6 +211,8 @@ class EmployeeLeaveController extends Controller
 					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
 				}	
 				dump(@$error);
+
+
 			}
 			if(empty($error)) {
 				$request['from'] =	$from->toDateString();
@@ -224,14 +226,14 @@ class EmployeeLeaveController extends Controller
 
 			}else{
 				//Session::flash('error', $error);
-
+					dd();
 
 			}
 		 }
 		
 
 		
-		return redirect()->route('listing.employeeleave');
+		return redirect()->route('account.leaves');
 	}
     
 }

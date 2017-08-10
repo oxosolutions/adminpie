@@ -165,6 +165,11 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Laracasts\Generators\GeneratorsServiceProvider::class,
         PHPMySQLWrapper\MySQLWrapper\PHPMySQLWrapperProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
+        Yajra\Datatables\HtmlServiceProvider::class,
+        Yajra\Datatables\ButtonsServiceProvider::class,
+        Spatie\Fractal\FractalServiceProvider::class,
         
 
         /*
@@ -241,6 +246,8 @@ return [
         'FormGenerator' => App\Helpers\FormGenerator::class,
         'MySQLWrapper' => PHPMySQLWrapper\MySQLWrapper\Wrapper::class,
         'drawSidebar' => App\Helpers\draw_sidebar::class,
+        'Image' => Intervention\Image\Facades\Image::class,
+        'Fractal' => Spatie\Fractal\FractalFacade::class,
 
     ],
 

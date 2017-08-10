@@ -36,11 +36,14 @@
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				 {!!Form::text('column_name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter Column Name'])!!}
 				 @if($errors->has('column_name'))
-				 	<span style="color: red;">{{$errors->first('column_name')}}</span>
+				 	<span style="color: red; font-size: 12px;">{{$errors->first('column_name')}}</span>
 				 @endif
 			</div>
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				 {!!Form::select('after_column',$tableheaders,null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter After Column'])!!}
+				 @if($errors->has('after_column'))
+				 	<span style="color: red; font-size: 12px;">{{$errors->first('after_column')}}</span>
+				 @endif
 			</div>
 			<div class="col s12 m2 l3">
 				<button class="btn blue">Create Column</button>

@@ -1,1 +1,0 @@
-<script type="text/javascript" src="{{ asset('LTR/default/assets/js/plugins/loaders/blockui.min.js')}}"></script>

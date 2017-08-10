@@ -19,7 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
 	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/style.css?ref='.rand(544,44))); ?>"> 
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
     
 	<script src="<?php echo e(asset('assets/js/moment.min.js')); ?>"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -43,8 +43,11 @@
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/jqueryHandsontable.js"></script>
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/removeRow/handsontable.removeRow.js"></script>
 	<script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	
 	
 
+	
 	<script type="text/javascript">
         function route(){
             return '<?php echo e(url('/')."/".Request::route()->getPrefix()); ?>';
@@ -52,6 +55,61 @@
         function csrf(){
             return '<?php echo e(csrf_token()); ?>';
         }
+    </script>
+    <script type="text/javascript">
+    	$(function(){
+    		$('#example').DataTable({
+    			processing: true,
+		      	serverSide: true,
+		      	ajax: '<?php echo e(url('/')); ?>/hrm/employee/list',
+		      	buttons: [
+		                    {
+		                        extend: 'excel',
+		                        filename: 'Export',
+		                        exportOptions: {
+		                            columns: ':not(.actions)'
+		                        }
+		                    }
+		                ],
+			    columns: [
+		            { data: 'employee_id', name: 'employee_id' },
+		            { data: 'employ_info.name', name: 'employ_info.name'},
+		            { data: 'department', name: 'department' },
+		            { data: 'designation', name: 'designation', searchable: true },
+		            { data: 'employ_info.email', name: 'employ_info.email', searchable: true },
+		            { data: 'created_at', name: 'created_at', searchable: true },
+		            { data: 'status', name: 'status', orderable: false, searchable: false, "className": 'actions' },
+			    ],
+			    /*initComplete: function () {
+		            var dataTable = this;
+		            dataTable.api().columns().every(function () {
+		                var column = this;
+		                var filterContainer = $(dataTable).find("thead .column-filters th").get(column.index()); //$(column.footer())
+		                var filterElement = $(filterContainer).find("input,select");
+		                filterElement.on('change', function () {
+		                    column.search($(this).val() !== null ? $(this).val() : "").draw();
+		                });
+		            });
+		        },*/
+				"oLanguage": {
+		            "sLengthMenu": "_MENU_ Rows",
+		            "sSearch": ""
+		        },
+		        "aLengthMenu": [
+		            [5, 10, 15, 20, 50, -1],
+		            [5, 10, 15, 20, 50, "All"] // change per page values here
+		        ],
+		        search: {
+				    "caseInsensitive": false
+				},
+				responsive: true,
+				searchHighlight: true,
+
+		        "iDisplayLength": 10    // set the initial value
+    		});
+    		$('select[name=example_length]').addClass('browser-default');
+    		$('input[type=search]').addClass('browser-default');
+    	});
     </script>
 	<?php if(@$plugins): ?>
 	    <?php $__currentLoopData = @$plugins; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $plugin): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -78,4 +136,3 @@
 			<?php endif; ?>
 	    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 	<?php endif; ?>
-	

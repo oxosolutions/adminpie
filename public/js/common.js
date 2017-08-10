@@ -140,4 +140,46 @@ setInterval(function(){clock();},100);
     $('#modal1').modal('close');
    });
 
+
+/********************* Dashboard *********************/
+
+$(document).on('click','.delete-widget',function(){
+  $(this).parents('.ui-widget-content').hide();
+  var slug      = $(this).siblings('input[name=slug]').val();
+  var widget_id = $(this).siblings('input[name=widget_id]').val();
+  var _token    = $('#token').val();
+  $.ajax({
+    url : route()+'/delete/dashboards/widget',
+    type : 'POST',
+    data : {  slug        : slug,
+              widget_id   : widget_id,
+              _token      : _token      
+    },
+    success: function(res){
+        if(res == "true"){
+            Materialize.toast("Success",4000);
+        }
+    }
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });

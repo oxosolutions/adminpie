@@ -75,6 +75,7 @@ class ShiftsController extends Controller
    }
    public function update(Request $request)
    {
+
        $sh =  Shift::find($request->id);
        if($request['status'] == 'true')
          {
@@ -102,15 +103,31 @@ class ShiftsController extends Controller
     }
     public function editShifts(Request $request , $id = null)
     {
+      $tbl = Session::get('organization_id');
+      $model = Shift::where('name',$request->name)->first();
+        if(@$model->id == $request->id){
+          if(@$model->name == $request->name){
+          $valid_fields = [
+                        'name' => 'required',
+                        'from' => 'required',
+                        'to'   => 'required',
+                        'working_days' => 'required'
+                      ];  
+          }
+        }else{
+            $valid_fields = [
+                          'name' => 'required|unique:'.$tbl.'_shifts',
+                          'from' => 'required',
+                          'to'   => 'required',
+                          'working_days' => 'required'
+                        ];
+        }
+      
+      $this->validate($request , $valid_fields);
+
        $tbl = Session::get('organization_id');
 
-        $valid_fields = [
-                            'name' => 'required',
-                            'from' => 'required',
-                            'to'   => 'required',
-                            'working_days' => 'required'
-                        ];
-      $this->validate($request , $valid_fields);
+        
 
       $data = $request->except('_token','id','action','working_days');
       $data['working_days'] = json_encode($request->working_days);

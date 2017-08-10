@@ -1,1 +1,0 @@
-	<script type="text/javascript" src="<?php echo e(asset('LTR/default/assets/js/plugins/forms/selects/select2.min.js')); ?>"></script>

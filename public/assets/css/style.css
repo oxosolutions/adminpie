@@ -667,7 +667,9 @@ AIONE DATALIST
 .aione-datalist-item  .aione-status.active{
 	border-color: #9CCC65;
 }
-
+.aione-datalist-item  .aione-status.pending{
+	border-color: orange;
+}
 /* To be REMOVED */
 .aione-datalist-item  .row{
 	margin-bottom:0;
@@ -939,7 +941,7 @@ NAVIGATION
 	display:block;
 }
 .aione-nav > ul > li > ul > li.nav-item-current{
-	background-color: #1e222b;
+	background-color: #ffffff;
 }
 
 .aione-nav > ul > li > ul > li{
@@ -949,11 +951,12 @@ NAVIGATION
 	border-bottom:none;
 }
 
-
 .aione-nav > ul > li > ul > li > a{
 	padding:0 0 0 15px;
 }
-
+.aione-nav > ul > li > ul > li.nav-item-current > a{
+	color: #333333;
+}
 .aione-nav > ul > li > ul > li > a .nav-item-icon{
 	display:none;
 }
@@ -1023,7 +1026,6 @@ Aione Tabs
 }
 .aione-tabs > .aione-tab > a:hover{
 	color:#666666;
-	padding:0 15px;
 }
 
 
@@ -1075,3 +1077,40 @@ TO BE CHANGED
     .divider{
         padding: 0px !important;
     }
+	
+	
+	
+	
+	
+/***************************************
+AIONE PROGRESS BAR
+***************************************/
+
+.aione-progress-bar {
+    margin-bottom: 20px;
+	position:relative;
+}
+
+.aione-progress-bg {
+    border: 1px solid #e8e8e8;
+	background-color:#FFFFFF;
+}
+.aione-progress-inside {
+    width: 60%;
+    height: 6px;
+    background-color: #3F51B5;
+    background-image: linear-gradient(90deg,#3F51B5,#17afb8,#66BB6A);
+    cursor: pointer;
+}
+.aione-progress-bar-content{
+	display:none;
+}
+.aione-progress-bar.active .aione-progress-bg {
+	padding:3px
+}
+.aione-progress-bar.active .aione-progress-inside {
+	height:15px;
+}
+.aione-progress-bar.active .aione-progress-bar-content {
+	display:block;
+}

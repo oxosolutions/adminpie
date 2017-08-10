@@ -8,13 +8,57 @@ use App\Model\Organization\EmailLayout;
 use App\Model\Organization\EmailTemplate;
 use Auth;
 use Session;
+use App\Model\Organization\Department;
+use App\Model\Organization\Designation;
+use App\Model\Organization\Shift;
+use App\Model\Organization\UsersRole;
+use App\Model\Organization\User;
+use App\Model\Organization\Campaign;
+use App\Model\Organization\UsersMeta;
 
 class EmailController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
-    	return view('organization.emails.index');
+        $search = $this->saveSearch($request);
+        if($search != false && is_array($search)){
+            $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+        }
+        $datalist= [];
+        $data= [];
+          if($request->has('items')){
+                $perPage = $request->items;
+                if($perPage == 'all'){
+                  $perPage = 999999999999999;
+                }
+              }else{
+                $perPage = 5;
+              }
+          $sortedBy = @$request->orderby;
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = Campaign::where('campaign_name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
+              }else{
+                  $model = Campaign::where('campaign_name','like','%'.$request->search.'%')->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = Campaign::orderBy($sortedBy,$request->order)->paginate($perPage);
+              }else{
+                   $model = Campaign::paginate($perPage);
+              }
+          }
+          $datalist =  [
+                          'datalist'=>  $model,
+                          'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created At'],
+                          'actions' => [
+                                          'edit' => ['title'=>'Edit','route'=>'edit.campaign' , 'class' => 'edit'],
+                                          'delete'=>['title'=>'Delete','route'=>'delete.designation']
+                                       ],
+                          'js'  =>  ['custom'=>['list-designation']],
+                          'css'=> ['custom'=>['list-designation']]
+                      ];
+    	return view('organization.emails.index',$datalist);
     }
     public function templates(Request $request)
     {
@@ -104,10 +148,63 @@ class EmailController extends Controller
         $model = EmailTemplate::where('id',$id)->delete();
         return back();
     }
-    public function sendEmail()
+    public function sendEmail($id = null)
     {
-        return view('organization.emails.send-email');
+        $data['layouts'] = EmailLayout::pluck('name','id');
+        $data['templates'] = EmailTemplate::pluck('name','id');
+        $data['departments'] = Department::pluck('name','id');
+        $data['designations'] = Designation::pluck('name','id');
+        $data['shifts'] = Shift::get();
+        $data['roles'] = UsersRole::get();
+        $data['users'] = User::get();
+        if($id != null){
+            $model = Campaign::find($id);
+            $model->send_to = json_decode($model->send_to);
+            $selected_users = json_decode($model->selected_users, true);
+            $selected_users_array = [];
+            array_walk($selected_users, function($value, $key) use (&$selected_users_array){
+            	$selected_users_array[$key] = array_map('intval',$value);
+            });
+            $model->selected_users = $selected_users_array;
+            $data['model'] = $model;
+        }
+        return view('organization.emails.send-email',$data);
     }
+
+    protected function sendMailToUsers(){
+
+    }
+
+    public function saveCampaign(Request $request){
+    	dd($request->users);
+        $this->validateCampaignForm($request);
+        $model = new Campaign;
+        $model->campaign_name = $request->campaign_name;
+        $model->campaign_desc = $request->campaign_desc;
+        $model->send_to = json_encode($request->send_to);
+        $model->selected_users = json_encode($request->users);
+        $model->layout = $request->layout;
+        $model->template = $request->template;
+        if($request->date != null && $request->time != null){
+            $model->scheduled = 1;
+            $model->exec_time = $request->date.' '.$request->time;
+        }
+        $model->save();
+        $this->sendMailToUsers();
+        return back();
+    }
+
+    protected function validateCampaignForm($request){
+        $rules = [
+                'campaign_name' => 'required',
+                'campaign_desc' => 'required',
+                'layout' => 'required',
+                'template' => 'required'
+        ];
+        $this->validate($request,$rules);
+    }
+
+
     public function createLayouts()
     {
         return view('organization.emails.create-layout');
@@ -155,6 +252,25 @@ class EmailController extends Controller
         $model = EmailLayout::where('id',$id)->update($request);
         Session::flash('success-update' , 'Updated Successfully');
         return back();
+    }
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
+            }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UsersMeta;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
+        }
     }
 
 }

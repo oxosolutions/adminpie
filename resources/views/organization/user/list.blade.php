@@ -1,5 +1,16 @@
 @extends('layouts.main')
 @section('content')
+<style type="text/css">
+	#card-alert{
+		position: absolute;
+	    top: 10px;
+	    width: 98%;
+	}
+	#card-alert i{
+		float: right;
+		cursor: pointer
+	}
+</style>
 @php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
@@ -15,6 +26,8 @@
 @include('common.list.datalist')
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+
+	<!-- <div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div> -->
 
 {!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
 	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add new user','button_title'=>'Save User','section'=>'usesec1']])
@@ -41,6 +54,10 @@
 			var data = '<input type="hidden" name="user_id" value="'+user_id+'">';
 			$('#change_password').append(data);
 		});
+		$(document).on('click','#card-alert i',function(){
+			$('#card-alert').remove();
+		});
 	});
+
 </script>
 @endsection

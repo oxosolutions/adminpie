@@ -14,7 +14,7 @@ class FormGenerator{
 	 * will generate the form according to the slug
 	 * @param [string] $form_slug 
 	 */
-	public static function GenerateForm($form_slug, Array $Options = [], $model = null, $formFrom = 'admin'){
+	public static function GenerateForm($form_slug, Array $Options = [], $dataModel = null, $formFrom = 'admin'){
 		$model = '';
 		if($formFrom == 'admin'){
 			$model = 'App\\Model\\Admin\\forms';
@@ -31,7 +31,7 @@ class FormGenerator{
 
 		},'formsMeta'])->first();
 		if($FormDetails != null){
-			$HTMLContent = self::GetHTMLForm($FormDetails, $Options, $formFrom);
+			$HTMLContent = self::GetHTMLForm($FormDetails, $Options, $formFrom, $dataModel);
 			return $HTMLContent;
 		}else{
 			dd('No form found!');
@@ -42,7 +42,7 @@ class FormGenerator{
 	 * This function will return the filed according to its slug
 	 * @param [string] $field_slug 
 	 */
-	public static function GenerateField($field_slug, Array $Options = [], $model = null, $formFrom = 'admin'){
+	public static function GenerateField($field_slug, Array $Options = [], $dataModel = null, $formFrom = 'admin'){
 		$model = '';
 		if($formFrom == 'admin'){
 			$model = 'App\\Model\\Admin\\FormBuilder';
@@ -51,7 +51,7 @@ class FormGenerator{
 		}
 		$FieldsCollection = $model::where('field_slug',$field_slug)->with(['fieldMeta'])->first();
 		if($FieldsCollection != null){
-			$HTMLField = self::GetHTMLField($FieldsCollection->field_type, $FieldsCollection, $Options);
+			$HTMLField = self::GetHTMLField($FieldsCollection->field_type, $FieldsCollection, $Options, $dataModel);
 			
 			return $HTMLField;
 		}else{
@@ -90,7 +90,7 @@ class FormGenerator{
 	 * @param [type] $collection [description]
 	 */
 	public static function GetHTMLSection($collection, $Options, $model, $formFrom){
-		return view('common.form.section',['collection'=>$collection,'options'=>$Options,'formFrom'=>$formFrom])->render();
+		return view('common.form.section',['collection'=>$collection,'options'=>$Options,'formFrom'=>$formFrom,'model'=>$model])->render();
 	}
 
 	/**
@@ -108,9 +108,9 @@ class FormGenerator{
 	 * @param [type] $collection [description]
 	 * @param [type] $Options    [description]
 	 */
-	public static function GetHTMLField($field, $collection, $Options){
+	public static function GetHTMLField($field, $collection, $Options, $model){
 
-		return view('common.form.fields.'.$field,['collection'=>$collection,'options'=>$Options])->render();
+		return view('common.form.fields.'.$field,['collection'=>$collection,'options'=>$Options,'model'=>$model])->render();
 	}
 
 
@@ -118,9 +118,9 @@ class FormGenerator{
 	 * Will render the html content for form template
 	 * @param [form object] $collection have all data and realtions of form
 	 */
-	public static function GetHTMLForm($collection, $options, $formFrom){
+	public static function GetHTMLForm($collection, $options, $formFrom, $model){
 
-		return view('common.form.form',['collection'=>$collection, 'options'=>$options, 'formFrom'=>$formFrom])->render();
+		return view('common.form.form',['collection'=>$collection, 'options'=>$options, 'formFrom'=>$formFrom,'model'=>$model])->render();
 	}
 
 	public static function GetMetaValue($metaCollection, $metaKey){

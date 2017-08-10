@@ -54,13 +54,14 @@ class DatasetController extends Controller
 
 
     function uploadDataset(Request $request){
+        $orgID = Session::get('organization_id');
         if($request->import_source == 'file'){
            
              if($request->file('file')->getClientOriginalExtension()=='sql' )
              {
                     $path = 'sql'; 
              }else{
-                    $path = 'datasets_files';
+                    $path = env('USER_FILES_PATH').'_'.$orgID.'/dataset_import_files';
                 }
             try {
                  if(!in_array($request->file('file')->getClientOriginalExtension(),['csv','sql','xlsx','xls'])){
@@ -338,7 +339,7 @@ class DatasetController extends Controller
         // dd($request->all());
         ini_set('memory_limit', '2048M');
         $model = Dataset::find($request->replace_or_append);
-        DB::select('TRUNCATE TABLE ocrm_'.$model->dataset_table);
+        DB::select('TRUNCATE TABLE ocrm_'.str_replace('ocrm_','',$model->dataset_table));
         //dd($model->dataset_table);
         $this->storeInDatabase($filename, $origName, $request->import_source, $orName = '', $model->dataset_table);
         if($model){
@@ -360,17 +361,27 @@ class DatasetController extends Controller
             return ['status'=>'false','id'=>'','message'=>'File not found on given path!'];
         }
 
-        $tableName = 'table_temp_'.rand(5,1000);
+        $tableName = 'ocrm_table_temp_'.rand(5,1000);
         $model_DL = Dataset::find($request->replace_or_append);
-        $oldTable = DB::table($model_DL->dataset_table)->get();
+        $oldTable = DB::table(str_replace('ocrm_','',$model_DL->dataset_table))->get();
         
         if(File::extension($filePath)=="xlsx" || File::extension($filePath)=="xls"){
             $assoc = [];
             $finalArray = [];
             $headers = [];
-            $data = Excel::load($filePath, function($reader){ })->get();
-            foreach($data as $key => $value){
-                $FileData[] = $value->all();
+            //$data = Excel::load($filePath, function($reader){ })->get();
+            $sheetCount = 0;
+            $data = Excel::load($filePath, function($reader) use (&$sheetCount){ 
+                $sheetCount = $reader->getSheetCount();
+            })->get();
+            if($sheetCount > 1){
+                foreach($data[0] as $key => $value){
+                    $FileData[] = $value->all();
+                }
+            }else{
+                foreach($data as $key => $value){
+                    $FileData[] = $value->all();
+                }
             }
             $i = 1;
             foreach($FileData[0] as $key  => $value){
@@ -379,9 +390,15 @@ class DatasetController extends Controller
                 $assoc[] = $c;
                 $i++;
             }
+            //dd($assoc);
             
             foreach($FileData as $values){
-                $finalArray[] = array_combine($assoc, array_values($values));
+                try{
+                    /*dump($assoc);
+                    dump(array_values($values));*/
+                    $finalArray[] = array_combine($assoc, array_values($values));
+                }catch(\Exception $e){
+                }
             }
             unset($oldTable[0]->id);
             $new = (array)$headers;
@@ -391,11 +408,11 @@ class DatasetController extends Controller
             if($new != $old){
                 return ['status'=>'false','message'=>'File columns are note same!'];
             }
-            DB::table($model_DL->dataset_table)->insert($finalArray);
+            DB::table(str_replace('ocrm_','',$model_DL->dataset_table))->insert($finalArray);
         }else{
             $model = new MySQLWrapper;
             $result = $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\r\n');
-            $tempTableData = DB::table($tableName)->get();
+            $tempTableData = DB::table(str_replace('ocrm_','',$tableName))->get();
             
             $oldColumns = [];
             unset($oldTable[0]->id);
@@ -441,10 +458,10 @@ class DatasetController extends Controller
             $model->description = $request->dataset_description;
             $model->dataset_table = $tableName;
             $model->save();
-            Session::flash('message','Dataset created successfully!');
+            Session::flash('success','Dataset created successfully!');
             return back();
         }catch(\Exception $e){
-            Session::flash('message','Unable to create dataset!');
+            Session::flash('success','Unable to create dataset!');
             throw $e;
         }
     }
@@ -519,8 +536,15 @@ class DatasetController extends Controller
 
     public function deleteDataset($id){
         $model = Dataset::find($id);
+        $datsetTable = $model->dataset_table;
+        DB::select('DROP TABLE '.$datsetTable);
         $model->delete();
-
+        Session::flash('success','Successfully deleted!');
         return back();
+    }
+
+    public function craeteDataset(){
+
+        return view('organization.dataset.create');
     }
 }

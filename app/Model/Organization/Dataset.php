@@ -29,7 +29,7 @@ class Dataset extends Model
         if($tabaleHeader != null){
             $firstRecordId = $tabaleHeader->id;
         }
-    	$tableRecords = DB::table(str_replace('ocrm_','',$datasetDataTable))->where('id','!=',$firstRecordId)->paginate(5);
+    	$tableRecords = DB::table(str_replace('ocrm_','',$datasetDataTable))->where('id','!=',$firstRecordId)->paginate(30);
     	$headers = [];
         if($tabaleHeader != null){
             foreach($tabaleHeader as $key => $row){

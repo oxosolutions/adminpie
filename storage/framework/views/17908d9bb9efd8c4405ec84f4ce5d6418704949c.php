@@ -18,7 +18,7 @@
 					<div class="row">
 						<h5><?php echo e($section->section_name); ?></h5> 
 					</div>
-						<?php echo FormGenerator::GenerateSection($section->section_slug, $options,'', $formFrom); ?>
+						<?php echo FormGenerator::GenerateSection($section->section_slug, $options,$model, $formFrom); ?>
 
 				</div>
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

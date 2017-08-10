@@ -11,7 +11,7 @@
 		<div class="aione-row">
 			<div id="aione_header" class="aione-header">
 				<div class="aione-row">
-					@include('components.new.topHeader') 
+					@include('components.topHeader') 
 				</div><!-- .aione-row -->
 			</div><!-- #aione_header -->
 			<div id="aione_main" class="aione-main {{($sidebar_small == 1)?'sidebar-small':''}}">

@@ -9,8 +9,8 @@
             <div id="aione_header" class="aione-header">
                 <div class="aione-row">
                 
-                    <?php echo $__env->make('admin.components.new.topHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
-                
+                    <?php echo $__env->make('admin.components.topHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+                 
                 </div><!-- .aione-row -->
             </div><!-- #aione_header -->
             <div id="aione_main" class="aione-main">

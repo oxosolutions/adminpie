@@ -90,4 +90,11 @@ class SettingController extends Controller
 		}
 		return view('admin.settings.organization',['model'=>$model]);
 	}
+	public function removeLogo($id)
+	{
+		dd($id);
+		$model = GlobalSetting::all();
+		dd($model);
+	}
 }
+	

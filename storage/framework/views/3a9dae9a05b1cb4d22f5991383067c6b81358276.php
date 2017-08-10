@@ -23,9 +23,15 @@
 					<?php $__currentLoopData = $sidebar->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ke => $subModule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 						<?php if(isset($permisson['submodule'][$subModule['id']]['permisson']) && $permisson['submodule'][$subModule['id']]['permisson']=='on'): ?>
 							<li class="aione-tab  <?php echo e(Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''); ?>">
-								<a href="<?php echo e(url(str_replace('/{id?}','',$subModule->sub_module_route))); ?>">
-									<span class="nav-item-text"><?php echo e(@$subModule['name']); ?></span>
-								</a>
+								<?php if(request()->route()->parameters()): ?>
+									<a href="<?php echo e(url(str_replace('/{id?}','',$subModule->sub_module_route),@request()->route()->parameters()['id'])); ?>">
+										<span class="nav-item-text"><?php echo e(@$subModule['name']); ?></span>
+									</a>
+								<?php else: ?>
+									<a href="<?php echo e(url(str_replace('/{id?}','',$subModule->sub_module_route))); ?>">
+										<span class="nav-item-text"><?php echo e(@$subModule['name']); ?></span>
+									</a>
+								<?php endif; ?>
 							</li>
 						<?php endif; ?>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

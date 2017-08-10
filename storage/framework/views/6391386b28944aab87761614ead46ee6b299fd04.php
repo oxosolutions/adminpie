@@ -48,7 +48,7 @@
 	.design-style{
 		
 	    text-align: center;
-	    margin-top: 0px;
+	   
 	}
 	.design-bg{
 		background: #ececec;
@@ -74,6 +74,23 @@
 	/*select{
 		display: block;
 	}*/
+	table {
+    border-collapse: collapse;
+    width: 100%;
+	}
+
+	th, td {
+	    text-align: left;
+	    padding: 8px;
+	}
+
+	tr:nth-child(even){background-color: #f2f2f2}
+
+	th {
+	    background-color: #e8e8e8;
+	    color: #676767;
+	    font-weight: 700
+	}
 	input{
 		margin: 0px !important;
 	}
@@ -101,62 +118,69 @@
 
 
 
-		
+<?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>		
 <div class="card">
 	<div class="row design-bg">
 		
 		<div class="col-md-4">
-			<?php echo Form::open(['route'=>'hr.attendance' , 'method'=>'post'] ); ?>
+			<div class="row">
+				<?php echo Form::open(['route'=>'hr.attendance' , 'method'=>'post'] ); ?>
 
-			<div class="col s3 pr-7 right-align">
-							<select name="date"  >
-								<?php $__currentLoopData = $daysInMonth; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								<?php if($date==$val): ?>
-								<option selected="selected" value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
+					<div class="col s3 pr-7 right-align">
+						<select name="date"  class="browser-default">
+							<?php $__currentLoopData = $daysInMonth; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							<?php if($date==$val): ?>
+							<option selected="selected" value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
 
-									<?php else: ?>
-										<option value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
-									<?php endif; ?>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								<?php else: ?>
+									<option value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
+								<?php endif; ?>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-							</select>
-						</div>
+						</select>
+					</div>
 
+
+					<div class="col s3 pl-7 pr-7">
+						<select name="month" class="browser-default">
+							<?php $__currentLoopData = $MO_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<?php if($month==$key): ?>
+									<option selected="selected" value="<?php echo e($key); ?>"><?php echo e($val); ?> </option>
+								<?php else: ?>
+									<option value="<?php echo e($key); ?>"><?php echo e($val); ?> </option>
+								<?php endif; ?>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+						</select>
+					</div>
+
+					<div class="col s3 pl-7 pr-7 right-align">
+						<select  name="year" class="browser-default">  
+							<?php $__currentLoopData = $year_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							<?php if($year==$val): ?>
+							<option selected="selected" value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
+
+								<?php else: ?>
+									<option value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
+								<?php endif; ?>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+						</select>
+					</div>
+					<div class="col s3 pl-7">
+						<button class="btn blue" type="submit"  style="margin: 6px;width: 100%;">Search
+							
+						</button>	
+					</div>
+					
+				<?php echo Form::close(); ?>
+
+			</div>
 			
-						<div class="col s3 pl-7">
-							<select name="month" >
-								<?php $__currentLoopData = $MO_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-									<?php if($month==$key): ?>
-										<option selected="selected" value="<?php echo e($key); ?>"><?php echo e($val); ?> </option>
-
-									<?php else: ?>
-										<option value="<?php echo e($key); ?>"><?php echo e($val); ?> </option>
-									<?php endif; ?>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-								
-							</select>
-
-						</div>
-
-						<div class="col s3 pr-7 right-align">
-							<select  name="year">
-								<?php $__currentLoopData = $year_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								<?php if($year==$val): ?>
-								<option selected="selected" value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
-
-									<?php else: ?>
-										<option value="<?php echo e($val); ?>"><?php echo e($val); ?> </option>
-									<?php endif; ?>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-							</select>
-						</div>
-			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" >Search
-				<i class="material-icons right">save</i>
-			</button>
-			<?php echo Form::close(); ?>
-
-			<h5 class="design-style"><span>Attendance </span><?php echo e($dateformat); ?></h5>
+			<div class="row">
+				<h5 class="design-style"><span>Attendance </span><?php echo e($dateformat); ?></h5>	
+			</div>
+			
 		</div>
 		
 	</div> 
@@ -199,114 +223,104 @@
 			<tbody>
 			
 
-				<?php $lock_status=1; ?>
+				<?php $lock_status=1; 
+					$attValue =  $attendance_data->toArray();
+				?>
 				<?php $__currentLoopData = $employee_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys => $vals): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-					<?php if(count($vals['attendance'])>0): ?>
-						<?php $__currentLoopData = $vals['attendance']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attKey => $attValue): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-											
-						<?php  
-							$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
+				<?php  
+					$in_out_data = $punch_in_out = $attendance_status = null; 
+					$emp_id = $vals['employee_id'];
+					if(!empty($attValue[$emp_id]['attendance_status'])){
+						$attendance_status = $attValue[$emp_id]['attendance_status'];
+					}
+					if(!empty($attValue[$emp_id]['punch_in_out'])){
+						$punch_in_out = json_decode($attValue[$emp_id]['punch_in_out'],true);
+					}
+					if(!empty($attValue[$emp_id]['in_out_data'])){
+						$in_out_data = json_decode($attValue[$emp_id]['in_out_data'],true);
+					}
+					if(!empty($attValue[$emp_id]['lock_status'])){
+						$lock_status = $attValue[$emp_id]['lock_status'];
+					}
+				 ?>
 
-								$emp_id = $attValue['employee_id'];
-								$attendance_status = $attValue['attendance_status'];
-								$in_time = $attValue['in_time'];
-								$out_time = $attValue['out_time'];
-								//@$total_hour = $attendance_data[$empKey]['total_hour'];
-								$over_time = $attValue['over_time'];
-								$due_time = $attValue['due_time'];
-								$lock_status = $attValue['lock_status'];
-								$punch_in_out = json_decode($attValue['punch_in_out'],true);
-								$in_out_data = json_decode($attValue['in_out_data'],true);
-
-									
-						 ?>
-			
+				
 					<tr class="table-tr">
-						<td><?php echo e($loop->parent->iteration); ?></td>
-						<td><?php echo e($attValue['employee_id']); ?></td>
-						<td><?php echo e($attValue['employee']['employ_info']['name']); ?></td>
-
-						<td><?php echo e($attValue['employee']['designations']['name']); ?></td>
-					
-							<td><?php echo e($attValue['employee']['department_rel']['name']); ?></td>
-						<?php if(@$attValue['lock_status']==1): ?>
-
-						<td> <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],$attendance_status	,['class' => '']); ?></td>
-						
-						<?php if($punch_in_out): ?>
-							<td>
-							<?php $__currentLoopData = $punch_in_out; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-							<div>
-									<?php echo Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?> <a class="del_check">del </a>
-							</div>
-							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-							</td>
-							<?php else: ?>
-							<td><button class="show_punch_in_out">add punch in out time</button> <div class="add_punch_in_out"><?php echo Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?>
-
-							<?php echo Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?>  </div> </td>
-						<?php endif; ?>
-
-						<?php if($in_out_data): ?>
-						<?php 
-						// $checkdata = json_decode($in_out_data,true);
-						// dump($checkdata)
-						 ?>
-							<td>
-							<?php $__currentLoopData = $in_out_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-							<?php echo e($loop->iteration); ?>
-
-								<?php $__currentLoopData = $val; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ip =>$times): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-									<div>
-											 <?php echo e($ip); ?><?php echo Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]); ?>  <a class="del_check">del </a>
-									</div>
-
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-							</td>
-							<?php else: ?>
-							<td>--</td>
-						<?php endif; ?>
-
-						
-						<?php elseif($attValue['lock_status']==0): ?>
-						<td><?php echo e($attendance_status); ?></td>
-						<td><?php echo e(($in_time == null) ? '00:00' : $in_time); ?></td>
-						<td><?php echo e(($out_time == null) ? '00:00' : $out_time); ?></td>
-						<td>lunch start time</td>
-						<td>lunch_out</td>
-						<td><?php echo e(($total_hour==null)? '00:00': $total_hour); ?></td>
-						<td><?php echo e(($over_time==null)? '00:00' : $over_time); ?></td>
-						<td><?php echo e(($due_time ==null)? '00:00': $due_time); ?></td>
-
-						<?php endif; ?>
-					</tr>
-					
-				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			
-
-				<?php else: ?>
-					
-						<?php  
-						$total_hour =$due_time = $over_time = $total_time = $out_time = $in_time = $attendance_status = null; 
-						$emp_id = $vals['employee_id'];
-
-						 ?>
-
-						<tr class="table-tr">
 						<td><?php echo e($loop->iteration); ?></td>
 						<td><?php echo e(@$vals['employee_id']); ?></td>
 						<td><?php echo e(@$vals['employ_info']['name']); ?></td>
 
 						<td><?php echo e(@$vals['designations']['name']); ?></td>
-					
-							<td>--</td>
-						
+						<td><?php echo e(@$vals['department_rel']['name']); ?></td>
+					<?php if($lock_status): ?>
+						<td> <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']); ?></td>
+						<?php if($punch_in_out): ?>
+								<td>
+								<?php $__currentLoopData = $punch_in_out; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<div>
+										<?php echo Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?> <a class="del_check">del </a>
+								</div>
+								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								</td>
+								<?php else: ?>
+								<td><button class="show_punch_in_out">add punch in out time</button> <div class="add_punch_in_out"><?php echo Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?>
 
-						
+								<?php echo Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]); ?>  </div> </td>
+						<?php endif; ?>
+						<?php if($in_out_data): ?>
+							
+								<td>
+								<?php $__currentLoopData = $in_out_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<?php echo e($loop->iteration); ?>
+
+									<?php $__currentLoopData = $val; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ip =>$times): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+										<div>
+												 <?php echo e($ip); ?><?php echo Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]); ?>  <a class="del_check">del </a>
+										</div>
+									<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								</td>
+								<?php else: ?>
+								<td>--</td>
+							<?php endif; ?>
+					<?php else: ?>
+						<td><?php echo e(@$attendance_status); ?></td>
+						<?php if($punch_in_out): ?>
+								<td>
+								<?php $__currentLoopData = $punch_in_out; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<div>
+										<?php echo e(($val == null) ? '--' : $val); ?>
+
+								</div>
+								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								</td>
+								<?php else: ?>
+								<td>--</td>
+							<?php endif; ?>
+							
+						<?php if($in_out_data): ?>
+							
+								<td>
+								<?php $__currentLoopData = $in_out_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<?php echo e($loop->iteration); ?>
+
+									<?php $__currentLoopData = $val; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ip =>$times): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+										<div>
+												 <?php echo e($ip); ?><?php echo e(($times == null) ? '--' : $times); ?>
+
+										</div>
+
+									<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								</td>
+								<?php else: ?>
+								<td>--</td>
+							<?php endif; ?>
+					<?php endif; ?>
 					</tr>
-					
-				<?php endif; ?>
+			
+
+				
 				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				
 			</tbody>
@@ -324,6 +338,10 @@
 	<?php endif; ?>
 	</div>
 </div>
+<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('.add_punch_in_out').hide();

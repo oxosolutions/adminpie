@@ -13,7 +13,10 @@ use Hash;
 use Session;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting;
-
+use App\Model\Organization\UsersRole;
+use App\Model\Organization\Employee;
+use App\Model\Organization\Client;
+use App\Model\Admin\GlobalOrganization;
 class UsersController extends Controller
 {
     protected $userRepo;
@@ -36,13 +39,13 @@ class UsersController extends Controller
         $sortedBy = @$request->orderby;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$request->order)->paginate($perPage);
               }else{
                   $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->desc_asc)->with(['user_role_rel'=>function($query){
+                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->order)->with(['user_role_rel'=>function($query){
                       $query->with('roles');
                   },'userType'])->paginate($perPage);
               }else{
@@ -51,6 +54,7 @@ class UsersController extends Controller
                   },'userType'])->paginate($perPage);
               }
           }
+          // dd($model);
           $datalist =  [
                           'datalist'=>$model,
                           'showColumns' => ['name'=>'Name','email'=>'Email','user_role_rel.roles.name' => 'Role','status' => 'Status'],
@@ -62,11 +66,9 @@ class UsersController extends Controller
                                           'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.status']
                                        ]
                       ];
-        $plugins = [
-                        'js' => ['select2','custom'=>['users']]
-                    ];
+        
     	// $userList = org_user::orderBy('id','desc')->get();
-        return view('organization.user.list',$datalist)->with(['plugins'=>$plugins]);
+        return view('organization.user.list',$datalist);
     	// return view('organization.user.list')->with(['userList'=>$userList,'plugins'=>$plugins]);
     }
     public function create(Request $request)
@@ -99,6 +101,36 @@ class UsersController extends Controller
         return redirect()->route('info.user',['id'=>$model->id]);
 
       }
+    }
+
+   
+    public function public_store_user(Request $request){
+   
+     if($request->isMethod('post')){
+
+         $model = org_user::where(['email'=>$request->email])->first();
+          if(count($model) > 0){
+            Session::flash('exist_email','Email already exist');
+            return back();
+          }else{
+            $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm-password'=>'required|same:password'];
+            $this->validate($request,$rules);
+            $user = new org_user;
+            $user->fill($request->only('name','email'));
+            $user->password = Hash::make($request->password);
+            $user->status = 0;
+            $user->save();
+            $user_id = $user->id;
+            $meta_data = $request->except('name','email','password','confirm-password','_token');
+            if(!empty($meta_data) && !empty($user_id)){
+                update_user_metas($meta_data, $user_id, true);
+            }
+
+          }
+          Session::flash('success','Successfully SignUp !!');
+          return back();
+      }
+      return view('organization.login.signup');
     }
     public function FunctionName(Request $request )
     {
@@ -133,7 +165,26 @@ class UsersController extends Controller
         $model->email = $request->email;
         $model->save();
         $notToDeleteIds = [];
+        $currentStoredRoles = UserRoleMapping::where(['user_id'=>$id])->pluck('role_id')->toArray();
+        $newSelectedRoles = array_map('intval',$request->role_id);
         foreach($request->role_id as $key => $role){
+            $model = UsersRole::find($role);
+            if($model->slug == 'employee'){
+                $employeeModel = Employee::where(['user_id'=>$id])->first();
+                if($employeeModel != null){
+                  $employeeModel->deleted_at = null;
+                  $employeeModel->save();
+                }else{
+                    $employeeModel = new Employee;
+                    $employeeModel->user_id = $id;
+                    $employeeModel->joining_date = date('Y-m-d');
+                    $employeeModel->status = 1;
+                    $employeeModel->save();
+                }
+            }
+            if($model->slug == 'client'){
+              $this->createClient($id, $request->name);
+            }
             $mappingModel = UserRoleMapping::firstOrNew(['user_id'=>$id,'role_id'=>$role]);
             $mappingModel->user_id = $id;
             $mappingModel->role_id = $role;
@@ -142,11 +193,36 @@ class UsersController extends Controller
             $notToDeleteIds[] = $mappingModel->id;
         }
         UserRoleMapping::whereNotIn('id',$notToDeleteIds)->where('user_id',$id)->delete();
+        $this->deleteFromRelatedTables($currentStoredRoles, $newSelectedRoles, $id);
         return redirect()->route('list.user');
     }
 
-    public function update(Request $request){
+    protected function deleteFromRelatedTables($currentStoredRoles, $newSelectedRoles, $userId){
+        $roleToRemove = array_diff($currentStoredRoles, $newSelectedRoles);
+        if(!empty($roleToRemove)){
+            foreach($roleToRemove as $key => $role){
+                $role = UsersRole::find($role);
+                if($role->slug == 'employee'){
+                    Employee::where(['user_id'=>$userId])->delete();
+                }
+                if($role->slug == 'client'){
+                    Client::where(['user_id'=>$userId])->delete();
+                }
+            }
+        }
+    }
 
+    protected function createClient($userid, $name){
+        $client = Client::where(['user_id'=>$userid])->first();
+        if($client == null){
+            $client = new Client;
+            $client->name = $name;
+            $client->user_id = $userid;
+            $client->save();
+        }
+    }
+
+    public function update(Request $request){
         try{
             $model = org_user::find($request->user_id);
             $model->name = $request->name;

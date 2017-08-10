@@ -1,4 +1,9 @@
 <?php $__env->startSection('content'); ?>
+<?php 
+	// $isEmployee = App\Model\Organization\Employee::where('user_id' , $model->id)->first();
+	$isEmployee = is_employee(@request()->route()->parameters()['id']);
+	$isAdmin = is_admin();
+ ?>
 <style type="text/css">
 	.edit-button{
 		display: block;width: 30px;line-height: 30px;text-align: center;float: right;
@@ -94,7 +99,17 @@
 	.info-card .headline-text{
 		font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8;
 	}
+	#card-alert{
+		position: absolute;
+	    top: 10px;
+	    width: 98%;
+	}
+	#card-alert i{
+		float: right;
+		cursor: pointer
+	}
 </style>
+
 <?php 
 $page_title_data = array(
 	'show_page_title' => 'yes',
@@ -109,7 +124,10 @@ $page_title_data = array(
     <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo $__env->make('organization.profile._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php if(Session::has('success-password')): ?>
-			<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>
+			
+			<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div>
+			
+			
 		<?php endif; ?>
 		<div class="row">
 		<div class="col l9 pr-7">
@@ -130,11 +148,8 @@ $page_title_data = array(
 						<?php echo Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1']); ?>
 
 							<div class="abc" >
-							<?php if($model->profilePic != null || $model->profilePic != "" || !empty($model->profilePic)): ?>
-								<img src="<?php echo e(asset('ProfilePicture/'.$model->profilePic)); ?>" >
-							<?php else: ?>
-								<img src="<?php echo e(asset('ProfilePicture/default-user.jpg')); ?>">
-							<?php endif; ?>
+								<img src="<?php echo e(asset(@get_profile_picture($id,'medium'))); ?>" >
+							
 							<?php 
 								$parameters = request()->route()->parameters();
 							 ?>
@@ -203,24 +218,124 @@ $page_title_data = array(
 						<div class="row pb-5" >
 							<div class="col l3"><strong>Name:</strong></div>
 							<div class="col l5"><?php echo e(@$model->name); ?></div>
-							<div class="col l4 right-align">
-								<a href="#modal1" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+							<div class="col l4 right-align" id="modal-wrapper">
+								<a class="grey-text darken-1 edit-button waves-effect" data-target="modal1"><i class="fa fa-pencil"></i></a>
+								
+								
+									
+								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
 								<?php echo Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH',]); ?>
 
-								<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-							
-								<?php echo Form::close(); ?>
+									<div class="modal-header white-text  blue darken-1" ">
+										<div class="row" style="padding:15px 10px;margin: 0px">
+											<div class="col l7 left-align">
+												<h5 style="margin:0px">Profile</h5>	
+											</div>
+											<div class="col l5 right-align">
+												<a href="javascript:;" name="closeModel"  id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+											</div>	
+										</div>
+									</div>
+									<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
+										<div class="col s12 m2 l12 aione-field-wrapper">
+										<?php echo FormGenerator::GenerateField('editempsec1f1',['type'=>'inset']); ?>
 
+										</div>
+										<div class="col s12 m2 l12 aione-field-wrapper">
+										 <?php echo FormGenerator::GenerateField('editempsec1f2',['type'=>'inset']); ?>
+
+										 </div>
+										 <div class="col s12 m2 l12 aione-field-wrapper">
+										 <?php echo FormGenerator::GenerateField('empsec1f8',['type'=>'inset']); ?>
+
+										 </div>
+										 <div class="col s12 m2 l12 aione-field-wrapper">
+											
+											<?php if(@request()->route()->parameters()['id']): ?>
+												<?php if($isEmployee): ?>
+													<?php echo Form::select('shift',App\Model\Organization\Shift::listshifts(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift']); ?>
+
+												<?php endif; ?>
+
+											<?php endif; ?>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button class="btn blue" type="submit" name="action">save
+										</button>
+									</div>	
+									<?php echo Form::close(); ?>
+
+								</div>
+
+								
 							</div>
 						</div>
 						
 						<div class="row pt-5" >
+							<div class="col l3"><strong>Email</strong></div>
+							<div class="col l9"><?php echo e(@$model->email); ?></div>
+						</div>
+						<div class="row pt-5" >
 							<div class="col l3"><strong>About Me</strong></div>
 							<div class="col l9"><?php echo e(@$model->about_me); ?></div>
 						</div>
-						
+														
 					</div>
 				</div>
+				
+				<?php if($isEmployee ): ?>
+				
+					<?php $__currentLoopData = @$model->metas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $Shift): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+						<?php if($Shift->key == 'shift'): ?>
+							<div class="row" style="padding: 0px 12px;">
+								<div class="col l3">
+									Shift
+								</div>
+								<div class="col l3">
+									<?php echo e(App\Model\Organization\Shift::where('id',$Shift->value)->first()->name); ?>
+
+								</div>
+								<div class="col l3">
+									<?php echo e(App\Model\Organization\Shift::where('id',$Shift->value)->first()->from); ?> - <?php echo e(App\Model\Organization\Shift::where('id',$Shift->value)->first()->to); ?>
+
+								</div>
+								<div class="col l3 week-days">
+									<?php $__currentLoopData = json_decode(App\Model\Organization\Shift::where('id',$Shift->value)->first()->working_days); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+									
+									<div class="active" title="<?php echo e(ucfirst($v)); ?>"><?php echo e(ucfirst($v[0])); ?></div>
+									<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+								</div>
+								<style type="text/css">
+									.week-days > .active{
+										border-color: #2196f3;
+									}
+									.week-days > .active:hover{
+										background-color:#2196f3;
+										color: white;
+
+									}
+									.week-days > div{
+									    display: inline-block;
+									    width: 24px;
+									    text-align: center;
+									    font-size: 13px;
+									    line-height: 24px;
+									    border: 1px solid #e8e8e8;
+									    border-radius: 50%;
+									    font-weight: 700;
+									    color: #676767;
+									    cursor: pointer;
+									}
+									.week-days > div:last-child{
+										color: red
+									}
+								</style>
+							</div>
+						<?php endif; ?>
+					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+				<?php endif; ?>	
+				
 			</div>
 			<div class="card mt-14" >
 				
@@ -278,10 +393,27 @@ $page_title_data = array(
 		<div class="col l3 pl-7">
 			<div class="card mt-14 " >
 				<div class="row center-align mb-0 pv-10" >
+				<?php if(@$errors->get('new_password') || @$errors->get('confirm_password')): ?>
+					<script type="text/javascript">
+						$(window).load(function(){
+							document.getElementById('add_new').click();
+						});
+					</script>
+				<?php endif; ?>
 					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>	
 					<?php echo Form::open(['route' => 'change.password' , 'method' => 'post']); ?>
 
 					<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+					<?php 
+						if(Auth::guard('admin')->check()){
+				            $id = Auth::guard('admin')->user()->id;
+				        }elseif(request()->route()->parameters()){
+				            $id = request()->route()->parameters()['id'];
+				        }else{
+				            $id = Auth::guard('org')->user()->id;
+				        }
+					 ?>
+					<input type="hidden" name="id" value="<?php echo e($id); ?>">
 					<?php echo Form::close(); ?>
 
 				</div>
@@ -290,7 +422,7 @@ $page_title_data = array(
 			<div class="card info-card" >
 				<div class="row valign-wrapper mb-0">
 					<div class="col l10 headline-text" >Contact Detail</div>
-					<div class="col l2">
+					<div class="col l2" id="modal-wrapper">
 						<a href="#modal2" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 						<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
 
@@ -307,7 +439,7 @@ $page_title_data = array(
 							<?php if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address' || $v->key == 'present_address'): ?>
 								<div class="row mb-0" >
 									<div class="col l12 subhead-wrapper" >
-										<span class="subhead"><?php echo e(str_replace('_',' ',$v->key)); ?></span>
+										<span class="subhead"><?php echo e(ucfirst(str_replace('_',' ',$v->key))); ?></span>
 									</div>
 									<div class="col l12 details-wrapper" >
 										<?php echo e($v->value); ?>
@@ -323,16 +455,19 @@ $page_title_data = array(
 					$roles = array_keys($model->user_role_rel->groupBy('role_id')->toArray());
 					//if role has permission to this widget
 				 ?>
-				<?php if(session()->get('user_role') == 1): ?>
+				<?php if($isEmployee || $isAdmin): ?>
 					<div class="card info-card" >
 
 							<div class="row valign-wrapper mb-0">
 								<div class="col l10 headline-text" >Employee Detail</div>
-								<div class="col l2">
-									<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+								<div class="col l2 " id="modal-wrapper">
+										<?php if($isAdmin): ?>
+											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+										<?php endif; ?>
 									<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
 
 									<input type="hidden" name="meta_table" value="employeemeta" />
+									
 									<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 									<?php echo Form::close(); ?>
 
@@ -366,13 +501,17 @@ $page_title_data = array(
 					<div class="card info-card" >
 						<div class="row valign-wrapper mb-0">
 							<div class="col l10 headline-text" >Bank Details</div>
-							<div class="col l2">
-							
-								<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+							<div class="col l2" id="modal-wrapper">
+								<?php if($isAdmin): ?>
+									<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+								<?php endif; ?>
 								<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
 
 							
 								<input type="hidden" name="meta_table" value="employeemeta" />
+								<?php if(count(request()->route()->parameters()) >0 ): ?>
+									<input type="hidden" name="empId" value="<?php echo e(request()->route()->parameters()['id']); ?>" />
+								<?php endif; ?>
 									<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 								<?php echo Form::close(); ?>
 
@@ -380,8 +519,16 @@ $page_title_data = array(
 							
 						</div>
 						<div class="row" >
-							<?php $__currentLoopData = FormGenerator::GetSectionFieldsName('empsec6'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								
+							<?php 
+								$data = [];
+							 ?>
+							<?php $__currentLoopData = str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+								<?php 
+									array_push($data , strtolower($v));
+								 ?>
+							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							<?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
 								<div class="row mb-0">
 									<div class="col l12 subhead-wrapper" >
 										<span class="subhead"><?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;</span>
@@ -391,89 +538,11 @@ $page_title_data = array(
 
 									</div>
 								</div>
+
 							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 					
 						</div>
 					</div>
-				<?php else: ?>
-					<?php 
-						$hasPermissionEmployeeDetails = App\Model\Organization\RolePermisson::hasPermission(session()->get('user_role'),25);
-					 ?>
-					<?php if($hasPermissionEmployeeDetails): ?>
-						<div class="card info-card" >
-
-								<div class="row valign-wrapper mb-0">
-									<div class="col l10 headline-text" >Employee Detail</div>
-									<div class="col l2">
-										<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
-										<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
-
-										<input type="hidden" name="meta_table" value="employeemeta" />
-										<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-										<?php echo Form::close(); ?>
-
-									</div>
-									
-								</div>
-								<div class="row" >
-									<?php $__currentLoopData = FormGenerator::GetSectionFieldsName('empsec7'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-										<div class="row mb-0" >
-											<div class="col l12 subhead-wrapper" >
-												<span class="subhead"><?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;</span>
-											</div>
-											<div class="col l12 details-wrapper" >
-												<?php if($field == 'designation'): ?>
-													&nbsp;<?php echo e(@App\Model\Organization\Designation::find($model[strtolower($field)])->name); ?>
-
-											<?php elseif($field == 'department'): ?>
-													&nbsp;	<?php echo Form::close(); ?><?php echo e(@App\Model\Organization\Department::find($model[strtolower($field)])->
-														name); ?>
-
-												<?php else: ?>
-													&nbsp;&nbsp;<?php echo e($model[strtolower($field)]); ?>
-
-												<?php endif; ?>
-											</div>
-										</div>
-									<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-								</div>
-						</div>
-					<?php endif; ?>
-					<?php 
-						$hasPermissionBankDetails = App\Model\Organization\RolePermisson::hasPermission(session()->get('user_role'),26);
-					 ?>
-					<?php if($hasPermissionBankDetails): ?>
-						<div class="card info-card" >
-							<div class="row valign-wrapper mb-0">
-								<div class="col l10 headline-text" >Bank Details</div>
-								<div class="col l2">
-									<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
-									<?php echo Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH']); ?>
-
-								
-									<input type="hidden" name="meta_table" value="employeemeta" />
-									<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-									<?php echo Form::close(); ?>
-
-								</div>
-								
-							</div>
-							<div class="row" >
-								<?php $__currentLoopData = FormGenerator::GetSectionFieldsName('empsec6'); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-									<div class="row mb-0">
-										<div class="col l12 subhead-wrapper" >
-											<span class="subhead"><?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;</span>
-										</div>
-										<div class="col l12 details-wrapper" >
-											<?php echo e($model[strtolower($field)]); ?>
-
-										</div>
-									</div>
-								<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-						
-							</div>
-						</div>
-					<?php endif; ?>
 				<?php endif; ?>
 				<?php if(@$model['employ_info']): ?>
 					<?php if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0): ?>
@@ -493,6 +562,9 @@ $page_title_data = array(
 	<script type="text/javascript">
 		
 	$(document).ready(function(){
+		$('#modal1').modal({
+			 dismissible: false
+		});
 		$('#modal2').modal({
 			 dismissible: false
 		});
@@ -511,13 +583,21 @@ $page_title_data = array(
 		$('#modal9').modal('close');
 	});
 	$(document).on('click','.chooser',function(){
-									$('.image-spinner').show();
-								});
-	</script>
-	
-								
-							
+		$('.image-spinner').show();
+	});
+	$(document).on('click','#card-alert i',function(){
+		$('#card-alert').remove();
+	});
 
+	</script>
+		<?php if(@$errors->has()): ?>
+			<script type="text/javascript">
+				$(window).load(function(){
+				$('#modal1').modal('open');
+					// console.log($('.error-red').parents('#modal-wrapper').find('.edit-button').html());
+				});
+			</script>
+		<?php endif; ?>						
 <?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

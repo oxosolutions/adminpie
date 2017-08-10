@@ -11,7 +11,8 @@ namespace App\Helpers;
 class draw_sidebar{
     static function drawSidebar()
     {
-        $model = Module::with(['subModule'=>function($query){
+        $orgModule = ORG::organization_module();
+        $model = Module::whereIn('id',$orgModule)->with(['subModule'=>function($query){
                 $query->with('moduleRoute');
             }])->orderBy('orderBy','asc')->get();
 

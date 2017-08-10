@@ -1,6 +1,7 @@
 <?php 
 use App\Model\Admin\GlobalWidget as GW;
 
+
 function global_draw_widget($slug)
 {
 
@@ -15,7 +16,4 @@ function global_draw_widget($slug)
 		return view('admin.widget.view_widget',['data'=>$data]);
 	} 
 }
-
-
-
 ?>

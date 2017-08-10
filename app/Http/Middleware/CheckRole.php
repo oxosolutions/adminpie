@@ -12,7 +12,6 @@ use App\Model\Admin\GlobalSubModule as submodule;
 use App\Model\Admin\GlobalModuleRoute as route;
 use App\Helpers\draw_sidebar;
 use App\Model\Organization\User;
-
 use Auth;
 use Session;
 class CheckRole
@@ -28,8 +27,10 @@ class CheckRole
     {  
         
       $current_route =  $request->route();
+      //dd($current_route->uri);
       $uri =str_replace('/{id}','',$current_route->uri);
       $current_uri = str_replace('/{id?}','',$uri);
+     // dd($current_uri);
       if(!in_array(1, role_id())){
         $permisson = Permisson::whereIn('role_id',role_id())->whereNotNull('permisson')->get();
         foreach ($permisson as $key => $value) {
@@ -54,8 +55,11 @@ class CheckRole
       }
       elseif(in_array(1, role_id())){
         $route = draw_sidebar::checkPermisson();
-       
-        $routes = $route['url'];
+        if(!empty($route)){
+            $routes = $route['url'];
+        }else{
+          $routes = '';
+        }
       }
       
         if(!empty($routes) &&in_array($current_uri, $routes)){

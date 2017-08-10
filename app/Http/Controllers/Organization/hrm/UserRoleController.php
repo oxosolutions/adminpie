@@ -11,6 +11,7 @@ use App\Model\Organization\WidegetPermisson as WidgetPermisson;
 use App\Model\Admin\GlobalOrganization as ORG;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\User;
+use App\Model\Organization\UserRoleMapping;
 use Session;
 use DB;
 
@@ -18,24 +19,24 @@ class UserRoleController extends Controller{
    
     public function listRole(Request $request)
     {
-        if($request->has('per_page')){
-          $perPage = $request->per_page;
+        if($request->has('items')){
+          $perPage = $request->items;
           if($perPage == 'all'){
             $perPage = 999999999999999;
           }
         }else{
           $perPage = 5;
         }
-        $sortedBy = @$request->sort_by;
+        $sortedBy = @$request->orderby;
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = Role::where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                $model = Role::where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
                 $model = Role::where('title','like','%'.$request->search.'%')->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = Role::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                $model = Role::orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
                  $model = Role::paginate($perPage);
             }
@@ -71,13 +72,17 @@ class UserRoleController extends Controller{
     }
     public function Delete(Request $request , $id = null)
     {   
+
+       // dd($request->all());
         if($request->isMethod('POST'))
-         {   
+         { 
+          
+           Role::where('id',$request['old_role_id'])->delete();
             try{
                 DB::beginTransaction();
-                    Role::where('id',$request['old_role_id'])->delete();
+                   // Role::where('id',$request['old_role_id'])->delete();
                     if(!empty($request['user'])){
-                        $checkUserExist = user::whereIn('id',$request['user'])->update(['role_id'=>$request['new_role_id']]);
+                        $checkUserExist = UserRoleMapping::whereIn('user_id',$request['user'])->update(['role_id'=>$request['new_role_id']]);
                     }
                     Permisson::where('role_id',$request['old_role_id'])->delete();
                     
@@ -87,10 +92,19 @@ class UserRoleController extends Controller{
                 }
             return redirect()->route('list.role');    
         }
-        if(!empty($id) && $id==1){
+        if(empty($id) && $id==1){
             return redirect()->route('access.denied');
         }else{
-            $roleUser = User::with('metas')->where('role_id',$id)->get();
+
+            // $roleUser = User::with('metas')->where('role_id',$id)->get();
+            // $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
+            // $roleData = compact("roleUser", "roleList" ,'id'); 
+
+            $roleUser = User::with(['user_role_rel', 'metas'])->whereHas('user_role_rel',function($query) use($id){
+                $query->where('role_id',$id);
+            })->get();// UserRoleMapping::where('role_id',$id)->get();
+
+            //dd($roleUser);
             $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
             $roleData = compact("roleUser", "roleList" ,'id');
           return view('organization.role.roleUser', $roleData);

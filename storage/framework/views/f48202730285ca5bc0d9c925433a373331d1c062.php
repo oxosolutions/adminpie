@@ -18,25 +18,25 @@
 
 	<?php echo Form::open(['route' => 'credientals.save' , 'type' => 'POST']); ?>
 
-	<div id="add_new_model" class="modal modal-fixed-footer">
+	<div id="add_new_model" class="modal modal-fixed-footer" style="overflow-y: hidden">
 		
 		<div class="modal-header white-text  blue darken-1" ">
-		<div class="row" style="padding:15px 10px">
-			<div class="col l7 left-align">
-				<h5 style="margin:0px">CREATE CREDENTIAL</h5>	
+			<div class="row" style="padding:15px 10px;margin-bottom: 0px">
+				<div class="col l7 left-align">
+					<h5 style="margin:0px">Create Credential</h5>	
+				</div>
+				<div class="col l5 right-align">
+					<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+				</div>
+					
 			</div>
-			<div class="col l5 right-align">
-				<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
-			</div>
-				
+			
 		</div>
-		
-	</div>
 		<div class="modal-content">
 		<?php echo FormGenerator::GenerateSection('cresec1',['type'=>'inset',@$model]); ?>
 
 		
-			<div >
+			<div class="row" style="margin-bottom: 20px">
 				<div id="repeat" class="col l12" >
 					<div class="row" style="border: 1px solid #e8e8e8;padding: 10px">
 						<div>
@@ -57,12 +57,14 @@
 						<div class="col s12 m2 l12 aione-field-wrapper">
 							 <input class="no-margin-bottom aione-field" placeholder="Password" name="password[]" type="password" value="">
 						</div>
+
 						
 					</div>
 				</div>
-				<div>
-					<a href="javascript:;" class="btn blue add-row">Add Row</a>
+				<div class="col l12">
+					<a href="javascript:;" class="btn blue add-row" style="margin-bottom: 30px">Add Row</a>
 				</div>
+				
 			</div>
 		</div>
 		
@@ -70,7 +72,7 @@
 			<?php if(request()->route()->parameters()['id']): ?>
 				<input type="hidden" name="project_id" value="<?php echo e(request()->route()->parameters()['id']); ?>">
 			<?php endif; ?>
-			<input type="submit" class="btn btn-primary" name="submit" value="submit">
+			<input type="submit" class="btn blue" name="submit" value="submit">
 
 		</div>
 	</div>
@@ -104,9 +106,11 @@
 <script type="text/javascript">
 		$(document).ready(function(){
 			$('#add_new_model').modal({
-				 dismissible: false
+				 dismissible: true
 			});
-			
+			$('.close-model-button').click(function(){
+			$("#add_new_model").modal('close');
+		});
 		})
 	
 </script>

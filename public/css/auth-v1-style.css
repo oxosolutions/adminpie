@@ -3,6 +3,7 @@ height: 100%;
 width: 100%;
 margin: 0;
 padding: 0;
+overflow:hidden; 
 }
 .heading{
 font-size: 18px;
@@ -14,8 +15,9 @@ width: 100%
 .login-form{
 height: 100%;
 box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
-padding: 140px 32px 32px 32px !important;
-overflow-y: auto
+padding: 100px 32px 32px 32px !important;
+overflow-y: auto;
+overflow-x: hidden;
 }
 .forgot-password{
 line-height: 55px
@@ -38,7 +40,7 @@ color: #03A9F4;
 }
 .left{
 height: 100%;
-background-image: url('../images/coloured-gradient.jpg');
+background-image: url('../images/fileIcons/coloured-gradient.jpg');
 color: white;
 background-size: cover
 
@@ -53,9 +55,7 @@ color: #808080;
 font-size: 22px;
 line-height: 46px;
 }
-.login-fields input{
-padding-left: 38px !important;
-}
+
 .error{
 background-color: #FED0C8;
 padding: 14px;
@@ -107,4 +107,15 @@ padding: 14px;
     white-space: nowrap;
     padding: 6px 12px;
     font-size: 14px;
+}
+.login-form .copyright{
+    position: absolute;bottom: 0;right: 0;padding: 32px;font-size: 13px;color: #a9b5be;
+}
+@media only screen and (max-width: 992px) {
+    .brand-name{
+
+        right: 50%;
+
+
+        }
 }

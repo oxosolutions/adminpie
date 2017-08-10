@@ -1,5 +1,39 @@
 @extends('layouts.app')
 @section('content')
+@if(Session::has('forgot-error'))
+	<div class="row error">
+		<span><i class="fa fa-ban"></i></span>
+		{{Session::get('forgot-error')}}
+	</div>
+@endif
+<div class="display-1">
+	Forgot Password
+</div>
+<div class="sub-title">
+	Lorem ipsum dolor sit amet, coectetuer adipiscing elit sed diam nonummy.
+</div>
+{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'forgot']) !!}
+<div>
+	<input type="email" name="email" placeholder="Enter Your Email">
+</div>
+<div class="row">
+	<div class="col l6">
+		<a style="line-height: 34px" href="{{ route('org.login.post') }}">Go to Login page</a>
+	</div>
+	<div class="col l6 right-align">
+		<button type="submit">Reset Password</button>	
+	</div>
+</div>
+{!! Form::close() !!}
+<div class="copyright">
+Copyright &copy; OXO Solutions 2017
+</div>
+
+
+
+
+
+<div style="position: absolute;bottom: 0;left: 0;display: none">
 	{{-- <form class="modal-body"> --}}
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'forgot']) !!}
 		<div class="text-center">
@@ -42,25 +76,5 @@
 	<div class="footer">
 			© 2017, All Right Reserved. <a href="http://oxosolutions.com/" target="_blank"  style="color: white"><span>OXO solutions</span></a>
 	</div>
-	<style type="text/css">
-		.login-cover{
-			    background: url('{{ asset('assets/images/cool-bg.jpg') }}') no-repeat;
-    background-size: cover;
-		}
-		.panel-body{
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			margin-left: -160px !important;
-			    margin-top: -127px !important;
-		}
-		.footer{
-			    position: fixed;
-    bottom: 20px;
-    text-align: center;
-    color: white;
-        background-color: hsla(0,0%,0%,0.3);
-    padding: 10px;
-		}
-	</style>
+</div>
 @endsection

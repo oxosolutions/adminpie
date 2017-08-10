@@ -38,12 +38,15 @@
 				 <?php echo Form::text('column_name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter Column Name']); ?>
 
 				 <?php if($errors->has('column_name')): ?>
-				 	<span style="color: red;"><?php echo e($errors->first('column_name')); ?></span>
+				 	<span style="color: red; font-size: 12px;"><?php echo e($errors->first('column_name')); ?></span>
 				 <?php endif; ?>
 			</div>
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				 <?php echo Form::select('after_column',$tableheaders,null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter After Column']); ?>
 
+				 <?php if($errors->has('after_column')): ?>
+				 	<span style="color: red; font-size: 12px;"><?php echo e($errors->first('after_column')); ?></span>
+				 <?php endif; ?>
 			</div>
 			<div class="col s12 m2 l3">
 				<button class="btn blue">Create Column</button>

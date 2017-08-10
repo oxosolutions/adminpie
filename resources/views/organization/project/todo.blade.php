@@ -3,7 +3,7 @@
 @php
     $page_title_data = array(
     'show_page_title' => 'yes',
-    'show_add_new_button' => 'yes',
+    'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
     'page_title' => 'To Do',
     'add_new' => '+ Add To Do'

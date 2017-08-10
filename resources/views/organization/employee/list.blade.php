@@ -14,7 +14,11 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Employees',
-	'add_new' => '+ Add Employee'
+	'add_new' => '+ Add Employee',
+	'second_button_title' => 'Export Employees',
+	'second_button_route' => 'export.employee',
+	'third_button_title' => 'Import Employees',
+	'third_button_route' => 'import.employee'
 ); 
 
 	 if(check_route_permisson('hrm/employee/save')==false){
@@ -26,6 +30,33 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('common.list.datalist')
+	{{-- <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Employe ID</th>
+                <th>Name</th>
+                <th>Departments</th>
+                <th>Designation</th>
+                <th>Email ID</th>
+                <th>Created At</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Employe ID</th>
+                <th>Name</th>
+                <th>Departments</th>
+                <th>Designation</th>
+                <th>Email ID</th>
+                <th>Created At</th>
+                <th>Status</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            
+        </tbody>
+    </table> --}}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 

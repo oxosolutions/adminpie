@@ -23,9 +23,15 @@
 					@foreach($sidebar->subModule as $ke => $subModule)
 						@if(isset($permisson['submodule'][$subModule['id']]['permisson']) && $permisson['submodule'][$subModule['id']]['permisson']=='on')
 							<li class="aione-tab {{-- {{strpos($link, 'details')?'one-active':''}} --}} {{Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''}}">
-								<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route)) }}">
-									<span class="nav-item-text">{{@$subModule['name']}}</span>
-								</a>
+								@if(request()->route()->parameters())
+									<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route),@request()->route()->parameters()['id']) }}">
+										<span class="nav-item-text">{{@$subModule['name']}}</span>
+									</a>
+								@else
+									<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route)) }}">
+										<span class="nav-item-text">{{@$subModule['name']}}</span>
+									</a>
+								@endif
 							</li>
 						@endif
 					@endforeach

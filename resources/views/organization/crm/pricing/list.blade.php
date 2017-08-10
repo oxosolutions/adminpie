@@ -5,8 +5,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Services',
-	'add_new' => '+ Add Services'
+	'page_title' => $user_for.' Price'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
@@ -19,8 +18,8 @@ $page_title_data = array(
 			<div class="row">
 				<div class="col-md-12 ">
 					<div class="panel panel-flat">
-						<input type="text" name="id" value="{{$id}}">
-						<input type="text" name="use_for" value="product">
+						<input type="hidden" name="id" value="{{$id}}">
+						<input type="hidden" name="use_for" value="{{strtolower($user_for)}}">
 						<div class="panel-body">
 							@include ('organization.crm.pricing._form')
 							<div class="text-right">

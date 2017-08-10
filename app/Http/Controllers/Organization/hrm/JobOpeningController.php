@@ -18,8 +18,7 @@ class JobOpeningController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function public_view_jobs(){
-      $jobs = JobOpening::with('opening_meta')->where('status',1)->get()->toArray();
-      //dd($jobs);
+      $jobs = JobOpening::with('opening_meta')->get()->toArray();
       return view('organization.jobopening.public_jobs',compact('jobs'));
     }
     public function index(Request $request)
@@ -157,7 +156,11 @@ class JobOpeningController extends Controller
      */
     public function update(Request $request, $id=null){
         $model =  JobOpening::find($id);
+
+
       if($request->isMethod('post')){
+       // dd($request->all());
+
         $model->fill($request->all());
         $model->save();
         unset($request['_token'], $request['title'] ,$request['department'], $request['designation'],$request['skills'] ,$request['job_type'], $request['location'], $request['number_of_post']);

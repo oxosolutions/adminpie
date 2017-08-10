@@ -16,6 +16,7 @@ $page_title_data = array(
     {!! Form::open(['route'=>'role.delete' , 'method'=>'POST'])!!}
     <div class="row">
         <div class="col l9">
+          <input type="hidden" name="old_role_id" value="{{$id}}">
             <p style="    line-height: 24px;"><strong class="red-text">NOTE:</strong> You are about to Delete the role which is associate with many Users. Please select another role to replace with <STRONG>( {{$roleList[$id]['name']}} )</STRONG>.
             </p>    
         </div>
@@ -66,7 +67,7 @@ $page_title_data = array(
                 <input name="user[]" value="{{$value['id']}}" type="hidden">
                     <div class="list-user">
                         <div class="chip" style="position: relative;">
-                            {{dump($value->metas)}}
+                            {{-- {{dump($value->metas)}} --}}
                             @foreach($value->metas as $k => $v )
                                 
                                 @if($v->key == "profilePic")

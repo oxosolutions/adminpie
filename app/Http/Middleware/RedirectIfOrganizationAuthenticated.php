@@ -29,7 +29,7 @@ class RedirectIfOrganizationAuthenticated
         Session::put('organization_id',$model->id);
         $auth = Auth::guard('org');
         if ($auth->check()) {
-            return redirect('/');
+            return redirect('/dashboard');
         }
 
         return $next($request);

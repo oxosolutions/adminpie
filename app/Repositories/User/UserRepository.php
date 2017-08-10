@@ -8,7 +8,7 @@ use App\Model\Organization\UserRoleMapping;
 class UserRepository implements UserRepositoryContract
 {
 	
-	public function create($data=null,$type)
+	public function create($data=null,$type,$userType = null)
 	{
 		$check = user::where('email',$data['email']);
 		if($check->count()==0)
@@ -17,6 +17,7 @@ class UserRepository implements UserRepositoryContract
 			$user->fill($data);
 			$user->password = Hash::make($data['password']);
 			$user->status = 1;
+			$user->user_type = $userType;
 			$user->save();
 			$userRole = new UserRoleMapping;
 			$userRole->user_id = $user->id;

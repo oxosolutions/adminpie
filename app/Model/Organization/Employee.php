@@ -6,19 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 use Session;
 use App\Model\Organization\User;
 use App\Model\Organization\UserRoleMapping;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class Employee extends Model
 {
+	use SoftDeletes;
     public static $breadCrumbColumn = 'employee_id';
+    protected $table = '';
     public function __construct()
     {
+    	parent::__construct();
     	if(!empty(Session::get('organization_id')))
     	{
             $this->table = Session::get('organization_id').'_employees'; 
     	}
     }
-
-    protected $fillable = ['user_id', 'employee_id', 'designation', 'department', 'marital_status', 'experience', 'blood_group', 'joining_date', 'disability_percentage', 'status'];
-
+    // protected $table = '175_employees';
+    protected $fillable = ['user_id', 'employee_id', 'designation', 'department', 'marital_status', 'experience', 'blood_group', 'joining_date', 'leaving_date', 'disability_percentage', 'status'];
+    protected $softDelete = true;
+    protected $dates = ['deleted_at'];
     public function employ_info()
     {
     	return $this->belongsTo('App\Model\Organization\User','user_id');
@@ -46,16 +51,17 @@ class Employee extends Model
 
     public static function employees()
     {
-        $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
-            $query->where('role_id',2);
-        })->pluck('name','id');
-        return $model;
-    }
-    public static function listEmployees()
-    {
-        return [];
-        $model = User::where('role_id',2)->pluck('name','id');
-        return $model;
+        $employee = self::with('employ_info')->get();
+        $data =    $employee->mapWithKeys(function($item){
+            return [$item['employee_id']=> $item['employ_info']['name']];
+         });
+        return $data;
+
+         //->keyBy('employee_id');
+        // $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
+        //     $query->where('role_id',2);
+        // })->pluck('name','id');
+        // return $model;
     }
 
     public function metas()

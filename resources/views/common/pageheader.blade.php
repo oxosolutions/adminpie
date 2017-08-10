@@ -19,6 +19,10 @@
           <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['second_button_route'])}}">{{@$second_button_title}}
           </a>
         @endif
+        @if(array_key_exists('third_button_route', @$page_title_data))
+          <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['third_button_route'])}}">{{@$third_button_title}}
+          </a>
+        @endif
 			@endif
 		@endif
 		<div class="clear"></div>
@@ -46,7 +50,8 @@
                           echo '<li><a href="#">'.$modelName.'</a>';
                             echo '<ul class="aione-subnavigation">';
                             foreach($result as $ky => $vl){
-                                echo '<li><a href="'.$vl->id.'">'.$vl[$resultModel::$breadCrumbColumn].'</li></a>';
+                                // echo '<li><a href="'.$vl->id.'">'.$vl[$resultModel::$breadCrumbColumn].'</li></a>';
+                                echo '<li><a href="javascript:;">'.$vl[$resultModel::$breadCrumbColumn].'</li></a>';
                             }
                             echo '</ul>';
                           echo '</li>';
@@ -56,7 +61,8 @@
                           echo '<li><a href="#"> '.$module->name.'</a>';
                           echo '<ul class="aione-subnavigation">';
                           foreach($module->subModule as $ky => $vl){
-                              echo '<li><a href="'.url(str_replace('/{id?}','',$vl->sub_module_route)).'">'.$vl->name.'</li></a>';
+                              // echo '<li><a href="'.url(str_replace('/{id?}','',$vl->sub_module_route)).'">'.$vl->name.'</li></a>';
+                              echo '<li><a href="javscript:;">'.$vl->name.'</li></a>';
                           }
                           echo '</ul>';
                         }   

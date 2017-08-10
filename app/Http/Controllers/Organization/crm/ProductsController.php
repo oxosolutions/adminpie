@@ -58,7 +58,9 @@ class ProductsController extends Controller
     public function edit(Request $request, $id)
     {
     }
-    public function prices(Request $request, $id=null){
+
+    public function common_price($request , $use_for, $id){
+
       $datalist= [];
         $data= [];
           if($request->has('per_page')){
@@ -72,26 +74,30 @@ class ProductsController extends Controller
           $sortedBy = @$request->sort_by;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = Pricing::where('id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = Pricing::where(['item_id'=>$id , 'use_for'=>'product'])->where('id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                  $model = Pricing::where('id','like','%'.$request->search.'%')->paginate($perPage);
+                  $model = Pricing::where(['item_id'=>$id , 'use_for'=>'product'])->where('id','like','%'.$request->search.'%')->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = Pricing::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = Pricing::where(['item_id'=>$id , 'use_for'=>'product'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                   $model = Pricing::whereItem_id($id)->paginate($perPage);
+                   $model = Pricing::where(['item_id'=>$id , 'use_for'=>$use_for])->paginate($perPage);
               }
           }
-          
+return $model;
+    }
+    public function prices(Request $request, $id=null){
+      
+        $model =  $this->common_price($request , 'product', $id);
                   $datalist =  [
+                  'user_for'=>"Product",
                   'id'=>$id,
                           'datalist'=>  $model,
                           'showColumns' => ['id'=>'id','price'=>'Price', 'created_at'=>'Created At'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.products'],
-                                          'price'=>['title'=>'Set Price','route'=>'price.products']
+                                          'delete'=>['title'=>'Delete','route'=>'delete.price.products']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
@@ -101,9 +107,14 @@ class ProductsController extends Controller
               $pricing->fill($request->all());
               $pricing->item_id = $request['id'];
               $pricing->save();
-        dd($request->all());
+       return back();
       }
       return view('organization.crm.pricing.list', $datalist);
+    }
+    public function delete_pricing($id)
+    {
+      Pricing::whereId($id)->delete();
+      return back(); 
     }
 
     public function delete($id)

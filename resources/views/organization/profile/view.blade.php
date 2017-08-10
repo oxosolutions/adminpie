@@ -1,5 +1,10 @@
 @extends('layouts.main')
 @section('content')
+@php
+	// $isEmployee = App\Model\Organization\Employee::where('user_id' , $model->id)->first();
+	$isEmployee = is_employee(@request()->route()->parameters()['id']);
+	$isAdmin = is_admin();
+@endphp
 <style type="text/css">
 	.edit-button{
 		display: block;width: 30px;line-height: 30px;text-align: center;float: right;
@@ -95,7 +100,17 @@
 	.info-card .headline-text{
 		font-weight: 600;padding: 10px 5px;display: block;border-bottom: 1px solid #e8e8e8;
 	}
+	#card-alert{
+		position: absolute;
+	    top: 10px;
+	    width: 98%;
+	}
+	#card-alert i{
+		float: right;
+		cursor: pointer
+	}
 </style>
+
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
@@ -110,7 +125,10 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
 		@include('organization.profile._tabs')
 		@if(Session::has('success-password'))
-			<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>
+			{{-- <script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script> --}}
+			<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div>
+			
+			
 		@endif
 		<div class="row">
 		<div class="col l9 pr-7">
@@ -130,11 +148,8 @@ $page_title_data = array(
 						@endphp
 						{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
 							<div class="abc" >
-							@if($model->profilePic != null || $model->profilePic != "" || !empty($model->profilePic))
-								<img src="{{ asset('ProfilePicture/'.$model->profilePic) }}" >
-							@else
-								<img src="{{ asset('ProfilePicture/default-user.jpg') }}">
-							@endif
+								<img src="{{ asset(@get_profile_picture($id,'medium')) }}" >
+							
 							@php
 								$parameters = request()->route()->parameters();
 							@endphp
@@ -202,22 +217,125 @@ $page_title_data = array(
 						<div class="row pb-5" >
 							<div class="col l3"><strong>Name:</strong></div>
 							<div class="col l5">{{@$model->name}}</div>
-							<div class="col l4 right-align">
-								<a href="#modal1" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+							<div class="col l4 right-align" id="modal-wrapper">
+								<a class="grey-text darken-1 edit-button waves-effect" data-target="modal1"><i class="fa fa-pencil"></i></a>
+								
+								{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
+									
+								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
 								{!!Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH',])!!}
-								@include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']])
-							
-								{!!Form::close()!!}
+									<div class="modal-header white-text  blue darken-1" ">
+										<div class="row" style="padding:15px 10px;margin: 0px">
+											<div class="col l7 left-align">
+												<h5 style="margin:0px">Profile</h5>	
+											</div>
+											<div class="col l5 right-align">
+												<a href="javascript:;" name="closeModel"  id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+											</div>	
+										</div>
+									</div>
+									<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
+										<div class="col s12 m2 l12 aione-field-wrapper">
+										{!! FormGenerator::GenerateField('editempsec1f1',['type'=>'inset']) !!}
+										</div>
+										<div class="col s12 m2 l12 aione-field-wrapper">
+										 {!! FormGenerator::GenerateField('editempsec1f2',['type'=>'inset']) !!}
+										 </div>
+										 <div class="col s12 m2 l12 aione-field-wrapper">
+										 {!! FormGenerator::GenerateField('empsec1f8',['type'=>'inset']) !!}
+										 </div>
+										 <div class="col s12 m2 l12 aione-field-wrapper">
+											{{-- {!! Form::select('shift',null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!} --}}
+											@if(@request()->route()->parameters()['id'])
+												@if($isEmployee)
+													{!! Form::select('shift',App\Model\Organization\Shift::listshifts(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!}
+												@endif
+
+											@endif
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button class="btn blue" type="submit" name="action">save
+										</button>
+									</div>	
+									{!!Form::close()!!}
+								</div>
+
+								
 							</div>
 						</div>
 						
 						<div class="row pt-5" >
+							<div class="col l3"><strong>Email</strong></div>
+							<div class="col l9">{{@$model->email}}</div>
+						</div>
+						<div class="row pt-5" >
 							<div class="col l3"><strong>About Me</strong></div>
 							<div class="col l9">{{@$model->about_me}}</div>
 						</div>
-						
+						{{-- @if($isEmployee != null)
+							<div class="row pt-5" >
+								<div class="col l3"><strong>Shift</strong></div>
+								@foreach(@$model->metas as $k => $Shift)
+									@if($Shift->key == 'shift')
+										<div class="col l9">{{App\Model\Organization\Shift::where('id',$Shift->value)->first()->name}}</div>
+									@endif
+								@endforeach
+							</div>
+						@endif --}}								
 					</div>
 				</div>
+				{{-- @if($isEmployee || $isAdmin) --}}
+				@if($isEmployee )
+				
+					@foreach(@$model->metas as $k => $Shift)
+						@if($Shift->key == 'shift')
+							<div class="row" style="padding: 0px 12px;">
+								<div class="col l3">
+									Shift
+								</div>
+								<div class="col l3">
+									{{App\Model\Organization\Shift::where('id',$Shift->value)->first()->name}}
+								</div>
+								<div class="col l3">
+									{{App\Model\Organization\Shift::where('id',$Shift->value)->first()->from}} - {{App\Model\Organization\Shift::where('id',$Shift->value)->first()->to}}
+								</div>
+								<div class="col l3 week-days">
+									@foreach(json_decode(App\Model\Organization\Shift::where('id',$Shift->value)->first()->working_days) as $k => $v)
+									
+									<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
+									@endforeach
+								</div>
+								<style type="text/css">
+									.week-days > .active{
+										border-color: #2196f3;
+									}
+									.week-days > .active:hover{
+										background-color:#2196f3;
+										color: white;
+
+									}
+									.week-days > div{
+									    display: inline-block;
+									    width: 24px;
+									    text-align: center;
+									    font-size: 13px;
+									    line-height: 24px;
+									    border: 1px solid #e8e8e8;
+									    border-radius: 50%;
+									    font-weight: 700;
+									    color: #676767;
+									    cursor: pointer;
+									}
+									.week-days > div:last-child{
+										color: red
+									}
+								</style>
+							</div>
+						@endif
+					@endforeach
+				@endif	
+				
 			</div>
 			<div class="card mt-14" >
 				
@@ -271,9 +389,26 @@ $page_title_data = array(
 		<div class="col l3 pl-7">
 			<div class="card mt-14 " >
 				<div class="row center-align mb-0 pv-10" >
+				@if(@$errors->get('new_password') || @$errors->get('confirm_password'))
+					<script type="text/javascript">
+						$(window).load(function(){
+							document.getElementById('add_new').click();
+						});
+					</script>
+				@endif
 					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>	
 					{!! Form::open(['route' => 'change.password' , 'method' => 'post']) !!}
 					@include('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
+					@php
+						if(Auth::guard('admin')->check()){
+				            $id = Auth::guard('admin')->user()->id;
+				        }elseif(request()->route()->parameters()){
+				            $id = request()->route()->parameters()['id'];
+				        }else{
+				            $id = Auth::guard('org')->user()->id;
+				        }
+					@endphp
+					<input type="hidden" name="id" value="{{$id}}">
 					{!! Form::close() !!}
 				</div>
 				
@@ -281,7 +416,7 @@ $page_title_data = array(
 			<div class="card info-card" >
 				<div class="row valign-wrapper mb-0">
 					<div class="col l10 headline-text" >Contact Detail</div>
-					<div class="col l2">
+					<div class="col l2" id="modal-wrapper">
 						<a href="#modal2" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 						{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
 						<input type="hidden" name="meta_table" value="usermeta" />
@@ -296,7 +431,7 @@ $page_title_data = array(
 							@if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address' || $v->key == 'present_address')
 								<div class="row mb-0" >
 									<div class="col l12 subhead-wrapper" >
-										<span class="subhead">{{str_replace('_',' ',$v->key)}}</span>
+										<span class="subhead">{{ucfirst(str_replace('_',' ',$v->key))}}</span>
 									</div>
 									<div class="col l12 details-wrapper" >
 										{{$v->value}}
@@ -311,15 +446,18 @@ $page_title_data = array(
 					$roles = array_keys($model->user_role_rel->groupBy('role_id')->toArray());
 					//if role has permission to this widget
 				@endphp
-				@if(session()->get('user_role') == 1)
+				@if($isEmployee || $isAdmin)
 					<div class="card info-card" >
 
 							<div class="row valign-wrapper mb-0">
 								<div class="col l10 headline-text" >Employee Detail</div>
-								<div class="col l2">
-									<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+								<div class="col l2 " id="modal-wrapper">
+										@if($isAdmin)
+											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+										@endif
 									{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
+									
 									@include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
 									{!!Form::close()!!}
 								</div>
@@ -349,20 +487,32 @@ $page_title_data = array(
 					<div class="card info-card" >
 						<div class="row valign-wrapper mb-0">
 							<div class="col l10 headline-text" >Bank Details</div>
-							<div class="col l2">
-							{{-- {{dd($model)}} --}}
-								<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+							<div class="col l2" id="modal-wrapper">
+								@if($isAdmin)
+									<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+								@endif
 								{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
 							
 								<input type="hidden" name="meta_table" value="employeemeta" />
+								@if(count(request()->route()->parameters()) >0 )
+									<input type="hidden" name="empId" value="{{request()->route()->parameters()['id']}}" />
+								@endif
 									@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
 								{!!Form::close()!!}
 							</div>
 							
 						</div>
 						<div class="row" >
-							@foreach(FormGenerator::GetSectionFieldsName('empsec6') as $key => $field)
-								
+							@php
+								$data = [];
+							@endphp
+							@foreach(str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')) as $k => $v)
+								@php
+									array_push($data , strtolower($v));
+								@endphp
+							@endforeach
+							@foreach($data as $key => $field)
+
 								<div class="row mb-0">
 									<div class="col l12 subhead-wrapper" >
 										<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
@@ -371,81 +521,11 @@ $page_title_data = array(
 										{{$model[strtolower($field)]}}
 									</div>
 								</div>
+
 							@endforeach
 					
 						</div>
 					</div>
-				@else
-					@php
-						$hasPermissionEmployeeDetails = App\Model\Organization\RolePermisson::hasPermission(session()->get('user_role'),25);
-					@endphp
-					@if($hasPermissionEmployeeDetails)
-						<div class="card info-card" >
-
-								<div class="row valign-wrapper mb-0">
-									<div class="col l10 headline-text" >Employee Detail</div>
-									<div class="col l2">
-										<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
-										{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
-										<input type="hidden" name="meta_table" value="employeemeta" />
-										@include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
-										{!!Form::close()!!}
-									</div>
-									
-								</div>
-								<div class="row" >
-									@foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
-										<div class="row mb-0" >
-											<div class="col l12 subhead-wrapper" >
-												<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
-											</div>
-											<div class="col l12 details-wrapper" >
-												@if($field == 'designation')
-													&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
-											@elseif($field == 'department')
-													&nbsp;	{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->
-														name}}
-												@else
-													&nbsp;&nbsp;{{$model[strtolower($field)]}}
-												@endif
-											</div>
-										</div>
-									@endforeach
-								</div>
-						</div>
-					@endif
-					@php
-						$hasPermissionBankDetails = App\Model\Organization\RolePermisson::hasPermission(session()->get('user_role'),26);
-					@endphp
-					@if($hasPermissionBankDetails)
-						<div class="card info-card" >
-							<div class="row valign-wrapper mb-0">
-								<div class="col l10 headline-text" >Bank Details</div>
-								<div class="col l2">
-									<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
-									{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
-								
-									<input type="hidden" name="meta_table" value="employeemeta" />
-									@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
-									{!!Form::close()!!}
-								</div>
-								
-							</div>
-							<div class="row" >
-								@foreach(FormGenerator::GetSectionFieldsName('empsec6') as $key => $field)
-									<div class="row mb-0">
-										<div class="col l12 subhead-wrapper" >
-											<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
-										</div>
-										<div class="col l12 details-wrapper" >
-											{{$model[strtolower($field)]}}
-										</div>
-									</div>
-								@endforeach
-						
-							</div>
-						</div>
-					@endif
 				@endif
 				@if(@$model['employ_info'])
 					@if(count(array_intersect(json_decode($model->employ_info['user_type']), [2,4])) != 0)
@@ -465,6 +545,9 @@ $page_title_data = array(
 	<script type="text/javascript">
 		
 	$(document).ready(function(){
+		$('#modal1').modal({
+			 dismissible: false
+		});
 		$('#modal2').modal({
 			 dismissible: false
 		});
@@ -483,11 +566,19 @@ $page_title_data = array(
 		$('#modal9').modal('close');
 	});
 	$(document).on('click','.chooser',function(){
-									$('.image-spinner').show();
-								});
-	</script>
-	
-								
-							
+		$('.image-spinner').show();
+	});
+	$(document).on('click','#card-alert i',function(){
+		$('#card-alert').remove();
+	});
 
+	</script>
+		@if(@$errors->has())
+			<script type="text/javascript">
+				$(window).load(function(){
+				$('#modal1').modal('open');
+					// console.log($('.error-red').parents('#modal-wrapper').find('.edit-button').html());
+				});
+			</script>
+		@endif						
 @endsection

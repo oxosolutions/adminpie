@@ -36,22 +36,21 @@ class ApplicantController extends Controller
                         ];
         $this->validate($request , $valid_fields);
         $request['role_id'] = setting_val_by_key('applicant_role');
-        $user_id = $this->user->create($request->all(), 2);
-        $applicant = new Applicant();
-        $applicant->user_id = $user_id;
-        $applicant->status = 1;
-        $applicant->save();
+        $user_id = $this->user->create($request->all(), 6,'applicant');
 
         $application = new Application();
         $application->opening_id = $request['opening_id'];
-        $application->applicant_id = $applicant->id;
+        $application->applicant_id = $user_id;
         $application->save();
         unset($request['_token'], $request["opening_id"],$request["name"], $request["email"], $request["password"], $request['role_id']);
-
-        foreach ($request->all() as $key => $value) {
+        $data = $request->except('_token','opening_id','name','email','password','role_id','qualification','percentage','board/university','date_of_passing');
+        foreach ($data as $key => $value) {
           $applicationMeta = new ApplicationMeta();
           $applicationMeta->application_id = $application->id;
           $applicationMeta->key = $key;
+          if(is_array($value)){
+            $value = json_encode($value);
+          }
           $applicationMeta->value = $value;
           $applicationMeta->save();
         }

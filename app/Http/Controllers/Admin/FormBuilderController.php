@@ -17,11 +17,11 @@ class FormBuilderController extends Controller
 {
     protected $valid_fields = [
                             'form_title' => 'required',
-                            'form_slug' => 'required|unique:global_forms|regex:/^[a-z0-9]+$/|min:4|max:300'
+                            'form_slug' => 'required|unique:global_forms|regex:/^[a-z0-9-_]+$/|min:4|max:300'
                         ];
     protected $valid_sections = [
                             'section_name' => 'required',
-                            'section_slug' => 'required|unique:global_form_sections|regex:/^[a-z0-9]+$/|min:4|max:300'
+                            'section_slug' => 'required|unique:global_form_sections|regex:/^[a-z0-9-_]+$/|min:4|max:300'
                         ];
     // protected $valid_form_fields = [
     //                         'field_title' => 'required|min:4|max:300',

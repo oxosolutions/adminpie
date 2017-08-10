@@ -17,7 +17,7 @@
 					<div class="row">
 						<h5>{{$section->section_name}}</h5> 
 					</div>
-						{!!FormGenerator::GenerateSection($section->section_slug, $options,'', $formFrom)!!}
+						{!!FormGenerator::GenerateSection($section->section_slug, $options,$model, $formFrom)!!}
 				</div>
 			@endforeach
 		</div>

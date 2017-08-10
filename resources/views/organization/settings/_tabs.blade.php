@@ -10,11 +10,12 @@
 <div class="col l12"  >
 
     <ul class="aione-tabs">
-        <li class="tab col aione-active {{strpos($link, 'org')?'aione-active':''}}"><a href="{{Route('setting.org')}}">Basic Settings</a></li>
-        <li class="tab col {{strpos($link, 'activities')?'aione-active':''}}""><a href="{{Route('setting.employee')}}">Employee Setting</a></li>
-        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.attendance')}}">Attendance Setting</a></li>
-        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.role')}}">Roles Setting</a></li>
-        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.leaves')}}">Leave Setting</a></li>
+        <li class="tab col {{strpos($link, 'organization')?'aione-active':''}}"><a href="{{Route('setting.org')}}">Basic</a></li>
+        <li class="tab col {{strpos($link, 'activities')?'aione-active':''}}""><a href="{{Route('setting.employee')}}">Employee</a></li>
+        <li class="tab col {{strpos($link, 'hrm')?'aione-active':''}}""><a href="{{Route('setting.attendance')}}">HRM</a></li>
+        <li class="tab col {{strpos($link, 'user')?'aione-active':''}}""><a href="{{Route('setting.user')}}">User</a></li>
+        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.role')}}">Roles</a></li>
+        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.leaves')}}">Leave</a></li>
         <div style="clear: both">
           
         </div>

@@ -61,6 +61,14 @@
 		});
 		
 		/*****************************************************
+		/*  Aione progress bar on Projects page
+		/*****************************************************/
+		$('body').on('click','.aione-progress-bar',function(e){
+			e.preventDefault();
+			$(this).toggleClass('active');
+		});
+		
+		/*****************************************************
 		/*  Materialize Date Picker
 		/*****************************************************/
 		$('.timepicker').pickatime({
@@ -78,8 +86,4 @@
 
 	});
 </script>
-<?php if(Session::get('success')): ?>
-	<script type="text/javascript">
-		swal("Success!", "<?php echo e(Session::get('success')); ?>", "success")
-	</script>
-<?php endif; ?>
+

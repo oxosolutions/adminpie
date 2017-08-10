@@ -61,12 +61,20 @@ class CategoryRepository implements CategoryRepositoryContract
 		return $data;
 	}
 	public function category_meta_save($request){
-		$cat_id = $request['id'];
+
+
+     $checkKey = ['role_include'=>'role_include' ,'roles_exclude'=>'roles_exclude' , 'include_designation'=>'include_designation', 'exclude_designation'=>'exclude_designation', 'user_include'=>'user_include',  'user_exclude'=>'user_exclude'];
+    $cat_id = $request['id'];
+     // CM::where(['category_id'=>$cat_id])->delete();
+     //  dd();
 		$cat = Category::find($cat_id);
 		$cat->fill($request->all());
 		$cat->save();
 		unset($request['_token'],$request['id'],$request['name'],$request['description']);
 		foreach ($request->all() as $key => $value) {
+      if(!empty($checkKey[$key])){
+        unset($checkKey[$key]);
+      }
 			$check = CM::where(['category_id'=>$cat_id, 'key'=>$key]);
 			if(is_array($value)){
 				$value = json_encode($value);
@@ -81,6 +89,8 @@ class CategoryRepository implements CategoryRepositoryContract
 				$cMeta->save();
 			}
 		}
+     $keyValue = array_values($checkKey);
+     CM::whereIn('key',$keyValue)->where('category_id',$cat_id)->delete();
   	}
   	public function manage_status($request){
           if($request['status']=='true')

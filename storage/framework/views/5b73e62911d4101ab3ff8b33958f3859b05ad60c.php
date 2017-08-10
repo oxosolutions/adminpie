@@ -234,17 +234,16 @@
 
 					<?php 
 					$now = Carbon\Carbon::now();
-			       echo  $where['year'] = $now->year;
+			        $where['year'] = $now->year;
 			         $month = $now->month;
 			        if(strlen($month)==1)
 						{
 							$month = '0'.$month;
 						}
-			       $dayInMonth = $now->daysInMonth;
-
-			        $dt = Carbon\Carbon::create($now->year, $now->month, 1);
-			       $beforeDay = $dt->dayOfWeek;
-			       		if(!empty($attendance_data)){
+			       	$dayInMonth = $now->daysInMonth;
+					$dt = Carbon\Carbon::create($now->year, $now->month, 1);
+			       	$beforeDay = $dt->dayOfWeek;
+			       		if(!empty($attendance_data[$month])){
        							$val = collect($attendance_data[$month]);
 								$data = $val->keyBy('date')->toArray();
 							}
@@ -569,6 +568,7 @@ line-height: 36px
 	<script>
 		function attendance_yearly_filter(year)
 		{
+			alert(year);
 			postData ={};
 			//postData['month'] = month;
 			postData['year']  = year;

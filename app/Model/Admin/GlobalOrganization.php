@@ -18,7 +18,11 @@ class GlobalOrganization extends Model
   	{
   		if(!empty(Session::get('organization_id'))){
 			$modules = self::where('id',Session::get('organization_id'))->first()->modules;
-			return $moduleData = array_map('intval',json_decode($modules,true));
+      if($modules != null){
+        return $moduleData = array_map('intval',json_decode($modules,true));
+      }else{
+        return [];
+      }
 		}
 
 		return false;

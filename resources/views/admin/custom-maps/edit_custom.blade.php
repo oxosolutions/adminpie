@@ -1,4 +1,13 @@
-@extends('admin.layouts.main')
+@if(Auth::guard('admin')->check() == true)
+	@php
+		$layout = 'admin.layouts.main';
+	@endphp
+@else
+	@php
+		$layout = 'layouts.main';
+	@endphp
+@endif
+@extends($layout)
 @section('content')
 @php
 $page_title_data = array(
@@ -15,7 +24,7 @@ $page_title_data = array(
 	{{-- @include('common.list.datalist') --}}
 {{-- @include('common.page_content_primary_end') --}}
 {{-- @include('common.page_content_secondry_start') --}}
-	{!!Form::model($model,['route'=>'update.custom.map'])!!}
+	{!!Form::model($model,['route'=>['update.custom.map',$model->id]])!!}
 		{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Custom Map','button_title'=>'Save','section'=>'custommapsection']]) --}}
 			<input type="hidden" name="id" value="{{$model->id}}">
 			{!!FormGenerator::GenerateSection('custommapsection')!!}

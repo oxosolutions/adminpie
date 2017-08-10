@@ -22,7 +22,7 @@ class UsersController extends Controller
         $roles = Role::where('status',1)->pluck('role_name','id');
       
         $plugins = [
-                        'js' => ['select2','custom'=>['admin_users']],
+                        'js' => ['custom'=>['admin_users']],
                         'roles'=>$roles
                     ];
         return view('admin.users.list')->with(['plugins'=>$plugins]);
@@ -55,7 +55,7 @@ class UsersController extends Controller
         $roles = Role::where('status',1)->pluck('role_name','id');
         $model = admin_user::where('id',$id)->get();
         $plugins = [
-                        'js'    =>  ['select2','custom'=>['admin_users']],
+                        'js'    =>  ['custom'=>['admin_users']],
                         'roles' =>  $roles,
                         'model' =>  $model
                     ];

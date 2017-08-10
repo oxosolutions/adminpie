@@ -14,7 +14,11 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Employees',
-	'add_new' => '+ Add Employee'
+	'add_new' => '+ Add Employee',
+	'second_button_title' => 'Export Employees',
+	'second_button_route' => 'export.employee',
+	'third_button_title' => 'Import Employees',
+	'third_button_route' => 'import.employee'
 ); 
 
 	 if(check_route_permisson('hrm/employee/save')==false){
@@ -26,6 +30,7 @@
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 

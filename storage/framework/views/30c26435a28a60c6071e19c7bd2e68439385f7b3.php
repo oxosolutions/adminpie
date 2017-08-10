@@ -2,11 +2,10 @@
 	<div class="aione-nav-background"></div>
     <ul id="aione_menu" class="aione-menu">
     <?php 
-    $index = 0;
     $permisson = drawSidebar::checkPermisson();
      ?>
         <?php $__currentLoopData = drawSidebar::drawSidebar(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $sidebar): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        
+       
 			<?php 
 			$routes = [];
 			 ?>
@@ -15,10 +14,9 @@
                 // preg_match_all("/{(.*?)}/", $subModule->sub_module_route, $matches);
                 // $routes[] = preg_replace("/\/{[a-z?]+?\}/", @request()->route()->parameters()[str_replace('?','',@$matches[1][0])], $subModule->sub_module_route);
                 $routes[] = str_replace('/{id?}','',$subModule->sub_module_route);
-                // dump($routes);
                ?>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-          
+       
             <?php if(isset($permisson['module'][$sidebar['id']]['permisson']) && $permisson['module'][$sidebar['id']]['permisson']=='on'): ?>
             <li class="aione-nav-item level0 <?php echo e((@$sidebar->subModule[0] != null)?'has-children':''); ?>  <?php echo e(in_array(Request::path(),$routes)?'nav-item-current':''); ?>"> 
               <?php if(@$sidebar->subModule[0] != null): ?>
@@ -58,9 +56,6 @@
                 </ul>
             </li>
           <?php endif; ?>
-          <?php 
-            $index++;
-           ?>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
     </ul>
 </nav>

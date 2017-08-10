@@ -15,15 +15,18 @@ use Auth;
 class AttendanceController extends Controller
 {
     public function myattendance(Request $request){
+        // dd($request->all());
         $where['year'] = $year = Carbon::now()->year;
         $user_id = Auth::guard('org')->user()->id;
         $employ_check = Employee::where('user_id',$user_id);
        if(!$employ_check->exists()){
+         return redirect()->route('access.denied');
             dd('Your not employee user!');
        }else{
         $where['employee_id'] = $employ_check->select('employee_id')->first()->employee_id;
         }
         if($request->isMethod('post')){
+           // dd($request->all());
            if(!empty($request["month"])){
                 $where['month'] = $request["month"];
              } 
@@ -35,12 +38,12 @@ class AttendanceController extends Controller
              }
             $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
             $attendance_data = $attendance->groupBy('month')->toArray();
+           // dd($attendance_data);
             return view('organization.profile.ajaxmyattandance',['attendance_data'=>$attendance_data, 'filter'=>$where]);
         }
     	
     	$attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
-        // dd($attendance);
-    	$attendance_data = $attendance->groupBy('month')->toArray();
+        $attendance_data = $attendance->groupBy('month')->toArray();
         return view('organization.profile.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
     }
 

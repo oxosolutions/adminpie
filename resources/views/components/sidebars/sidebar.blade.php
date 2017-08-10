@@ -2,11 +2,10 @@
 	<div class="aione-nav-background"></div>
     <ul id="aione_menu" class="aione-menu">
     @php
-    $index = 0;
     $permisson = drawSidebar::checkPermisson();
     @endphp
         @foreach(drawSidebar::drawSidebar() as $key => $sidebar)
-        {{-- {{dump($sidebar->subModule)}} --}}
+       
 			@php
 			$routes = [];
 			@endphp
@@ -15,12 +14,9 @@
                 // preg_match_all("/{(.*?)}/", $subModule->sub_module_route, $matches);
                 // $routes[] = preg_replace("/\/{[a-z?]+?\}/", @request()->route()->parameters()[str_replace('?','',@$matches[1][0])], $subModule->sub_module_route);
                 $routes[] = str_replace('/{id?}','',$subModule->sub_module_route);
-                // dump($routes);
               @endphp
             @endforeach
-{{--             {{dump(Request::path())}}
-            {{dump($routes)}}
- --}}          
+       
             @if(isset($permisson['module'][$sidebar['id']]['permisson']) && $permisson['module'][$sidebar['id']]['permisson']=='on')
             <li class="aione-nav-item level0 {{(@$sidebar->subModule[0] != null)?'has-children':''}}  {{in_array(Request::path(),$routes)?'nav-item-current':''}}"> 
               @if(@$sidebar->subModule[0] != null)
@@ -64,9 +60,6 @@
                 </ul>
             </li>
           @endif
-          @php
-            $index++;
-          @endphp
         @endforeach 
     </ul>
 </nav>

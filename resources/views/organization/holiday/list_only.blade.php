@@ -13,39 +13,46 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.profile._tabs')
-<div id="projects" class="projects list-view">
-	<div class="row">
-
-	</div>
-	<div class="row">
-		<div class="col s12 m12 l12" >
-				<table class="bordered">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Date</th>
-							<th>Description</th>	
-						</tr>
-						
-					</thead>
-					<tbody>
-						@foreach($model as $k => $holidays)
-							<tr>
-								<td>{{$holidays->title}}</td>
-								<td>{{date( 'D / d M Y' , strtotime($holidays->date_of_holiday) )}}</td>
-								<td>{{$holidays->description}}</td>
-							</tr>
-						@endforeach		
-					</tbody>
-				</table>
-		</div>
-
-		
-	</div>
+<div class="holidays-list">
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Date</th>
+				<th>Description</th>	
+			</tr>
+		</thead>
+		<tbody>
+			@foreach($model as $k => $holidays)
+				<tr>
+					<td>{{$holidays->title}}</td>
+					<td>{{date( 'D / d M Y' , strtotime($holidays->date_of_holiday) )}}</td>
+					<td>{{$holidays->description}}</td>
+				</tr>
+			@endforeach		
+		</tbody>
+	</table>
 </div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+<style type="text/css">
+.holidays-list table, td, th {    
+    border: 1px solid #e8e8e8;
+    text-align: left;
+}
 
+.holidays-list table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.holidays-list th, td {
+    padding: 15px;
+}
+.holidays-list th{
+	font-weight: 600
+}
+</style>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend') 
 @endsection

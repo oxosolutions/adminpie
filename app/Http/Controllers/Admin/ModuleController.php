@@ -92,50 +92,51 @@ class ModuleController extends Controller
             if($subModulesCheck->exists()){
              $subModules = GlobalSubModule::where('module_id',$id)->select('id')->get()->keyBy('id')->toArray();
             }
-
-            foreach($request->submodule as $key => $submodule){
-               if(isset($submodule['submodule_id'])){
-                unset($subModules[$submodule['submodule_id']]);
-                    $globalSubModule = GlobalSubModule::find($submodule['submodule_id']);
-                }else{
-	               $globalSubModule = new GlobalSubModule;
-                }
-	            $globalSubModule->name = $submodule['submodule_name']; 
-	            $globalSubModule->sub_module_route = $submodule['sub_module_route'];
-	            $globalSubModule->module_id = $mainModule->id;
-	            $globalSubModule->status = 1;
-	            $globalSubModule->save();
-                $routeCheck =  Route::where('sub_module_id',$globalSubModule->id);
-                $routes = $routeCheck->select('id')->get()->keyBy('id')->toArray();
-               if($routeCheck->exists()){
-                $routes = $routeCheck->select('id')->get()->keyBy('id')->toArray();
-               }
-
-	            if(isset($submodule['perm_route_name'])){
-	            	foreach($submodule['perm_route_name'] as $routeKey => $rouetValue){
-		            	if($rouetValue != null){
-                            if(isset($submodule['route_id'][$routeKey])){
-                                unset($routes[$submodule['route_id'][$routeKey]]);
-                                $globalModuleRoute = Route::find($submodule['route_id'][$routeKey]);
-                            }else{
-		            		        $globalModuleRoute = new Route;
-                                }
-			                $globalModuleRoute->sub_module_id = $globalSubModule->id;
-			                $globalModuleRoute->route = $submodule['perm_route'][$routeKey];
-			                $globalModuleRoute->route_name = $submodule['perm_route_name'][$routeKey];
-			                $globalModuleRoute->status = 1;
-			                $globalModuleRoute->save();
-		            	}
+            if($request->submodule != null){
+                foreach($request->submodule as $key => $submodule){
+                   if(isset($submodule['submodule_id'])){
+                    unset($subModules[$submodule['submodule_id']]);
+                        $globalSubModule = GlobalSubModule::find($submodule['submodule_id']);
+                    }else{
+    	               $globalSubModule = new GlobalSubModule;
                     }
-	            }
-               if(!empty($routes)){
-                    $flattenRoute =collect($routes)->flatten()->all();
-                    Route::whereIn('id',$routes)->delete();
-                }
-	        }
+    	            $globalSubModule->name = $submodule['submodule_name']; 
+    	            $globalSubModule->sub_module_route = $submodule['sub_module_route'];
+    	            $globalSubModule->module_id = $mainModule->id;
+    	            $globalSubModule->status = 1;
+    	            $globalSubModule->save();
+                    $routeCheck =  Route::where('sub_module_id',$globalSubModule->id);
+                    $routes = $routeCheck->select('id')->get()->keyBy('id')->toArray();
+                   if($routeCheck->exists()){
+                    $routes = $routeCheck->select('id')->get()->keyBy('id')->toArray();
+                   }
+
+    	            if(isset($submodule['perm_route_name'])){
+    	            	foreach($submodule['perm_route_name'] as $routeKey => $rouetValue){
+    		            	if($rouetValue != null){
+                                if(isset($submodule['route_id'][$routeKey])){
+                                    unset($routes[$submodule['route_id'][$routeKey]]);
+                                    $globalModuleRoute = Route::find($submodule['route_id'][$routeKey]);
+                                }else{
+    		            		        $globalModuleRoute = new Route;
+                                    }
+    			                $globalModuleRoute->sub_module_id = $globalSubModule->id;
+    			                $globalModuleRoute->route = $submodule['perm_route'][$routeKey];
+    			                $globalModuleRoute->route_name = $submodule['perm_route_name'][$routeKey];
+    			                $globalModuleRoute->status = 1;
+    			                $globalModuleRoute->save();
+    		            	}
+                        }
+    	            }
+                   if(!empty($routes)){
+                        $flattenRoute =collect($routes)->flatten()->all();
+                        Route::whereIn('id',$routes)->delete();
+                    }
+    	        }
                 $flattenModule = collect($subModules)->flatten()->all();
                 GlobalSubModule::with('moduleRoute')->whereIn('id',$flattenModule)->delete();
                 Route::whereIn('sub_module_id',$flattenModule)->delete();
+            }
             return redirect()->route('list.module');
         }
         $module =[];

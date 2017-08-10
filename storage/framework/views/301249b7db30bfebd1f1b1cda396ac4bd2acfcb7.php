@@ -24,6 +24,9 @@ $page_title_data = array(
 		<button type="submit" class="btn blue">Save Template</button>
 	<?php echo Form::close(); ?>
 
+	<?php if(Session::has('success-update')): ?>
+		<script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>
+	<?php endif; ?>
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 

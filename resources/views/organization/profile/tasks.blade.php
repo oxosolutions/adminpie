@@ -19,18 +19,20 @@
 @include('common.pageheader',$page_title_data) 
 	<div class="row">
 
-@php
- 
-  $link=$_SERVER['REQUEST_URI'];
-  $route = explode('/',$link);
+        @php
+         
+          $link=$_SERVER['REQUEST_URI'];
+          $route = explode('/',$link);
 
-  
-@endphp
-    @if(in_array('account', $route))
-    	@include('organization.profile._tabs')
-    @elseif(in_array('project', $route))
+          
+        @endphp
+            @if(in_array('account', $route))
+            	@include('organization.profile._tabs')
+            @elseif(in_array('project', $route))
 
-    @endif
+            @endif
+    @include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
 		<div class="row">
 			<!-- <a href="#modal11" class="btn-flat">Add task</a> -->
 			<div id="add_new_model" class="tasks_add modal modal-fixed-footer">
@@ -106,6 +108,11 @@
 
             </div>
 		</div>
+    @include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+    @include('common.pagecontentend')
 	</div>
 	<style type="text/css">
 		.options{

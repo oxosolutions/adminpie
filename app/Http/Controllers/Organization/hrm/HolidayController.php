@@ -22,15 +22,10 @@ class HolidayController extends Controller
     	$tbl = Session::get('organization_id');
         $valid_fields = [
                             'title'             => 'required|unique:'.$tbl.'_holidays',
+                            'date_of_holiday'   => 'required|unique:'.$tbl.'_holidays',
                             'description'       => 'required'
                         ];
         $this->validate($request , $valid_fields) ;
-
-        $check_date = Holiday::where('date_of_holiday', $newData['date_of_holiday'])->first();
-        if($check_date != null){
-            Session::flash('date_error' , 'Holiday for this date is available');
-            return back();
-        }
 
         $holiday = new Holiday();
         $holiday->fill($newData);
@@ -97,6 +92,8 @@ class HolidayController extends Controller
     }
     public function update(Request $request)
     {
+        
+                         
     	if($request['status'] == 'true'){
             $request['status'] = '1';
         }else{
@@ -120,14 +117,27 @@ class HolidayController extends Controller
     }
     public function editHoliday(Request $request)
     {
-        $model = Holiday::where('id',$request->id)->get();
         $tbl = Session::get('organization_id');
+        $data = Holiday::where('id',$request->id)->first();
+        if($data->id == $request->id){
+            if($data->date_of_holiday == $request->date_of_holiday){
+                    $valid_fields = [
+                                  'date_of_holiday' => 'required'
+                                ];
+                    $this->validate($request , $valid_fields) ;
+            }else{
+                $valid_fields = [
+                                  'date_of_holiday' => 'required|unique:'.$tbl.'_holidays'
+                                ];
+                $this->validate($request , $valid_fields) ;
+            }
+        }
+        $model = Holiday::where('id',$request->id)->get();
         $valid_fields = [
-                            'date_of_holiday'   => 'required',
+                            'title'             => 'required',
                             'description'       => 'required'
                         ];
-
-        $this->validate($request , $valid_fields);
+        $this->validate($request , $valid_fields) ;
 
         $newdata = $request->except('_token','date_of_holiday','action');
         $newdata['date_of_holiday'] = $this->date_format($request['date_of_holiday']);

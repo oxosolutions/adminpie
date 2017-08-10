@@ -5,8 +5,10 @@ use Session;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 class User extends Authenticatable 
 {
+   use SoftDeletes;
    public static $breadCrumbColumn = 'name';
    public function __construct()
    {	
@@ -15,6 +17,8 @@ class User extends Authenticatable
 	       $this->table = Session::get('organization_id').'_users';
 	   	}
    }
+   protected $softDelete = true;
+   protected $dates = ['deleted_at'];
    public function user_role_rel(){
       return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','id');
    }

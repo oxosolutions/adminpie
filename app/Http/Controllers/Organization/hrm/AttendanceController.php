@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organization\hrm;
 use Excel;
+use Validator;
 use Illuminate\Http\Request;
 use App\Model\Organization\Employee;
 // use App\Model\EmployeeAttendance as Attendance;
@@ -10,7 +11,7 @@ use App\Model\Organization\Holiday as LH;
 
 use App\Model\Organization\EmployeeLeave as Leave;
 use App\Http\Controllers\Controller;
-use App\Model\Organization\Attendance as Attendance;
+use App\Model\Organization\Attendance;
 
 use Carbon\Carbon;
 use DB;
@@ -94,18 +95,35 @@ class AttendanceController extends Controller
 
 	public function attendance_import(Request $request)
 	{
+			$file = $request->file('attendance_file');
+			$validator = Validator::make(
+				    [
+				        'file'      => $file,
+				        'extension' => strtolower($file->getClientOriginalExtension()),
+				    ],
+				    [
+				        'file'          => 'required',
+				        'extension'      => 'required|in:csv',
+				    ]
+				);
+
+			if ($validator->fails()) {
+            	return back();
+        	}
+
 
 
 		//dump($request->file('attendance_file'));
 		
 		if($request->file('attendance_file'))
 		{	
-			$storage_path = public_path().'/attendance_file';
+			$orgID = Session::get('organization_id');
+			$storage_path = env('USER_FILES_PATH').'_'.$orgID.'/hrm_attendance_import_files';
 			$file = $request->file('attendance_file');
 			$file_name = str_random(13).$file->getClientOriginalName();
 			$file->move($storage_path, $file_name);	
 		
-		Excel::load('attendance_file/'.$file_name, function ($reader)
+		Excel::load($storage_path.'/'.$file_name, function ($reader)
 		{
 			$reader->noHeading();
 			$all_data = json_decode(json_encode($reader->all()) , true);
@@ -312,7 +330,7 @@ class AttendanceController extends Controller
 				'css' => ['custom'=>['attendance']]
 		];		
  		return view('organization.attendance.attendance',['plugins'=>$plugins]);
-		 return view('common.Attendance',['attendance_data'=>$attendance_data, 'chunk'=>$chunk , 'total_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data]);
+		// return view('common.Attendance',['attendance_data'=>$attendance_data, 'chunk'=>$chunk , 'total_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data]);
 
 
 	}
@@ -325,8 +343,8 @@ class AttendanceController extends Controller
 		$fweek_no =  $fdate = null;
 		 $dt = Carbon::parse($years.'-'.$month);
 		$year_month  = "$years-$month";
-		$employee_data = Employee::all();
-
+		$employee_data = Employee::whereMonth('joining_date','<=',$month)->WhereYear('joining_date','<=',$years)->get()->keyBy('employee_id');//all();
+// dump($employee_data);
 		//$where['month'] ='06';
 //dump($where);
 //dump(Attendance::where($where)->get());
@@ -348,6 +366,8 @@ class AttendanceController extends Controller
 			{
 				$fdate = $where['date']= $request['date'];
 				Session::put('date',$fdate);
+			}else{
+				Session::forget('date');
 			}
 			if(!empty($request['week']))
 			{
@@ -360,6 +380,7 @@ class AttendanceController extends Controller
 				$where['month'] = $month ='0'.$month;
 			}
 			
+			 // DUMP($where);
 		
 			if(Attendance::where($where)->count()==0)
 			{
@@ -369,18 +390,23 @@ class AttendanceController extends Controller
 			}
 			 	$year_month  = "$years-$month"; 			
 		 		$dt = Carbon::parse($year_month);	
+		}else{
+
+			if(Session::has('date'))
+			{
+				Session::forget('date');
+			}
 		}
 
 
 		if(Attendance::where($where)->count()==0)
-			{
-				
+			{	
 				$error = "no data exist";
 				return view('organization.attendance.attendance_table',['error'=>$error , 'month'=> $month , 'year'=> $years, 'employee_data'=>$employee_data ,'fweek_no'=>$fweek_no ]);
 			}
 				$d = Attendance::with('employee')->groupBy('employee_id')->selectRaw('count(id) as row,  employee_id')->where($where)->first()->row;
 				$chunk = $total_days = $count = $d;//$dt->daysInMonth;
-				
+				// dump('chunk', $chunk);
 				
 				if(isset($where['date']) )
 				{	
@@ -419,39 +445,37 @@ class AttendanceController extends Controller
 				$attendance_by_self = Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status')->where($where)->get();
 		
  		return view('organization.attendance.attendance_table', ['attendance_data'=>$new_attendance_data, 'chunk'=>$chunk , 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
-
-
 	}
 	/**
 	 * 
 	 */
 
+protected function employee_data($dates){
+	$data = Employee::with(['employ_info.metas', 'designations', 'department', 'department_rel','attendance' =>function($query) use($current_dates){
+			 		$query->where($current_dates);
+				}])->where('status',1)->get();	
+	return $data;
+}
 	public function attendance_by_hr(Request $request){	
 		$filter_dates = $attendance_data = null;
 		$current_dates = $this->current_date_data;
-		$employee_ids = Employee::where('status',1)->pluck('employee_id');
-	
 		if($request->isMethod('post')){
-			$filter_dates = $request->except(['_token']);
-			//dump($filter_dates , $employee_ids);
-			 // $attendance_check  = Attendance::with('employee.employ_info', 'employee.designations', 'employee.department', 'employee.department')->where($request->except(['_token']))->whereIn('employee_id',$employee_ids);
-			
-			$employee_data = Employee::with(['employ_info', 'designations', 'department_rel','attendance'=>function($q) use($filter_dates, $employee_ids){
-						$q->where($filter_dates)->whereIn('employee_id',$employee_ids);
-			}])->where(function($subQuery) use ($filter_dates, $employee_ids){
-					$subQuery->whereHas('attendance', function($query) use ($filter_dates, $employee_ids){
-						$query->where($filter_dates)->whereIn('employee_id',$employee_ids);
-					});
-			})->get();
-		}else{
-			$employee_data = Employee::with(['employ_info', 'designations', 'department', 'department','attendance' =>function($query) use($current_dates){
-				 $query->where($current_dates);
-			}])->where('status',1)->get();
-			
+			$filter_dates = $current_dates = $request->except(['_token']);
 		}
-
+		$cDate =	date('Y-m-d',strtotime($current_dates["year"].'-'.$current_dates["month"].'-'.$current_dates["date"]));
+		$employee_data =	Employee::with(['employ_info', 'designations', 'department_rel'])->where('joining_date','<=',$cDate)->whereNull('leaving_date')->get();
+		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
+		if($request->isMethod('post')){
+			$employee_datas = Employee::with(['employ_info', 'designations', 'department_rel'])->where('joining_date','<=',$cDate)->whereNotNull('leaving_date')->where('leaving_date','>=',$cDate)->get()->keyBy('id');
+			if( !empty($employee_datas) )
+			{
+				$employee_data = $employee_data->merge($employee_datas);
+			}
+			$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
+		}
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);
 	}
+
 	public function attendance_fill_hr(Request $request )
 	{
 		//dd($request->all());
@@ -463,11 +487,15 @@ class AttendanceController extends Controller
 				if(isset($value['punch_in_out']))
 				{
 					$value['punch_in_out'] = json_encode($value['punch_in_out']);
+				}else{
+					$value['punch_in_out'] =Null;
 				}
 
 				if(isset($value['in_out_data']))
 				{
 					$value['in_out_data'] = json_encode($value['in_out_data']);
+				}else{
+					$value['in_out_data'] =Null;
 				}
 				
 				$where 		= 	array_collapse([$conditions, ['employee_id'=>$key]]);
@@ -488,7 +516,7 @@ class AttendanceController extends Controller
 				$attendance->save();
 			}
 		}
-		return back();//redirect()->route('hr.attendance');
+		return redirect()->route('list.attendance');
 	}
 	public function lock_status(Request $request){
 		$mo = $request['month'];

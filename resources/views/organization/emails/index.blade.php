@@ -13,7 +13,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	List of emails
+	@include('common.list.datalist')
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 	
