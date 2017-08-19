@@ -3,7 +3,36 @@
 		
 			
 
-			
+			<div class="row m-20" >
+				<div class=" col l5 right-align">
+					<i class="fa fa-arrow-left lh-44" onclick="attendance_yearly_filter({{@$filter['year']-1}})" ></i>
+				</div>
+				<div class="col l2 center-align">
+					<h5><a  id='year_display' class='dropdown-button' href='#' data-activates='dropdown1'>{{@$filter['year']}}</a></h5>
+					 
+
+					  <!-- Dropdown Structure -->
+					  <ul id='dropdown1' class='dropdown-content'>
+
+					    <li>
+							<button onclick="attendance_yearly_filter('2016')"> 2016</button>
+						</li> 
+					    <li>
+							<button onclick="attendance_yearly_filter('2017')"> 2017</button>
+						</li> 
+					    <li>
+							<button onclick="attendance_yearly_filter('2018')"> 2018</button>
+					    </li> 
+					    <li>
+							<button onclick="attendance_yearly_filter('2019')"> 2019</button>
+						</li> 
+					    <li><button onclick="attendance_yearly_filter('2020')"> 2020</button></li> 
+					  </ul>
+				</div>
+				<div class="col l5">
+					<i class="fa fa-arrow-right lh-44" onclick="attendance_yearly_filter({{@$filter['year']+1}})"></i>
+				</div>
+			</div>	
 
 
 

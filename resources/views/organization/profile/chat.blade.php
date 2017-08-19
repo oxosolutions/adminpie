@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+{!! FormGenerator::GenerateForm('form_generator_fields') !!}
 	<style type="text/css">
 		.widget-v1{
 			width: 600px;border:1px solid #e8e8e8;border-radius: 3px;
@@ -105,6 +106,45 @@
     		padding: 0px 10px;
 		}
 	</style>
+
+
+
+
+<div id="" class="aione-tabs-wrapper">
+	<nav class="aione-nav aione-nav-horizontal">
+		<ul class="aione-tabs">
+			<li class="aione-tab ">
+				<a href="#aione_modules_settings">
+					<span class="nav-item-text">Settings</span>
+				</a>
+			</li>
+			<li class="aione-tab ">
+				<a href="#aione_modules_custom_css">
+					<span class="nav-item-text">Custom CSS</span>
+				</a>
+			</li>
+			<li class="aione-tab ">
+				<a href="#aione_modules_custom_js">
+					<span class="nav-item-text">Custom JS</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<div class="aione-tabs-content-wrapper">
+		<div id="aione_modules_settings" class="aione-tab-content">
+			Settings
+		</div>
+		<div id="aione_modules_custom_css" class="aione-tab-content">
+			CSS
+		</div>
+		<div id="aione_modules_custom_js" class="aione-tab-content">
+			JS
+		</div>
+	</div>
+</div>
+
+
+
 	<div class="row widget-v1" style="margin-top: 100px">
 		<div class="col l5 todo-section">
 			<div class="row">

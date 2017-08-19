@@ -1,0 +1,1 @@
+<div id="field_{{$collection->field_slug}}" class="field {{$collection->field_type}} field-type-{{$collection->field_type}}">

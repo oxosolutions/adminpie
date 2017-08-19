@@ -54,8 +54,8 @@ class JobOpeningController extends Controller
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'opening.update' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.opening'],
-                                      'apply'=>['title'=>'Apply','route'=>'application'],
-                                      'application'=>['title'=>'Application','route'=>'applied.application']
+                                      'apply'=>['title'=>'Apply','route'=>'application']
+                                      // 'application'=>['title'=>'Application','route'=>'applied.application']
                                   ],
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]

@@ -46,7 +46,7 @@ $page_title_data = array(
 	{!!Form::open(['route'=>'save.team'	,'method'=>'POST'])!!}
 @endif	
 
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Team','button_title'=>'Save','section'=>'prosec2']])
+{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Team','button_title'=>'Save','section'=>'prosec2']]) --}}
 {!!Form::close()!!}	
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

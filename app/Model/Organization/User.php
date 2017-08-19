@@ -31,13 +31,20 @@ class User extends Authenticatable
 
    public function metas()
    {
-   	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');
+    return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');
+   }
+   public function metas_for_attendance()
+   {
+   	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id')->whereIn('key',['shift','employee_id','joining_date','designation','department']);
    }
    public static function userList()
    {
       return self::pluck('name','id');
    }
-
+   public static function getEmployee()
+    {
+      return self::where('user_type','employee')->pluck('name','id');
+    }
    public function employee_rel()
    {
       return $this->hasOne('App\Model\Organization\Employee','user_id','id');
@@ -67,4 +74,10 @@ class User extends Authenticatable
     {
       return $this->hasMany('App\Model\Organization\UsersType','id','user_type');
     }
+
+    public function employees()
+    {
+      return self::where('user_type','employee')->pluck('name','id');
+    }
+  
 }

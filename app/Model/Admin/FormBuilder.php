@@ -26,4 +26,12 @@ class FormBuilder extends Model
         
         $this->table = $table;
     }
+
+    public function section(){
+        return $this->belongsTo('App\Model\Admin\section','section_id','id');
+    }
+
+    public function formsMeta(){
+        return $this->hasMany('App\Model\Admin\FormsMeta','form_id','form_id');
+    }
 }

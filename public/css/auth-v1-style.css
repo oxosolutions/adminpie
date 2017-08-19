@@ -5,20 +5,31 @@ margin: 0;
 padding: 0;
 overflow:hidden; 
 }
-.heading{
+/***************************************
+Login Page CSS
+***************************************/
+.page-wrapper{
+    margin-bottom: 0px;height: 100vh
+}
+.page-wrapper > .left{
+    height: 100%;background-image: url('../images/fileIcons/coloured-gradient.jpg');color: white;background-size: cover;
+}
+.page-wrapper > .form-wrapper{
+    height: 100%;box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);padding: 100px 32px 32px 32px !important;overflow-y: auto;overflow-x: hidden;
+}
+.login-form .display-1{
+    font-size: 30px;
+    font-weight: 300;
+    color: #4e5a64;
+}
+ .heading{
 font-size: 18px;
 
 }
 .full-width{
 width: 100%
 }
-.login-form{
-height: 100%;
-box-shadow: 0 5px 5px -3px rgba(0,0,0,.2),0 8px 10px 1px rgba(0,0,0,.14),0 3px 14px 2px rgba(0,0,0,.12);
-padding: 100px 32px 32px 32px !important;
-overflow-y: auto;
-overflow-x: hidden;
-}
+
 .forgot-password{
 line-height: 55px
 }
@@ -38,13 +49,7 @@ padding: 20px;
  .brand-name > span{
 color: #03A9F4;
 }
-.left{
-height: 100%;
-background-image: url('../images/fileIcons/coloured-gradient.jpg');
-color: white;
-background-size: cover
 
-}
 .login-fields{
 position: relative;
 }
@@ -78,11 +83,7 @@ background-color: #FFEFBE;
 padding: 14px;
 
 }
-.login-form .display-1{
-        font-size: 30px;
-    font-weight: 300;
-    color: #4e5a64;
-}
+
 .login-form .sub-title{
         color: #a0a9b4;
     font-size: 15px;

@@ -8,17 +8,16 @@ use App\Model\Organization\Holiday;
 use Carbon\Carbon;
 use Session;
 use App\Model\Organization\UsersMeta;
+use App\Model\Organization\Attendance;
 use Auth;
+
 class HolidayController extends Controller
 {
     public function save(Request $request)
     {
-        $newData = [];
-        foreach($request->all() as $key => $value){
-            $newData[$key] = $value;
-            $newData['date_of_holiday'] = Carbon::parse($request['date_of_holiday'])->format('Y-m-d');
-        }
-        
+        $carbon = Carbon::parse($request['date_of_holiday']);
+        $request['date_of_holiday'] = $carbon->format('Y-m-d');
+        $request['status'] = 1;
     	$tbl = Session::get('organization_id');
         $valid_fields = [
                             'title'             => 'required|unique:'.$tbl.'_holidays',
@@ -26,9 +25,8 @@ class HolidayController extends Controller
                             'description'       => 'required'
                         ];
         $this->validate($request , $valid_fields) ;
-
         $holiday = new Holiday();
-        $holiday->fill($newData);
+        $holiday->fill($request->all());
     	$holiday->save();
     	return redirect()->route('list.holidays');
     }

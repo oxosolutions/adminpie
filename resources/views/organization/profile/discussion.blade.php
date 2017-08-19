@@ -13,7 +13,12 @@
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	{!! FormGenerator::GenerateForm('aione_form_fields_test',['type'=>'inset']) !!}
+	{{-- {{Form::open(['route' => 'account.discussion' , 'method' => 'post'])}}
+		{!! FormGenerator::GenerateForm('aione_form_fields_test',['type'=>'inset']) !!}
+	{!! Form::close()!!} --}}
+	{!! FormGenerator::GenerateForm('form_generator_fields') !!}
+	{{-- {!! FormGenerator::GenerateSection('addempsec1') !!} --}}
+
 	@include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')

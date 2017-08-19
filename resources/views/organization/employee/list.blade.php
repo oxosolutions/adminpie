@@ -29,10 +29,11 @@
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-@include('common.list.datalist')
-	{{-- <table id="example" class="display" cellspacing="0" width="100%">
+{{-- @include('common.list.datalist') --}}
+	<table id="example" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
+                <th>User</th>
                 <th>Employe ID</th>
                 <th>Name</th>
                 <th>Departments</th>
@@ -44,6 +45,7 @@
         </thead>
         <tfoot>
             <tr>
+                <th>User</th>
                 <th>Employe ID</th>
                 <th>Name</th>
                 <th>Departments</th>
@@ -56,7 +58,7 @@
         <tbody>
             
         </tbody>
-    </table> --}}
+    </table>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 

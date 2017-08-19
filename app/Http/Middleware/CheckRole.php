@@ -25,7 +25,6 @@ class CheckRole
      */
     public function handle($request, Closure $next, $role = null)
     {  
-        
       $current_route =  $request->route();
       //dd($current_route->uri);
       $uri =str_replace('/{id}','',$current_route->uri);
@@ -33,6 +32,7 @@ class CheckRole
      // dd($current_uri);
       if(!in_array(1, role_id())){
         $permisson = Permisson::whereIn('role_id',role_id())->whereNotNull('permisson')->get();
+
         foreach ($permisson as $key => $value) {
           if($value['permisson_type']=='module'){
                   $route = module::where('id',$value['permisson_id'])->whereNotNull('route');

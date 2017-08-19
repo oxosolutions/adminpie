@@ -21,7 +21,7 @@ class Employee extends Model
     	}
     }
     // protected $table = '175_employees';
-    protected $fillable = ['user_id', 'employee_id', 'designation', 'department', 'marital_status', 'experience', 'blood_group', 'joining_date', 'leaving_date', 'disability_percentage', 'status'];
+    /*protected $fillable = ['user_id', 'employee_id', 'designation', 'department', 'marital_status', 'experience', 'blood_group', 'joining_date', 'leaving_date', 'disability_percentage', 'status'];
     protected $softDelete = true;
     protected $dates = ['deleted_at'];
     public function employ_info()
@@ -67,6 +67,6 @@ class Employee extends Model
     public function metas()
    {
     return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');
-   }
+   }*/
 
 }

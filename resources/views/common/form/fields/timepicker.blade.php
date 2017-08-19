@@ -1,28 +1,16 @@
-@if(isset($options['type']))
-	@if($options['type'] == 'inset')
-		<div class="col s12 m2 l12 aione-field-wrapper">
-				{!!Form::time(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'timepicker'])!!}
-		</div>
-	@else
-		<div class="row" style="padding:10px 0px">
-			<div class="col l3" style="line-height: 30px">
-				{{$collection->field_title}}
-			</div>
-			<div class="col l9">
-				{!!Form::time(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'timepicker'])!!}
-			</div>
-		</div>
-	@endif
-@else
-	<div class="row" style="padding:10px 0px">
-		<div class="col l3" style="line-height: 30px">
-			{{$collection->field_title}}
-		</div>
-		<div class="col l9">
-			{!!Form::time(str_replace(' ','_',strtolower($collection->field_title)), null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'timepicker'])!!}
-		</div>
-	</div>
-@endif
+@include('common.form.fields.includes.field-wrapper-start')
+	@include('common.form.fields.includes.field-label-start')
+		@include('common.form.fields.includes.label')
+	@include('common.form.fields.includes.field-label-end')
+	@include('common.form.fields.includes.field-start')
+		
+		{!!Form::time(str_replace(' ','_',strtolower($collection->field_title)), null,['id'=>'input_'.$collection->field_slug,'class'=>'timepicker '.$collection->field_slug])!!}
+		@include('common.form.fields.includes.error')
+	@include('common.form.fields.includes.field-end')
+@include('common.form.fields.includes.field-wrapper-end')
+		
+	
+
 
 <script type="text/javascript">
 	   $('.timepicker').pickatime({

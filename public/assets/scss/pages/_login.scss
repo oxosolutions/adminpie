@@ -1,0 +1,78 @@
+
+/***************************************
+Login Page CSS
+***************************************/
+
+.login-background {
+    background-image: linear-gradient(to right,rgba(76, 175, 80, 0.4),rgba(123, 67, 151, 0.6)),url(../images/bg-pattern.png),linear-gradient(to right,rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(../images/login-background.jpg);
+    background-size: auto,auto,auto,cover;
+    background-repeat: no-repeat,repeat,no-repeat,no-repeat;
+    background-attachment: fixed,scroll,fixed,fixed;
+	position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+	height:100%;
+}
+.login-wrapper {
+    width: 400px;
+	max-width:78%;
+    padding: 40px;
+    margin: 0 auto;
+	position:relative;
+}
+.login-wrapper .aione-row{
+	background: #ffffff;
+	padding:20px;
+    position: relative;
+    z-index: 9;
+}
+.login-wrapper:before {
+    content: "";
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    bottom: 28px;
+    left: 28px;
+    z-index: 5;
+    background-color: rgba(255,255,255,0.25); 
+}
+.login-wrapper:after {
+    content:"";
+}
+.aione-page-content {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+}
+.field-wrapper .field-label .field-description{
+	display:none;
+}
+.field-wrapper .field {
+    margin-bottom: 10px;
+    border-bottom: none;
+}
+
+.login-wrapper .site-logo{
+	text-align:center;
+}
+
+.login-wrapper .site-title{
+	font-size: 36px;
+    line-height: 40px;
+    font-weight: 600;
+    color: #666666;
+    text-align: center;
+}
+.login-wrapper .site-title span{
+	color: #F44336;
+}
+.login-wrapper .site-tagline{
+	text-align:center;
+}
+.login-wrapper .aione-footer{
+    margin:0;
+}
+
+

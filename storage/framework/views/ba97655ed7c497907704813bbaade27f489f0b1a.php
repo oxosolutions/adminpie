@@ -5,199 +5,668 @@ $page_title_data = array(
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
   'page_title' => 'Modules',
-  'add_new' => '+ Apply leave'
+  'add_new' => '+ Add Module'
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<div id="search" class="projects list-view">
-  <div class="row" id="find-project">
-    <div class="col s12 m12 l9 " >
-      <div class="row no-margin-bottom">
-        <div class="col s12 m12 l6  pr-7 tab-mt-10" >
-          <!-- <input class="search aione-field" placeholder="Search" /> -->
-          <nav>
-              <div class="nav-wrapper">
-                  <form>
-                    <div class="input-field">
-                        <input id="search" class="search" type="search" required style="background-color: #ffffff">
-                        <label class="label-icon" for="search" style=""><i class="material-icons icon-search" >search</i></label>
-                        <i class="material-icons icon-close">close</i>
-                    </div>
-                  </form>
-              </div>
-          </nav>
-        </div>
-        <div class="col s6 m6 l3  aione-field-wrapper pl-7 tab-mt-10">
-          <div class="row aione-sort" style="">
-            <select class="col  browser-default aione-field" >
-              <option value="" disabled selected>Sort By</option>
-              <option value="1">Name</option>
-              <option value="2">Date</option>
-            </select>
-            <div class="col alpha-sort" style="width: 25%;padding-left:7px;">
-              <a href="javascript:;" class="sort" ><i class="fa fa-sort-alpha-asc arrow_sort white" ></i></a>
-            </div>
-          </div>
-        </div>
+    <div class="module-wrapper" >
+        <?php echo $__env->make('admin.module._sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <div class="Detail-container">
+	        <?php if(@$subModuleData == null): ?>
+		        <?php if(@$moduleData != null): ?>
+                    <?php echo Form::open(['route' => 'save.style.subModule' , 'method' => 'post']); ?>
 
-        <div class="col s6 m6 l3 pl-7 right-float tab-mt-10 tab-pl-10">
-          <div class="row aione-switch-view">
-            <ul class="right  views m-0" >
-              <li class="inline-block" sty><a href="#list-view" class=" view" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
-              
-              
-
-              <li class="inline-block" ><a href="#detail-view" class=" view" data-view="detail-view"><i class="material-icons" >view_stream</i></a></li>
+                        <div id="" class="aione-tabs-wrapper">
+                            <nav class="aione-nav aione-nav-horizontal">
+                                <ul class="aione-tabs">
+                                    <li class="aione-tab ">
+                                        <a href="#aione_modules_settings">
+                                            <span class="nav-item-text">Settings</span>
+                                        </a>
+                                    </li>
+                                    <li class="aione-tab ">
+                                        <a href="#aione_modules_custom_css">
+                                            <span class="nav-item-text">Custom CSS</span>
+                                        </a>
+                                    </li>
+                                    <li class="aione-tab ">
+                                        <a href="#aione_modules_custom_js">
+                                            <span class="nav-item-text">Custom JS</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <div class="aione-tabs-content-wrapper">
+                                <div id="aione_modules_settings" class="aione-tab-content">
+                                    <div class="row">
+                                        <div style="padding-top: 20px;">
+                                                <div class="col l4">
+                                                  <?php echo Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']); ?>
 
 
-              <li class="inline-block" ><a href="#grid-view" class=" view" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+                                                    <?php echo Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']); ?>                     
 
-      
-      
-    </div>
+                                                    <input type="hidden" name="modules_id" value="<?php echo e(@request()->route()->parameters()['id']); ?>">                                  
+                                                    <div class="col l6 aione-field-wrapper">
+                                                        <label>Pick a color</label>
 
-    <div class="col s12 m3 l3 pl-7" >
-      <a id="add_new" href="<?php echo e(route('create.module')); ?>" class="btn add-new display-form-button" >
-        Add Module
-      </a>
-     
-      
-    </div>
-  </div>
+                                                        <input type="text" id="custom" class="no-margin-bottom aione-field">
+                                                        
+                                                    </div>
+                                                    
+                                                    <div class="col l6 aione-field-wrapper">
+                                                        <label>Pick an icon</label>
+                                                        <input type="text" class="input1 input font-awesome"  placeholder="Pick an icon" />  
+                                                        <i class="fa "></i>
+                                                    </div>
+                                                    <script type="text/javascript">
+                                                        console.log($(document).find('.input1').val());
+                                                    </script>
+                                                </div>
+                                                <div class="col l8">
+                                                    
+                                                    <div class="col s12 m2 l6 aione-field-wrapper">
+                                                        <label>Name</label>
+                                                        <input type="text" name="name" value="<?php echo e(@$moduleData->name); ?>" class="no-margin-bottom aione-field" >
+                                                    </div>
+                                                    <div class="col s12 m2 l6 aione-field-wrapper">
+                                                        <label>Route</label>
+                                                        <?php echo Form::select('route',App\Model\Admin\GlobalModule::getRouteListArray(),@$moduleData->route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']); ?>
 
-  <div class="row" id="sortable">
-    <?php 
-      $index = 0;
-     ?>
-    <?php $__currentLoopData = $listModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <div id="item-<?php echo e($index); ?>">
-        <div class="list" id="list">
-       
-          <div class="card-panel shadow white z-depth-1 hoverable project"  >
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="aione_modules_custom_css" class="aione-tab-content">
+                                    <div class="col l6">
+                                        <label>
+                                            Write css code here
+                                        </label>
+                                        <div id="editor-css" class="editor" >
+                                        </div>
+                                        <?php echo Form::hidden('css', @$moduleData->css,['class' => 'editor-css']); ?>
 
-            <div class="row valign-wrapper no-margin-bottom">
-              <div class="col l5 s5 center-align project-image-wrapper">
-                
-                
 
-                <div class="defualt-logo"  data-toggle="popover" title="Click to view details" >
-                 <?php echo e(ucwords(substr($val->name, 0, 1))); ?> 
-                </div>
-                  <a href="<?php echo e(route('edit.module',['id'=>$val->id])); ?>"> Edit</a>
+                                    </div>
+                                </div>
+                                <div id="aione_modules_custom_js" class="aione-tab-content">
+                                    <div class="col l6">
+                                        <label>
+                                        Write Javascript code here
+                                        </label>
+                                        <div id="editor-js" class="editor">
+                                        </div>
+                                        <?php echo Form::hidden('js', @$moduleData->js,['class' => 'editor-js']); ?>
 
-              </div>
-              <div class="col l11 s10 editable " >
-                <div class="row m-0 valign-wrapper">
-                  <div class="col s8 m8 l8">
-                    <input type="hidden" value="<?php echo e($val->id); ?>" class="module_id" >
-                    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" class="shift_token" >
+
+                                    </div>
+                                </div>
+                                <div class="col l12">
+                                    <button class="btn blue">Save Module</button>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+
+                        </div>
+
+                    <?php echo Form::close(); ?>
+
+
+                   <?php echo Form::open(['route' => 'sub.module.save' , 'method' => 'post']); ?>
+
+                        <div class="add-module">
+                            <button class="btn blue" type="submit">Add Sub-module</button>
+                                <span>
+                                    <input type="text" name="name">
+                                    <input type="hidden" name="module_id" value="<?php echo e(@request()->route()->parameters()['id']); ?>">    
+                                </span>
+                            <div class="clear"></div>
+                        </div>
+                    <?php echo Form::close(); ?>
+
+                        <ul class="collection">
+                            <?php $__currentLoopData = $moduleData->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li class="collection-item">
+                                    <a href="<?php echo e(route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id])); ?>"><?php echo e($value->name); ?></a>
+                                    <a href="<?php echo e(route('subModule.delete',['id'=>$value->id])); ?>" class="secondary-content delete-submodule">
+                                        <i class="arrow-delete material-icons dp48">delete</i>
+                                    </a>
+                                    <script type="text/javascript">
+                                        $(document).on('click','.delete-submodule',function(e){
+                                            e.preventDefault();
+                                            var href = $(this).attr("href");
+                                            swal({   
+                                                title: "Are you sure?",   
+                                                text: "You will not be able to recover this imaginary file!",   
+                                                type: "warning",   
+                                                showCancelButton: true,   
+                                                confirmButtonColor: "#DD6B55",   
+                                                confirmButtonText: "Yes, delete it!",   
+                                                closeOnConfirm: false 
+                                            }, 
+                                            function(){
+                                                window.location = href;
+                                               swal("Deleted!", "Your Sub Module has been deleted.", "success"); 
+                                           });
+                                        })
+                                    </script>
+                                    <a href="<?php echo e(route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']])); ?>" class="secondary-content">
+                                        <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                                    </a>
+                                    <a href="<?php echo e(route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']])); ?>" class="secondary-content">
+                                        <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                                    </a>
+                                </li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
                     
-                    <a href="#" data-toggle="popover" title="Click here to edit the Module name" data-content="TEST" >
-                      <h5 class="project-title black-text flow-text truncate line-height-35">
-                        <span class="project-name shift_name font-size-14 name" contenteditable="true" > <?php echo e($val->name); ?></span>
-                      </h5>
-                    </a>
-                  </div>
-                  <div class="col l4 right-align">
-                    <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" class="module_token" >
-                    <div class="switch">
-                        <label>
-                          <?php if($val->status == '0'): ?>
-                            <input type="checkbox">
-                          <?php else: ?>
-                            <input type="checkbox" checked="checked">
-                          <?php endif; ?>
-                          <span class="lever"></span>
-                        </label>
-                      </div>
-                  </div>
-                  
-                  <div class="col s4 m4 l4 right-align">
-                    <div class="switch">
-                      <a onclick="return confirm('Are you sure want to delete?')" href="<?php echo e(route('delete.module',['id'=>$val->id])); ?>" data-toggle="popover" title="Click here to delete this Module">  <i class="fa fa-trash red-text" aria-hidden="true"></i></a>
-                      <a href="<?php echo e(route('get.submodule',$val->id)); ?>" title="Click here to style this Module">  <i class="fa fa-edit blue-text" aria-hidden="true"></i></a>
-                     </div>
-                  </div>
+		        <?php endif; ?>
+			<?php endif; ?>
 
+            <?php if(@$subModuleData != null): ?>
+               
+                <div id="" class="aione-tabs-wrapper">
+                    <nav class="aione-nav aione-nav-horizontal">
+                        <ul class="aione-tabs">
+                            <li class="aione-tab ">
+                                <a href="#aione_modules_settings">
+                                    <span class="nav-item-text">Settings</span>
+                                </a>
+                            </li>
+                            <li class="aione-tab ">
+                                <a href="#aione_modules_custom_css">
+                                    <span class="nav-item-text">Custom CSS</span>
+                                </a>
+                            </li>
+                            <li class="aione-tab ">
+                                <a href="#aione_modules_custom_js">
+                                    <span class="nav-item-text">Custom JS</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="aione-tabs-content-wrapper">
+                        <div id="aione_modules_settings" class="aione-tab-content">
+                            <div class="sub-div">
+                                <div class="row">
+                                    <div class="col l6">
+                                        Routes For Permission
+                                    </div>
+                                    <div class="col l6 right-align">
+                                        <a href="" class="btn green add-route-permission">add</a>
+                                    </div>
+                                </div>
+                                <?php echo Form::open(['route' => 'edit.subModule','method' => 'POST']); ?>
+
+                                <?php $__currentLoopData = $moduleData->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $submodule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if($submodule->id == @request()->route()->parameters()['subModule']): ?>
+                                        <div class="repeat_route_permission">
+                                            <?php $__currentLoopData = $submodule->moduleRoute; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $routeKey => $route): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div class="row repeat-sub-row">
+                                                    <div class="col s12 m2 l12 aione-field-wrapper" style="border: 1px solid #e8e8e8;padding: 14px; margin-top: 1%;">
+                                                        <div class="row valign-wrapper">
+                                                            <div class="col l5 pr-7">
+                                                                <label>Route name</label>
+                                                                <input type="hidden" name="subModule_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>" placeholder="Enter route name" />
+                                                                <input type="text" name="route_name[]" value="<?php echo e($route->route_name); ?>" placeholder="Enter route name" />
+                                                            </div>
+                                                            <div class="col l6 pl-7 pr-7">
+                                                                <label>Route</label>
+                                                                <?php echo Form::select('routes[]',App\Model\Admin\GlobalModule::getRouteListArray(),$route->route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']); ?>
+
+                                                            </div>
+                                                            <div class="col l1 pl-7">
+                                                                <a href="<?php echo e(route('delete.subModule.permission',['id' => $submodule->id , 'route_name' => $route->route_name])); ?>" class="delete-reoute-permission"><i class="fa fa-close"></i></a>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                   
+                                                    <hr class="style2">
+                                                </div>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </div>
+                                    <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <input type="submit" value="save Permission">
+                                <?php echo Form::close(); ?>
+
+                            </div>
+                            <?php echo Form::open(['route' => 'save.style.module' , 'method' => 'post']); ?>
+
+                                <div class="row">
+                                    <div class="col l6">
+                                        <h6><strong>Edit sub Module</strong></h6>
+                                        <div class="col s12 m2 l12 aione-field-wrapper">
+                                            <label>Name</label>
+                                            <input type="text" name="name" value="<?php echo e(@$subModuleData->name); ?>" class="no-margin-bottom aione-field" >
+                                        </div>
+                                        <div class="col s12 m2 l12 aione-field-wrapper">
+                                            <label>Route</label>
+                                            <?php echo Form::select('sub_module_route',App\Model\Admin\GlobalModule::getRouteListArray(),@$subModuleData->sub_module_route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']); ?>
+
+                                        </div>
+                                    </div>
+                                    <div class="col l6">
+                                      <?php echo Form::hidden('color', @$subModuleData->color ,['class' => 'color_picker']); ?>
+
+
+                                        <?php echo Form::hidden('icon', @$subModuleData->icon,['class' => 'font-awesome-text']); ?>                     
+
+                                        <input type="hidden" name="sub_modules_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>">                                  
+                                        <div class="col l6">
+                                            <h6>Pick a color for icon background</h6>
+
+                                            <input type="text" id="custom" >
+                                            
+                                        </div>
+                                        
+                                        <div class="col l6">
+                                            <h6>Pick an icon for menu</h6>
+                                            <input type="text" class="input1 input font-awesome"  placeholder="Pick an icon" />  
+                                        </div>
+                                    </div>
+                                    <div class="col l12">
+                                        
+                                        
+                                    </div>
+                                    <div class="col l12">
+                                        <button class="btn blue">Save submodule</button>
+                                    </div>
+                                </div>
+                            <?php echo Form::close(); ?>
+
+                            <?php endif; ?>
+                            <?php if(@$subModuleData == null && @$moduleData == null): ?>
+                            <?php echo Form::open(['route' => 'module.save' , 'method' => 'post']); ?>
+
+                            <div class="add-module">
+
+                                <button class="btn blue" type="submit">Add Module</button>
+                                <span>
+                                    <input type="text" name="name">    
+                                </span>
+                                <div class="clear"></div>
+                                
+                            </div>
+                            <?php echo Form::close(); ?>
+
+                            <ul class="collection">
+                            <?php $__currentLoopData = $listModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li class="collection-item">
+                                    <a href="<?php echo e(route('list.module',['id'=>$val->id])); ?>"><?php echo e($val->name); ?></a> 
+                                    <a href="<?php echo e(route('module.delete',['id'=>$val->id])); ?>" class="secondary-content delete-module">
+                                        <i class="arrow-delete material-icons dp48">delete</i>
+                                    </a>
+                                    <script type="text/javascript">
+                                        $(document).on('click','.delete-module',function(e){
+                                            e.preventDefault();
+                                            var href = $(this).attr("href");
+                                            swal({   
+                                                title: "Are you sure?",   
+                                                text: "You will not be able to recover this imaginary file!",   
+                                                type: "warning",   
+                                                showCancelButton: true,   
+                                                confirmButtonColor: "#DD6B55",   
+                                                confirmButtonText: "Yes, delete it!",   
+                                                closeOnConfirm: false 
+                                            }, 
+                                            function(){
+                                            window.location = href;
+                                               swal("Deleted!", "Your Module has been deleted.", "success"); 
+                                           });
+                                        })
+                                    </script>
+                                    <a href="<?php echo e(route('module.sort.down',['id'=>$val->id])); ?>" class="secondary-content">
+                                        <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                                    </a>
+                                    <a href="<?php echo e(route('module.sort.up',['id'=>$val->id])); ?>" class="secondary-content">     <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                                    </a>
+                                </li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </ul>
+                        </div>
+                        <div id="aione_modules_custom_css" class="aione-tab-content">
+                            <div class="col l6">
+                                <label>
+                                    Write css code here
+                                </label>
+                                <div id="editor-css" class="editor" >
+                                </div>
+                                <?php echo Form::hidden('css', @$subModuleData->css,['class' => 'editor-css']); ?>
+
+
+                            </div>
+                        </div>
+                        <div id="aione_modules_custom_js" class="aione-tab-content">
+                            <div class="col l6">
+                                <label>
+                                Write Javascript code here
+                                </label>
+                                <div id="editor-js" class="editor">
+                                </div>
+                                <?php echo Form::hidden('js', @$subModuleData->js,['class' => 'editor-js']); ?>
+
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
-              
-            </div>
-          </div>          
+
+               
+            <?php endif; ?>
         </div>
-        <?php 
-          $index++;
-         ?>  
-      </div>
-    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-  </div>
-</div>
-<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-<script type="text/javascript">
- $(document).ready(function(){
-    $('.modal').modal();
-  });
-
-  $(document).on('change', '.switch > label > input',function(e){
-      e.preventDefault();
-      var postedData = {};
-      postedData['id']        = $(this).parents('.shadow').find('.module_id').val();
-      postedData['status']      = $(this).prop('checked');
-      postedData['_token']      = $('.shadow').find('.module_token').val();
-
-      $.ajax({
-        url:route()+'/module/status/update',
-        type:'POST',
-        data:postedData,
-        success: function(res){
-          console.log('data sent successfull');
+        <div class="clear"></div>
+    </div>
+    <style type="text/css">
+           .module-wrapper > .list-container{
+            float: left;
+            width: 25%;
+            border: 1px solid #e8e8e8;
+            height: 100%;
+            padding: 10px;
         }
-      });
-      $('.editable h5 ,.editable p').removeClass('edit-fields');
+        .module-wrapper > .Detail-container{
+            float: right;
+            width: 74%;
+            border: 1px solid #e8e8e8;
+            padding: 10px;
+           
+        }
+        .list-modules > li > div,.list-sub-modules > li{
+            border: 1px solid #e8e8e8;
+            padding:10px 5px;
+            margin-bottom: 5px;
+            box-shadow: 1px 1px 1px 1px #F2F1F1;
+            background-color: white;
+        }
+        .list-modules > li > div > .del,.list-sub-modules > li > .del{
+            float: right;
+            color: #757575;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .list-modules > li > div > .arrow{
+            float: left;
+            color: #757575;
+            font-size: 18px;
+            transform: rotate(270deg);
+            cursor: pointer;
+        }
+        .list-sub-modules > li{
+            margin-left: 10px;
+             transition: opacity 1s ease-out;
+        }
+        .list-active .list-sub-modules{
+            display: block;
+            
+        }
+        .list-sub-modules{
+            display: none;
+        }
+       .module-wrapper .editor{
+            height: 200px;margin: 5px 10px
+        }
+       
+       
+        .module-wrapper .btn.blue{
+            float: right;
+           
+            margin: 10px;
+        }
+        .aione-nav-item .material-icons{
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            border: 3px solid white;
+            line-height: 14px;
+            height: 20px;
+            background-color: red;
+            font-size: 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+        }
+        .aione-nav-item:hover .material-icons{
+            display: block
+        }
+        .Detail-container .secondary-content{
+            margin-left: 14px;
+        }
+        .add-module > button {
+            float: right;
+        }
+        .add-module > span{
+            float: right;
+            width: 200px
+        }
+        .collection .collection-item .material-icons{
+            display: none
+        }
+         .collection .collection-item:hover .material-icons{
+            display: block
+        }
+        .sp-replacer{
+           border:none;
+           background-color:transparent;
+           padding:0;
+           margin:0;
+           display: block;
+        }
+        .sp-preview {
+           width: 45px;
+           height: 45px;
+          
+           overflow:hidden;
+           border: none;
+           margin-right: 0;
+        }
+        .sp-dd{
+           display:none;
+        }
+    </style>
+    <script type="text/javascript">
+     $(document).ready(function () {
+
+
+
+        // $('.collection').on('click','.arrow-upward',function(e){
+        //     var module_id = [];
+        //       var sort_id = [];
+        //     e.preventDefault();
+        //     var current = $(this).parents('.collection-item');
+        //     current.prev().before(current);
+            
+        //     $('.module_id').each(function($v){
+        //         module_id.push($(this).val());
+        //     });
+        //     $('.ui-sortable-handle').each(function($v){
+        //         sort_id.push($(this).attr('id'));
+        //     });
+
+        //     $.ajax({
+        //         url: route()+'/sort/module',
+        //         type: 'POST',
+        //         data: {module_id : module_id , sort_id : sort_id  , _token : $('.shift_token').val()},
+        //         success:function(){
+        //           console.log()
+        //         }
+        //     });
+        // });
+        // $('.collection').on('click','.arrow-downward',function(e){
+        //     var module_id = [];
+        //       var sort_id = [];
+        //     e.preventDefault();
+        //     var current = $(this).parents('.collection-item');
+        //     current.next().after(current);
+
+        //     $('.module_id').each(function($v){
+        //         module_id.push($(this).val());
+        //     });
+        //     $('.ui-sortable-handle').each(function($v){
+        //         sort_id.push($(this).attr('id'));
+        //     });
+
+        //     $.ajax({
+        //         url: route()+'/sort/module',
+        //         type: 'POST',
+        //         data: {module_id : module_id , sort_id : sort_id  , _token : $('.shift_token').val()},
+        //         success:function(){
+        //           console.log()
+        //         }
+        //     });
+        // });
+        
+        $('.sortable').sortable({
+            axis: 'y',
+            items: "li:not(.unsortable)",
+            update: function (event, ui) {
+              var module_id = [];
+              var sort_id = [];
+              var data = $(this).sortable('serialize');
+
+              $('.module_id').each(function($v){
+                module_id.push($(this).val());
+              });
+              $('.ui-sortable-handle').each(function($v){
+                sort_id.push($(this).attr('id'));
+              });
+
+              $.ajax({
+                url: route()+'/sort/module',
+                type: 'POST',
+                data: {module_id : module_id , sort_id : sort_id  , _token : $('.shift_token').val()},
+                success:function(){
+                  console.log()
+                }
+            });
+          }
+        });
+
     });
-  $( function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
-  });
- $(document).ready(function () {
-    $('#sortable').sortable({
-        axis: 'y',
-        update: function (event, ui) {
-          var module_id = [];
-          var sort_id = [];
-          var data = $(this).sortable('serialize');
 
-          $('.module_id').each(function($v){
-            module_id.push($(this).val());
-          });
-          $('.ui-sortable-handle').each(function($v){
-            sort_id.push($(this).attr('id'));
-          });
+        // $("#custom").spectrum({
+        //     color: '#000',
+        //     showAlpha: true,
+        // });
+        $("#custom").spectrum({
+            color: "#168dc5",
+            flat: false,
+            showInput: true,
+            showInitial: true,
+            allowEmpty: true,
+            showAlpha: true,
+            disabled: false,
+            localStorageKey: "save-color",
+            showPalette: true,
+            showPaletteOnly: false,
+            togglePaletteOnly: true,
+            showSelectionPalette: true,
+            clickoutFiresChange: true,
+            cancelText: "Cancel",
+            chooseText: "Select",
+            togglePaletteMoreText: "More",
+            togglePaletteLessText: "Less",
+            containerClassName: "Class1",
+            replacerClassName: "Class2",
+            preferredFormat: "Class3",
+            maxSelectionSize: 5,
+            palette: [
+                ["#168dc5","#cc0000","#cc0000","#cc0000","#168dc5","#cc0000","#168dc5","#cc0000"],
+                ["#168dc5","#cc0000","#cc0000","#cc0000","#168dc5","#cc0000","#168dc5","#cc0000"],
+                ["#168dc5","#cc0000","#cc0000","#cc0000","#168dc5","#cc0000","#168dc5","#cc0000"],
+                ["#168dc5","#cc0000","#cc0000","#cc0000","#168dc5","#cc0000","#168dc5","#cc0000"],
+                ["#168dc5","#cc0000","#cc0000","#cc0000","#168dc5","#cc0000","#168dc5","#cc0000"] 
+                ],
+            selectionPalette: ['#168dc5']
+        });
+        $(document).ready(function(){
+            $(document).on('click','.list-modules .arrow',function(){ 
+                if($(this).parents('li').hasClass('list-active')){
+                    $(this).parents('li').removeClass('list-active');
+                }else{
+                    $(this).parents('li').addClass('list-active');
+                    $(this).parents('li').siblings().removeClass('list-active');    
+                }
+                
+            });
+            $('.input1').iconpicker(".input1");
 
-          $.ajax({
-            url: route()+'/sort/module',
-            type: 'POST',
-            data: {module_id : module_id , sort_id : sort_id  , _token : $('.module_token').val()},
-            success:function(){
-              console.log()
+            $('#custom').change(function(){
+                $('.color_picker').val($("#custom").spectrum('get').toRgbString());             
+            });
+            $('.font-awesome').change(function(){
+                $('.font-awesome-text').val($(this).val());
+            });
+            if($('input[name=icon]').val() != ""){
+                $('.geticonval > i').each(function(){
+                    if($(this).attr('class') == 'fa '+$('input[name=icon]').val()){
+                        $(this).parent().addClass('geticonval selectedicon');
+                        $('.font-awesome').val($('input[name=icon]').val());
+                    }else{
+                        console.log("not in class");
+                    }
+                });
+            }
+            if($('input[name=color]').val() != ""){
+                $('.sp-preview-inner').css({'background-color': $('input[name=color]').val()});
             }
         });
-      }
-    });
-});
-</script>
+        var editorJs = ace.edit("editor-js");
+        editorJs.setTheme("ace/theme/monokai");
+        editorJs.getSession().setMode("ace/mode/javascript");
+        var editorCss = ace.edit("editor-css");
+        editorCss.setTheme("ace/theme/monokai");
+        editorCss.getSession().setMode("ace/mode/css");
+        // $("#custom").spectrum({
+        //     color: '#000',
+        //     showAlpha: true,
+        // });
 
+        editorJs.getSession().on("change", function () {
+            var code = editorJs.getValue();
+            $('input[name=js]').val(code);
+        });
+        editorCss.getSession().on("change", function () {
+            var code = editorCss.getValue();
+            $('input[name=css]').val(code);
+        });
 
+        if($('input[name=js]').val() != ""){
+            editorJs.setValue($('.editor-js').val());
+        } 
+        if($('input[name=css]').val() != ""){
+            editorCss.setValue($('.editor-css').val());
+        } 
+        $( function() {
+            $( "#sortable" ).sortable();
+            $( "#sortable" ).disableSelection();
+        });
+         $('body').on('click','.add-route-permission', function(e){
+            var result = '<div class="row repeat-sub-row"> <div class="col s12 m2 l12 aione-field-wrapper" style="border: 1px solid #e8e8e8;padding: 14px; margin-top: 1%;"> <div class="row valign-wrapper"> <div class="col l5 pr-7"> <label>Route name</label><input type="hidden" name="subModule_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>" placeholder="Enter route name" /> <input type="text" name="route_name[]" value="" placeholder="Enter route name" /> </div> <div class="col l6 pl-7 pr-7"> <label>Route</label> <?php echo Form::select('routes[]',App\Model\Admin\GlobalModule::getRouteListArray(),null, ['class'=>'form-control sel browser-default','placeholder'=>'url ']); ?> </div> <div class="col l1 pl-7"> <a href="" class=" delete-reoute-permission"><i class="fa fa-close"></i></a> </div> </div> </div> <hr class="style2"> </div>';
+            result
+            var elem = $(this);
+            e.preventDefault();
+            // $.ajax({
+            //     url: route()+'single/route/permission',
+            //     type: 'GET',
+            //     data: {routeCount: elem.parents('.sub-div').find('input[name=submoduleNumber]').val()},
+            //     success: function(result){
+                    elem.parents('.sub-div').find('.repeat_route_permission').append(result);
+                    $('select').material_select();
+            //     } 
+            // });
+        });
+        // $('body').on('click','.delete-reoute-permission', function(e){
+        //     e.preventDefault();
+        //     if($('.repeat-sub-row').length > 1){
+        //         $(this).parents('.repeat-sub-row').remove();
+        //     }
+        // });
+
+    </script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('admin.layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

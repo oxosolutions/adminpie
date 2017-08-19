@@ -10,11 +10,20 @@ use App\Model\Admin\GlobalSubModule;
 class ModuleController extends Controller
 {
     
-    public function listModule()
+    public function listModule($id = null , $subModule = null)
     {
-    	$model  = Module::orderBy('orderBy','asc')->with('subModule')->get();
-        // dd($model);
-    	return view('admin.module.index',['listModule'=>$model]);
+       	$model  = Module::orderBy('orderBy','asc')->with('subModule')->get();
+        $moduleData = [];
+        $subModuleData = [];
+        if(@$id != null){
+            $moduleData = Module::with(['subModule'=>function($query){
+                $query->with('moduleRoute');
+                }])->where(['id' => $id])->first();
+        }
+        if(@$subModule != null){
+            $subModuleData = GlobalSubModule::where('id',$subModule)->first();
+        }
+    	return view('admin.module.index',['listModule'=>$model,'moduleData'=>$moduleData,'subModuleData' => $subModuleData]);
     }
     public function create()
     {
@@ -36,8 +45,9 @@ class ModuleController extends Controller
             $add_route->save();
         }   
     }
-    public function save(Request $request)
+    public function save(Request $request , $id=null)
     {
+        
         // dd($request->all());
         $mainModule = new Module();
         $mainModule->name = $request->name;
@@ -61,19 +71,83 @@ class ModuleController extends Controller
             	}
             }
         }
+
     	return redirect()->route('list.module');
-    	
+    }
+    public function saveModule(Request $request)
+    {
+        $greatest_orderId = Module::orderBy('orderBy','DESC')->first();
+        $model = new Module;
+        $model->name = $request->name;
+        $model->orderBy = $greatest_orderId->orderBy+1;
+        $model->save();
+            return back();
+    }
+    public function SubModuleSave(Request $request)
+    {
+        $get_last_id = GlobalSubModule::where('module_id' ,$request->module_id)->orderBy('orderBy','DESC')->first();
+        if($get_last_id !=null){
+            $order_id = $get_last_id->orderBy+1;
+        }else{
+            $order_id = 1;
+        }
+        $model = new GlobalSubModule;
+        $model->name = $request->name;
+        $model->status = 1;
+        $model->orderBy = $order_id;
+        $model->module_id = $request->module_id;
+        $model->save();
+        return back();
+    }
+    public function deleteModule($id)
+    {
+        $deleteModule = Module::where('id',$id)->delete();
+        $getSubModule = GlobalSubModule::where('module_id',$id)->get();
+        if($getSubModule->count() > 0){
+            GlobalSubModule::where('module_id',$id)->delete();
+        }
+        return back();
+    }
+    public function deletesubModule($id)
+    {
+        $delModule = GlobalSubModule::where('id',$id)->delete();
+        if($delModule){
+            return back();
+        }
+    }
+    public function sortSubModuleDown($id , $subModule)
+    {
+        $getData = GlobalSubModule::where(['module_id' => $id , 'id' => $subModule])->first();
+        $newSort = $getData->orderBy+1;
+
+        $getNextRow = GlobalSubModule::where('orderBy', $newSort)->first();
+        if($getNextRow != null){
+            GlobalSubModule::where('orderBy', $newSort)->update(['orderBy' => $getNextRow->orderBy-1]);
+            GlobalSubModule::where(['module_id' => $id , 'id' => $subModule])->update(['orderBy' => $getData->orderBy+1]);
+        }
+        return back();
+    }
+    public function sortSubModuleUp($id , $subModule)
+    {
+        $getData = GlobalSubModule::where(['module_id' => $id , 'id' => $subModule])->first();
+        $newSort = $getData->orderBy-1;
+        $getNextRow = GlobalSubModule::where('orderBy', $newSort)->first();
+        if($getNextRow != null){
+            GlobalSubModule::where('orderBy', $newSort)->update(['orderBy' => $getNextRow->orderBy+1]);
+            GlobalSubModule::where(['module_id' => $id , 'id' => $subModule])->update(['orderBy' => $getData->orderBy-1]);
+        }
+        return back();
+
     }
 //Module form add route row
     public function add_route_row()
     {
-
         return view('admin.module.add_route_row');
     }
 
 
     /**
-     * [edit description]
+     * [edit description] 
      * @param  Request $request [form data]
      * @param  [int]  $id      [description]
      * @return [type]           [description]
@@ -148,6 +222,24 @@ class ModuleController extends Controller
         }
         return view('admin.module.edit',['module'=>$module]);
     }
+
+    public function editsubModule(Request $request)
+    {
+        $newArray = array_combine($request->routes, $request->route_name);
+        foreach($newArray as $key => $routesData){
+            $save = Route::firstOrNew(['sub_module_id'=>$request->subModule_id,'route'=>$key]);
+            $save->sub_module_id = $request->subModule_id;
+            $save->route = $key;
+            $save->route_name = $routesData;
+            $save->save();
+        }
+        return back();
+    }
+    public function deletesubModulePermission($id,$route_name)
+    {
+        $model = Route::where(['sub_module_id' => $id , 'route_name' => $route_name])->delete();
+        return back();
+    }
     public function delete_route($id)
     {
        $model = Route::find($id);
@@ -219,23 +311,54 @@ class ModuleController extends Controller
     public function sortModule(Request $request)
     {
         //get value of module and arrange it by sort 
-       $module_id = $request->module_id;
+        $module_id = $request->module_id;
         $new_array = [];
         $index = 1;
-       foreach($module_id as $key => $value){
+        foreach($module_id as $key => $value){
             $new_array[$value] = $index;
             $index++;
-       }
+        }
         foreach($new_array as $module_id => $order_id){
             Module::where('id',$module_id)->update(['orderBy'=>$order_id]);
         }
 
     }
+    public function sortModuleDown($id)
+    {
+        $model= Module::where('id',$id)->first();
+        $increment = $model->orderBy+'1';
+        $getNextRow = Module::where('orderBy',$increment)->first();
+        
+        if( $getNextRow != null){
+            $decress = $getNextRow->orderBy-'1';
+            $new_sort = Module::where('orderBy',$increment)->update(['orderBy' => $decress]);
+            $new_sort = Module::where('id',$id)->update(['orderBy' => $increment]);
+        }
+        return back();
+    }
+    public function sortModuleUp($id)
+    {
+        $model= Module::where('id',$id)->first();
+        $decress = $model->orderBy-'1';
+        $getNextRow = Module::where('orderBy',$decress)->first();
+        
+        if( $getNextRow != null){
+            $increment= $getNextRow->orderBy+'1';
+            $new_sort = Module::where('orderBy',$decress)->update(['orderBy' => $increment]);
+            $new_sort = Module::where('id',$id)->update(['orderBy' => $decress]);
+        }
+        return back();
+    }
     public function style($id)
     {
         $model = GlobalSubModule::where('id',$id)->first();
-        return view('admin.module.style',compact('model'));
+        return view('admin.module.index',compact('subModulemodel'));
     }
+    // public function style($id)
+    // {
+    //     $model = GlobalSubModule::where('id',$id)->first();
+    //     return view('admin.module.style',compact('model'));
+    // }
     public function getSubmodules($id)
     {
         $model = GlobalSubModule::where('module_id',$id)->get();
@@ -243,6 +366,7 @@ class ModuleController extends Controller
     }
     public function saveStyle(Request $request)
     {   
+        // dd($request->all());
         $model = GlobalSubModule::where('id',$request->sub_modules_id)->update($request->except('_token','sub_modules_id'));
         return back();
     }

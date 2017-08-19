@@ -6,6 +6,8 @@ use App\Model\EmployeeLeave as Leave;
 use App\Model\Organization\Attendance as EMP_ATT;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Model\Organization\Designation;
+use App\Model\Organization\Department;
 
 use App\Model\Organization\Employee as ORG_EMP;
 
@@ -13,6 +15,28 @@ use App\Model\Organization\Employee as ORG_EMP;
 
 
 class EmployeeHelper{
+
+
+	public static function get_designation($designation_id=null)
+	{
+		if(!empty($designation_id)){
+			$des = Designation::select('name')->where(['id'=>$designation_id,'status'=>1]);
+			if($des->exists()){
+			return $des->first()->name;	
+			}
+			 return null;
+		}
+	}
+	public static function get_department($department_id=null)
+	{
+		if(!empty($department_id)){
+			$dep = Department::select('name')->where(['id'=>$department_id,'status'=>1]);
+			if($dep->exists()){
+				return $dep->first()->name;	
+			}
+			return null;
+		}
+	}
 
 	public static function employ_info($employee_id)
 	{

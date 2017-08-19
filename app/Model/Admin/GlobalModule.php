@@ -33,7 +33,7 @@ class GlobalModule extends Model
 
 	public function subModule()
 	{
-		return $this->hasMany('App\Model\Admin\GlobalSubModule','module_id','id');
+		return $this->hasMany('App\Model\Admin\GlobalSubModule','module_id','id')->orderBy('orderBy','ASC');
 	}
 
 

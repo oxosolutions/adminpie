@@ -1,22 +1,17 @@
-
+{{-- 
 @if(isset($options['type']))
-	@if($options['type'] == 'inset')
-		<div class="col s12 m2 l12 aione-field-wrapper" style="margin-bottom: 10px">
+	@if($options['type'] == 'inset') --}}
 
-			<div class="row">
-				<div class="col l3">Select file</div>
-				<div class="col l9">
-					{!!Form::file(str_replace(' ','_',strtolower($collection->field_title)),null,['class'=>'no-margin-bottom aione-field','placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder')])!!}
-				</div>
-			</div>
-			 
-		</div>
-		<div class="error-red">	
-			@if(@$errors->has())
-				{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
-			@endif
-		</div>
-	@else
+		@include('common.form.fields.includes.field-wrapper-start')
+			@include('common.form.fields.includes.field-label-start')
+				@include('common.form.fields.includes.label')
+			@include('common.form.fields.includes.field-label-end')
+			@include('common.form.fields.includes.field-start')
+				{!!Form::file(str_replace(' ','_',strtolower($collection->field_title)),null,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug])!!}
+				@include('common.form.fields.includes.error')
+			@include('common.form.fields.includes.field-end')
+		@include('common.form.fields.includes.field-wrapper-end')
+	{{-- @else
 		<div class="row" style="padding:10px 0px;margin-bottom: 10px">
 			<div class="col l3" style="line-height: 30px">
 				{{ucfirst($collection->field_title)}}
@@ -31,8 +26,8 @@
 			</div>
 
 		</div>
-	@endif
-@else
+	@endif --}}
+{{-- @else
 	<div class="row" style="padding:10px 0px;margin-bottom: 10px">
 		<div class="col l3" style="line-height: 30px">
 			{{ucfirst($collection->field_title)}}
@@ -52,7 +47,7 @@
 		</div>
 
 	</div>
-@endif
+@endif --}}
 <script type="text/javascript">
 $(document).ready(function(){
 	$(document).on('click','.submit-logo',function(e){

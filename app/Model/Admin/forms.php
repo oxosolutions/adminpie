@@ -7,7 +7,7 @@ use Auth;
 use Session;
 class forms extends Model
 {
-    protected $fillable = ['form_title','form_slug','form_description'];
+    protected $fillable = ['form_title','form_slug','form_description','type'];
     protected $table	= 'global_forms';
     
 
@@ -16,7 +16,7 @@ class forms extends Model
     }
 
     public function formsMeta(){
-    	return $this->hasMany('App\Model\Admin\FormsMeta','id','form_id');
+    	return $this->hasMany('App\Model\Admin\FormsMeta','form_id','id');
     }
 }
 

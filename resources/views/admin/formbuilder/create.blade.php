@@ -12,11 +12,12 @@
 @extends($layout)
 @section('content')
 @php
+$title = (@$type == 'form')?'Add New Form':'Add New Survey';
 $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Add New Form',
+    'page_title' => $title,
     'add_new' => '+ Add Designation'
 ); 
 @endphp
@@ -54,6 +55,17 @@ $page_title_data = array(
                 {!! Form::textarea('form_description',null,['rows' => '5' ,'class' => 'materialize-textarea' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
            </div>
         </div>
+       {{--  <div class="row pv-10">
+           <div class="col l3" style="line-height: 32px">
+               Form Type
+           </div>
+           <div class="col l9">
+              
+                {!! Form::select('type',['form'=>'Form','survey'=>'Survey'],null,["class"=>"no-margin-bottom aione-field browser-default"])!!}
+           </div>
+        </div> --}}
+
+        <input type="hidden" name="type" value="{{@$type}}">
          @if(@$errors->has())
           @foreach($errors->all() as $kay => $err)
             <div style="color: red">{{$err}}</div>

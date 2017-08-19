@@ -8,7 +8,7 @@ use Session;
 class UsersRole extends Model
 {	
    public static $breadCrumbColumn = 'id';
-   protected $fillable = [ 'name', 'description', 'status'];
+   protected $fillable = [ 'name', 'description','order','slug', 'status'];
 
    public function __construct()
    {	

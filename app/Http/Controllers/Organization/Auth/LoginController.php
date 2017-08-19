@@ -165,15 +165,15 @@ class LoginController extends Controller
     public function updatePass(Request $request)
     {
         $model = User::where('remember_token',Session::get('reset_token'))->first();
-        $check = Hash::check($request->password , Hash::make($request->confirmPassword));
+        $check = Hash::check($request->password , Hash::make($request->confirmpassword));
 
         $validate = [
                         'password'      => 'required|min:6',
-                        'confirmPassword'  => 'required|same:password|min:6'
+                        'confirmpassword'  => 'required|same:password|min:6'
                     ];
         $this->validate($request , $validate);
        
-    $model = User::where('remember_token',Session::get('reset_token'))->update(['password' => Hash::make($request->confirmPassword)]);
+    $model = User::where('remember_token',Session::get('reset_token'))->update(['password' => Hash::make($request->confirmpassword)]);
         if($model){
             Session::flash('password-changed','Password change Successfully.');
             return redirect()->route('org.login');

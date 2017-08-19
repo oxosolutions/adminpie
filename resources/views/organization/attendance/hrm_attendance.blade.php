@@ -97,6 +97,8 @@
 	}
 </style>
 <?php
+
+
 			if(isset($filter_dates)){
 				$dateFilter = $filter_dates['year'].'-'.$filter_dates['month'].'-'.$filter_dates['date'];
 				$current_date_time = Carbon\Carbon::parse($dateFilter);
@@ -146,8 +148,6 @@
 
 						</select>
 					</div>
-
-
 					<div class="col s3 pl-7 pr-7">
 						<select name="month" class="browser-default">
 							@foreach($MO_data as $key => $val)
@@ -159,8 +159,7 @@
 							@endforeach
 						</select>
 					</div>
-
-					<div class="col s3 pl-7 pr-7 right-align">
+ 					<div class="col s3 pl-7 pr-7 right-align">
 						<select  name="year" class="browser-default">  
 							@foreach($year_data as $key =>$val)
 							@if($year==$val)
@@ -170,7 +169,6 @@
 									<option value="{{$val}}">{{$val}} </option>
 								@endif
 							@endforeach
-
 						</select>
 					</div>
 					<div class="col s3 pl-7">
@@ -208,126 +206,134 @@
 					{!! Form::hidden('dates[day]',$day,['class' => 'form-control']) !!}
 					{!! Form::hidden('dates[month_week_no]',$month_week_no,['class' => 'form-control']) !!}
 					
-		<table class="table table-bordered table-striped">
-			<thead>
-				<tr class="table-tr">
-				<th>Sr</th>
-					<th>Employee</th>
-					<th>Name</th>
-					<th>Designation</th>
-					<th>Department</th>
-					<th>Attendance Status</th>
-					<th>Punch In Out</th>		
-					<th>Check In Out</th>
-					{{-- <th>In Time</th>
-					<th>Leaving Time</th>
-					<th>Lunch Start Time </th>
-					<th>Lunch End Time </th>
-					<th>Total Time</th>
-					<th>Over Time</th>
-					<th>Due Time</th> --}}
-				</tr>
-			</thead>
-			<tbody>
-			
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr class="table-tr">
+			<th>Sr</th>
+			<th>Employee</th>
+			<th>Name</th>
+			<th>Designation</th>
+			<th>Department</th>
+			<th>Attendance Status</th>
+			<th>Punch In Out</th>		
+			<th>Check In Out</th>
+ 		</tr>
+	</thead>
+	<tbody>
+	<?php
+	 	$lock_status	=1; 
+	 	$designation 	= $department = null;
+		$attValue 		=  $attendance_data->toArray();
+	?>
+		@foreach($employee_data as $keys => $vals)
+		@php 
+ 		$user_meta  = $vals->metas_for_attendance->mapwithKeys(function($item){
+	 					return [$item['key'] => $item['value'] ];
+						 }); 
+ 		if(!empty($user_meta['designation'])){
+ 			$designation =	EmployeeHelper::get_designation($user_meta['designation']);
+ 		}
+ 		if(!empty($user_meta['department'])){
+ 			$department =	EmployeeHelper::get_department($user_meta['department']);
+ 		}
+		 if(empty($user_meta['employee_id']) || empty($user_meta['shift']) || empty($user_meta['joining_date'])){
+			continue;
+		}
+		if(date('Y-m-d', strtotime($user_meta['joining_date'])) > date('Y-m-d', strtotime($dateformat))){
+				continue;
+		}
+ 			$in_out_data = $punch_in_out = $attendance_status = null;
+			$emp_id = $user_meta['employee_id'];
+			if(!empty($attValue[$emp_id]['attendance_status'])){
+				$attendance_status = $attValue[$emp_id]['attendance_status'];
+			}
+			if(!empty($attValue[$emp_id]['punch_in_out'])){
+				$punch_in_out = json_decode($attValue[$emp_id]['punch_in_out'],true);
+			}
+			if(!empty($attValue[$emp_id]['in_out_data'])){
+				$in_out_data = json_decode($attValue[$emp_id]['in_out_data'],true);
+			}
+			if(!empty($attValue[$emp_id]['lock_status'])){
+				$lock_status = $attValue[$emp_id]['lock_status'];
+			}
+		@endphp
 
-				<?php $lock_status=1; 
-					$attValue =  $attendance_data->toArray();
-				?>
-				@foreach($employee_data as $keys => $vals)
-				@php 
-					$in_out_data = $punch_in_out = $attendance_status = null; 
-					$emp_id = $vals['employee_id'];
-					if(!empty($attValue[$emp_id]['attendance_status'])){
-						$attendance_status = $attValue[$emp_id]['attendance_status'];
-					}
-					if(!empty($attValue[$emp_id]['punch_in_out'])){
-						$punch_in_out = json_decode($attValue[$emp_id]['punch_in_out'],true);
-					}
-					if(!empty($attValue[$emp_id]['in_out_data'])){
-						$in_out_data = json_decode($attValue[$emp_id]['in_out_data'],true);
-					}
-					if(!empty($attValue[$emp_id]['lock_status'])){
-						$lock_status = $attValue[$emp_id]['lock_status'];
-					}
-				@endphp
+		
+			<tr class="table-tr">
+				<td>{{$loop->iteration}}</td>
+				<td>{{@$user_meta['employee_id']}}</td>
+				<td>{{@$vals['name']}}</td>
 
-				
-					<tr class="table-tr">
-						<td>{{$loop->iteration}}</td>
-						<td>{{@$vals['employee_id']}}</td>
-						<td>{{@$vals['employ_info']['name']}}</td>
-
-						<td>{{@$vals['designations']['name']}}</td>
-						<td>{{@$vals['department_rel']['name']}}</td>
-					@if($lock_status)
-						<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']) !!}</td>
-						@if($punch_in_out)
-								<td>
-								@foreach($punch_in_out as $key =>$val)
+				<td>{{@$designation}}</td>
+				<td>{{@$department}}</td>
+			@if($lock_status)
+				<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']) !!}</td>
+				@if($punch_in_out)
+						<td>
+						@foreach($punch_in_out as $key =>$val)
+						<div>
+								{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!} <a class="del_check">del </a>
+						</div>
+						@endforeach
+						</td>
+						@else
+						<td><button class="show_punch_in_out">add punch in out time1</button> <div class="add_punch_in_out">{!! Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}
+						{!! Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}  </div> </td>
+				@endif
+				@if($in_out_data)
+					
+						<td>
+						@foreach($in_out_data as $key =>$val)
+						{{$loop->iteration}}
+							@foreach($val as $ip =>$times)
 								<div>
-										{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!} <a class="del_check">del </a>
+										 {{$ip}}{!! Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
 								</div>
-								@endforeach
-								</td>
-								@else
-								<td><button class="show_punch_in_out">add punch in out time</button> <div class="add_punch_in_out">{!! Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}
-								{!! Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}  </div> </td>
-						@endif
-						@if($in_out_data)
-							
-								<td>
-								@foreach($in_out_data as $key =>$val)
-								{{$loop->iteration}}
-									@foreach($val as $ip =>$times)
-										<div>
-												 {{$ip}}{!! Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
-										</div>
-									@endforeach
-								@endforeach
-								</td>
-								@else
-								<td>--</td>
-							@endif
-					@else
-						<td>{{@$attendance_status}}</td>
-						@if($punch_in_out)
-								<td>
-								@foreach($punch_in_out as $key =>$val)
-								<div>
-										{{($val == null) ? '--' : $val}}
-								</div>
-								@endforeach
-								</td>
-								@else
-								<td>--</td>
-							@endif
-							
-						@if($in_out_data)
-							
-								<td>
-								@foreach($in_out_data as $key =>$val)
-								{{$loop->iteration}}
-									@foreach($val as $ip =>$times)
-										<div>
-												 {{$ip}}{{($times == null) ? '--' : $times}}
-										</div>
-
-									@endforeach
-								@endforeach
-								</td>
-								@else
-								<td>--</td>
-							@endif
+							@endforeach
+						@endforeach
+						</td>
+						@else
+						<td>--</td>
 					@endif
-					</tr>
-			
+			@else
+				<td>{{@$attendance_status}}</td>
+				@if($punch_in_out)
+						<td>
+						@foreach($punch_in_out as $key =>$val)
+						<div>
+								{{($val == null) ? '--' : $val}}
+						</div>
+						@endforeach
+						</td>
+						@else
+						<td>--</td>
+					@endif
+					
+				@if($in_out_data)
+					
+						<td>
+						@foreach($in_out_data as $key =>$val)
+						{{$loop->iteration}}
+							@foreach($val as $ip =>$times)
+								<div>
+										 {{$ip}}{{($times == null) ? '--' : $times}}
+								</div>
 
-				
-				@endforeach
-				
-			</tbody>
-		</table>
+							@endforeach
+						@endforeach
+						</td>
+						@else
+						<td>--</td>
+					@endif
+			@endif
+			</tr>
+	
+
+		
+		@endforeach
+		
+	</tbody>
+</table>
 		@if(@$lock_status==1)
 		<div class="col s12 m3 l12 aione-field-wrapper right-align">
 			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" >Save Attendance

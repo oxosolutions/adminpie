@@ -1,13 +1,7 @@
-@php
-	$model = "App\Model\Organization\Client";
-@endphp
-@extends('layouts.widget')
-
-@section('front')
 
 	<div class="front" >
 		<div class="card shadow mt-0 fix-height" >
-			<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#">{{$data['widgets']->title}}</a></h5></div>
+			<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#"></a></h5></div>
 			<div class="row mb-10" >
 			<input id="widget_website_rank_input" class="browser-default" value=""/><a href="#" id="widget_website_rank_input">Submit</a>
 				<div id="widget_website_rank_result">
@@ -47,4 +41,3 @@
 			
 		</div>
 	</div>
-@overwrite

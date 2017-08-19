@@ -2,7 +2,6 @@
 	$model = "App\Model\Organization\Client";
 @endphp
 @extends('layouts.widget')
-
 @section('front')
 	<div class="front" >
 		<div class="card shadow mt-0 fix-height" >
@@ -33,7 +32,6 @@
 				@if($data2 == null || $data2->isEmpty())
 					{{dump("No Data Found")}}
 				@else
-				
 				@foreach($data2 as $k => $v)
 					@php
 						$employees[] = App\Model\Organization\User::where('id',$v->user_id)->first();

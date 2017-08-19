@@ -163,6 +163,7 @@ class UsersController extends Controller
         $model = org_user::find($id);
         $model->name = $request->name;
         $model->email = $request->email;
+        $model->user_type = 'employee';
         $model->save();
         $notToDeleteIds = [];
         $currentStoredRoles = UserRoleMapping::where(['user_id'=>$id])->pluck('role_id')->toArray();
@@ -170,8 +171,13 @@ class UsersController extends Controller
         foreach($request->role_id as $key => $role){
             $model = UsersRole::find($role);
             if($model->slug == 'employee'){
-                $employeeModel = Employee::where(['user_id'=>$id])->first();
-                if($employeeModel != null){
+                $usersMeta = new UsersMeta;
+                $usersMeta->key = 'joining_date';
+                $usersMeta->value = date('Y-m-d');
+                $usersMeta->type = 'employee';
+                $usersMeta->save();
+                //$employeeModel = Employee::where(['user_id'=>$id])->first();
+                /*if($employeeModel != null){
                   $employeeModel->deleted_at = null;
                   $employeeModel->save();
                 }else{
@@ -180,7 +186,7 @@ class UsersController extends Controller
                     $employeeModel->joining_date = date('Y-m-d');
                     $employeeModel->status = 1;
                     $employeeModel->save();
-                }
+                }*/
             }
             if($model->slug == 'client'){
               $this->createClient($id, $request->name);

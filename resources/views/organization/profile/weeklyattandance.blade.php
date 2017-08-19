@@ -9,6 +9,9 @@
 	$end_date = $filter['month_week_no'] * 7;
 	$start_date = $end_date - 6;
 	$dt = Carbon\Carbon::create($filter['year'], $filter['month'], $start_date);
+	if($filter['month_week_no']==5){
+		$end_date = $dt->daysInMonth;
+	}
 	$dt->weekOfMonth;
 
 	$dt->subWeek();

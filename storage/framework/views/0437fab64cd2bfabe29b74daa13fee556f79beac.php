@@ -48,15 +48,14 @@
 					  
                       if(class_exists('App\Model\Organization\\'.$modelName)){
                           $resultModel = 'App\\Model\\Organization\\'.$modelName;
-                          $result = $resultModel::groupBy($resultModel::$breadCrumbColumn)->get();
+                          //$result = $resultModel::groupBy($resultModel::$breadCrumbColumn)->get();
 						  
                           echo '<li><a href="#">'.$modelName.'</a>';
-                            echo '<ul class="aione-subnavigation">';
+                            /*echo '<ul class="aione-subnavigation">';
                             foreach($result as $ky => $vl){
-                                // echo '<li><a href="'.$vl->id.'">'.$vl[$resultModel::$breadCrumbColumn].'</li></a>';
                                 echo '<li><a href="javascript:;">'.$vl[$resultModel::$breadCrumbColumn].'</li></a>';
                             }
-                            echo '</ul>';
+                            echo '</ul>';*/
                           echo '</li>';
                       }else{
                         $module = drawSidebar::getSubModule($segment);

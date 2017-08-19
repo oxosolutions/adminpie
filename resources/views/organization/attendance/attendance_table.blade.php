@@ -113,31 +113,24 @@
 		    transition: all 150ms ease-out;
 	}
 </style>
+{{-- @include('organization.attendance.date_manage'); --}}
 @php 
 $number = 1;
-// dump(@$attendance_data);
-		$holidays =[];
-		if(!empty($holiday_data))
-		{
-			foreach ($holiday_data as $key => $value) {
-			$holidays[$value->day] = $value->title;
-			}
-		}
+	
+		// $holidays =[];
+		// if(!empty($holiday_data))
+		// {
+		// 	foreach ($holiday_data as $key => $value) {
+		// 	$holidays[$value->day] = $value->title;
+		// 	}
+		// }
 		$postDate = 01;
 		 if(!empty(Session::get('date')))
 		 {
 		 	$fdate = $postDate = Session::get('date');
-		 	//dump('session'. $fdate);
 		 }
-		 // if(strlen($month)){
-		 // 	$month = "0".$month;
-		 // }
-		
-
 			$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 00);
-			// dump('current'.$month_wise);
 			$mo =	$dat->month; // use for week filter
-			//dump($dat->toDateTimeString());
 
 		 if(!empty($fill_attendance_days)) 
 		 {
@@ -194,22 +187,12 @@ $number = 1;
 			else{
 				$weekDate->addWeeks($fweek_no); 
 			}
-
-
-			$nxt_week = $weekDate->weekOfMonth;
+ 			$nxt_week = $weekDate->weekOfMonth;
 			$nxt_week_month =	$weekDate->month;
 			$nxt_week_year =	$weekDate->year;
-			// dump("next week $nxt_week  $nxt_week_month $nxt_week_year".  $weekDate->toDateTimeString());
-			// if($fweek_no==1)
-			// {
+			
 				$weekDate->subWeeks(2); 
-				// dump($weekDate->toDateTimeString());
-			// }
-			// else{
-			// 	$wno = $nxt_week - 2;
-			// 	dump($wno);
-			// 	$weekDate->subWeeks($wno); 
-			// }
+				
 			
 
 			$prev_week = $weekDate->weekOfMonth;
@@ -245,7 +228,7 @@ $number = 1;
 		$year_data = range(2015, 2050);
 	@endphp
 
-@if($total_days==28)
+	@if($total_days==28)
 	<style type="text/css"> 
 		.column
 		{
@@ -260,9 +243,10 @@ $number = 1;
 			width: 2.43% !important;
 		}
 	</style>
+
 @endif
 
-	    <ul class="aione-tabs">
+<ul class="aione-tabs">
 	        <li class="tab col monthly" ><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="">Monthly</a></li>
 	        <li class="tab col weekly "><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class=" ">Weekly</a></li>
 	        <li class="tab col daily"><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class=" ">Daily</a></li>
@@ -271,11 +255,7 @@ $number = 1;
 	          
 	        </div>
 	    </ul>
-	
-					
-
-
-<div class="row">
+	    <div class="row">
 	<h5 class="text-center"></h5>
 </div>
 
@@ -444,294 +424,5 @@ $number = 1;
 			@endif
 		@endfor
 	</div>
-</div> 		
-
-<div id="attendance_sheet_container" class="table-responsive">
-			@if(!empty($error))
-{{-- When Attendance data not available then this portion work --}}
-			<div class="attendance-sheet">
-					<div class="attendance-sheet">
-						<div class="attendanc-sheet content">
-							Employee
-						</div>
-						<div class="attendanc-sheet content">
-							<div class="attendanc-sheet content">Name</div>
-						</div>
-						<div>
-								@php
-								$number=1;
-								if(!empty($fweek_no)){
-									if($fweek_no==5){
-
-										$end_week_day = $total_days;
-										$number = $start_week_day = 29;
-										//dump($end_week_day);
-
-									}else{
-										$total_days = $end_week_day = $fweek_no * 7;
-										$number = $start_week_day = $end_week_day -6;
-									}
-									for($d=$start_week_day; $d<=$end_week_day; $d++){
-										$getDay = Carbon\Carbon::create($year, $month, $d, 0);
-										///echo '<div class="attendance-sheet column">'.$d.'<br>'.substr($getDay->format('l'),0,1).'</div>';
-									}
-								}
-								// dump( @$fdate);
-
-								@endphp
-
-								@if(!empty($fdate))
-									@php
-										$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
-										if($getDay->format('l')=="Sunday")
-									{
-										$td .="<div class='attendance-sheet column sunday'>S</div>";
-									}else
-									{
-										$td .="<div class='attendance-sheet column'>-</div>";
-									}
-									@endphp
-									<div class="attendance-sheet column">{{$fdate}}<br> 
-										{{substr($getDay->format('l'),0,1)}} 
-										</div>
-								@else
-									@for($d=$number; $d<=$total_days; $d++)
-									@php 
-									$getDay = Carbon\Carbon::create($year, $month, $d, 0);
-									if($getDay->format('l')=="Sunday")
-									{
-										$td .="<div class='attendance-sheet column sunday'>S</div>";
-									}else
-									{
-										$td .="<div class='attendance-sheet column'>-</div>";
-									}
-									@endphp
-										<div class="attendance-sheet column">{{$d}}<br> 
-										{{substr($getDay->format('l'),0,1)}} 
-										</div>
-									@endfor
-								@endif
-
-						</div>
-						<div style="clear:both;">
-						</div>
-					</div>
-					
-						@foreach($employee_data as $empKey => $empVal)
-						@php
-						$employ_info = EmployeeHelper::employ_info($empVal['employee_id']); 
-
-						@endphp
-						<div class="attendance-sheet">
-							<div class="attendanc-sheet content">
-								{{$empVal['employee_id']}}
-							</div>
-								<div class="attendanc-sheet content">{{$employ_info['employ_info']['name']}}  </div>
-							{!! $td  !!}
-						</div>
-						@endforeach
-					<div style="clear: both;"></div>
-			</div>
-
-		
-			
-			@else
-			<div class="attendance-sheet">
-				<div class="attendance-sheet">
-					<div class="attendance-sheet">
-						<div class="attendanc-sheet content">Employee</div>
-						<div class="attendanc-sheet content">Name</div>
-						{{-- <div class="attendance-sheet column">Department</div> --}}
-						{{-- <div class="attendance-sheet column">Attendance Count</div> --}}
-						{{-- <div class="attendance-sheet column">Attendance %</div>
-						<div class="attendance-sheet column">Total Hours</div>
-						<div class="attendance-sheet column">Over Time Hours</div> --}}
-						@if(!empty($fweek_no) || !empty($fdate))
-								@php
-								if(!empty($fweek_no)){
-									if($fweek_no==5){
-
-										$end_week_day = $total_days;
-										$number = $start_week_day = 29;
-										//dump($end_week_day);
-
-									}else{
-										$total_days = $end_week_day = $fweek_no * 7;
-										$number = $start_week_day = $end_week_day -6;
-									}
-									for($d=$start_week_day; $d<=$end_week_day; $d++){
-										$getDay = Carbon\Carbon::create($year, $month, $d, 0);
-										echo '<div class="attendance-sheet column">'.$d.'<br>'.substr($getDay->format('l'),0,1).'</div>';
-									}
-								}
-// day by day attendance
-								if(!empty($fdate)){
-									$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
-										echo '<div class="attendance-sheet column">'.$fdate.'<br>'.substr($getDay->format('l'),0,1).'</div>';	
-								}
-
-								@endphp
-							@if(isset($attendance_data[0]))
-								@foreach($attendance_data[0] as $dateKey =>$dateVal)
-									@if($dateVal['day']=='Sunday')
-										<?php $sunday_count++; ?>
-									@endif
-									<div class="attendance-sheet column">{{$dateVal['date']}}<br>{{substr($dateVal['day'], 0,1)}}</div>
-									
-								@endforeach
-							@endif
-
-						@else
-
-							@for($d=1; $d<=$total_days; $d++)
-								@php 
-								$getDay = Carbon\Carbon::create($year, $month, $d, 0);
-								if($d > $fill_attendance_days)
-								{
-									if($getDay->format('l')=="Sunday")
-									{
-										$td .="<div  class='attendance-sheet column sunday'>St</div>";
-									}else
-									{
-										$td .="<div class='attendance-sheet column'> t- </div>";
-									}
-								}
-								@endphp
-							<div class="attendance-sheet column">{{$d}}<br>
-							{{substr($getDay->format('l'),0,1)}} 
-							</div>
-							@endfor
-						@endif
-						<div style="clear: both">
-							
-						</div>
-					</div>
-					</div>
-
-			</div>
-
-			
-			<div class="attendance-sheet">
-				<div class="attendance-sheet">
-					<div class="attendanc-sheet content">
-					@if(!empty($attendance_data))
-						
-						@foreach($attendance_data as $groupkey => $groupVal)
-
-								<?php 
-								$collect 	= 	collect($groupVal);
-								$att_datas 	=	$collect->keyBy('date')->toArray();
-								//dump($att_datas);
-								
-									$day_count = $chunk - $sunday_count;
-									$employ_info = EmployeeHelper::employ_info($groupVal[0]['employee_id']); 
-									if(empty($attendance_count[$groupVal[0]['employee_id']]))
-									{
-										$attendance_count[$groupVal[0]['employee_id']] = 0;
-									}
-									if($day_count==0)
-									{
-											$day_count =1;
-									}
-									$percent = ceil(($attendance_count[$groupVal[0]['employee_id']] / $day_count * 100));
-									//$over_time_sum = $sum = 0;
-								?>
-					</div>
-				</div>	
-						@if(EmployeeHelper::employ_info($groupVal[0]['employee_id']))
-
-							<div class="attendance-sheet " > 
-									
-								<div class="attendanc-sheet content emp_id">
-									<div class="popup hidden">
-										<div class="name">
-											<span>Department</span>
-											<span>{{$employ_info['department']}}</span>
-										</div>
-										<div class="Departments">
-											<span>Count</span>
-
-											<span>{{@$attendance_count[$groupVal[0]['employee_id']]}} /{{$day_count}} </span>
-										</div>
-										
-									</div>
-									{{$groupVal[0]['employee_id']}} 
-								</div>
-								<div class="attendanc-sheet content emp_name">
-								@if(!empty($employ_info['employ_info']['name']))
-									{{$employ_info['employ_info']['name']}}
-									
-								@endif
-								</div>
-								{{-- <div class="attendance-sheet column"> {{$percent}} </div>
-								<div class="attendance-sheet column"> {{$total_hour[$groupVal[0]['employee_id']]}}</div>
-								<div class="attendance-sheet column"> {{$total_over_time[$groupVal[0]['employee_id']]}}</div>> --}}
-								
-								@if(!empty($fdate))
-									@if(!empty($att_datas[$fdate]))
-										@if(array_key_exists($att_datas[$fdate]['date'], $holidays))
-												<div class="attendance-sheet column absent-bg-color tooltipped"  data-position="bottom" data-tooltip="{{$holidays[$j]}}" style="background-color: #8A91F0;">{{-- {{$holidays[$j][0]}} --}}H</div>
-											@else
-												@if($att_datas[$fdate]['attendance_status']=='present')
-														<div class="attendance-sheet column present-bg-color">P</div>
-												@elseif($att_datas[$fdate]['attendance_status']=='absent')
-													<div class="attendance-sheet column absent-bg-color">A</div>
-												@elseif($att_datas[$fdate]['attendance_status']=='Sunday')
-													<div class="attendance-sheet column sunday">S</div>
-												@elseif($att_datas[$fdate]['attendance_status']=='leave')
-													<div class="attendance-sheet column sunday">L</div>
-												@else
-													<div class="attendance-sheet column sunday">o</div>
-												@endif
-										@endif
-									@else
-
-									<div class="attendance-sheet column present-bg-color">--</div>
-									@endif
-									
-								@else
-									@for($j=$number; $j<=$total_days; $j++)
-									@if(isset($att_datas[$j]['attendance_status']))
-
-										@if(array_key_exists($att_datas[$j]['date'], $holidays))
-												<div class="attendance-sheet column absent-bg-color tooltipped"  data-position="bottom" data-tooltip="{{$holidays[$j]}}" style="background-color: #8A91F0;">{{-- {{$holidays[$j][0]}} --}}H</div>
-											@else
-												@if($att_datas[$j]['attendance_status']=='present')
-														<div class="attendance-sheet column present-bg-color">P</div>
-												@elseif($att_datas[$j]['attendance_status']=='absent')
-													<div class="attendance-sheet column absent-bg-color">A</div>
-												@elseif($att_datas[$j]['attendance_status']=='Sunday')
-													<div class="attendance-sheet column sunday">S</div>
-												@elseif($att_datas[$j]['attendance_status']=='leave')
-													<div class="attendance-sheet column sunday">L</div>
-												@else
-													<div class="attendance-sheet column sunday">o</div>
-												@endif
-										@endif
-									@else
-
-									<div class="attendance-sheet column present-bg-color">--</div>
-									@endif
-									@endfor
-								@endif
-									<br>
-									<div style="clear: both;"></div>
-							</div>
-							@endif
-						@endforeach
-					@endif
-
-			</div>
-			@endif
-			<div style="clear: both;"></div>
-
-			
-
 </div>
-
-
-
-
-
-
-
+@include('organization.attendance.attendance_data_display')

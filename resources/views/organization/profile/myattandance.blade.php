@@ -114,6 +114,9 @@
 	@include('common.page_content_primary_start')
 	<div class="row">
 		@include('organization.profile._tabs')
+	@if(!empty($error))
+	<h1>{{$error}}</h1>
+	@else
 		<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 
 		<div class="row">
@@ -132,13 +135,13 @@
 
 						
 					{{--- YEARLY STARTS --}}
-		<div class="row year-view">
+		<div id="yearly_data" class="row year-view">
 			<div class="row m-20" >
 				<div class=" col l5 right-align">
-					<i class="fa fa-arrow-left lh-44" ></i>
+					<i class="fa fa-arrow-left lh-44" onclick="attendance_yearly_filter({{$filter['year']-1}})" ></i>
 				</div>
 				<div class="col l2 center-align">
-					<h5><a class='dropdown-button' href='#' data-activates='dropdown1'>{{@$filter['year']}}</a></h5>
+					<h5><a  id='year_display' class='dropdown-button' href='#' data-activates='dropdown1'>{{@$filter['year']}}</a></h5>
 					 
 
 					  <!-- Dropdown Structure -->
@@ -160,7 +163,7 @@
 					  </ul>
 				</div>
 				<div class="col l5">
-					<i class="fa fa-arrow-right lh-44" ></i>
+					<i class="fa fa-arrow-right lh-44" onclick="attendance_yearly_filter({{$filter['year']+1}})"></i>
 				</div>
 			</div>	
 		
@@ -399,6 +402,7 @@
 			</div>
 			
 		</div>
+@endif
 	</div>
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
@@ -568,21 +572,18 @@ line-height: 36px
 	<script>
 		function attendance_yearly_filter(year)
 		{
-			alert(year);
 			postData ={};
-			//postData['month'] = month;
 			postData['year']  = year;
-			//postData['month_week_no'] = week;
 			postData['_token'] = $("#token").val();
-			console.log(postData);
 			$.ajax({
-					url:route()+'/attandance',
+					url:route()+'/attendance',
 					type:'POST',
 					data:postData,
 					success:function(res){
-						$('#attendance-data').html(res);
+						$("#year_display").html(year);
 
-					}
+						$('#yearly_data').html(res);
+ 						}
 			});
 		
 		}

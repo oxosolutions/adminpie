@@ -15,6 +15,7 @@ class ManageTeamController extends Controller
     }
     Public function listTeam(Request $request , $id = null) 
     {
+      //dd(123);
       // if($id != null){
       //   $data = Team::where('id',$id)->get();
       // }

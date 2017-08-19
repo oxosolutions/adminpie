@@ -1,31 +1,10 @@
+<?php echo $__env->make('common.form.fields.includes.field-wrapper-start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.form.fields.includes.field-label-start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo $__env->make('common.form.fields.includes.label', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.form.fields.includes.field-label-end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.form.fields.includes.field-start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo Form::textarea(str_replace(' ','_',strtolower($collection->field_title)),null,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug, 'rows'=>'3', 'cols'=>'100']); ?>
 
-<?php if(@$options['type'] == 'inset'): ?>
-	<div class="col s12 m2 l12 aione-field-wrapper">
-			<?php echo Form::textarea(str_replace(' ','_',strtolower($collection->field_title)),null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'rows'=>'8','style'=>'height: 100px;margin-bottom:10px']); ?>
-
-	</div>
-	<div class="error-red">	
-		<?php if(@$errors->has()): ?>
-			<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
-
-		<?php endif; ?>
-	</div>
-<?php else: ?>
-	<div class="row">
-		<div class="col l3" style="line-height: 30px">
-			<?php echo e(ucfirst($collection->field_title)); ?>
-
-		</div>
-		<div class="col l9">
-			 <?php echo Form::textarea(str_replace(' ','_',strtolower($collection->field_title)),null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'class'=>'materialize-textarea','style'=>'border:1px solid #a8a8a8;margin-bottom: 0px']); ?>
-
-		</div>
-	</div>
-		
-	<div class="error-red">	
-		<?php if(@$errors->has()): ?>
-			<?php echo e($errors->first(str_replace(' ','_',strtolower($collection->field_title)))); ?>
-
-		<?php endif; ?>
-	</div>
-<?php endif; ?>
+		<?php echo $__env->make('common.form.fields.includes.error', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<?php echo $__env->make('common.form.fields.includes.field-end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.form.fields.includes.field-wrapper-end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

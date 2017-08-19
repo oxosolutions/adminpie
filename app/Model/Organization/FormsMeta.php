@@ -20,4 +20,8 @@ class FormsMeta extends Model
     		
     	}
     }
+
+    public function forms(){
+        return $this->belongsTo('App\Model\Organization\forms','form_id','id');
+    }
 }

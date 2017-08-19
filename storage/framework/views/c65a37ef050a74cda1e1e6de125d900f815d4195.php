@@ -10,11 +10,12 @@
 
 <?php $__env->startSection('content'); ?>
 <?php 
+$title = (@$title != '')?$title:'Forms';
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Forms',
+	'page_title' => $title,
 	'add_new' => '+ Apply leave'
 ); 
  ?>

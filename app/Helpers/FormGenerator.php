@@ -9,7 +9,7 @@ use App\Model\Organization\forms as OrgForms;
 use App\Model\Organization\section as OrgSection;
 use DB;
 class FormGenerator{
-
+	
 	/**
 	 * will generate the form according to the slug
 	 * @param [string] $form_slug 
@@ -43,16 +43,29 @@ class FormGenerator{
 	 * @param [string] $field_slug 
 	 */
 	public static function GenerateField($field_slug, Array $Options = [], $dataModel = null, $formFrom = 'admin'){
+
 		$model = '';
 		if($formFrom == 'admin'){
 			$model = 'App\\Model\\Admin\\FormBuilder';
 		}else{
 			$model = 'App\\Model\\Organization\\FormBuilder';
 		}
-		$FieldsCollection = $model::where('field_slug',$field_slug)->with(['fieldMeta'])->first();
+		$FieldsCollection = $model::where('field_slug',$field_slug)->with(['fieldMeta','formsMeta','section']);
+		if(isset($Options['section_id'])){
+			$FieldsCollection->where('section_id',$Options['section_id']);
+		}
+		if(@$Options['from'] == 'repeater'){
+			$FieldsCollection = $FieldsCollection->get();
+			$collection = $FieldsCollection;
+			$status = 'repeater';
+		}else{
+			$FieldsCollection = $FieldsCollection->first();
+			$collection = $FieldsCollection->field_type;
+			$status = 'single';
+		}
+
 		if($FieldsCollection != null){
-			$HTMLField = self::GetHTMLField($FieldsCollection->field_type, $FieldsCollection, $Options, $dataModel);
-			
+			$HTMLField = self::GetHTMLField($collection, $FieldsCollection, $Options, $dataModel,$status);
 			return $HTMLField;
 		}else{
 			dd('No field found');
@@ -71,13 +84,19 @@ class FormGenerator{
 		}else{
 			$model = 'App\\Model\\Organization\\section';
 		}
-		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields'])->first();
+		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields','formsMeta']);
+		if(isset($Options['form_id'])){
+			$SectionCollection = $SectionCollection->where('form_id',$Options['form_id'])->first();
+		}else{
+			$SectionCollection = $SectionCollection->first();
+		}
 		if($SectionCollection == null){
 			dd('No section found');
 		}
 		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
 		if($sectionType == 'Repeater'){
 			$Options['field_type'] = 'array';
+			$SectionCollection->fields = $SectionCollection->fields->unique('field_slug')->values();
 			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $datamodel, $formFrom);
 		}else{
 			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options, $datamodel, $formFrom);
@@ -90,7 +109,7 @@ class FormGenerator{
 	 * @param [type] $collection [description]
 	 */
 	public static function GetHTMLSection($collection, $Options, $model, $formFrom){
-		return view('common.form.section',['collection'=>$collection,'options'=>$Options,'formFrom'=>$formFrom,'model'=>$model])->render();
+		return view('common.form.section',['collection'=>$collection,'options'=>$Options,'formFrom'=>$formFrom,'model'=>$model, 'settings'=>get_meta_array($collection->formsMeta)])->render();
 	}
 
 	/**
@@ -99,7 +118,7 @@ class FormGenerator{
 	 * @param [type] $Options    [description]
 	 */
 	public static function GetHTMLGroup($collection, $Options, $model, $formFrom){
-		return view('common.form.group',['collection'=>$collection,'options'=>$Options,'model'=>$model,'formFrom'=>$formFrom])->render();
+		return view('common.form.group',['collection'=>$collection,'options'=>$Options,'model'=>$model,'formFrom'=>$formFrom,'settings'=>get_meta_array($collection->formsMeta)])->render();
 	}
 
 	/**
@@ -108,9 +127,18 @@ class FormGenerator{
 	 * @param [type] $collection [description]
 	 * @param [type] $Options    [description]
 	 */
-	public static function GetHTMLField($field, $collection, $Options, $model){
-
-		return view('common.form.fields.'.$field,['collection'=>$collection,'options'=>$Options,'model'=>$model])->render();
+	public static function GetHTMLField($field, $collection, $Options, $model, $status){
+		if($status == 'single'){
+			return view('common.form.fields.'.$field,['collection'=>$collection,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($collection->formsMeta)])->render();
+		}else{
+			$fields = '';
+			$fields.="<div class=\"repeater-section\">";
+			foreach($field as $fieldKey => $fieldValue){
+				$fields .= view('common.form.fields.'.$fieldValue->field_type,['collection'=>$fieldValue,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($fieldValue->formsMeta)])->render();
+			}
+			$fields.="</div>";
+			return $fields;
+		}
 	}
 
 
@@ -120,7 +148,7 @@ class FormGenerator{
 	 */
 	public static function GetHTMLForm($collection, $options, $formFrom, $model){
 
-		return view('common.form.form',['collection'=>$collection, 'options'=>$options, 'formFrom'=>$formFrom,'model'=>$model])->render();
+		return view('common.form.form',['collection'=>$collection, 'options'=>$options, 'formFrom'=>$formFrom,'model'=>$model, 'settings'=>get_meta_array($collection->formsMeta)])->render();
 	}
 
 	public static function GetMetaValue($metaCollection, $metaKey){

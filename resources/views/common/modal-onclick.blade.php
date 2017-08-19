@@ -7,17 +7,11 @@
 	$url = implode('/',$array);
 @endphp
 <div id="{{$data['modal_id']}}" class="modal modal-fixed-footer" style="overflow-y: hidden;">
-	<div class="modal-header white-text  blue darken-1" ">
-		<div class="row" style="padding:15px 10px;margin: 0px">
-			<div class="col l7 left-align">
-				<h5 style="margin:0px">{{@$data['heading']}}</h5>	
-			</div>
-			<div class="col l5 right-align">
-				<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
-			</div>	
-		</div>
+	<div class="modal-header">
+		<h5>{{@$data['heading']}}</h5>	
+		<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
 	</div>
-	<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
+	<div class="modal-content">
 		@if(isset($data['section']))
 			{!!FormGenerator::GenerateSection($data['section'],['type'=>'inset'],'','admin')!!}
 		@endif

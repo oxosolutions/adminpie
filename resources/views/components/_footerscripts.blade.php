@@ -1,5 +1,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
+
 		/*****************************************************
 		/*  Header Right Menu Toggles
 		/*****************************************************/
@@ -30,7 +31,7 @@
 		/*  Navigation Item Click Show Hide Child Menu
 		/*****************************************************/
 		$('body').on('click','.aione-nav > ul > li.has-children > a',function(e){
-			e.preventDefault();
+			//e.preventDefault();
 			var nav_item = $(this).parent();
 			nav_item.toggleClass('nav-item-selected').siblings().removeClass('nav-item-selected');
 		});
@@ -67,6 +68,60 @@
 			e.preventDefault();
 			$(this).toggleClass('active');
 		});
+
+		/*****************************************************
+		/*  Aione tabs
+		/*****************************************************/
+
+		$('.aione-tabs-wrapper .aione-tabs > .aione-tab > a').click(function(e){
+			e.preventDefault();
+			$(this).parent().addClass('active').siblings().removeClass('active');
+			var selected_tab = $(this).attr('href');
+			$(selected_tab).addClass('active').siblings().removeClass('active');
+		})
+
+		/*****************************************************
+		/*  Aione Form Validations
+		/*****************************************************/
+
+		$.validate();
+
+		/*****************************************************
+		/*  Aione Form Validations
+		/*****************************************************/
+		/*
+		$(".dashboard-widgets .aione-widgets").gridster({
+			widget_selector: "div",
+			widget_margins: [10, 10],
+			widget_base_dimensions: [140, 140],
+			extra_rows: 0,
+			extra_cols: 0,
+			max_cols: null,
+			min_cols: 1,
+			min_rows: 1,
+			autogenerate_stylesheet: true,
+			avoid_overlapped_widgets: true
+
+			
+			serialize_params: function($w, wgd){},
+			draggable.start: function(event, ui){},
+			draggable.drag: function(event, ui){},
+			draggable.stop: function(event, ui){},
+			resize.enabled: false,
+			resize.axes: ['both'],
+			resize.handle_class: 'gs-resize-handle',
+			resize.handle_append_to: '',
+			resize.max_size: [Infinity, Infinity],
+			resize.start: function(e, ui, $widget) {},
+			resize.resize: function(e, ui, $widget) {},
+			resize.stop: function(e, ui, $widget) {},
+			collision.on_overlap_start: function(collider_data) { },
+			collision.on_overlap: function(collider_data) { },
+			collision.on_overlap_stop: function(collider_data) { },
+			
+
+		});
+		*/
 		
 		/*****************************************************
 		/*  Materialize Date Picker

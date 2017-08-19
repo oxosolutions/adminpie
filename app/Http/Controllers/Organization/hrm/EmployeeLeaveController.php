@@ -16,24 +16,29 @@ class EmployeeLeaveController extends Controller
 {
 
 	public function leave_listing(){
-
+		$leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		if(in_array(1, role_id())){
-			return redirect()->route('access.denied');
+			$error = "You can not view leave.";
+		}else{
+			$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->get();
+			$emp_id = get_current_user_meta('employee_id');
+			$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->get();
+			$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
+			// dump($data);
+			// // $collect = collect($leavesData->toArray());
+			// // dump($collect->where('status',1));
+			// $leave_count_by_cat = $data->groupBy('leave_category_id');
 		}
-		$user = user_info()->toArray();	
-		$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->get();
-		// dump($leave_rule);
-		$leavesData = EMP_LEV::where('employee_id',$user['employee_rel']['employee_id'])->get();
-		$leave_count_by_cat = $leavesData->groupBy('leave_category_id');
-		// DUMP($leave_count_by_cat);
-		// dump($leavesData);
-		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat]);
+		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat,'error'=>$error]);
 	}
 
 	Public function store(Request $request, $id=null)
 	{ 
-		$user = user_info()->toArray();		
+		$user = user_info()->toArray();	
+
+		$emp_id = get_current_user_meta('employee_id');	
 		if($request->isMethod('post')){
+			$request['reason_of_leave']  = $request['accleasec1f1'];
 			$current = Carbon::now();
 			$from = Carbon::parse($request->from);
 			
@@ -116,15 +121,15 @@ class EmployeeLeaveController extends Controller
 
 				if($rule_check['valid_for']['value'] == "monthly")
 				{
-						$leaveFrm = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($from->month))->get()->keyBy('id');
+						$leaveFrm = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($from->month))->get()->keyBy('id');
 
-							$leaveTo = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($from->month))->get()->keyBy('id');
+							$leaveTo = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($from->month))->get()->keyBy('id');
 							$leaveData = $leaveFrm->merge($leaveTo);//->toArray();
 					if($from->month != $to->month)
 					{
-						$leaveToFormReq = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($to->month))->get()->keyBy('id');
+						$leaveToFormReq = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($to->month))->get()->keyBy('id');
 
-						$leaveToReq = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($to->month))->get()->keyBy('id');
+						$leaveToReq = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($to->month))->get()->keyBy('id');
 							$data = $leaveToFormReq->merge($leaveToReq);
 							$leaveData = $data->merge($leaveData);
 					}				
@@ -183,7 +188,7 @@ class EmployeeLeaveController extends Controller
 									{
 										 $error['exceed_number_of_day'][] = "you exceed leave limit in month ".$to->month;
 									}
-					}
+						}
 				}
 					// echo "to sum";
 					 //dump( @$total_days);
@@ -198,7 +203,7 @@ class EmployeeLeaveController extends Controller
 				}
 				elseif($rule_check['valid_for']['value'] == "yearly")
 				{
-					$leave_sumdays = EMP_LEV::where(['employee_id'=>$user['employee_rel']['employee_id'], 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
+					$leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
 						$total_sum = $leave_sumdays + $request['total_days'];
 						if($total_sum >= $rule_check['number_of_day']['value'])
 						{
@@ -218,22 +223,19 @@ class EmployeeLeaveController extends Controller
 				$request['from'] =	$from->toDateString();
 				$request['to'] = $to->toDateString();
 				$leave = new EMP_LEV();	
-				$request['employee_id'] = EMP::where('user_id', $user['id'])->select('employee_id')->first()->employee_id;
+				$request['employee_id'] = $emp_id;  
 				$leave->fill($request->all());
 				$leave->save();
 				save_activity('apply_leave');
-				//Session::flash('sucessful', 'Successfully Apply Leave ');
+				Session::flash('sucessful', 'Successfully Apply Leave ');
 
 			}else{
 				//Session::flash('error', $error);
-					dd();
+					
 
 			}
 		 }
-		
-
-		
-		return redirect()->route('account.leaves');
+ 	return redirect()->route('account.leaves');
 	}
     
 }

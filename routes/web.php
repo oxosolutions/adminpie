@@ -25,6 +25,12 @@
 				//
 				
 				Route::get('widgets', ['as'=>'index.widget' , 'uses'=>'WidgetController@index']);
+				Route::get('modules-design', ['as'=>'modulesdesign' , 'uses'=>function(){
+					return view('admin.module-design');
+				}]);
+				Route::get('formbuilder', ['as'=>'modulesdesign' , 'uses'=>function(){
+					return view('admin.formbuilder');
+				}]);
 
 				Route::get('widget/delete/{id}', ['as'=>'delete.widget' , 'uses'=>'WidgetController@delete']);
 
@@ -43,10 +49,10 @@
 				Route::get('/module/delete/{id}',['as'=>'delete.module' , 'uses'=>'ModuleController@delete']);
 				Route::get('/module/style/{id}',['as'=>'style.module' , 'uses'=>'ModuleController@style']);
 				Route::post('/module/style/save',['as'=>'save.style.module' , 'uses'=>'ModuleController@saveStyle']);
-				Route::post('/subModule/style/save',['as'=>'save.style.subModule' , 'uses'=>'ModuleController@saveStyleModule']);
+				Route::post('/submodule/style/save',['as'=>'save.style.subModule' , 'uses'=>'ModuleController@saveStyleModule']);
 				Route::get('/submodule/{id}',['as'=>'get.submodule' , 'uses'=>'ModuleController@getSubmodules']);
 
-				Route::get('/modules',['as'=>'list.module' , 'uses'=>'ModuleController@listModule']);
+				Route::get('/modules/{id?}/{subModule?}',['as'=>'list.module' , 'uses'=>'ModuleController@listModule']);
 				Route::get('module/add_route_row',['as'=>'route_row.module' , 'uses'=>'ModuleController@add_route_row']);
 				Route::get('module/route/delete/{id}',['as'=>'delete.route' , 'uses'=>'ModuleController@delete_route']);
 				Route::post('/module/status/update',['as'=>'status.module' , 'uses'=>'ModuleController@update_module_status']);
@@ -54,8 +60,20 @@
 				Route::get('/singlemodule/{id?}',['as'=>'get.single.module','uses'=>'ModuleController@getSingleModule']);
 				Route::get('/single/route/permission/{id?}',['as'=>'get.single.route.permission','uses'=>'ModuleController@getSingleRoutePermission']);
 				
+				//according to new design 
+				Route::post('/save/module',['as'=>'module.save' , 'uses'=>'ModuleController@saveModule']);
+				Route::post('/save/submodule',['as'=>'sub.module.save' , 'uses'=>'ModuleController@SubModuleSave']);
+				Route::get('/delete/module/{id}',['as'=>'module.delete' , 'uses'=>'ModuleController@deleteModule']);
+				Route::get('/delete/delModule/{id}',['as'=>'subModule.delete' , 'uses'=>'ModuleController@deletesubModule']);
+				Route::POST('/edit/subModule',['as'=>'edit.subModule' , 'uses'=>'ModuleController@editsubModule']);
+				Route::get('/delete/submodule/permission/{id}/{route_name}',['as'=>'delete.subModule.permission' , 'uses'=>'ModuleController@deletesubModulePermission']);
+
 				//sort module
 				Route::post('/sort/module',['as'=>'sort.module','uses'=>'ModuleController@sortModule']);
+				Route::get('/module/sort/down/{id}',['as'=>'module.sort.down','uses'=>'ModuleController@sortModuleDown']);
+				Route::get('/module/sort/up/{id}',['as'=>'module.sort.up','uses'=>'ModuleController@sortModuleUp']);
+				Route::get('/submodule/sort/down/{id}/{subModule}',['as'=>'sub.module.sort.down','uses'=>'ModuleController@sortSubModuleDown']);
+				Route::get('/submodule/sort/up/{id}/{subModule}',['as'=>'sub.module.sort.up','uses'=>'ModuleController@sortSubModuleUp']);
 
 
 				Route::get('/drawSidebar',['as' => 'draw.sidebar' , 'uses' => 'ModuleController@drawSidebar']);
@@ -89,8 +107,10 @@
 				*/
 				Route::POST('/create',				['as'=>'create.forms','uses'=>'FormBuilderController@createForm']);
 				Route::get('/forms',				['as'=>'list.forms','uses'=>'FormBuilderController@listForm']);
+				Route::get('/form/settings/{id}',	['as'=>'form.settings','uses'=>'FormBuilderController@formSettings']);
+				Route::post('/form/savemeta/{is}', 	['as'=>'save.form.settings','uses'=>'FormBuilderController@storeSettings']);
 				Route::get('/forms/delete/{id}',	['as'=>'delete.form','uses'=>'FormBuilderController@deleteForm']);
-				Route::get('/form/sections/{form_id}',['as'=>'list.sections','uses'=>'FormBuilderController@sectionsList']);
+				Route::get('/form/{form_id}/sections',['as'=>'list.sections','uses'=>'FormBuilderController@sectionsList']);
 				Route::post('/create/sections/{id}',		['as'=>'create.sections','uses'=>'FormBuilderController@createSection']);
 				Route::get('/delete/sections/{id}',	['as'=>'del.section','uses'=>'FormBuilderController@deleteSection']);
 				Route::get('/form/create',			['as'=>'create.form','uses'=>'FormBuilderController@index']);
@@ -102,8 +122,13 @@
 				Route::get('/form/field',			['as'=>'form.field','uses'=>'FormBuilderController@formFields']);
 				Route::get('/form/edit/{id}',		['as'=>'form.edit','uses'=>'FormBuilderController@editForm']);
 				Route::get('/form/update/{id}',		['as'=>'form.udpate','uses'=>'FormBuilderController@updateForm']);
-				Route::get('/field/delete/{id}',		['as'=>'field.delete','uses'=>'FormBuilderController@deletefield']);
+				Route::get('/field/delete/{id}',	['as'=>'field.delete','uses'=>'FormBuilderController@deletefield']);
+				Route::post('/form/section/update/{form_id}', ['as'=>'section.update','uses'=>'FormBuilderController@updateSection']);
+				Route::post('/form/field/create/{form_id}/{section_id}', ['as'=>'create.field','uses'=>'FormBuilderController@createField']);
+				Route::post('/form/update/field/{form_id}/{section_id}/{field_id}',['as'=>'update.field','uses'=>'FormBuilderController@updateField']);
+				Route::get('/form/section/delete/{section_id}',['as'=>'section.delete','uses'=>'FormBuilderController@deleteSection']);
 
+				
 				/************************************************************************************************************/
 
 			});
@@ -175,6 +200,7 @@
 				//new emails route by ashish
 				Route::get('email',					['as'=>'emails' , 'uses'=>'email\EmailController@index']);
 				Route::get('email/send', 			['as'=>'email.send' , 'uses'=>'email\EmailController@sendEmail']);
+				Route::get('/email/delete/{id}',	['as'=>'delete.email','uses'=>'email\EmailController@deleteEmail']);
 				Route::post('campaign/save', 		['as'=>'save.campaign','uses'=>'email\EmailController@saveCampaign']);
 				Route::get('campaign/edit/{id}', 	['as'=>'edit.campaign','uses'=>'email\EmailController@sendEmail']);
 				Route::get('email/templates', 		['as'=>'email.templates' , 'uses'=>'email\EmailController@templates']);
@@ -207,7 +233,9 @@
 				});
 					// Route::get('delete/dashboards/widget/{slug?}/{id?}/{widget_id?}',['as'=>'delete.widget.dashboard','uses'=>'DashboardController@deleteWidget']);
 					Route::post('delete/dashboards/widget',['as'=>'delete.widget.dashboard','uses'=>'DashboardController@deleteWidget']);
-					Route::post('delete/dashboards',['as'=>'delete.dashboard','uses'=>'DashboardController@deleteDashboard']);
+					Route::get('delete/dashboards/{slug}',['as'=>'delete.dashboard','uses'=>'DashboardController@deleteDashboard']);
+					Route::post('edit/dashboards',['as'=>'edit.dashboard','uses'=>'DashboardController@EditDashboard']);
+					Route::post('update/dashboards',['as'=>'update.edit.dashboard','uses'=>'DashboardController@UpdateDashboard']);
 					Route::post('sort/dashbaord',['as'=>'sort.dashboard','uses'=>'DashboardController@sortDashboard']);
 				Route::group(['middleware'=>'role'],function(){
 					Route::get('/holiday/list/{id?}',['as'=>'holiday.list','uses'=>'hrm\HolidayController@holidayList']);
@@ -245,6 +273,7 @@
 				// Route::post('project/tasks/employee/filter',['as'=>'filterEmployee.tasks','uses'=>'account\TasksController@filterEmployee']);
 
 				Route::post('save/dashboard/widget',['as'=>'update.dashboard.widget','uses'=>'DashboardController@saveWidget']);
+				Route::post('save/dashboard' , ['as' => 'dashboard.save', 'uses' => 'DashboardController@dashboards']);
 
 				//profile
 				Route::group(['prefix' => 'account','namespace' => 'account'],function(){
@@ -257,9 +286,8 @@
 							return view('organization.profile.performance');
 						}]);
 						Route::get('/emails/{id?}',['as'=>'account.emails','uses'=>'AccountController@emailsList']);
-						Route::get('/salary/{id?}',['as'=>'account.salary','uses'=>function(){
-							return view('organization.profile.salary');
-						}]);
+						Route::get('/emails/view/{id}',['as'=>'account.emails.view','uses'=>'AccountController@emailDetails']);
+						
 						Route::get('/chat/{id?}',['as'=>'account.chat','uses'=>function(){
 							return view('organization.profile.chat');
 						}]);
@@ -269,7 +297,6 @@
 					Route::get('/projects/{id?}',[ 'as'=>'account.projects','uses'=>'AccountController@listProjects']);
 
 					});
-					Route::post('save/dashboard' , ['as' => 'dashboard.save', 'uses' => 'AccountController@dashboards']);
 
 					Route::post('change/password' , ['as' => 'change.password' , 'uses' => 'AccountController@changePassword']);
 
@@ -323,7 +350,11 @@
 					Route::get('payscale/delete/{id}', ['as'=> 'delete.payscale' , 'uses' => 'PayscaleController@delete']);
 					Route::match(['post','get'],'payscale/edit/{id}', ['as'=> 'edit.payscale' , 'uses' => 'PayscaleController@edit']);
 
-
+					// Route::get('/salary/{id?}',['as'=>'hrm.salary','uses'=>'SalaryController@index']);
+					Route::match(['get','post'],'/salary/{id?}',['as'=>'hrm.salary','uses'=>'SalaryController@generate_salary']);
+					// (){
+					// 		return view('organization.profile.salary');
+					// 	}]);
 
 					Route::get('log',['as'=>'list.log', 'uses'=>'LogsystemController@viewLog']);
 					Route::post('log',['as'=>'search.log', 'uses'=>'LogsystemController@search_log']);
@@ -355,6 +386,8 @@
 
 
 						});
+							Route::get('application/{id}',				['as' => 'view.applicantion', 'uses'=>'ApplicationController@application_view']);
+							Route::get('application/delete/{id}',				['as' => 'delete.applicantion', 'uses'=>'ApplicationController@delete']);
 
 
 						Route::match(['get','post'],'applicant/create',['as'=>'applicant.create', 'uses'=>'ApplicantController@create']);
@@ -399,6 +432,7 @@
 							Route::get('leave/delete/{id}',		['as' => 'delete.leave' , 'uses' =>'LeavesController@delete']);
 							Route::POST('leave/edit',		['as' => 'edit.leave' , 'uses' =>'LeavesController@editLeave']);
 							Route::get('leave/approve/{id?}',		['as' => 'approve.leave' , 'uses' =>'LeavesController@approve_leave']);
+							Route::get('leave/reject/{id?}',		['as' => 'reject.leave' , 'uses' =>'LeavesController@reject_leave']);
 
 
 						//shifts
@@ -468,6 +502,11 @@
 					});
 
 					Route::get('client/create',			['as'=>'create.client','uses'=>'ClientController@create']);
+					Route::get('contacts', 				['as'=>'contact.list','uses'=>'ContactController@index']);
+					Route::post('contacts/save', 		['as'=>'contact.save','uses'=>'ContactController@saveContact']);
+					Route::get('contact/edit/{id}',		['as'=>'contact.edit','uses'=>'ContactController@edit']);
+					Route::post('contact/update/{id}',	['as'=>'contact.update','uses'=>'ContactController@update']);
+					Route::get('contact/delete/{id}',	['as'=>'delete.contact','uses'=>'ContactController@delete']);
 					Route::post('client/save',			['as'=>'save.client','uses'=>'ClientController@save']);
 					Route::get('client/view/{id}',		['as'=>'view.client','uses'=>'ClientController@view']);
 					Route::get('client/edit/{id}',		['as'=>'edit.client','uses'=>'ClientController@edit']);
@@ -630,6 +669,7 @@
 					Route::post('/update/categories/{id}',['as' => 'category.update' , 'uses' => 'categoriesController@updateCategory']);
 
 					Route::get('/media',['as'=>'media','uses'=>'MediaController@index']);
+					Route::match(['get','post'],'/media/create',['as'=>'create.media','uses'=>'MediaController@create']);
 				});
 				Route::group(['prefix'=>'support','namespace' => 'support'],function(){
 					Route::get('tickets',	['as'=>'support.tickets','uses'=>'SupportsController@index']);
@@ -680,6 +720,9 @@
 
 			Route::match(['get','post'],'/visualization/view/{id}',['as'=>'visualization.view','uses'=>'visualization\VisualisationController@embedVisualization']);
 			Route::post('/visualization/settings/save/{id}',['as'=>'visualization.settings.save','uses'=>'visualization\VisualisationController@saveVisualizationSettings']);
+			//surveys
+			Route::get('/surveys',				['as'=>'list.survey','uses'=>'survey\SurveyController@listSurvey']);
+			Route::get('/survey/create',		['as'=>'create.survey','uses'=>'survey\SurveyController@createSurvey']);
 
 		});
 
@@ -709,8 +752,10 @@
 	//forms
 		Route::POST('/create/form',				['as'=>'org.create.forms','uses'=>'Admin\FormBuilderController@createForm']);
 		Route::get('/forms/list',				['as'=>'org.list.forms','uses'=>'Admin\FormBuilderController@listForm']);
+		Route::get('/form/settings/{id}',		['as'=>'org.form.settings','uses'=>'Admin\FormBuilderController@formSettings']);
+		Route::post('/form/savemeta/{id}', 		['as'=>'org.save.form.settings','uses'=>'Admin\FormBuilderController@storeSettings']);
 		Route::get('/form/delete/{id}',			['as'=>'org.delete.form','uses'=>'Admin\FormBuilderController@deleteForm']);
-		Route::get('/forms/sections/{form_id}',	['as'=>'org.list.sections','uses'=>'Admin\FormBuilderController@sectionsList']);
+		Route::get('/form/{form_slug}/sections',['as'=>'org.list.sections','uses'=>'Admin\FormBuilderController@sectionsList']);
 		Route::post('/create/section/{id}',		['as'=>'org.create.sections','uses'=>'Admin\FormBuilderController@createSection']);
 		Route::get('/delete/section/{id}',		['as'=>'org.del.section','uses'=>'Admin\FormBuilderController@deleteSection']);
 		Route::get('/forms/create',				['as'=>'org.create.form','uses'=>'Admin\FormBuilderController@index']);
@@ -723,7 +768,12 @@
 		Route::get('/form/edit/{id}',			['as'=>'org.form.edit','uses'=>'Admin\FormBuilderController@editForm']);
 		Route::get('/form/update/{id}',			['as'=>'org.form.udpate','uses'=>'Admin\FormBuilderController@updateForm']);
 		Route::get('/field/delete/{id}',		['as'=>'org.field.delete','uses'=>'Admin\FormBuilderController@deletefield']);
-
+		Route::post('/form/section/update/{form_id}', ['as'=>'org.section.update','uses'=>'Admin\FormBuilderController@updateSection']);
+		Route::post('/form/field/create/{form_id}/{section_id}', ['as'=>'org.create.field','uses'=>'Admin\FormBuilderController@createField']);
+		Route::post('/form/update/field/{form_id}/{section_id}/{field_id}',['as'=>'org.update.field','uses'=>'Admin\FormBuilderController@updateField']);
+		Route::get('/form/section/delete/{section_id}',['as'=>'org.section.delete','uses'=>'Admin\FormBuilderController@deleteSection']);
+		
+		
 	//custom maps
 		Route::get('/custom-maps/{type?}', 				['as'=>'org.custom.maps','uses'=>'Admin\CustomMapsController@index']);
 		Route::post('/custom-map/save',			['as'=>'org.save.custom.map','uses'=>'Admin\CustomMapsController@saveMap']);

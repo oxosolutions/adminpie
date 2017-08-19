@@ -1,526 +1,179 @@
 
 <?php $__env->startSection('content'); ?>
-<style type="text/css">
-		.recent-five li{
-			padding: 7px 10px;
-			width: 100%
-		}
-		.recent-five li a{
-			float: right;
-		}
-		.mb-10{
-			margin-bottom: 10px
-		}
-		.pr-14{
-			padding-right: 14px !important;
-		}
-		.fix-height{
-			min-height: 230px;max-height: 230px
-		}
-		.back > .card > div{
-			margin-bottom: 5px
-		}
-		.btn-unflip{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-		/*.btn-unflip-2{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-		.btn-unflip-3{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-		.btn-unflip-4{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}
-		.btn-unflip-5{
-			position: absolute;
-			top: 0;
-			right: 0;
-		}*/
-		.count span{
-			font-size: 32px;
-			font-weight: 900;
-			color: #8E8E8E;
-			padding: 20px 0px;
-			display: block;
-    		text-align: center;
-    		border-bottom: 1px solid #e8e8e8;
-		}
-		.in-out-button{
-			padding: 14px;
-			
-		}
-		.in-out-button a#start{
-			display: block;
-   			background-color: #00BC9B;
-   			padding: 7px 30px;
-		}
-		.in-out-button a#start .check-out{
-			display: none;
-		} 
-		.in-out-button a#stop .check-in{
-			display: none;
-		} 
-		.in-out-button a#stop{
-			display: block;
-   			background-color: #d9534f;
-   			padding: 7px 30px;
-		}
-		.in-out-button a i{
-			color: white;
-			    font-size: 50px;
-		}
-		.in-out-button a > div{
-			display: block;
-			float: right;
-		}
-		.aione-widget-header{
-			border-bottom: 1px solid #e8e8e8;cursor: pointer;
-		}
-		.aione-widget-header a{
-			padding: 10px;color: black;display: block
-		}
-		.aione-widget-content{
-			border-bottom: 1px solid #e8e8e8;padding: 10px;font-size: 72px
-		}
-		.aione-widget-footer{
-			padding: 0px 10px
-		}
-		.aione-widget-footer .all{
-			float: left;
-			width: 45%;
-			font-size: 14px;
-			font-weight: 600;
-			padding: 10px 5px;
-			border: 0px;
-			border-radius: 4px;
-		}
-		.aione-widget-footer .recent{
-			float: right;
-			width: 54%;
-			font-size: 14px;
-			font-weight: 600;
-			padding: 10px 0px;
-			border: 0px;
-			border-radius: 4px;
-		}
-		.mt-0{
-			margin-top: 0px;
-		}
-		.m-0{
-			margin: 0px;
-		}
-		.aione-btn{
-			display: inline-block;color: white;margin: 0 auto;padding: 8px 20px;
-		}
-		.add-btn{
-			font-size: 14px;
-			font-weight: 600;
-			padding: 10px 5px;
-			border: 0px;
-			border-radius: 4px;	
-			width: 100%;
-
-		}
-		.add-widget{
-			border:2px dashed #e8e8e8;
-			margin-top: 10px;
-			min-height: 230px;max-height: 230px;
-			padding: 38px 20px;
-			cursor: pointer;
-		}
-		.plus-sign{
-			width: 100%;
-			font-size: 72px;
-			font-weight: 800;
-			color: #676767;
-
-		}
-	</style>
 <?php 
 	$page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
+	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dashboard',
-	'add_new' => '+ Add Widget'
+	'page_title' => 'Dashboards',
+	'add_new' => '+ Add Dashboard'
 	); 
  ?>
+<style type="text/css">
+.aione-widgets{
+	position: relative;
+	display: block;
+}
+.aione-widgets .aione-widget{
+	float:left;
+	width:24%;
+	min-height: 160px;
+	padding: 0;
+	margin:0 1% 1% 0;
+	position: relative;
 
-<?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+
+	color: #666666;
+	background-color: #ffffff;
+	border: 1px solid #e8e8e8;
+}
+.aione-widgets:after {
+	content:"";
+	display: block;
+	width: 100%;
+	height: 1px;
+	clear: both; 
+}
+.aione-widgets .aione-widget .aione-widget-header{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+.aione-widgets .aione-widget .aione-widget-header .aione-widget-handle{
+	float: left;
+	opacity: 0;
+	width: 30px;
+    height: 30px;
+    line-height: 30px;
+	-webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+}
+.aione-widgets .aione-widget:hover .aione-widget-header .aione-widget-handle{
+	opacity: 1;
+}
+.aione-widgets .aione-widget:hover .aione-widget-header .aione-widget-handle .aione-icon{
+	line-height: 30px;
+}
+.aione-widgets .aione-widget .aione-widget-header .aione-widget-title{
+	float: left;
+	display:none;
+}
+.aione-widgets .aione-widget.hide-title .aione-widget-header .aione-widget-title{
+	display:none;
+}
+.aione-widgets .aione-widget .aione-widget-header .aione-widget-actions{
+	float: right;
+	opacity: 0;
+	-webkit-transition: all 300ms ease-in-out;
+    -moz-transition: all 300ms ease-in-out;
+    -o-transition: all 300ms ease-in-out;
+    transition: all 300ms ease-in-out;
+}
+.aione-widgets .aione-widget:hover .aione-widget-header .aione-widget-actions{
+	opacity: 1;
+}
+.aione-widgets .aione-widget .aione-widget-header .aione-widget-actions .fixed-action-btn{
+	position: relative;
+    right: auto;
+    bottom: auto;
+    padding: 0;
+    margin: 0;
+
+}
+.aione-widgets .aione-widget .aione-widget-header .aione-widget-actions .fixed-action-btn.horizontal ul {
+    text-align: right;
+    right: 44px;
+}
+.aione-widgets .aione-widget .aione-widget-header .aione-widget-actions .fixed-action-btn.horizontal ul li {
+    margin:0;
+}
+.aione-widgets .aione-widget .aione-widget-content{
+	
+}
+.aione-widgets .aione-widget .aione-widget-footer{
+	display:none;
+}
+.aione-widgets .aione-widget .aione-widget-content .aione-widget-error{
+    color: #F44336;
+    text-align: center;
+    height: 100%;
+    font-size: 16px;
+    line-height: 1.3;
+    padding: 20px 10px;
+}
+</style>
+
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
-<div>
 <?php echo $__env->make('organization.dashboard._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-		<div class="row">
-			<?php 
-				$count = [];
-			 ?>
-			<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widgetKey => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<?php 
-					$count[] = $widget->id;
-					// dump($widget['widgets']);
-				 ?>
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			<?php 
-				$isAdmin = in_array('administrator',get_user_roles());
-				if(count(request()->route()->parameters()) >0 ){
-					$current_dashboard_id = request()->route()->parameters()['id'];
-				}
-				else{
-					$current_dashboard_id = "";
-				}
-				
 
-				
+<div class="aione-dashboard">
+    <div class="aione-widgets">
+    
+
+    	<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widget_key => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    		<?php 
+				$widget_id = $widget->id;
+				$widget_key = $widget->slug;
+				$widget_title = $widget->title;
 			 ?>
 
-			<?php $__currentLoopData = @$dashboard_tabs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $tab): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-			    <?php if($key == $current_dashboard_id): ?>
-			    	
-			    <?php endif; ?>
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			<div id="sortable_1">
-			<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widgetKey => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-					<?php 
-						$file = (!$isAdmin)?$widget->widgets->slug:$widget->slug;
-					 ?>
-					<?php if(View::exists('organization.widgets.'.$file)): ?>
-						<?php 
-							if($isAdmin){
-								$widget['widgets'] = $widget;
-							}
-						 ?>
-						
-						<div class="ui-state-default widget-wrapper col l3 pr-14">
-								<?php 
-									$slug = request()->route()->parameters()['id'];
-									if(Auth::guard('admin')->check()){
-										$id = Auth::guard('admin')->user()->id;
-									}else{
-										$id = Auth::guard('org')->user()->id;
-									}
-									$widget_id = $widget['id'];
-								 ?>
-							<?php echo $__env->make('organization.widgets.'.$file , ['data'=>$widget,'count' => count($count),'isAdmin'=>$isAdmin], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-								
-								<input type="hidden" name="slug" value="<?php echo e($slug); ?>">
-								<input type="hidden" name="widget_id" value="<?php echo e($widget_id); ?>">
-							<a href="javascript:;" class="delete-widget"><i class="material-icons dp48">clear</i></a>
+	    	<div id="aione_widget_<?php echo e($widget_key); ?>" class="aione-widget aione-widget-<?php echo e($widget_key); ?> aione-widget-id-<?php echo e($widget_id); ?>">
+	    		<div class="aione-widget-header">
+	    			<div class="aione-widget-handle"><a class="aione-widget-drag aione-tooltip" title="Sort Widget"><i class="aione-icon material-icons">menu</i></a></div>
+	    			<div class="aione-widget-title"><?php echo e($widget_title); ?></div>
+	    			<div class="aione-widget-actions">
+	    				<div class="fixed-action-btn horizontal click-to-toggle">
+							<a class="btn-floating">
+								<i class="aione-icon material-icons">more_horiz</i>
+							</a>
+							<ul>
+								<li><a class="btn-floating red aione-widget-delete  aione-tooltip"  title="Delete Widget"><i class="aione-icon material-icons">close</i></a></li>
+								<li><a class="btn-floating yellow darken-1 aione-widget-collapse  aione-tooltip"  title="Minimize Widget"><i class="aione-icon material-icons">launch</i></a></li>
+								<li><a class="btn-floating blue"  title="XYZ Widget"><i class="aione-icon material-icons  aione-tooltip">attach_file</i></a></li>
+							</ul>
 						</div>
-						
-					<?php endif; ?>
-				
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			</div>
-			<div class="col l3">
-				<div class="add-widget row" data-target="add-widget">
-					<div class="col l12 center-align plus-sign" style="">
-						+
-					</div>
-					<div class="col l12 center-align">
-						Add New Widget
-					</div>
-				</div>
-			</div>
-			
-			<div id="add-widget" class="modal modal-fixed-footer" style="overflow-y: hidden;">
-				<div class="modal-header white-text  blue darken-1" ">
-					<div class="row" style="padding:15px 10px;margin: 0px">
-						<div class="col l7 left-align">
-							<h5 style="margin:0px">Add Widget</h5>	
-						</div>
-						<div class="col l5 right-align">
-							<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button " style="color: white"><i class="fa fa-close"></i></a>
-						</div>	
-					</div>
-				</div>
-				<?php echo e(Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])); ?>
+	    			</div>
+	    		</div>
+	    		<div class="aione-widget-content">
+	    			<?php if(View::exists('organization.widgets.'.$widget_key)): ?>
+	    				<?php echo $__env->make('organization.widgets.'.$widget_key, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	    			<?php else: ?> 
+	    				<div class="aione-widget-error">
+	    					<?php echo e(__('messages.widget_view_misssing')); ?>
 
+	    				</div>
+	    			<?php endif; ?>
+	    		</div>
+	    		<div class="aione-widget-footer"></div>
+	    	</div> <!-- .aione-widget -->
 
-					<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
-						<?php echo Form::select('widget[]',@$listWidget,null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=> 'Select Widget','field_placeholder','multiple'=>true]); ?>
+    	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-						<input type="hidden" name="slug" value="<?php echo e(Request()->route()->parameters()['id']); ?>">
-						<?php echo csrf_field(); ?>
-
-
-					</div>
-					<div class="modal-footer">
-						<button class="btn blue " type="submit" name="action">Add</button>
-					</div>	
-				<?php echo e(Form::close()); ?>
-
-			</div>
-			
-		</div>
-	</div> 
-	<div class="row">	
-		<div class="col l6 pr-7">
-			<div class="card center-align chk-n-out" >
-				<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
-				<input type="hidden" class="status" value="<?php echo e($check_in_out_status); ?>" >
-				<button href="javascript:;" status="check_in" class="checkInOut blue aione-btn" id="check_in" style="">
-					<span>
-						<span >
-							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
-						</span>
-						<span>
-								<span style="font-size: 18px;margin-left: 5px">Check-In</span>
-						</span>
-					</span>
-				</button>
-				
-				<button  status="check_out" class="checkInOut grey darken-2" id="check_out" style="display: inline-block;color: white;margin: 0 auto;padding: 8px 20px">
-					<span>
-						<span >
-							<i class="fa fa-clock-o" style="font-size: 22px;"></i>
-						</span>
-						<span>
-								<span style="font-size: 18px;margin-left: 5px">Check-Out</span>
-						</span>
-					</span>
-				</button>
-			</div>
-
-		</div>
-		
-		
-	</div>
-	<div class="row">
-		<div class="col l3">
-			<div class="card shadow mt-0" style="border:1px solid #e1e1e1">
-				<div class="center-align aione-widget-header" ><h5 class="m-0"><a href="#">Working Hours</a></h5></div>
-				<div class="count">
-					<span ><time id="timer">00:00:00</time> Hrs</span>
-				</div>
-				<div class="in-out-button">
-
-					<a href="#" id="start">
-						<i class="material-icons dp48">access_alarm</i>
-						<div>
-							<div class="check-in" style="font-size: 26px;color: white">
-								Check In
-							</div>
-							<div class="check-out" style="font-size: 26px;color: white">
-								Check Out
-							</div>
-
-							<div style="color: white;font-size: 14px;line-height: 7px;">
-								<div class="" id="clock_1"></div>
-							</div>
-						</div>
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
-
-
-
+    </div> <!-- .aione-widgets -->
+</div> <!-- .aione-dashboard -->
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-	<style type="text/css">
+<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'edit-dashboard','heading'=>'Edit Dashboard','button_title'=>'Save Data','section'=>'dashboard']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-		.widget-wrapper {
-			position: relative;
-			display: block;
-		}
-		.widget-wrapper > a{
-			position: absolute;
-			top: 22px;
-			right: 30px;
-			display: none;
-		}
-		.widget-wrapper > a > i{
-			font-size: 20px;
-    		color: #979797;
-    		
-		}
-		.widget-wrapper:hover  a {
-			display: block;
-		}
-		
-	</style>
-	<script type="text/javascript">
-	 $( function() {
-	    $( "#sortable" ).sortable({
-	    	axis: "x",
-	      items: "li:not(.unsortable)",
-	      update : function(){
-	      	var dashboard_index = [];
-	      	$('.dashboard-tab').each(function(){
-	      		dashboard_index.push($(this).attr('dashboard-index'));
-	      	});
-	      	$.ajax({
-	      		url : route()+'sort/dashbaord',
-	      		type : "POST",
-	      		data : {
-	      			data : dashboard_index,
-	      			_token : $("#token").val()
-	      		},
-	      		success : function (res) {
-	      			console.log(res);
-	      		}
-	      	});
-	      }
-	    });
-	  } );
-	 $(document).on('click','.delete-dashboard',function(){
-	 	var tabSlug = $(this).attr('tab-id');
-			      				$(this).parents('.dashboard-tab').remove();
+<?php echo e(Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])); ?>
+
+	<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
+	<?php echo Form::select('widget[]',@$listWidgets,null,["class"=>"no-margin-bottom aione-field browser-default" , 'placeholder'=> 'Select Widget','field_placeholder','multiple'=>true]); ?>
+
+		<input type="hidden" name="slug" value="<?php echo e(@Request()->route()->parameters()['id']); ?>" class="slug-parameter">
+		<?php echo csrf_field(); ?>
 
 
-	 	$.ajax({
-	      		url : route()+'delete/dashboards',
-	      		type : "POST",
-	      		data : {
-	      			slug : tabSlug,
-	      			_token : $("#token").val()
-	      		},
-	      		success : function (res) {
-	      			if(res == 'true'){
-	      			}
-	      			console.log(res);
-	      		}
-	      	});
-	 });
-
-	 $( function() {
-	    $( "#sortable_1" ).sortable();
-	    $( "#sortable_1" ).disableSelection();
-	  } );
-		 
-	$(document).ready(function() {
-
-
-		
-		status = $(".status").val();
-		if(status=='check_in')
-		{
-			$("#check_out").show();
-			$("#check_in").hide();
-		}else if(status=='not_employ'){
-				$(".chk-n-out").hide();
-			$("#check_in").hide();
-		}else{
-			$("#check_out").hide();
-			$("#check_in").show();
-		}
-
-		$('#calendar').fullCalendar({
-			
-		});
-		
-	});
-
-	$(document).on('click','.checkInOut',function(e){
-
-		status = $(this).attr('status');
-		postdata ={}; 
-		postdata['_token'] = $("#token").val();
-		postdata['status'] = status;
-		$.ajax({
-			url:route()+'hrm/attendance/check_in_out',
-			type:'POST',
-			data:postdata,
-			success:function(res)
-			{	
-				$("#check_out , #check_in").show();
-				 $("#"+status).hide();
-				//$("#"+status).hide();
-				// if(status=='check_in'){
-					
-				//  }else{
-				// 	$("#check_in").show();
-				//  }
-
-				
-			}
-		});
-	});
-
-	// function checkInOut(e)
-	// {	
-	// 	e.preventDefault();
-	// 	 token = $("#token").val();
-	// 	$.ajax({
-	// 		url:route()+'attendance/check_in_out',
-	// 		type:'POST',
-	// 		data:{'checkInOut':'check','token':token},
-	// 		success:function(res)
-	// 		{
-	// 			console('success');
-	// 		}
-	// 	});
-		
-		
- //    }
- //**********************stop watch********************************8
-var h1 = document.getElementById('timer'),
-    start = document.getElementById('start'),
-    stop = document.getElementById('stop'),
-    clear = document.getElementById('clear'),
-    seconds = 0, minutes = 0, hours = 0,
-    t;
-
-function add() {
-    seconds++;
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes >= 60) {
-            minutes = 0;
-            hours++;
-        }
-    }
-    
-    h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
-
-    timer();
-}
-function timer() {
-    t = setTimeout(add, 1000);
-}
-// timer();
-$(document).on('click','.in-out-button > a' , function(){
-	if($(this).attr('id') == 'start'){
-		$(this).attr('id','stop');
-		timer();
-	}else{
-		$(this).attr('id','start');
-		clearTimeout(t);
-	}
-});
-
-// /* Start button */
-// start.onclick =function(){
-// 	timer();
-// }
-
-//  Stop button 
-// stop.onclick = function() {
-//     clearTimeout(t);
-// }
-
-/* Clear button */
-/*clear.onclick = function() {
-    h1.textContent = "00:00:00";
-    seconds = 0; minutes = 0; hours = 0;
-}*/
-
- //***********************************************************
-	</script>
+	</div>
+	<div class="modal-footer">
+		<button class="btn blue " type="submit" name="action">Add</button>
+	</div>	
+<?php echo e(Form::close()); ?>
 
 
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

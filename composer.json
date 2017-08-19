@@ -31,7 +31,7 @@
             "App\\": "app/",
             "PHPMySQLWrapper\\MySQLWrapper\\" : "packages/phpmysqlwrapper/mysqlwrapper/src"
         },
-        "files": ["app/Helpers/widget_function.php", "app/Helpers/global_helper.php"]
+        "files": ["app/Helpers/widget_function.php", "app/Helpers/global_helper.php", "app/Helpers/aione_forms.php"]
     },
     "autoload-dev": {
         "psr-4": {

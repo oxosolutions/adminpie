@@ -164,53 +164,85 @@ $page_title_data = array(
 								onchange="document.getElementById('form1').submit()" class="chooser">
 							</div>
 						{!!Form::close()!!}
-							@if($model->profilePic != null || $model->profilePic != "" || !empty($model->profilePic))
+							@if($model->user_profile_picture != null || $model->user_profile_picture != "" || !empty($model->user_profile_picture))
 								<a href="{{route('profile.picture.delete',$id)}}">Remove Image</a>	
 							@endif
 						
 						
 
 						<div class="preloader-wrapper image-spinner big active" style="">
-							      <div class="spinner-layer spinner-blue">
-							        <div class="circle-clipper left">
-							          <div class="circle"></div>
-							        </div><div class="gap-patch">
-							          <div class="circle"></div>
-							        </div><div class="circle-clipper right">
-							          <div class="circle"></div>
-							        </div>
-							      </div>
+							<div class="spinner-layer spinner-blue">
+								<div class="circle-clipper left">
+									<div class="circle">
+										
+									</div>
+								</div>
+								<div class="gap-patch">
+									<div class="circle">
+									
+									</div>
+								</div>
+								<div class="circle-clipper right">
+									<div class="circle">
+										
+									</div>
+								</div>
+							</div>
 
-							      <div class="spinner-layer spinner-red">
-							        <div class="circle-clipper left">
-							          <div class="circle"></div>
-							        </div><div class="gap-patch">
-							          <div class="circle"></div>
-							        </div><div class="circle-clipper right">
-							          <div class="circle"></div>
-							        </div>
-							      </div>
+							<div class="spinner-layer spinner-red">
+								<div class="circle-clipper left">
+									<div class="circle">
+										
+									</div>
+								</div>
+								<div class="gap-patch">
+									<div class="circle">
+									
+									</div>
+								</div>
+								<div class="circle-clipper right">
+									<div class="circle">
+										
+									</div>
+								</div>
+							</div>
 
-							      <div class="spinner-layer spinner-yellow">
-							        <div class="circle-clipper left">
-							          <div class="circle"></div>
-							        </div><div class="gap-patch">
-							          <div class="circle"></div>
-							        </div><div class="circle-clipper right">
-							          <div class="circle"></div>
-							        </div>
-							      </div>
+							<div class="spinner-layer spinner-yellow">
+								<div class="circle-clipper left">
+									<div class="circle">
+										
+									</div>
+								</div>
+								<div class="gap-patch">
+									<div class="circle">
+									
+									</div>
+								</div>
+								<div class="circle-clipper right">
+									<div class="circle">
+										
+									</div>
+								</div>
+							</div>
 
-							      <div class="spinner-layer spinner-green">
-							        <div class="circle-clipper left">
-							          <div class="circle"></div>
-							        </div><div class="gap-patch">
-							          <div class="circle"></div>
-							        </div><div class="circle-clipper right">
-							          <div class="circle"></div>
-							        </div>
-							      </div>
-							    </div>
+							<div class="spinner-layer spinner-green">
+								<div class="circle-clipper left">
+									<div class="circle">
+										
+									</div>
+								</div>
+								<div class="gap-patch">
+									<div class="circle">
+									
+									</div>
+								</div>
+								<div class="circle-clipper right">
+									<div class="circle">
+										
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					
 					<div class="col l9 p-14">
@@ -236,13 +268,13 @@ $page_title_data = array(
 									</div>
 									<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
 										<div class="col s12 m2 l12 aione-field-wrapper">
-										{!! FormGenerator::GenerateField('editempsec1f1',['type'=>'inset']) !!}
+										{!! FormGenerator::GenerateField('name',['type'=>'inset']) !!}
 										</div>
 										<div class="col s12 m2 l12 aione-field-wrapper">
-										 {!! FormGenerator::GenerateField('editempsec1f2',['type'=>'inset']) !!}
+										 {!! FormGenerator::GenerateField('email',['type'=>'inset']) !!}
 										 </div>
 										 <div class="col s12 m2 l12 aione-field-wrapper">
-										 {!! FormGenerator::GenerateField('empsec1f8',['type'=>'inset']) !!}
+										 {!! FormGenerator::GenerateField('about_me',['type'=>'inset']) !!}
 										 </div>
 										 <div class="col s12 m2 l12 aione-field-wrapper">
 											{{-- {!! Form::select('shift',null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!} --}}
@@ -455,7 +487,7 @@ $page_title_data = array(
 										@if($isAdmin)
 											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 										@endif
-									{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+									{!!Form::model($model->toArray(),['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
 									
 									@include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
@@ -470,14 +502,14 @@ $page_title_data = array(
 											<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
 										</div>
 										<div class="col l12 details-wrapper" >
-											@if($field == 'designation')
+										@if($field == 'designation')
 												&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
 										@elseif($field == 'department')
 												&nbsp;	{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->
 													name}}
-											@else
+										@else
 												&nbsp;&nbsp;{{$model[strtolower($field)]}}
-											@endif
+										@endif
 										</div>
 									</div>
 								@endforeach
@@ -500,7 +532,6 @@ $page_title_data = array(
 									@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
 								{!!Form::close()!!}
 							</div>
-							
 						</div>
 						<div class="row" >
 							@php
@@ -544,33 +575,33 @@ $page_title_data = array(
 @include('common.pagecontentend')
 	<script type="text/javascript">
 		
-	$(document).ready(function(){
-		$('#modal1').modal({
-			 dismissible: false
-		});
-		$('#modal2').modal({
-			 dismissible: false
-		});
-		$('#modal3').modal({
-			 dismissible: false
-		});
-		$('#modal4').modal({
-			 dismissible: false
-		});
+		$(document).ready(function(){
+			$('#modal1').modal({
+				 dismissible: false
+			});
+			$('#modal2').modal({
+				 dismissible: false
+			});
+			$('#modal3').modal({
+				 dismissible: false
+			});
+			$('#modal4').modal({
+				 dismissible: false
+			});
 
-	})
-	$(document).on('click','closeDialog',function(){
-		$('#modal1').modal('close');
-	})
-	$(document).on('click','.fa-close',function(){
-		$('#modal9').modal('close');
-	});
-	$(document).on('click','.chooser',function(){
-		$('.image-spinner').show();
-	});
-	$(document).on('click','#card-alert i',function(){
-		$('#card-alert').remove();
-	});
+		})
+		$(document).on('click','closeDialog',function(){
+			$('#modal1').modal('close');
+		})
+		$(document).on('click','.fa-close',function(){
+			$('#modal9').modal('close');
+		});
+		$(document).on('click','.chooser',function(){
+			$('.image-spinner').show();
+		});
+		$(document).on('click','#card-alert i',function(){
+			$('#card-alert').remove();
+		});
 
 	</script>
 		@if(@$errors->has())

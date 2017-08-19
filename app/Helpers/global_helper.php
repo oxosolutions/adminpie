@@ -18,6 +18,27 @@ use App\Model\Organization\ActivityLog;
 use App\Model\Admin\GlobalActivityTemplate;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\UserRoleMapping;
+use App\Mddel\Organization\OrganizationSetting;
+
+/************************************************************
+*	@function g
+*	@description Global Debug Function
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return organization_id [code]
+************************************************************/
+function g($g){	
+
+	$output ='';
+	$output .='<pre>';
+	$output .=print_r($g);
+	$output .='</pre>';	
+	
+	//Return Output
+	return $output;
+}
+
 
 /************************************************************
 *	@function get_organization_id
@@ -35,6 +56,14 @@ function get_organization_id(){
 	
 	//Return Organization ID
 	return $organization_id;
+}
+
+function get_meta_array($meta){
+	$metaArray = [];
+	foreach($meta as $key => $value){
+		$metaArray[$value->key] = $value->value;
+	}
+	return $metaArray;
 }
 
 
@@ -93,6 +122,10 @@ function get_image($path, $filename, $size = null, $html = false){
 
 }
 
+ // function get_form_settings($formId){
+ // 	$model = 'use App\Model\\Organization\\';
+ // }
+
 /************************************************************
 *	@function get_profile_picture
 *	@description Returns user id of logged in user
@@ -118,21 +151,21 @@ function get_profile_picture($uid = null, $size = null, $html = false){
 	
 	$user_profile_picture_url = 'assets/images/user.png';
 	
-	 
-	if(empty($user_profile_picture)){
-		return $user_profile_picture_url;
-	} 
-	
-	$profile_picture_path = upload_path('user_profile_picture');
+	if(!empty($user_profile_picture)){
+		$profile_picture_path = upload_path('user_profile_picture');
 		
-	if(!File::exists($profile_picture_path.directory_separator().$user_profile_picture)){
-		delete_user_meta('user_profile_picture', $uid); 
+		if(!File::exists($profile_picture_path.directory_separator().$user_profile_picture)){
+			delete_user_meta('user_profile_picture', $uid);
+		} else {
+			$user_profile_picture_url = get_image($profile_picture_path, $user_profile_picture, $size, false);
+		}
+	} 
+
+	if($html){
+		return '<img src="'.asset($user_profile_picture_url).'" data-user-id="'.$uid.'" class="user-profile-picture user-profile-picture-'.$size.'" />';
+	}else{
 		return $user_profile_picture_url;
 	}
-		
-	$user_profile_picture_url = get_image($profile_picture_path, $user_profile_picture, $size, false);
-	
-	return $user_profile_picture_url;
 
 }
 
@@ -359,15 +392,26 @@ function resize_image($size = 'thumbnail', $filename, $source_path = null, $dest
 *	@return  		[object/array]
 ************************************************************/
 
-function get_meta($model, $uid, $key = null, $column, $array = false){	
-	
+function get_meta($model, $uid = null, $key = null, $column = null, $array = false){	
+	$whereArray = [];
+	if($uid != null && $column != null){
+		$whereArray[$column] = $uid;
+	}
+	if($key != null){
+		$whereArray['key'] = $key;
+	}
 	$meta = array();
 	$model = 'App\\Model\\'.$model;
-	if($key != null){
-		$meta = $model::where([$column => $uid,'key'=>$key])->get();
+	if(!empty($whereArray)){
+		$meta = $model::where($whereArray)->get();
 	}else{
-		$meta = $model::where([$column => $uid])->get();
+		if($column != null){
+			$meta = $model::where([$column => $uid])->get();
+		}else{
+			$meta = $model::get();
+		}
 	}
+	//dd($meta);
 	$correctedMeta = [];
 	if(!$meta->isEmpty()){
 		foreach($meta as $mkey => $metaValues){
@@ -375,13 +419,19 @@ function get_meta($model, $uid, $key = null, $column, $array = false){
 		}
 	}
 	$meta = collect($correctedMeta);
-	if($meta->count() == 1){
+	if($meta->count() == 1 && $key != null){
 		return $meta->toArray()[$key];
 	}
 	if($array){
 		$meta =  $meta->toArray();
+		if(empty($meta)){
+			return false;
+		}
+	}else{
+		if($meta->isEmpty()){
+			return false;
+		}
 	}
-
 	//Return Meta Object 
 	return $meta;
 }
@@ -459,7 +509,7 @@ function get_user($meta = true ,$array = false, $id = null){
 
 function update_user_meta($metaKey, $metaValue, $uid = null, $return = false){
 	if($uid == null){
-		$uid = Auth::guard('org')->user()->id;
+		$uid = get_user_id();
 	}
 	$meta = [$metaKey=>$metaValue];
 	$updatedMeta = update_user_metas($meta, $uid, $return);
@@ -573,6 +623,29 @@ if(!function_exists('get_user_role')){
 	}
 }
 
+function get_organization_meta($key = null, $array = false){
+	$model = 'Organization\OrganizationSetting';
+	$meta = get_meta($model,null,$key,null,$array);
+	return $meta;
+}
+
+function update_organization_meta($metaKey, $metaValue){
+	update_organization_metas([$metaKey=>$metaValue]);
+	return true;
+}
+
+function update_organization_metas(Array $meta){
+	
+	$updatedMeta = [];
+	foreach($meta as $metaKey => $metaValue){
+		$model = org_setting::firstOrNew(['key'=>$metaKey]);
+		$model->key = $metaKey;
+		$model->value = $metaValue;
+		$model->save();
+	}
+	return true;	
+}
+
 function delete_file($filePath){
 	// File::delete('images/' . $image_url);
 }
@@ -600,8 +673,70 @@ function directory_separator(){
 	//Return User ID
 	return $directory_separator;
 }
+/************************************************************
+*	@function meta_table
+*	@description Draw html table of meta data of an entity
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm meta		[array	optional	default	null]
+*	@perm layout		[string	optional	default	table]
+*	@return html [html]
+************************************************************/
+function meta_table($headers = null, $meta = null, $layout="table", $style = "default"){
+	$html = '';
+	if( $layout == 'table' ){
+		$html .= aione_table($headers, $meta, $style);
+	} elseif( $layout == 'table' ){
+		$html .= aione_list($headers, $meta, $style);
+	}
+	return $html;
+}
 
+/************************************************************
+*	@function aione_table
+*	@description Draw html table of given Array
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm headers		[array	optional	default	null]
+*	@perm records		[array	optional	default	null]
+*	@return html [html]
+************************************************************/
+function aione_table($headers = null, $records = null, $style = "default"){
+	
+	$html = '';
+	$html .= '<div id="aione_table" class="aione-table">';
+	if(!empty($headers)){
+		
+	}
+	$html .= '</div>';
+	
+	return $html;
+}
 
+/************************************************************
+*	@function aione_list
+*	@description Draw html list of given Array
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm headers		[array	optional	default	null]
+*	@perm records		[array	optional	default	null]
+*	@return html [html]
+************************************************************/
+function aione_list($headers = null, $records = null, $style = "default"){
+	$html = '';
+	$html .= '<div id="aione_list" class="aione-list">';
+	if(!empty($headers)){
+		
+	}
+	$html .= '</div>';
+	
+	$html .= '</div>';
+	
+	return $html;
+}
 /************************************************************
 *	@Module Tools
 *	@Section Widgets
@@ -662,7 +797,7 @@ function get_website_alexa_rank( $url = null ){
 	 */
 	function user_info(){
 		$id = Auth::guard('org')->user()->id;
-		$user = User::where(['id'=>$id])->select(['name','email','id'])->with('employee_rel')->first();
+		$user = User::where(['id'=>$id])->select(['name','email','id'])->first();
 		return $user;
 	}
 /************************************************************

@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{ asset('css/ocrm.css') }}" type="text/css" rel="stylesheet"  media="screen,projection"/>
     <link href="{{ asset('assets/css/fullcalendar.min.css') }}" rel='stylesheet' />
-	<link href="{{ asset('assets/css/fullcalendar.print.min.css') }}" rel='stylesheet' media='print' />
-	<link href="{{ asset('assets/css/style.css') }}" rel='stylesheet' />
+	<link href="{{ asset('assets/css/aione.css') }}" rel='stylesheet' />
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/spectrum.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('css/simple-iconpicker.min.css') }}">
     

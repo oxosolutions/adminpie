@@ -35,6 +35,10 @@ class section extends Model
     	return $this->hasMany('App\Model\Organization\SectionMeta','section_id','id');
     }
 
+    public function formsMeta(){
+        return $this->hasMany('App\Model\Organization\FormsMeta','form_id','form_id');
+    }
+
     public function setTable($table){
 
         $this->table = $table;

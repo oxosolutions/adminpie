@@ -18,6 +18,11 @@ class UsersMeta extends Model
    
    protected $fillable = ['user_id', 'key', 'value', 'type'];
 
+   // public function users()
+   // {
+   //  return $this->belongsTo('')
+   // }
+
    public static function saveDataListSetting($url,$params){
 	   if(Auth::guard('org')->check()){
 	   		$user = Auth::guard('org')->user()->id;
@@ -56,5 +61,22 @@ class UsersMeta extends Model
 		$model = self::where(['user_id'=>Auth::guard('org')->user()->id,'key'=>$metaKey])->first();
 		return @$model->value;
    }
+
+   public function user(){
+   		return $this->belongsTo('App\Model\Organization\User','user_id','id');
+   }
+
+   public function scopeDepartment($query){
+        return $this->belongsTo('App\Model\Organization\Department','value','id');
+    }
+
+    public function scopeDesignation($query){
+        return $this->belongsTo('App\Model\Organization\Designation','value','id');
+    }
+
+    public function payscale(){
+      return $this->belongsTo('App\Model\Organization\Payscale','value','id');
+    }
+    // public function payscale
 
 }

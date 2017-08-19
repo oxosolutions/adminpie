@@ -180,6 +180,7 @@ foreach($columns as $column){
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 			<div class="clear"></div> <!-- .clear -->
 		</li> 	<!-- .aione-datalist-header-item -->
+
 		<?php $__currentLoopData = $datalist; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dataset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 			<li class="aione-datalist-item" >
 				<div class="aione-datalist-item-wrapper">
@@ -222,29 +223,34 @@ foreach($columns as $column){
 														<?php else: ?>
 															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Deactivate</a>
 														<?php endif; ?>
-													<?php elseif($action_key == 'approve_status'): ?>
-														<?php if($dataset->status == 0): ?>
+													<?php elseif($action_key == 'check_status'): ?>
+														<?php if($dataset->status == 2): ?>
 															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Approve</a>
-														<?php elseif($dataset->status == 2): ?>
+														<?php elseif($dataset->status == 0): ?>
+
 															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Approve</a>
 															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Reject</a>
-														<?php else: ?>
+														<?php elseif($dataset->status == 1): ?>
 															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Reject</a>
 														<?php endif; ?>
 													<?php else: ?>
 														<?php 
 
 															if(is_array($action_value['route'])){
-																dd($dataset);
-																$explodedRoute = explode('.',$action_value['route']['id']);
-																$route = $action_value['route']['route'];
-																$routeId = $dataset[$explodedRoute[0]]['id'];
+																if(!isset($action_value['route']['id'])){
+																	$route = $action_value['route']['route'];
+																	$routeId = $dataset['id'];
+																}else{
+																	$explodedRoute = explode('.',$action_value['route']['id']);
+																	$route = $action_value['route']['route'];
+																	$routeId = $dataset[$explodedRoute[0]]['id'];
+																}
 															}else{
 																$route = $action_value['route'];
 																$routeId = $dataset->id;
 															}
-														 ?>
-														<a href="<?php echo e(route($route,$routeId)); ?>" style="padding-right:10px" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
+															 ?>
+															<a href="<?php echo e(route($route,$routeId)); ?>" style="padding-right:10px" class="<?php echo e(@$action_value['class']); ?>"><?php echo e($action_value['title']); ?></a>
 													<?php endif; ?>
 												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 

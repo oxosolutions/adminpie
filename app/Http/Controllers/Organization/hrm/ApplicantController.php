@@ -4,12 +4,13 @@ namespace App\Http\Controllers\Organization\hrm;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Organization\Applicant;
-use App\Model\Organization\ApplicantMeta; 
+// use App\Model\Organization\Applicant;
+// use App\Model\Organization\ApplicantMeta; 
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\Application;
-use App\Model\Organization\ApplicationMeta;
-
+// use App\Model\Organization\ApplicationMeta;
+use App\Model\Organization\User;
+use App\Model\Organization\UsersMeta;
 use Session;
 
 class ApplicantController extends Controller
@@ -42,7 +43,7 @@ class ApplicantController extends Controller
         $application->opening_id = $request['opening_id'];
         $application->applicant_id = $user_id;
         $application->save();
-        unset($request['_token'], $request["opening_id"],$request["name"], $request["email"], $request["password"], $request['role_id']);
+        // unset($request['_token'], $request["opening_id"],$request["name"], $request["email"], $request["password"], $request['role_id']);
         $data = $request->except('_token','opening_id','name','email','password','role_id','qualification','percentage','board/university','date_of_passing');
         foreach ($data as $key => $value) {
           $applicationMeta = new ApplicationMeta();
@@ -54,6 +55,8 @@ class ApplicantController extends Controller
           $applicationMeta->value = $value;
           $applicationMeta->save();
         }
+            Session::flash('sucess','successfully applied Job');
+        return redirect()->route('openingss');
       }
          return view('organization.applicant.apply',compact('id'));
     }
@@ -77,23 +80,23 @@ class ApplicantController extends Controller
           $sortedBy = @$request->sort_by;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = Applicant::with('user_relation')->where('id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = User::where('user_type','applicant')->where('id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                  $model = Applicant::with('user_relation')->where('id','like','%'.$request->search.'%')->paginate($perPage);
+                  $model = User::where('user_type','applicant')->where('id','like','%'.$request->search.'%')->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = Applicant::with('user_relation')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = User::where('user_type','applicant')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                   $model = Applicant::with('user_relation')->paginate($perPage);
+                   $model = User::where('user_type','applicant')->paginate($perPage);
               }
           }
                   $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'user_relation.name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created At'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.designation']
+                                          'delete'=>['title'=>'Delete','route'=>'delete.applicant']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
@@ -108,8 +111,9 @@ class ApplicantController extends Controller
      */
     public function create(Request $request)
     {
-
-        if($request->isMethod('post')){
+      if($request->isMethod('post')){
+        $request['name'] = $request['appsec1f1'];
+        $request['email'] = $request['appsec1f2'];
         $tbl = Session::get('organization_id');
         $valid_fields = [   'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
@@ -117,12 +121,8 @@ class ApplicantController extends Controller
                         ];
         $this->validate($request , $valid_fields);
         $request['role_id'] = setting_val_by_key('applicant_role');
-        $user_id = $this->user->create($request->all(), 2);
-        $applicant = new Applicant();
-        $applicant->user_id = $user_id;
-        $applicant->status = 1;
-        $applicant->save();
-        }
+        $user_id = $this->user->create($request->all(),6,'applicant');
+      }
       return redirect()->route('list.applicant');
     }
     /**
@@ -134,7 +134,7 @@ class ApplicantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $appCheckFirst = ApplicationMeta::where(['applicant_id'=>$id]);
+        $appCheckFirst = User::where(['id'=>$id]);
         if($appCheckFirst->exists()){
            $data =  $appCheckFirst->get()->keyBy('key');
            $collection = collect($data->toArray());
@@ -171,14 +171,15 @@ class ApplicantController extends Controller
          return view('organization.applicant.edit', compact('model'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+   /**
+    * [destroy description]
+    * @param  [type] $id [description]
+    * @return [type]     [description]
+    */
     public function destroy($id)
     {
-        //
+        User::where('id',$id)->delete();
+        UsersMeta::where('user_id', $id)->delete();
+        return back();
     }
 }

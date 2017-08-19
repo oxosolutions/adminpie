@@ -10,9 +10,7 @@ Homestead.yaml
 /bak
 
 # Gulp build
-/public/tools
-/public/tools/build
-/public/buildtools/build
+/public/aione-build-tools
 
 # User Files
 /public/files

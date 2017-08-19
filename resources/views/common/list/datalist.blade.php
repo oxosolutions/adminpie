@@ -174,6 +174,7 @@ foreach($columns as $column){
 			@endforeach
 			<div class="clear"></div> <!-- .clear -->
 		</li> 	<!-- .aione-datalist-header-item -->
+
 		@foreach($datalist as $dataset)
 			<li class="aione-datalist-item" >
 				<div class="aione-datalist-item-wrapper">
@@ -215,29 +216,34 @@ foreach($columns as $column){
 														@else
 															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Deactivate</a>
 														@endif
-													@elseif($action_key == 'approve_status')
-														@if($dataset->status == 0)
+													@elseif($action_key == 'check_status')
+														@if($dataset->status == 2)
 															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
-														@elseif($dataset->status == 2)
+														@elseif($dataset->status == 0)
+
 															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
 															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
-														@else
+														@elseif($dataset->status == 1)
 															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
 														@endif
 													@else
 														@php
 
 															if(is_array($action_value['route'])){
-																dd($dataset);
-																$explodedRoute = explode('.',$action_value['route']['id']);
-																$route = $action_value['route']['route'];
-																$routeId = $dataset[$explodedRoute[0]]['id'];
+																if(!isset($action_value['route']['id'])){
+																	$route = $action_value['route']['route'];
+																	$routeId = $dataset['id'];
+																}else{
+																	$explodedRoute = explode('.',$action_value['route']['id']);
+																	$route = $action_value['route']['route'];
+																	$routeId = $dataset[$explodedRoute[0]]['id'];
+																}
 															}else{
 																$route = $action_value['route'];
 																$routeId = $dataset->id;
 															}
-														@endphp
-														<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
+															@endphp
+															<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
 													@endif
 												@endforeach
 

@@ -35,7 +35,7 @@ class EmployeeController extends Controller
         }
         $datalist= [];
         $data= [];
-        /*if($request->has('items')){
+        if($request->has('items')){
               $perPage = $request->items;
               if($perPage == 'all'){
                 $perPage = 999999999999999;
@@ -43,7 +43,7 @@ class EmployeeController extends Controller
             }else{
               $perPage = 5;
             }
-        $sortedBy = @$request->orderby;
+        /*$sortedBy = @$request->orderby;
         $orgId = Session::get('organization_id');
         $datalist['datalist'] = [];
         $model = [];
@@ -141,7 +141,10 @@ class EmployeeController extends Controller
         $employe_id = '';
         $department_name = '';
         $designation_name = '';
-        $model = User::with(['metas'])->where(['user_type'=>'employee'])->get()->toArray();
+        $sortedBy = @$request->orderby;
+
+        $model = $this->getQueryResult($request,$sortedBy,$perPage);
+
         foreach ($model as $key => $record) {
             $model[$key]['department'] = '';
             $model[$key]['designation'] = '';
@@ -152,24 +155,24 @@ class EmployeeController extends Controller
                     $model[$key]['department'] = $department;
                 }
                 if($metaValue['key'] == 'designation'){
-                    $designation = DES::find($metaValue['value'])->name;
-                    $model[$key]['designation'] = $designation;
+                    $designation = DES::find($metaValue['value']);
+                    if($designation != null){
+                        $model[$key]['designation'] = $designation->name;
+                    }else{
+                        $model[$key]['designation'] = '';
+                    }
                 }
                 if($metaValue['key'] == 'employee_id'){
                     $model[$key]['employee_id'] = $metaValue['value'];
                 }
             }
-            $model[$key] = (object)$model[$key];
         }
-        //dd(collect($model));
-        //'employ_info.metas.contact_no'=>'Contact No',
-        
         $datalist =  [
-                      'datalist'=>  collect($model),
-                      'showColumns' => ['employee_id'=>'Employee ID','name'=>'Name','department_name'=>'Department','designation_name'=>'Designation','email'=>'Email ID','created_at'=>'Created At','status'=>'Status'],
+                      'datalist'=>  $model,
+                      'showColumns' => ['employee_id'=>'Employee ID','name'=>'Name','department'=>'Department','designation'=>'Designation','email'=>'Email ID','created_at'=>'Created At','status'=>'Status'],
                       'actions' => [
-                                      'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'=>'employ_info.id'] , 'class' => 'edit'],
-                                      'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'employ_info.id'] , 'class' => 'delete']
+                                      'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'] , 'class' => 'edit'],
+                                      'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'id'] , 'class' => 'delete']
                                    ],
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
@@ -186,26 +189,80 @@ class EmployeeController extends Controller
         return view('organization.employee.list',$datalist)->with(['data' => $data]);
     }
 
+    protected function getQueryResult($request, $sortedBy, $items){
+        if($request->has('search')){
+            if($sortedBy != ''){
+                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+            }else{
+                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+            }
+        }else{
+            if($sortedBy != ''){
+                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+            }else{
+                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+            }
+        }
+        return $model;
+    }
+
     public function employeeListDatatable(){
-        $model = EMP::with(['employ_info'=>function($query){
-              $query->with(['metas']);
-        },'designations','department_rel'])->get();
+        // Get employee list on the behalf of role
+        /*$model = User::with(['metas','user_role_rel'])->whereHas('user_role_rel', function($query){
+            $query->with(['roles'])->whereHas('roles', function($query){
+                $query->where('slug','employee');
+            });
+        })->get();*/
+        $model = User::with(['metas'])->where(['user_type'=>'employee'])->get();
 
         return Datatables::of($model)
+        ->addColumn('user', function($model){
+            return get_profile_picture($model->id,null,true);
+        })
         ->addColumn('department', function($model){
-            if($model->department_rel != null){
-                return $model->department_rel->name;
+            $department = $model->metas->where('key','department')->first();
+            if($department != null){
+                $department = DEP::find($department->value);
+                if($department != null){
+                    return $department->name;
+                }else{
+                    return '';
+                }
             }else{
                 return '';
             }
         })
         ->addColumn('designation', function($model){
-            if($model->designations != null){
-                return $model->designations->name;
+            $designation = $model->metas->where('key','designation')->first();
+            if($designation != null){
+                $designation = DES::find($designation->value);
+                if($designation != null){
+                    return $designation->name;
+                }else{
+                    return '';
+                }
             }else{
                 return '';
             }
         })
+        ->addColumn('employee_id', function($model){
+            $employeeId = $model->metas->where('key','employee_id')->first();
+            if($employeeId != null){
+                return $employeeId->value;
+            }else{
+                return '';
+            }
+        })
+        ->editColumn('status', function($model){
+            return view('organization.employee.status',['model'=>$model])->render();
+        })
+        ->editColumn('created_at', function($model){
+            return $model->created_at->diffForHumans();
+        })
+        ->editColumn('name', function($model){
+            return view('organization.employee.actions',['model'=>$model])->render();
+        })
+        ->rawColumns(['status','name','user'])
         ->make(true);
     }
     protected function saveSearch($request){
@@ -258,6 +315,7 @@ class EmployeeController extends Controller
     {
         $request['joining_date'] = date("Y-m-d");
         $model = OrganizationSetting::where('key' , 'employee_role')->first();
+
         if(count($model) > 0){
             $employee_id = $model->value;
         }else{
@@ -269,11 +327,11 @@ class EmployeeController extends Controller
                             'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
                             'password'      => 'required|min:8',
-                            'employee_id'   => 'required|min:4|max:256|unique:'.$tbl.'_employees'
+                            'employee_id'   => 'required|min:4|max:256'
                         ];
         $this->validate($request , $valid_fields);
         $request['role_id'] =  setting_val_by_key('employee_role');
-        $user_id = $this->user->create($request->all(), $employee_id);
+        $user_id = $this->user->create($request->all(), $employee_id, 'employee');
         foreach($request->all() as $key => $value){
             if(in_array($key,['designation','department','shift','employee_id'])){
                 $userMeta = new UsersMeta;
@@ -360,14 +418,16 @@ class EmployeeController extends Controller
     }
 
     public function export(){
-       $model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
+
+        /*$model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
             $query->with('metas');
-       }])->get();
+        }])->get();*/
+        $model = User::with(['metas'])->where(['user_type'=>'employee'])->get();
        $headers = array(
                     'User.name',
                     'User.email',
                     'User.password',
-                    'Employee.id',
+                    /*'Employee.id',
                     'Employee.user_id',
                     'Employee.employee_id',
                     'Employee.designation',
@@ -376,15 +436,15 @@ class EmployeeController extends Controller
                     'Employee.experience',
                     'Employee.blood_group',
                     'Employee.joining_date',
-                    'Employee.disability_percentage'
+                    'Employee.disability_percentage'*/
         );
        $employeeDataArray = [];
        foreach ($model as $key => $employe) {
             $singleEmployeeArray = [];
-            $singleEmployeeArray[] = @$employe->employ_info->name;
-            $singleEmployeeArray[] = @$employe->employ_info->email;
-            $singleEmployeeArray[] = @$employe->employ_info->password;
-            $singleEmployeeArray[] = @$employe->id;
+            $singleEmployeeArray[] = @$employe->name;
+            $singleEmployeeArray[] = @$employe->email;
+            $singleEmployeeArray[] = @$employe->password;
+            /*$singleEmployeeArray[] = @$employe->id;
             $singleEmployeeArray[] = @$employe->user_id;
             $singleEmployeeArray[] = @$employe->employee_id;
             $singleEmployeeArray[] = @$employe->designation_rel->name;
@@ -393,8 +453,8 @@ class EmployeeController extends Controller
             $singleEmployeeArray[] = @$employe->experience;
             $singleEmployeeArray[] = @$employe->blood_group;
             $singleEmployeeArray[] = @$employe->joining_date;
-            $singleEmployeeArray[] = @$employe->disability_percentage;
-            foreach($employe->employ_info->metas as $k => $meta){
+            $singleEmployeeArray[] = @$employe->disability_percentage;*/
+            foreach($employe->metas as $k => $meta){
                 if(!in_array('UsersMeta.'.$meta->key, $headers)){
                     $headers[] = 'UsersMeta.'.$meta->key;
                 }

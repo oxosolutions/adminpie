@@ -46,6 +46,8 @@ class LeaveCategoryController extends Controller
       */
     public function save(Request $request)
     {
+      // dd($request->all());
+      $request['name'] = $request['addleavecat'];
       $tbl = Session::get('organization_id');
       $valid_fields = [
                           'name'          => 'required|unique:'.$tbl.'_categories',

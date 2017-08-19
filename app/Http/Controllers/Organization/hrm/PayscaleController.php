@@ -19,6 +19,7 @@ class PayscaleController extends Controller
 
 	public function index(Request $request , $id=null)
     {
+    	
     	$datalist= [];
 	    $data= [];
 	      if($request->has('items')){

@@ -49,7 +49,7 @@
             </div>
                 @if(array_key_exists('id',request()->route()->parameters()))
                     <div class="input-field col s4 ">
-                        {!! Form::select('assign_to',App\Model\Organization\Employee::employees(),null,["class"=>"no-margin-bottom aione-field Employee_filter" , 'placeholder'=>'Employee Filter'])!!}
+                        {!! Form::select('assign_to',App\Model\Organization\User::getEmployee(),null,["class"=>"no-margin-bottom aione-field Employee_filter" , 'placeholder'=>'Employee Filter'])!!}
                         <label>Employee Filter</label>
                       </div>
                 @else
@@ -203,7 +203,7 @@
                                                                                     </div>
                                                                                 @else
                                                                                     <div class="col s12 m2 l12 aione-field-wrapper">
-                                                                                        {!! Form::select('assign_to',App\Model\Organization\Employee::employees(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
+                                                                                        {!! Form::select('assign_to',App\Model\Organization\User::getEmployee(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
                                                                                     </div>
                                                                                 @endif
                                                                                
@@ -359,7 +359,7 @@
                                                                                     </div>
                                                                                 @else
                                                                                     <div class="col s12 m2 l12 aione-field-wrapper">
-                                                                                        {!! Form::select('assign_to',App\Model\Organization\Employee::employees(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
+                                                                                        {!! Form::select('assign_to',App\Model\Organization\User::getEmployee(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
                                                                                     </div>
                                                                                 @endif
                                                                                
@@ -515,7 +515,7 @@
                                                                                     </div>
                                                                                 @else
                                                                                     <div class="col s12 m2 l12 aione-field-wrapper">
-                                                                                        {!! Form::select('assign_to',App\Model\Organization\Employee::employees(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
+                                                                                        {!! Form::select('assign_to',App\Model\Organization\User::getEmployee(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
                                                                                     </div>
                                                                                 @endif
                                                                                
@@ -607,7 +607,7 @@
         </div>
     @else
         <div class="col s12 m2 l12 aione-field-wrapper">
-            {!! Form::select('assign_to',App\Model\Organization\Employee::employees(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
+            {!! Form::select('assign_to',App\Model\Organization\User::getEmployee(),array_map('intval',json_decode($tasks->assign_to)->user),["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task' , 'multiple'])!!}
         </div>
     @endif --}}
 @else

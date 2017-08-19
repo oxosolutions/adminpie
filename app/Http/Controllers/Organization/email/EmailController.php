@@ -15,7 +15,8 @@ use App\Model\Organization\UsersRole;
 use App\Model\Organization\User;
 use App\Model\Organization\Campaign;
 use App\Model\Organization\UsersMeta;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\CampaignEmail;
 class EmailController extends Controller
 {
     public function index(Request $request)
@@ -53,7 +54,7 @@ class EmailController extends Controller
                           'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created At'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.campaign' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.designation']
+                                          'delete'=>['title'=>'Delete','route'=>'delete.email']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
@@ -154,9 +155,9 @@ class EmailController extends Controller
         $data['templates'] = EmailTemplate::pluck('name','id');
         $data['departments'] = Department::pluck('name','id');
         $data['designations'] = Designation::pluck('name','id');
-        $data['shifts'] = Shift::get();
-        $data['roles'] = UsersRole::get();
-        $data['users'] = User::get();
+        $data['shifts'] = Shift::pluck('name','id');
+        $data['roles'] = UsersRole::pluck('name','id');
+        $data['users'] = User::pluck('name','id');
         if($id != null){
             $model = Campaign::find($id);
             $model->send_to = json_decode($model->send_to);
@@ -171,12 +172,30 @@ class EmailController extends Controller
         return view('organization.emails.send-email',$data);
     }
 
-    protected function sendMailToUsers(){
-
+    protected function sendMailToUsers($sendTo,$layout,$template){
+    	Mail::to($sendTo)->send(new CampaignEmail($layout, $template));
     }
 
     public function saveCampaign(Request $request){
-    	dd($request->users);
+    	$userEmails = [];
+        $userIds = [];
+    	foreach($request->users as $key => $values){
+    		if($key == 'users'){
+    			$users = User::whereIn('id',$values)->get();
+    			foreach($users as $k => $value){
+    				$userEmails[] = $value->email;
+                    $userIds[] = $value->id;
+    			}
+    		}else{
+    			$userMeta = UsersMeta::with(['user'])->where('key',$key)->whereIn('value',$values)->get();
+	    		foreach($userMeta as $k => $meta){
+	    			$userEmails[] = $meta->user->email;
+                    $userIds[] = $meta->user->id;
+	    		}
+    		}
+    	}
+    	$sendTo = array_unique($userEmails);
+        $userIds = array_unique($userIds);
         $this->validateCampaignForm($request);
         $model = new Campaign;
         $model->campaign_name = $request->campaign_name;
@@ -185,12 +204,17 @@ class EmailController extends Controller
         $model->selected_users = json_encode($request->users);
         $model->layout = $request->layout;
         $model->template = $request->template;
+        $model->send_to_users = json_encode($userIds);
+        $scheduleStatus = false;
         if($request->date != null && $request->time != null){
             $model->scheduled = 1;
             $model->exec_time = $request->date.' '.$request->time;
+            $scheduleStatus = true;
         }
         $model->save();
-        $this->sendMailToUsers();
+        if($scheduleStatus == false){
+        	$this->sendMailToUsers($sendTo, $request->layout, $request->template);
+        }
         return back();
     }
 
@@ -271,6 +295,13 @@ class EmailController extends Controller
             $model->save();
             return false;
         }
+    }
+
+    public function deleteEmail($id){
+        $model = Campaign::find($id);
+        $model->delete();
+        Session::flash('success','Successfully deleted!');
+        return back();
     }
 
 }

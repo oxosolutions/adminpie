@@ -64,12 +64,12 @@
                         </div>
                             @if($selectedArray == null)
                                 <div class="col s12 m2 l12 aione-field-wrapper">
-                                    {!! Form::text('assign_to[]',@App\Model\Organization\Employee::employees()[Auth::guard('org')->user()->id],["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task','readonly'=>'readonly'])!!}
+                                    {!! Form::text('assign_to[]',@App\Model\Organization\User::employees()[Auth::guard('org')->user()->id],["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task','readonly'=>'readonly'])!!}
                                     <input type="hidden" value="{{Auth::guard('org')->user()->id}}" name="assign_to[]" />
                                 </div>
                             @else
                                 <div class="col s12 m2 l12 aione-field-wrapper">
-                                    {!! Form::select('assign_to[]',App\Model\Organization\Employee::employees(),$selectedArray,["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task'])!!}
+                                    {!! Form::select('assign_to[]',@App\Model\Organization\User::employees(),$selectedArray,["class"=>"no-margin-bottom aione-field" , 'placeholder'=>'Select Employee to assign this task'])!!}
                                     <input type="hidden" name="assign_to" value="{{$selectedArray}}">
                                 </div>
                             @endif

@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('content')
 @php
+// dd($datalist);
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -15,7 +16,7 @@
 	@foreach(@$data as $key => $value)
 		@php
 			$id = $value->id;
-			$model = ['name' => $value->name,'from' => $value->from, 'to' => $value->to , 'reason_of_leave' => $value->reason_of_leave, 'employee_id' => $value->employee_id , 'leave_category_id' => $value->leave_category_id];
+			$model = ['name' => $value->name,'from' => $value->from, 'to' => $value->to , 'reason_of_leave' => $value->reason_of_leave];
 		@endphp
 	@endforeach
 	<script type="text/javascript">

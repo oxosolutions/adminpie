@@ -24,4 +24,8 @@ class section extends Model
     	return $this->hasMany('App\Model\Admin\SectionMeta','section_id','id');
     }
 
+    public function formsMeta(){
+        return $this->hasMany('App\Model\Admin\FormsMeta','form_id','form_id');
+    }
+
 }

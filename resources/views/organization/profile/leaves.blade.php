@@ -19,6 +19,9 @@ $page_title_data = array(
 
 	<div class="row">
 		@include('organization.profile._tabs')
+		@if(!empty($error))
+			<h1>{{$error}}</h1>
+		@else
 		<div class="row">
 			<div class="fade-background">
 			</div>
@@ -95,9 +98,13 @@ $page_title_data = array(
 								        <div class="col s3 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Approved</span>
 								        </div>
-								    @else
+								    @elseif($val->status ==2)
 											 <div class="col s3 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Un-Approved</span>
+								        </div>
+									@elseif($val->status ==0)
+											<div class="col s3 right-align">
+								           	<span class="teal white-text" style="padding: 2px 5px">Pending</span>
 								        </div>
 								    @endif  
 							    </div>
@@ -130,7 +137,6 @@ $page_title_data = array(
 									@foreach($ruleVal['meta'] as $metakey =>$metaVal)
 									@php	$used_leave =0;
 										if(!empty($leave_count_by_cat[$ruleVal->id])){
-											
 											$used_leave = $leave_count_by_cat[$ruleVal->id]->sum('total_days');
 										}
 									@endphp
@@ -188,6 +194,7 @@ $page_title_data = array(
 				</div>
 			</div>
 		</div>
+		@endif
 	
 	</div>
 	

@@ -12,21 +12,76 @@ use App\Model\Organization\Employee;
 use App\Model\Organization\User as US;
 use App\Model\Organization\UsersMeta as UM;
 use App\Model\Organization\LogSystem as LS;
+use App\Model\Organization\Project;
 use App\Model\Organization\ProjectMeta;
 use Session;
 use Image;
-
+use App\Model\Organization\Campaign;
+use App\Model\Organization\EmailLayout;
+use App\Model\Organization\EmailTemplate;
 class AccountController extends Controller
 {
-     public function emailsList(){
-        return view('organization.profile.email');
+     public function emailsList(Request $request, $id = null){
+
+        $search = $this->saveSearch($request);
+        if($search != false && is_array($search)){
+            $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
+        }
+        $datalist= [];
+        $data= [];
+          if($request->has('items')){
+                $perPage = $request->items;
+                if($perPage == 'all'){
+                  $perPage = 999999999999999;
+                }
+              }else{
+                $perPage = 5;
+              }
+          $sortedBy = @$request->orderby;
+          if($id == null){
+            $userid = get_user_id();
+          }else{
+            $userid = $id;
+          }
+          if($request->has('search')){
+              if($sortedBy != ''){
+                  $model = Campaign::where('campaign_name','like','%'.$request->search.'%')->where('send_to_users','like','%'.$userid.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
+              }else{
+                  $model = Campaign::where('campaign_name','like','%'.$request->search.'%')->where('send_to_users','like','%'.$userid.'%')->paginate($perPage);
+              }
+          }else{
+              if($sortedBy != ''){
+                  $model = Campaign::orderBy($sortedBy,$request->order)->where('send_to_users','like','%'.$userid.'%')->paginate($perPage);
+              }else{
+                   $model = Campaign::where('send_to_users','like','%'.$userid.'%')->paginate($perPage);
+              }
+          }
+          $datalist =  [
+                          'datalist'=>  $model,
+                          'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created At'],
+                          'actions' => [
+                                          'edit' => ['title'=>'View Details','route'=>'account.emails.view' , 'class' => 'edit'],
+                                          'delete'=>['title'=>'Delete','route'=>'delete.email']
+                                       ],
+                          'js'  =>  ['custom'=>['list-designation']],
+                          'css'=> ['custom'=>['list-designation']]
+                      ];
+        return view('organization.profile.email',$datalist);
+    }
+
+    public function emailDetails($id){
+
+        $model = Campaign::find($id);
+        $data['layout'] = EmailLayout::find($model->layout);
+        $data['template'] = EmailTemplate::find($model->template);
+        return view('organization.profile.view_email',$data);
     }
 
     protected function listActivities()
     {
         $user_id = Auth::guard('org')->user()->id;
         $user_log = LS::where('user_id',$user_id)->orderBy('id','DESC')->limit(10)->get();
-        return $user_log;        
+        return $user_log;
     }
 
     /**
@@ -40,21 +95,19 @@ class AccountController extends Controller
     	if($id == null){
     		 $id = Auth::guard('org')->user()->id;
     	}
-        $userDetails = User::with(['employee_rel'=>function($query){
-                $query->with(['department_rel','designation_rel']);
-            },'metas','applicant_rel','client_rel','user_role_rel'])->find($id);
+        $userDetails = User::with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
+        $userMeta = get_user_meta($id,null,true);
 
         $userDetails->password = '';
-        if($userDetails->employee_rel != null){
-            @$userDetails->employee_id = $userDetails->employee_rel->employee_id;
-            @$userDetails->department = $userDetails->employee_rel->department_rel->id;
-            if($userDetails->employee_rel->designation_rel != null){
-                $userDetails->designation = $userDetails->employee_rel->designation_rel->id;
-            }
+        if($userMeta != false){
+            @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
+            @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
+            $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
+            
+            // dd($userDetails);
+            @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
+            @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
         }
-        // dd($userDetails);
-        @$userDetails->marital_status = $userDetails->employee_rel->marital_status;
-        @$userDetails->date_of_joining = Carbon::parse($userDetails->employee_rel->joining_date)->format('Y-m-d');
         if(!$userDetails->metas->isEmpty()){
             foreach($userDetails->metas as $key => $value){
                 $userDetails->{$value->key} = $value->value;
@@ -107,7 +160,6 @@ class AccountController extends Controller
     }
 
     public function storeMeta(Request $request, $id){
-
         $request_data = $request->except([
                             '_method','_token','action'
                         ]);
@@ -125,7 +177,7 @@ class AccountController extends Controller
         }
         if($request_data['meta_table'] == 'employeemeta'){
             $tbl = Session::get('organization_id');
-            $data = Employee::where(['user_id' => $id])->first();
+            /*$data = Employee::where(['user_id' => $id])->first();
             if(!array_key_exists('empId', $request->all())){
               if(@$data->user_id == $id){
                 if(@$data->employee_id == @$request_data['employee_id']){
@@ -142,30 +194,36 @@ class AccountController extends Controller
 
                 }
             }  
-            }
+            }*/
             
             foreach($request_data as $key => $value){
                 if($value != null && $value != ''){
-                    if($key == 'designation'){
+                    /*if($key == 'designation'){
                         $employeeModel = Employee::where('user_id',$id)->update(['designation' => $value]);
                     }
                     if($key == 'department'){
                         $employeeModel = Employee::where('user_id',$id)->update(['department' => $value]);
                     }
-                    if($key == 'employee_id'){
-                        $employeeModel = Employee::where('user_id',$id)->update(['employee_id' => $value]);
-                    }
+                    
                     if($key == 'date_of_joining'){
                         $employeeModel = Employee::where('user_id',$id)->update(['joining_date' => $value]);
                     }
                     if($key == 'date_of_leaving'){
                         $employeeModel = Employee::where('user_id',$id)->update(['leaving_date' => $value]);
+                    }*/
+                    if($key == 'employee_id'){
+                        $metaModel = UM::where(['key'=>$key])->where('user_id','!=',$id)->first();
+                        if($metaModel != null){
+                            Session::flash('error',"Employee Id Already exists");
+                            return back();
+                        }
+                    }else{
+                        $metaModel = UM::firstOrNew(['key'=>$key,'user_id'=>$id]);
+                        $metaModel->key = $key;
+                        $metaModel->value = $value;
+                        $metaModel->user_id = $id;
+                        $metaModel->save();
                     }
-                    $metaModel = UM::firstOrNew(['key'=>$key]);
-                    $metaModel->key = $key;
-                    $metaModel->value = $value;
-                    $metaModel->user_id = $id;
-                    $metaModel->save();
                 }
             }
         }
@@ -210,7 +268,7 @@ class AccountController extends Controller
 
     public function deleteProfilePicture($id)
     {
-        $model = UM::where(['key' => 'user_profile_picture' , 'id' => $id])->delete();
+        $model = UM::where(['key' => 'user_profile_picture' , 'user_id' => $id])->delete();
         return back();
     }
     public function uploadimage($id , $file_name)
@@ -234,50 +292,42 @@ class AccountController extends Controller
     }
     public function listProjects($id = null)
     {
-        dd($id);
+
         if($id == null){
-            if(Auth::guard('admin')->user() != null){
-                $id = Auth::guard('admin')->user()->id;
-            }else{
-                $id = Auth::guard('org')->user()->id;
-            }
+            $model = Project::with('projectMeta')->get();
+        }else{
+            $model = $id;
+        }
+        dd($model);
+        if($id == null){
+            $user_id = get_user_id();
             $model = ProjectMeta::where(['key'=>'teams'])->get();
-            dd($model);
         }else{
             // $model = ProjectMeta::where(['key' => ])
+            $model = ProjectMeta::all();
         }
+        dd($model);
         return view('organization.profile.projects');
     }
-    public function dashboards(Request $request)
-    {
-        if(Auth::guard('admin')->user() != null){
-            $id = Auth::guard('admin')->user()->id;
-        }else{
-            $id = Auth::guard('org')->user()->id;
-        }
-        $model = UM::where(['user_id'=>$id,'key'=>'dashboards'])->first();
-        
-        if(array_key_exists($request->slug , json_decode($model->value))){
-            Session::flash('error' , 'Slug Already Exists');
-        }else{
-            if($model != null){
-                $storedDashboards = json_decode($model->value);
-                $slug = $request->slug;
-                $storedDashboards->$slug = ['title'=>$request->title,'description'=>$request->description ,'slug' => $request->slug];
-                $model->user_id = $id;
-                $model->key = 'dashboards';
-                $model->value = json_encode($storedDashboards);
-                $model->save();
-            }else{
-                $storedDashboards[$request->slug] = ['title'=>$request->title,'description'=>$request->description ,'slug' => $request->slug];
-                $model = new UM;
-                $model->user_id = $id;
-                $model->key = 'dashboards';
-                $model->value = json_encode($storedDashboards);
-                $model->save();
+
+    protected function saveSearch($request){
+        $search = $request->except(['page']);
+        $model = UM::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
+        if($model != null){
+            if(!empty($request->except(['page']))){
+              $model->value = json_encode($request->except(['page']));
+              $model->save();
             }
+            $savedSearch = json_decode($model->value, true);
+            return $savedSearch;
+        }else{
+            $model = new UM;
+            $model->user_id = Auth::guard('org')->user()->id;
+            $model->key = $request->route()->uri;
+            $model->value = json_encode(@$request->except(['page']));
+            $model->save();
+            return false;
         }
-        
-        return back();
     }
+    
 }

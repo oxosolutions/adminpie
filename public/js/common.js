@@ -1,4 +1,23 @@
 $(document).ready(function(){
+
+    
+     $('.add-new-repeater').click(function(e){
+        e.preventDefault();
+        var html = '<div class="repeater-row"><i class="material-icons dp48">close</i>'+$(this).parents('.repeater-group').find('.repeater-wrapper .repeater-row').html()+'<div>';
+        var repeaterLength = $(this).parents('.repeater-group').find('.repeater-row').length;
+        console.log(repeaterLength);
+        $(this).parents('.repeater-group').find('.repeater-wrapper').append(html);
+        $(this).parents('.repeater-group').find('.repeater-row:last').find('input').each(function(index){
+            $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
+        });
+      });
+    
+      $('body').on('click','.repeater-row-delete', function(){
+        if($(this).parents('.repeater-wrapper').find('.repeater-row-delete').length > 1){
+          $(this).parents('.repeater-row').remove();
+        }
+      });
+
 	
 function clock(){
 
@@ -144,10 +163,12 @@ setInterval(function(){clock();},100);
 /********************* Dashboard *********************/
 
 $(document).on('click','.delete-widget',function(){
-  $(this).parents('.ui-widget-content').hide();
+  
   var slug      = $(this).siblings('input[name=slug]').val();
   var widget_id = $(this).siblings('input[name=widget_id]').val();
   var _token    = $('#token').val();
+    $(this).parents('.widget-wrapper').hide();
+
   $.ajax({
     url : route()+'/delete/dashboards/widget',
     type : 'POST',
@@ -157,8 +178,10 @@ $(document).on('click','.delete-widget',function(){
     },
     success: function(res){
         if(res == "true"){
-            Materialize.toast("Success",4000);
+          // $(this).parents('.widget-wrapper').hide();
+          Materialize.toast("Success",4000);
         }
+
     }
   });
 });
