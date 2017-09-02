@@ -16,8 +16,23 @@
 	{{-- {{Form::open(['route' => 'account.discussion' , 'method' => 'post'])}}
 		{!! FormGenerator::GenerateForm('aione_form_fields_test',['type'=>'inset']) !!}
 	{!! Form::close()!!} --}}
-	{!! FormGenerator::GenerateForm('form_generator_fields') !!}
-	{{-- {!! FormGenerator::GenerateSection('addempsec1') !!} --}}
+	<div class="row">
+	<div class="aione-card col l6">
+		<div class="aione-row"> 
+			{!! FormGenerator::GenerateForm('aione_form_fields_test',[]) !!}
+		</div>
+	</div>
+	<div class="aione-card col l6">
+		<div class="aione-row"> 
+			{!! FormGenerator::GenerateForm('test_form',[]) !!}
+		</div>
+	</div>
+	</div>
+	
+	
+	{{--
+	{!! FormGenerator::GenerateForm('form_setting_form',[]) !!}
+	 {!! FormGenerator::GenerateSection('addempsec1') !!} --}}
 
 	@include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

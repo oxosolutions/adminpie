@@ -112,8 +112,8 @@ class ApplicantController extends Controller
     public function create(Request $request)
     {
       if($request->isMethod('post')){
-        $request['name'] = $request['appsec1f1'];
-        $request['email'] = $request['appsec1f2'];
+        $request['name'] = $request['name'];
+        $request['email'] = $request['email'];
         $tbl = Session::get('organization_id');
         $valid_fields = [   'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
@@ -136,6 +136,8 @@ class ApplicantController extends Controller
     {
         $appCheckFirst = User::where(['id'=>$id]);
         if($appCheckFirst->exists()){
+
+          dd( $appCheckFirst);
            $data =  $appCheckFirst->get()->keyBy('key');
            $collection = collect($data->toArray());
             $keyed = $collection->mapWithKeys(function ($item) {

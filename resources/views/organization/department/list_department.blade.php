@@ -11,12 +11,9 @@
 @endphp
 	@if(@$errors->has())
 		<script type="text/javascript">
-			$(window).load(function(){
-				$('.modal').modal('open');
-				$('#modal-edit').modal({
-					dismissible : true
-				});
-			});
+			window.onload = function(){
+				$('#add_new_model').modal('open');
+			}
 		</script>
 	@endif
 	@if(@$data)
@@ -26,9 +23,14 @@
 			@endphp
 		@endforeach
 		<script type="text/javascript">
-			$(window).load(function(){
-				document.getElementById('modal-edit').click();
-			});
+			window.onload = function(){
+				$('#modal_edit').modal('open');
+			}
+			// $(document).ready(function(){
+			// 	console.log('hello 2');
+			// 	document.getElementById('modal-edit').click();
+			// 	console.log('hello 3');
+			// });
 		</script>
 		
 	@endif
@@ -47,7 +49,7 @@
 		@if(@$model)
 			{!! Form::model($model ,['route'=>'edit.department' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 			<input type="hidden" name="id" value="{{$data[0]['id']}}">
-			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
+			{{-- <a href="#modal_edit" style="display: none" id="modal-edit" data-target="modal_edit"></a> --}}
 			@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Department','button_title'=>'update Department','section'=>'adddepartment']])
 		{!!Form::close()!!}
 		@endif
@@ -59,10 +61,10 @@
 		$(document).on('blur', '.edit-fields',function(e){
 			e.preventDefault();
 			var postedData = {};
-			postedData['name'] 			= $(this).parents('.shadow').find('.name').text();
-			postedData['id'] 				= $(this).parents('.shadow').find('.id').val();
-			postedData['status'] 			= $(this).parents('.shadow').find('.switch > label > input').prop('checked');
-			postedData['_token'] 			= $('.shadow').find('._token').val();
+			postedData['name'] 	 = $(this).parents('.shadow').find('.name').text();
+			postedData['id'] 	 = $(this).parents('.shadow').find('.id').val();
+			postedData['status'] = $(this).parents('.shadow').find('.switch > label > input').prop('checked');
+			postedData['_token'] = $('.shadow').find('._token').val();
 
 			$.ajax({
 				url:route()+'/department/update',
@@ -76,10 +78,10 @@
 		});
 		$(document).on('change', '.switch > label > input',function(e){
 			var postedData = {};
-			postedData['name'] 			= $(this).parents('.shadow').find('.name').text();
-			postedData['id'] 				= $(this).parents('.shadow').find('.id').val();
-			postedData['status'] 			= $(this).prop('checked');
-			postedData['_token'] 			= $('.shadow').find('._token').val();
+			postedData['name'] 	 = $(this).parents('.shadow').find('.name').text();
+			postedData['id'] 	 = $(this).parents('.shadow').find('.id').val();
+			postedData['status'] = $(this).prop('checked');
+			postedData['_token'] = $('.shadow').find('._token').val();
 
 			$.ajax({
 				url:route()+'/department/update',

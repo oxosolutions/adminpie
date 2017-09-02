@@ -14,7 +14,8 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
     <div class="card" style="margin-top:0px;padding: 10px ">
 	{!!Form::model($org_data, ['route' => ['edit.organization', $org_data->id]])!!}
-        @include('admin.organization._form')                
+        {{-- @include('admin.organization._form')      --}}
+         {!! FormGenerator::GenerateForm('edit_organization_form') !!}           
         <div class="row right-align pv-10">
             <button type="submit" class="btn btn-primary blue">Update Organization<i class="icon-arrow-right14 position-right"></i>
             </button>  

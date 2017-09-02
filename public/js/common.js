@@ -10,6 +10,9 @@ $(document).ready(function(){
         $(this).parents('.repeater-group').find('.repeater-row:last').find('input').each(function(index){
             $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
         });
+        $(this).parents('.repeater-group').find('.repeater-row:last').find('input,textarea,select').each(function(index){
+          $(this).val('');
+        });
       });
     
       $('body').on('click','.repeater-row-delete', function(){
@@ -162,12 +165,12 @@ setInterval(function(){clock();},100);
 
 /********************* Dashboard *********************/
 
-$(document).on('click','.delete-widget',function(){
+$(document).on('click','.aione-widget-delete',function(){
   
-  var slug      = $(this).siblings('input[name=slug]').val();
-  var widget_id = $(this).siblings('input[name=widget_id]').val();
+  var slug      = $(this).parents('.aione-widget-header').find('input[name=slug]').val();
+  var widget_id = $(this).parents('.aione-widget-header').find('input[name=widget_id]').val();
   var _token    = $('#token').val();
-    $(this).parents('.widget-wrapper').hide();
+    $(this).parents('.aione-widget').remove();
 
   $.ajax({
     url : route()+'/delete/dashboards/widget',

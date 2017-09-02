@@ -39,17 +39,17 @@ class UsersController extends Controller
         $sortedBy = @$request->orderby;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$request->order)->paginate($perPage);
+                  $model = org_user::where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$request->order)->paginate($perPage);
               }else{
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->paginate($perPage);
+                  $model = org_user::where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->order)->with(['user_role_rel'=>function($query){
+                  $model = org_user::where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->order)->with(['user_role_rel'=>function($query){
                       $query->with('roles');
                   },'userType'])->paginate($perPage);
               }else{
-                   $model = org_user::where('id','!=',Auth::guard('org')->user()->id)->with(['user_role_rel'=>function($query){
+                   $model = org_user::where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->with(['user_role_rel'=>function($query){
                       $query->with('roles');
                   },'userType'])->paginate($perPage);
               }

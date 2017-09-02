@@ -2,13 +2,32 @@
 @php
     $section = $sections->where('id',request()->input('sections'))->first();
     $field = $section->fields->where('id',request()->input('field'))->first();
-    // dd($field);
-    $fiedlMeta = $field->fieldMeta;
-    // dd($fiedlMeta->where('key','field_placeholder')->first());
+    $fieldMeta = $field->fieldMeta;
+    $model = [];
+    $model['field_title'] = $field->field_title;
+    $model['field_type'] = $field->field_type;
+    $model['field_description'] = $field->field_description;
+    $model['field_order'] = $field->field_order;
+    $model['field_slug'] = $field->field_slug;
+    $next_field = $fieldMeta->where('key','next_field')->first();
+    $model['next_field'] = ($next_field != null)?$next_field->value:'';
+
+   foreach($fieldMeta as $key => $value){
+        $model[$value->key] = @$value->value;
+   }
+
+    $sectionOptions = $fieldMeta->where('key','field_options')->first();
+    $model['field_options'] = [];
+    if($sectionOptions != null){
+        $model['field_options'] = json_decode($sectionOptions->value,true);
+    }
+    // dd($model);
 @endphp
 
-{!!Form::open(['route'=>['update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}
-    <div class="fields_list active-field">
+{!!Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}
+
+    {!! FormGenerator::GenerateForm('form_generator_fields',[],$model) !!}
+    {{-- <div class="fields_list active-field">
         <div class="row field_row">
             <div class="col l4 left-align grey lighten-5 " style="padding:20px">
                 <span class="field-title">Field Label*</span><br>
@@ -56,6 +75,7 @@
                         <option value="multi_select" {{($field->field_type == 'multi_select')?'selected':''}} >Multi Select</option>
                         <option value="checkbox" {{($field->field_type == 'checkbox')?'selected':''}} >Checkbox</option>
                         <option value="radio" {{($field->field_type == 'radio')?'selected':''}} >Radio Button</option>
+                        <option value="media" {{($field->field_type == 'media')?'selected':''}} >Media</option>
                     </optgroup>
                 </select>
                   
@@ -67,12 +87,12 @@
                 <span class="field-description">Question Order be in number [0-9]</span>
             </div>
             <div class="col l8 form-group" style="padding:10px">
-                 <input type="text" name="field_order" required="required" class="form-control field-label-input" value="{{$field->field_order}}">
+                 <input type="text" name="field_order" required="required" class="form-control field-label-input" value="{{$field->order}}">
             </div>
         </div>
         <div class="row field_row postfix">
             <div class="col l4 left-align grey lighten-5" style="padding:20px">
-            <span class="field-title">Prefix</span><br>
+            <span class="field-title">prefix</span><br>
                 <span class="field-description">Text will place on starting of random numbers</span>
             </div>
             <div class="col l8 form-group" style="padding:10px">
@@ -158,11 +178,11 @@
                         <option value="url" {{(in_array('url',$validateArray))?'selected':''}}>URL</option>
                         <option value="email" {{(in_array('email',$validateArray))?'selected':''}}>Email</option>
                     </select>
-                	{{-- <a href="javascript:;" style="float:right;" class="delete_validation"><span class=" fa fa-trash"></span></a> --}}
+                	
             	</div>
            
             </div>
-            {{-- <a href="javascript:;" class="btn add_validation" data-count=" ">Add</a> --}}
+            
         </div>
             <div class="row field_row main-option-row" style="display: {{(in_array($field->field_type,['select','multi_select','checkbox','radio']))?'block':'none'}}">
                 <div class="col l4 left-align grey lighten-5" style="padding:44px 20px">
@@ -269,23 +289,19 @@
                 <input type="text" name="field_class" class="form-control" value="{{@$fiedlMeta->where('key','field_class')->first()->value}}">
             </div>  
         </div>
-        {{-- <div class="row field_row">
-            <div class="col l12 right-align grey lighten-5" style="padding:20px">
-                <a href="javascript:;" class="btn btn-primary UpdateField">Update</a>
-            </div>
-        </div> --}}
-    </div>
+     
+    </div> --}}
     <button type="submit" class="btn blue">
         Save
     </button>
-    <style type="text/css">
+  {{--   <style type="text/css">
         .prefix{
             display: none;
         }
         .postfix{
             display: {{($field->field_type == 'auto-generator')?'block':'none'}};
         }
-    </style>
+    </style> --}}
 {!!Form::close()!!}
 <script type="text/javascript">
     $(document).ready(function() {

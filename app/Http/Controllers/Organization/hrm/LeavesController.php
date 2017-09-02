@@ -119,7 +119,12 @@ class LeavesController extends Controller
                                    ],
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
-                  ];           
+                  ];
+          if(!empty($id) || $id != null || $id != ''){
+            $data = LV::where('id',$id)->first();
+          }else{
+            $data = "";
+          }      
           return view('organization.leave.list_leave',$datalist)->with(['data'=>$data]);
     }
   
@@ -136,7 +141,8 @@ class LeavesController extends Controller
        	$request['from']= $this->date_format($request['from']);
        	$request['to']= $this->date_format($request['to']);
         $sh->fill($request->all());
-        $sh->status = 2;
+        $sh->status = 1; 
+        $sh->apply_by ='hr';
         $sh->save();
         return redirect()->route('leaves');
     }

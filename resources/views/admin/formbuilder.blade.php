@@ -41,30 +41,6 @@ $page_title_data = array(
                             <span class="nav-item-arrow"></span>
                         </a>
                         <ul id="sortable_submenu" class="side-bar-submenu">
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/profile">
-                                    <span class="nav-item-icon">P</span>
-                                    <span class="nav-item-text">Text</span>
-                                </a>
-                            </li>
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/activities">
-                                    <span class="nav-item-icon">A</span>
-                                    <span class="nav-item-text">Radio</span>
-                                </a>
-                            </li>
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/attendance">
-                                    <span class="nav-item-icon">A</span>
-                                    <span class="nav-item-text">Checkbox</span>
-                                </a>
-                            </li>
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/performance">
-                                    <span class="nav-item-icon">P</span>
-                                    <span class="nav-item-text">Textarea</span>
-                                </a>
-                            </li>
                            
                         </ul>
                         <i class="material-icons dp48 del">clear</i>    
@@ -79,30 +55,7 @@ $page_title_data = array(
                             <span class="nav-item-arrow"></span>
                         </a>
                         <ul id="sortable_submenu" class="side-bar-submenu">
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/profile">
-                                    <span class="nav-item-icon">P</span>
-                                    <span class="nav-item-text">Text</span>
-                                </a>
-                            </li>
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/activities">
-                                    <span class="nav-item-icon">A</span>
-                                    <span class="nav-item-text">Radio</span>
-                                </a>
-                            </li>
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/attendance">
-                                    <span class="nav-item-icon">A</span>
-                                    <span class="nav-item-text">Checkbox</span>
-                                </a>
-                            </li>
-                            <li class="aione-nav-item level1 ">
-                                <a href="http://master.adminpie.com/account/performance">
-                                    <span class="nav-item-icon">P</span>
-                                    <span class="nav-item-text">Textarea</span>
-                                </a>
-                            </li>
+                            
                            
                         </ul>
                         <i class="material-icons dp48 del">clear</i>    
@@ -111,72 +64,7 @@ $page_title_data = array(
             </nav>
         </div>
         <div class="Detail-container">
-          
-                
-                    <div class="row no-margin-bottom">
-                        <div class="input-field col l12">
-                            <input placeholder="Enter section name" name="section_name" id="user_name" type="text" >
-                            <label for="user_name">Section Name</label>
-             
-                        </div>
 
-                        <div class="input-field col l12">
-                            <input placeholder="Enter slug" name="section_slug" id="emailId" type="text" >
-                            <label for="emailId">Slug</label>
-                            
-                        </div>
-
-                        <div class="input-field col l12">
-                            <input placeholder="Enter description" name="section_description" id="roleId" type="text" >
-                            <label for="roleId">Description</label>
-                        </div>
-                        
-                        <div class="input-field col l12">
-                            <select class="no-margin-bottom aione-field" name="section_type">
-                                <option selected="selected" disabled="disabled" hidden="hidden" value="">Select type</option>
-                                <option value="Single">Single</option>
-                                <option value="Repeater">Repeater</option>
-                            </select>
-                        </div>
-                       {{--  
-                        @if(@$errors->has())
-                            @foreach($errors->all() as $kay => $err)
-                                <div style="color: red">{{$err}}</div>
-                            @endforeach
-                        @endif --}}
-
-                        <div class="col s12 m12 l12 aione-field-wrapper center-align">
-                          <button class="save_user btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save
-                            <i class="material-icons right">save</i>
-                          </button>
-                        </div>
-
-                    </div>
-                
-            <div>
-                Fileds List
-            </div>
-            <ul class="collection">
-                <li class="collection-item">Name (Text)<i class="material-icons dp48 del">clear</i>    </li>
-                <li class="collection-item">Gender (Radio)<i class="material-icons dp48 del">clear</i>    </li>
-                <li class="collection-item">Skills (checkbox)<i class="material-icons dp48 del">clear</i>    </li>
-                <li class="collection-item">Description (textarea)<i class="material-icons dp48 del">clear</i>    </li>
-                
-            </ul>
-            <div>
-                <button class="btn blue add-new-field">Add Field</button>
-            </div>
-           {{--  <div class="row">
-                <div class="col s12 m12 l12 aione-field-wrapper">
-                    <label>Name</label>
-                    <input type="text" name="name" value="" class="no-margin-bottom aione-field" >
-                </div>
-                <div class="col s12 m12 l12 aione-field-wrapper">
-                    <label>Description</label>
-                    <textarea></textarea> 
-                </div>
-
-            </div> --}}
         </div>
         <div style="clear: both;padding:20px">
             
@@ -278,10 +166,10 @@ $page_title_data = array(
          }
     </style>
     <script type="text/javascript">
-        $("#custom").spectrum({
+        /*$("#custom").spectrum({
             color: '#000',
             showAlpha: true,    
-        });
+        });*/
         $(document).ready(function(){
             $(document).on('click','.add-new-field',function(){
                 var html = '<li class="collection-item">Untitled<i class="material-icons dp48 del">clear</i></li>';

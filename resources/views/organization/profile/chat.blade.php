@@ -1,6 +1,33 @@
 @extends('layouts.main')
 @section('content')
-{!! FormGenerator::GenerateForm('form_generator_fields') !!}
+{{-- {!! FormGenerator::GenerateForm('form_generator_fields') !!} --}}
+{{-- {!! FormGenerator::GenerateForm('demo_test',[],'','org') !!} --}}
+{{-- {!! FormGenerator::GenerateForm('surveyyyy',[],'','org') !!} --}}
+{!! FormGenerator::GenerateForm('test_form')!!}
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.options').parents('.repeater-group').parent().hide();	
+		$('.field-type').change(function(){
+			if($(this).val()=="checkbox" || $(this).val()=="radio" || $(this).val()=="select" || $(this).val()=="multi-select"){
+				$('.options').parents('.repeater-group').parent().show();
+			}
+			else{
+				$('.options').parents('.repeater-group').parent().hide();	
+			}
+		});
+		// $(document).on('click','.add-another-option',function(e){
+		// 	e.preventDefault();
+		// 	var html='<div class="option">'+$('.options > .option ').html()+'<a href="#" class="delete-current"><i class="fa fa-close"></i></a></div>';
+		// 	$('.options').append(html);
+		// });
+		// $('.options').on('click','.delete-current',function(e){
+		// 	e.preventDefault();
+		// 	$(this).parents('.option').remove();
+		// });
+	})
+		
+</script>
 	<style type="text/css">
 		.widget-v1{
 			width: 600px;border:1px solid #e8e8e8;border-radius: 3px;
@@ -107,7 +134,7 @@
 		}
 	</style>
 
-
+{{-- 
 
 
 <div id="" class="aione-tabs-wrapper">
@@ -242,5 +269,5 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --}}
 @endsection

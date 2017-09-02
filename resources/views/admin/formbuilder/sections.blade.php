@@ -37,6 +37,10 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+    @if($form->type == 'survey')
+        @include('organization.survey._tabs')
+    @endif
+    <input type="hidden" name="_token" value="{{csrf_token() }}">
     <div class="module-wrapper">
         <div class="list-container">
             <nav id="aione_nav" class="aione-nav aione-nav-vertical">
@@ -47,7 +51,7 @@ $page_title_data = array(
                             <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-list"></i></span>
                             <span class="nav-item-text">
                                 All Sections
-                            </span>                      
+                            </span>
                         </a>
                     </li>
                 @php $index = 1;@endphp
@@ -55,7 +59,7 @@ $page_title_data = array(
 					@php
 						$section_id = $section->id;	
 					@endphp
-                    <li class="aione-nav-item level0 has-children {{(Request::input('sections') == $section->id)?'nav-item-current':''}}">
+                    <li class="aione-nav-item level0 has-children {{(Request::input('sections') == $section->id)?'nav-item-current':''}}" section-id={{ $section->id }}>
                         <a href="{{Request::url()}}?sections={{$section->id}}">
                             <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-amazon">
                                 </i></span>
@@ -64,19 +68,19 @@ $page_title_data = array(
                             </span>
                             <span class="nav-item-arrow"></span>
                         </a>
-                        <ul id="sortable_submenu" class="side-bar-submenu">
+                        <ul class="side-bar-submenu">
                        @foreach($section->fields as $k => $fields)
-                            <li class="aione-nav-item level1 {{(Request::input('field') == $fields->id)?'nav-item-current':''}}">
+                            <li class="aione-nav-item level1 unsortable {{(Request::input('field') == $fields->id)?'nav-item-current':''}}">
                                 <a href="{{Request::url()}}?sections={{$section->id}}&field={{$fields->id}}">
                                     <span class="nav-item-icon">P</span>
-                                    <span class="nav-item-text"> {{ucfirst($fields->field_title)}} ({{$fields->field_type}})</span>
+                                    <span class="nav-item-text"> {{$fields->field_title}} ({{$fields->field_type}})</span>
                                 </a>
                             </li>
                         @endforeach
                         </ul>
-                        <i class="material-icons dp48 del">clear</i>    
+                        
                     </li>
-                    @endforeach
+                @endforeach
                 </ul>
             </nav>
         </div>
@@ -85,38 +89,7 @@ $page_title_data = array(
             @if(!Request::has('field'))
 
                 @if(Request::has('sections') && Request::input('sections') != 'all')
-                    <div id="" class="aione-tabs-wrapper">
-                        <nav class="aione-nav aione-nav-horizontal">
-                            <ul class="aione-tabs">
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_settings">
-                                        <span class="nav-item-text">Settings</span>
-                                    </a>
-                                </li>
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_custom_css">
-                                        <span class="nav-item-text">Custom CSS</span>
-                                    </a>
-                                </li>
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_custom_js">
-                                        <span class="nav-item-text">Custom JS</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                        <div class="aione-tabs-content-wrapper">
-                            <div id="aione_modules_settings" class="aione-tab-content">
-                                Settings
-                            </div>
-                            <div id="aione_modules_custom_css" class="aione-tab-content">
-                                CSS
-                            </div>
-                            <div id="aione_modules_custom_js" class="aione-tab-content">
-                                JS
-                            </div>
-                        </div>
-                    </div>
+                    
                     {!!Form::open(['route'=>[$route_slug.'section.update',request()->form_id]])!!}
                         <input type="hidden" name="section_id" value="{{Request::input('sections')}}" />
                         <div class="row no-margin-bottom">
@@ -188,10 +161,12 @@ $page_title_data = array(
                 @if(Request::has('sections') && Request::input('sections') != 'all')
                     {!!Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')]])!!}
                         <div class="add-section">
+                            
+                            <div class="add-field-form">
+                            {!! FormGenerator::GenerateSection('add_field_sub_form') !!}
                             <button class="btn blue" type="submit">Add Field</button>
-                            <span>
-                                <input type="text" name="field_title">
-                            </span>
+                                {{-- <input type="text" name="field_title"> --}}
+                            </div>
                             <div class="clear"></div>
                         </div>
                     {!!Form::close()!!}
@@ -200,15 +175,69 @@ $page_title_data = array(
                 <ul class="collection">
                     @if(Request::has('sections') && Request::input('sections') == 'all')
                         @foreach($sections as $k => $section)
-                            <li class="collection-item">{{ucfirst($section->section_name)}} ({{ucfirst($section->section_slug)}})<a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field"><i class="material-icons dp48 del">clear</i></a>    </li>
+                            <li class="collection-item" section-id="">
+                                {{$section->section_name}} ({{$section->section_slug}})
+                                <a href="{{route($route_slug.'section.clone',$section->id)}}" class="delete-field">
+                                    <i class="fa fa-clone"></i>
+                                </a>
+                                <a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field">
+                                    <i class="material-icons dp48 del">clear</i>
+                                </a>
+                                <a href="javascript:;" class="arrow-upward">
+                                    <i class=" material-icons dp48">arrow_upward</i>    
+                                </a>
+                                
+                                <a href="javascript:;" class="arrow-downward">
+                                    <i class=" material-icons dp48">arrow_downward</i>    
+                                </a>
+                                
+                                
+                            </li>
                         @endforeach
                     @endif
                     @if(Request::has('sections') && Request::input('sections') != 'all')
                         @foreach($sections->where('id',Request::input('sections'))->first()->fields as $k => $field)
-                            <li class="collection-item">{{ucfirst($field->field_title)}} ({{ucfirst($field->field_slug)}})<a href="{{route($route_slug.'field.delete',$field->id)}}" class="delete-field"><i class="material-icons dp48 del">clear</i></a>  </li>
+                            <li class="collection-item" field-id="{{$field->id}}">
+                                {{$field->field_title}} ({{$field->field_slug}})
+                                
+                                <a href="{{route($route_slug.'field.clone',$field->id)}}" class="delete-field">
+                                    <i class="fa fa-clone"></i>
+                                </a>
+                                <a href="{{route($route_slug.'field.delete',$field->id)}}" class="delete-field">
+                                    <i class="material-icons dp48 del">clear</i>
+                                </a>
+                                @if(Auth::guard('admin')->check())
+                                    
+                                    @php
+                                        $down = 'field.down.sort';
+                                        $up = 'field.up.sort';
+                                    @endphp
+                                @else   
+                                    @php
+                                        $down = 'org.field.down.sort';
+                                        $up = 'org.field.up.sort';
+                                    @endphp
+                                @endif
+                                
+                                <a href="{{ route($up,$field->id) }}" class="arrow-upward">
+                                    <i class=" material-icons dp48">arrow_upward</i>    
+                                </a>
+                                
+                                <a href="{{ route($down,$field->id) }}" class="arrow-downward">
+                                    <i class=" material-icons dp48">arrow_downward</i>    
+                                </a>
+                                
+                            </li>
                         @endforeach
                     @endif
                 </ul>
+            @endif
+            @if(Session::has('null_order'))
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        Materialize.toast({{ Session::get('null_order') }} ,6000);
+                    });
+                </script>
             @endif
             @if(Request::has('field') && Request::input('field') != '')
                 
@@ -223,10 +252,7 @@ $page_title_data = array(
         <div style="clear: both;padding:20px">
             
         </div>
-        {{-- <div>
-            these fields are just for demo purpose please ignore it
-            @include('admin.formbuilder._fields_survey')
-        </div> --}}
+        
         
     </div>
     <style type="text/css">
@@ -287,11 +313,7 @@ $page_title_data = array(
             height: 40px;
             line-height: 40px;
         }
-        .module-wrapper .btn.blue{
-            float: right;
-           
-            margin: 10px;
-        }
+      
         .aione-nav-item .material-icons{
             position: absolute;
             top: -10px;
@@ -316,41 +338,45 @@ $page_title_data = array(
             border: 1px solid #e8e8e8;
             margin-bottom: 5px;
         }
-    /*     .Detail-container .collection .collection-item > .material-icons{
+   
+          .Detail-container .collection .collection-item .delete-field,
+          .Detail-container .collection .collection-item .arrow-upward,
+          .Detail-container .collection .collection-item .arrow-downward{
             float: right;
             font-size: 16px;
             color: #757575;
             cursor: pointer;
             display: none
          }
-         .Detail-container .collection .collection-item:hover .material-icons{
+         .Detail-container .collection .collection-item:hover .delete-field,
+         .Detail-container .collection .collection-item:hover .arrow-upward,
+         .Detail-container .collection .collection-item:hover .arrow-downward{
             display: block;
-         }*/
-          .Detail-container .collection .collection-item .delete-field{
-            float: right;
-            font-size: 16px;
-            color: #757575;
-            cursor: pointer;
+         }
+         .Detail-container .collection .collection-item:first-child:hover .arrow-upward{
             display: none
          }
-         .Detail-container .collection .collection-item:hover .delete-field{
-            display: block;
+         .Detail-container .collection .collection-item:last-child:hover .arrow-downward{
+            display: none
          }
-
-
-        .add-section > button {
+        /*.add-section > button {
             float: right;
         }
         .add-section > span{
             float: right;
             width: 200px
+        }*/
+        .add-section .add-field-form > div,
+        .add-section .add-field-form > button{
+            float: left;
+            width: 23%;
+            margin: 0px 10px 0px 0px;
         }
+        
     </style>
+ 
     <script type="text/javascript">
-        $("#custom").spectrum({
-            color: '#000',
-            showAlpha: true,    
-        });
+        
         $(document).ready(function(){
             $(document).on('click','.list-modules .arrow',function(){ 
                 if($(this).parents('li').hasClass('list-active')){
@@ -362,7 +388,7 @@ $page_title_data = array(
                 
             });
 
-            $('.input1').iconpicker(".input1");
+            // $('.input1').iconpicker(".input1");
 
             $('#custom').change(function(){
                 $('.color_picker').val($("#custom").spectrum('get').toRgbString());             
@@ -384,32 +410,43 @@ $page_title_data = array(
                 $('.sp-preview-inner').css({'background-color': $('input[name=color]').val()});
             }
         });
-        var editorJs = ace.edit("editor-js");
-        editorJs.setTheme("ace/theme/monokai");
-        editorJs.getSession().setMode("ace/mode/javascript");
-        var editorCss = ace.edit("editor-css");
-        editorCss.setTheme("ace/theme/monokai");
-        editorCss.getSession().setMode("ace/mode/css");
-        $("#custom").spectrum({
-            color: '#000',
-            showAlpha: true,
+       
+
+        $( function() {
+            $( "#sortable" ).sortable({
+                axis: "y",
+                items: "li:not(.unsortable)",
+                update : function(){
+                    var ids = [];
+                    $('#sortable > li').each(function(){
+                        if($(this).attr('section-id') != undefined){
+                            ids.push($(this).attr('section-id'));
+                        }
+                    });
+                    console.log(ids);
+                    $.ajax({
+                        url : route()+'/section/sort',
+                        type : 'post',
+                        data : {id : ids , _token : $('input[name=_token]').val() },
+                        success : function(){
+
+                        }
+                    })
+                }
+            });
+            $( "#sortable" ).disableSelection();
         });
-
-
-        $( function() {
-                $( "#sortable" ).sortable({
-                    axis: "y"
-                });
-                $( "#sortable" ).disableSelection();
-              } );
-        $( function() {
-                $( "#sortable_submenu" ).sortable({
-                    axis: "y"
-                });
-                $( "#sortable_submenu" ).disableSelection();
-              } );
-
-
         
+        // $(document).on('click','.arrow-downward',function(){
+        //     var field_id = $(this).parents('.collection-item').attr('field-id');
+        //     $.ajax({
+        //         url : route()+'/field/sort',
+        //         type : 'post',
+        //         data : {field_id : field_id , _token : $('input[name=_token]').val()},
+        //         success : function(res){
+
+        //         }
+        //     });
+        // });
     </script>
 @endsection

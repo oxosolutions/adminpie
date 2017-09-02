@@ -15,10 +15,12 @@
 $title = (@$type == 'form')?'Add New Form':'Add New Survey';
 $page_title_data = array(
     'show_page_title' => 'yes',
-    'show_add_new_button' => 'no',
+    'show_add_new_button' => 'yes',
     'show_navigation' => 'yes',
     'page_title' => $title,
-    'add_new' => '+ Add Designation'
+    'add_new' => 'All Forms',
+    'route' => 'list.forms'
+    
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
@@ -27,7 +29,8 @@ $page_title_data = array(
   
     <div class="row">
     {!! Form::open([ 'method' => 'POST', 'route' => $route ,'class' => 'form-horizontal']) !!}
-        <div class="row pv-10">
+    {!! FormGenerator::GenerateForm('add_survey_form') !!}
+       {{--  <div class="row pv-10">
            <div class="col l3" style="line-height: 32px">
                Form name
            </div>
@@ -54,7 +57,7 @@ $page_title_data = array(
               
                 {!! Form::textarea('form_description',null,['rows' => '5' ,'class' => 'materialize-textarea' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
            </div>
-        </div>
+        </div> --}}
        {{--  <div class="row pv-10">
            <div class="col l3" style="line-height: 32px">
                Form Type
@@ -64,18 +67,17 @@ $page_title_data = array(
                 {!! Form::select('type',['form'=>'Form','survey'=>'Survey'],null,["class"=>"no-margin-bottom aione-field browser-default"])!!}
            </div>
         </div> --}}
-
         <input type="hidden" name="type" value="{{@$type}}">
          @if(@$errors->has())
           @foreach($errors->all() as $kay => $err)
             <div style="color: red">{{$err}}</div>
           @endforeach
         @endif
-        <div class="row pv-10">
+       {{--  <div class="row pv-10">
            <div class="col l12 right-align">
             <button type="submit" class="btn btn-primary blue">Save</button>
            </div>
-        </div>
+        </div> --}}
        
      
     {!! Form::close() !!} 

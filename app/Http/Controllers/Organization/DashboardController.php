@@ -18,11 +18,13 @@ use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Admin\GlobalWidget;
 use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalOrganization;
-
+use App\Model\Admin\forms;
+use App\Model\Admin\FormsMeta;
 class DashboardController extends Controller
 {
 	
 	protected function widget_permisson(){
+
 		$widgetPermisson = Permisson::select('permisson_id')->whereIn('role_id',role_id())->where([ 'permisson_type'=>'widget','permisson'=>'on'])->get();
     	$permissonWidgetId = $widgetPermisson->mapWithKeys(function ($item) {
     		return [$item['permisson_id'] => $item['permisson_id']];
@@ -58,12 +60,46 @@ class DashboardController extends Controller
 		return @json_decode($dashboards,true);
 	}
 
+	protected function updateMeta(){
+		$dataArray = array(
+				'form_show_save_button'  => 'yes',
+				'form_show_reset_button' => 'no',
+				'form_save_button_text' => 'Save',
+				'form_reset_button_text' => 'Reset',
+				'form_show_form_title' => 'no',
+				'form_show_form_description' => 'no',
+				'form_title_align' => 'center',
+				'form_description_align' => 'center',
+				'form_show_section_title' => 'yes',
+				'form_show_section_description' => 'no',
+				'form_section_title_align' => 'left',
+				'form_section_description_align' => 'left',
+				'form_show_field_tooltip' => 'no',
+				'form_show_field_placeholder' => 'yes',
+				'form_label_position' => 'top',
+				'form_show_field_label' => 'yes',
+				'form_show_field_description' => 'no',
+				'form_style' => 'clean',
+				'form_theme' => 'light'
+			);
+		$model = forms::get();
+		foreach($model as $key => $value){
+			foreach($dataArray as $dataKey => $dataValue){
+				$metaModel = FormsMeta::firstOrNew(['form_id'=>$value->id,'key'=>$dataKey]);
+				$metaModel->form_id = $value->id;
+				$metaModel->key = $dataKey;
+				$metaModel->value = $dataValue;
+				$metaModel->save();
+			}
+		}
+	}
+
     public function index($slug = null){
 		$user_id = get_user_id();
 		$dashboards = get_user_meta($user_id,'dashboards');
 		$allowed_widgets = array();
 		$widgets = array();
-		$listWidgets = [];
+		$listWidgets = array();
 		if($dashboards){
 			$dashboards = @json_decode($dashboards,true);
 			if($dashboards && is_array($dashboards)){
@@ -97,21 +133,24 @@ class DashboardController extends Controller
 	    				$widgets = $widgets->whereIn('id',$widgetsEnables);
 	    			}
 				}
+				$widgets = $widgets->toArray();
 				
 			} else {
 				$dashboards = $this->init_dashboards($user_id);
 			}
 		} else {
 			$dashboards = $this->init_dashboards($user_id);
+			return redirect()->route('organization.dashboard','');
 		}
 		$data = array(
-			'listWidgets'			=>	$listWidgets,
 			'dashboards'			=>	$dashboards,
-			'dashboard'				=>	$slug,
+			'current_dashboard'		=>	$slug,
+			'listWidgets'			=>	$listWidgets,
 			'allowed_widgets'		=>	$allowed_widgets,
 			'widgets'				=>	$widgets,
 			
 		);
+
 		return view('organization.dashboard.index',$data);
 
     }
@@ -209,18 +248,34 @@ class DashboardController extends Controller
 		$id = get_user_id();
 		$dashboards = get_user_meta($id, 'dashboards');
 		$decoded_data = json_decode($dashboards , true);
-		$requestData  = $request->all()['data'];
-		$newArray = [];
-		foreach($decoded_data as $key => $value){
-			if($key == $requestData['old_slug']){
-				$value['slug'] = $requestData['slug'];
-				$newArray[$requestData['slug']] = $value;
-			}else{
-				$newArray[$key] = $value;
-			}
-		}
-		update_user_meta('dashboards', json_encode($newArray) , get_user_id(), $return = true);
-		return 'true';
+		// dd($decoded_data);
+		$requestData  = $request->all();
+
+		$decoded_data[$request->old_slug] = [
+							'title' 		=> $request->title , 
+							'description' 	=> $request->description,
+							'slug' 			=> $request->old_slug,
+							'widgets' 		=> $decoded_data[$request->old_slug]['widgets']];
+		update_user_meta('dashboards', json_encode($decoded_data) , $id , $return = true);
+		return back();
     }
+	// public function updateDashboard(Request $request){
+	// 	$id = get_user_id();
+	// 	$dashboards = get_user_meta($id, 'dashboards');
+	// 	$decoded_data = json_decode($dashboards , true);
+	// 	$requestData  = $request->all()['data'];
+	// 	$newArray = [];
+	// 	foreach($decoded_data as $key => $value){
+	// 		if($key == $requestData['old_slug']){
+	// 			$value['slug'] = $requestData['slug'];
+	// 			$newArray[$requestData['slug']] = $value;
+	// 		}else{
+	// 			$newArray[$key] = $value;
+	// 		}
+	// 	}
+	// 	update_user_meta('dashboards', json_encode($newArray) , get_user_id(), $return = true);
+	// 	return 'true';
+ //    }
+ 	
 
 }

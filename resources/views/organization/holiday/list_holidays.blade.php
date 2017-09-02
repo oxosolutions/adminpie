@@ -2,9 +2,9 @@
 @section('content')
 	@if(@$errors->has() || Session::has('date_error'))
 		<script type="text/javascript">
-			$(window).load(function(){
-				$('.modal').modal('open');
-			});
+			window.onload = function(){
+				$('#add_new_model').modal('open');
+			}
 		</script>
 	@endif
 @if(@$data)
@@ -18,9 +18,9 @@
 		@endphp
 	@endforeach
 	<script type="text/javascript">
-		$(window).load(function(){
-			document.getElementById('modal-edit').click();
-		});
+		window.onload = function(){
+			$('#modal_edit').modal('open');
+		}
 	</script>
 @endif
 @php

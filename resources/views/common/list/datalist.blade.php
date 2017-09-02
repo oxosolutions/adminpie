@@ -111,6 +111,7 @@ foreach($columns as $column){
 						<select class="col  browser-default aione-field" name="orderby" >
 							<option value="" disabled selected>Sort By</option>
 							@if(isset($showColumns))
+
 								@foreach($showColumns as $key => $column)
 									@php
 										$explodedKey = explode('.',$key);
@@ -336,6 +337,13 @@ foreach($columns as $column){
 													$sts = '';
 												}
 												echo '<span class="aione-status '.$sts.'"></span>';
+											}elseif($k == 'link'){
+												if($dataset->target == 'next_page'){
+													$target = 'blank';
+												}else{
+													$target = '';
+												}
+												echo '<a href="'.$dataset->{$k}.'" target="'.$target.'">'.$dataset->{$k} .'</a>';												
 											}else{
 												echo $dataset->{$k};
 											}
@@ -350,6 +358,7 @@ foreach($columns as $column){
 				</div>	<!-- .aione-datalist-item-wrapper -->
 			</li>	<!-- .aione-datalist-item -->
 		@endforeach
+
 	</ul> 	<!-- .aione-datalist-items -->
 
 			</div> <!-- .aione-row -->

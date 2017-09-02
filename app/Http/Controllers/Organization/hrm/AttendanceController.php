@@ -331,7 +331,6 @@ class AttendanceController extends Controller
 	 		$dt = Carbon::parse($year_month);	
 		}
 
-
 		$holidays = Holiday::whereMonth('date_of_holiday',$month)->get();
 		$holiday_data = $holidays->mapWithKeys(function($data){
 			$holiday_date = str_replace('0','',date('d', strtotime($data['date_of_holiday'])));
@@ -343,113 +342,7 @@ class AttendanceController extends Controller
 		 $leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 
 		return view('organization.attendance.attendance_table', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
-		// get_user_meta(get_user_id(), $key = 'department', $array = false);
-		
-
-
 	}
-
-// 	public function ajax(Request $request)
-// 	{	
-// 		$now = Carbon::now();
-// 		$where['month'] = $month = $now->subMonth()->month;
-// 		$where['year']  = $years = $now->year;	
-// 		$fweek_no =  $fdate = null;
-// 		 $dt = Carbon::parse($years.'-'.$month);
-// 		$year_month  = "$years-$month";
-// 		$employee_data = Employee::whereMonth('joining_date','<=',$month)->WhereYear('joining_date','<=',$years)->get()->keyBy('employee_id');
-		// if ($request->isMethod('post'))
-		// {
-		// 		unset($where);
-		// 		$where = [];
-			
-		// 	if(!empty($request['date']))
-		// 	{
-		// 		$fdate = $where['date']= $request['date'];
-		// 		Session::put('date',$fdate);
-		// 	}else{
-		// 		Session::forget('date');
-		// 	}
-		// 	if(!empty($request['week']))
-		// 	{
-		// 		$fweek_no = $where['month_week_no']= $request['week'];
-		// 	}
-		// 	 	$where['month'] = $month 	=  $request['month'];
-		// 		$where['year']  = $years  = $request['years'];
-		// 	if(strlen($month)==1)
-		// 	{
-		// 		$where['month'] = $month ='0'.$month;
-		// 	}
-			
-		// 	 // DUMP($where);
-		
-		// 	if(Attendance::where($where)->count()==0)
-		// 	{
-				
-		// 		$error = "no data exist";
-		// 		return view('organization.attendance.attendance_table',['error'=>$error , 'month'=> $month , 'year'=> $years, 'employee_data'=>$employee_data ,'fweek_no'=>$fweek_no ]);
-		// 	}
-		// 	 	$year_month  = "$years-$month"; 			
-		//  		$dt = Carbon::parse($year_month);	
-		// }else{
-
-		// 	if(Session::has('date'))
-		// 	{
-		// 		Session::forget('date');
-		// 	}
-		// }
-
-
-// 		if(Attendance::where($where)->count()==0)
-// 			{	
-// 				$error = "no data exist";
-// 				return view('organization.attendance.attendance_table',['error'=>$error , 'month'=> $month , 'year'=> $years, 'employee_data'=>$employee_data ,'fweek_no'=>$fweek_no ]);
-// 			}
-// 				$d = Attendance::with('employee')->groupBy('employee_id')->selectRaw('count(id) as row,  employee_id')->where($where)->first()->row;
-// 				$chunk = $total_days = $count = $d;//$dt->daysInMonth;
-// 				// dump('chunk', $chunk);
-				
-// 				if(isset($where['date']) )
-// 				{	
-// 					$chunk =1;
-// 				}
-// 				$holiday_data = LH::select([DB::raw('DAY(date_of_holiday) as day'),'title'])->whereYear('date_of_holiday', '=', $where['year'])
-// 							->whereMonth('date_of_holiday', '=', $where['month'])
-// 							->get();
-// 				$attendance = Attendance::with('employee')->select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get();
-// 				$new_attendance_data = $attendance->groupBy('employee_id')->toArray();
-// 				// foreach ($new as $key => $value) {
-// 				// 	dump(collect($value)->keyBy('date'));
-// 				// }
-
-
-// 				$lock_status = $attendance[0]['lock_status'];
-// 				$attendanceAggregate = Attendance::groupBy('employee_id')
-// 		   		->selectRaw('sum(total_hour) as sum_total, sum(over_time) as ot, count(id) as row,  employee_id')->where($where);
-// 				$total_hour = $attendanceAggregate->pluck('sum_total','employee_id');
-// 				$total_over_time = $attendanceAggregate->pluck('ot','employee_id');
-// 				$total_record = $attendanceAggregate->pluck('row','employee_id');
-
-// 				$where['attendance_status'] ='present';
-
-// 				$attendance_count = Attendance::orderBy('row','DESC ')->groupBy('employee_id')
-// 		   		->selectRaw(' count(employee_id) as row,  employee_id')->where($where)->pluck('row','employee_id');
-// //dump('chunk'.$chunk);
-// 				$attendance_data = array_chunk(json_decode(json_encode($attendance),true),$chunk);
-
-// 				//dump($attendance_data);
-// 				// $collect = collect($attendance_data[0]);
-// 				//  dump($collect->groupBy('date'));
-// 				$leave_data = [];//Leave::whereYear('from','=',$where['year'])->whereMonth('from','=',$where['month'])->where('approved_status',1)->get();
-				
-// 				$where['submited_by'] = 'self';
-// 				$attendance_by_self = Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status')->where($where)->get();
-		
-//  		return view('organization.attendance.attendance_table', ['attendance_data'=>$new_attendance_data, 'chunk'=>$chunk , 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'employee_data'=>$employee_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
-// 	}
-	/**
-	 * 
-	 */
 
 	protected function employee_data($dates){
 		$data = Employee::with(['employ_info.metas', 'designations', 'department', 'department_rel','attendance' =>function($query) use($current_dates){
@@ -466,27 +359,9 @@ class AttendanceController extends Controller
 		$cDate =	date('Y-m-d',strtotime($current_dates["year"].'-'.$current_dates["month"].'-'.$current_dates["date"]));
 		$employee_data = User::with('metas_for_attendance')->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
 
-	//	$user_data = User::with('metas_for_attendance')->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
-		//dd($user_data);
-
-		// $employee_data = User::with(['metas'=>function($query){
-		// 	$query->with(['designation','department']);
-		// }])->whereHas('metas',function($query) use ($cDate){
-		// 	$query->where(['key'=>'date_of_joining'])->where('value','<=',$cDate)->orWhere(function($query){
-		// 		$query->whereIn('key',['designation','department']);
-		// 	});
-		// })->get()->keyBy('id');
-		 // dd($employee_data);
-		// $employee_data =	Employee::with(['employ_info', 'designations', 'department_rel'])->where('joining_date','<=',$cDate)->whereNull('leaving_date')->get();
-
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		if($request->isMethod('post')){
 
-			/*$employee_datas = Employee::with(['employ_info', 'designations', 'department_rel'])->where('joining_date','<=',$cDate)->whereNotNull('leaving_date')->where('leaving_date','>=',$cDate)->get()->keyBy('id');*/
-			// if( !empty($employee_datas) )
-			// {
-			// 	$employee_data = $employee_data->merge($employee_datas);
-			// }
 			$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		}
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);

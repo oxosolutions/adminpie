@@ -38,7 +38,36 @@ function g($g){
 	//Return Output
 	return $output;
 }
-
+/************************************************************
+*	@function users_drop_down
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return id [integer] , name [varchar]
+************************************************************/
+function users_drop_down($type=null){
+	return User::userDropDowns($type);
+}
+/************************************************************
+*	@function categories_drop_down
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return id [integer] , name [varchar]
+************************************************************/
+function categories_drop_down($type=null){
+	return App\Model\Organization\Category::Categories($type);
+}
+/************************************************************
+*	@function categories_drop_down
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return id [integer] , name [varchar]
+************************************************************/
+function departments_drop_down(){
+	return App\Model\Organization\Department::departmentLists();
+}
 
 /************************************************************
 *	@function get_organization_id
@@ -148,9 +177,7 @@ function get_profile_picture($uid = null, $size = null, $html = false){
 	
 	$meta_key = 'user_profile_picture';
 	$user_profile_picture = get_user_meta($uid,$meta_key, true);
-	
-	$user_profile_picture_url = 'assets/images/user.png';
-	
+	$user_profile_picture_url = 'assets/images/user_'.get_file_size($size).'.png';
 	if(!empty($user_profile_picture)){
 		$profile_picture_path = upload_path('user_profile_picture');
 		
@@ -819,6 +846,54 @@ function get_website_alexa_rank( $url = null ){
 		}
 		return $metaValue;
 	}
+
+/************************************************************
+*	@function get_attendance
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return attendance [array]
+************************************************************/
+function get_attendance(){	
+
+	$attendance = array();
+
+
+	
+	
+	//Return attendance
+	return $attendance;
+}
+
+
+/************************************************************
+*	@function get_form_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm fid		[integer	required	default	void]
+*	@perm key		[string	required	default	void]
+*	@perm array		[true/false	optional	default	false]
+*	@return $meta (Form Meta)
+************************************************************/
+
+function get_form_meta($fid, $key = null, $array = true, $global = true){	
+	
+	$meta = array();
+	if($global){
+		$model = "Admin\\FormsMeta";
+	} else {
+		$model = "Organization\\FormsMeta";
+	}
+	
+	
+	$meta = get_meta($model, $fid, $key, 'form_id', $array);
+
+	//Return Meta Object 
+	return $meta;
+}
+
+
 
 	/************************************************************
 	*	@function role_id

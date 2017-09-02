@@ -2,15 +2,9 @@
 @if(isset($options['type']))
 	@if($options['type'] == 'inset') --}}
 
-		@include('common.form.fields.includes.field-wrapper-start')
-			@include('common.form.fields.includes.field-label-start')
-				@include('common.form.fields.includes.label')
-			@include('common.form.fields.includes.field-label-end')
-			@include('common.form.fields.includes.field-start')
-				{!!Form::file(str_replace(' ','_',strtolower($collection->field_title)),null,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug])!!}
-				@include('common.form.fields.includes.error')
-			@include('common.form.fields.includes.field-end')
-		@include('common.form.fields.includes.field-wrapper-end')
+
+{!!Form::file(str_replace(' ','_',strtolower($collection->field_slug)),null,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug])!!}
+				
 	{{-- @else
 		<div class="row" style="padding:10px 0px;margin-bottom: 10px">
 			<div class="col l3" style="line-height: 30px">

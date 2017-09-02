@@ -22,9 +22,9 @@ $page_title_data = array(
   @if(@$data)
     
     <script type="text/javascript">
-      $(window).load(function(){
-        document.getElementById('modal-edit').click();
-      });
+      window.onload = function(){
+      $('#modal_edit').modal('open');
+    }
     </script>
   @endif
 @include('common.pageheader',$page_title_data) 

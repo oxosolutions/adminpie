@@ -230,16 +230,17 @@
  		$user_meta  = $vals->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
 						 }); 
+ 	
  		if(!empty($user_meta['designation'])){
  			$designation =	EmployeeHelper::get_designation($user_meta['designation']);
  		}
  		if(!empty($user_meta['department'])){
  			$department =	EmployeeHelper::get_department($user_meta['department']);
  		}
-		 if(empty($user_meta['employee_id']) || empty($user_meta['shift']) || empty($user_meta['joining_date'])){
+		 if(empty($user_meta['employee_id']) || empty($user_meta['user_shift']) || empty($user_meta['date_of_joining'])){
 			continue;
 		}
-		if(date('Y-m-d', strtotime($user_meta['joining_date'])) > date('Y-m-d', strtotime($dateformat))){
+		if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat))){
 				continue;
 		}
  			$in_out_data = $punch_in_out = $attendance_status = null;

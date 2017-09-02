@@ -1,43 +1,35 @@
-{{-- <div class="col l3" style="line-height: 25px;">
-	{{$collection->field_title}}
-</div>
-<div class="col l9">
-	<div class="row" style="margin-bottom: 20px">
-		@php
-			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'));
-			
-		@endphp
-		@foreach($optionValues->key as $key => $value)
-			<div class="col l3">
-				{!!Form::radio(str_replace(' ','_',strtolower($collection->field_title)),$optionValues->key[$loop->index],false,['id'=>str_replace(' ','_',strtolower($collection->field_title)).$loop->index])!!}
-		    	<label for="{{str_replace(' ','_',strtolower($collection->field_title)).$loop->index}}">{{$optionValues->value[$loop->index]}}</label>    
-			</div>
-		@endforeach
-	</div>
-		<div class="error-red">	
-			@if(@$errors->has())
-				{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
-			@endif
-		</div>
-
+@php
+	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
 	
-</div> --}}
+@endphp
 
-@include('common.form.fields.includes.field-wrapper-start')
-	@include('common.form.fields.includes.field-label-start')
-		@include('common.form.fields.includes.label')
-	@include('common.form.fields.includes.field-label-end')
-	@include('common.form.fields.includes.field-start')
 		@php
-			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'));
-			// dd($optionValues);
+			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'),true);
+			if(isset($optionValues['key'])){
+				$status = false;
+				$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
+			}else{
+				$status = true;
+				$collect = collect($optionValues);
+				$keys = array_keys($collect->groupBy('key')->toArray());
+				$values = array_keys($collect->groupBy('value')->toArray());
+				$arrayOptions = array_combine($keys, $values);
+			}
 		@endphp
-		@foreach($optionValues->key as $key => $value)
-			<div class="col l3">
-				{!!Form::radio(str_replace(' ','_',strtolower($collection->field_title)),$optionValues->key[$loop->index],false,['id'=>str_replace(' ','_',strtolower($collection->field_title)).$loop->index])!!}
-		    	<label for="{{str_replace(' ','_',strtolower($collection->field_title)).$loop->index}}">{{$optionValues->value[$loop->index]}}</label>    
-			</div>
-		@endforeach
-		@include('common.form.fields.includes.error')
-	@include('common.form.fields.includes.field-end')
-@include('common.form.fields.includes.field-wrapper-end')
+		@if($status == false)
+			@foreach($optionValues['key'] as $key => $value)
+				{{-- {{dump($collection)}} --}}
+				<div id="field_option_{{$collection->field_slug}}" class="field-option">
+					{!!Form::radio(str_replace(' ','_',strtolower($collection->field_slug)),$optionValues['key'][$loop->index],null,['id'=>'option_'.str_replace(' ','_',strtolower($collection->field_slug)).$loop->index,'class'=>$collection->field_slug.' '.$class_name])!!}
+			    	<label for="option_{{str_replace(' ','_',strtolower($collection->field_slug)).$loop->index}}" class="field-option-label">{!!$optionValues['value'][$loop->index]!!}</label>    
+				</div>
+
+			@endforeach
+		@else
+			@foreach($arrayOptions as $key => $value)
+				<div id="field_option_{{$collection->field_slug}}" class="field-option">
+					{!!Form::radio(str_replace(' ','_',strtolower($collection->field_slug)),$key,null,['id'=>'option_'.str_replace(' ','_',strtolower($collection->field_slug)).$loop->index,'class'=>$class_name])!!}
+			    	<label for="option_{{str_replace(' ','_',strtolower($collection->field_slug)).$loop->index}}" class="field-option-label">{!!$value!!}</label>    
+				</div>
+			@endforeach
+		@endif

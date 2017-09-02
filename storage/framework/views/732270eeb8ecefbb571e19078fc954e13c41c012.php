@@ -111,6 +111,7 @@ foreach($columns as $column){
 						<select class="col  browser-default aione-field" name="orderby" >
 							<option value="" disabled selected>Sort By</option>
 							<?php if(isset($showColumns)): ?>
+
 								<?php $__currentLoopData = $showColumns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 									<?php 
 										$explodedKey = explode('.',$key);
@@ -343,6 +344,13 @@ foreach($columns as $column){
 													$sts = '';
 												}
 												echo '<span class="aione-status '.$sts.'"></span>';
+											}elseif($k == 'link'){
+												if($dataset->target == 'next_page'){
+													$target = 'blank';
+												}else{
+													$target = '';
+												}
+												echo '<a href="'.$dataset->{$k}.'" target="'.$target.'">'.$dataset->{$k} .'</a>';												
 											}else{
 												echo $dataset->{$k};
 											}
@@ -357,6 +365,7 @@ foreach($columns as $column){
 				</div>	<!-- .aione-datalist-item-wrapper -->
 			</li>	<!-- .aione-datalist-item -->
 		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
 	</ul> 	<!-- .aione-datalist-items -->
 
 			</div> <!-- .aione-row -->

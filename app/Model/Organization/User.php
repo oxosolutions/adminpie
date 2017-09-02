@@ -35,11 +35,15 @@ class User extends Authenticatable
    }
    public function metas_for_attendance()
    {
-   	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id')->whereIn('key',['shift','employee_id','joining_date','designation','department']);
+   	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id')->whereIn('key',['user_shift','employee_id','date_of_joining','designation','department']);
    }
    public static function userList()
    {
       return self::pluck('name','id');
+   }
+    public static function userDropDowns($type=null)
+   {
+      return self::where(['status'=>1, 'user_type'=> $type])->pluck('name','id');
    }
    public static function getEmployee()
     {
@@ -79,5 +83,16 @@ class User extends Authenticatable
     {
       return self::where('user_type','employee')->pluck('name','id');
     }
-  
+    public static function getEmployeesId(){
+      $data = self::with(['metas'])->whereHas('metas',function($query){
+        $query->where('key','employee_id')->whereNotNull('value');
+      })->where('user_type','employee')->get();
+      $optionsArray = [];
+      foreach ($data as $key => $value) {
+        if($value->metas->pluck('value')[0] != '' && $value->metas->pluck('value')[0] != null){
+            $optionsArray[$value->metas->pluck('value')[0]]=$value->name.' ('.$value->metas->pluck('value')[0].' )';
+        }
+      }
+      return $optionsArray;
+    }
 }

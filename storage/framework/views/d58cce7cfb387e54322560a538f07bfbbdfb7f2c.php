@@ -1,53 +1,35 @@
 <?php 
 	$model = "App\Model\Organization\User";
+	$item_count = $model::all()->count();
+	$items = $model::orderBy('id','DESC')->limit(5)->get();
  ?>
-
-
-<?php $__env->startSection('front'); ?>
-
-	<div class="front" >
-		<div class="card shadow mt-0 fix-height" >
-			<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"></h5></div>
-			<div class="row center-align aione-widget-content mb-10" >
-					<?php echo e($model::all()->count()); ?>
-
-			</div>
-			<div class="row aione-widget-footer mb-10" >
-				<button href="#" class="all blue white-text">All </button>
-				<button href="#" class="recent blue white-text flip-btn-1">Recent </button>
-			</div>
+<?php echo $__env->make('organization.widgets.includes.widget-start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('organization.widgets.includes.widget-front-start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+        <div class="aione-widget-title"><?php echo e(ucfirst($widget_title)); ?></div>
+		<div class="aione-widget-content-wrapper">
+			<span class="aione-hero-text aione-counter"><?php echo e($item_count); ?></span>
 		</div>
-	</div>
-<?php $__env->stopSection(true); ?>
+		<div class="aione-widget-footer"></div>
+    <?php echo $__env->make('organization.widgets.includes.widget-front-end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php echo $__env->make('organization.widgets.includes.widget-back-start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    	<div class="aione-widget-title"><?php echo e(ucfirst($widget_title)); ?></div>
+    	<div class="aione-widget-content-wrapper">
+            <ul class="aione-recent-items">
+				<?php if(!$items->isEmpty()): ?>
+    				<?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item_key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+						<li class="item waves-effect"><?php echo e($item->email); ?>
 
-<?php $__env->startSection('back'); ?>
-	<div class="back">
-		<div class="card shadow mt-0 fix-height" > 
-			<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"></h5>
-				<a href="#" class="btn-unflip-1 btn-unflip"><i class="material-icons dp48">clear</i></a>
-			</div>
-			<div class="row aione-widget-list m-0" >
-				<ul class="recent-five">
-				<?php 
-					$data2 = $model::orderBy('id','DESC')->limit(5)->get();
-				 ?>
-				<?php if($data2 == null || $data2->isEmpty()): ?>
-					<?php echo e(dump("No Data Found")); ?>
-
-				<?php else: ?>
-					<?php $__currentLoopData = $data2; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-						<li class="waves-effect">
-							<?php echo e($v->email); ?>
-
-							<a href="<?php echo e(route('account.profile',$v->id)); ?>">view</a>
+							<a class="item-action" href="<?php echo e(route('account.profile',$item->id)); ?>">view</a>
 						</li>
-						<div class="divider"></div>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-				<?php endif; ?>
-					
-				</ul>
-			</div>
+    			<?php else: ?> 
+    				<div class="aione-widget-error">
+    					<?php echo e(__('messages.widget_empty_list', ['entity' => 'user'])); ?>
+
+    				</div>
+    			<?php endif; ?>
+			</ul>
 		</div>
-	</div>
-<?php $__env->stopSection(true); ?>
-<?php echo $__env->make('layouts.widget', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<div class="aione-widget-footer"></div>
+     <?php echo $__env->make('organization.widgets.includes.widget-back-end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('organization.widgets.includes.widget-end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

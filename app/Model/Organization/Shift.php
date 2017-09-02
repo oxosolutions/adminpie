@@ -15,7 +15,7 @@ class Shift extends Model
 	       $this->table = Session::get('organization_id').'_shifts';
 	   	}
 	}
-   	protected $fillable = ['name', 'from', 'to', 'status'];
+   	protected $fillable = ['name', 'from', 'to', 'working_days','status'];
 
 	public static function listshifts(){
 		return Self::pluck('name','id');		

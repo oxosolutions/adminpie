@@ -1,14 +1,131 @@
 /***************************************
-FIELD
+AIONE FORM WRAPPER
+***************************************/
+.aione-form-wrapper{
+
+}
+
+.aione-form-wrapper > .aione-row{
+
+}
+
+/***************************************
+AIONE FORM HEADER
 ***************************************/
 
+.aione-form-header{
+    margin-bottom: 15px;
+    position:relative;
+}
+
+.aione-form-header > .aione-row{
+
+}
+.aione-form-header .aione-form-title{
+    color:#666666;
+    text-align: center;
+    font-size: 24px;
+    line-height:1.33;
+    font-weight:400;
+    padding: 0;
+    margin: 0 0 10px 0;
+    position:relative;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.aione-form-header .aione-form-title.aione-align-left{
+    text-align: left;
+}
+.aione-form-header .aione-form-title.aione-align-center{
+    text-align: center;
+}
+.aione-form-header .aione-form-title.aione-align-right{
+    text-align: right;
+}
+.aione-form-header .aione-form-description{
+    color:#747474;
+    text-align: center;
+    font-size: 18px;
+    line-height:1.33;
+    font-weight:400;
+    padding: 0;
+    margin: 0 0 10px 0;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.aione-form-header .aione-form-description.aione-align-left{
+    text-align: left;
+}
+.aione-form-header .aione-form-description.aione-align-center{
+    text-align: center;
+}
+.aione-form-header .aione-form-description.aione-align-right{
+    text-align: right;
+}
+/***************************************
+SECTIONS
+***************************************/
+.aione-form-section-header{
+    margin: 0;
+    padding: 0;
+    position:relative;
+}
+
+.aione-form-section-header > .aione-row{
+
+}
+.aione-form-section-header .aione-form-section-title{
+    color:#666666;
+    text-align: center;
+    font-size: 18px;
+    line-height:1.33;
+    font-weight:400;
+    padding: 0;
+    margin: 0 0 10px 0;
+    position:relative;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.aione-form-section-header .aione-form-section-title.aione-align-left{
+    text-align: left;
+}
+.aione-form-section-header .aione-form-section-title.aione-align-center{
+    text-align: center;
+}
+.aione-form-section-header .aione-form-section-title.aione-align-right{
+    text-align: right;
+}
+.aione-form-section-header .aione-form-section-description{
+    color:#747474;
+    text-align: center;
+    font-size: 16px;
+    line-height:1.33;
+    font-weight:400;
+    padding: 0;
+    margin: 0 0 10px 0;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.aione-form-section-header .aione-form-section-description.aione-align-left{
+    text-align: left;
+}
+.aione-form-section-header .aione-form-section-description.aione-align-center{
+    text-align: center;
+}
+.aione-form-section-header .aione-form-section-description.aione-align-right{
+    text-align: right;
+}
+/***************************************
+FIELD
+***************************************/
+.field-wrapper{
+    position: relative;
+}
 .field-label{
     text-align: left;
-    margin-bottom: 10px;
+    padding: 0;
+    margin: 0;
 }
 .field-label label{
-    margin-bottom: 0;
-    padding:0;
+    display:block;
+    margin: 0;
+    padding: 10px 0 10px 0;
     font-weight: 100;
 }
 .field-title{
@@ -19,6 +136,7 @@ FIELD
     font-weight: 400;
     padding: 0;
     margin: 0 0 5px 0;
+    word-wrap: break-word;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 .field-description{
@@ -29,6 +147,7 @@ FIELD
     font-weight: 400;
     padding: 0;
     margin: 0;
+    word-wrap: break-word;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
@@ -47,11 +166,11 @@ FIELD
 }
 
 .field {
-    margin-bottom: 20px;
+    margin: 0;
     padding: 0 0 10px 0;
 }
 .field-option{
-    padding:0;
+    padding:0 0 5px 0;
     margin-bottom: 5px;
     border-bottom: 1px dotted #e8e8e8;
 }
@@ -59,17 +178,19 @@ FIELD
     margin-bottom: 0;
     border-bottom: none;
 }
-.field-option label,
 .field .field-option label{
-    display: block;
-    padding: 6px 0 7px 40px;
+    display: inline;
+    padding: 6px 0 7px 6px;
     color: #747474;
     text-align: left;
     font-size: 16px;
     line-height: 20px;
-    font-weight: 400;
+    font-weight: 400; 
+    word-wrap: break-word;
 }
-
+.field .field-option label{
+    cursor: pointer;
+}
 select,
 textarea,
 .field input[type="text"],
@@ -79,6 +200,8 @@ textarea,
 .field input[type="password"] input[type="number"], 
 .field input[type="tel"],
 .field input[type="url"],
+.field input[type="date"],
+.field input[type="time"],
 .field select,
 .field select[multiple=multiple]{
     font-size: 18px;
@@ -114,6 +237,8 @@ textarea:focus,
 .field input[type="password"],
 .field input[type="tel"]:focus,
 .field input[type="url"]:focus,
+.field input[type="date"]:focus,
+.field input[type="time"]:focus,
 .field select:focus,
 .field select[multiple=multiple]{
     background-color: #f5f3f2;
@@ -121,68 +246,111 @@ textarea:focus,
 }
 
 input[type=radio], 
-.radio input[type=radio], 
-.field-wrapper .field.radio input[type=radio], 
+.field input[type=radio], 
+.field.field-type-radio input[type=radio], 
  input[type=checkbox],
-.checkbox input[type=checkbox],
-.field-wrapper .field.checkbox input[type=checkbox] {
-    border: 1px solid #b4b9be;
-    background: #fff;
-    color: #555;
-    clear: none;
-    cursor: pointer;
+.field input[type=checkbox],
+.field.field-type-checkbox input[type=checkbox] {
     display: inline-block;
-    line-height: 0;
-    height: 30px;
     margin: 0;
+    padding: 0 !important;
     outline: 0;
-    padding: 0!important;
+    width: 24px;
+    min-width: 24px;
+    height: 24px;
+    line-height: 0;
+    color: #555;
+    background-color: #FFFFFF;
+    border: 1px solid #b4b9be;
+    clear: none;
+    cursor: pointer;    
     text-align: center;
     vertical-align: middle;
-    width: 30px;
-    min-width: 24px;
     -webkit-appearance: none;
     -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
     box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
-    -webkit-transition: .05s border-color ease-in-out;
-    transition: .05s border-color ease-in-out;
+    -moz-transition: all 200ms ease-in-out;
+    -webkit-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
 }
 
 input[type=radio], 
-.radio input[type=radio], 
-.field-wrapper .field.radio input[type=radio] {
+.field input[type=radio], 
+.field.field-type-radio input[type=radio] {
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
-
-input[type=radio]:checked:before ,
-.radio input[type=radio]:checked:before ,
-.field-wrapper .field.radio input[type=radio]:checked:before {
+input[type=radio]:checked ,
+.field input[type=radio]:checked ,
+.field.field-type-radio input[type=radio]:checked {
+    background-color: #0073aa;
+    border: 1px solid #0073aa;
+}
+input[type=radio]:before ,
+.field input[type=radio]:before ,
+.field.field-type-radio input[type=radio]:before {
     content: "";
-    -webkit-border-radius: 50px;
-    border-radius: 50px;
-    width: 14px;
-    height: 14px;
+    width: 4px;
+    height: 4px;
+    margin: 10px;
+    opacity:0;
+    display: block;
+    background-color: rgba(255, 255, 255, 0.8);
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -moz-transition: all 200ms ease-in-out;
+    -webkit-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
+}
+input[type=radio]:checked:before ,
+.field input[type=radio]:checked:before ,
+.field.field-type-radio input[type=radio]:checked:before {
+    opacity: 1;
+    width: 8px;
+    height: 8px;
     margin: 7px;
     display: block;
-    background-color: #1e8cbe;
+}
+input[type=checkbox]:checked ,
+.field input[type=checkbox]:checked ,
+.field.field-type-checkbox input[type=checkbox]:checked {
+    background-color: #0073aa;
+    border: 1px solid #0073aa;
 }
 
-input[type=checkbox]:checked:before ,
-.radio input[type=checkbox]:checked:before ,
-.field-wrapper .field.radio input[type=checkbox]:checked:before {
+input[type=checkbox]:before ,
+.field input[type=checkbox]:before ,
+.field.field-type-checkbox input[type=checkbox]:before {
     content: "";
-    width: 14px;
+    opacity:0;
+    width: 8px;
     height: 14px;
-    margin: 7px;
+    margin: 2px 0 0 7px;
     display: block;
-    background-color: #1e8cbe;
+    border-bottom: 2px solid #FFFFFF;
+    border-right: 2px solid #FFFFFF;
+    -moz-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -moz-transition: all 200ms ease-in-out;
+    -webkit-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
+}
+
+
+
+input[type=checkbox]:checked:before ,
+.field input[type=checkbox]:checked:before ,
+.field.field-type-checkbox input[type=checkbox]:checked:before {
+    opacity:1;
 }
 
 button,
 input[type=button],
-.button {
+input[type=submit],
+input[type=reset]{
     font-size: 18px;
     line-height: 24px;
     font-weight: 400;
@@ -202,9 +370,138 @@ input[type=button],
 }
 button:hover,
 input[type=button]:hover,
-.button:hover {
-color: #ffffff;
+input[type=submit]:hover,
+input[type=reset]:hover{
+    color: #ffffff;
     background-color: #121212;
+    border: none;
+}
+/***************************************
+FIELD TYPE SWITCH
+***************************************/
+.field-wrapper.field-wrapper-type-switch .field-label{
+    margin-right: 70px;
+}
+.field.field-type-switch{
+    position: absolute;
+    right: 0;
+    top: 14px;
+    padding: 0;
+}
+.field-wrapper-type-switch.aione-align-top .field-type-switch{
+
+}
+.field-wrapper-type-switch.aione-align-middle .field-type-switch{
+    top: 50%;
+    margin: -10px 0 0 0;
+}
+.field-wrapper-type-switch.aione-align-bottom .field-type-switch{
+    top: 100%;
+    margin: -30px 0 0 0;
+}
+
+.field.field-type-switch input[type=checkbox]{
+    display: none;
+}
+
+.field.field-type-switch .switch {
+    display: block;
+    background: #ef5350;
+    border-radius: 20px;
+    box-shadow: 0 2px 1px 0 rgba(255,255,255,.5), inset 0 1px 3px 0 rgba(0,0,0,.2);
+    width: 60px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: all .25s linear;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.field.field-type-switch .switch .handle {
+    width: 16px;
+    height: 16px;
+    display: block;
+    float: left;
+    margin: 2px 0 0 2px;
+    background: #fff;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,.2), 0 4px 23px 0 rgba(0,0,0,.08), -2px 4px 4px 0 rgba(0,0,0,.1);
+    -moz-transition: all .3s cubic-bezier(.33,1.6,.66,1);
+    -webkit-transition: all .3s cubic-bezier(.33,1.6,.66,1);
+    transition: all .3s cubic-bezier(.33,1.6,.66,1);
+}
+.field.field-type-switch .switch .handle:before {
+    content: "ON";
+    margin: 0 0 0 -40px;
+}
+.field.field-type-switch .switch .handle:after {
+    content: "OFF";
+    margin: 0 0 0 18px;
+}
+.field.field-type-switch .switch .handle:before,
+.field.field-type-switch .switch .handle:after {
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #fff;
+    width: 40px;
+    display: block;
+    text-align: center;
+    float: left;
+    text-shadow: 0 1px 1px rgba(0,0,0,.1);
+}
+.field.field-type-switch input[type=checkbox]:checked + .switch {
+    background: #8BC34A ;
+}
+.field.field-type-switch input[type=checkbox]:checked + .switch .handle {
+    margin:2px 0 0 42px;
+}
+
+/***************************************
+FIELD TYPE FILE
+***************************************/
+input[type=file]{
+    padding: 20px 0 20px 20px;
+    border: 1px dashed #e8e8e8;
+    width: 100%;
+    background-color: #f8f8f8;
+    -moz-transition: all 200ms ease-in-out;
+    -webkit-transition: all 200ms ease-in-out;
+    transition: all 200ms ease-in-out;
+
+}
+input[type=file]:hover{
+    border: 1px dashed #e8e8e8;
+    background-color: #f2f2f2;
+}
+
+
+
+
+/***************************************
+FORM STYLE BORDERED
+***************************************/
+.aione-form-style-bordered{
+    border:1px solid #e8e8e8;
+}
+.aione-form-style-bordered > .aione-row{
+    padding: 15px;
+}
+.aione-form-style-bordered .aione-form-header,
+.aione-form-style-bordered .aione-form-section-header,
+.aione-form-style-bordered .field-wrapper{
+    border-bottom:1px solid #e8e8e8;
+}
+.aione-form-style-bordered .field-wrapper{
+    margin-bottom: 15px;
 }
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */

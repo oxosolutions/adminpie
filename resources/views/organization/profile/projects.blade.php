@@ -10,6 +10,7 @@ $page_title_data = array(
 	'add_new' => ''
 ); 
 @endphp
+{{ dump($model) }}
 @include('common.pageheader',$page_title_data)
 	<div class="row">
 		@include('organization.profile._tabs')
@@ -72,147 +73,55 @@ $page_title_data = array(
 									
 								</div>
 								<div class="divider"></div>
-								<div class="row hover-me" style="padding:14px;background-color: #F9F9F9">
-									<div class="row valign-wrapper">
-										<div class="col s6">
-											<div class="row valign-wrapper">
-												<div class="col">
-													<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
-														A
-													</div>	
-												</div>
-												<div class="col" style="padding-left: 10px">
-													<div style="" class="">OCRM</div>
-													<div class="options">
-														<a href="" style="padding-right:10px">View Details</a>
-							                        	
+								@foreach($model as $k => $project)
+									<div class="row hover-me" style="padding:14px;background-color: #F9F9F9">
+										<div class="row valign-wrapper">
+											<div class="col s6">
+												<div class="row valign-wrapper">
+													<div class="col">
+														<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
+															A
+														</div>	
 													</div>
+													<div class="col" style="padding-left: 10px">
+														<div style="" class="">{{ $project->name }}
+
+														</div>
+														
+													</div>
+													
+												</div>
+												<div class="options">
+													<a href="{{ route('details.project',$project->id) }}" style="padding-right:10px">View Details</a>
+						                        	
 												</div>
 											</div>
-
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											 <div class="chip">
-											    <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="Contact Person">
-											    Sgs Sandhu
-											 </div>
-										</div>
-										
-									</div>
-								</div>
-								
-								<div class="row hover-me" style="padding:14px;">
-									<div class="row valign-wrapper">
-										<div class="col s6">
-											<div class="row valign-wrapper">
-												<div class="col">
-													<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
-														A
-													</div>	
-												</div>
-												<div class="col" style="padding-left: 10px">
-													<div style="" class="">AdminPie</div>
-													<div class="options">
-														<a href="" style="padding-right:10px">View Details</a>
-							                        	
-													</div>
-												</div>
+											<div class="col s2">
+												@foreach($project->projectMeta as $key => $meta)
+													@if($meta->key == 'start_date')
+														{{ $meta->value }}
+													@endif
+												@endforeach
 											</div>
-
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											 <div class="chip">
-											    <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="Contact Person">
-											    Sgs Sandhu
-											 </div>
-										</div>
-									</div>
-								</div>
-								
-								<div class="row hover-me" style="padding:14px;background-color: #F9F9F9">
-									<div class="row valign-wrapper">
-										<div class="col s6">
-											<div class="row valign-wrapper">
-												<div class="col">
-													<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
-														A
-													</div>	
-												</div>
-												<div class="col" style="padding-left: 10px">
-													<div style="" class="">Smaartframework</div>
-													<div class="options">
-														<a href="" style="padding-right:10px">View Details</a>
-							                        	
-													</div>
-												</div>
+											<div class="col s2">
+												@foreach($project->projectMeta as $key => $meta)
+													@if($meta->key == 'end_date')
+														{{ $meta->value }}
+													@endif
+												@endforeach
 											</div>
-
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											 <div class="chip">
-											    <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="Contact Person">
-											    Sgs Sandhu
-											 </div>
-										</div>
-										
-									</div>
-								</div>
-								
-								<div class="row hover-me" style="padding:14px;">
-									<div class="row valign-wrapper">
-										<div class="col s6">
-											<div class="row valign-wrapper">
-												<div class="col">
-													<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
-														A
-													</div>	
-												</div>
-												<div class="col" style="padding-left: 10px">
-													<div style="" class="">TEST1</div>
-													<div class="options">
-														<a href="" style="padding-right:10px">View Details</a>
-							                        	
-													</div>
-												</div>
+											<div class="col s2">
+												 <div class="chip">
+												    <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="Contact Person">
+												    Sgs Sandhu
+												 </div>
 											</div>
-
+											
 										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											2017/06/09
-										</div>
-										<div class="col s2">
-											 <div class="chip">
-											    <img src="{{ asset('assets/images/sgs_sandhu.jpg') }}" alt="Contact Person">
-											    Sgs Sandhu
-											 </div>
-										</div>
-										
 									</div>
-								</div>
+								@endforeach							
 							
-							
-							@include('common.list.datalist')
+							{{-- @include('common.list.datalist') --}}
 	
 						</div>
 					</div>

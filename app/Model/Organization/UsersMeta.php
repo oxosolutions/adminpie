@@ -23,6 +23,9 @@ class UsersMeta extends Model
    //  return $this->belongsTo('')
    // }
 
+public function get_user_meta(){
+  return $this->hasMany('App\Model\Organization\UsersMeta' ,'user_id' ,'user_id');
+}
    public static function saveDataListSetting($url,$params){
 	   if(Auth::guard('org')->check()){
 	   		$user = Auth::guard('org')->user()->id;

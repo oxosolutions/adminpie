@@ -12,11 +12,11 @@ $page_title_data = array(
   
 	@endphp	
 
-  @if(@$errors->has())
+  @if($errors->any())
     <script type="text/javascript">
-      $(window).load(function(){
-        $('.modal').modal('open');
-      });
+      window.onload = function(){
+        $('#add_new_model').modal('open');
+      }
     </script>
   @endif
   @if(@$data)
@@ -25,10 +25,11 @@ $page_title_data = array(
         $model = ['name' => $value['name'],'id' => $value['id']];
       @endphp
     @endforeach
+
     <script type="text/javascript">
-      $(window).load(function(){
-        document.getElementById('modal-edit').click();
-      });
+      window.onload = function(){
+        $('#modal_edit').modal('open');
+      }
     </script>
   @endif
 @include('common.pageheader',$page_title_data) 
@@ -55,17 +56,26 @@ $page_title_data = array(
 @include('common.pagecontentend')
 @if(Session::has('success-update'))
     <script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>
-  @endif
-  <style type="text/css">
+@endif
+<style type="text/css">
   	.modal-footer a{
-  		font-size: 13px;margin: 8px;display: inline-block;
+  		font-size: 13px;
+        margin: 8px;
+        display: inline-block;
   	}
   	.modal-footer .save{
-  		color: white;background-color: #2196f3;border-color: #2196f3;    padding: 8px 12px;    border-radius: 3px;    cursor: pointer;    font-weight: 400;    text-align: center;vertical-align: middle;
+  		color: white;background-color: #2196f3;
+        border-color: #2196f3;
+        padding: 8px 12px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-weight: 400;
+        text-align: center;
+        vertical-align: middle;
   	}
   	.modal{
-  		    overflow-y: hidden;
-  		    border-radius: 4px;
+	    overflow-y: hidden;
+	    border-radius: 4px;
   	}
   	.modal-header i{
   		color: #a9a9a9;
@@ -74,7 +84,6 @@ $page_title_data = array(
   	.modal-header i:hover{
   		color:#676767;
   	}
-  
 
 	#style-2::-webkit-scrollbar-thumb
 	{
@@ -83,5 +92,5 @@ $page_title_data = array(
 		background-color: #dcdcdc;
 	}
 
-  </style>
+</style>
 @endsection

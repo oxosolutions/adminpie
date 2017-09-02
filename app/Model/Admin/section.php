@@ -8,7 +8,7 @@ use Session;
 
 class section extends Model
 {
-   protected $fillable = ['form_id','section_name','section_slug','section_description'];
+   protected $fillable = ['form_id','section_name','section_slug','section_description','order','status'];
    protected $table = 'global_form_sections'; 
 
     

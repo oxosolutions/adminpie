@@ -10,10 +10,18 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
+
+
+
+	@if (Session::has('sucessful'))
+			<div class="alert alert-info" style="color:green;">
+				<h1> {{Session::get('sucessful')}} </h1>
+			</div>
+	@endif
 	@if (Session::has('error'))
-	 
-		@foreach(Session::get('error') as $key => $value)
-		<div class="alert alert-info" style="color:red;">{{$value}} </div>
+ 		@foreach(Session::get('error') as $key => $value)
+		<div class="alert alert-info" style="color:red;"><h3>
+		{{e($value)}} </h3></div>
 		@endforeach
 	@endif
 

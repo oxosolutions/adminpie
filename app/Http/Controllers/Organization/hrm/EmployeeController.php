@@ -151,8 +151,10 @@ class EmployeeController extends Controller
             $model[$key]['employee_id'] = '';
             foreach($record['metas'] as $metaKey => $metaValue){
                 if($metaValue['key'] == 'department'){
-                    $department = DEP::find($metaValue['value'])->name;
-                    $model[$key]['department'] = $department;
+                    $department = DEP::find($metaValue['value']);
+                    if(!empty($department)){
+                      $model[$key]['department'] =     $department->name;
+                    }
                 }
                 if($metaValue['key'] == 'designation'){
                     $designation = DES::find($metaValue['value']);
@@ -327,7 +329,7 @@ class EmployeeController extends Controller
                             'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
                             'password'      => 'required|min:8',
-                            'employee_id'   => 'required|min:4|max:256'
+                            'employee_id'   => 'required|min:4|regex:/^[a-z0-9-]+$/|max:256'
                         ];
         $this->validate($request , $valid_fields);
         $request['role_id'] =  setting_val_by_key('employee_role');
@@ -374,13 +376,9 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-        $model = EMP::where('user_id',$id)->delete();
-
-        if($model){
-            $model = User::where('id',$id)->delete();
-            $model_meta = UsersMeta::where('user_id',$id)->delete();
-            return back();
-        }
+        $model = User::where('id',$id)->delete();
+        $model_meta = UsersMeta::where('user_id',$id)->delete();
+        return back();
     }
 
     public function updateEmployeeName(Request $request){

@@ -69,7 +69,7 @@
                             <option value="datepicker">Datepicker</option>
                             <option value="timepicker">Timepicker</option>
                             <option value="switch">Switch</option>
-                            <option value="editor">Editor</option>
+                            <option value="code">Code</option>
                             <option value="auto-generator">Auto Generator Text</option>
                         </optgroup>
                         <optgroup label="Content">

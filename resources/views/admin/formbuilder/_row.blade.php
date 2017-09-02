@@ -66,7 +66,7 @@
             <div class="fields_list active-field">
                 <div class="row field_row">
                     <div class="col l4 left-align grey lighten-5 " style="padding:20px">
-                        <span class="field-title">Field Label*</span><br>
+                        <span class="field-title">Field Label1*</span><br>
                         <span class="field-description">This is the name which will appear on the EDIT page</span>
                     </div>
                     <div class="col l8 form-group"  style="padding: 10px">
@@ -99,7 +99,7 @@
                                 <option value="datepicker" {{(@$value->field_type == 'datepicker')?'selected':''}}>Datepicker</option>
                                 <option value="timepicker" {{(@$value->field_type == 'timepicker')?'selected':''}}>Timepicker</option>
                                 <option value="switch" {{(@$value->field_type == 'switch')?'selected':''}}>Switch</option>
-                                <option value="editor" {{(@$value->field_type == 'editor')?'selected':''}}>Editor</option>
+                                <option value="code" {{(@$value->field_type == 'code')?'selected':''}}>Code</option>
                                 <option value="auto-generator" {{(@$value->field_type == 'auto-generator')?'selected':''}}>Auto Generator Text</option>
                             </optgroup>
                             <optgroup label="Content">
@@ -111,6 +111,7 @@
                                 <option value="multi_select" {{(@$value->field_type == 'multi_select')?'selected':''}}>Multi Select</option>
                                 <option value="checkbox" {{(@$value->field_type == 'checkbox')?'selected':''}}>Checkbox</option>
                                 <option value="radio" {{(@$value->field_type == 'radio')?'selected':''}}>Radio Button</option>
+                                <option value="radio" {{(@$value->field_type == 'media')?'selected':''}}>Media</option>
                             </optgroup>
                         </select>
                           
@@ -122,7 +123,7 @@
                         <span class="field-description">Question Order be in number [0-9]</span>
                     </div>
                     <div class="col l8 form-group" style="padding:10px">
-                         <input type="text" name="field_order[{{$rowCount}}]" required="required" class="form-control field-label-input" value="{{@$value->field_order}}">
+                         <input type="text" name="field_order[{{$rowCount}}]" required="required" class="form-control field-label-input" value="{{@$value->order}}">
                     </div>
                 </div>
                 <div class="row field_row postfix">

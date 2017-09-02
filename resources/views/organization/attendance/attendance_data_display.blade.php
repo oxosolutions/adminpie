@@ -9,7 +9,6 @@
 			</div>
 			<div>
 					@php
-					// dump($holiday_data);
 					$number=1;
 					if(!empty($fweek_no)){
 						if($fweek_no==5){
@@ -26,7 +25,7 @@
 					@endphp
 					@if(!empty($fdate))
 						@php
-						$number = $total_days = $fdate;
+							$number = $total_days = $fdate;
 							$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
 							if($getDay->format('l')=="Sunday")
 						{
@@ -64,32 +63,29 @@
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
 						 }); 
-					if(!empty($user_meta['employee_id']) && !empty($user_meta['shift']) && !empty($user_meta['joining_date']))
+					if(!empty($user_meta['employee_id']) && !empty($user_meta['user_shift']) && !empty($user_meta['date_of_joining']))
 					{
-						if(date('m', strtotime($user_meta['joining_date'])) >  $current_month){
-									continue;
-								}
-						if(!empty($fweek_no) || !empty($fdate)){
+							
+ 						if(!empty($fweek_no) || !empty($fdate)){
 							echo "<br>";
 							if(!empty($fdate))
 							{	
-								if(date('Y-m-d', strtotime($user_meta['joining_date'])) > date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate")))
+								if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate")))
 								{
 									continue;
 								}
  							}
 							if(!empty($fweek_no)){
-								if(date('m', strtotime($user_meta['joining_date'])) >  $current_month){
+								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month){
 								continue;
 								}
-								if(date('m', strtotime($user_meta['joining_date'])) ==  $current_month){
-									$joining_week = Carbon\Carbon::parse($user_meta['joining_date']);
-									// dump($joining_week->weekOfMonth, 'joining');
-									// dump($current_week);
+								if(date('m', strtotime($user_meta['date_of_joining'])) ==  $current_month){
+									$joining_week = Carbon\Carbon::parse($user_meta['date_of_joining']);
+									
 									}
 							}
 						}else{
-								if(date('m', strtotime($user_meta['joining_date'])) >  $current_month){
+								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year ){
 									continue;
 								}
  						}

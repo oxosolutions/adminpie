@@ -11,7 +11,7 @@ class FormBuilder extends Model
 
     protected $table = 'global_form_fields';
 
-    protected $fillable = ['field_slug', 'form_id', 'section_id', 'field_title','field_type','field_description','field_order'];
+    protected $fillable = ['field_slug', 'form_id', 'section_id', 'field_title','field_type','field_description','order','status'];
     
     public function fields()
     {

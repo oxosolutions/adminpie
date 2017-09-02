@@ -27,7 +27,7 @@ class FormGenerator{
 
 				return $query->with('fieldMeta');
 
-			},'sectionMeta']);
+			},'sectionMeta'])->orderBy('order','ASC');
 
 		},'formsMeta'])->first();
 		if($FormDetails != null){
@@ -50,7 +50,14 @@ class FormGenerator{
 		}else{
 			$model = 'App\\Model\\Organization\\FormBuilder';
 		}
-		$FieldsCollection = $model::where('field_slug',$field_slug)->with(['fieldMeta','formsMeta','section']);
+		$FieldsCollection = $model::where('field_slug',$field_slug)->with(['fieldMeta','formsMeta']);
+		if(isset($Options['form_id'])){
+			$FieldsCollection->with(['section'=>function($query) use ($Options){
+				$query->where('form_id',$Options['form_id']);
+			}]);
+		}else{
+			$FieldsCollection->with(['section']);
+		}
 		if(isset($Options['section_id'])){
 			$FieldsCollection->where('section_id',$Options['section_id']);
 		}
@@ -63,7 +70,6 @@ class FormGenerator{
 			$collection = $FieldsCollection->field_type;
 			$status = 'single';
 		}
-
 		if($FieldsCollection != null){
 			$HTMLField = self::GetHTMLField($collection, $FieldsCollection, $Options, $dataModel,$status);
 			return $HTMLField;
@@ -84,12 +90,15 @@ class FormGenerator{
 		}else{
 			$model = 'App\\Model\\Organization\\section';
 		}
-		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields','formsMeta']);
+		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields'=>function($query){
+			$query->orderBy('order');
+		},'formsMeta'])->orderBy('order','ASC');
 		if(isset($Options['form_id'])){
 			$SectionCollection = $SectionCollection->where('form_id',$Options['form_id'])->first();
 		}else{
 			$SectionCollection = $SectionCollection->first();
 		}
+
 		if($SectionCollection == null){
 			dd('No section found');
 		}
@@ -129,12 +138,12 @@ class FormGenerator{
 	 */
 	public static function GetHTMLField($field, $collection, $Options, $model, $status){
 		if($status == 'single'){
-			return view('common.form.fields.'.$field,['collection'=>$collection,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($collection->formsMeta)])->render();
+			return view('common.form.field',['collection'=>$collection,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($collection->formsMeta),'field'=>$field])->render();
 		}else{
 			$fields = '';
 			$fields.="<div class=\"repeater-section\">";
 			foreach($field as $fieldKey => $fieldValue){
-				$fields .= view('common.form.fields.'.$fieldValue->field_type,['collection'=>$fieldValue,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($fieldValue->formsMeta)])->render();
+				$fields .= view('common.form.field',['collection'=>$fieldValue,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($fieldValue->formsMeta),'field'=>$fieldValue->field_type])->render();
 			}
 			$fields.="</div>";
 			return $fields;

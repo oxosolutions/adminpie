@@ -23,10 +23,12 @@ $url = url()->current();
     {!! Form::open(['route' => 'create.widget']) !!}
 @endif
 
+    {{-- {!! FormGenerator::GenerateForm('create_widget_form') !!} --}}
+
     <div class="row">
         <div class="col l12" style="padding: 10px 0px;">
             title
-        </div>
+        </div>      
         <div class="col l12">
           {!! Form::text('title',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
         </div>

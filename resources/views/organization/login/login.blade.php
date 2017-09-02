@@ -19,6 +19,8 @@
 @endif
 {!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 {!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
+	
+
 <div class="">
 				<a href="{{ route('forgot.password') }}">Forgot Password</a>
 			</div>

@@ -1,90 +1,37 @@
-{{-- @if(isset($options['type']))
-	@if($options['type'] == 'inset') --}}
-		@php
-			$model = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
-			if($model != false && $model != '' && $model != null){
-				$exploded = explode('@',$model);
-				$result = new $exploded[0];
-				$exploded[1] = str_replace('()', '', $exploded[1]);
-			}
-		@endphp
-		@if($model != false && $model != '' && $model != null)
-			<div class="col s12 m2 l12 aione-field-wrapper">
-				{!! Form::select(str_replace(' ','_',strtolower($collection->field_title)).'[]',$result->$exploded[1](),null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
-			</div>
-		<div class="error-red">	
-			@if(@$errors->has())
-				{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
-			@endif
-		</div>
+@php
+	$model = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
+	if($model != false && $model != '' && $model != null){
+		$exploded = explode('@',$model);
+		$result = new $exploded[0];
+		$exploded[1] = str_replace('()', '', $exploded[1]);
+	}
+@endphp
+@if($model != false && $model != '' && $model != null)
+	<div class="col s12 m2 l12 aione-field-wrapper">
+		{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$result->$exploded[1](),null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
+	</div>
+<div class="error-red">	
+	@if(@$errors->has())
+		{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+	@endif
+</div>
 
-		@else
-			@php
-				$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
-				$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
-			@endphp
-
-			@include('common.form.fields.includes.field-wrapper-start')
-				@include('common.form.fields.includes.field-label-start')
-					@include('common.form.fields.includes.label')
-				@include('common.form.fields.includes.field-label-end')
-				@include('common.form.fields.includes.field-start')
-					{!! Form::select(str_replace(' ','_',strtolower($collection->field_title)).'[]',$arrayOptions,null,['class'=>$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'multiple'])!!}
-					@include('common.form.fields.includes.error')
-				@include('common.form.fields.includes.field-end')
-			@include('common.form.fields.includes.field-wrapper-end')
-
-			
-
-		@endif
-	{{-- @else
-		<div class="col l3" style="line-height: 30px">
-			{{$collection->field_title}}
-		</div>
-		<div class="col l9">
-			@php
-				$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
-				$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
-			@endphp
-			{!! Form::select(str_replace(' ','_',strtolower($collection->field_title)).'[]',$arrayOptions,null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'])!!}
-		</div>
-		<div class="error-red">	
-			@if(@$errors->has())
-				{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
-			@endif
-		</div>
-
-	@endif --}}
-{{-- @else
-
+@else
 	@php
-		$model = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
-		if($model != false && $model != '' && $model != null){
-			$exploded = explode('@',$model);
-			$result = new $exploded[0];
-			$exploded[1] = str_replace('()', '', $exploded[1]);
+		$arrayOptions = [];
+		$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
+		if(isset($optionValues['key'])){
+			$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
+		}else{
+			$collect = collect($optionValues);
+			$keys = array_keys($collect->groupBy('key')->toArray());
+			$values = array_keys($collect->groupBy('value')->toArray());
+			$arrayOptions = array_combine($keys, $values);
 		}
 	@endphp
-	@if($model != false && $model != '' && $model != null)
-		<div class="col l3" style="line-height: 30px">
-			{{$collection->field_title}}
-		</div>
-		<div class="col l9">
-			{!! Form::select(str_replace(' ','_',strtolower($collection->field_title)).'[]',$result->$exploded[1](),null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'])!!}
-		</div>
-	@else
-		<div class="col l3" style="line-height: 30px">
-			{{$collection->field_title}}
-		</div>
-		<div class="col l9">
-			@php
-				$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
-				$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
-			@endphp
-			{!! Form::select(str_replace(' ','_',strtolower($collection->field_title)).'[]',$arrayOptions,null,['placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'])!!}
-		</div>
-	@endif
-@endif --}}
+			{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$arrayOptions,null,['class'=>$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'multiple'])!!}
+
+@endif
 
 <script type="text/javascript">
 	$(document).ready(function(){

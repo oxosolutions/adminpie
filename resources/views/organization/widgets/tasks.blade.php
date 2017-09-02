@@ -2,9 +2,7 @@
 	$model = "App\Model\Organization\Client";
 @endphp
 @extends('layouts.widget')
-
 @section('front')
-
 	<div class="front" >
 		<div class="card shadow mt-0 fix-height" >
 			<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#">{{ucfirst($data['widgets']->slug)}}</a></h5></div>

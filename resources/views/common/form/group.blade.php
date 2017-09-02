@@ -1,7 +1,36 @@
 <div class="repeater-group">
 
-	@if($model != null)
-		@foreach($model as $key => $value)
+	@if($model != null && !empty($model[strtolower($collection->section_slug)]))
+		<div class="repeater-wrapper">
+			@if(@$model[strtolower($collection->section_slug)] != '')
+				@php
+					$fieldOptions = $model[strtolower($collection->section_slug)];
+					if(!is_array($fieldOptions)){
+						$fieldOptions = json_decode($fieldOptions,true);
+					}
+				@endphp
+			@endif
+			@foreach($fieldOptions as $key => $value)
+				<div class="repeater-row">
+					<i class="material-icons dp48 repeater-row-delete">close</i>
+					@php
+						$options = [];
+						$options['loop_index'] = $loop->index;
+					@endphp
+					@foreach($collection->fields as $secKey => $field)
+						@php
+							$default_value = '';
+							$options['from'] = 'repeater';
+							$options['section_id'] = $collection->id;
+							$default_value = @$value[$field->field_slug];
+
+						@endphp
+							{!!FormGenerator::GenerateField($field->field_slug, $options,$default_value, $formFrom)!!}	
+					@endforeach
+				</div>
+			@endforeach
+		</div>
+		{{-- @foreach($model as $key => $value)
 			@php
 				$defaulValues = [];
 			@endphp
@@ -19,34 +48,30 @@
 						@endphp
 						@foreach($collection->fields as $secKey => $field)
 								@php
-									$options['default_value'] = $defaulValues[$secKey];
+									//$options['default_value'] = $defaulValues[$secKey];
 									$options['from'] = 'repeater';
 									$options['section_id'] = $collection->id;
 								@endphp
-								{!!FormGenerator::GenerateField($field->field_slug, $options,'', $formFrom)!!}
+								{!!FormGenerator::GenerateField($field->field_slug, $options,$model, $formFrom)!!}
 						@endforeach
 					</div>
 				</div>
 			</div>
-		@endforeach
+		@endforeach --}}
 	@else
-		
-	<div class="repeater-wrapper">
-		<div class="repeater-row">
-		<i class="material-icons dp48 repeater-row-delete">close</i>
-		@foreach($collection->fields as $secKey => $field)
-			@php
-				$options['from'] = 'repeater';
-				$options['section_id'] = $collection->id;
-			@endphp
-				
-				{!!FormGenerator::GenerateField($field->field_slug, $options,'', $formFrom)!!}	
-		@endforeach	
+		<div class="repeater-wrapper">
+			<div class="repeater-row">
+			<i class="material-icons dp48 repeater-row-delete">close</i>
+			@foreach($collection->fields as $secKey => $field)
+				@php
+					$options['from'] = 'repeater';
+					$options['section_id'] = $collection->id;
+					$options['loop_index'] = 0;
+				@endphp
+					{!!FormGenerator::GenerateField($field->field_slug, $options,'', $formFrom)!!}	
+			@endforeach	
+			</div>
 		</div>
-	</div>
-		
-		
-		
 	@endif
 	
 		

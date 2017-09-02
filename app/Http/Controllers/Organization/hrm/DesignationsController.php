@@ -53,16 +53,15 @@ class DesignationsController extends Controller
     if(!empty($id) || $id != null || $id != ''){
       $data['data'] = DES::where('id',$id)->first();
     }
-                  // dd($datalist);
       return view('organization.designation.list_designation',$datalist)->with(['data' => $data]);
 
    }
   
    public function save(Request $request)
    {
-    $tbl = Session::get('organization_id');
-    $valid_fields = [
-                            'name' => 'required|unique:'.$tbl.'_designations'
+      $tbl = Session::get('organization_id');
+        $valid_fields = [
+                          'name' => 'required|unique:'.$tbl.'_designations'
                         ];
         $this->validate($request , $valid_fields);
       $sh = new DES();
@@ -109,7 +108,8 @@ class DesignationsController extends Controller
         Session::flash('success-update','update success');
       return redirect()->route('designations');
     }
-    public function deleteUserDesignation(Request $request , $id){
+    public function deleteUserDesignation($id){
+      
      $model = DES::where('id',$id)->delete();
       if($model){
         return back();

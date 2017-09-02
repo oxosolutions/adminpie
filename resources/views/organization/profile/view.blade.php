@@ -487,6 +487,7 @@ $page_title_data = array(
 										@if($isAdmin)
 											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 										@endif
+										{{-- {{ dd($model) }} --}}
 									{!!Form::model($model->toArray(),['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
 									
@@ -503,12 +504,19 @@ $page_title_data = array(
 										</div>
 										<div class="col l12 details-wrapper" >
 										@if($field == 'designation')
-												&nbsp;{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
+											&nbsp;
+												{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
 										@elseif($field == 'department')
-												&nbsp;	{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->
-													name}}
+											&nbsp;	
+												{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->name}}
+										@elseif($field == 'user_shift')
+											&nbsp;	
+												{!! Form::close() !!}{{@App\Model\Organization\Shift::find($model[strtolower($field)])->name}}
+										@elseif($field == 'Pay_scale')
+											&nbsp;	
+												{!! Form::close() !!}{{@App\Model\Organization\Payscale::find($model[strtolower($field)])->title}}
 										@else
-												&nbsp;&nbsp;{{$model[strtolower($field)]}}
+												&nbsp;&nbsp;{{@$model[strtolower($field)]}}
 										@endif
 										</div>
 									</div>

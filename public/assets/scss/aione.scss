@@ -68,17 +68,25 @@ Aione layout
 
 //clockpicker
 @import "../../bower_components/materialize-clockpicker/src/sass/clockpicker";
+//Select2
+@import "../../bower_components/select2/src/scss/core.scss"; 
 
 
 
 
 //Aione Componants
+@import "components/backgrounds";
 @import "components/typography";
-@import "components/common";
 @import "components/model";
 @import "components/aione-forms";
+@import "components/aione-table";
 @import "components/aione-datalist";
 @import "components/aione-datalist-pagination";
 @import "components/aione-tabs";
 @import "components/progressbar";
 @import "components/temp";
+
+@import "components/common";
+
+//Select 2 Aione Theme Style Overide
+@import "components/select2-aione-theme";

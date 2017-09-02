@@ -1,3 +1,8 @@
+.aione-card{
+    
+}
+
+
 /***************************************
 COMMON
 ***************************************/
@@ -12,6 +17,17 @@ COMMON
 .display_block{
 	display: block !important;
 }
+
+.aione-align-left{
+    text-align: left;
+}
+.aione-align-center{
+    text-align: center;
+}
+.aione-align-right{
+    text-align: right;
+}
+
 		
 ::-webkit-scrollbar {
     width: 8px;

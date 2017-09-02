@@ -4,6 +4,7 @@ namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
+
 class Payscale extends Model
 {
 	public static $breadCrumbColumn = 'id';

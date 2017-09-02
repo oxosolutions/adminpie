@@ -20,4 +20,8 @@ class Department extends Model
 	public function departmentList(){
         return self::orderBy('id')->pluck('name','id');
     }
+    public static function departmentLists(){
+        return self::orderBy('id')->where('status',1)->pluck('name','id');
+    }
+
 }

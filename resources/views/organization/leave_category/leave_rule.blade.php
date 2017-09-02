@@ -42,7 +42,7 @@ $page_title_data = array(
 				Name
 			</div>
 			<div class="col l9">
-				{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+				
 				{!! Form::text('name',@$data['cat']['name'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
 			</div>
 		</div>	
@@ -52,8 +52,7 @@ $page_title_data = array(
 				Description
 			</div>
 			<div class="col l9">
-				{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
-				 {{-- <textarea id="textarea1" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea> --}}
+				
 				 {!! Form::textarea('description',@$data['cat']['description'],['class'=>"materialize-textarea","id"=>"textarea1","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px"]) !!}
 			</div>
 		</div>	
@@ -80,13 +79,13 @@ $page_title_data = array(
 				{{@$data['apply_before']}}
 			</div>
 			<div class="col l9">
-				{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+				
 				{!!Form::text('apply_before',@$data['data']['apply_before'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
 			</div>
 		</div>
 		
 	
-				
+		{{-- {!! FormGenerator::GenerateForm('edit_leave_category_form') !!}				 --}}
 
 		<div class="row" style="padding-bottom: 15px">
 		{!! Form::submit('submit',['class'=>'btn blue white-text'])!!}

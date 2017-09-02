@@ -7,7 +7,7 @@ use Auth;
 use Session;
 class forms extends Model
 {
-    protected $fillable = ['form_title','form_slug','form_description','type'];
+    protected $fillable = ['form_title','form_slug','form_description','type','order'.'status'];
     protected $table	= 'global_forms';
     
 

@@ -20,6 +20,7 @@
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 	{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
+	
 	{!!Form::close()!!}
 
 	@include('components._footer')

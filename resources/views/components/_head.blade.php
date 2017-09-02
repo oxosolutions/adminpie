@@ -1,30 +1,26 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	
+	<meta name="csrf-token" content="{{ csrf_token() }}">
+
 	<title> AdminPie</title>
 
 	<!-- Global stylesheets -->
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/aione.css?ref='.rand(1111,9999)) }}">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
 	
 
-
-    
-	<script src="{{ asset('assets/js/moment.min.js')}}"></script>
+	
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.js"></script>
+    <script src="{{ asset('assets/js/moment.min.js')}}"></script>
     <script type="text/javascript" src="{{ asset('bower_components/jquery-form-validator/form-validator/jquery.form-validator.js')}}"></script>
 
-    
-    <!-- Dashboard Grid -->
-	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/gridster/dist/jquery.gridster.css') }}">
-	<script type="text/javascript" src="{{ asset('bower_components/gridster/dist/jquery.gridster.js')}}"></script>
-
-
+    <!-- Select 2 -->
+	<script type="text/javascript" src="{{ asset('bower_components/select2/dist/js/select2.js')}}"></script>
 
 	
     <script src="{{ asset('assets/js/fullcalendar.min.js')}}"></script>
@@ -34,8 +30,7 @@
     <script type="text/javascript" src="{{ asset('js/common.js?')}}?ref={{rand(8899,9999)}}"></script>
     <script type="text/javascript" src="{{ asset('js/jquery-ui.min.js?')}}?ref={{rand(8899,9999)}}"></script>
     
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
-    
+ 
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js"></script>
 	
@@ -48,6 +43,7 @@
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/removeRow/handsontable.removeRow.js"></script>
 	<script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="{{asset('js/dropzone.js')}}"></script>
 
 	
 	<script type="text/javascript">
@@ -83,17 +79,6 @@
 		            { data: 'created_at', name: 'created_at', searchable: true },
 		            { data: 'status', name: 'status', orderable: false, searchable: false, "className": 'actions' },
 			    ],
-			    /*initComplete: function () {
-		            var dataTable = this;
-		            dataTable.api().columns().every(function () {
-		                var column = this;
-		                var filterContainer = $(dataTable).find("thead .column-filters th").get(column.index()); //$(column.footer())
-		                var filterElement = $(filterContainer).find("input,select");
-		                filterElement.on('change', function () {
-		                    column.search($(this).val() !== null ? $(this).val() : "").draw();
-		                });
-		            });
-		        },*/
 				"oLanguage": {
 		            "sLengthMenu": "_MENU_ Rows",
 		            "sSearch": ""

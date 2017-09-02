@@ -1,7 +1,6 @@
 @extends('layouts.main')
 @section('content')
 @php
-// dd($datalist);
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -11,18 +10,17 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
-
 @if($data)
-	@foreach(@$data as $key => $value)
+	{{-- @foreach(@$data->toArray() as $key => $value) --}}
 		@php
-			$id = $value->id;
-			$model = ['name' => $value->name,'from' => $value->from, 'to' => $value->to , 'reason_of_leave' => $value->reason_of_leave];
+			$id = $data['id'];
+			$model = ['name' => $data->name,'leave_from' => $data->leave_from, 'leave_to' => $data->to , 'leavereason' => $data->reason_of_leave];
 		@endphp
-	@endforeach
+	{{-- @endforeach --}}
 	<script type="text/javascript">
-		$(window).load(function(){
-			document.getElementById('modal-edit').click();
-		});
+		window.onload = function(){
+			$('#modal_edit').modal('open');
+		}
 	</script>
 @endif	
 @include('common.pagecontentstart')
@@ -37,7 +35,6 @@
 @if(@$model)
 	{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 	<input type="hidden" name="id" value="{{$id}}">
-	<a href="#modal_edit" style="display: none" id="modal-edit"></a>
 	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','section'=>'leavesection']])
 	{!!Form::close()!!}
 @endif	

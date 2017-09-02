@@ -26,6 +26,10 @@ class GlobalModule extends Model
         return $routeList;
     }
 
+    public function listModules()
+    {
+        return Self::pluck('name','id');
+    }
     // public function permissons()
     // {
     //     return $this->morphMany('App\Model\Organization\RolePermisson', 'permisson');
@@ -36,7 +40,10 @@ class GlobalModule extends Model
 		return $this->hasMany('App\Model\Admin\GlobalSubModule','module_id','id')->orderBy('orderBy','ASC');
 	}
 
-
+public function widgets()
+{
+    return $this->hasMany('App\Model\Admin\GlobalWidget','module_id','id');
+}
     // public function module_role_permisson()
     // {
     //     return $this->hasMany('App\Model\Organization\RolePermisson','module_id','id');

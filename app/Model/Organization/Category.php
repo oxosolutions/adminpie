@@ -25,6 +25,15 @@ class Category extends Model
     {
     	return self::pluck('name','id');
     }
+    public static function getCategories()
+    {
+       return self::where('type','bookmark')->pluck('name','id');
+    }
+    public static function Categories($type)
+    {
+       return self::where(['type'=>$type, 'status'=>1])->pluck('name','id');
+    }
+
     public static function getListByTypePage()
     {
     	return self::where('type','page')->pluck('name','id');

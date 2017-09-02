@@ -7,19 +7,13 @@ use Auth;
 use Session;
 class forms extends Model
 {
-    protected $fillable = ['form_title','form_slug','form_description'];
+    protected $fillable = ['form_title','form_slug','form_description','type'];
     protected $table	= 'global_forms';
     
     public function __construct(){
-    	try{
-    		if(Auth::guard('org')->check()){
 		    	if(!empty(Session::get('organization_id'))){
 		    		$this->table = Session::get('organization_id').'_forms';
 		    	}
-		    }
-    	}catch(\Exception $e){
-    		
-    	}
     }
     
 

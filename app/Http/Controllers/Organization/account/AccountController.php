@@ -212,12 +212,19 @@ class AccountController extends Controller
                         $employeeModel = Employee::where('user_id',$id)->update(['leaving_date' => $value]);
                     }*/
                     if($key == 'employee_id'){
-                        $metaModel = UM::where(['key'=>$key])->where('user_id','!=',$id)->first();
+                        $metaModel = UM::where(['key'=>$key,'value' => $value])->where('user_id','!=',$id)->first();
                         if($metaModel != null){
                             Session::flash('error',"Employee Id Already exists");
                             return back();
+                        }else{
+                            $metaModel = NEW UM;
+                            $metaModel->key = $key;
+                            $metaModel->value = $value;
+                            $metaModel->user_id = $id;
+                            $metaModel->save();
                         }
                     }else{
+                        // dump($key);
                         $metaModel = UM::firstOrNew(['key'=>$key,'user_id'=>$id]);
                         $metaModel->key = $key;
                         $metaModel->value = $value;
@@ -296,18 +303,11 @@ class AccountController extends Controller
         if($id == null){
             $model = Project::with('projectMeta')->get();
         }else{
-            $model = $id;
+            $model = Project::with(['projectMeta'])->whereHas('projectMeta',function($query) use ($id){
+                $query->where('key' , 'users')->where('value' , 'like' , '%'.$id.'%');
+            })->get();
         }
-        dd($model);
-        if($id == null){
-            $user_id = get_user_id();
-            $model = ProjectMeta::where(['key'=>'teams'])->get();
-        }else{
-            // $model = ProjectMeta::where(['key' => ])
-            $model = ProjectMeta::all();
-        }
-        dd($model);
-        return view('organization.profile.projects');
+        return view('organization.profile.projects',compact('model'));
     }
 
     protected function saveSearch($request){

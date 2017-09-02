@@ -12,17 +12,17 @@
 			@endphp
 		@endforeach
 		<script type="text/javascript">
-			$(window).load(function(){
-				document.getElementById('modal-edit').click();
-			});
+			window.onload = function(){
+				$('#modal_edit').modal('open');
+			}
 		</script>
 	@endif
 
 @if(@$errors->has())
 	<script type="text/javascript">
-		$(window).load(function(){
-			$('#add_new_model').modal('open');
-		});
+		window.onload = function(){
+				$('#add_new_model').modal('open');
+			}
 	</script>
 @endif
 

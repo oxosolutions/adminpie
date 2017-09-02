@@ -2,6 +2,21 @@
 	$(document).ready(function() {
 
 		/*****************************************************
+		/*  Hide Menu
+		/*****************************************************/
+		$(document).click(function(e) {
+			e.stopPropagation();
+			//console.log(e.target);
+			if (!$(e.target).is('#aione_header_right *')) {
+		        $('#aione_header_right .aione-header-item').removeClass('active');
+		    }
+		    if (!$(e.target).is('.aione-breadcrumbs *')) {
+		        $('.aione-breadcrumbs li').removeClass('active');
+		    }
+		    
+		});
+
+		/*****************************************************
 		/*  Header Right Menu Toggles
 		/*****************************************************/
 		$('body').on('click','#aione_header_right .aione-header-item > a',function(e){
@@ -85,6 +100,36 @@
 		/*****************************************************/
 
 		$.validate();
+
+		/*****************************************************
+		/*  Aione Form Selct 2
+		/*****************************************************/
+		$('.field-type-multi_select select').select2({
+		  theme: "aione"
+		});
+
+		/*****************************************************
+		/*  Aione Form Selct 2
+		/*****************************************************/
+		$(document).on('click','.aione-delete-confirmation',function(e){
+	        e.preventDefault();
+	        var href = $(this).attr("href");
+	        swal({   
+	            title: "Are you sure?",   
+	            text: "Are you sure you want to delete",   
+	            type: "warning",   
+	            showCancelButton: true,   
+	            confirmButtonColor: "#DD6B55",   
+	            confirmButtonText: "Delete",   
+	            closeOnConfirm: false 
+	        }, 
+	        function(){
+	           window.location = href;
+	           swal("Deleted!", "Your widget has been deleted.", "success"); 
+	       }); 
+	    })
+
+		
 
 		/*****************************************************
 		/*  Aione Form Validations
