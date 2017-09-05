@@ -19,7 +19,7 @@ $page_title_data = array(
             {{-- @include('admin.organization._form')                 --}}
             {!! FormGenerator::GenerateForm('create_organization_form') !!}
             <div class="row right-align pv-10">
-                <button type="submit" class="btn btn-primary blue"> create Organization <i class="icon-arrow-right14 position-right"></i></button>  
+               {{--  <button type="submit" class="btn btn-primary blue"> create Organization <i class="icon-arrow-right14 position-right"></i></button>  --}} 
             </div>                      
             
                                 

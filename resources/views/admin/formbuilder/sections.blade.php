@@ -21,8 +21,9 @@
 @extends($layout)
 @section('content')
 @php
-    $sectionData = $sections->where('id',request()->input('sections'))->first();
+    
     $title = $form->form_title;
+
 @endphp
 @php
 $page_title_data = array(
@@ -33,12 +34,16 @@ $page_title_data = array(
   'add_new' => '+ Apply leave'
 ); 
 @endphp
-
+<script type="text/javascript">
+    
+</script>
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
     @if($form->type == 'survey')
         @include('organization.survey._tabs')
+    @else
+        @include('admin.formbuilder._tabs')
     @endif
     <input type="hidden" name="_token" value="{{csrf_token() }}">
     <div class="module-wrapper">
@@ -85,59 +90,46 @@ $page_title_data = array(
             </nav>
         </div>
         <div class="Detail-container">
-            
+            @php
+                $section_id = request()->input('sections');
+                $sectionFormData = [];
+                $data = [];
+            @endphp
+            @foreach($sections as $key => $value)
+                @if($value->id == $section_id)
+                    @php
+                        $sectionFormData[$key] = $value;   
+                    @endphp
+                @endif    
+            @endforeach
+            @foreach($sectionFormData as $key => $value)
+                @foreach($value->sectionMeta as $k => $v)
+                    @php
+                        $data[$v->key] = $v->value;
+                    @endphp
+                @endforeach
+                @php
+                    $data['section_name'] = $value->section_name;
+                    $data['section_slug'] = $value->section_slug;
+                    $data['section_description'] = $value->section_description;
+                @endphp
+            @endforeach
+          
             @if(!Request::has('field'))
 
                 @if(Request::has('sections') && Request::input('sections') != 'all')
-                    
-                    {!!Form::open(['route'=>[$route_slug.'section.update',request()->form_id]])!!}
+                    {!!Form::model($data,['route'=>[$route_slug.'section.update',request()->form_id]])!!}
                         <input type="hidden" name="section_id" value="{{Request::input('sections')}}" />
                         <div class="row no-margin-bottom">
-                            <div class="input-field col l12">   
-                                @php
-                                    $sectionDetails = $sections->where('id',Request::input('sections'))->first();
-                                @endphp
-                                <input placeholder="Enter section name" name="section_name" id="user_name" type="text" value="{{($sectionDetails != null)?$sectionDetails->section_name:''}}" >
-                                <label for="user_name">Section Name</label>
-                            </div>
-
-                            <div class="input-field col l12">
-                                <input placeholder="Enter slug" name="section_slug" id="emailId" type="text" value="{{($sectionDetails != null)?$sectionDetails->section_slug:''}}" >
-                                <label for="emailId">Slug</label>
-                                
-                            </div>
-
-                            <div class="input-field col l12">
-                                <input placeholder="Enter description" name="section_description" id="roleId" type="text" value="{{($sectionDetails != null)?$sectionDetails->section_description:''}}" >
-                                <label for="roleId">Description</label>
-                            </div>
-                            @php
-                                $sectionmeta = null;
-                                $section = $sections->where('id',Request::input('sections'))->first();
-                                if($section != null){
-                                    $sectionmeta = $section->sectionMeta->where('key','section_type')->first();
-                                }
-                            @endphp
-                            
-                            <div class="input-field col l12">
-                                <select class="no-margin-bottom aione-field" name="section_type">
-                                    <option selected="selected" disabled="disabled" hidden="hidden" value="">Select type</option>
-                                    <option value="Single" {{($sectionmeta != null && $sectionmeta->value == 'Single')?'selected':''}}>Single</option>
-                                    <option value="Repeater" {{($sectionmeta != null && $sectionmeta->value == 'Repeater')?'selected':''}}>Repeater</option>
-                                </select>
-                            </div>
-                            
+                          
+                            {!! FormGenerator::GenerateForm('form_generator_section_edit') !!}
                             @if(@$errors->has())
                                 @foreach($errors->all() as $kay => $err)
                                     <div style="color: red">{{$err}}</div>
                                 @endforeach
                             @endif
 
-                            <div class="col s12 m12 l12 aione-field-wrapper center-align">
-                              <button class="save_user btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit">Save
-                                <i class="material-icons right">save</i>
-                              </button>
-                            </div>
+                          
 
                         </div>
                     {!!Form::close()!!}
@@ -146,11 +138,12 @@ $page_title_data = array(
                 @if(Request::has('sections') && Request::input('sections') == 'all')
                     {!! Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
                         <div class="add-section">
-                            <button class="btn blue" type="submit">Add Section</button>
+                          {{--   <button class="btn blue" type="submit">Add Section</button>
                             <span>
                                 <input type="text" name="name">
                                 <input type="hidden" name="module_id" value="">    
-                            </span>
+                            </span> --}}
+                            {!! FormGenerator::GenerateForm('add_section_form') !!} 
                             <div class="clear"></div>
                             @if($errors->has('name'))
                                 <span style="color: red;">{{$errors->first('name')}}</span>
@@ -159,16 +152,10 @@ $page_title_data = array(
                     {!!Form::close()!!}
                 @endif
                 @if(Request::has('sections') && Request::input('sections') != 'all')
-                    {!!Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')]])!!}
-                        <div class="add-section">
-                            
-                            <div class="add-field-form">
-                            {!! FormGenerator::GenerateSection('add_field_sub_form') !!}
-                            <button class="btn blue" type="submit">Add Field</button>
-                                {{-- <input type="text" name="field_title"> --}}
-                            </div>
-                            <div class="clear"></div>
-                        </div>
+                    {!!Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')],'class'=>'add-field-mini-form'])!!}
+                            {!! FormGenerator::GenerateForm('add_field_from_section') !!}  
+                             
+                                         
                     {!!Form::close()!!}
                 @endif
 
@@ -190,7 +177,33 @@ $page_title_data = array(
                                 <a href="javascript:;" class="arrow-downward">
                                     <i class=" material-icons dp48">arrow_downward</i>    
                                 </a>
-                                
+                                <a href="javascript:;" class="move" section-id = "{{ $section->id }}" data-target="list-forms">
+                                    <i class=" material-icons dp48">forward</i>    
+                                </a>
+                                <div id="list-forms" class="modal modal-fixed-footer" style="overflow-y: hidden;">
+                                    <div class="modal-header">
+                                        <h5>Select form where you want to move this section</h5>  
+                                        <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+                                    </div>
+                                     {!! Form::open([ 'method' => 'POST', 'route' =>$route_slug.'section.move' ,'class' => 'form-horizontal']) !!}
+                                    <div class="modal-content">
+                                         {!! Form::select('move_to',listForms(),null,['class'=>' browser-default ','id'=>'input_','placeholder'=>'Select form'])!!}
+                                            <input type="hidden" name="sectionId" value="">
+                                         {!! FormGenerator::GenerateField('want_to') !!}
+                                          
+                                    </div>
+                                    <div class="modal-footer">
+                                       
+                                        <button class="btn blue " type="submit" name="action">Proceed
+                                        </button>
+                                    </div>
+                                    {!! Form::close() !!}  
+                                </div>
+                                <script type="text/javascript">
+                                    $('#list-forms').modal({
+                                         dismissible: true
+                                    });
+                                </script>
                                 
                             </li>
                         @endforeach
@@ -226,7 +239,35 @@ $page_title_data = array(
                                 <a href="{{ route($down,$field->id) }}" class="arrow-downward">
                                     <i class=" material-icons dp48">arrow_downward</i>    
                                 </a>
-                                
+                                 <a href="javascript:;" class="move" section-id="{{ $section->id }}" data-target="sections-list">
+                                    <i class=" material-icons dp48">forward</i>    
+                                </a>
+                                <div id="sections-list" class="modal modal-fixed-footer" style="overflow-y: hidden;">
+                                    <div class="modal-header">
+                                        <h5>Destination</h5>  
+                                        <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+                                    </div>
+                                     {!! Form::open([ 'method' => 'POST', 'route' =>['section.move',$section->id] ,'class' => 'form-horizontal']) !!}
+                                    <div class="modal-content">
+                                            Select Form
+                                         {!! Form::select('move_to_form',listForms(),null,['class'=>' browser-default ','id'=>'input_','placeholder'=>'Select form'])!!}
+                                            Select Section
+                                            {!! Form::select('move_to_section',listForms(),null,['class'=>' browser-default ','id'=>'input_','placeholder'=>'Select form'])!!}
+                                         {!! FormGenerator::GenerateField('want_to') !!}
+                                          
+                                    </div>
+                                    <div class="modal-footer">
+                                       
+                                        <button class="btn blue " type="submit" name="action">Proceed
+                                        </button>
+                                    </div>
+                                    {!! Form::close() !!}  
+                                </div>
+                                <script type="text/javascript">
+                                    $('#sections-list').modal({
+                                         dismissible: true
+                                    });
+                                </script>
                             </li>
                         @endforeach
                     @endif
@@ -241,7 +282,7 @@ $page_title_data = array(
             @endif
             @if(Request::has('field') && Request::input('field') != '')
                 
-                @if($sectionData->form->type == 'survey')
+                @if($form->type == 'survey')
                     @include('admin.formbuilder._fields_survey')
                 @else
                     @include('admin.formbuilder._field',['sections'=>$sections])
@@ -341,7 +382,8 @@ $page_title_data = array(
    
           .Detail-container .collection .collection-item .delete-field,
           .Detail-container .collection .collection-item .arrow-upward,
-          .Detail-container .collection .collection-item .arrow-downward{
+          .Detail-container .collection .collection-item .arrow-downward,
+          .Detail-container .collection .collection-item .move{
             float: right;
             font-size: 16px;
             color: #757575;
@@ -350,7 +392,8 @@ $page_title_data = array(
          }
          .Detail-container .collection .collection-item:hover .delete-field,
          .Detail-container .collection .collection-item:hover .arrow-upward,
-         .Detail-container .collection .collection-item:hover .arrow-downward{
+         .Detail-container .collection .collection-item:hover .arrow-downward,
+         .Detail-container .collection .collection-item:hover .move{
             display: block;
          }
          .Detail-container .collection .collection-item:first-child:hover .arrow-upward{
@@ -366,13 +409,13 @@ $page_title_data = array(
             float: right;
             width: 200px
         }*/
-        .add-section .add-field-form > div,
+       /* .add-section .add-field-form > div,
         .add-section .add-field-form > button{
             float: left;
             width: 23%;
             margin: 0px 10px 0px 0px;
-        }
-        
+        }*/
+
     </style>
  
     <script type="text/javascript">
@@ -436,7 +479,9 @@ $page_title_data = array(
             });
             $( "#sortable" ).disableSelection();
         });
-        
+        $(document).on('click','.move',function(){
+            $('input[name=sectionId]').val($(this).attr('section-id'));
+        });
         // $(document).on('click','.arrow-downward',function(){
         //     var field_id = $(this).parents('.collection-item').attr('field-id');
         //     $.ajax({

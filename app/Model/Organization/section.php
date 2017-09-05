@@ -9,7 +9,7 @@ use Session;
 class section extends Model
 {
    public static $breadCrumbColumn = 'section_name';
-   protected $fillable = ['form_id','section_name','section_slug','section_description'];
+   protected $fillable = ['form_id','section_name','section_slug','section_description','order'];
 
    public function __construct(){
 

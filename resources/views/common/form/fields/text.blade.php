@@ -23,7 +23,7 @@
 @endif
 
 @php
-	if(isset($settings['show_placeholder']) && $settings['show_placeholder'] != '' && $settings['show_placeholder'] == 'yes'){
+	if(@$settings['form_field_show_placeholder']){
 		$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
 	}else{
 		$placeholder = '';

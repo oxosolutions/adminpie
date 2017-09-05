@@ -132,15 +132,15 @@
 <script type="text/javascript">
 	
 	$('#add_media').modal();
-	$('.options').parents('.repeater-group').parent().hide();	
-	$('.field-type').change(function(){
-		if($(this).val()=="checkbox" || $(this).val()=="radio" || $(this).val()=="select"){
-			$('.options').parents('.repeater-group').parent().show();
-		}
-		else{
-			$('.options').parents('.repeater-group').parent().hide();	
-		}
-	});
+	// $('.options').parents('.repeater-group').parent().hide();	
+	// $('.field-type').change(function(){
+	// 	if($(this).val()=="checkbox" || $(this).val()=="radio" || $(this).val()=="select"){
+	// 		$('.options').parents('.repeater-group').parent().show();
+	// 	}
+	// 	else{
+	// 		$('.options').parents('.repeater-group').parent().hide();	
+	// 	}
+	// });
 	$('.regex-wrapper').parents('.field-wrapper').hide();
 	$('.show-hide-regex').change(function(){
 		if($(this).val()=="other"){

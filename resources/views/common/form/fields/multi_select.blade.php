@@ -7,14 +7,9 @@
 	}
 @endphp
 @if($model != false && $model != '' && $model != null)
-	<div class="col s12 m2 l12 aione-field-wrapper">
+	
 		{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$result->$exploded[1](),null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
-	</div>
-<div class="error-red">	
-	@if(@$errors->has())
-		{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
-	@endif
-</div>
+
 
 @else
 	@php

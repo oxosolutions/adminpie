@@ -32,7 +32,8 @@ $page_title_data = array(
 @endphp
 @include('common.pageheader',$page_title_data)
 <div class="row">
-	
+			<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
+
 	 {!! Form::open(['route'=>'meta.category' ,	'class'=> 'form-horizontal', 'method' => 'post']) !!}
 	{!! Form::hidden('id',$data['id']) !!}
 
@@ -59,7 +60,7 @@ $page_title_data = array(
 
 		<div class="row"  style="padding-bottom: 15px">
 			<div class="col l3" style="line-height: 30px">
-				No of Leaves 
+				Total Number Of Leaves 
 			</div>
 			<div class="col l9">
 				
@@ -68,14 +69,14 @@ $page_title_data = array(
 				</div>
 				<div class="col l6 pl-7">
 
-					{!! Form::select('valid_for',['monthly'=>'Monthly', 'yearly'=>'Yearly'],@$data['data']['valid_for'],['placeHolder'=>"Valid For"])!!}
+					{!! Form::select('valid_for',['monthly'=>'Monthly', 'yearly'=>'Yearly'],@$data['data']['valid_for'],['class'=>'browser-default', 'placeHolder'=>"Valid For"])!!}
 				</div>
 			</div>
 		</div>	
 		<div class="row" style="padding-bottom: 15px">
 			
 			<div class="col l3" style="line-height: 30px">
-				No of day before apply
+				Number Of Day Before Apply
 				{{@$data['apply_before']}}
 			</div>
 			<div class="col l9">
@@ -83,6 +84,106 @@ $page_title_data = array(
 				{!!Form::text('apply_before',@$data['data']['apply_before'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
 			</div>
 		</div>
+		<div class="row" style="padding-bottom: 15px">
+			
+			<div class="col l3" style="line-height: 30px">
+				Minimum Saction Of Leave 
+				{{@$data['minimum_saction_leave']}}
+			</div>
+			<div class="col l9">
+				
+				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
+			</div>
+		</div>
+		<div class="row" style="padding-bottom: 15px">
+			
+			<div class="col l3" style="line-height: 30px">
+				Maximum Saction Of Leave 
+				{{@$data['minimum_saction_leave']}}
+			</div>
+			<div class="col l9">
+				
+				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
+			</div>
+		</div>
+		<div class="row" style="padding-bottom: 15px">
+			
+			<div class="col l3" style="line-height: 30px">
+				Carry Forward For Next year
+				{{@$data['carry_forward']}}
+			</div>
+			<div class="col l9">
+			@if(!empty($data['data']['carry_farward']) && $data['data']['carry_farward_cashout']='on' )
+				{!!Form::checkbox('carry_farward',@$data['data']['carry_farward'],true) !!}
+			@else
+				{!!Form::checkbox('carry_farward',@$data['data']['carry_farward']) !!}
+
+			@endif
+			</div>
+		</div>
+		<div class="row" style="padding-bottom: 15px">
+			
+			<div class="col l3" style="line-height: 30px">
+				Carry Forward Cashout
+				{{@$data['carry_forward']}}
+			</div>
+			<div class="col l9">
+			@if(!empty($data['data']['carry_farward_cashout']) && $data['data']['carry_farward_cashout']='on' )
+				{!!Form::checkbox('carry_farward_cashout',@$data['data']['carry_farward'],true) !!}
+				@else
+				{!!Form::checkbox('carry_farward_cashout',@$data['data']['carry_farward']) !!}
+			@endif
+			</div>
+		</div>
+
+		<div class="row"  style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Include Designation
+ 				@if(!empty($data['data']['include_designation']))
+					@php
+						$data['data']['include_designation'] = array_map('intval', json_decode($data['data']['include_designation']));
+					@endphp
+				@endif
+			</div>
+			<div class="col l9">
+				<div class="col l6 pl-7">
+					{!! Form::select('include_designation[]',@$data['designationData'],@$data['data']['include_designation'],['multiple' => true, 'id'=>'include_designation','class'=>'browser-default', 'placeholder'=>"Valid For"])!!}
+				</div>
+			</div>
+		</div>	
+		
+		<div id="user_drop_down">	
+			<div class="row"  style="padding-bottom: 15px">
+				<div class="col l3" style="line-height: 30px">
+					Include User
+					@if(!empty($data['data']['user_include']))
+						@php
+							$data['data']['user_include'] = array_map('intval', json_decode($data['data']['user_include']));
+						@endphp
+					@endif
+				</div>
+				<div class="col l9">
+					<div class="col l6 pl-7">
+						{!! Form::select('user_include[]',@$data['user_include'],@$data['data']['user_include'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user include"])!!}
+					</div>
+				</div>
+			</div>	
+			<div class="row"  style="padding-bottom: 15px">
+				<div class="col l3" style="line-height: 30px">
+					Exclude User
+					@if(!empty($data['data']['user_exclude']))
+						@php
+							$data['data']['user_exclude'] = array_map('intval', json_decode($data['data']['user_exclude']));
+						@endphp
+					@endif
+				</div>
+				<div class="col l9">
+					<div class="col l6 pl-7">
+						{!! Form::select('user_exclude[]',@$data['user_exclude'],@$data['data']['user_exclude'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user exclude"])!!}
+					</div>
+				</div>
+			</div>
+		</div>	
 		
 	
 		{{-- {!! FormGenerator::GenerateForm('edit_leave_category_form') !!}				 --}}
@@ -153,7 +254,26 @@ $page_title_data = array(
 $(document).ready(function(){
 $('.hides').hide();
 })
-function show_option(id){
+
+$("#include_designation").on('change',function(event){
+	des_id = $('#include_designation').val();
+	data = {};
+	data['des_id'] =	des_id;
+	data['_token'] = 	$('#token').val();
+	$.ajax({
+		url:route()+'/ajax_user_drop_down',
+		method:'POST',
+		data:data,
+		success:function(res){
+			$("#user_drop_down").html(res);
+			
+		}
+	});
+	
+
+});
+
+ function show_option(id){
 	$('#'+id).addClass('green');
 	if(id =='include_role'){
 		$('#exclude_role').removeClass('green');

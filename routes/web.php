@@ -119,6 +119,10 @@
 					Route::get('/forms',				['as'=>'list.forms','uses'=>'FormBuilderController@listForm']);
 					Route::get('/form/settings/{id}',	['as'=>'form.settings','uses'=>'FormBuilderController@formSettings']);
 					Route::post('/form/savemeta/{is}', 	['as'=>'save.form.settings','uses'=>'FormBuilderController@storeSettings']);
+					Route::get('form/custom/{id}',['as' => 'form.custom' , 'uses' => 'FormBuilderController@customForm']);
+					Route::get('form/preview/{id}',		['as' => 'form.preview' , 'uses' => 'FormBuilderController@previewForm']);
+					Route::post('save/form/custom/{id}',['as' => 'save.form.custom' , 'uses' => 'FormBuilderController@saveCustomForm']);
+					Route::post('update/form/custom/{id}',['as' => 'update.form.custom' , 'uses' => 'FormBuilderController@updateCustomForm']);
 					Route::get('/forms/delete/{id}',	['as'=>'delete.form','uses'=>'FormBuilderController@deleteForm']);
 					Route::get('/form/{form_id}/sections',['as'=>'list.sections','uses'=>'FormBuilderController@sectionsList']);
 					Route::post('/create/sections/{id}',		['as'=>'create.sections','uses'=>'FormBuilderController@createSection']);
@@ -142,6 +146,8 @@
 					Route::get('/field/sort/up/{id}',['as'=>'field.up.sort','uses'=>'FormBuilderController@fieldSortUp']);
 					Route::get('/field/clone/{id}',['as'=>'field.clone','uses'=>'FormBuilderController@fieldClone']);
 					Route::get('/section/clone/{id}',['as'=>'section.clone','uses'=>'FormBuilderController@sectionClone']);
+					Route::post('/section/move',['as'=>'section.move','uses'=>'FormBuilderController@sectionMove']);
+
 					Route::get('/form/clone/{id}',['as'=>'form.clone','uses'=>'FormBuilderController@formClone']);
 
 					
@@ -185,6 +191,7 @@
 			/******************************* All Routes For Organization ************************************/
 
 		Route::group(['namespace'=>'Organization'], function(){
+
 
 			Route::get('/survey', ['as'=>'display.survey', 'uses'=>'survey\SurveyController@display_survey']);
 			Route::post('/survey/save', ['as'=>'filled.survey', 'uses'=>'survey\SurveyController@save_survey']);
@@ -251,6 +258,8 @@
 			Route::get('/survey/perview/{form_id}',		['as'=>'survey.perview','uses'=>'survey\SurveyController@surveyPerview']);
 			Route::get('/survey/result',				['as'=>'result.survey','uses'=>'survey\SurveyController@resultSurvey']);
 			Route::get('/survey/share/{id}',			['as'=>'share.survey','uses'=>'survey\SurveyController@shareSurvey']);
+			Route::post('/survey/shareto/{id}',			['as'=>'save.shareto','uses'=>'survey\SurveyController@saveShareTo']);
+			Route::get('/survey/shareto/delete/{id}',	['as'=>'survey.remove.shareto','uses'=>'survey\SurveyController@deleteShareTo']);
 
 			Route::group(['middleware' => ['auth.org']], function(){
 				//new emails route by ashish
@@ -409,6 +418,8 @@
 
 				//Employee	
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
+
+					Route::post('ajax_user_drop_down',['as'=>'user.drop-downs', 'uses'=>'LeaveCategoryController@get_user_by_designation']);
 					Route::get('drop-downs',['as'=>'drop-downs', 'uses'=>'SalaryController@drop_downs']);
 					Route::get('payscale/{id?}', ['as'=> 'list.payscale' , 'uses' => 'PayscaleController@index']);
 					Route::post('payscale/store', ['as'=> 'store.payscale' , 'uses' => 'PayscaleController@store']);
@@ -804,6 +815,12 @@ Route::group(['prefix'=>'front'], function(){
 	Route::post('/create/section/{id}',		['as'=>'org.create.sections','uses'=>'Admin\FormBuilderController@createSection']);
 	Route::get('/delete/section/{id}',		['as'=>'org.del.section','uses'=>'Admin\FormBuilderController@deleteSection']);
 	Route::get('/forms/create',				['as'=>'org.create.form','uses'=>'Admin\FormBuilderController@index']);
+	Route::get('form/preview/{id}',			['as' => 'org.form.preview' , 'uses' => 'Admin\FormBuilderController@previewForm']);
+
+	Route::get('form/custom/{id}',['as' => 'org.form.custom' , 'uses' => 'Admin\FormBuilderController@customForm']);
+	Route::post('save/form/custom/{id}',['as' => 'org.save.form.custom' , 'uses' => 'Admin\FormBuilderController@saveCustomForm']);
+	Route::post('update/form/custom/{id}',['as' => 'org.update.form.custom' , 'uses' => 'Admin\FormBuilderController@updateCustomForm']);
+
 	Route::get('/form/fields/{form_id}/{section_id}',['as'=>'org.list.field','uses'=>'Admin\FormBuilderController@listFields']);
 	Route::get('/delete/field',				['as'=>'org.del.field','uses'=>'Admin\FormBuilderController@deleteField']);
 	Route::post('/update/field/{form_id}/{section_id}',['as'=>'org.update.field','uses'=>'Admin\FormBuilderController@updateField']);
@@ -824,6 +841,8 @@ Route::group(['prefix'=>'front'], function(){
 	Route::get('/field/clone/{id}',['as'=>'org.field.clone','uses'=>'Admin\FormBuilderController@fieldClone']);
 	Route::get('/section/clone/{id}',['as'=>'org.section.clone','uses'=>'Admin\FormBuilderController@sectionClone']);
 	Route::get('/form/clone/{id}',['as'=>'org.form.clone','uses'=>'Admin\FormBuilderController@formClone']);
+	Route::post('/section/move',['as'=>'org.section.move','uses'=>'Admin\FormBuilderController@sectionMove']);
+
 //custom maps
 	Route::get('/custom-maps/{type?}', 				['as'=>'org.custom.maps','uses'=>'Admin\CustomMapsController@index']);
 	Route::post('/custom-map/save',			['as'=>'org.save.custom.map','uses'=>'Admin\CustomMapsController@saveMap']);
@@ -831,6 +850,8 @@ Route::group(['prefix'=>'front'], function(){
 	Route::get('/custom-map/edit/{id}',		['as'=>'org.getData.custom.map','uses'=>'Admin\CustomMapsController@getDataById']);
 	Route::post('/custom-map/update/{id}',	['as'=>'org.update.custom.map','uses'=>'Admin\CustomMapsController@updateMap']);
 	Route::get('/custom-map/view/{id}',		['as'=>'org.view.map','uses'=>'Admin\CustomMapsController@viewmap']);
+
+	Route::get('/survey/{token}',			['as'=>'embed.survey','uses'=>'Organization\survey\SurveyController@embededSurvey']);
 
 	/***************************************** Public Route for Share Data ******************************************/
 

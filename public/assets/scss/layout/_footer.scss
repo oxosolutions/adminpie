@@ -18,6 +18,7 @@ FOOTER
 .aione-footer a, 
 .aione-footer a:visited{
 	color: #757575;
+	text-decoration: none;
 	webkit-transition: all 150ms ease-out;
 	-moz-transition: all 150ms ease-out;
 	-o-transition: all 150ms ease-out;
@@ -26,4 +27,5 @@ FOOTER
 .aione-footer a:hover,
 .aione-footer a:active{
 	color: #666666;
+	text-decoration: none;
 }

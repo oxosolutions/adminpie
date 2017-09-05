@@ -84,12 +84,23 @@ class OrganizationController extends Controller
         if(Auth::guard('admin')->check()){
             Session::put('organization_id',$organizationID);
             $organization = ORG::find($organizationID);
+
             ORG::where('id','>=',1)->update(['auth_login_token'=>'']);
             $tokenString = str_random(20);
             $organization->auth_login_token = $tokenString;
             $organization->save();
             Session::put('organization_id','');
-            return redirect()->to('http://'.$organization->slug.'.adminpie.com/login/'.$tokenString);
+            if($organization->primary_domain != null && $organization->primary_domain != ''){
+                
+                return redirect()->to('http://'.$organization->primary_domain.'/login/'.$tokenString);
+
+            }elseif($organization->secondary_domains != null && $organization->secondary_domains != ''){
+
+                return redirect()->to('http://'.$organization->secondary_domains.'/login/'.$tokenString);
+
+            }else{
+                return redirect()->to('http://'.$organization->slug.'.adminpie.com/login/'.$tokenString);
+            }
         }
     }
 
@@ -130,6 +141,9 @@ class OrganizationController extends Controller
         //     DB::beginTransaction();
             $org_data = ORG::findOrFail($id);
              if($request->isMethod('post')){
+                $ex[] = 'form_id';
+                $ex[] = 'form_slug';
+                $ex[] = 'form_title';
                 unset($this->valid_fields['password'], $this->valid_fields['confirm_password']);
                 $ex[] = '_token';
                 $ex[] = 'password';

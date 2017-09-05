@@ -9,9 +9,7 @@ $page_title_data = array(
     'add_new' => '+ Add Media'
 ); 
 $id = "";
-if(!empty($survey_data)){
-    $sections = $survey_data[0]['section'];
-}
+
 @endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
@@ -88,7 +86,7 @@ if(!empty($survey_data)){
 
                     <div class="card-inner" style="background-color: #00a65a;">
                         <span>
-                          12
+                          {{$survey_completed_count}}
                         </span>
                     </div>
 
@@ -114,7 +112,7 @@ if(!empty($survey_data)){
 
                     <div class="card-inner" style="background-color: #dd4b39;">
                         <span>
-                            12       
+                            ??       
                         </span>
                     </div>
 
@@ -140,7 +138,7 @@ if(!empty($survey_data)){
 
                     <div class="card-inner" style="background-color: #f74d4d;">
                         <span>
-                          10
+                          ??
                         </span>
                     </div>
 
@@ -166,7 +164,7 @@ if(!empty($survey_data)){
 
                     <div class="card-inner" style="background-color: #ffb848;">
                         <span>
-                          501
+                          ?
                         </span>
                     </div>
 
@@ -187,50 +185,29 @@ if(!empty($survey_data)){
 
 <div>
     <div class="row">
-        <div class="col m9">
-            <div class="card">
-                <div class="center-align">
-                    <span class="card-title-bar">Structure of survey</span>
-                </div>
+        <div>
+            @if(!empty($section_question_count))
+                <style>
+                   table  td , th{
+                            border:1px solid grey;
+                    }
+                </style>
+            <table>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Total Question</th>
+                </tr>
+                @foreach($section_question_count as $groupName => $queCount)
+                <tr>
+                   <td> {{str_replace('-', ' ',$groupName)}}</td> <td>{{$queCount}}</td> 
+                </tr>
 
-                <div>
-                    <ul class="collapsible" data-collapsible="accordion">
-                      {{--   @foreach($type_value as  $tkey => $tval) --}}
-                            <div class="col m2">     
-                                <div class="card-section">
-
-                                    <div class="card-content">
-
-                                        <span class="card-part1" >
-                                            Total
-                                        </span>
-                                   {{--  @if($tkey=='text_only') 
-                                        <span class="card-part2 {{$tkey}}" >
-                                            Textarea
-                                        </span>
-                                    @else 
-                                        <span class="card-part2" >
-                                            {{ucwords($tkey)}}
-                                        </span>
-                                    @endif --}}
-                                    </div>
-
-                                    <div class="card-inner _style " style="background-color: #da542e;">
-                                        <span>
-                                            jsahhjags
-                                        </span>
-                                    </div>
-
-                                    <div class="clear"></div>
-                                  
-                                </div>
-                            </div>
-                       
-                    </ul>
-                </div>
-
-            </div>
+            @endforeach
+             </table>
+            @endif
         </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -256,41 +233,29 @@ if(!empty($survey_data)){
             <div class="card">
                 <div class="center-align">
                     <span class="card-title-bar">Settings</span>
+                   
                 </div>
                 <div class="divider"></div>
 				<div class="aione-survey-settings">
-					{{-- @foreach($survey_data->setting  as $survey_setting_key => $survey_setting_value) --}}
-
 					<div class="aione-survey-setting">
-						
-						{{-- @if( $survey_setting_value->key == 'survey_custom_error_messages_list') --}}
-							{{-- @foreach(json_decode($survey_setting_value->value) as $survey_setting_subkey => $survey_setting_subvalue) --}}
-
+                    @foreach($settings as $settingKey => $settingVal)
+                        @if($settingKey=='_token')
+                                @continue;
+                        @endif
 								<div class="aione-survey-subsetting">
-									<span class="aione-survey-subsetting-key">hjash</span>
-									<span class="aione-survey-subsetting-value">awshas</span>
+									<span class="aione-survey-subsetting-key">{{$loop->index}}. {{ucfirst( str_replace('_', ' ', $settingKey))}}</span>
+									<span class="aione-survey-subsetting-value">{{$settingVal}}</span>
 								</div>
-							{{-- @endforeach
-						@else --}}
+                    @endforeach
 							<span class="aione-survey-setting-key">hjagsdhashd</span>
 							<span class="aione-survey-setting-value">
                            
                                 <span class="aione-switch-enabled">
-                                    <!--<svg height="10" width="10">
-                                      <circle cx="5" cy="5" r="2" stroke="green" stroke-width="5" fill="#fff" />
-                                    </svg>-->
                                     <i class="material-icons dp48" style="color: green;font-size: 17px;">info</i>
                                 </span>
-                            
-                            {{-- {{$survey_setting_value->value}} --}}
                             </span>
-						
-						
 					</div>
-					
 				</div>
-
-					
             </div>
         </div>
     </div>

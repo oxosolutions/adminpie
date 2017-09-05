@@ -1,10 +1,12 @@
 <?php if(Auth::guard('admin')->check() == true): ?>
 	<?php 
 		$layout = 'admin.layouts.main';
+		$route = 'create.form';
 	 ?>
 <?php else: ?>
 	<?php 
 		$layout = 'layouts.main';
+		$route = 'org.create.form';
 	 ?>
 <?php endif; ?>
 
@@ -16,8 +18,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => $title,
-	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form',
-	'route' => ($title == 'Survey')?'create.survey':'create.form'
+	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form1',
+	'route' => ($title == 'Survey')?'create.survey':$route
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -30,4 +32,5 @@ $page_title_data = array(
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
+
 <?php echo $__env->make($layout, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

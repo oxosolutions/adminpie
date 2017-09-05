@@ -15,14 +15,17 @@ class forms extends Model
 		    		$this->table = Session::get('organization_id').'_forms';
 		    	}
     }
-    
+    public function listForm()
+    {
+        return self::pluck('form_title','id');
+    }   
 
     public function section(){
     	return $this->hasMany('App\Model\Organization\section','form_id','id');
     }
 
     public function formsMeta(){
-    	return $this->hasMany('App\Model\Organization\FormsMeta','id','form_id');
+    	return $this->hasMany('App\Model\Organization\FormsMeta','form_id','id');
     }
 
     public function setTable($table){

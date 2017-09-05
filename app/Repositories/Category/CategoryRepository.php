@@ -63,7 +63,7 @@ class CategoryRepository implements CategoryRepositoryContract
 	public function category_meta_save($request){
 
 
-     $checkKey = ['role_include'=>'role_include' ,'roles_exclude'=>'roles_exclude' , 'include_designation'=>'include_designation', 'exclude_designation'=>'exclude_designation', 'user_include'=>'user_include',  'user_exclude'=>'user_exclude'];
+     $checkKey = ['role_include'=>'role_include' ,'roles_exclude'=>'roles_exclude' , 'include_designation'=>'include_designation', 'exclude_designation'=>'exclude_designation', 'user_include'=>'user_include',  'user_exclude'=>'user_exclude','carry_farward'=>'carry_farward','carry_farward_cashout'=>'carry_farward_cashout'];
     $cat_id = $request['id'];
      // CM::where(['category_id'=>$cat_id])->delete();
      //  dd();
@@ -71,27 +71,42 @@ class CategoryRepository implements CategoryRepositoryContract
 		$cat->fill($request->all());
 		$cat->save();
 		unset($request['_token'],$request['id'],$request['name'],$request['description']);
-		foreach ($request->all() as $key => $value) {
-      if(!empty($checkKey[$key])){
-        unset($checkKey[$key]);
+      $check = CM::where(['category_id'=>$cat_id]);
+      if($check->exists())
+      {
+         CM::where('category_id',$cat_id)->delete();
       }
-			$check = CM::where(['category_id'=>$cat_id, 'key'=>$key]);
-			if(is_array($value)){
-				$value = json_encode($value);
-			}
-			if($check->count() >0 ){
-				$check->update(['value'=>$value]);
-			}else{
-				$cMeta = new CM();
-				$cMeta->key = $key;
-				$cMeta->category_id = $cat_id;
-				$cMeta->value = $value;
-				$cMeta->save();
-			}
-		}
-     $keyValue = array_values($checkKey);
-     CM::whereIn('key',$keyValue)->where('category_id',$cat_id)->delete();
+     foreach ($request->all() as $key => $value) {
+    //   if(!empty($checkKey[$key])){
+    //     unset($checkKey[$key]);
+    //   }
+
+      $cMeta = new CM();
+      $cMeta->key = $key;
+      $cMeta->category_id = $cat_id;
+      if(is_array($value)){
+          $value = json_encode($value);
+        }
+          $cMeta->value = $value;
+          $cMeta->save();
+
+		// 	if(is_array($value)){
+		// 		$value = json_encode($value);
+		// 	}
+		// 	if($check->count() >0 ){
+		// 		$check->update(['value'=>$value]);
+		// 	}else{
+		// 		$cMeta = new CM();
+		// 		$cMeta->key = $key;
+		// 		$cMeta->category_id = $cat_id;
+		// 		$cMeta->value = $value;
+		// 		$cMeta->save();
+		// 	}
+		// }
+  //    $keyValue = array_values($checkKey);
+  //    CM::whereIn('key',$keyValue)->where('category_id',$cat_id)->delete();
   	}
+  }
   	public function manage_status($request){
           if($request['status']=='true')
           {

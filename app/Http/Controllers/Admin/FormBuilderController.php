@@ -35,7 +35,7 @@ class FormBuilderController extends Controller
     public function index(){
 
         $plugins = ['js' => ['custom'=>['builder']]];
-    	return view('admin.formbuilder.create',['plugins' => $plugins,'type'=>'form' ]);
+        return view('admin.formbuilder.create',['plugins' => $plugins,'type'=>'form' ]);
     }
 
     public function createForm(Request $request)
@@ -88,15 +88,15 @@ class FormBuilderController extends Controller
         }
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = $modelName::where('form_title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->with(['section'])->paginate($perPage);
+                $model = $modelName::where('type','form')->where('form_title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->with(['section'])->paginate($perPage);
             }else{
-                $model = $modelName::where('form_title','like','%'.$request->search.'%')->with(['section'])->paginate($perPage);
+                $model = $modelName::where('type','form')->where('form_title','like','%'.$request->search.'%')->with(['section'])->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = $modelName::orderBy($sortedBy,$request->order)->with(['section'])->paginate($perPage);
+                $model = $modelName::where('type','form')->orderBy($sortedBy,$request->order)->with(['section'])->paginate($perPage);
             }else{
-                 $model = $modelName::paginate($perPage);
+                 $model = $modelName::where('type','form')->paginate($perPage);
             }
         }
         if(Auth::guard('admin')->check()){
@@ -140,7 +140,7 @@ class FormBuilderController extends Controller
 
     protected function validateAddModule($request){
         $rules = [
-            'name' => 'required'
+            'section_name' => 'required'
         ];
 
         $this->validate($request,$rules);
@@ -159,12 +159,20 @@ class FormBuilderController extends Controller
         }
         $model = new $modelName;
         $model->form_id = $id;
-        $model->section_name = $request->name;
+        $model->section_name = $request->section_name;
         $model->order = $newOrder;
+        $model->section_slug = $request->section_slug;
         $model->save();
+        $new_sec_id = $model->id;
+        
+        $modelName = $this->assignModel('SectionMeta');
+        $section = new $modelName;
+        $section->section_id = $new_sec_id;
+        $section->key = 'modelName';
+        $section->value = $request->section_type;
         return back();
 
-    	/*$newData = $request->except('section_type');
+        /*$newData = $request->except('section_type');
         $this->validate($request, $this->valid_sections);
         $modelName = $this->assignModel('section');
         $model = new $modelName;
@@ -172,17 +180,17 @@ class FormBuilderController extends Controller
         $model->form_id = $id;
         $model->save();
         if($model){
-        	$section_id = $modelName::select('id')->orderBy('id','DESC')->limit('1')->get();
-        	$section_id = $section_id[0]->id;
-        	$newMeta = $request->except('section_name','section_slug','section_description','_token');
-	  		foreach($newMeta as $key => $value){
+            $section_id = $modelName::select('id')->orderBy('id','DESC')->limit('1')->get();
+            $section_id = $section_id[0]->id;
+            $newMeta = $request->except('section_name','section_slug','section_description','_token');
+            foreach($newMeta as $key => $value){
                 $modelName = $this->assignModel('SectionMeta');
-	  			$sectionMeta = new $modelName;
-	  			$sectionMeta->section_id = $section_id;
-	  			$sectionMeta->key = $key;
-	  			$sectionMeta->value = $value;
-	  			$sectionMeta->save();
-	  		}
+                $sectionMeta = new $modelName;
+                $sectionMeta->section_id = $section_id;
+                $sectionMeta->key = $key;
+                $sectionMeta->value = $value;
+                $sectionMeta->save();
+            }
         }
         if(Auth::guard('admin')->check()){
             return redirect()->route('list.sections',['form_id' => $id]);
@@ -245,6 +253,8 @@ class FormBuilderController extends Controller
         $model->form_id = $form_id;
         $model->section_id = $section_id;
         $model->field_title = $request->field_title;
+        $model->field_slug = $request->field_slug;
+        $model->field_type = $request->field_type;
         $model->order = $newOrder;
         $model->save();
         return back();
@@ -257,7 +267,7 @@ class FormBuilderController extends Controller
     *   @Last Update: Rahul Sharma 08 June 2017
     */
     public function sectionsList($form_id){
-         $plugins = [
+        $plugins = [
                         'js' => ['custom'=>['builder']],
                    ];
         $modelName = $this->assignModel('section');
@@ -286,11 +296,11 @@ class FormBuilderController extends Controller
     public function listFields(Request $request , $form_id, $section_id)
     {  
         $modelName = $this->assignModel('FormBuilder');
-    	$model = $modelName::where(['section_id' => $section_id,'form_id'=>$form_id])->with([
+        $model = $modelName::where(['section_id' => $section_id,'form_id'=>$form_id])->with([
                 'fieldMeta'=>function($query) use ($form_id, $section_id){
                     $query->where(['form_id'=>$form_id,'section_id'=>$section_id]);
                 }])->get();
-    	$plugins = [
+        $plugins = [
                         'js' => ['custom'=>['builder']] 
                    ];
             //check if the existing field data has same slug
@@ -338,7 +348,7 @@ class FormBuilderController extends Controller
     public function fieldList(Request $request , $id)
     {
 
-       	$plugins = [
+        $plugins = [
                         'js' => ['custom'=>['builder']],
                    ];
         $modelName = $this->assignModel('section');
@@ -379,7 +389,7 @@ class FormBuilderController extends Controller
 
     public function formFields(){
 
-    	return view('admin.formbuilder._fields')->render();
+        return view('admin.formbuilder._fields')->render();
     }
     public function formsList(){
         $modelName = $this->assignModel('FormBuilder');
@@ -406,6 +416,7 @@ class FormBuilderController extends Controller
     }
 
     public function updateField(Request $request, $form_id, $section_id, $field_id){
+        // dd($request->all());
         $this->validateUpdateFields($request);
         $modelName = $this->assignModel('FormBuilder');
         $model = $modelName::firstOrNew(['form_id'=>$form_id,'section_id'=>$section_id,'id'=>$field_id]);
@@ -413,7 +424,7 @@ class FormBuilderController extends Controller
         $model->field_title = $request->field_title;
         $model->field_type = $request->field_type;
         $model->field_description = $request->field_description;
-        $model->order = $request->field_order;
+        //$model->order = $request->field_order;
         $model->save();
         $modelName = $this->assignModel('FieldMeta');
         $exceptedKeys = $request->except(['_token','field_slug','field_title','field_type','field_description','field_order']);
@@ -486,11 +497,16 @@ class FormBuilderController extends Controller
     {
         $field_id = $id;
         $Associate = $this->assignModel('FormBuilder');
+        
         $section_id = $Associate::select('section_id')->where('id',$field_id)->first()->section_id;
         $form_id = $Associate::select('form_id')->where('id',$field_id)->first()->form_id;
         $order = $Associate::select('order')->where('id',$field_id)->first()->order;
         
         $getFieldsList = $Associate::where(['section_id' => $section_id , 'form_id' => $form_id])->get();
+        // foreach($getFieldsList as $key => $value){
+        //     $value->order
+        // }
+        // dd();
         foreach ($getFieldsList as $key => $value) {
             if($value->order != null){
                 if($order < $value->order){
@@ -517,9 +533,10 @@ class FormBuilderController extends Controller
         
         $getFieldsList = $Associate::where(['section_id' => $section_id , 'form_id' => $form_id])->get();
         foreach ($getFieldsList as $key => $value) {
+            $count_fields = $Associate::where(['section_id' => $section_id , 'form_id' => $form_id])->get()->count();
+            //dd($count_fields);
             if($value->order != null){
-                // if($order < $value->order){
-                
+                //dd( );
                     $next_order = $Associate::select('order')->where(['order'=>$order-1 ,'section_id' => $section_id , 'form_id' => $form_id])->first()->order;
                     $prevField = $Associate::select('id')->where(['order'=> $order-1 ,'section_id' => $section_id , 'form_id' => $form_id])->first()->id;
                     $updateOrderPre = $Associate::where(['id' => $prevField , 'section_id' => $section_id , 'form_id' => $form_id])->update(['order' => $order]);
@@ -561,9 +578,12 @@ class FormBuilderController extends Controller
         $data = [];
         $Associate = $this->assignModel('FormBuilder');
         $model = $Associate::where('id',$id)->first()->toArray();
+
         $field_id = $id;
         $form_id = $model['form_id'];
         $section_id = $model['section_id'];
+        $lastOrderId = $Associate::where(['form_id'=>$form_id,'section_id' => $section_id])->orderBy('order','DESC')->first();
+        $model['order'] = $lastOrderId->order+1;
 
         if($model != null){
             $create = new $Associate;
@@ -596,11 +616,13 @@ class FormBuilderController extends Controller
     {
         $Associate = $this->assignModel('section');
         $model = $Associate::where('id',$id)->first()->toArray();
+        $lastOrderId = $Associate::orderBy('order','DESC')->first();
 
         $form_id = $model['form_id'];
         $section_id = $model['id'];
+        $model['order'] = $lastOrderId->order+1;
         $field_id = '';
-
+        
         if($model != null){
 
             $create = new $Associate;
@@ -610,6 +632,7 @@ class FormBuilderController extends Controller
                 $data = [];
             $Associate = $this->assignModel('FormBuilder');
             $model = $Associate::where(['form_id'=>$form_id,'section_id' => $section_id])->get()->toArray();
+
             foreach($model as $key => $value){
 
                 foreach ($value as $k => $v) {
@@ -632,29 +655,196 @@ class FormBuilderController extends Controller
     }
     public function formClone($id)
     {
-        $modelName = $this->assignModel('forms');
-        $formData = $modelName::find($id);
+        $formModel = $this->assignModel('forms');
+        $formData = $formModel::find($id)->toArray();
+        $old_slug = $formData['form_slug'];
+        unset($formData['form_slug']);
+        $formData['form_slug'] = $old_slug.'_copy';
 
         if(@$formData != null){
-            $modelName = $this->assignModel('section');
-            $sectionData = $modelName::where('form_id',$id)->get()->toArray();
-        }
+            $data = [];
+            // $create = new $formModel;
+            // $create->fill($formData);
+            // $create->save();
+            // $new_form_id = $create->id;
 
-        if(@$sectionData != null){
-            $modelName = $this->assignModel('FormBuilder');
-            $fieldData = $modelName::where(['form_id' => $id , 'section_id' => $sectionData[0]['id']])->get()->toArray();
-                
-                //SectionMeta if exists
-                if(@$fieldData != null){
-                    foreach ($fieldData as $key => $value) {
-                        $meta = $this->assignModel('FieldMeta');
-                        $metaData = $meta::where('id' , $value['id'])->get();
-                        dump($metaData);
+            $sectionModel = $this->assignModel('section');
+            $sectionData = $sectionModel::where('form_id',$id)->get()->toArray();
+                        
+            $sec_id = [];
+            if(count($sectionData)> 0){
+                foreach ($sectionData as $key => $value) {
+                    $sec_id[] = $value['id'];
+                }
+            }else{
+                $sec_id[] = $value['id'];
+            }
+            
+            $sectionData = [];
+
+            foreach ($sec_id as $key => $value) {
+                $sectionData[] = $sectionModel::with(['fields' => function($query) use($value , $id){
+                    $query->where(['section_id'=>$value , 'form_id' => $id])->with(['fieldMeta'=>function($query) use($id , $value){
+                        $query->where(['form_id'=>$id , 'section_id' => $value]);
+                    }]);
+                    }])->where('form_id',$id)->get()->toArray();
+
+            }
+            dd($sectionData);
+            foreach($sectionData as $key => $value){
+                foreach ($value->toArray() as $k => $v) {
+                    if($k == 'form_id' || $k == 'id'){
+                        unset($k);
+                        $data[$key]['form_id'] = $new_form_id;
+                    }else{
+                        $data[$key][$k] = $v;
                     }
                 }
+            }
+            foreach ($data as $key => $value) {
+                $create = new $sectionModel;
+                $create->fill($value);
+                $create->save();
+                $new_section_id = $create->id;
 
+                $fielsModel = $this->assignModel('FormBuilder');
+
+                // $fieldData = $fielsModel::with(['fieldMeta'=>function($query) use($id , $sec_id){
+                //     $query->where(['form_id'=>$id , 'section_id' => $sec_id]);
+                // }])->where(['section_id'=>$sec_id , 'form_id' => $id])->get()->toArray();
+                // dd($fieldData);
+                foreach($value['fields'] as $k => $v){
+                    unset($v['id']);
+                    $v['section_id'] = $new_section_id;
+                    $v['form_id'] = $new_form_id;
+
+                    $field = new $fielsModel;
+                    $field->fill($v);
+                    $field->save();
+                    $field_id = $field->id;
+                    
+                    if(array_key_exists('field_meta', $v)){
+
+                        if($v['field_meta'] != null){
+                            $Associate = $this->assignModel('fieldMeta');
+                            foreach ($v['field_meta'] as $key => $value) {
+                                $value['field_id'] = $field_id;
+                                $value['section_id'] = $new_section_id;
+                                $value['form_id'] = $new_form_id;
+
+                                $fieldMeta = new $Associate;
+                                $fieldMeta->fill($value);
+                                $fieldMeta->save();
+                            }
+                        }
+                    }
+
+                }
+            }
         }
+        return back();
 
-        dd($fieldData);
+    }
+    public function customForm($id)
+    {
+        $modelName = $this->assignModel('FormsMeta');
+        $model = $modelName::where(['form_id'=>$id])->whereIn('key', [ 'js','css'])->get()->toArray();
+        $data = [];
+        foreach($model as $key => $value){
+                if($value['key'] == 'js'|| $value['key'] == 'css'){
+                    $data[$value['key']] = $value['value']; 
+                }
+        }
+        return view('admin.formbuilder.custom-code',compact('data'));
+    }
+    public function updateCustomForm(Request $request , $id)
+    {
+        return $this->saveCustomForm($request , $id);
+    }
+    public function saveCustomForm(Request $request , $id)
+    {
+        $modelName = $this->assignModel('FormsMeta');
+            foreach($request->except('_token') as $key => $value){
+                $meta = FormsMeta::firstOrNew(['form_id'=>$id, 'key'=>$key]);
+                $meta->form_id = $id;
+                $meta->key = $key;
+                if (is_array($value)) {
+                    $value = json_encode($value);
+                }
+                $meta->value = $value;
+                $meta->save();
+            }
+
+        return redirect()->route('form.custom',$id);
+    }
+    public function previewForm($id)
+    {
+        $modelName = $this->assignModel('forms');
+        $slug = $modelName::select('form_slug')->where('id',$id)->first()->form_slug;
+        return view('admin.formbuilder.preview',compact('slug'));
+    }
+    public function sectionMove(Request $request)
+    {
+        // dump($request->all());
+        // dd($id);
+        $modelName = $this->assignModel('section');
+
+        if($request->has('want_to')){
+            if($request['want_to'] == 'move'){
+                $form_id = $modelName::where('id',$request['sectionId'])->first()->form_id;
+                $model = $modelName::where('id',$request['sectionId'])->update(['form_id' => $request['move_to']]);
+                $modelName = $this->assignModel('FormBuilder');
+                $sectionMeta = $modelName::where(['section_id'=>$request['sectionId'] , 'form_id' => $form_id])->update(['form_id' => $request['move_to']]);
+                return back();
+            }
+            if($request['want_to'] == 'copy'){
+
+                $form_id = $modelName::where('id',$request['sectionId'])->first()->form_id;
+
+                $section = $modelName::where('id',$request['sectionId'])->first();
+                unset($section->form_id);
+                $section->form_id = $request['move_to'];
+                $saveSection = new $modelName;
+                $saveSection->fill($section->toArray());
+                $saveSection->save();
+                $new_sec_id = $saveSection->id;
+
+                $sectionId = $request['sectionId'];
+                $modelName = $this->assignModel('FormBuilder');
+                $sectionMeta = $modelName::with(['fieldMeta'=>function($query) use( $sectionId , $form_id){
+                    $query->where(['section_id'=>$request['sectionId'] , 'form_id' => $form_id]);
+                }])->where(['section_id'=>$request['sectionId'] , 'form_id' => $form_id])->get()->toArray();
+
+
+
+                foreach($sectionMeta as $k => $v){
+                    unset($v['id']);
+                    $v['section_id'] = $new_sec_id;
+                    $v['form_id'] = $request['move_to'];
+
+                    $field = new $modelName;
+                    $field->fill($v);
+                    $field->save();
+                    $field_id = $field->id;
+                    
+                    if(array_key_exists('field_meta', $v)){
+                        if($v['field_meta'] != ''){
+                            $Associate = $this->assignModel('fieldMeta');
+                            foreach ($v['field_meta'] as $key => $value) {
+                                $value['field_id'] = $field_id;
+                                $value['section_id'] = $new_sec_id;
+                                $value['form_id'] = $request['move_to'];
+
+                                $fieldMeta = new $Associate;
+                                $fieldMeta->fill($value);
+                                $fieldMeta->save();
+                            }
+                        }
+                    }
+
+                }
+            }
+            return back();
+        }
     }
 }

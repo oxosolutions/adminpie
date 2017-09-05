@@ -24,6 +24,9 @@
 <div class="">
 				<a href="{{ route('forgot.password') }}">Forgot Password</a>
 			</div>
+	@if(session()->has('csrf_error'))
+		<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
+	@endif
 {!!Form::close()!!}
 
 		@include('components._footer')

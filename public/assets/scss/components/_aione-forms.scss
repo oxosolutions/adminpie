@@ -128,6 +128,10 @@ FIELD
     padding: 10px 0 10px 0;
     font-weight: 100;
 }
+.field-label label:blank,
+.field-label label:empty{
+    padding: 0;
+}
 .field-title{
     color: #747474;
     text-align: left;
@@ -466,6 +470,16 @@ FIELD TYPE SWITCH
 }
 
 /***************************************
+FIELD TYPE Button
+***************************************/
+.field.field-type-button input[type=button],
+.field.field-type-button input[type=submit],
+.field.field-type-button input[type=reset]{
+    margin:0;
+    padding: 8px 30px 8px 30px;
+}
+
+/***************************************
 FIELD TYPE FILE
 ***************************************/
 input[type=file]{
@@ -489,20 +503,23 @@ input[type=file]:hover{
 /***************************************
 FORM STYLE BORDERED
 ***************************************/
-.aione-form-style-bordered{
+.aione-form-border{
     border:1px solid #e8e8e8;
 }
-.aione-form-style-bordered > .aione-row{
+.aione-form-border > .aione-row{
     padding: 15px;
 }
-.aione-form-style-bordered .aione-form-header,
-.aione-form-style-bordered .aione-form-section-header,
-.aione-form-style-bordered .field-wrapper{
+.aione-form-border .aione-form-header{
     border-bottom:1px solid #e8e8e8;
 }
-.aione-form-style-bordered .field-wrapper{
+.aione-form-section-border .aione-form-section-header{
+    border-bottom:1px solid #e8e8e8;
+}
+.aione-form-field-border .field-wrapper{
+    border-bottom:1px solid #e8e8e8;
     margin-bottom: 15px;
 }
+
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:#b4b4b4;

@@ -14,7 +14,15 @@
 	}*/
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
 @endphp
-
+@if(isset($options['default_value']) && $options['default_value'] != '')
+	@php
+		$default_value = $options['default_value'];
+	@endphp
+@else
+	@php
+		$default_value = [];
+	@endphp
+@endif
 
 @php
 	$arrayOptions = [];
@@ -24,9 +32,18 @@
 			$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
 		}else{
 			$collect = collect($optionValues);
-			$keys = array_keys($collect->groupBy('key')->toArray());
+			/*$keys = array_keys($collect->groupBy('key')->toArray());
 			$values = array_keys($collect->groupBy('value')->toArray());
-			$arrayOptions = array_combine($keys, $values);
+			$arrayOptions = array_combine($keys, $values);*/
+			$arrayOptions =null;
+			if(!empty($collect->toArray())){
+				
+				$arrayOptions = $collect->mapwithKeys(function($items){
+					if(!empty($items['value'])){
+						return [$items['key']=>$items['value']];
+					}
+				});
+			}
 		}
 	}else{
 		$arrayOptions = @$result->{$exploded[1]}();
@@ -34,10 +51,13 @@
 @endphp
 
 @php
-	if(isset($settings['show_placeholder']) && $settings['show_placeholder'] != '' && $settings['show_placeholder'] == 'yes'){
+	if(isset($settings['form_show_field_placeholder']) && $settings['form_show_field_placeholder'] != '' && $settings['form_show_field_placeholder'] == 'yes'){
 		$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
 	}else{
 		$placeholder = '';
+	}
+	if(empty($arrayOptions)){
+		$arrayOptions = $default_value;
 	}
 @endphp
 

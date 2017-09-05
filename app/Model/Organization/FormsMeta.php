@@ -7,18 +7,21 @@ use Auth;
 use Session;
 class FormsMeta extends Model
 {
-    protected $table	= 'global_form_meta';
+    // protected $table	= 'global_form_meta';
+    protected $fillable = ['form_id', 'key', 'value', 'type'];
 
     public function __construct(){
-    	try{
-    		if(Auth::guard('org')->check()){
+    	// try{
+    	// 	if(Auth::guard('org')->check()){
 		    	if(!empty(Session::get('organization_id'))){
+
 		    		$this->table = Session::get('organization_id').'_form_meta';
+                    // dump($this->table);
 		    	}
-		    }
-    	}catch(\Exception $e){
-    		
-    	}
+            
+		   //  }
+    	// }catch(\Exception $e){
+    	// }
     }
 
     public function forms(){

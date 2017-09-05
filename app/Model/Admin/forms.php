@@ -11,6 +11,11 @@ class forms extends Model
     protected $table	= 'global_forms';
     
 
+	public function listForm()
+	    {
+	    	return self::pluck('form_title','id');
+	    }    
+
     public function section(){
     	return $this->hasMany('App\Model\Admin\section','form_id','id');
     }

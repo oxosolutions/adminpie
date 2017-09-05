@@ -2,7 +2,7 @@
 @php
     $section = $sections->where('id',request()->input('sections'))->first();
     $field = $section->fields->where('id',request()->input('field'))->first();
-    $fieldMeta = $field->fieldMeta;
+    $fieldMeta = $field->fieldMeta->where('section_id',request()->input('sections'));
     $model = [];
     $model['field_title'] = $field->field_title;
     $model['field_type'] = $field->field_type;
@@ -15,18 +15,17 @@
    foreach($fieldMeta as $key => $value){
         $model[$value->key] = @$value->value;
    }
-
     $sectionOptions = $fieldMeta->where('key','field_options')->first();
     $model['field_options'] = [];
     if($sectionOptions != null){
         $model['field_options'] = json_decode($sectionOptions->value,true);
     }
-    // dd($model);
 @endphp
 
 {!!Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}
 
     {!! FormGenerator::GenerateForm('form_generator_fields',[],$model) !!}
+    
     {{-- <div class="fields_list active-field">
         <div class="row field_row">
             <div class="col l4 left-align grey lighten-5 " style="padding:20px">
@@ -291,9 +290,9 @@
         </div>
      
     </div> --}}
-    <button type="submit" class="btn blue">
+    {{-- <button type="submit" class="btn blue">
         Save
-    </button>
+    </button> --}}
   {{--   <style type="text/css">
         .prefix{
             display: none;

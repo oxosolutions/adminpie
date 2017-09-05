@@ -1,10 +1,12 @@
 @if(Auth::guard('admin')->check() == true)
 	@php
 		$layout = 'admin.layouts.main';
+		$route = 'create.form';
 	@endphp
 @else
 	@php
 		$layout = 'layouts.main';
+		$route = 'org.create.form';
 	@endphp
 @endif
 @extends($layout)
@@ -16,8 +18,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => $title,
-	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form',
-	'route' => ($title == 'Survey')?'create.survey':'create.form'
+	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form1',
+	'route' => ($title == 'Survey')?'create.survey':$route
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)

@@ -37,18 +37,20 @@ $route = 'org.save.form.settings';
 @include('common.pagecontentstart')
 	@include('organization.survey._tabs')
 	@include('common.page_content_primary_start')
-		<div class="setting-wrapper">
-			<div>
-				{!! Form::model($model,['route' => ['save.survey.settings',request()->route()->parameters()['id']], 'class'=> 'form-horizontal','method' => 'post'])!!}
-					{!! FormGenerator::GenerateForm('Survey_Setting_Form') !!}
-				{!! Form::close() !!}		
+		<div class="survey-settings-wrapper">
+			<div class="aione-row">
+				<div class="aione-column l6 m6 s12">
+					{!! Form::model($model,['route' => ['save.survey.settings',request()->route()->parameters()['id']], 'class'=> 'form-horizontal','method' => 'post'])!!}
+						{!! FormGenerator::GenerateForm('Survey_Setting_Form') !!}
+					{!! Form::close() !!}		
+				</div>
+				<div class="aione-column l6 m6 s12">
+					{!!Form::model(@$model,['route'=>[$route,request()->route()->parameters()['id']]])!!}
+						{!! FormGenerator::GenerateForm('form_setting_form',['type'=>'inset']) !!}
+					{!!Form::close()!!}
+				</div>
 			</div>
-			<div>
-				{!!Form::model(@$model,['route'=>[$route,@$model['id']]])!!}
-					{!! FormGenerator::GenerateForm('form_setting_form',['type'=>'inset']) !!}
-				{!!Form::close()!!}
-			</div>
-		</div>
+		</div> <!-- .survey-settings-wrapper -->
 		
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')

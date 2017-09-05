@@ -20,7 +20,9 @@
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 	{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
-	
+	@if(session()->has('csrf_error'))
+		<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
+	@endif
 	{!!Form::close()!!}
 
 	@include('components._footer')

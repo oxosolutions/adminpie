@@ -14,7 +14,7 @@ class User extends Authenticatable
    {	
 	   	if(!empty(Session::get('organization_id')))
 	   	{
-	       $this->table = Session::get('organization_id').'_users';
+	      return $this->table = Session::get('organization_id').'_users';
 	   	}
    }
    protected $softDelete = true;

@@ -9,6 +9,7 @@ use App\Model\Organization\FormsMeta;
 use Illuminate\Support\Facades\Schema;
 use Auth;
 use DB;
+use App\Model\Organization\Collaborator;
 class SurveyController extends Controller
 {
 
@@ -57,7 +58,7 @@ class SurveyController extends Controller
     	 return view('organization.survey.survey_add',['type'=>'survey']);
     }
     public function surveySettings($survey_id){
-        $model = FormsMeta::where(['form_id'=>$survey_id,'type'=>'survey'])->get();
+        $model = FormsMeta::where(['form_id'=>$survey_id])->get();
         $modelData = [];
         foreach($model as $key => $value){
             $modelData[$value->key] = $value->value;
@@ -142,8 +143,35 @@ class SurveyController extends Controller
     {
         return view('organization.survey.survey_result');
     }
-    public function shareSurvey()
-    {
-        return view('organization.survey.share');
+    public function shareSurvey($id)
+    {   
+        $survey = forms::find($id);
+        if($survey->embed_token == '' || $survey->embed_token == null){
+            $survey->embed_token = str_random();
+            $survey->save();
+        }
+        $collab = Collaborator::where(['type'=>'survey','relation_id'=>$id])->get();
+        return view('organization.survey.share',['token'=>$survey->embed_token,'collab'=>$collab]);
+    }
+
+    public function embededSurvey($token){
+        dd($token);
+    }
+
+    public function saveShareTo(Request $request, $id){
+        $model = Collaborator::firstOrNew(['type'=>'survey','relation_id'=>$id,'email'=>$request->email_user_share]);
+        $model->type = 'survey';
+        $model->relation_id = $id;
+        $model->email = $request->email_user_share;
+        $model->access = $request['user-share-edit-view'];
+        $model->status = 1;
+        $model->save();
+        return back();
+    }
+
+    public function deleteShareTo($id){
+        $model = Collaborator::find($id);
+        $model->delete();
+        return back();
     }
 }

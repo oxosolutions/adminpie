@@ -1,5 +1,4 @@
 <div class="repeater-group">
-
 	@if($model != null && !empty($model[strtolower($collection->section_slug)]))
 		<div class="repeater-wrapper">
 			@if(@$model[strtolower($collection->section_slug)] != '')
@@ -23,7 +22,6 @@
 							$options['from'] = 'repeater';
 							$options['section_id'] = $collection->id;
 							$default_value = @$value[$field->field_slug];
-
 						@endphp
 							{!!FormGenerator::GenerateField($field->field_slug, $options,$default_value, $formFrom)!!}	
 					@endforeach

@@ -14,7 +14,6 @@ $id = "";
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-
 @include('organization.survey._tabs')
 
 	<div class="share-wrapper">
@@ -24,10 +23,10 @@ $id = "";
 			</div>
 			<div class="body-wrapper">
 				<div class="link-field">
-					{!! FormGenerator::GenerateField('shareable_link') !!}
+					{!! FormGenerator::GenerateField('shareable_link',['default_value'=>route('embed.survey',$token)]) !!}
 				</div>
 				<div class="copy-button">
-					<button > Copy link</button>
+					<button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> Copy link</button>
 				</div>
 			</div>
 			<div class="clear"></div>
@@ -37,49 +36,37 @@ $id = "";
 			<div class="title">
 				share with users
 			</div>
+			{!!Form::open(['route'=>['save.shareto',request()->route()->parameters()['id']]])!!}
 			<div class="body-wrapper">
 				<div class="user-field">
 					{!! FormGenerator::GenerateField('email_user_share') !!}
 					
 				</div>
 				<div class="share-button">
-					<div>{!! FormGenerator::GenerateField('user-share-edit-view') !!}</div>
+					<div>{!! FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]) !!}</div>
 					<div><button>Share</button></div>
 				</div>
 				<div class="clear"></div>
 			</div>
-			
+			{!!Form::close()!!}
 			<div class="list-users">
 				<table class="striped">
 			        <thead>
 						<tr>
 							<th>Email</th>
-							<th>Name</th>
 							<th>Rights</th>
 							<th>Remove</th>
 						</tr>
 			        </thead>
 
 			        <tbody>
-						<tr>
-							<td>ashish9436@gmail.com</td>
-							<td>Ashish</td>
-							<td>Viewing Rights</td>
-							<td>x</td>
-							
-						</tr>
-						<tr>
-							<td>sandy@gmail.com</td>
-							<td>sandeep</td>
-							<td>Full Rights</td>
-							<td>x</td>
-						</tr>
-						<tr>
-							<td>mandy@gmail.com</td>
-							<td>rahul</td>
-							<td>Full Rights</td>
-							<td>x</td>
-						</tr>
+						@foreach($collab as $key => $value)
+							<tr>
+								<td>{{$value->email}}</td>
+								<td>{{$value->access}}</td>
+								<td><a href="{{route('survey.remove.shareto',$value->id)}}" style="color: #757575"><i class="material-icons dp48">clear</i></a></td>
+							</tr>
+						@endforeach
 			        </tbody>
 			    </table>
 			</div>
@@ -112,18 +99,22 @@ $id = "";
 			padding: 20px 0px
 		}
 		.share-wrapper .share-link .body-wrapper .link-field,
-		.share-wrapper .share-user .body-wrapper .user-field{
+		.share-wrapper .share-user .body-wrapper .user-field,
+		.share-wrapper .share-link .body-wrapper .copy-button,
+		.share-wrapper .share-user .body-wrapper .share-button,
+		.share-wrapper .share-user .body-wrapper .share-button >div{
 			float: left;
+		}
+		.share-wrapper .share-link .body-wrapper .link-field,
+		.share-wrapper .share-user .body-wrapper .user-field{
 			width: 75%;
 
 		}
 		.share-wrapper .share-link .body-wrapper .copy-button,
 		.share-wrapper .share-user .body-wrapper .share-button{
-			float: left;
 			width: 25%;
 		}
 		.share-wrapper .share-user .body-wrapper .share-button >div{
-			float: left;
 			margin-left: 10px;
 			width: 45%
 		}
@@ -133,6 +124,61 @@ $id = "";
 		}
 
 	</style>
+	<script type="text/javascript">
+		document.getElementById("copy_button").addEventListener("click", function() {
+		    copyToClipboard(document.getElementById("input_shareable_link"));
+		   
+		});
+		function copyToClipboard(elem) {
+			var targetId = "_hiddenCopyText_";
+		    var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";
+		    var origSelectionStart, origSelectionEnd;
+		    if (isInput) {
+		        // can just use the original source element for the selection and copy
+		        target = elem;
+		        origSelectionStart = elem.selectionStart;
+		        origSelectionEnd = elem.selectionEnd;
+		    } else {
+		        // must use a temporary form element for the selection and copy
+		        target = document.getElementById(targetId);
+		        if (!target) {
+		            var target = document.createElement("textarea");
+		            target.style.position = "absolute";
+		            target.style.left = "-9999px";
+		            target.style.top = "0";
+		            target.id = targetId;
+		            document.body.appendChild(target);
+		        }
+		        target.textContent = elem.textContent;
+		    }
+		    // select the content
+		    var currentFocus = document.activeElement;
+		    target.focus();
+		    target.setSelectionRange(0, target.value.length);
+		    
+		    // copy the selection
+		    var succeed;
+		    try {
+		    	  succeed = document.execCommand("copy");
+		    } catch(e) {
+		        succeed = false;
+		    }
+		    // restore original focus
+		    if (currentFocus && typeof currentFocus.focus === "function") {
+		        currentFocus.focus();
+		    }
+		    
+		    if (isInput) {
+		        // restore prior selection
+		        elem.setSelectionRange(origSelectionStart, origSelectionEnd);
+		    } else {
+		        // clear temporary content
+		        target.textContent = "";
+		    }
+		    return succeed;
+		}
+
+	</script>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')

@@ -18,5 +18,4 @@ class FieldMeta extends Model
 		}
 		return $metaValue;
 	}
-
 }

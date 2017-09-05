@@ -62,25 +62,27 @@ class DashboardController extends Controller
 
 	protected function updateMeta(){
 		$dataArray = array(
-				'form_show_save_button'  => 'yes',
-				'form_show_reset_button' => 'no',
-				'form_save_button_text' => 'Save',
-				'form_reset_button_text' => 'Reset',
-				'form_show_form_title' => 'no',
-				'form_show_form_description' => 'no',
+				'form_border'  => '1',
+				'form_theme' => 'light',
+				'form_show_title' => '0',
+				'form_show_description' => '0',
 				'form_title_align' => 'center',
 				'form_description_align' => 'center',
-				'form_show_section_title' => 'yes',
-				'form_show_section_description' => 'no',
+				'form_section_show_title' => '1',
+				'form_section_show_description' => '0',
+				'form_secion_show_border' => '1',
 				'form_section_title_align' => 'left',
 				'form_section_description_align' => 'left',
-				'form_show_field_tooltip' => 'no',
-				'form_show_field_placeholder' => 'yes',
-				'form_label_position' => 'top',
-				'form_show_field_label' => 'yes',
-				'form_show_field_description' => 'no',
-				'form_style' => 'clean',
-				'form_theme' => 'light'
+				'form_field_show_label' => '1',
+				'form_field_show_description' => '0',
+				'form_field_show_tooltip' => '0',
+				'form_field_show_placeholder' => '1',
+				'form_field_show_border' => '1',
+				'form_field_label_position' => 'top',
+				'form_show_save_button' => '1',
+				'form_save_button_text' => 'Save',
+				'form_reset_button_text' => 'Cancel',
+				'form_show_reset_button' => '0'
 			);
 		$model = forms::get();
 		foreach($model as $key => $value){

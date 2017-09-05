@@ -3,6 +3,7 @@
 @endphp
 
 		@php
+
 			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'),true);
 			if(isset($optionValues['key'])){
 				$status = false;
@@ -10,10 +11,21 @@
 			}else{
 				$status = true;
 				$collect = collect($optionValues);
-				$keys = array_keys($collect->groupBy('key')->toArray());
+				/*$keys = array_keys($collect->groupBy('key')->toArray());
+
 				$values = array_keys($collect->groupBy('value')->toArray());
-				$arrayOptions = array_combine($keys, $values);
+				$arrayOptions = array_combine($keys, $values);*/
+				$arrayOptions =null;
+				if(!empty($collect->toArray())){
+					
+					$arrayOptions = $collect->mapwithKeys(function($items){
+						if(!empty($items['value'])){
+							return [$items['key']=>$items['value']];
+						}
+					});
+				}
 			}
+
 		@endphp
 		@if($status == false)
 			

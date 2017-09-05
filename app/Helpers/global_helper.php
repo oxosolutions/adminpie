@@ -1015,5 +1015,16 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 	 //              }
 		//     }	
 
+	//get current forms list by org or admin
+	function listForms(){
+		if(Auth::guard('admin')->check()){
+            $model = 'App\\Model\\Admin\\forms';
+        }else{
+            $model = 'App\\Model\\Organization\\forms';
+        }
+        return $model::pluck('form_title','id');
+    }
+    
+
 	
 ?>

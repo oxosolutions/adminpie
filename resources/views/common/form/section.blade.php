@@ -1,5 +1,4 @@
 @foreach($collection->fields as $secKey => $field)
-		{{-- {{dump($collection)}} --}}
 		@php
 			$options['section_id'] = $collection->id;
 		@endphp

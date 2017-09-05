@@ -23,6 +23,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+	@include('admin.formbuilder._tabs')
 	{!!Form::model(@$model,['route'=>[$route,@$model['id']]])!!}
 		{!! FormGenerator::GenerateForm('form_setting_form',['type'=>'inset']) !!}
 	{!!Form::close()!!}

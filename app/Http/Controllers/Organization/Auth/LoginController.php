@@ -47,7 +47,7 @@ class LoginController extends Controller
         $this->middleware('guest.org', ['except' => 'logout']);
     }
 
-    public function showLoginForm($id = null){
+    public function showLoginForm(Request $request, $id = null){
         if($id != null){
             $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
             if($organizationToken != null){
@@ -67,7 +67,31 @@ class LoginController extends Controller
                 }
             }
         }
-        $domain = explode('.', request()->getHost());
+
+        $completeDomain = $request->getHost();
+        $primary_domain = $this->is_primary_domain_exists($completeDomain);
+        $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
+        if($primary_domain == false){
+            if($secondary_domain == false){
+                $domain = explode('.', $request->getHost());
+                $subdomain = $domain[0];
+                $model = GlobalOrganization::where('slug',$subdomain)->first();
+                if($model == null){
+                    return redirect()->route('demo5');
+                }
+                Session::put('organization_id',$model->id);
+                return view('organization.login.login');
+            }else{
+                Session::put('organization_id',$secondary_domain->id);
+                return view('organization.login.login');
+            }
+        }else{
+            Session::put('organization_id',$primary_domain->id);
+            return view('organization.login.login');
+        }
+
+
+        /*$domain = explode('.', request()->getHost());
         $subdomain = $domain[0];
         $model = GlobalOrganization::where('slug',$subdomain)->first();
         if($model == null){
@@ -76,7 +100,7 @@ class LoginController extends Controller
             //dd('Not Valid Organization');
         }
         Session::put('organization_id',$model->id);
-        return view('organization.login.login');
+        return view('organization.login.login');*/
     }
     public function showLoginFormv1()
     {
@@ -184,5 +208,23 @@ class LoginController extends Controller
     public function register()
     {
         return view('organization.login.register');
+    }
+
+    protected function is_primary_domain_exists($domain){
+        $primary_domain_existance_status = GlobalOrganization::where('primary_domain',$domain)->first();
+        if($primary_domain_existance_status != null){
+            return $primary_domain_existance_status;
+        }else{
+            return false;
+        }
+    }
+
+    protected function is_secondary_domain_exists($domain){
+        $secondary_domain_existance_status = GlobalOrganization::where('secondary_domains',$domain)->first();
+        if($secondary_domain_existance_status != null){
+            return $secondary_domain_existance_status;
+        }else{
+            return false;
+        }
     }
 }

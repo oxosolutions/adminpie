@@ -157,7 +157,7 @@ $user_profile_picture = App\Model\Organization\UsersMeta::getUserMeta('user_prof
 		</div> <!-- .aione-header-item -->
 		
 		<div class="aione-header-item aione-clock"> 
-			<div class=""></div>
+			<div class="">{{get_organization_id()}}</div>
 		</div> <!-- .aione-header-item -->
 	
 	</div><!-- .aione-row -->

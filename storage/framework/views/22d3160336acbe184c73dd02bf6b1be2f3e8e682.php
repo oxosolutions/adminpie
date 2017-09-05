@@ -1,5 +1,4 @@
 <?php $__currentLoopData = $collection->fields; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $secKey => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-		
 		<?php 
 			$options['section_id'] = $collection->id;
 		 ?>
