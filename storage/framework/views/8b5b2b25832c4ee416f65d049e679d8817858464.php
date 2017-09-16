@@ -1,11 +1,6 @@
 <?php 
 	$fieldType  = '';
-	$required = '';
-	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
-	$requiredOrNot = FormGenerator::GetMetaValue($collection->fieldMeta,'field_required');
-	if($requiredOrNot == 'yes'){
-		$required = 'required';
-	}
+
  ?>
 <?php if(isset($options['field_type']) && $options['field_type'] == 'array'): ?>
 	<?php 
@@ -37,5 +32,4 @@
 		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
 	}
  ?>
-<?php echo Form::text($name,$default_value,['class'=>$collection->field_slug.' '.$class_name,'id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder, ' data-validation' => $required]); ?>
-
+<?php echo Form::text($name,$default_value,['class'=>$field_input_class,'id'=>$field_input_id,'placeholder'=>$placeholder, ' data-validation' => $field_validations]); ?> 

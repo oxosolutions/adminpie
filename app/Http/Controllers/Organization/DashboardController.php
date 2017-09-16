@@ -97,6 +97,7 @@ class DashboardController extends Controller
 	}
 
     public function index($slug = null){
+    	// get_settings();
 		$user_id = get_user_id();
 		$dashboards = get_user_meta($user_id,'dashboards');
 		$allowed_widgets = array();

@@ -1,4 +1,2 @@
 
-		
-		{!!$collection->field_description!!}
 	

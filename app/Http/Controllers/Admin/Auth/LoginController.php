@@ -39,7 +39,9 @@ class LoginController extends Controller
     }
 
     public function showLoginForm(){
-        return view('admin.login.login');
+        $settings = collect([]);
+        // $settings = OrganizationSetting::all();
+        return view('admin.login.login',compact('settings'));
     }
 
     protected function guard()

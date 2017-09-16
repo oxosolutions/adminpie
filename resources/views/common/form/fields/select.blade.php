@@ -61,4 +61,4 @@
 	}
 @endphp
 
-{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)),$arrayOptions,null,['class'=>$collection->field_slug.' browser-default '.$class_name,'id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder])!!}
+{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)),$arrayOptions,null,['class'=>'input_'.$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder])!!}

@@ -6,6 +6,17 @@
 /***************************************
 COMMON
 ***************************************/
+.aione-rounded{
+    -moz-border-radius:4px;
+    -webkit-border-radius:4px;
+    border-radius:4px;
+}
+.aione-circle{
+    -moz-border-radius:50%;
+    -webkit-border-radius:50%;
+    border-radius:50%;
+}
+
 .clear{
 	clear:both;
 }

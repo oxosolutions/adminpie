@@ -15,63 +15,66 @@ $id = "";
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.survey._tabs')
-
-	<div class="share-wrapper">
-		<div class="share-link">
-			<div class="title">
-				Share Link
-			</div>
-			<div class="body-wrapper">
-				<div class="link-field">
-					{!! FormGenerator::GenerateField('shareable_link',['default_value'=>route('embed.survey',$token)]) !!}
+	@if(!@$permission)
+		{{dump('You don\'t have permission!')}}
+	@else
+		<div class="share-wrapper">
+			<div class="share-link">
+				<div class="title">
+					Share Link
 				</div>
-				<div class="copy-button">
-					<button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> Copy link</button>
-				</div>
-			</div>
-			<div class="clear"></div>
-		</div>
-		<div class="share-user">
-			
-			<div class="title">
-				share with users
-			</div>
-			{!!Form::open(['route'=>['save.shareto',request()->route()->parameters()['id']]])!!}
-			<div class="body-wrapper">
-				<div class="user-field">
-					{!! FormGenerator::GenerateField('email_user_share') !!}
-					
-				</div>
-				<div class="share-button">
-					<div>{!! FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]) !!}</div>
-					<div><button>Share</button></div>
+				<div class="body-wrapper">
+					<div class="link-field">
+						{!! FormGenerator::GenerateField('shareable_link',['default_value'=>route('embed.survey',$token)]) !!}
+					</div>
+					<div class="copy-button">
+						<button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> Copy link</button>
+					</div>
 				</div>
 				<div class="clear"></div>
 			</div>
-			{!!Form::close()!!}
-			<div class="list-users">
-				<table class="striped">
-			        <thead>
-						<tr>
-							<th>Email</th>
-							<th>Rights</th>
-							<th>Remove</th>
-						</tr>
-			        </thead>
-
-			        <tbody>
-						@foreach($collab as $key => $value)
+			<div class="share-user">
+				
+				<div class="title">
+					share with users
+				</div>
+				{!!Form::open(['route'=>['save.shareto',request()->route()->parameters()['id']]])!!}
+				<div class="body-wrapper">
+					<div class="user-field">
+						{!! FormGenerator::GenerateField('email_user_share') !!}
+						
+					</div>
+					<div class="share-button">
+						<div>{!! FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]) !!}</div>
+						<div><button>Add User</button></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				{!!Form::close()!!}
+				<div class="list-users">
+					<table class="striped">
+				        <thead>
 							<tr>
-								<td>{{$value->email}}</td>
-								<td>{{$value->access}}</td>
-								<td><a href="{{route('survey.remove.shareto',$value->id)}}" style="color: #757575"><i class="material-icons dp48">clear</i></a></td>
+								<th>Email</th>
+								<th>Rights</th>
+								<th>Remove</th>
 							</tr>
-						@endforeach
-			        </tbody>
-			    </table>
+				        </thead>
+
+				        <tbody>
+							@foreach($collab as $key => $value)
+								<tr>
+									<td>{{$value->email}}</td>
+									<td>{{$value->access}}</td>
+									<td><a href="{{route('survey.remove.shareto',$value->id)}}" style="color: #757575"><i class="material-icons dp48">clear</i></a></td>
+								</tr>
+							@endforeach
+				        </tbody>
+				    </table>
+				</div>
 			</div>
 		</div>
-	</div>
+	@endif
 	<style type="text/css">
 		.share-wrapper{
 			margin-top: 30px

@@ -1,4 +1,4 @@
-<nav id="aione_nav" class="aione-nav aione-nav-vertical">
+<nav id="aione_nav" class="aione-nav vertical dark">
 	<div class="aione-nav-background"></div>
     <ul id="aione_menu" class="aione-menu">
     <?php 

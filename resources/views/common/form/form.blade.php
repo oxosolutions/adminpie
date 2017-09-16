@@ -2,15 +2,19 @@
 $form_id =  $collection->id;
 $form_title =  $collection->form_title;
 $form_description =  $collection->form_description;
-
-$form_settings = (object) get_form_meta($form_id);
+if($formFrom == 'admin'){
+	$global = true;
+}else{
+	$global = false;
+}
+$form_settings = (object) get_form_meta($form_id,null,true,$global);
 
 $aione_form_border = $aione_form_section_border = $aione_form_field_border = "";
 
 if(@$form_settings->form_border){
 	$aione_form_border = "aione-form-border";
 }
-if(@$form_settings->form_section_show_border){
+if(@$form_settings->form_secion_show_border){
 	$aione_form_section_border = "aione-form-section-border";
 }
 if(@$form_settings->form_field_show_border){
@@ -18,9 +22,6 @@ if(@$form_settings->form_field_show_border){
 }
 
 @endphp
-<input type="hidden" name="form_id" value="{{$collection->id}}" />
-<input type="hidden" name="form_slug" value="{{$collection->form_slug}}" />
-<input type="hidden" name="form_title" value="{{$collection->form_title}}" />
 
 <div id="aione_form_wrapper_{{$form_id}}" class="aione-form-wrapper aione-form-theme-{{@$form_settings->form_theme}} aione-form-label-position-{{@$form_settings->form_label_position}} aione-form-style-{{@$form_settings->form_style}} {{$aione_form_border}} {{$aione_form_field_border}} {{$aione_form_section_border}}">
 	<div class="aione-row">
@@ -37,9 +38,9 @@ if(@$form_settings->form_field_show_border){
 			</div> <!-- .aione-form-header -->
 		@endif
 		<div id="aione_form_content" class="aione-form-content">
-			<div class="aione-row">
+			<div class="aione-row aione-{{@$form_settings->form_section_style}}">
 			@foreach($collection->section as $key => $section)
-				<div id="aione_form_section_{{$section->id}}" class="aione-form-section aione-{{@$form_settings->form_section_style}}">
+				<div id="aione_form_section_{{$section->id}}" class="aione-form-section">
 					<div class="aione-row">
 
 						@if( (@$form_settings->form_section_show_title && !empty($section->section_name)) || (@$form_settings->form_show_section_description && !empty($section->section_description)))

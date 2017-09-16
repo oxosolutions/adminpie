@@ -11,256 +11,268 @@ $page_title_data = array(
 $id = "";
 
 @endphp 
+<style type="text/css">
+    .aione-row > .left-75{
+        width: 70%;
+        float: left;
+        padding-right: 10px
+    }
+    .aione-row > .right-25{
+        width: 30%;
+        float: right;
+    }
+    .aione-row.theme-1 > .card-4{
+        width: 25%;
+        float: left;
+        padding: 30px 0px;
+        text-align: center;
+    }
+    .aione-row > .card-4 > h3, .aione-row > .card-4 > p{
+        padding:0;
+        margin: 0;
+    }
+    .aione-row > .card-4 > p{
+        line-height: 28px;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: 300;
+        color: #676767;
+    }
+    .aione-row > .card-4:nth-child(odd) > h3{
+        color:#DF735E 
+    }
+    .aione-row > .card-4:nth-child(even) > h3{
+        color:#79C3A9 
+    }
+    .aione-border.theme-1{
+        border:1px solid #e8e8e8;
+        border-radius: 4px
+    }
+    .aione-border.theme-1 > .card-4{
+        border-right: 1px solid #e8e8e8;
+    }
+
+     .aione-row.theme-2 > .card-4{
+        width: 24%;
+        margin-right: 10px;
+        float: left;
+        padding: 30px 0px;
+        text-align: center;
+    }
+     .aione-row.theme-2 > .card-4:last-child{
+        margin-right: 0px
+     }
+    .aione-border.theme-2 > .card-4{
+        border: 1px solid #e8e8e8;
+        border-radius: 4px
+    }
+
+     .aione-row.theme-3 > .card-4{
+        width: 50%;
+        float: left;
+        padding: 30px 0px;
+        text-align: center;
+    }
+     
+    .aione-border.theme-3 > .card-4{
+        border: 1px solid #e8e8e8;
+     
+    }
+</style>
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-@include('organization.survey._tabs')
-<div class="slider-container">
-    <div class="row">
-            <div class="col m2">     
-                <div class="card-section">
-
-                    <div class="card-content">
-
-                        <span class="card-part1" >
-                            Total
-                        </span>
-
-                        <span class="card-part2" >
-                            Groups
-                        </span>
-
+    @include('organization.survey._tabs')
+        <div class="aione-row">
+            <div class="left-75">
+                 @if(!empty($error))
+                    <div class="slider-container">
+                        <div class="row">
+                            <h1> {{$error}}</h1>
+                        </div>
                     </div>
+                @else
 
-                    <div class="card-inner" style="background-color: #da542e;">
-                        <span>
-                          {{$group_count}}
-                        </span>
+                <div>
+                    <div class="row">
+                        <div class="aione-table">
+                            @if(!empty($section_question_count))
+                               {{--  <style>
+                                   table  td , th{
+                                            border:1px solid grey;
+                                    }
+                                </style> --}}
+                                <table class="wide"> 
+                                    <thead>
+                                        <tr>
+                                            <th>Group Name</th>
+                                            <th>Total Question</th>
+                                        </tr>
+                                    </thead>
+                                    @foreach($section_question_count as $groupName => $queCount)
+                                    <tbody>
+                                        <tr>
+                                           <td> {{str_replace('-', ' ',$groupName)}}</td> <td>{{$queCount}}</td> 
+                                        </tr>
+                                    </tbody>
+                                    @endforeach
+                                 </table>
+                            @endif
+                        </div>
                     </div>
-
-                    <div class="clear"></div>
-                  
                 </div>
-            </div> 
-
-            <div class="col m2">     
-                <div class="card-section">
-
-                    <div class="card-content">
-
-                        <span class="card-part1" >
-                            Total
-                        </span>
-
-                        <span class="card-part2" >
-                            Questions
-                        </span>
-                    
+               
+                <div class="aione-row aione-border theme-2" style="margin-bottom: 10px">
+                    <div class="card-4">
+                        <h3>{{$group_count}}</h3>
+                        <p>Groups</p>
                     </div>
-
-                    <div class="card-inner" style="background-color: #08c;">
-                        <span>
-                          {{$question_count}}
-                        </span>
+                    <div class="card-4">
+                        <h3>{{$question_count}}</h3>
+                        <p>Questions</p>
                     </div>
-
-                    <div class="clear"></div>
-                  
+                     <div class="card-4">
+                        <h3> {{$survey_completed_count}}</h3>
+                        <p>Completed Surveys</p>
+                    </div>
+                     <div class="card-4">
+                        <h3>47</h3>
+                        <p>Incompleted Surveys</p>
+                    </div>
                 </div>
-            </div> 
 
-            <div class="col m2">     
-                <div class="card-section">
+                <div class="aione-table row">
+                    <div class="col l6">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colspan="2"><center>Errors</center></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td ><center>Count</center></td>
+                                    <td ><center>0</center></td>
 
-                    <div class="card-content">
-
-                        <span class="card-part1" >
-                            Complete
-                        </span>
-
-                        <span class="card-part2" >
-                            Survey
-                        </span>
-                        
+                                </tr>
+                               @foreach($errors_warnings as $errorKey => $errorVal)
+                                <tr>
+                                     <td ><center>Slug : {{$errorKey}} <br> Question: {{$errorVal['question']}} <br> Field:{{$errorVal['field_type']}}</center></td>
+                                    <td ><center> {{$errorVal['error']['error']}}</center></td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
+                    <div class="col l6">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th colspan="2"><center>Warnings</center></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                     <td ><center>Count</center></td>
+                                    <td ><center>0</center></td>
 
-                    <div class="card-inner" style="background-color: #00a65a;">
-                        <span>
-                          {{$survey_completed_count}}
-                        </span>
+
+                                </tr>
+                                <tr>
+                                   <td ><center>lorem impsum</center></td>
+                                    <td ><center>1</center></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="clear"></div>
-                  
+                                
                 </div>
-            </div> 
-
-            <div class="col m2">     
-                <div class="card-section">
-
-                    <div class="card-content">
-
-                        <span class="card-part1" >
-                            Incomplete
-                        </span>
-
-                        <span class="card-part2" >
-                            Survey
-                        </span>
-                    
+             
+                <div class="card-style-1">
+                    <div class="title">Total Errors</div>
+                    <div class="count">{{count($ques_slug_error)}}
+                            {{-- {{$ques_slug_error->keys()->implode(',')}} --}}
                     </div>
-
-                    <div class="card-inner" style="background-color: #dd4b39;">
-                        <span>
-                            ??       
-                        </span>
-                    </div>
-
-                    <div class="clear"></div>
-                  
+                    <div></div>
                 </div>
-            </div> 
-
-            <div class="col m2">     
-                <div class="card-section">
-
-                    <div class="card-content">
-
-                        <span class="card-part1" >
-                            Total
-                        </span>
-
-                        <span class="card-part2" >
-                            Errors
-                        </span>
-
-                    </div>
-
-                    <div class="card-inner" style="background-color: #f74d4d;">
-                        <span>
-                          ??
-                        </span>
-                    </div>
-
-                    <div class="clear"></div>
-                  
-                </div>
-            </div> 
-
-            <div class="col m2">     
-                <div class="card-section">
-
-                    <div class="card-content">
-
-                        <span class="card-part1" >
-                            Total
-                        </span>
-
-                        <span class="card-part2" >
-                            Warnings
-                        </span>
-                    
-                    </div>
-
-                    <div class="card-inner" style="background-color: #ffb848;">
-                        <span>
-                          ?
-                        </span>
-                    </div>
-
-                    <div class="clear"></div>
-                  
+                 <div class="card-style-1">
+                    <div class="title">Total Warnings</div>
+                    <div class="count">158</div>
+                    <div></div>
                 </div>
             </div>
+            <div class="right-25 aione-table" >
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">Settings</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($setting_questions as $settingKey => $settingVal)
+                            @if($settingKey=='_token')
+                                @continue;
+                            @endif
+                            @if(!empty($settings[$settingKey]))
+                                <tr>
+                                    <td>{{$loop->iteration}}.{{$settingVal}}</td>
+                                    <td>{{$settings[$settingKey]}}</td>
+                                </tr>
+                            @endif
+                        @endforeach
+                    </tbody>
+                </table>
 
-    </div>
-
-    <div class="row">
-       
-    </div>
-
-</div>
-
-</div>
-
-<div>
-    <div class="row">
-        <div>
-            @if(!empty($section_question_count))
-                <style>
-                   table  td , th{
-                            border:1px solid grey;
-                    }
-                </style>
-            <table>
-                <tr>
-                    <th>Group Name</th>
-                    <th>Total Question</th>
-                </tr>
-                @foreach($section_question_count as $groupName => $queCount)
-                <tr>
-                   <td> {{str_replace('-', ' ',$groupName)}}</td> <td>{{$queCount}}</td> 
-                </tr>
-
-            @endforeach
-             </table>
-            @endif
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-
-
-    $(document).ready(function(){
-
-    $('.collapsible').collapsible({
-
-    accordion: false, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    onOpen: function(el) { 
-    // alert('Open'); 
-    }, // Callback for Collapsible open
-    onClose: function(el) {
-     // alert('Closed'); } // Callback for Collapsible close
-    });
-
-
-  });
-
-</script>
-
-        <div class="col m3">
-            <div class="card">
-                <div class="center-align">
+              {{--   <div class="center-align">
                     <span class="card-title-bar">Settings</span>
-                   
                 </div>
                 <div class="divider"></div>
-				<div class="aione-survey-settings">
-					<div class="aione-survey-setting">
-                    @foreach($settings as $settingKey => $settingVal)
+                <div class="aione-survey-settings">
+                    <div class="aione-survey-setting">
+                    @foreach($setting_questions as $settingKey => $settingVal)
                         @if($settingKey=='_token')
                                 @continue;
                         @endif
-								<div class="aione-survey-subsetting">
-									<span class="aione-survey-subsetting-key">{{$loop->index}}. {{ucfirst( str_replace('_', ' ', $settingKey))}}</span>
-									<span class="aione-survey-subsetting-value">{{$settingVal}}</span>
-								</div>
+                                    @if(!empty($settings[$settingKey]))
+                                <div class="aione-survey-subsetting">
+                                        <span class="aione-survey-subsetting-key">{{$loop->iteration}}.
+                                            {{$settingVal}}
+                                        </span>
+                                        <span class="aione-survey-subsetting-value">{{$settings[$settingKey]}}</span>
+                                </div>
+                                    @endif
                     @endforeach
-							<span class="aione-survey-setting-key">hjagsdhashd</span>
-							<span class="aione-survey-setting-value">
-                           
-                                <span class="aione-switch-enabled">
-                                    <i class="material-icons dp48" style="color: green;font-size: 17px;">info</i>
-                                </span>
-                            </span>
-					</div>
-				</div>
+                          
+                    </div>
+                </div> --}}
+                    
             </div>
         </div>
-    </div>
-</div>
+   
 
+    
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function(){
+
+        $('.collapsible').collapsible({
+
+        accordion: false, // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+        onOpen: function(el) { 
+        // alert('Open'); 
+        }, // Callback for Collapsible open
+        onClose: function(el) {
+         // alert('Closed'); } // Callback for Collapsible close
+        });
+
+
+      });
+
+    </script>
+   
+   
 @if(!empty($section))
     @foreach ($sections as $key => $value) 
         
@@ -281,35 +293,33 @@ $id = "";
 
     @endforeach
 @endif
-<div class="card-style-1">
-    <div class="title">Total Survey</div>
-    <div class="count">158</div>
-    <div></div>
-</div>
-<style type="text/css">
-    .card-style-1{
-        padding: 20px;
-        border: 1px solid #e8e8e8;
-        width: 20%
 
-    }
-    .card-style-1 .title{
-        text-align: center;
-        font-size: 20px;
-        font-weight: 500;
-        color: #757575;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #e8e8e8
-    }
-    .card-style-1 .count{
-        text-align: center;
-        font-size: 48px;
-        font-weight: 200;
-        color: #454545;
-        padding-top: 20px
 
-    }
-</style>
+@endif
+        <style type="text/css">
+            .card-style-1{
+                padding: 20px;
+                border: 1px solid #e8e8e8;
+                width: 20%
+
+            }
+            .card-style-1 .title{
+                text-align: center;
+                font-size: 20px;
+                font-weight: 500;
+                color: #757575;
+                padding-bottom: 20px;
+                border-bottom: 1px solid #e8e8e8
+            }
+            .card-style-1 .count{
+                text-align: center;
+                font-size: 48px;
+                font-weight: 200;
+                color: #454545;
+                padding-top: 20px
+
+            }
+        </style>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
    <style type="text/css">

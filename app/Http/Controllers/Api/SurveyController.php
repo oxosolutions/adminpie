@@ -5,75 +5,127 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\forms;
+use App\Model\Organization\FormsMeta;
 use App\Model\Organization\User;
 use App\Model\Admin\GlobalOrganization as GO;
 use Session;
+use Illuminate\Support\Facades\Schema;
+use DB;
+use App\Model\Organization\FieldMeta;
+use App\Model\Organization\FormBuilder;
+
 
 class SurveyController extends Controller
 {
     public function surveys(Request $request){
         $org_id = GO::where('active_code',$request['activation_key'])->first()->id;
     	Session::put('organization_id',$org_id);
-    	$form  =  forms::with('section.fields.fieldMeta')->where('type','survey')->get();
+    	$form  =  forms::with(['section'=>function($query){
+                                        $query->orderBy('order','asc');
+                                    },
+                                'section.sectionMeta',
+                                'section.fields' =>function($query){
+                                        $query->orderBy('order','asc');
+                                },'section.fields.fieldMeta'] )->where('type','survey')->get();
+        $smeta  =  forms::with(['section.sectionMeta'] )->where('type','survey')->get();
     	$data["status"]= "success";
     	$data["media"]= "";
         $question = [];
         $surveys =[];
         $groups =[];
+        $repeater = [];
         foreach ($form as $key => $value) 
-        {
-            $temp_form = ["id"=>$value['id'], "survey_table"=>'', "name"=>$value['form_title'], "created_by"=>'', "description"=>$value['form_description'], "status"=>'', "created_at"=>date('Y-m-d',strtotime($value->created_at)), "updated_at"=>date('Y-m-d',strtotime($value->updated_at)), "deleted_at"=>'']; 
+        {   $form_id = $value['id']; 
+            $temp_form = ["id"=>$value['id'], "survey_table"=>'', "name"=>$value['form_title'], "created_by"=>'', "description"=>$value['form_description'], "status"=>'',"created_by"=>$value['created_by'], "created_at"=>date('Y-m-d',strtotime($value->created_at)), "updated_at"=>date('Y-m-d',strtotime($value->updated_at)), "deleted_at"=>'']; 
             array_push($surveys,$temp_form);
             if(!empty($value['section']))
             {
                $section[] = $value['section'];
                foreach ($value['section'] as $sectionKey => $sectionValue) 
                {
-                $temp_section =  ["id"=>$sectionValue['id'], "survey_id"=>$sectionValue['form_id'], "title"=>$sectionValue['section_name'], "description"=>$sectionValue['section_description'], "group_order"=>$sectionValue['order'], "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>''];
+                // dump($sectionValue);
+                $section_type = $sectionValue['sectionMeta']->where('key','section_type')->first();
+                $section_type_value ="";
+                if(!empty($section_type['key'])){
+                    $section_type_value = $section_type['value'];
+                }
+                $section_id = $sectionValue['id']; 
+                $temp_section =  ["id"=>$sectionValue['id'], "survey_id"=>$sectionValue['form_id'], "title"=>$sectionValue['section_name'], "description"=>$sectionValue['section_description'], "group_order"=>$sectionValue['order'],'section_type'=>$section_type_value, "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>''];
+
                     array_push($groups,$temp_section);
                     if(!empty($sectionValue['fields']))
                     {
                         $index=0;
+                        $repeater_check =0;
                         foreach ($sectionValue['fields'] as $fieldKey => $fieldValue) 
                         {
+
+                            $field_id  =$fieldValue['id'];
+/*below code is for  Add Question id which have not*/                           
+                            $field_add_question = FieldMeta::where(['form_id'=>$form_id , 'section_id'=>$section_id, 'field_id'=>$field_id,  'key'=>'question_id']);
+                            if(!$field_add_question->exists()){
+                                $field_meta = new FieldMeta();
+                                $field_meta->form_id = $form_id;
+                                $field_meta->section_id = $section_id;
+                                $field_meta->field_id = $field_id;
+                                $field_meta->key = 'question_id';
+                                $field_meta->value = "SID".$form_id."_GID".$section_id."_QID".$field_id;
+                                $field_meta->save();
+                                }
                             $index++;
                             if(!empty($fieldValue['fieldMeta']))
                             {
+
                                 $collect = collect($fieldValue['fieldMeta']);
                                 $form_meta =  $collect->mapWithKeys(function($item){
                                     return [$item['key'] => $item['value']];
                                 });
 
-                                $form_fields =   ['question_text'=>$fieldValue['field_title'], 'question_type'=>$fieldValue['field_type'], 'question_key'=>null, "question_id"=> $fieldValue['id'], "next_question_key"=> null, "question_message"=> null, "required"=> null, "pattern"=> null, "otherPattern"=>null, "survey_id"=> $fieldValue['form_id'], "group_id"=> $fieldValue['section_id'],
-                                            "question_order"=>$fieldValue["order"], "question_desc"=> $fieldValue["field_description"], "created_at"=>$fieldValue['created_at'], "updated_at"=>$fieldValue['updated_at'], "deleted_at"=>null, "answers"=>[[]], ]; 
+                                $form_fields =   ['question_text'=>$fieldValue['field_title'], 'question_type'=>$fieldValue['field_type'], 'question_key'=>'', "question_id"=> $fieldValue['id'], "question_message"=> '', "required"=> '', "pattern"=> '', "otherPattern"=>'', "survey_id"=> $fieldValue['form_id'], "group_id"=> $fieldValue['section_id'],
+                                            "question_order"=>$fieldValue["order"], "question_desc"=> $fieldValue["field_description"], "created_at"=>$fieldValue['created_at'], "updated_at"=>$fieldValue['updated_at'], "deleted_at"=>'', "answers"=>[[]], "fields"=>"" ]; 
                                 if(!empty($form_meta['question_id'])){
                                     $form_fields['question_key'] = $form_meta['question_id'];
                                 }
+                                    $options = json_decode(@$form_meta['field_options'],true);
+                                        $form_fields['next_question_key'] ="";
                                 if($fieldValue['field_type']=='select' ||  $fieldValue['field_type']=='multi_select' || $fieldValue['field_type']== 'radio' || $fieldValue['field_type'] == 'checkbox')
-                                {
-                                    $options = json_decode($form_meta['field_options'],true);
-                                    
-                                    $option = null;
+                                {   $option = null;
                                     if(!empty($options)){
                                         for($i=0; $i < count($options); $i++){
                                            $option[$i]['option_type']= $fieldValue['field_type'];
-                                           $option[$i]['option_value']= $options[$i]['key'];
-                                           $option[$i]['option_text']= $options[$i]['value'];
-                                           $option[$i]['option_next']= '';
+                                           $option[$i]['option_value']= @$options[$i]['key'];
+                                           $option[$i]['option_text']= @$options[$i]['value'];
+                                           $option[$i]['option_next'] = "";
+                                           if(!empty($options[$i]['go_to_question'])){
+                                                $option[$i]['option_next']= @$options[$i]['go_to_question'];
+                                           }
                                            $option[$i]['option_prompt']= '';
                                        }
                                     }
                                     $form_fields['answers'] = [$option];
                                 }
-                            array_push($question,$form_fields);
+                                 
+                                    if($section_type_value =='repeater' && $repeater_check ==0 )
+                                        {   $repeater_check = 1;
+                                            
+                                            $repeater_section =  ['question_text'=>'Fill the repeater', 'question_type'=>'repeater', 'question_key'=>$sectionValue['section_slug'], "question_id"=> $sectionValue['id'], "question_message"=> '', "required"=> '', "pattern"=> '', "otherPattern"=>'', "survey_id"=> $sectionValue['form_id'], "group_id"=> $sectionValue['id'],
+                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>'createddd', "updated_at"=>'updtaeee', "deleted_at"=>'', "answers"=>[[]],'fields'=>[] ,'next_question_key'=>'' ];                                
+                                                array_push($repeater_section['fields'] ,  $form_fields);
+                                        }elseif($section_type_value =='repeater'){
+                                                array_push($repeater_section['fields'] ,  $form_fields);  
+                                        }else{
+                                            array_push($question,$form_fields);
+                                        }
                             }
                         }
+                            if($section_type_value =='repeater'){
+                                array_push($question,$repeater_section );
+                            }
                     }
                }
-
             }
         }
-            $data['questions']   = $question;
+            $data['questions']      = $question;
             $data['surveys']     = $surveys;           
             $data['groups']      = $groups;
             $data["users"]       = User::all();
@@ -85,10 +137,94 @@ class SurveyController extends Controller
                 dd($form_id);
             }
 
-            public function save_app_survey_filled_data(Request $request){
-                 // dump(get_organization_id());
-                //  $org_id = GO::where('active_code',$request['activation_key'])->first()->id;
-                dd($request->all());
-            }
+    public function save_app_survey_filled_data(Request $request){
+         // dd($request->all());
+         $organization = GO::where('active_code',$request['activation_code']);
+         if($organization->exists()){
+            $org_id = $organization->first()->id;
+         }else{
+            return $error['org_id_not_exist'] =  "Error: Organization Not Exist";
+         }
+        Session::put('organization_id',$org_id);
+        $form_query = forms::where('id',$request['survey_id']);
+        if($form_query->exists()) {
+           $form = $form_query->first();
+         }else{
+            return $error['survey_id_not_exist'] =  "Error: Survey  Not Exist";
+         }
+        $form_id = $request['survey_id'];
+        unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'] );
+        $survey_data = json_decode($request['survey_data'],true);  
+        $records = 0;
+        foreach ($survey_data as $key => $value) {
+            unset($colums, $values, $keys);
+            $return = $this->create_alter_insert_survey_table($org_id, $form_id , $value);
+            if($return){
+                    $records++;
+                }
+        }
+        return ['sucess'=>"$records Import successfully!"];
+    }
 
+    public function create_alter_insert_survey_table($org_id, $form_id,$data){
+        // dd($org_id, intval($form_id), $data);
+        $form_id = intval($form_id);
+        $question =  FormBuilder::with(['fieldMeta'=>function($query){
+          $query->where('key','question_id');
+        }])->where('form_id',$form_id)->get()->toArray();
+        $questionId_slug = collect($question)->mapWithKeys(function($items){
+          return [$items['field_meta'][0]['value']=>$items['field_slug']];
+        });
+        $table_name = 'ocrm_'.$org_id.'_survey_results_'.$form_id;
+        $form_meta = FormsMeta::where(['form_id'=>$form_id,'key'=>'survey_data_table', 'value'=>$table_name]);
+        if(!$form_meta->exists() || $form_meta->count() >1){
+            if($form_meta->count() >1 ){
+                $form_meta->delete();
+            }
+            $formMeta = new FormsMeta();
+            $formMeta->form_id = $form_id;
+            $formMeta->key = 'survey_data_table';
+            $formMeta->value = $table_name;
+            $formMeta->save();
+        }
+        foreach ($data as $dataKey => $dataValue){
+                if($dataKey !="id"){
+                    if(!empty($questionId_slug[$dataKey])) {
+                        $dataKey = $questionId_slug[$dataKey];
+                    }
+                        $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
+                     if(is_array($dataValue)) {
+                        $dataValue = json_encode($dataValue);
+                     }
+                     $values[$dataKey] = $dataValue;
+                     $keys[] = $dataKey;
+                }
+             }
+            $newTableName = str_replace('ocrm_', '', $table_name);
+         if(Schema::hasTable($newTableName)){
+            $table_column = Schema::getColumnListing($newTableName);
+            $columnsdata  = collect($keys);
+            $new_columns   = $columnsdata->diff($table_column)->toArray();
+            if(!empty($new_columns)){
+                foreach ($new_columns as $key => $value) {
+                    DB::select("ALTER TABLE `{$table_name}` ADD $value text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");
+                }
+            }
+      }else{ 
+        DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+        DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+        }
+            if(!empty($values['unique_id'])){
+                if(!DB::table($newTableName)->where('unique_id',$values['unique_id'])->exists()){
+                   DB::table($newTableName)->insert($values);
+                   return true;
+                }else{
+                    return false; 
+                }
+            }else{
+                
+                 DB::table($newTableName)->insert($values);
+                 return true;
+            }
+    }
 }

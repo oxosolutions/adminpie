@@ -5,7 +5,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'no',
-	'page_title' => 'Dashboards',
+	'page_title' => 'Dashboard',
 	'add_new' => '+ Add Dashboard'
 	); 
 @endphp
@@ -358,6 +358,7 @@
 
     </div> <!-- .aione-widgets -->
 </div> <!-- .aione-dashboard -->
+
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 	@if($current_dashboard != null)

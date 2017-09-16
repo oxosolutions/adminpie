@@ -1,5 +1,17 @@
 @php
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
+	$field_input_class = "input-".$collection->field_slug;
+	$field_input_id = "input_".$collection->field_slug;
+	$field_validations = "";
+	$field_validation = "";
+	$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
+
+	$field_meta = array(); 
+
+	$field_meta['field_custom_code_theme'] = FormGenerator::GetMetaValue($collection->fieldMeta,'field_custom_code_theme');
+	$field_meta['field_custom_code_language'] = FormGenerator::GetMetaValue($collection->fieldMeta,'field_custom_code_language');
+
+	$field_meta = (object) $field_meta;
 @endphp
 <div id="field_{{$collection->field_slug}}" class="field-wrapper field-wrapper-{{$collection->field_slug}} field-wrapper-type-{{$collection->field_type}} {{$class_name}}">
 	@if(@$settings['form_field_show_label'] || @$settings['form_field_show_description'])
@@ -20,7 +32,7 @@
 	@endif
 	
 
-	<div id="field_{{$collection->field_slug}}" class="field {{$collection->field_type}} field-type-{{$collection->field_type}}">
+	<div id="field_{{$collection->field_slug}}" class="field field-type-{{$collection->field_type}}">
 	
 		@if(View::exists('common.form.fields.'.$field))
 			@include('common.form.fields.'.$field)

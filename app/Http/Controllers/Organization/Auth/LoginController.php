@@ -14,6 +14,7 @@ use Hash;
 use App\Model\Organization\User;
 use App\Mail\forgetPassword;
 use App\Model\Organization\UserRoleMapping;
+use App\Model\Organization\OrganizationSetting;
 
 class LoginController extends Controller
 {
@@ -67,7 +68,7 @@ class LoginController extends Controller
                 }
             }
         }
-
+        $arraySetting = [];
         $completeDomain = $request->getHost();
         $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
@@ -80,14 +81,15 @@ class LoginController extends Controller
                     return redirect()->route('demo5');
                 }
                 Session::put('organization_id',$model->id);
-                return view('organization.login.login');
+                return view('organization.login.login',compact('arraySetting'));
             }else{
                 Session::put('organization_id',$secondary_domain->id);
-                return view('organization.login.login');
+                return view('organization.login.login',compact('arraySetting'));
             }
         }else{
+            $settings = OrganizationSetting::all();
             Session::put('organization_id',$primary_domain->id);
-            return view('organization.login.login');
+            return view('organization.login.login',compact('settings'));
         }
 
 
@@ -152,7 +154,8 @@ class LoginController extends Controller
     }
     public function forgotPassword()
     {
-        return view('organization.login.forgot-password');
+        $settings = OrganizationSetting::all();
+        return view('organization.login.forgot-password',compact('settings'));
     }
      public function forgotPasswordv1()
     {

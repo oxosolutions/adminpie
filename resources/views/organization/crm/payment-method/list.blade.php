@@ -5,7 +5,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Payment method		',
+	'page_title' => 'Payment methods		',
 	'add_new' => '+ Add Payment Method'
 ); 
 @endphp

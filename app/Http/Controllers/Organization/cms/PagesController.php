@@ -5,16 +5,29 @@ namespace App\Http\Controllers\Organization\cms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Page;
+use App\Model\Organization\PageMeta;
 use App\Model\Organization\Posts;
+use App\Model\Organization\forms;
+use App\Model\Organization\Cms\Menu\Menu;
+use Auth;
+use Session;
 
 class PagesController extends Controller
 {
+    
+
     public function create()
     {
     	return view('organization.pages.create_page');
     }
     public function save(Request $request)
     {
+        $tbl = Session::get('organization_id');
+        $rules = [
+                    'slug' => 'required|unique:'.$tbl.'_pages',
+                    'title' => 'required'
+                    ];
+        $this->validate($request,$rules);
         $page =   new Page();
         $request->request->add(['type'=>'page']);
         $page->fill($request->all());
@@ -48,27 +61,50 @@ class PagesController extends Controller
             }
             $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['title'=>'Title','created_at'=>'Created At','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
+                        'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created At','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
                         'actions' => [
                                         'edit'    => ['title'=>'Edit','route'=>'edit.pages','class'=>'edit'],
-                                        'delete'  => ['title'=>'Delete','route'=>'delete.page']
+                                        'delete'  => ['title'=>'Delete','route'=>'delete.page'],
+                                        'view'  => ['title'=>'View','route'=>'page.view']
                                     ]
                       ];
             return view('organization.pages.list_pages',$datalist);
         }
     public function edit($id)
     {
-        $page = Page::where('id',$id)->first();
+        $page = Page::where('id',$id)->with(['pageMeta'])->first();
+       
         return view('organization.pages.edit_page',['page'=>$page]);
     }
     public function update(Request $request)
     {
-        $update = Page::find($request->id);
-        $update->fill($request->all());
-        $update->post_type ="page";
-        $update->save();
-        return redirect()->route('list.pages');
-    }
+
+        $data = [];
+        foreach($request->except('_token') as $k => $v){
+            $data[$k] = $v;
+            if(is_array($v)){
+                $data[$k] = json_encode($v);
+            }
+        }
+        
+        unset($data['template'],$data['id'],$data['select_status'],$data['menu']);
+        $updatePage = Page::where('id',$request['id'])->update($data);
+            
+        $meta = $request->except('_token','title','slug','description','content','tags','id','categories');
+        foreach ($meta as $key => $value) {
+            $data = PageMeta::where(['page_id' => $request['id'] , 'key' => $key])->first();
+            if($data == null){
+                $model =  new PageMeta;
+                $model->page_id = $request['id'];
+                $model->key = $key;
+                $model->value = $value;
+                $model->save();
+            }else{
+                $model = PageMeta::where(['page_id' => $request['id'] , 'key'=>$key])->update(['value' => $value]);
+            }
+        }
+        return back();
+    }   
     /**
      * @param  none
      * @return [true]
@@ -175,10 +211,122 @@ class PagesController extends Controller
         return "true";
     }
 
+    //preview page
+    public function viewPage($slug)
+    {
+        $pageData = Page::where('slug',$slug)->first();
+        $form = [];
+        $values= explode(PHP_EOL,@$pageData->description);
+        if(@$values != null){
 
+            foreach ($values as $key => $value) {
+                preg_match_all('/\[(.*?)\]/' , $value , $matches ,PREG_PATTERN_ORDER );
+                if($matches[0] != "" && !empty($matches[0])){
+                    foreach($matches[0] as $k => $v){
+                        preg_match('/(form_slug = (\"(.*)\"))|(form_slug = (\'(.*)\'))/', $v , $form_match );
+                        $form[]['form'] = $form_match[3];
+                    }        
+                }else{
+                    $form[] = $value;
+                }
+            }
+        }
+        $menu = [];
+        $page = Page::where('id',$pageData->id)->with(['pageMeta'])->first();
+         if($page->pageMeta != null){
+            foreach ($page->pageMeta as $key => $value) {
+                if($value->key == "menu"){
+                   $menu = Menu::where('id',$value->value)->with('menuItem')->get();
+                }
+            }
+        }
+        // organization.pages.viewPage
+        return view('organization.pages.viewPage')->with(['pageData' => $pageData , 'formData' => $form , 'menu' => $menu]);
+    }
+    public function menusList()
+    {
+       return view('organization.cms.menu.menu'); 
+    }
+    public function designSettings()
+    {
+       return view('organization.cms.design-setting.design-setting');
+    }
+    public function viewPageById($id)
+    {
+        $pageData = Page::where('id',$id)->first();
+        return redirect()->route('page.slug',$pageData->slug);
+    }
+    //this is a temprary method for design purpose 
+    public function pageView($slug)
+    {
+        $pageData = Page::where('slug',$slug)->first();
+        $form = [];
+        $values= explode(PHP_EOL,$pageData->description);
+        if(@$values != null){
 
+            foreach ($values as $key => $value) {
+                preg_match_all('/\[(.*?)\]/' , $value , $matches ,PREG_PATTERN_ORDER );
+                if($matches[0] != "" && !empty($matches[0])){
+                    foreach($matches[0] as $k => $v){
+                        preg_match('/(form_slug = (\"(.*)\"))|(form_slug = (\'(.*)\'))/', $v , $form_match );
+                        $form[]['form'] = $form_match[3];
+                    }        
+                }else{
+                    $form[] = $value;
+                }
+            }
+        }
+        // if(@$pageData->description != null){
+        //     preg_match_all('/\[(.*?)\]/' , $pageData->description , $matches ,PREG_PATTERN_ORDER );
+        //     if($matches[0] != "" && !empty($matches[0])){
+        //         foreach($matches[0] as $k => $v){
+        //             preg_match('/(form_slug = (\"(.*)\"))|(form_slug = (\'(.*)\'))/', $v , $form_match );
+        //             $form[] = $form_match[3];
+        //         }        
+        //     }
+        
+        
+        // }
+        return view('common.front')->with(['pageData' => $pageData , 'formData' => $form]);
+        // return view('common.front');
+    }
+    public function pageSetting($id)
+    {
+        return view('organization.pages.page-settings');
+    }
+    public function customeCode($id)
+    {
+        $model = PageMeta::where(['page_id' => $id])->get();
 
+        if($model->isEmpty() ){
+            $customCode = '';
+        }else{
+            $customCode = [];
+            foreach($model as $key => $value){
+                $customCode[$value->key] = $value->value;
+            }
+        }
+        return view('organization.pages.custom-code',compact('customCode'));
+    }
+    public function saveCustomeCode(Request $request)
+    {
 
-
-
+        foreach ($request->except('_token') as $key => $value) {
+            $data = PageMeta::where(['page_id' => $request['page_id'] , 'key' => $key])->first();
+            if($data == null){
+                $model =  new PageMeta;
+                $model->page_id = $request['page_id'];
+                $model->key = $key;
+                $model->value = $value;
+                $model->save();
+            }else{
+                $model = PageMeta::where(['page_id' => $request['page_id'] , 'key'=>$key])->update(['value' => $value]);
+            }
+        }
+        return back();
+    }
+    public function updatePage(Request $request)
+    {
+        dd($request->all());
+    }
 }

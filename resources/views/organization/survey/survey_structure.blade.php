@@ -19,20 +19,18 @@ if(!empty($survey_data)){
 @include('common.page_content_primary_start')
 @include('organization.survey._tabs')
 <style>
-                   table  td , th{
-                            border:1px solid grey;
-                    }
-                </style>
+
+</style>
 
 	<h5>Groups</h5>
     @if(!empty($survey_data))
     <style>
-    	.chead {
+    			.chead {
 					width:240px;
 					display: inline-block;
 				}
 
-    		.font-style{		
+    			.font-style{		
     				font-size: 16px;
 					font-weight: 300;
 				}
@@ -45,41 +43,63 @@ if(!empty($survey_data)){
 					font-size: 14px;
 					font-weight: 300;
 				}
+				.collapsible{
+					box-shadow: none
+				}
+				.collapsible-header > i{
+					 float: right;color: #aaa;
+				    position: absolute;
+				    right: 0;
+				}
+				.collapsible-header.active > i{
+					transform: rotate(90deg);
+					transition: 0.6s ease-in;
+				}
     </style>
 	    <ul class="collapsible" data-collapsible="accordion">
 	    @foreach ($sections as $key => $value) 
 		    <li>
-		      <div class="collapsible-header"><i class="material-icons">filter_drama</i>{{$value['section_name']}}</div>
-			    <div class="collapsible-body">
-				    <span class="chead font-style">Questions </span> 
-				    <span class="chead font-style">Type</span>
-				    <span class="desc font-style">Description </span> 
-				    <span class="chead font-style">Answer Option</span>
-				</div>
-		       @foreach($value['fields'] as $fieldKey => $fieldVal)
-			      	<div class="collapsible-body">
-			      		<span class="chead field-font-style" >{{$fieldVal['field_title']}}</span>
-			      		<span class="chead field-font-style" >{{$fieldVal['field_type']}}</span> 
-			      		<span class='desc field-font-style'>{{substr($fieldVal['field_description'], 90)}}</span>
-						@php
-		            		$collection = collect($fieldVal['field_meta'])->mapWithKeys(function($item){
-		                		return [$item['key']=>$item['value']];
-		            		});
-							$meta = $collection->toArray();
-	            		@endphp
-	            		<span class="chead field-font-style">
-		            		@foreach($meta as $metaKey=> $metaVal)
-	            				@if($metaKey == 'field_options' && in_array($fieldVal['field_type'], ['radio','select','checkbox'])  )
-	                				@foreach(json_decode($metaVal,true) as $optKey => $optVal)
-										{{$loop->iteration}} {{$optVal['key']}}-{{$optVal['value']}}<br>
-	                				@endforeach
-	            				@endif
-	            			@endforeach 
-            			</span>
+		      <div class="collapsible-header" style="position: relative;"><span>{{$value['section_name']}}</span><i class="fa fa-chevron-circle-right" style="   "></i></div>
+		      <div class="collapsible-body aione-table">
+		      	<table class="wide">
+				    <thead>
+				    	<tr>
+						    <th >Questions </th> 
+						    <th >Type</th>
+						    <th >Description </th> 
+						    <th >Answer Option</th>
+					    </tr>
+					</thead>
+		       		
+			      	<tbody >
+			      		@foreach($value['fields'] as $fieldKey => $fieldVal)
+			      		<tr>
+			      			<td >{{$fieldVal['field_title']}}</td>
+				      		<td  >{{$fieldVal['field_type']}}</td> 
+				      		<td >{{substr($fieldVal['field_description'], 90)}}</td>
+							@php
+			            		$collection = collect($fieldVal['field_meta'])->mapWithKeys(function($item){
+			                		return [$item['key']=>$item['value']];
+			            		});
+								$meta = $collection->toArray();
+		            		@endphp
+		            		<td >
+			            		@foreach($meta as $metaKey=> $metaVal)
+		            				@if($metaKey == 'field_options' && in_array($fieldVal['field_type'], ['radio','select','checkbox'])  )
+		                				@foreach(json_decode($metaVal,true) as $optKey => $optVal)
+											{{$loop->iteration}} {{$optVal['key']}}-{{$optVal['value']}}<br>
+		                				@endforeach
+		            				@endif
+		            			@endforeach 
+	            			</td>	
+			      		</tr>
+			      		@endforeach		
             			
 
-		      		</div>
-				@endforeach	
+		      		</tbody>
+					
+				</table>
+			  </div>
 		    </li>
 	    @endforeach
 	  </ul>

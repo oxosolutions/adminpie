@@ -105,8 +105,12 @@ function get_meta_array($meta){
 *	@return uid [integer]
 ************************************************************/
 function get_user_id(){
+	if(Auth::guard('admin')->check()){
+        $uid = Auth::guard('admin')->user()->id;
+    }else{
+        $uid = Auth::guard('org')->user()->id;
+    }
 	
-	$uid = Auth::guard('org')->user()->id;
 	
 	//Return User ID
 	return $uid;
@@ -807,6 +811,23 @@ function get_website_alexa_rank( $url = null ){
 	return json_encode($get_website_alexa_rank);
 }
 
+	
+	function get_settings($model, $key = null, $whereColumns = [], $array = true){
+		get_meta($model, $uid = null, $key = null, $column = null, $array = false);
+		$modelData = $model::get();
+		if($key != null){
+			$modelData = $modelData->where('key',$key);
+		}
+		if(!empty($whereColumns)){
+			$modelData = $modelData->where($whereColumns);
+		}
+		if($array){
+			$modelData = $modelData->toArray();
+		}
+		return $modelData;
+	}
+
+
 
 
 
@@ -885,6 +906,11 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 	} else {
 		$model = "Organization\\FormsMeta";
 	}
+	/*if(Auth::guard('admin')->check() == true){
+		$model = "Admin\\FormsMeta";
+	} else {
+		$model = "Organization\\FormsMeta";
+	}*/
 	
 	
 	$meta = get_meta($model, $fid, $key, 'form_id', $array);
@@ -1024,7 +1050,19 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
         }
         return $model::pluck('form_title','id');
     }
-    
+	function listSections(){
+		if(Auth::guard('admin')->check()){
+            $model = 'App\\Model\\Admin\\section';
+        }else{
+            $model = 'App\\Model\\Organization\\section';
+        }
+        return $model::pluck('section_name','id');
+    }
+    function listOperators()
+    {
+    	$list = ['add' => '+','sub' => '-','mul' => '*' ,'divi' => '/' ,'less' => '<','greater' => '>', 'lessEqual' => '<=' , 'greaterEqual' => '>=' , 'equal' => '=='];
+    	return $list;
+    }
 
 	
 ?>

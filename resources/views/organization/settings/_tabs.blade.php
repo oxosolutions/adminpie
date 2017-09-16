@@ -1,58 +1,28 @@
+<nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal"  >
+  <ul id="sortable_tabs" class="aione-tabs">
+      <li class="aione-tab {{(Request::route()->action['as'] == 'setting.org')?'nav-item-current':''}}">
+        <a href="{{route('setting.org')}}"><span class="nav-item-text">Basic</span></a>
+      </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'setting.employee')?'nav-item-current':''}}">
+        <a href="{{ route('setting.employee') }}"><span class="nav-item-text">Employee</span></a>
+      </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'setting.attendance')?'nav-item-current':''}}">
+        <a href="{{route('setting.attendance')}}"><span class="nav-item-text">HRM</span></a>
+      </li>
+      <li class="aione-tab  {{(Request::route()->action['as'] == 'setting.user')?'nav-item-current':''}}">
+        <a href="{{route('setting.user')}}"><span class="nav-item-text">User</span></a>
+      </li>
+      <li class="aione-tab   {{(Request::route()->action['as'] == 'setting.role')?'nav-item-current':''}}">
+        <a href="{{route('setting.role')}}"><span class="nav-item-text">Roles</span></a>
+      </li>
+      <li class="aione-tab   {{(Request::route()->action['as'] == 'setting.leaves')?'nav-item-current':''}}">
 
+        <a href="{{route('setting.leaves')}}"><span class="nav-item-text">Leave</span></a>
+      </li>
+      
+      <div class="clear"></div>
+  </ul>
+</nav>
   
-@php
- 
-  $link=$_SERVER['REQUEST_URI'];
-  
-  
-@endphp
-
-<div class="col l12"  >
-
-    <ul class="aione-tabs">
-        <li class="tab col {{strpos($link, 'organization')?'aione-active':''}}"><a href="{{Route('setting.org')}}">Basic</a></li>
-        <li class="tab col {{strpos($link, 'activities')?'aione-active':''}}""><a href="{{Route('setting.employee')}}">Employee</a></li>
-        <li class="tab col {{strpos($link, 'hrm')?'aione-active':''}}""><a href="{{Route('setting.attendance')}}">HRM</a></li>
-        <li class="tab col {{strpos($link, 'user')?'aione-active':''}}""><a href="{{Route('setting.user')}}">User</a></li>
-        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.role')}}">Roles</a></li>
-        <li class="tab col {{strpos($link, 'attandance')?'aione-active':''}}""><a href="{{Route('setting.leaves')}}">Leave</a></li>
-        <div style="clear: both">
-          
-        </div>
-    </ul>
-</div>
-<style type="text/css">
-
-
-
-   .aione-tabs{
-      border-bottom: 1px solid #e8e8e8;
-      padding-bottom: 4px;
-      padding: 0px;
-      margin: 0px;
-   }
-   .aione-tabs > .tab{
-     
-    display: inline-block;
-   }
-   .aione-tabs > .tab:hover{
-      background-color: #e8e8e8;
-          border-bottom: 1px solid #EEE;
-   }
-   .aione-tabs > .tab > a{
-    padding: 0px 12px  !important; 
-    line-height: 40px;
-    display: inline-block; 
-    color: #0073aa;
-   }
-   .aione-active{
-      border: 1px solid #e8e8e8;
-      border-bottom: 1px solid #fff;
-      margin-bottom: -1px;
-   }
-   .aione-active a{
-      color: black !important;
-      font-weight: 500
-   }
 
 </style>

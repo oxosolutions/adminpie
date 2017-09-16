@@ -62,6 +62,7 @@ class Kernel extends HttpKernel
         'guest.org' => \App\Http\Middleware\RedirectIfOrganizationAuthenticated::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'log' => \App\Http\Middleware\Logsystem::class,
+        'page.auth' => \App\Http\Middleware\PageAuth::class,
     ];
 
 }

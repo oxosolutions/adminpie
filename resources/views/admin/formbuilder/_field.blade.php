@@ -302,21 +302,25 @@
         }
     </style> --}}
 {!!Form::close()!!}
+<style type="text/css">
+    
+</style>
 <script type="text/javascript">
     $(document).ready(function() {
-        $('select').material_select();
-        //$('.main-option-row').hide();
-        $('body').on('change','.field_type',function(e){
+        $('#field_prefix').hide();
+        $('#field_postfix').hide();
+        $('body').on('change','#field_field_type .field_type',function(e){
             e.preventDefault();
             e.stopPropagation();
             if($(this).val() == 'select'  || $(this).val() == 'multi_select' || $(this).val() == 'checkbox' || $(this).val() == 'radio'){
+                console.log('hello111');
                 $('.main-option-row').show();
             }else{
                 $('.main-option-row').hide();
             }
             if($(this).val() == 'auto-generator'){
-                $('.prefix').show();
-                $('.postfix').show();
+                $('#field_prefix').show();
+                $('#field_postfix').show();
             }else{
                 $('.prefix').hide();
                 $('.postfix').hide();

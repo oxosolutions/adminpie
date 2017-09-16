@@ -34,10 +34,10 @@ class FormGenerator{
 			$HTMLContent = self::GetHTMLForm($FormDetails, $Options, $formFrom, $dataModel);
 			return $HTMLContent;
 		}else{
-			dd('No form found!');
+			echo "<br/><br/><span style='color:red;'>No form found!</span><br/><br/>";
 		}
 	}
-
+ 
 	/**
 	 * This function will return the filed according to its slug
 	 * @param [string] $field_slug 
@@ -103,7 +103,7 @@ class FormGenerator{
 			dd('No section found');
 		}
 		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
-		if($sectionType == 'Repeater'){
+		if($sectionType == 'repeater'){
 			$Options['field_type'] = 'array';
 			$SectionCollection->fields = $SectionCollection->fields->unique('field_slug')->values();
 			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $datamodel, $formFrom);
@@ -141,11 +141,11 @@ class FormGenerator{
 			return view('common.form.field',['collection'=>$collection,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($collection->formsMeta),'field'=>$field])->render();
 		}else{
 			$fields = '';
-			$fields.="<div class=\"repeater-section\">";
+			// $fields.="<div class=\"repeater-section\">";
 			foreach($field as $fieldKey => $fieldValue){
 				$fields .= view('common.form.field',['collection'=>$fieldValue,'options'=>$Options,'model'=>$model,'settings'=>get_meta_array($fieldValue->formsMeta),'field'=>$fieldValue->field_type])->render();
 			}
-			$fields.="</div>";
+			// $fields.="</div>";
 			return $fields;
 		}
 	}

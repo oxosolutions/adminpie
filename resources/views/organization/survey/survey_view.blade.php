@@ -2,22 +2,31 @@
 @section('content')
 @php
 	$page_title_data = array(
-	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
-	'show_navigation' => 'yes',
-	'page_title' => 'Survey Settings',
-	'add_new' => '+ Add Feedback'
-); 
+			'show_page_title' => 'yes',
+			'show_add_new_button' => 'no',
+			'show_navigation' => 'yes',
+			'page_title' => 'Survey Settings',
+			'add_new' => '+ Add Feedback'
+		); 
 @endphp
-
 @include('common.pageheader',$page_title_data) 
+	@if(Session::has('sucess'))
+		<h3 style='color:green;'> {{Session::get('sucess')}}</h3>
+	@endif
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 		@include('organization.survey._tabs')
-		{!! Form::open(['route' => 'filled.survey', 'class'=> 'form-horizontal','method' => 'post'])!!}
-			{!! FormGenerator::GenerateForm($slug,[],'','org') !!}
-			<button type="submit">save</button>
-		{!! Form::close() !!}
+		@if(!@$permission)
+			{{dump('You don\'t have permission!')}}
+		@else
+			{!! Form::model($slug,['route' => 'filled.survey', 'class'=> 'form-horizontal','method' => 'post'])!!}
+				{!! FormGenerator::GenerateForm($slug,[],'','org') !!}
+				<input type="hidden" name="form_id" value="{{$form_id}}" >
+				<input type="hidden" name="form_slug" value="{{$slug}}" >
+				<button type="submit">save</button>
+			{!! Form::close() !!}
+		@endif
+
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 		{{-- <script type="text/javascript">

@@ -214,6 +214,8 @@ class OrganizationController extends Controller
 		$org->fill($request->all());
 		$org->save();
         $org_id = $org->id;
+        $active_code =  $org_id * 576;
+        ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
         Session::put('organization_id',$org->id);
         $checkMaster = GlobalSetting::where('key','primary_organization');
         if($checkMaster->exists()){
@@ -346,6 +348,12 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_designations',
                                 '--schema'=>'name:string, status:integer:default(1)'
                             ]);
+        
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_collaborators',
+                                '--schema'=>'type:string, relation_id:integer, email:string, userid:string, access:string, status:string'
+                            ]);
 //Shifts
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -356,7 +364,7 @@ class OrganizationController extends Controller
 			Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_pages',
-                                '--schema'=>'title:string:nullable, sub_title:string:nullable, slug:string:nullable, content:text:nullable, tags:text:nullable, categories:string:nullable, post_type:string:nullable, attachments:string:nullable, version:string:nullable, revision:string:nullable, created_by:string:nullable, post_status:string:nullable, status:integer:default(1), type:string'
+                                '--schema'=>'title:string:nullable, sub_title:string:nullable, slug:string:nullable,description:text:nullable, content:text:nullable, tags:text:nullable, categories:string:nullable, post_type:string:nullable, attachments:string:nullable, version:string:nullable, revision:string:nullable, created_by:string:nullable, post_status:string:nullable, status:integer:default(1), type:string'
                             ]);
 				Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -629,7 +637,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_forms',
-                                '--schema'=>'form_title:string, form_slug:string, form_description:text, type:string, order:integer, status:string'
+                                '--schema'=>'form_title:string, form_slug:string, form_description:text, type:string, embed_token:text, form_order:integer, form_status:string, created_by:integer'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -685,6 +693,19 @@ class OrganizationController extends Controller
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_surveys',
                                 '--schema'=>'survey_table:string, name:string:nullable, created_by:string:nullable, description:text, status:integer:default(1)']);
+//Menu 
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_menus',
+                                '--schema'=>'title:string, description:text:nullable, order:integer, status:integer:default(1)']);         
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_menu_settings',
+                                '--schema'=>'menu_id:integer, key:string, value:text:nullable,order:integer']);            
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_menu_items',
+                                '--schema'=>'menu_id:integer, label:string:nullable, description:text:nullable, title:string:nullable, class:string:nullable, title_attribute:string:nullable, link:string:nullable, target:string:nullable, type:string:nullable, parent:integer:nullable, order:integer:nullable, icon:string:nullable, status:integer:default(1)']);            
 		Artisan::call('migrate');
         // $userTypes = [
         //     ['type'=>'Admin','status'=>1],

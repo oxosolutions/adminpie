@@ -7,7 +7,7 @@ use Auth;
 use Session;
 class forms extends Model
 {
-    protected $fillable = ['form_title','form_slug','form_description','type'];
+    protected $fillable = ['form_title','form_slug','form_description','type','created_by'];
     protected $table	= 'global_forms';
     
     public function __construct(){
@@ -21,7 +21,7 @@ class forms extends Model
     }   
 
     public function section(){
-    	return $this->hasMany('App\Model\Organization\section','form_id','id');
+    	return $this->hasMany('App\Model\Organization\section','form_id','id')->orderBy('id','asc');
     }
 
     public function formsMeta(){

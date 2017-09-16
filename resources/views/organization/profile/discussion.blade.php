@@ -17,14 +17,16 @@
 		{!! FormGenerator::GenerateForm('aione_form_fields_test',['type'=>'inset']) !!}
 	{!! Form::close()!!} --}}
 	<div class="row">
-	<div class="aione-card col l6">
+	<div class="aione-card col l12">
 		<div class="aione-row"> 
 			{!! FormGenerator::GenerateForm('aione_form_fields_test',[]) !!}
 		</div>
 	</div>
-	<div class="aione-card col l6">
+	<div class="aione-card col l12">
 		<div class="aione-row"> 
+			{{-- 
 			{!! FormGenerator::GenerateForm('test_form',[]) !!}
+			--}}
 		</div>
 	</div>
 	</div>

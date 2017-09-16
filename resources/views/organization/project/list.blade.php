@@ -23,7 +23,7 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Projects',
-	'add_new' => '+ Add Projecct'
+	'add_new' => '+ Add Project'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 

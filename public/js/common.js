@@ -56,8 +56,11 @@ function clock(){
 	else {
 		seconds = seconds;
 	}
-		document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + meridiem);
+  if($(document).find('#clock').length > 0){
+    document.getElementById("clock").innerHTML = (hours + ":" + minutes + ":" + seconds + meridiem);
+  }
 }
+
 setInterval(function(){clock();},100);
 /*
 	$("#my-tabs .management-tabs").click(function(){

@@ -8,10 +8,9 @@
 	$model['field_description'] = $field->field_description;
 	$model['field_order'] = $field->field_order;
 	$model['field_slug'] = $field->field_slug;
-	$next_field = $fieldMeta->where('key','next_field')->first();
-	$model['next_field'] = ($next_field != null)?$next_field->value:'';
-	$question__d = $fieldMeta->where('key','question__d')->first();
-	$model['question__d'] = ($question__d != null)?$question__d->value:'';
+	foreach($fieldMeta as $key => $value){
+        $model[$value->key] = @$value->value;
+   }
 	$validation = $fieldMeta->where('key','validation')->first();
 	$model['validation'] = ($validation != null )?$validation->value:'';
 	$required = $fieldMeta->where('key','required')->first();
@@ -33,7 +32,7 @@
 	</div>
 	<div class="modal-content" style="padding:0px;overflow: hidden">
 		<div class="row" style="margin: 0;height: inherit">
-			<div class="col l8 gallery-files" style="border-right: 1px solid #a9a9a9;height: 100%;overflow: auto;padding:20px">
+			<div class="col l8 gallery-files" style="border-right: 1px solid #a9a9a9;height: 104%;overflow-x: hidden;width: 64%">
 				<div class="aione-tile-view" id="files" >
 					
 					{{-- <form action="/file-upload" class="dropzone" id="my-awesome-dropzone"></form> --}}
@@ -63,7 +62,7 @@
 	<div class="modal-footer">
 		<button class="btn blue save-gallery-details" type="submit" name="action">Save
 		</button>
-		{!!  Form::open(array('url' => 'foo/bar', 'files' => true)) !!}
+		{!!  Form::open(array('url' => 'foo/bar', 'class' => 'form_media_upload', 'files' => true, 'class')) !!}
 			<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" multiple />
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<a class="btn blue " onclick="document.getElementById('upload').click(); return false">Upload media
@@ -73,7 +72,9 @@
 </div>
 
 <style type="text/css">
-
+	.form_media_upload{
+		display: inline-block;	
+	}
 	.aione-tile-view > div{
 		width: 175px;
 		float: left;

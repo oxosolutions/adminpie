@@ -38,6 +38,10 @@ $page_title_data = array(
 	.map-view .no-border{
 		border:none;
 	}
+	.display-map .land.active{
+		fill: #6db77c
+	}
+	
 </style>
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -47,68 +51,96 @@ $page_title_data = array(
 				{!!$model->map_data!!}
 			</div>
 			<div class="box">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel quam vitae massa euismod aliquam a ac arcu. Quisque nec diam cursus turpis commodo iaculis non
+				
 			</div>
 		</div>
-		<div class="col l3">
-			<div class="box">
-				<div class="heading">
-					Information
-				</div>
-				<div>
-					<div class="row info">
-						<div class="col l4 sub-head">
+		<div class="col l3 aione-table">
+			
+			<table class="wide">
+				<thead >
+					<tr><th colspan="2">Information</th></tr>
+				</thead>
+				<tbody>
+					<tr >
+						<td >
 							Title:
-						</div>
-						<div class="col l8">
+						</td>
+						<td >
 							{{$model->title}}
-						</div>
-					</div>
-					<div class="row info">
-						<div class="col l4 sub-head">
+						</td>
+					</tr>
+					<tr >
+						<td >
 							Table Code:
-						</div>
-						<div class="col l8 ">
+						</td>
+						<td >
 							{{$model->table_code}}
-						</div>
-					</div>
-					<div class="row info">
-						<div class="col l5 sub-head">
+						</td>
+					</tr>
+					<tr >
+						<td >
 							Description:
-						</div>
-						<div class="col l8">
+						</td>
+						<td >
 							{{$model->description}}
-						</div>
-					</div>
-				</div>
-			</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 
 			<div class="box">
 				@php
 					if($model->map_keys != ''){
 						$map_keys = json_decode($model->map_keys, true);
 				@endphp
-						@foreach($map_keys as $key => $value)
-							<div class="row info">
-								{{$value['id']}}				
-							</div>
-						@endforeach
+				@foreach($map_keys as $key => $value)
+					<div class="row info">
+						{{$value['id']}}				
+					</div>
+				@endforeach
 				@php
 					}
 				@endphp
 			</div>
 			<div class="box right-align no-border">
-				<button class="">SAVE</button>	
+				
 			</div>
 			
-			<div class="box">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent vel quam vitae massa euismod aliquam a ac arcu. Quisque nec diam cursus turpis commodo iaculis non
+			<div class="box get_value">
+						
+			</div>
+
+			<div>
+				<input type="text" name="link">
 			</div>
 		</div>
 	</div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+	<script type="text/javascript">
+	$(document).ready(function(){
+		url = 'http://manage.adminpie.com/public/custom-maps/GM-460161798027/green/';
+		$(document).on('click','.display-map .land',function(){
+			$(this).attr("class", "land active");
+			$(this).siblings().attr("class", "land");	
+			var ID = $(this).attr('id');
+			$('.get_value').empty();
+			$('.get_value').append('<input type="text" name="'+ID+'">')
+		});
 	
+		$(document).on('focusout','.get_value input',function(){
+			 url = url + $(this).attr('name') + '=' + $(this).val() + '+';
+			 $('input[name=link]').val(url);
+		});
+		$(document).on('focusin','input[name=link]',function(){
+			var f_url = $('input[name=link]').val();
+			f_url = f_url.substring(0, f_url.length - 1);
+			$('input[name=link]').val(f_url);
+		});
+	})
+		
+
+	</script>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

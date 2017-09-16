@@ -17,6 +17,10 @@ class Category extends Model
 	}
 	protected $fillable = ['name', 'description', 'type', 'status'];
 
+    // public function leave_meta(){
+    //   return $this->hasMany('App\Model\Organization\CategoryMeta','category_id','id');
+    // }
+
 	public function meta()
     {
     	return $this->hasMany('App\Model\Organization\CategoryMeta','category_id','id');

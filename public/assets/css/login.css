@@ -135,7 +135,6 @@ table {
   content: "";
   display: block;
   width: 100%;
-  height: 1px;
   clear: both
 }
 .aione-main {
@@ -378,6 +377,16 @@ html {
   font-family: Roboto,sans-serif;
   font-weight: 400
 }
+.aione-rounded {
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px
+}
+.aione-circle {
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%
+}
 .clear {
   clear: both
 }
@@ -458,7 +467,7 @@ html {
   position: relative
 }
 .aione-form-section-header .aione-form-section-title {
-  color: #666;
+  color: #168dc5;
   text-align: center;
   font-size: 18px;
   line-height: 1.33;
@@ -496,6 +505,9 @@ html {
 .aione-form-section-header .aione-form-section-description.aione-align-right {
   text-align: right
 }
+.aione-form-footer {
+  margin: 10px 0 10px 0
+}
 .field-wrapper {
   position: relative
 }
@@ -517,7 +529,7 @@ html {
 .field-title {
   color: #747474;
   text-align: left;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 22px;
   font-weight: 400;
   padding: 0;
@@ -570,10 +582,31 @@ html {
   font-size: 16px;
   line-height: 20px;
   font-weight: 400;
-  word-wrap: break-word
+  cursor: pointer;
+  word-wrap: break-word;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none
 }
-.field .field-option label {
-  cursor: pointer
+.field-wrapper.field-wrapper-type-checkbox.horizontal .field-option,
+.field-wrapper.field-wrapper-type-radio.horizontal .field-option {
+  display: inline-block;
+  border-bottom: none
+}
+.field-wrapper.field-wrapper-type-checkbox.horizontal.columns-2 .field-option,
+.field-wrapper.field-wrapper-type-radio.horizontal.columns-2 .field-option {
+  width: 49.5%
+}
+.field-wrapper.field-wrapper-type-checkbox.horizontal.columns-3 .field-option,
+.field-wrapper.field-wrapper-type-radio.horizontal.columns-3 .field-option {
+  width: 32.5%
+}
+.field-wrapper.field-wrapper-type-checkbox.horizontal.columns-4 .field-option,
+.field-wrapper.field-wrapper-type-radio.horizontal.columns-4 .field-option {
+  width: 24.3%
 }
 .field input[type=date],
 .field input[type=email],
@@ -831,6 +864,15 @@ input[type=submit]:hover {
 .field.field-type-switch input[type=checkbox]:checked + .switch .handle {
   margin: 2px 0 0 42px
 }
+.field-wrapper.field-wrapper-type-switch .field-label label {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none
+}
 .field.field-type-button input[type=button],
 .field.field-type-button input[type=reset],
 .field.field-type-button input[type=submit] {
@@ -863,8 +905,86 @@ input[type=file]:hover {
   border-bottom: 1px solid #e8e8e8
 }
 .aione-form-field-border .field-wrapper {
-  border-bottom: 1px solid #e8e8e8;
-  margin-bottom: 15px
+  border-bottom: 1px solid #e8e8e8
+}
+.aione-form-field-border .field-wrapper.no-border {
+  border-bottom: none
+}
+.aione-accordion .aione-form-section .aione-form-section-header,
+.aione-collapsible .aione-form-section .aione-form-section-header {
+  cursor: pointer
+}
+.aione-accordion .aione-form-section .aione-form-section-content,
+.aione-collapsible .aione-form-section .aione-form-section-content {
+  display: none
+}
+.aione-accordion .aione-form-section.active .aione-form-section-content,
+.aione-collapsible .aione-form-section.active .aione-form-section-content {
+  display: block
+}
+.aione-accordion .aione-form-section .aione-form-section-header:after,
+.aione-collapsible .aione-form-section .aione-form-section-header:after {
+  content: ""
+}
+.aione-tabs-horizontal,
+.aione-tabs-vertical {
+  position: relative
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-header:hover,
+.aione-tabs-horizontal .aione-form-section.active .aione-form-section-header,
+.aione-tabs-vertical .aione-form-section .aione-form-section-header:hover,
+.aione-tabs-vertical .aione-form-section.active .aione-form-section-header {
+  background: #f5f5f5
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-header,
+.aione-tabs-vertical .aione-form-section .aione-form-section-header {
+  cursor: pointer
+}
+.aione-form-section-border .aione-tabs-horizontal .aione-form-section .aione-form-section-header,
+.aione-form-section-border .aione-tabs-vertical .aione-form-section .aione-form-section-header {
+  border-right: 1px solid #e8e8e8;
+  border-left: 1px solid #e8e8e8
+}
+.aione-form-section-border .aione-tabs-horizontal .aione-form-section:first-child .aione-form-section-header,
+.aione-form-section-border .aione-tabs-vertical .aione-form-section:first-child .aione-form-section-header {
+  border-top: 1px solid #e8e8e8
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-header .aione-form-section-title,
+.aione-tabs-vertical .aione-form-section .aione-form-section-header .aione-form-section-title {
+  color: #606c71;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.33;
+  font-weight: 400;
+  padding: 10px 10px
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-content {
+  top: 50px;
+  width: 100%;
+  left: 0;
+  display: none;
+  position: absolute;
+  border: 1px solid #e8e8e8;
+  padding: 15px
+}
+.aione-tabs-horizontal .aione-form-section {
+  float: left
+}
+.aione-tabs-vertical .aione-form-section .aione-form-section-header {
+  width: 24.5%
+}
+.aione-tabs-vertical .aione-form-section .aione-form-section-content {
+  top: 0;
+  width: 74%;
+  right: 0;
+  display: none;
+  position: absolute;
+  border: 1px solid #e8e8e8;
+  padding: 15px
+}
+.aione-tabs-horizontal .aione-form-section.active .aione-form-section-content,
+.aione-tabs-vertical .aione-form-section.active .aione-form-section-content {
+  display: block
 }
 ::-webkit-input-placeholder {
   color: #b4b4b4;
@@ -889,12 +1009,34 @@ input[type=file]:hover {
   color: #b4b4b4;
   text-overflow: ellipsis
 }
-.login-background {
-  background-image: linear-gradient(to right,rgba(76,175,80,.4),rgba(123,67,151,.6)),url(../images/bg-pattern.png),linear-gradient(to right,rgba(0,0,0,.2),rgba(0,0,0,.2)),url(../images/login-background.jpg);
+.login-theme-darlic,
+.login-theme-darlic .login-background {
+  background-image: linear-gradient(to right,rgba(76,175,80,.4),rgba(123,67,151,.6)),url(../images/bg-pattern.png),linear-gradient(to right,rgba(0,0,0,.2),rgba(0,0,0,.2)),url(../images/login-background-darlic.jpg);
   background-size: auto,auto,auto,cover;
   background-repeat: no-repeat,repeat,no-repeat,no-repeat;
   background-attachment: fixed,scroll,fixed,fixed;
   position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%
+}
+.login-theme-clean .login-background {
+  background-image: url(../images/login-background-clean.svg);
+  background-size: auto;
+  background-repeat: repeat;
+  background-attachment: scroll;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%
+}
+.login-theme-clean .login-background:before {
+  content: "";
+  position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
@@ -923,6 +1065,10 @@ input[type=file]:hover {
   left: 28px;
   z-index: 5;
   background-color: rgba(255,255,255,.25)
+}
+.login-theme-clean .login-wrapper:before {
+  background-color: rgba(0,0,0,.15);
+  box-shadow: 0 0 20px rgba(0,0,0,.2)
 }
 .login-wrapper:after {
   content: ""

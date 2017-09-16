@@ -6,7 +6,7 @@ $page_title_data = array(
 'show_add_new_button' => 'yes',
 'show_navigation' => 'yes',
 'page_title' => 'Pages',
-'add_new' => '+ Add Pages'
+'add_new' => '+ Add Page'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)

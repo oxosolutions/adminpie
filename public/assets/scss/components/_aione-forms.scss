@@ -73,7 +73,7 @@ SECTIONS
 
 }
 .aione-form-section-header .aione-form-section-title{
-    color:#666666;
+    color:#168dc5;
     text-align: center;
     font-size: 18px;
     line-height:1.33;
@@ -112,6 +112,12 @@ SECTIONS
     text-align: right;
 }
 /***************************************
+FOOTER
+***************************************/
+.aione-form-footer{
+    margin: 10px 0 10px 0;
+}
+/***************************************
 FIELD
 ***************************************/
 .field-wrapper{
@@ -135,7 +141,7 @@ FIELD
 .field-title{
     color: #747474;
     text-align: left;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 22px;
     font-weight: 400;
     padding: 0;
@@ -190,10 +196,31 @@ FIELD
     font-size: 16px;
     line-height: 20px;
     font-weight: 400; 
-    word-wrap: break-word;
-}
-.field .field-option label{
     cursor: pointer;
+    word-wrap: break-word;
+        -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.field-wrapper.field-wrapper-type-radio.horizontal .field-option,
+.field-wrapper.field-wrapper-type-checkbox.horizontal .field-option{
+    display:inline-block;
+    border-bottom: none;
+}
+.field-wrapper.field-wrapper-type-radio.horizontal.columns-2 .field-option,
+.field-wrapper.field-wrapper-type-checkbox.horizontal.columns-2  .field-option{
+    width:49.5%;
+}
+.field-wrapper.field-wrapper-type-radio.horizontal.columns-3 .field-option,
+.field-wrapper.field-wrapper-type-checkbox.horizontal.columns-3 .field-option{
+    width:32.5%;
+}
+.field-wrapper.field-wrapper-type-radio.horizontal.columns-4 .field-option,
+.field-wrapper.field-wrapper-type-checkbox.horizontal.columns-4 .field-option{
+    width:24.3%;
 }
 select,
 textarea,
@@ -469,6 +496,15 @@ FIELD TYPE SWITCH
     margin:2px 0 0 42px;
 }
 
+.field-wrapper.field-wrapper-type-switch .field-label label{
+    cursor: pointer;
+        -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
 /***************************************
 FIELD TYPE Button
 ***************************************/
@@ -517,9 +553,105 @@ FORM STYLE BORDERED
 }
 .aione-form-field-border .field-wrapper{
     border-bottom:1px solid #e8e8e8;
-    margin-bottom: 15px;
+}
+.aione-form-field-border .field-wrapper.no-border{
+    border-bottom:none;
 }
 
+/***************************************
+FORM SECTION STYLE ACCORDION/Collapsible
+***************************************/
+.aione-collapsible .aione-form-section .aione-form-section-header,
+.aione-accordion .aione-form-section .aione-form-section-header{
+    cursor: pointer; 
+}
+.aione-collapsible .aione-form-section .aione-form-section-content,
+.aione-accordion .aione-form-section .aione-form-section-content{
+    display: none;
+}
+.aione-collapsible .aione-form-section.active .aione-form-section-content,
+.aione-accordion .aione-form-section.active .aione-form-section-content{
+    display: block;
+}
+.aione-collapsible .aione-form-section .aione-form-section-header:after,
+.aione-accordion .aione-form-section .aione-form-section-header:after{
+    content:""; 
+}
+.aione-collapsible .aione-form-section.active .aione-form-section-header:after,
+.aione-accordion .aione-form-section.active .aione-form-section-header:after{
+    
+}
+/***************************************
+FORM SECTION STYLE Tabs
+***************************************/
+.aione-tabs-horizontal,
+.aione-tabs-vertical{
+    position: relative;
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-header:hover,
+.aione-tabs-vertical .aione-form-section .aione-form-section-header:hover,
+.aione-tabs-horizontal .aione-form-section.active .aione-form-section-header,
+.aione-tabs-vertical .aione-form-section.active .aione-form-section-header{
+    background: #f5f5f5;
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-header,
+.aione-tabs-vertical .aione-form-section .aione-form-section-header{
+    cursor: pointer; 
+}
+.aione-form-section-border .aione-tabs-horizontal .aione-form-section .aione-form-section-header,
+.aione-form-section-border .aione-tabs-vertical .aione-form-section .aione-form-section-header{
+    border-right:1px solid #e8e8e8;
+    border-left:1px solid #e8e8e8;
+}
+.aione-form-section-border .aione-tabs-horizontal .aione-form-section:first-child .aione-form-section-header,
+.aione-form-section-border .aione-tabs-vertical .aione-form-section:first-child .aione-form-section-header{
+    border-top:1px solid #e8e8e8;
+}
+
+.aione-tabs-horizontal .aione-form-section .aione-form-section-header .aione-form-section-title,
+.aione-tabs-vertical .aione-form-section .aione-form-section-header .aione-form-section-title{
+    color: #606c71;
+    margin:0;
+    font-size: 16px;
+    line-height: 1.33;
+    font-weight: 400;
+    padding: 10px 10px;
+}
+.aione-tabs-horizontal .aione-form-section .aione-form-section-content{
+    top:50px;
+    width: 100%;
+    left:0;
+    display: none;
+    position: absolute;
+    border:1px solid #e8e8e8;
+        padding: 15px;
+}
+.aione-tabs-horizontal .aione-form-section{
+    float:left;
+}
+.aione-tabs-vertical .aione-form-section .aione-form-section-header{
+    width: 24.5%;
+}
+.aione-tabs-vertical .aione-form-section .aione-form-section-content{
+    top:0;
+    width: 74%;
+    right:0;
+    display: none;
+    position: absolute;
+    border:1px solid #e8e8e8;
+        padding: 15px;
+}
+.aione-tabs-horizontal .aione-form-section.active .aione-form-section-content,
+.aione-tabs-vertical .aione-form-section.active .aione-form-section-content{
+    display: block;
+}
+
+
+/*
+.aione-form-field-border .field-wrapper:last-child{
+    border-bottom:none;
+}
+*/
 
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:#b4b4b4;

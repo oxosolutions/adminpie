@@ -98,9 +98,12 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
-        ],
+            // 'fields'=>[
+            //     'required'=>'Select fields to view survey data'
+            // ],
+            'attribute-name' => [
+                'rule-name' => 'custom-message',
+            ],
     ],
 
     /*

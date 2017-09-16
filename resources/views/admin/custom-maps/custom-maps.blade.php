@@ -34,7 +34,7 @@ if(Auth::guard('admin')->check() != true){
 @endphp
 @include('common.pageheader',$page_title_data) 
 @if(!Auth::guard('admin')->check())
-@include('admin/custom-maps._tabs')
+
 @endif
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')

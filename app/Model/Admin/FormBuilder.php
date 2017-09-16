@@ -34,4 +34,14 @@ class FormBuilder extends Model
     public function formsMeta(){
         return $this->hasMany('App\Model\Admin\FormsMeta','form_id','form_id');
     }
+    public function listColumn()
+    {  
+        if(request()->route()->parameters()['id'] != null){
+            $requestParameter = request()->route()->parameters()['id'];
+        }else{
+            $requestParameter = request()->route()->parameters()['form_id'];
+        }
+        $list = $this->where('form_id',$requestParameter)->pluck('field_title','id');
+        return $list;
+    }
 }

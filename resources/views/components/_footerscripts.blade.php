@@ -1,3 +1,35 @@
+<style>
+
+.field-type-code textarea{
+    width: 0;
+    height: 0;
+    display: inline;
+    overflow: hidden;
+    opacity: 1;
+    line-height: 0;
+    min-height: 0;
+    max-height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.aione-code-editor {
+	min-height:100px;
+}
+.aione-code-editor.small {
+	height:140px;
+}
+.aione-code-editor.medium {
+	height:280px;
+}
+.aione-code-editor.large {
+	height:400px;
+}
+#aione_account_tabs > .aione-tabs > .aione-tab{
+	width: auto;
+	display: inline-block
+}
+</style>
 <script type="text/javascript">
 	$(document).ready(function() {
 
@@ -96,6 +128,35 @@
 		})
 
 		/*****************************************************
+		/*  Aione FORM Section Accordion
+		/*****************************************************/
+
+		$('.aione-accordion .aione-form-section-header').click(function(e){
+			e.preventDefault();
+			$(this).parent().parent().toggleClass('active').siblings().removeClass('active');
+		})
+		/*****************************************************
+		/*  Aione FORM Section Collapsible
+		/*****************************************************/
+
+		$('.aione-collapsible .aione-form-section-header').click(function(e){
+			e.preventDefault();
+			$(this).parent().parent().toggleClass('active'); 
+		})
+		/*****************************************************
+		/*  Aione FORM Section Tabs
+		/*****************************************************/
+
+		$('.aione-tabs-horizontal .aione-form-section-header').click(function(e){
+			e.preventDefault();
+			$(this).parent().parent().toggleClass('active').siblings().removeClass('active'); 
+		})
+		$('.aione-tabs-vertical .aione-form-section-header').click(function(e){
+			e.preventDefault();
+			$(this).parent().parent().toggleClass('active').siblings().removeClass('active'); 
+		})
+
+		/*****************************************************
 		/*  Aione Form Validations
 		/*****************************************************/
 
@@ -182,7 +243,48 @@
 			ampmclickable: true, // make AM PM clickable
 			aftershow: function(){} //Function for after opening timepicker  
 		});
-			  
+
+		/*****************************************************
+		/*  Code Ediror
+		/*****************************************************/
+
+		var editors = new Array();
+
+	    $(".field.field-type-code > textarea").each(function() {
+	        editors.push($(this).attr("id"));
+	    });
+
+	    $.each(editors, function( index, value ) {
+			var editor_wrappper_id = value+'_editor';
+			var theme = $('#'+editor_wrappper_id).attr("data-theme");
+			var mode = $('#'+editor_wrappper_id).attr("data-mode");
+
+			if(theme == ''){
+				theme= "ace/theme/monokai";
+			} else {
+				theme= "ace/theme/"+theme;
+			}
+
+			if(mode == ''){
+				mode= "ace/mode/html";
+			} else {
+				mode= "ace/mode/"+mode;
+			}
+			//console.log(" theme = "+theme+" mode = "+mode+" index = "+index + " value = " + value );
+
+			var editor = ace.edit(editor_wrappper_id);
+			editor.setValue($('#'+value).val()); 
+			editor.setTheme(theme);
+			editor.getSession().setMode(mode);
+			editor.setShowPrintMargin(false);
+			editor.getSession().on("change", function () {
+				$('#'+value).val(editor.getSession().getValue());
+			});
+		});
+	
+
+
+
 
 	});
 </script>

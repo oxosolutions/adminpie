@@ -77,11 +77,22 @@ $page_title_data = array(
 			
 			<div class="col l3" style="line-height: 30px">
 				Number Of Day Before Apply
-				{{@$data['apply_before']}}
+				
 			</div>
 			<div class="col l9">
 				
 				{!!Form::text('apply_before',@$data['data']['apply_before'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
+			</div>
+		</div>
+		<div class="row" style="padding-bottom: 15px">
+			
+			<div class="col l3" style="line-height: 30px">
+				Number Of Day After Apply
+				
+			</div>
+			<div class="col l9">
+				
+				{!!Form::text('apply_after',@$data['data']['apply_after'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
 			</div>
 		</div>
 		<div class="row" style="padding-bottom: 15px">

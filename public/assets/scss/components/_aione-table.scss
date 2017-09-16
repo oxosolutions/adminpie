@@ -1,114 +1,104 @@
 /***************************************
 Aione Table
 ***************************************/
-.aione-table{
-   display: block;
-  margin: auto;
-  max-width: 600px;
-  padding:5px;
-  width: 100%;
-}
-
 .aione-table table{
-background: white;
-  border-radius:3px;
-  border-collapse: collapse;
-  height: 320px;
-  margin: auto;
-  max-width: 600px;
-  padding:5px;
-  width: 100%;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  animation: float 5s infinite;
+  border: 1px solid #e8e8e8;
+}
+.aione-table thead{
+	padding: 0;
+  margin: 0;
+  border: none;
+}
+.aione-table table > thead > tr {
+  border-bottom: 1px solid #e8e8e8; 
+}
+.aione-table table > thead > tr > th{
+  font-weight: bold;
+  border-right: 1px solid #e8e8e8;
+}
+.aione-table table > thead > tr > th:first-child {
+}
+.aione-table table > thead > tr > th:last-child {
+  border-right: none;
+}
+.aione-table  table > tbody{
+}
+.aione-table table > tbody > tr {
+  border-bottom: 1px solid #e8e8e8;
+}
+.aione-table table > tbody > tr:hover {
+  background-color: #f2f2f2;
+}
+.aione-table table > tbody > tr:first-child {
+}
+.aione-table table > tbody > tr:last-child {
+  border-bottom: none;
+}
+.aione-table table > tbody > tr:nth-child(odd) {
+  background-color: #f8f8f8;
+}
+.aione-table table > tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+.aione-table table > tbody > tr:hover:nth-child(odd) {
+  background-color: #f2f2f2;
+}
+.aione-table table > tbody > tr:hover:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.aione-table tbody tr:last-child td:first-child {
+}
+.aione-table tbody tr:last-child td:last-child {
+}
+.aione-table table > tbody > tr > td {
+  border-right: 1px solid #e8e8e8;
+}
+.aione-table table > tbody > tr > td:last-child {
+  border-right: none;
+}
+.aione-table tfoot{
 }
 
-.aione-table thead{
-	
-}
-.aione-table thead tr {
-  border-top: 1px solid #C1C3D1;
-  border-bottom-: 1px solid #C1C3D1;
-  color:#666B85;
-  font-size:16px;
-  font-weight:normal;
-  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
-}
-.aione-table thead th {
-  color:#D5DDE5;;
-  background:#1b1e24;
-  border-bottom:4px solid #9ea7af;
-  border-right: 1px solid #343a45;
-  font-size:23px;
-  font-weight: 100;
-  padding:24px;
-  text-align:left;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  vertical-align:middle;
-}
-.aione-table thead th:first-child {
+/***************************************
+Aione Table ROUNDED
+***************************************/
+.aione-table .rounded thead th:first-child {
   border-top-left-radius:3px;
 }
- 
-.aione-table thead th:last-child {
+.aione-table .rounded thead th:last-child {
   border-top-right-radius:3px;
   border-right:none;
 }
-.aione-table tbody{
-	
-}
-.aione-table tbody tr {
-  border-top: 1px solid #C1C3D1;
-  border-bottom-: 1px solid #C1C3D1;
-  color:#666B85;
-  font-size:16px;
-  font-weight:normal;
-  text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
-}
-.aione-table tbody tr:hover td {
-  background:#4E5066;
-  color:#FFFFFF;
-  border-top: 1px solid #22262e;
-  border-bottom: 1px solid #22262e;
-}
- 
-.aione-table tbody tr:first-child {
-  border-top:none;
-}
-
-.aione-table tbody tr:last-child {
-  border-bottom:none;
-}
- 
-.aione-table tbody tr:nth-child(odd) td {
-  background:#EBEBEB;
-}
- 
-.aione-table tbody tr:nth-child(odd):hover td {
-  background:#4E5066;
-}
-
-.aione-table tbody tr:last-child td:first-child {
+.aione-table .rounded tbody tr:last-child td:first-child {
   border-bottom-left-radius:3px;
 }
- 
-.aione-table tbody tr:last-child td:last-child {
-  border-bottom-right-radius:3px;
-}
- 
-.aione-table tbody td {
-  background:#FFFFFF;
-  padding:20px;
-  text-align:left;
-  vertical-align:middle;
-  font-weight:300;
-  font-size:18px;
-  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-  border-right: 1px solid #C1C3D1;
+.aione-table .rounded tbody tr:last-child td:first-child {
+  border-bottom-left-radius:3px;
 }
 
-.aione-table tbody td:last-child {
-  border-right: 0px;
+/***************************************
+Aione Table Compact
+***************************************/
+.aione-table table.compact > thead > tr > th,
+.aione-table table.compact > tbody > tr > td {
+  padding:5px;
 }
-.aione-table tfoot{
-	
+/***************************************
+Aione Table Wide
+***************************************/
+.aione-table table.wide > thead > tr > th,
+.aione-table table.wide > tbody > tr > td {
+  padding:20px 10px;
+}
+/***************************************
+Aione Table scroll
+***************************************/
+.aione-table.scroll{
+  overflow: scroll;
+}
+.aione-table.scrollx{
+  overflow-x: scroll;
+}
+.aione-table.scrolly{
+  overflow-y: scroll;
 }

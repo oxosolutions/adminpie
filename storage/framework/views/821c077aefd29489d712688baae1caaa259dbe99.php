@@ -5,7 +5,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'no',
-	'page_title' => 'Dashboards',
+	'page_title' => 'Dashboard',
 	'add_new' => '+ Add Dashboard'
 	); 
  ?>
@@ -363,6 +363,7 @@
 
     </div> <!-- .aione-widgets -->
 </div> <!-- .aione-dashboard -->
+
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php if($current_dashboard != null): ?>

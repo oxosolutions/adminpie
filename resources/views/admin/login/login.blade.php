@@ -25,7 +25,7 @@
 	@endif
 	{!!Form::close()!!}
 
-	@include('components._footer')
+	{{-- @include('components._footer') --}}
 
 	</div>
 	</div> 

@@ -57,5 +57,5 @@ class PagesController extends Controller
     //     $update->save();
     //     return redirect()->route('list.pages');
     // }
-
+   
 }
