@@ -20,21 +20,21 @@ $user_profile_picture = App\Model\Organization\UsersMeta::getUserMeta('user_prof
 		<div class="aione-header-item aione-nav-toggle">
 			<a href="#" class="nav-toggle {{($sidebar_small == 1)?'active':''}}"></a>
 		</div>
-		@if($show_logo == 'yes')
+		@if(@$show_logo)
 			@if(!empty($site_logo))
 				<div class="aione-header-item aione-logo">
 					<img src="{{asset($site_logo)}}" />
 				</div> <!-- .aione-header-item -->
 			@endif
 		@endif
-		@if($show_title == 'yes')
+		@if(@$show_title)
 			@if(!empty($site_title))
 				<div class="aione-header-item aione-site-title">
 					 <h1 class="site-title">{{$site_title}}</h1>
 				</div> <!-- .aione-header-item -->
 			@endif
 		@endif
-		@if($show_tagline == 'yes')
+		@if(@$show_tagline)
 			@if(!empty($site_tagline))
 				<div class="aione-header-item aione-site-tagline">
 					<h2 class="site-tagline">{{$site_tagline}}</h2>

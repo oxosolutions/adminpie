@@ -27,6 +27,10 @@
 
         <a href="{{route('results.survey',$id)}}"><span class="nav-item-text">Result</span></a>
       </li>
+      <li class="aione-tab   {{(Request::route()->action['as'] == 'survey.stats.report')?'nav-item-current':''}}">
+
+        <a href="{{route('survey.stats.report')}}"><span class="nav-item-text">Report</span></a>
+      </li>
       @if(App\Model\Organization\Collaborator::checkAccess($id,'survey') == null)
         <li class="aione-tab {{(Request::route()->action['as'] == 'share.survey')?'nav-item-current':''}}">
           <a href="{{route('share.survey',$id)}}"><span class="nav-item-text">Share</span></a>

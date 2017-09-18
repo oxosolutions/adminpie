@@ -183,4 +183,62 @@ class SurveyStatsController extends Controller
             $data = json_decode($data,true);
             return $data;
     }
+
+//DB::raw("CONCAT(users.first_name,' ',users.last_name) as full_name"))
+
+    public function survey_static_result(Request $request){
+          $table_name = "235_survey_results_2";
+          $data = DB::table($table_name)->select(['accident_date', 'accident_time',  DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address") , 'accident_type', 'sub_type_of_road',   'type_of_injury'])->get();
+          // dd($data);
+          $data = json_decode(json_encode($data->all()),true);
+         
+          if($request->isMethod('post') && $request['export'] ){
+           $file_name ='ocrm_235_survey_results_2_'.date('Y-m-d-h-i-s');
+                     Excel::create($file_name, function($excel) use($data){
+                      $excel->sheet('mySheet', function($sheet) use($data){
+                        $sheet->fromArray($data);
+                      });
+                    })->export('csv');
+          }
+    $sub_type_of_road = FormBuilder::with(['fieldMeta'=>function($query){
+      $query->where('key','field_options');
+    }])->where('field_slug','sub_type_of_road')->first()->toArray();
+
+    $option_data = collect(json_decode($sub_type_of_road['field_meta'][0]['value'],true))->pluck('value','key')->toArray();
+        return view('organization.survey.survey_static_result',compact('data','option_data'));
+    }
+
+    public function survey_static_community_based(Request $request){
+     
+          $table_name = "235_survey_results_1";
+//           accident_date
+// accident_time 
+// no_of_fatalities 
+// no_of_persons_grievously_injured 
+// no_of_persons_with_minor_injuries
+// type_of_collision 
+// type_of_vehicle_involved 
+// road_features 
+
+
+          $data = DB::table($table_name)->select(['accident_date', 'accident_time', 'no_of_fatalities' ,'no_of_persons_grievously_injured','no_of_persons_with_minor_injuries','type_of_collision' ,'type_of_vehicle_involved','road_features', DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address") ])->get();
+          // dd($data);
+          $data = json_decode(json_encode($data->all()),true);
+         
+          if($request->isMethod('post') && $request['export'] ){
+           $file_name ='ocrm_235_survey_results_2_'.date('Y-m-d-h-i-s');
+                     Excel::create($file_name, function($excel) use($data){
+                      $excel->sheet('mySheet', function($sheet) use($data){
+                        $sheet->fromArray($data);
+                      });
+                    })->export('csv');
+          }
+    // $sub_type_of_road = FormBuilder::with(['fieldMeta'=>function($query){
+    //   $query->where('key','field_options');
+    // }])->where('field_slug','sub_type_of_road')->first()->toArray();
+
+    // $option_data = collect(json_decode($sub_type_of_road['field_meta'][0]['value'],true))->pluck('value','key')->toArray();
+    $option_data=[];
+        return view('organization.survey.survey_static_result',compact('data','option_data'));
+    }
 }

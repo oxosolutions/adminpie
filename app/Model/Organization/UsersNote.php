@@ -15,6 +15,6 @@ class UsersNote extends Model
 	   	}
    }
    
-   protected $fillable = [`user_id`, `title`, `description`, `priority`];
+   protected $fillable = ['user_id', 'title', 'description', 'priority'];
 
 }

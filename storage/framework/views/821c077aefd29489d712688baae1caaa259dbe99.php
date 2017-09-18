@@ -295,6 +295,16 @@
 <?php echo $__env->make('organization.dashboard._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
 <div class="aione-dashboard">
+	
+	<div class="aione-dashboard-welcome-message">
+		<?php 
+			$admin_dashboard_welcome_message = App\Model\Organization\OrganizationSetting::getSettings('admin_dashboard_welcome_message');
+		 ?>
+
+		<?php echo $admin_dashboard_welcome_message; ?>
+
+		
+	</div>
     <div class="aione-widgets">
     	<?php $__currentLoopData = $widgets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $widget_key => $widget): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 

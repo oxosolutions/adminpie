@@ -295,6 +295,15 @@
 @include('organization.dashboard._tabs')
 
 <div class="aione-dashboard">
+	
+	<div class="aione-dashboard-welcome-message">
+		@php
+			$admin_dashboard_welcome_message = App\Model\Organization\OrganizationSetting::getSettings('admin_dashboard_welcome_message');
+		@endphp
+
+		{!!$admin_dashboard_welcome_message!!}
+		
+	</div>
     <div class="aione-widgets">
     	@foreach($widgets as $widget_key => $widget)
 

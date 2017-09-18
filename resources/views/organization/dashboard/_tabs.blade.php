@@ -10,7 +10,7 @@
 </div>
 
  
-<nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal"  >
+<nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal aione-dashboard-tabs"  >
   <ul id="sortable" class="aione-tabs">
     @foreach(@$dashboards as $key => $tab)
       <li class="aione-tab dashboard-tab

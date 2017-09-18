@@ -168,7 +168,8 @@ class AttendanceController extends Controller
 					$limitDays = 1;
 					$dt  = carbon::parse(date('Y-m-d',strtotime($dates[0])));
 				  	$endLimit = $dt->daysInMonth;
-					foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
+
+ 					foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
 						if($limitDays > $endLimit){
 							break; 
 						}

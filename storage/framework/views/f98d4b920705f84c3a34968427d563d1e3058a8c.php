@@ -4,9 +4,26 @@
 	<?php echo $__env->make('components._head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php 
 		$sidebar_small = App\Model\Organization\UsersMeta::getUserMeta('layout_sidebar_small');
+
+		$custom_css = App\Model\Organization\OrganizationSetting::getSettings('admin_custom_css');
+		$custom_js = App\Model\Organization\OrganizationSetting::getSettings('admin_custom_js');
+
+		$user_roles = get_user_roles(); 
+
+		$user_role_classes = array();
+		foreach($user_roles as $user_role){
+			$user_role_classes[] = "user-role-".$user_role;
+		}
+		$user_role_classes = implode(" ",$user_role_classes);
+
+
 	 ?>
+	<style type="text/css">
+		<?php echo @$custom_css; ?>
+
+	</style>
 </head>
-<body>
+<body class="<?php echo e(@$user_role_classes); ?>">
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide aione-theme-arcane">
 		<div class="aione-row">
 			<div id="aione_header" class="aione-header">
@@ -39,6 +56,9 @@
 	</div><!-- #aione_wrapper -->
 	
 	<?php echo $__env->make('components._footerscripts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<script type="text/javascript">
+		<?php echo @$custom_js; ?>
 
+	</script> 
 </body>
 </html>

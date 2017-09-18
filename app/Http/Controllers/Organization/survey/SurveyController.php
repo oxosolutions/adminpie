@@ -55,11 +55,18 @@ class SurveyController extends Controller
         $deleteRoute = 'org.delete.form';
         $sectionRoute = 'org.list.sections';
         $settingsRoute = 'org.form.settings';
+        $cloneRoute = 'org.form.clone';
+
         $datalist =  [
                         'datalist'=>$model,
                         'showColumns' => ['form_title'=>'Survey Title','form_slug'=>'Survey Slug','created_at'=>'Created At','section[1].id'=>'Section Count'],
-                        'actions' => ['edit'=>['title'=>'Edit','route'=>'survey.sections.list'],'preview'=>['title'=>'View','route'=>'survey.perview'], 'delete'=>['title'=>'Delete','route'=>$deleteRoute]],
-                        'title' => 'Survey'
+                        'actions' => [
+                                'edit'=>['title'=>'Edit','route'=>'survey.sections.list'],
+                                'preview'=>['title'=>'View','route'=>'survey.perview'],
+                                'delete'=>['title'=>'Delete','route'=>$deleteRoute],
+                                'clone'=>['title'=>'clone','route'=>$cloneRoute]],
+                        'title' => 'Survey',
+                        
                     ];
                     /*
                         don't delete this (by Rahul)
@@ -200,5 +207,9 @@ class SurveyController extends Controller
             }
         }
         return $permission;
+    }
+
+    public function survey_report(Request $request){
+
     }
 }

@@ -201,6 +201,8 @@
 			Route::post('/survey/save', ['as'=>'filled.survey', 'uses'=>'survey\SurveyController@save_survey']);
 			Route::get('/survey/delete/table/{table_name}', ['as'=>'delete.table', 'uses'=>'survey\SurveyController@delete_survey_table']);
 
+			Route::get('/widgets', ['as'=>'list.widgets', 'uses'=>'widgets\WidgetsController@listWidgets']);
+			Route::get('/widget/create', ['as'=>'create.widgets', 'uses'=>'widgets\WidgetsController@createWidget']);
 			// Route::post('/survey/filled/save', ['as'=>'filled.survey', 'uses'=>'survey\SurveyController@survey_filled_data_save']);
 
 
@@ -257,7 +259,10 @@
 			Route::get('/surveys',						['as'=>'list.survey','uses'=>'survey\SurveyController@listSurvey']);
 			Route::get('/survey/{form_id}/sections',	['as'=>'survey.sections.list','uses'=>'survey\SurveyController@sectionsList']);
 			Route::get('/survey/stats/{id}',			['as'=>'stats.survey','uses'=>'survey\SurveyStatsController@stats']);
-			Route::get('/survey/structure/{id}',			['as'=>'structure.survey','uses'=>'survey\SurveyStatsController@survey_structure']);
+			Route::get('/survey/report',				['as'=>'survey.stats.report','uses'=>'survey\SurveyStatsController@survey_static_result']);
+			Route::match(['get','post'],'/survey/report/2', ['as'=>'survey.stats.report','uses'=>'survey\SurveyStatsController@survey_static_result']);
+			Route::match(['get','post'],'/survey/report/1', ['as'=>'survey.stats.report.community','uses'=>'survey\SurveyStatsController@survey_static_community_based']);
+
 			Route::match(['get','post'],'/survey/result/{id?}',			['as'=>'results.survey','uses'=>'survey\SurveyStatsController@survey_result']);
 			Route::get('/survey/add',					['as'=>'create.survey','uses'=>'survey\SurveyController@createSurvey']);
 			Route::get('/survey/settings/{id}',			['as'=>'survey.settings','uses'=>'survey\SurveyController@surveySettings']);
@@ -268,6 +273,7 @@
 			Route::post('/survey/shareto/{id}',			['as'=>'save.shareto','uses'=>'survey\SurveyController@saveShareTo']);
 			Route::get('/survey/shareto/delete/{id}',	['as'=>'survey.remove.shareto','uses'=>'survey\SurveyController@deleteShareTo']);
 
+
 			Route::group(['middleware' => ['auth.org']], function(){
 				//new emails route by ashish
 				Route::get('email',					['as'=>'emails' , 'uses'=>'email\EmailController@index']);
@@ -277,18 +283,33 @@
 				Route::get('campaign/edit/{id}', 	['as'=>'edit.campaign','uses'=>'email\EmailController@sendEmail']);
 				Route::get('email/templates', 		['as'=>'email.templates' , 'uses'=>'email\EmailController@templates']);
 				Route::get('email/create-template', ['as'=>'create.template' , 'uses'=>'email\EmailController@createTemplates']);
+				Route::get('document/create-template', ['as'=>'create.document.template' , 'uses'=>'document\DocumentController@createTemplates']);
 				Route::get('email/edit-template/{id}',	['as'=>'edit.template' , 'uses'=>'email\EmailController@getInfoTemplates']);
+				Route::get('document/edit-template/{id}',	['as'=>'edit.document.template' , 'uses'=>'document\DocumentController@getInfoTemplates']);
 				Route::POST('email/update-template',	['as'=>'update.template' , 'uses'=>'email\EmailController@updateTemplates']);
+				Route::POST('document/update-template',	['as'=>'update.documant.template' , 'uses'=>'document\DocumentController@updateTemplates']);
 				Route::get('email/layouts', 		['as'=>'email.layouts' , 'uses'=>'email\EmailController@layouts']);
 				Route::get('email/layout/delete/{id}', ['as'=>'email.layout.delete' , 'uses'=>'email\EmailController@deleteLayout']);
+				Route::get('document/layout/delete/{id}', ['as'=>'document.layout.delete' , 'uses'=>'document\DocumentController@deleteLayout']);
 				Route::get('email/edit-layout/{id}',	['as'=>'edit.layout' , 'uses'=>'email\EmailController@getInfolayout']);
+				Route::get('document/document-layout/{id}',	['as'=>'document.layout' , 'uses'=>'document\DocumentController@getInfolayout']);
+				Route::get('document/layout/preview/{id}',	['as'=>'document.layout.view' , 'uses'=>'document\DocumentController@layoutPreview']);
+				Route::get('document/template/preview/{id}',	['as'=>'document.template.view' , 'uses'=>'document\DocumentController@TemplatePreview']);
 				Route::POST('email/update-layout',	['as'=>'update.layout' , 'uses'=>'email\EmailController@updatelayout']);
-				Route::get('email/template/delete/{id}', ['as'=>'email.templates.delete' , 'uses'=>'email\EmailController@deleteTemplates']);
+				Route::POST('document/update-layout',	['as'=>'update.document.layout' , 'uses'=>'document\DocumentController@updatelayout']);
+				Route::get('email/template/delete/{id}', ['as'=>'templates.delete' , 'uses'=>'document\DocumentController@deleteTemplates']);
 				Route::get('email/create-layouts', 	['as'=>'create.layouts' , 'uses'=>'email\EmailController@createLayouts']);
+				Route::get('document/create-layouts', 	['as'=>'create.document.layouts' , 'uses'=>'document\DocumentController@createLayouts']);
 				Route::post('layout/save', 			['as'=>'save.layout' , 'uses'=>'email\EmailController@saveLayout']);
+				Route::post('document/layout/save', 			['as'=>'save.document.layout' , 'uses'=>'document\DocumentController@saveLayout']);
 				Route::post('template/save', 			['as'=>'save.template' , 'uses'=>'email\EmailController@saveTemplate']);
+				Route::post('document/template/save', 			['as'=>'save.document.template' , 'uses'=>'document\DocumentController@saveTemplate']);
 
 				Route::get('documents', ['as'=>'documents' , 'uses'=>'document\DocumentController@index']);
+				Route::get('documents/create', ['as'=>'create.documents' , 'uses'=>'document\DocumentController@createDocument']);
+				Route::post('documents/save', ['as'=>'save.documents' , 'uses'=>'document\DocumentController@saveDocument']);
+				Route::get('documents/preview/{id}', ['as'=>'view.document' , 'uses'=>'document\DocumentController@viewDocument']);
+
 				Route::get('document/templates', ['as'=>'document.templates' , 'uses'=>'document\DocumentController@templates']);
 				Route::get('document/layouts', ['as'=>'document.layouts' , 'uses'=>'document\DocumentController@layouts']);
 

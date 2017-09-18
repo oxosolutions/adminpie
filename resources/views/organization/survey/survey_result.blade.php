@@ -22,22 +22,29 @@
 		float:right;
 	}
 	.result-options input{
-	    color: #757575;
+		    float: left;
+    background-color: #168dc5;
+    color: white;
+   
+	
     display: inline-block;
     padding: 0 10px;
-    margin: 0 0 0 10px;
-    background-color: #f8f8f8;
-    border: 1px solid #e8e8e8;
+   
+   
+   
     font-size: 16px;
     line-height: 30px;
     font-weight: 400;
     font-family: "Open Sans",Arial,Helvetica,sans-serif;
     text-align: center;
     cursor: pointer;
-    webkit-transition: all 150ms ease-out;
+    -webkit-transition: all 150ms ease-out;
     -moz-transition: all 150ms ease-out;
     -o-transition: all 150ms ease-out;
     transition: all 150ms ease-out;	
+	}
+	.result-options input:hover{
+		background-color: #168dc5
 	}
 </style>
 @php
@@ -177,18 +184,18 @@ $page_title_data = array(
 				</div>
 			</div>
 			<div class="aione-row search-options">
-				<button id="more_condition" class="aione-button aione-button-large aione-button-light aione-button-square add-new-button"> + More condition</button>
+				<button id="more_condition" class="aione-button aione-button-large aione-button-light aione-button-square add-new-button"> + Add Filters</button>
 				{!! Form::submit('Search') !!} 
 			</div>
 			<div class="aione-row result-options">
-				{!! Form::submit('Export Csv',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}
-				
+				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}
+				<a href="{{route('delete.table',['table'=>$table])}}" > <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
 			</div>	
 				
 	{!! Form::close() !!}
 </div>
 
-<a href="{{route('delete.table',['table'=>$table])}}" > <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button">Delete table {{$table}}</button></a>
+
 
 	<div id="table-structure" class="aione-table scrollx">
 		<table class="compact">
