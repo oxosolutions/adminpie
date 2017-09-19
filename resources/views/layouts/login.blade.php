@@ -1,3 +1,9 @@
+@php
+	$login_theme = @$settings->where('key' , 'login_theme')->first();
+	$login_style = @$settings->where('key' , 'login_style')->first();
+	$Site_title = @$settings->where('key' , 'title')->first();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +11,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
-	<title>AdminPie </title>
+	<title>{{@$Site_title->value}}</title>
 
 	<!-- Global stylesheets --> 
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
@@ -13,11 +19,6 @@
 
 </head>
 <body>
-	@php
-		$login_theme = $settings->where('key' , 'login_theme')->first();
-		$login_style = $settings->where('key' , 'login_style')->first();
-	@endphp
-
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme->value}} login-style-{{@$login_style->value}}">
 		<div class="aione-row">
 			<div id="aione_main" class="aione-main">

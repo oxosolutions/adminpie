@@ -226,7 +226,8 @@
 			Route::post('forgot',			['as'=>'forgot','uses'=>'Auth\LoginController@forgotMail']);
 			Route::get('reset-password/UfcZNQ0sU5w52FoXk28', ['as'=>'edit.password' ,'uses' => 'Auth\LoginController@changePass']);
 			Route::post('update-password', ['as'=>'update.pass' ,'uses' => 'Auth\LoginController@updatePass']);
-			Route::post('register', ['as'=>'register' ,'uses' => 'Auth\LoginController@register']);
+			Route::get('register', ['as'=>'register' ,'uses' => 'Auth\LoginController@register']);
+			Route::get('user/register', ['as'=>'org.register' ,'uses' => 'Auth\LoginController@registerUser']);
 
 		//Email Template
 			Route::get('emails',['as'=>'emails' , 'uses'=>'templates\EmailTemplateController@index']);
@@ -260,10 +261,14 @@
 			Route::get('/survey/{form_id}/sections',	['as'=>'survey.sections.list','uses'=>'survey\SurveyController@sectionsList']);
 			Route::get('/survey/stats/{id}',			['as'=>'stats.survey','uses'=>'survey\SurveyStatsController@stats']);
 			Route::get('/survey/report',				['as'=>'survey.stats.report','uses'=>'survey\SurveyStatsController@survey_static_result']);
+			Route::get('/survey/structure/{id}',			['as'=>'structure.survey','uses'=>'survey\SurveyStatsController@survey_structure']);
+
 			Route::match(['get','post'],'/survey/report/2', ['as'=>'survey.stats.report','uses'=>'survey\SurveyStatsController@survey_static_result']);
 			Route::match(['get','post'],'/survey/report/1', ['as'=>'survey.stats.report.community','uses'=>'survey\SurveyStatsController@survey_static_community_based']);
+			Route::match(['get','post'],'/survey/report/5', ['as'=>'survey.stats.report.surveillance','uses'=>'survey\SurveyStatsController@survey_static_surveillance']);
+			Route::match(['get','post'],'/survey/reports/{id}', ['as'=>'survey.reports','uses'=>'survey\SurveyStatsController@reports']);
 
-			Route::match(['get','post'],'/survey/result/{id?}',			['as'=>'results.survey','uses'=>'survey\SurveyStatsController@survey_result']);
+			
 			Route::get('/survey/add',					['as'=>'create.survey','uses'=>'survey\SurveyController@createSurvey']);
 			Route::get('/survey/settings/{id}',			['as'=>'survey.settings','uses'=>'survey\SurveyController@surveySettings']);
 			Route::post('/survey/settings/save/{id}',	['as'=>'save.survey.settings','uses'=>'survey\SurveyController@saveSurveySettings']);
@@ -272,6 +277,7 @@
 			Route::get('/survey/share/{id}',			['as'=>'share.survey','uses'=>'survey\SurveyController@shareSurvey']);
 			Route::post('/survey/shareto/{id}',			['as'=>'save.shareto','uses'=>'survey\SurveyController@saveShareTo']);
 			Route::get('/survey/shareto/delete/{id}',	['as'=>'survey.remove.shareto','uses'=>'survey\SurveyController@deleteShareTo']);
+			Route::match(['get','post'],'/survey/result/{id?}', ['as'=>'results.survey','uses'=>'survey\SurveyStatsController@survey_result']);
 
 
 			Route::group(['middleware' => ['auth.org']], function(){
@@ -279,8 +285,10 @@
 				Route::get('email',					['as'=>'emails' , 'uses'=>'email\EmailController@index']);
 				Route::get('email/send', 			['as'=>'email.send' , 'uses'=>'email\EmailController@sendEmail']);
 				Route::get('/email/delete/{id}',	['as'=>'delete.email','uses'=>'email\EmailController@deleteEmail']);
+				Route::get('/document/delete/{id}',	['as'=>'delete.document','uses'=>'document\DocumentController@deleteDocument']);
 				Route::post('campaign/save', 		['as'=>'save.campaign','uses'=>'email\EmailController@saveCampaign']);
 				Route::get('campaign/edit/{id}', 	['as'=>'edit.campaign','uses'=>'email\EmailController@sendEmail']);
+				Route::get('document/edit/{id}', 	['as'=>'edit.document','uses'=>'document\DocumentController@editDocument']);
 				Route::get('email/templates', 		['as'=>'email.templates' , 'uses'=>'email\EmailController@templates']);
 				Route::get('email/create-template', ['as'=>'create.template' , 'uses'=>'email\EmailController@createTemplates']);
 				Route::get('document/create-template', ['as'=>'create.document.template' , 'uses'=>'document\DocumentController@createTemplates']);
@@ -307,6 +315,7 @@
 
 				Route::get('documents', ['as'=>'documents' , 'uses'=>'document\DocumentController@index']);
 				Route::get('documents/create', ['as'=>'create.documents' , 'uses'=>'document\DocumentController@createDocument']);
+				Route::post('documents/update', ['as'=>'update.documents' , 'uses'=>'document\DocumentController@updateDocument']);
 				Route::post('documents/save', ['as'=>'save.documents' , 'uses'=>'document\DocumentController@saveDocument']);
 				Route::get('documents/preview/{id}', ['as'=>'view.document' , 'uses'=>'document\DocumentController@viewDocument']);
 
@@ -321,9 +330,9 @@
 				Route::get('settings/role' , ['as'=>'setting.role' , 'uses' => 'hrm\SettingController@roleSetting']);
 				Route::get('settings/leaves' , ['as'=>'setting.leaves' , 'uses' => 'hrm\SettingController@leaveSetting']);
 				
-				Route::get('/', function(){
+				Route::get('/', ['as' => 'org.dashboard' , 'uses' => function(){
 					return redirect()->route('organization.dashboard');
-				});
+				}]);
 					// Route::get('delete/dashboards/widget/{slug?}/{id?}/{widget_id?}',['as'=>'delete.widget.dashboard','uses'=>'DashboardController@deleteWidget']);
 				Route::post('delete/dashboards/widget',['as'=>'delete.widget.dashboard','uses'=>'DashboardController@deleteWidget']);
 				Route::get('delete/dashboards/{slug}',['as'=>'delete.dashboard','uses'=>'DashboardController@deleteDashboard']);
@@ -375,6 +384,7 @@
 						Route::get('/activities/{id?}',['as'=>'account.activities','uses'=>'AccountActivityController@listActivities']);
 						Route::any('/attendance/{id?}',['as'=>'account.attandance','uses'=>'AttendanceController@myattendance']);
 						Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
+						Route::get('/view/{id?}',['as'=>'account.view','uses'=>'AccountController@profileView']);
 						Route::get('/performance/{id?}',['as'=>'account.performance','uses'=>function(){
 							return view('organization.profile.performance');
 						}]);

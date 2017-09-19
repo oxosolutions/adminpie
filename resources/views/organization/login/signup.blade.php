@@ -2,8 +2,7 @@
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	<div class="login-wrapper">
-		<div class="aione-row">
+	
 			@if (Session::has('success'))
 			 <div class="alert alert-info">{{ Session::get('success') }}</div>
 			@endif
@@ -24,8 +23,7 @@
 				{!! FormGenerator::GenerateForm('organization_user_registration_form',['type'=>'inset'])!!}
 
 			{!! Form::close() !!}
-		</div>		
-	</div>
+		
 @include('common.page_content_primary_end')
 
 	

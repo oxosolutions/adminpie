@@ -17,8 +17,11 @@
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 		{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
+			<div class="" style="margin-bottom: 15px">
+				<a href="{{ route('forgot.password') }}">Forgot your password ?</a>
+			</div>
 			<div class="">
-				<a href="{{ route('forgot.password') }}">Forgot Password</a>
+				No account yet?<a href="{{ route('register') }}">Register now</a>
 			</div>
 			@if(session()->has('csrf_error'))
 				<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>

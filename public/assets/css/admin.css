@@ -422,7 +422,7 @@ table {
   color: #454545;
   background-color: #fff;
   width: 100%;
-  height: auto;
+  height: auto
 }
 .aione-nav .aione-nav-background {
   display: none
@@ -446,7 +446,7 @@ table {
   webkit-transition: all 150ms ease-out;
   -moz-transition: all 150ms ease-out;
   -o-transition: all 150ms ease-out;
-  transition: all 150ms ease-out;
+  transition: all 150ms ease-out
 }
 .aione-nav ul li a {
   color: #454545;
@@ -462,7 +462,6 @@ table {
   -o-transition: all 150ms ease-out;
   transition: all 150ms ease-out
 }
-
 .aione-nav > ul > li > a .nav-item-icon {
   width: 20px;
   height: 20px;
@@ -1519,7 +1518,7 @@ input[type=file]:hover {
   height: 41px
 }
 .aione-filters .aione-filter.aione-page-items {
-  width: 160px;
+  width: 270px;
   float: right;
   margin-right: 10px
 }

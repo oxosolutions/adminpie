@@ -71,7 +71,9 @@ foreach($columns as $column){
 			
 				<!---------------- AIONE FILTERS ---------------->
 				<div id="aione_filters" class="aione-filters">
+					
 					<div class="aione-filter aione-select-view">
+						{{--
 						<div class="aione-switch-view">
 							<ul class="views" >
 								<li class="view"><a href="#list-view" class="view-selector" title="List View" data-view="list-view"><i class="material-icons" >view_list</i></a></li>
@@ -79,11 +81,12 @@ foreach($columns as $column){
 								<li class="view"><a href="#grid-view" class="view-selector" title="Grid View" data-view="grid-view"><i class="material-icons" >view_module</i></a></li>
 							</ul>
 						</div>
+						--}}
 						
 					</div> <!-- .aione-filter -->
 					<div class="aione-filter aione-page-items">
 						<select class="browser-default aione-field" name="items" onchange="document.form1.submit();">
-							<option value="" disabled selected>Items</option>
+							<option value="" disabled selected>Display per page</option>
 							<option value="5" {{(Request::get('items') && Request::get('items') == '5')?'selected':''}}>5</option>
 							<option value="10" {{(Request::get('items') && Request::get('items') == '10')?'selected':''}}>10</option>
 							<option value="25" {{(Request::get('items') && Request::get('items') == '25')?'selected':''}}>25</option>
@@ -194,7 +197,7 @@ foreach($columns as $column){
 											<div class="options" style=" display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">
 												@foreach($actions as $action_key => $action_value)
 													@if($action_key == 'download')
-														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
+														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
 													@elseif($action_key == 'delete')
 														@php
 															if(is_array($action_value['route'])){
@@ -208,7 +211,7 @@ foreach($columns as $column){
 															}
 														@endphp
 														{{-- <a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a> --}}
-														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red-text">{{$action_value['title']}}</a>
+														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red-text action-{{$action_key}}">{{$action_value['title']}}</a>
 													@elseif($action_key == 'model')
 														<a href="#" data-target="{{$action_value['data-target']}}" class="{{$action_value['class']}}" id="{{$dataset->id}}" style="padding-right:10px">{{$action_value['title']}}</a>
 													@elseif($action_key == 'status_option')
@@ -244,7 +247,7 @@ foreach($columns as $column){
 																$routeId = $dataset->id;
 															}
 															@endphp
-															<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a>
+															<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
 													@endif
 												@endforeach
 

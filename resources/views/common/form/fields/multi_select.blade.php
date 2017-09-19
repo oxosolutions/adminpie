@@ -1,15 +1,15 @@
 @php
-	$model = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
-	if($model != false && $model != '' && $model != null){
-		$exploded = explode('@',$model);
+	$modelRelated = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
+	if($modelRelated != false && $modelRelated != '' && $modelRelated != null){
+		$exploded = explode('@',$modelRelated);
 		$result = new $exploded[0];
 		$exploded[1] = str_replace('()', '', $exploded[1]);
 	}
 @endphp
-@if($model != false && $model != '' && $model != null)
-	
-		{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$result->$exploded[1](),null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
-
+@if($modelRelated != false && $modelRelated != '' && $modelRelated != null)
+				
+			{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$result->$exploded[1](),null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
+		
 
 @else
 	@php

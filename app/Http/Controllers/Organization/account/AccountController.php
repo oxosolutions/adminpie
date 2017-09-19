@@ -76,7 +76,33 @@ class AccountController extends Controller
         $data['template'] = EmailTemplate::find($model->template);
         return view('organization.profile.view_email',$data);
     }
+    public function profileView($id)
+    {
+      $user_log = $this->listActivities();
+        if($id == null){
+             $id = Auth::guard('org')->user()->id;
+        }
+        $userDetails = User::with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
+        $userMeta = get_user_meta($id,null,true);
 
+        $userDetails->password = '';
+        if($userMeta != false){
+            @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
+            @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
+            $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
+            
+            // dd($userDetails);
+            @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
+            @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
+        }
+        if(!$userDetails->metas->isEmpty()){
+            foreach($userDetails->metas as $key => $value){
+                $userDetails->{$value->key} = $value->value;
+            }
+        }
+           
+        return view('organization.profile.preview',['model' => $userDetails , 'user_log' => $user_log]);
+    }
     protected function listActivities()
     {
         $user_id = Auth::guard('org')->user()->id;

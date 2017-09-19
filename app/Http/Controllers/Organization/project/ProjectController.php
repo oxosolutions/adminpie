@@ -55,7 +55,7 @@ class ProjectController extends Controller
         return redirect()->route('list.project');
 
     }
-
+    
     public function listProject(Request $request , $id = null)
     {
         $data = "";

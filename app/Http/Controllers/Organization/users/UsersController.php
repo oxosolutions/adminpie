@@ -57,9 +57,10 @@ class UsersController extends Controller
           // dd($model);
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name','email'=>'Email','user_role_rel.roles.name' => 'Role','status' => 'Status'],
+                          'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status'],
                           'actions' => [
-                                          'view'   => ['title'=>'View','route'=>'account.profile','class'=>'view'],
+                                          // 'view'   => ['title'=>'View','route'=>'account.profile','class'=>'view'],
+                                          'view'   => ['title'=>'View','route'=>'account.view','class'=>'view'],
                                           'edit'   => ['title'=>'Edit','route'=>'info.user','class'=>'edit'],
                                           'delete' => ['title'=>'Delete','route'=>'delete.user'],
                                           'model'  =>  ['title'=>'change Password','data-target' => 'change_password','class'=>'change_password'],
@@ -113,7 +114,7 @@ class UsersController extends Controller
             Session::flash('exist_email','Email already exist');
             return back();
           }else{
-            $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm-password'=>'required|same:password'];
+            $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
             $this->validate($request,$rules);
             $user = new org_user;
             $user->fill($request->only('name','email'));
@@ -127,7 +128,7 @@ class UsersController extends Controller
             }
 
           }
-          Session::flash('success','Successfully SignUp !!');
+          Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
           return back();
       }
       return view('organization.login.signup');

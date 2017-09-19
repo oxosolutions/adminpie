@@ -208,9 +208,15 @@ class LoginController extends Controller
             echo "Not Changed";
         }
     }
-    public function register()
+    public function register(Request $request)
     {
-        return view('organization.login.register');
+        $arraySetting = [];
+        $completeDomain = $request->getHost();
+        $primary_domain = $this->is_primary_domain_exists($completeDomain);
+
+        $settings = OrganizationSetting::all();
+        Session::put('organization_id',$primary_domain->id);
+        return view('organization.login.signup',compact('settings'));
     }
 
     protected function is_primary_domain_exists($domain){

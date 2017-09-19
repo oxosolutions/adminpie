@@ -8,6 +8,11 @@ use App\Model\Organization\Document;
 use App\Model\Organization\DocumentTemplate;
 use App\Model\Organization\DocumentLayout;
 use session;
+use App\Model\Organization\Department;
+use App\Model\Organization\Designation;
+use App\Model\Organization\Shift;
+use App\Model\Organization\UsersRole;
+use App\Model\Organization\User;
 
 class DocumentController extends Controller
 {
@@ -41,8 +46,8 @@ class DocumentController extends Controller
                           'datalist'=>  $model,
                           'showColumns' => ['title'=>'Name','description' => 'Description','created_at'=>'Created At'],
                           'actions' => [
-                                          'edit' => ['title'=>'Edit','route'=>'edit.campaign' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.email'],
+                                          'edit' => ['title'=>'Edit','route'=>'edit.document' , 'class' => 'edit'],
+                                          'delete'=>['title'=>'Delete','route'=>'delete.document'],
                                           'view' => ['title' => 'View' , 'route' => 'view.document']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
@@ -172,7 +177,7 @@ class DocumentController extends Controller
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'edit.document.template' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'templates.delete'],
-                                      'view'=>['title'=>'View','route'=>'templates.delete'],
+                                      'view'=>['title'=>'View','route'=>'document.template.view'],
                                    ],
                       
                     ];
@@ -206,11 +211,33 @@ class DocumentController extends Controller
       $model = new Document();
       $model->fill($request->except('_token'));
       $model->save();
-      return back();
+      return $this->index($request);
     }
     public function viewDocument($id)
     {
-      $document = Document::find($id);
+      $document = Document::with(['DocumentLayout' , 'DocumentTemplate'])->find($id);
       return view('organization.documents.preview',compact('document'));
+    }
+    public function deleteDocument($id)
+    {
+      $document = Document::where('id',$id)->delete();
+      return back();
+    }
+    public function editDocument($id)
+    {
+      $document = Document::where('id',$id)->first();
+      $params = [
+                  'departments'   => $data['departments'] = Department::pluck('name','id'),
+                  'designations'  => $data['designations'] = Designation::pluck('name','id'),
+                  'shifts'        => $data['shifts'] = Shift::pluck('name','id'),
+                  'roles'         => $data['roles'] = UsersRole::pluck('name','id'),
+                  'users'         => $data['users'] = User::pluck('name','id')
+                ];
+      return view('organization.documents.createDocument',compact(['document','params']));
+    }
+    public function updateDocument(Request $request)
+    {
+      $upadte = Document::where('id',$request['id'])->update($request->except('_token','id'));
+      return back();
     }
 }
