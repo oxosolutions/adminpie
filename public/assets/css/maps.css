@@ -530,9 +530,6 @@ table {
 .aione-nav > ul > li > ul > li > a {
   padding: 0 0 0 20px
 }
-.aione-nav > ul > li > ul > li.nav-item-current > a {
-  color: #0073aa
-}
 .aione-nav > ul > li > ul > li.nav-item-current > a:after {
   content: "";
   position: absolute;
@@ -576,6 +573,9 @@ table {
 }
 .aione-nav.dark > ul > li > ul > li > a {
   color: #fff
+}
+.aione-nav.dark > ul > li > ul > li.nav-item-current > a {
+  color: #0073aa
 }
 .aione-main.sidebar-small .aione-nav > ul > li > a .nav-item-arrow,
 .aione-main.sidebar-small .aione-nav > ul > li > a .nav-item-text {

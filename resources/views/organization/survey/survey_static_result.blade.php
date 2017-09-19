@@ -47,12 +47,24 @@
 		background-color: #168dc5
 	}
 
-
 </style>
 @php
 if(!empty($data)){
- 	// $data = json_decode(json_encode($data->all()),true);
-	$keys = array_keys($data[0]);
+
+	$head = [
+  "address" => "Address of the accident site",
+  "accident_date" => "Date of accident",
+  "accident_time" => "Time of accident",
+  "accident_type" => "Type of collision",
+  "sub_type_of_road" => "Road features",
+  "type_of_injury1" => "Number of fatally injured persons",
+  "type_of_injury2" => "Number of grievous injured persons",
+  "type_of_injury3" => "Number of minor injured persons" ];
+ 	// $data = json_decode(json_encode($data->all()),true);  Address of
+
+ 	// dump($data[0]);
+	//$keys = array_keys($data[0]);
+	$keys = array_values($head);
 
 }
 $page_title_data = array(
@@ -77,10 +89,11 @@ $page_title_data = array(
 	}
 
 	$dt = Carbon\Carbon::now();
-	dump($dt->toDateString());
-	dump($dt->weekOfMonth);
+	// dump($dt->toDateString());
+	// dump($dt->weekOfMonth);
 	 // $operator = ['>', '<','=','>=','<='];
 @endphp
+
 <div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
 	
 		{!! Form::open(['route'=>['survey.stats.report'],'method' => 'post' ]) !!}
@@ -93,45 +106,44 @@ $page_title_data = array(
 	{!! Form::close() !!}
 </div>
 <div class="aione-table">
-	
-
-<table id="info" style="margin-bottom: 15px">
-	<thead>
-		<tr>
-			<th colspan="4">Summary information</th>
-		</tr>	
-	</thead>
-	
-	<tbody>
-		<tr>
-			<td>Reporting date</td>
-			<td> {{date('d-m-Y')}}</td>
-			<td>Reporting week </td>
-			<td>{{$dt->weekOfMonth}}</td>
-		</tr>
-		<tr>
-			<td>Reporting unit name</td>
-			<td colspan="3">______________________</td>
-		</tr>
-		<tr>
-			<td>Total number of accident durning last two weeks</td>
-			<td colspan="3">______________________</td>
-		</tr>
-		<tr>
-			<td>Total number of fatally injured person</td>
-			<td colspan="3"></td>
-		</tr>
-		<tr>
-			<td>Total number of grieviously injured person</td>
-			<td colspan="3"></td>
-		</tr>
-		<tr>
-			<td>Total number with minor injuries</td>
-			<td colspan="3"></td>
-		</tr>
-	</tbody>
-</table>
+	<table id="info">
+		<thead>
+			<tr>
+				<th colspan="4">Summary information</th>
+			</tr>
+		</thead>
+			
+		<tbody>
+			<tr>
+				<td>Reporting date</td>
+				<td> {{date('d-m-Y')}}</td>
+				<td>Reporting week </td>
+				<td>{{$dt->weekOfMonth}}</td>
+			</tr>
+			<tr>
+				<td>Reporting unit name</td>
+				<td colspan="3">______________________</td>
+			</tr>
+			<tr>
+				<td>Total number of accident durning last two weeks</td>
+				<td colspan="3">{{@$last_two_week}}</td>
+			</tr>
+			<tr>
+				<td>Total number of fatally injured person</td>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>Total number of grieviously injured person</td>
+				<td colspan="3"></td>
+			</tr>
+			<tr>
+				<td>Total number with minor injuries</td>
+				<td colspan="3"></td>
+			</tr>
+		</tbody>
+	</table>
 </div>
+
 
 
 

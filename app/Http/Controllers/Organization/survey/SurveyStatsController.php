@@ -228,16 +228,12 @@ class SurveyStatsController extends Controller
           $table_name = "235_survey_results_2";
 
 
-          $data = DB::table($table_name)->select(['accident_date', 'accident_time',  DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address") , 'accident_type', 'sub_type_of_road',   'type_of_injury'])->get();
+          $data = DB::table($table_name)->select([  DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address") , 'accident_date', 'accident_time', 'accident_type', 'sub_type_of_road',   'type_of_injury'])->get();
 
 
       $dt = carbon::now();
-        dump($to = $dt->toDateString());
-        dump($from = $dt->subWeek(2)->toDateString());  
-
-
-
-
+        $to = $dt->toDateString();
+        $from = $dt->subWeek(2)->toDateString();
       // $last_two_week = DB::table($table_name)->whereBetween('created_at',[$to, $from])->count();
       $last_two_week = DB::table($table_name)->where('created_at', '<=', $to) ->where('created_at', '>=', $from)->count();
       // dump($last_two_week);
@@ -258,6 +254,7 @@ class SurveyStatsController extends Controller
     }])->where('field_slug','sub_type_of_road')->first()->toArray();
 
     $option_data = collect(json_decode($sub_type_of_road['field_meta'][0]['value'],true))->pluck('value','key')->toArray();
+
         return view('organization.survey.survey_static_result',compact('data','option_data' ,'last_two_week'));
     }
 

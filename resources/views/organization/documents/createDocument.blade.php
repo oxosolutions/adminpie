@@ -164,9 +164,28 @@ $page_title_data = array(
 			$(document).on('change','.filter',function(e){
 				e.preventDefault();
 				e.stopPropagation();
-				
-				alert($(this).val());
-			})
+
+				var value = $(this).val().toString();
+				var arrayValue = value.split(',');
+				$(arrayValue).each(function(k,v){
+					console.log(v);
+					if(v != null || v != ''){
+						$('.content').find('.'+v).removeClass('hidden').show();
+					}
+				});
+			});
+			$(document).on('click','.select2-selection__choice__remove',function(e){
+				e.preventDefault();
+				e.stopPropagation();
+
+				var value = $('.filter').val().toString();
+				console.log(value);
+				var arrayValue = value.split(',');
+				$(arrayValue).each(function(k,v){
+					
+					$('.content').find('.'+v).addClass('hidden').hide();
+				});
+			});
 		});
 	</script>
 @endsection

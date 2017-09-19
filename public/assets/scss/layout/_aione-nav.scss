@@ -143,9 +143,7 @@ NAVIGATION
 .aione-nav > ul > li > ul > li > a{
     padding:0 0 0 20px;
 }
-.aione-nav > ul > li > ul > li.nav-item-current > a{
-	color: #0073aa;
-}
+
 .aione-nav > ul > li > ul > li.nav-item-current > a:after{
     content: "";
     position: absolute;
@@ -210,7 +208,9 @@ VERTICAL DARK
 .aione-nav.dark > ul > li > ul > li > a{
     color: #ffffff;
 }
-
+.aione-nav.dark > ul > li > ul > li.nav-item-current > a{
+    color: #0073aa;
+}
 /***************************************
 VERTICAL LIGHT
 ***************************************/
