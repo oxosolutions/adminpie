@@ -18,7 +18,7 @@
             @endforeach
        
             @if(isset($permisson['module'][$sidebar['id']]['permisson']) && $permisson['module'][$sidebar['id']]['permisson']=='on')
-            <li class="aione-nav-item level0 {{(@$sidebar->subModule[0] != null)?'has-children':''}}  {{in_array(Request::path(),$routes)?'nav-item-current':''}}"> 
+            <li class="aione-nav-item route-{{@$sidebar['route']}}  level0 {{(@$sidebar->subModule[0] != null)?'has-children':''}}  {{in_array(Request::path(),$routes)?'nav-item-current':''}}"> 
               @if(@$sidebar->subModule[0] != null)
                 <a href="javascript:;">
               @else
@@ -49,7 +49,12 @@
 
                     @foreach($sidebar->subModule as $ke => $subModule)
                      @if(isset($permisson['submodule'][$subModule['id']]['permisson']) && $permisson['submodule'][$subModule['id']]['permisson']=='on')
-                        <li class="aione-nav-item level1 {{Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''}}">
+                     @php
+                     $submenu_class = $subModule->sub_module_route;
+                     $submenu_class = str_replace("/","-",$submenu_class);
+
+                     @endphp
+                        <li class="aione-nav-item route-{{@$submenu_class}} level1 {{Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''}}">
                             <a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route)) }}">
                                 <span class="nav-item-icon">{{@$subModule['name'][0]}}</span>
 								<span class="nav-item-text">{{@$subModule['name']}}</span>

@@ -2,8 +2,13 @@
 /***************************************
 Login Page CSS
 ***************************************/
-
-.login-theme-darlic ,
+.aione-login-login-link,
+.aione-login-signup-link,
+.aione-login-reset-password-link{
+    color:#168dc5;
+    line-height: 1.8;
+}
+.login-background ,
 .login-theme-darlic .login-background {
     background-image: linear-gradient(to right,rgba(76, 175, 80, 0.4),rgba(123, 67, 151, 0.6)),url(../images/bg-pattern.png),linear-gradient(to right,rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(../images/login-background-darlic.jpg);
     background-size: auto,auto,auto,cover;

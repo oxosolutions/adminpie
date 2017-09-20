@@ -826,7 +826,7 @@
 					});
 					Route::post('/user/store',		['as'=>'store.user','uses'=>'UsersController@store']);
 					Route::get('/user/edit/{id}',	['as'=>'edit.user','uses'=>'UsersController@edit']);
-					Route::get('/user/{id}',		['as'=>'info.user','uses'=>'UsersController@user_info']);
+					Route::get('/user/edit/{id}',		['as'=>'info.user','uses'=>'UsersController@user_info']);
 					Route::get('/delete/{id}',		['as'=>'delete.user','uses'=>'UsersController@deleteUser']);
 					Route::get('/changeStatus/{id}',['as'=>'change.user.status','uses'=>'UsersController@changeStatus']);
 					Route::post('/user/profile/update/{id}',['as'=>'save.user.profile','uses'=>'UsersController@user_meta']);
@@ -835,6 +835,8 @@
 					Route::get('/sidebar/status/{status}',['as'=>'sidebar.active.inactive','uses'=>'UsersController@saveSideBarActiveStats']);
 					
 				});
+				Route::get('user/view/{id?}',['as'=>'user.preview','uses'=>'account\AccountController@profileView']);
+
 			});
 		});
     //});

@@ -30,9 +30,16 @@
 </div> --}}
 
 {!! Form::close() !!}
-{{-- <div class="copyright">
-Copyright &copy; OXO Solutions 2017
-</div> --}}
+
+	<div class="aione-align-center" style="margin: 10px 0 20px 0">
+				If you do not have a user account?
+				<a class="aione-login-signup-link display-block bold" href="{{ route('register') }}">Signup Here</a>
+			</div>
+			<div class="aione-align-center">
+				Already have a user account?
+				<a class="aione-login-signup-link display-block bold" href="/login">Login Here</a>
+			</div>
+	</div>	
 
 @include('common.page_content_primary_end')
 

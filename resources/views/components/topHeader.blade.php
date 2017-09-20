@@ -64,8 +64,9 @@ $user_profile_picture = App\Model\Organization\UsersMeta::getUserMeta('user_prof
 					</div> <!-- .aione-widget-header -->
 					<div class="aione-widget-content">
 						<ul class="profile-menu">
-							<li><a href="#" class="">Profile</a></li>
 							<!--
+							<li><a href="#" class="">Profile</a></li>
+							
 							<li>{{user_info()}}</li>
 							<li><a href="#" class="">Privacy</a></li>
 							<li><a href="#" class="">Notifications</a></li>

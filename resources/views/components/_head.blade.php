@@ -5,7 +5,7 @@
 	<title> AdminPie</title>
 
 	<!-- Global stylesheets -->
-	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/aione.css?ref='.rand(1111,9999)) }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/aione.css') }}">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -27,8 +27,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
     
     <script src="{{ asset('bower_components/sweetalert/dist/sweetalert.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/common.js?')}}?ref={{rand(8899,9999)}}"></script>
-    <script type="text/javascript" src="{{ asset('js/jquery-ui.min.js?')}}?ref={{rand(8899,9999)}}"></script>
+    <script type="text/javascript" src="{{ asset('js/common.js?')}}"></script>
+    <script type="text/javascript" src="{{ asset('js/jquery-ui.min.js?')}}"></script>
     
  
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>

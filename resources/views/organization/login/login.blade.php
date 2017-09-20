@@ -17,11 +17,13 @@
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 		{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
-			<div class="" style="margin-bottom: 15px">
-				<a href="{{ route('forgot.password') }}">Forgot your password ?</a>
+			<div class="aione-align-center" style="margin: 10px 0 20px 0">
+				Have you forgotten your password? <br>
+				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password ?</a>
 			</div>
-			<div class="">
-				No account yet?<a href="{{ route('register') }}">Register now</a>
+			<div class="aione-align-center">
+				If you do not have a user account?
+				<a class="aione-login-signup-link display-block bold" href="{{ route('register') }}">Signup Here</a>
 			</div>
 			@if(session()->has('csrf_error'))
 				<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>

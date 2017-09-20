@@ -20,7 +20,7 @@
 			@php
 				$title = $settings->where('key' , 'title')->first();
 			@endphp
-				<div style="text-align: center;margin: 20px;color: #888">
+				<div style="text-align: center;margin: 20px;color: #168dc5;font-size: 25px; line-height: 1.4;">
 					{{$title->value}}
 				</div>
 		@endif

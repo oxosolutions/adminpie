@@ -77,7 +77,7 @@ if(@$form_settings->form_field_show_border){
 		<div id="aione_form_footer" class="aione-form-footer">
 			<div class="aione-row">
 			@php
-				$save_button_text = 'Save';
+				$save_button_text = 'Submit';
 				$cancel_button_text = 'Cancel';
 				if(!empty(@$form_settings->form_save_button_text)){
 					$save_button_text = $form_settings->form_save_button_text;

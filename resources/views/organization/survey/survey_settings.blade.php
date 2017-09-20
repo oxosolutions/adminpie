@@ -41,13 +41,13 @@ $route = 'org.save.form.settings';
 			{{dump('You don\'t have permission!')}}
 		@else
 			<div class="survey-settings-wrapper">
-				<div class="aione-row">
-					<div class="aione-column l6 m6 s12">
+				<div class="ar">
+					<div class="ac l50 m50 s100">
 						{!! Form::model($model,['route' => ['save.survey.settings',request()->route()->parameters()['id']], 'class'=> 'form-horizontal','method' => 'post'])!!}
 							{!! FormGenerator::GenerateForm('Survey_Setting_Form') !!}
 						{!! Form::close() !!}		
 					</div>
-					<div class="aione-column l6 m6 s12">
+					<div class="ac l50 m50 s100"> 
 						{!!Form::model(@$model,['route'=>[$route,request()->route()->parameters()['id']]])!!}
 							{!! FormGenerator::GenerateForm('form_setting_form',['type'=>'inset']) !!}
 						{!!Form::close()!!}

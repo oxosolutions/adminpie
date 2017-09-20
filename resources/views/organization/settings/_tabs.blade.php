@@ -3,7 +3,8 @@
       <li class="aione-tab {{(Request::route()->action['as'] == 'setting.org')?'nav-item-current':''}}">
         <a href="{{route('setting.org')}}"><span class="nav-item-text">Basic</span></a>
       </li>
-      <li class="aione-tab {{(Request::route()->action['as'] == 'setting.employee')?'nav-item-current':''}}">
+
+       <li class="aione-tab {{(Request::route()->action['as'] == 'setting.employee')?'nav-item-current':''}}">
         <a href="{{ route('setting.employee') }}"><span class="nav-item-text">Employee</span></a>
       </li>
       <li class="aione-tab {{(Request::route()->action['as'] == 'setting.attendance')?'nav-item-current':''}}">
@@ -19,6 +20,7 @@
 
         <a href="{{route('setting.leaves')}}"><span class="nav-item-text">Leave</span></a>
       </li>
+     
       
       <div class="clear"></div>
   </ul>

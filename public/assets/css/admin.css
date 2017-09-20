@@ -772,6 +772,33 @@ table {
   background-color: #787a7e;
   border-radius: 6px
 }
+.aione-message {
+  padding: 20px;
+  margin: 10px 0;
+  font-size: 20px;
+  line-height: 1.4;
+  font-weight: 400;
+  font-family: "Open Sans",Arial,sans-serif;
+  text-align: center;
+  color: #454545;
+  background-color: #f2f2f2;
+  border: 1px solid #e8e8e8
+}
+.aione-message-success {
+  color: #4caf50;
+  background-color: #e8f5e9;
+  border-color: #4caf50
+}
+.aione-message-warning {
+  color: #ff9800;
+  background-color: #fff4e5;
+  border-color: #ff9800
+}
+.aione-message-error {
+  color: #f44336;
+  background-color: #fef2f1;
+  border-color: #f44336
+}
 .aione-rounded {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -790,6 +817,12 @@ table {
 }
 .display_block {
   display: block!important
+}
+.display-block {
+  display: block
+}
+.bold {
+  font-weight: 700
 }
 .aione-align-left {
   text-align: left

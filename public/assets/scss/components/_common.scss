@@ -6,6 +6,35 @@
 /***************************************
 COMMON
 ***************************************/
+
+.aione-message{
+    padding: 20px;
+    margin: 10px 0;
+    font-size: 20px;
+    line-height: 1.4;
+    font-weight: normal;
+    font-family: "Open Sans", Arial,sans-serif;
+    text-align: center;
+    color: #454545;
+    background-color: #f2f2f2;
+    border: 1px solid #e8e8e8;
+}
+.aione-message-success{
+    color: #4caf50;
+    background-color: #e8f5e9;
+    border-color: #4caf50;
+}
+.aione-message-warning{
+    color: #FF9800;
+    background-color: #fff4e5;
+    border-color: #FF9800;
+}
+.aione-message-error{
+    color: #F44336;
+    background-color: #fef2f1;
+    border-color: #F44336;
+}
+
 .aione-rounded{
     -moz-border-radius:4px;
     -webkit-border-radius:4px;
@@ -29,6 +58,12 @@ COMMON
 	display: block !important;
 }
 
+.display-block{
+    display: block;
+}
+.bold{
+    font-weight:bold;
+}
 .aione-align-left{
     text-align: left;
 }

@@ -18,7 +18,7 @@
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
        
             <?php if(isset($permisson['module'][$sidebar['id']]['permisson']) && $permisson['module'][$sidebar['id']]['permisson']=='on'): ?>
-            <li class="aione-nav-item level0 <?php echo e((@$sidebar->subModule[0] != null)?'has-children':''); ?>  <?php echo e(in_array(Request::path(),$routes)?'nav-item-current':''); ?>"> 
+            <li class="aione-nav-item route-<?php echo e(@$sidebar['route']); ?>  level0 <?php echo e((@$sidebar->subModule[0] != null)?'has-children':''); ?>  <?php echo e(in_array(Request::path(),$routes)?'nav-item-current':''); ?>"> 
               <?php if(@$sidebar->subModule[0] != null): ?>
                 <a href="javascript:;">
               <?php else: ?>
@@ -45,7 +45,12 @@
 
                     <?php $__currentLoopData = $sidebar->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $ke => $subModule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                      <?php if(isset($permisson['submodule'][$subModule['id']]['permisson']) && $permisson['submodule'][$subModule['id']]['permisson']=='on'): ?>
-                        <li class="aione-nav-item level1 <?php echo e(Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''); ?>">
+                     <?php 
+                     $submenu_class = $subModule->sub_module_route;
+                     $submenu_class = str_replace("/","-",$submenu_class);
+
+                      ?>
+                        <li class="aione-nav-item route-<?php echo e(@$submenu_class); ?> level1 <?php echo e(Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''); ?>">
                             <a href="<?php echo e(url(str_replace('/{id?}','',$subModule->sub_module_route))); ?>">
                                 <span class="nav-item-icon"><?php echo e(@$subModule['name'][0]); ?></span>
 								<span class="nav-item-text"><?php echo e(@$subModule['name']); ?></span>

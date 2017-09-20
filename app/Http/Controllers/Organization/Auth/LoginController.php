@@ -183,10 +183,10 @@ class LoginController extends Controller
             return redirect()->route('org.login');
         }
     }
-     public function changePassv1()
+    public function changePassv1()
     {
        
-            return view('organization.login.reset-password-v1');
+        return view('organization.login.reset-password-v1');
        
     }
     public function updatePass(Request $request)
@@ -200,7 +200,7 @@ class LoginController extends Controller
                     ];
         $this->validate($request , $validate);
        
-    $model = User::where('remember_token',Session::get('reset_token'))->update(['password' => Hash::make($request->confirmpassword)]);
+        $model = User::where('remember_token',Session::get('reset_token'))->update(['password' => Hash::make($request->confirmpassword)]);
         if($model){
             Session::flash('password-changed','Password change Successfully.');
             return redirect()->route('org.login');

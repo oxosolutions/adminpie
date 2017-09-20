@@ -27,7 +27,7 @@ class User extends Authenticatable
     return $this->hasOne('App\Model\Organization\Applicant','user_id','id');
    }
    
-   protected $fillable = ['name', 'email', 'password', 'api_token', 'remember_token'];
+   protected $fillable = ['name', 'email', 'password', 'api_token','deleted_at', 'remember_token'];
 
    public function metas()
    {

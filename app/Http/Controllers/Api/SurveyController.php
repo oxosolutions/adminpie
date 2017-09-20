@@ -18,7 +18,14 @@ use App\Model\Organization\FormBuilder;
 class SurveyController extends Controller
 {
     public function surveys(Request $request){
-        $org_id = GO::where('active_code',$request['activation_key'])->first()->id;
+        // $org_id = GO::where('active_code',$request['activation_key'])->first()->id;
+
+         $org = GO::where('active_code',$request['activation_key']);
+
+        if(!$org->exists()){
+            return ['status'=>'error', 'message'=>'active code not exist'];
+        }
+        $org_id = $org->first()->id;
     	Session::put('organization_id',$org_id);
     	$form  =  forms::with(['section'=>function($query){
                                         $query->orderBy('order','asc');

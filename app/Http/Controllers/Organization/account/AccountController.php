@@ -19,6 +19,9 @@ use Image;
 use App\Model\Organization\Campaign;
 use App\Model\Organization\EmailLayout;
 use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\UserRoleMapping;
+
+
 class AccountController extends Controller
 {
      public function emailsList(Request $request, $id = null){
@@ -76,7 +79,7 @@ class AccountController extends Controller
         $data['template'] = EmailTemplate::find($model->template);
         return view('organization.profile.view_email',$data);
     }
-    public function profileView($id)
+    public function profileView($id = null)
     {
       $user_log = $this->listActivities();
         if($id == null){
@@ -84,6 +87,8 @@ class AccountController extends Controller
         }
         $userDetails = User::with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
+
+
 
         $userDetails->password = '';
         if($userMeta != false){
@@ -100,7 +105,6 @@ class AccountController extends Controller
                 $userDetails->{$value->key} = $value->value;
             }
         }
-           
         return view('organization.profile.preview',['model' => $userDetails , 'user_log' => $user_log]);
     }
     protected function listActivities()

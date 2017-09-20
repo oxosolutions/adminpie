@@ -231,7 +231,7 @@ class SurveyStatsController extends Controller
           $data = DB::table($table_name)->select([  DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address") , 'accident_date', 'accident_time', 'accident_type', 'sub_type_of_road',   'type_of_injury'])->get();
 
 
-      $dt = carbon::now();
+        $dt = carbon::now();
         $to = $dt->toDateString();
         $from = $dt->subWeek(2)->toDateString();
       // $last_two_week = DB::table($table_name)->whereBetween('created_at',[$to, $from])->count();
@@ -271,7 +271,7 @@ class SurveyStatsController extends Controller
 // road_features 
 
 
-          $data = DB::table($table_name)->select(['accident_date', 'accident_time', 'no_of_fatalities' ,'no_of_persons_grievously_injured','no_of_persons_with_minor_injuries','type_of_collision' ,'type_of_vehicle_involved','road_features', DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address") ])->get();
+          $data = DB::table($table_name)->select([ DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address"),   'accident_date', 'accident_time', 'no_of_fatalities' ,'no_of_persons_grievously_injured','no_of_persons_with_minor_injuries','type_of_collision' ,'type_of_vehicle_involved','road_features'])->get();
           // dd($data);
           $data = json_decode(json_encode($data->all()),true);
          
@@ -299,9 +299,10 @@ class SurveyStatsController extends Controller
 // type_of_collision 
 // type_of_vehicle_involved 
 // road_features 
+          
 
 
-          $data = DB::table($table_name)->select(['accident_date', 'accident_time', 'accident_type', 'feature_of_road', 'vehicle_type', 'type_of_injury', DB::raw("CONCAT(accident_site_state,' ', accident_site_district,' ', accident_site_taluk,' ', accident_site_village ) as address") ])->get();
+          $data = DB::table($table_name)->select([DB::raw("CONCAT(accident_site_state,' ', accident_site_district,' ', accident_site_taluk,' ', accident_site_village ) as address"), 'accident_date', 'accident_time', 'accident_type', 'feature_of_road', 'vehicle_type', 'type_of_injury' ])->get();
           // dd($data);
           $data = json_decode(json_encode($data->all()),true);
          

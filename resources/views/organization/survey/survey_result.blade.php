@@ -56,7 +56,7 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Survey Results',
+    'page_title' => 'Survey Raw Data',
     'add_new' => '+ Add Media'
 ); 
 @endphp 
@@ -189,7 +189,7 @@ $page_title_data = array(
 			</div>
 			<div class="aione-row result-options">
 				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}
-				<a href="{{route('delete.table',['table'=>$table])}}" > <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
+				<a href="{{route('delete.table',['table'=>$table])}}" onclick="confirm('Are you sure you want to delete all records?');"> <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
 			</div>	
 				
 	{!! Form::close() !!}

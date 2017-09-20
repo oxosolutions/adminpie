@@ -281,7 +281,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users',
-                                '--schema'=>'name:string, email:string, password:string, api_token:char(60), remember_token:string, status:integer:default(1), user_type:string, deleted_at:timestamp:nullable'
+                                '--schema'=>'name:string, email:string, password:string, api_token:char(60), remember_token:string, status:integer:default(1), user_type:string, deleted_at:integer:default(0)'
                             ]);
         Artisan::call('make:migration:schema',[
 								'--model'=>false,

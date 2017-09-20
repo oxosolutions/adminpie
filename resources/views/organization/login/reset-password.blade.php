@@ -43,7 +43,8 @@
 
  --}}		
 	{!! Form::close() !!}
-	</div>		
+
+	
 </div>
 @include('common.page_content_primary_end')
 

@@ -59,12 +59,15 @@ class SurveyController extends Controller
 
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['form_title'=>'Survey Title','form_slug'=>'Survey Slug','created_at'=>'Created At','section[1].id'=>'Section Count'],
+                        'showColumns' => ['form_title'=>'Survey Title','form_slug'=>'Survey ID','created_at'=>'Created'],
                         'actions' => [
-                                'edit'=>['title'=>'Edit','route'=>'survey.sections.list'],
+                                //'edit'=>['title'=>'Edit','route'=>'survey.sections.list'],
                                 'preview'=>['title'=>'View','route'=>'survey.perview'],
-                                'delete'=>['title'=>'Delete','route'=>$deleteRoute],
-                                'clone'=>['title'=>'clone','route'=>$cloneRoute]],
+                                'data'=>['title'=>'Raw Data','route'=>'results.survey'],
+                                'report'=>['title'=>'Report','route'=>'survey.stats.report'],
+                                //'delete'=>['title'=>'Delete','route'=>$deleteRoute],
+                                //'clone'=>['title'=>'clone','route'=>$cloneRoute]
+                                ],
                         'title' => 'Survey',
                         
                     ];
@@ -110,7 +113,7 @@ class SurveyController extends Controller
          unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'] );
         $res = $this->apisurvey->create_alter_insert_survey_table(get_organization_id(), $form_id,$request->all());
 
-        Session::flash('sucess','Successfuly Save Survey');
+        Session::flash('sucess','Submitted Sucessfully');
         return back();
     }
 

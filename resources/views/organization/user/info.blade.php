@@ -16,14 +16,32 @@
 			$data = json_decode($model->user_type);
 			$model['user_type'] = array_map('intval',$data);
 		@endphp --}}
-	{!! Form::model($model,['route'=>['save.user.profile',$model->id]], ['class'=> 'form-horizontal','method' => 'post','id'=>'save-user-details'])!!}
-				@if(@$model->user_role_rel != null)
+		@php
+			$processData = $model;
+			$data = [];
+		@endphp
+		@foreach($processData->metas as $key => $meta)
+			@php
+				$model[$meta->key] = $meta->value;
+			@endphp
+		@endforeach
+		@php
+			$roleIds = $model->user_role_rel->pluck('role_id');
+			$model['role_id'] = $roleIds;
+		@endphp
+
+	{!! Form::model($model,['route'=>['save.user.profile',$model['id']]], ['class'=> 'form-horizontal','method' => 'post','id'=>'save-user-details'])!!}
+				{{-- @if(@$model->user_role_rel != null)
 					@php
 					$model['role_id'] = $model->user_role_rel->pluck('role_id');
 					@endphp 	
-				@endif
+				@endif --}}
 			{{-- @include ('organization.user._form_employee') --}}
-			{!! FormGenerator::GenerateForm('edit_user_form') !!}
+			{{-- {!! FormGenerator::GenerateForm('edit_user_form') !!} --}}
+
+
+			{!! FormGenerator::GenerateSection('organization_user_edit') !!}
+			<button type="submit">save</button>
 	{!!Form::close()!!}
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
