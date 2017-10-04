@@ -40,34 +40,12 @@ if(@$form_settings->form_field_show_border){
 		<div id="aione_form_content" class="aione-form-content">
 			<div class="aione-row aione-{{@$form_settings->form_section_style}}">
 			@foreach($collection->section as $key => $section)
-				<div id="aione_form_section_{{$section->id}}" class="aione-form-section">
-					<div class="aione-row">
+				
+				@php
+					$options['form_id'] = $collection->id; 
+				@endphp
+				{!!FormGenerator::GenerateSection($section->section_slug, $options,$model, $formFrom)!!}
 
-						@if( (@$form_settings->form_section_show_title && !empty($section->section_name)) || (@$form_settings->form_show_section_description && !empty($section->section_description)))
-						<div id="aione_form_section_header" class="aione-form-section-header">
-							<div class="aione-row">
-								@if(@$form_settings->form_section_show_title && !empty($section->section_name))
-									<h3 class="aione-form-section-title aione-align-{{@$form_settings->form_section_title_align}}">{{$section->section_name}}</h1>
-								@endif
-								@if(@$form_settings->form_section_show_description && !empty($section->section_description))
-									<h4 class="aione-form-section-description aione-align-{{@$form_settings->form_section_description_align}}">{{$section->section_description}}</h2>
-								@endif
-							</div> <!-- .aione-row -->
-						</div> <!-- .aione-form-header -->
-						@endif
-						<div id="aione_form_section_content" class="aione-form-section-content">
-							<div class="aione-row">
-
-							@php
-							$options['form_id'] = $collection->id; 
-							@endphp
-							{!!FormGenerator::GenerateSection($section->section_slug, $options,$model, $formFrom)!!}
-
-							</div> <!-- .aione-row -->
-						</div> <!-- .aione-form-content -->
-
-					</div> <!-- .aione-row -->
-				</div> <!-- .aione-form-section -->
 			@endforeach
 
 			</div> <!-- .aione-row -->
@@ -98,13 +76,69 @@ if(@$form_settings->form_field_show_border){
 		</div> <!-- .aione-form-footer -->
 		@endif
 
-
+	<textarea class="form_conditions" id="form_{{$form_id}}" style="display: none;">{{json_encode(FormGenerator::GetCurrentFormConditions())}}</textarea>
 	</div> <!-- .aione-row -->
 </div> <!-- .aione-form-wrapper -->
-
+{{-- {{dump(FormGenerator::GetCurrentFormConditions())}}
+<pre>
+{{json_encode(FormGenerator::GetCurrentFormConditions())}}
+</pre> --}}
 <script type="text/javascript">
-	  $('.datepicker').pickadate({
-	    selectMonths: true, // Creates a dropdown to control month
-	    selectYears: 15 // Creates a dropdown of 15 years to control year
-	  });
+	// $(document).ready(function() {
+		
+	// 	var conditions = '';
+	// 	conditions = jQuery.parseJSON(conditions);
+
+	// 	/*console.log("=== Form Conditions");
+	// 	console.log(conditions);
+	// 	console.log("===================");*/
+	// 	$('.field-wrapper').each(function(e){
+	// 		if($(this).attr('data-conditions') == 1){
+	// 			$(this).hide();
+	// 		}
+	// 	});
+
+	// 	$('.field-wrapper').click(function(e){
+	// 		console.log($(this).parents('form').find('.field-wrapper').length);
+	// 		return false;
+	// 		$(this).parents('form').find('.field-wrapper').each(function(ev){
+	// 			if($(this).attr('data-conditions') == 1){
+					
+	// 				var field_id = $(this).attr('id').replace("field_","");
+	// 				var field_conditions = conditions[field_id]['field_conditions'];
+
+	// 				var show = 1;
+	// 				//console.log(field_conditions);
+	// 				$(field_conditions).each(function(index, value){
+
+	// 					var input_val = $('#field_'+value.condition_column).find('input,select').val();
+	// 					//console.log(value.condition_column +' ----> '+input_val);
+	// 						//console.log("----> "+value.condition_value);
+	// 					/*if( value.condition_column value.condition_operator value.condition_value){
+							
+	// 					} else{
+	// 						show = 1;
+	// 					}*/
+	// 				});
+
+	// 				if(show == 1){
+	// 					$(this).show();
+	// 				}
+
+	// 				/*console.log("=== FIELD Conditions");
+	// 				console.log(field_conditions);
+	// 				console.log("===================");*/
+
+	// 			}
+	// 		});
+	// 	});
+
+	// });
+
+
+	
+	$('.datepicker').pickadate({
+		selectMonths: true, // Creates a dropdown to control month
+		selectYears: 15 // Creates a dropdown of 15 years to control year
+	});
 </script>

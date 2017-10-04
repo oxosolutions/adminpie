@@ -1,55 +1,71 @@
-@php
-	$ArrayData = App\Model\Organization\Dataset::getDatasetTableData(request()->route()->parameters()['id']);
-	$records = $ArrayData['records'];
-	$headers = $ArrayData['headers'];
-	if(empty($records)){
-		$tempArray = [];
-		$index = 0;
-		foreach($headers as $header){
-			if($index == 0){
-				$tempArray[] = $ArrayData['firstRecord']+1;
-			}else{
-				$tempArray[] = "";
-			}
-			$index++;
-		}
-		$records[] = $tempArray;
-	}
-	@$tableheaders->id = 'id';
-@endphp
 @extends('layouts.main')
 @section('content')
+@if(@$history != null)
+	
+@endif
+<style type="text/css">
+
+.handson-table-button{
+	margin-bottom: 10px;
+	height: 36px
+}
+	.handson-table-button > li > a{
+		    line-height: 28px;
+    border: 1px solid #CCCCCC;
+    color: #282828;
+    display: inline-block;
+    padding: 0 16px;
+    border-radius: 3px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+	}
+	.handson-table-button > li > a > i{
+		 vertical-align: bottom;
+   		 line-height: 28px;
+   		  color: #282828;
+   		  font-size: 16px
+	}
+	
+	.handson-table-button > li > a:hover{
+		border-color: #999
+	}
+	.handson-table-button > li{
+		float: left;
+		    margin-right: 8px;
+	}
+	.handson-table-button > li > .aione-options{
+		display: none;
+		    height: 147px;
+    width: 160px;
+    border: 1px solid #e8e8e8;
+    position: absolute;
+    z-index: 999999;
+    background-color: white;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 1px 5px 0 rgba(0,0,0,.12),0 3px 1px -2px rgba(0,0,0,.2);
+	}
+	.handson-table-button > li.active > .aione-options{
+		display: block;
+	}
+/*	td{
+		    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    overflow: hidden;
+	}*/
+</style>
 @php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset: '.$ArrayData['dataset_name'],
+	'page_title' => 'Dataset: '.$dataset['dataset_name'],
 	'add_new' => '+ Add Role'
 	); 
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
-		<div class="row">
-			<div class="col s12 m2 l3 aione-field-wrapper">
-				 {!!Form::text('column_name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter Column Name'])!!}
-				 @if($errors->has('column_name'))
-				 	<span style="color: red; font-size: 12px;">{{$errors->first('column_name')}}</span>
-				 @endif
-			</div>
-			<div class="col s12 m2 l3 aione-field-wrapper">
-				 {!!Form::select('after_column',$tableheaders,null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter After Column'])!!}
-				 @if($errors->has('after_column'))
-				 	<span style="color: red; font-size: 12px;">{{$errors->first('after_column')}}</span>
-				 @endif
-			</div>
-			<div class="col s12 m2 l3">
-				<button class="btn blue">Create Column</button>
-			</div>
-		</div>
-	{!!Form::close()!!}
+@include('organization.dataset._tabs')
 	<div id="example2" style="width: 100%; font-size: 14px;">
 		
 	</div>
@@ -59,92 +75,157 @@
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 
-<div id="modal1" class="modal modal-fixed-footer">
-	<div class="modal-header white-text  blue darken-1" ">
-		<div class="row" style="padding:15px 10px;margin: 0px">
-			<div class="col l7 left-align">
-				<h5 style="margin:0px">Column Name</h5>	
-			</div>
-			<div class="col l5 right-align">
-				<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
-			</div>	
-		</div>
+
+
+@if(@request()->route()->parameters['action'] == 'rivisions')
+@foreach($history as $k => $rows)
+	<div class="aione-table" style="margin-bottom: 20px">
+		<table class="compact">
+			<thead>
+				<tr>
+					<td>Key</td>
+					<td>Value</td>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($rows as $key => $value)
+					<tr>
+
+						<td width="400px">{{$key}}</td>
+						<td style="width:400px;height: 20px;overflow: hidden">{{$value}}</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
 	</div>
-    <div class="modal-content">
-    	<div class="col s12 m2 l12 aione-field-wrapper">
-			 {!!Form::text('column_name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter Column Name'])!!}
-		</div>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Save</a>
-    </div>
+@endforeach
+@endif
+@if(@request()->route()->parameters['action'] == 'view')
+	<div class="aione-table" style="margin-bottom: 20px">
+		<table class="compact">
+			<thead>
+				<tr>
+					<td>Key</td>
+					<td>Value</td>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($tableheaders as $k => $rows)
+					@if(!in_array($k,['id','status','parent']))
+						<tr>
+							<td width="400px">{{$rows}}</td>
+							<td>{{ $viewrecords[0]->{$k} }}</td>
+						</tr>
+					@endif
+				@endforeach
+			</tbody>
+		</table>
+	</div>
+@endif
+
+@if(@request()->route()->parameters['action'] == 'edit')
+	<form action="{{route('dataset.update')}}" method="POST" class="aione-table">
+		{{csrf_field()}}
+		<input type="hidden" name="dataset_id" value="{{ request()->route()->parameters()['id'] }}">
+		<table class="compact">
+			<thead>
+				<tr>
+					<td>Key</td>
+					<td>Value</td>
+				</tr>
+			</thead>
+			<tbody>
+					
+				@foreach($tableheaders as $k => $rows)
+					@if(!in_array($k,['id','status','parent']))
+						<tr>
+							<td width="400px">{{$rows}}</td>
+							<td>
+								<div id="field_{{$k}}" class="field-wrapper field-wrapper-{{$k}} field-wrapper-type-text ">
+									<div id="field_{{$k}}" class="field field-type-text" style="padding: 0">
+										<input type="text" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
+									</div>
+								</div>
+							</td>
+						</tr>
+					@else
+						<input type="hidden" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
+					@endif
+				@endforeach
+
+			</tbody>
+		</table>
+		<input type="submit" name="update_data" value="Update Record" />
+	</form>
+@endif
+<div class="aione-table" style="width: 99%;overflow-x: scroll;overflow-y: scroll;max-height: 500px;margin-bottom: 20px">
+	<table class="compact">
+		<thead>
+			<tr>
+				<th>
+					Action
+				</th>
+				@foreach($tableheaders as $k => $header)
+					@if(!in_array($k,['id','status','parent']))
+						<th>
+							{{$header}}
+						</th>
+					@endif
+				@endforeach
+			</tr>
+		</thead>
+		<tbody>
+				
+			@foreach($records as $k => $rows)
+					<tr>
+						<td>
+							<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'view','record_id'=>$rows->id])}}"><i class="fa fa-eye"></i></a>
+							<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'edit','record_id'=>$rows->id])}}"><i class="fa fa-pencil"></i></a>
+							<a href="{{route('delete.record',['id'=>$dataset->id,'record_id'=>$rows->id])}}" class="delete-row"><i class="fa fa-trash " style="color: red"></i></a>
+							<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'rivisions','record_id'=>$rows->id])}}"><i class="fa fa-history"></i></a>
+							 <script type="text/javascript">
+                                    $(document).on('click','.delete-row',function(e){
+                                        e.preventDefault();
+                                        var href = $(this).attr("href");
+
+                                        swal({   
+                                            title: "Are you sure?",   
+                                            text: "You will not be able to recover this row!",   
+                                            type: "warning",   
+                                            showCancelButton: true,   
+                                            confirmButtonColor: "#DD6B55",   
+                                            confirmButtonText: "Yes, delete it!",   
+                                            closeOnConfirm: false 
+                                        }, 
+                                        function(){
+                                        window.location = href;
+                                           swal("Deleted!", "Your Row has been deleted.", "success"); 
+                                       });
+                                    })
+                                </script>
+						</td>
+						@foreach($rows as $key => $value)
+							@if(!in_array($key,['id','status','parent']))
+								<td class="aione-tooltip" title="{{$value}}">
+									<span class="truncate">
+										{{$value}}	
+									</span>
+									
+								</td>
+							@endif
+						@endforeach	
+					</tr>
+			@endforeach
+		</tbody>
+	</table>
+	
 </div>
-
-{!!$ArrayData['tableRecords']->render()!!}
-<script type="text/javascript">
-	window.changedDataRecords = [];
-	var
-	    hiddenData = {!!json_encode($records)!!},
-	    container = document.getElementById('example2'),
-	    hot2;
-
-	  hot2 = new Handsontable(container, {
-	    data: hiddenData,
-	    colHeaders: true,
-	    contextMenu: true,
-	    rowHeaders: true,
-	    modifyColWidth: 1000,
-	    manualColumnResize: true,
-    	manualRowResize: true,
-	    colHeaders: {!!json_encode($headers)!!},
-	    // columns: [{readOnly: true}],
-	    minSpareRows: 1,
-	    contextMenu: ['row_above','row_below','---------','col_right','---------','remove_row','remove_row','---------','undo','redo','---------','make_read_only','alignment'],
-	    afterChange: function(changes, source){
-	    	if(source == 'edit'){
-	    		changedDataRecords.push(hot2.getData()[changes[0][0]]);
-	    		$('.save_dataset').fadeIn(200);
-	    	}
-	    }
-	  });
-
-	  hot2.updateSettings({
-	  	afterCreateCol: function(index, amount){
-	    	// console.log(hot2.getColHeader(index))
-	    	$('#modal1').modal('open');
-	    	console.log(index);
-	    }
-	  });
-
-	  hot2.updateSettings({
-	  		cells: function(row, col, prop){
-	  			var cellProperties = {};
-	  			if(col == 0){
-	  				cellProperties.readOnly = true;
-	  			}
-	  			return cellProperties;
-	  		}
-	  });
-	  $(document).ready(function(){
-   
-	    $('.modal').modal();
-	    $('.save_dataset').click(function(){
-	    	$.ajax({
-	    		type:'POST',
-	    		url: '{{url('dataset/update')}}/{{request()->route()->parameters()['id']}}',
-	    		data: { '_token': '{{csrf_token()}}','records': changedDataRecords },
-	    		success: function(result){
-	    			$('.save_dataset').fadeOut(200);
-	    		}
-	    	});
-	    });
-	  });
-	  //to open modal
-	    //$('#modal1').modal('open');
-</script>
+{{$records->render()}}
 <style type="text/css">
-	.htMenu {
-		font-size: 14px !important;
+	.pagination li{
+		padding-left: 5px;
+		padding-right: 8px;
+		padding-bottom: 10px;
 	}
 </style>
 @endsection

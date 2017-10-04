@@ -117,7 +117,7 @@ class FormBuilderController extends Controller
         }
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['form_title'=>'Form Title','form_slug'=>'Form Slug','created_at'=>'Created At','section[1].id'=>'Section Count'],
+                        'showColumns' => ['form_title'=>'Form Title','form_slug'=>'Form Slug','created_at'=>'Created','section[1].id'=>'Section Count'],
                         'actions' => [
                                 'delete'=>['title'=>'Delete','route'=>$deleteRoute],
                                 'section'=>['title'=>'Sections','route'=>['route'=>$sectionRoute]],
@@ -443,6 +443,20 @@ class FormBuilderController extends Controller
                 }
             }
             $request['field_options'] = $new_field_options;
+
+        }
+        if($request->has('field_conditions')){
+            $new_field_options = [];
+            foreach($request['field_conditions'] as $k => $v){
+                if(is_array($v)){
+                    foreach ($v as $key => $value) {
+                        if($value != null){
+                            $new_field_options[$k][$key] = $value;
+                        }
+                    }
+                }
+            }
+            $request['field_conditions'] = $new_field_options;
 
         }
         $this->validateUpdateFields($request);

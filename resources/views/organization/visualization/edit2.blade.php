@@ -10,28 +10,29 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
-@include('organization.visualization._tabs')
+
 @include('common.pagecontentstart')
 
     @include('common.page_content_primary_start')
-
-        {!!Form::open(['route'=>['save.charts',request()->route()->parameters()['id']]])!!}
+      @include('organization.visualization._tabs')
+         {{-- {{dd($charts)}} --}}
+        {!!Form::model(@$model,['route'=>['save.charts',request()->route()->parameters()['id']]])!!}
           <div class="row">
               <div class="col l8 pr-7">
                   <div class="card-v2">
                       <div class="card-v2-header">
                           Available Charts
                       </div>
-                      <div class="card-v2-content" style="padding: 8px">
+                      <div class="card-v2-content" style="padding: 12px">
                         
-                          <ul class="collapsible" data-collapsible="accordion">
+                          
                               @if(!$charts->isEmpty())
                                 @foreach($charts as $chartKey => $chart)
-                                  <li class="repeater-li">
-                                    <input type="hidden" value="{{$chart->id}}" name="chart_id[chart_{{$loop->index}}]" />
-                                    <div class="collapsible-header">{{$chart->chart_title}}<i class="fa fa-trash"></i></div>
-                                    <div class="collapsible-body">
-                                          <div class="row mb-0">
+                                 
+                                    {{-- <input type="hidden" value="{{$chart->id}}" name="chart_id[chart_{{$loop->index}}]" />
+                                    <div class="collapsible-header"><div style="width: 90%;">{{$chart->chart_title}}</div><i class="fa fa-trash"></i></div>
+                                    <div class="collapsible-body"> --}}
+                                        {{--   <div class="row mb-0">
                                                <label>Chart Title</label>
                                               <div class="col s12 m2 l12 aione-field-wrapper">
                                                    {!!Form::text('chart_title[chart_'.$loop->index.']',$chart->chart_title,['class'=>'no-margin-bottom aione-field','placeholder'=>'Chart Title'])!!}
@@ -98,15 +99,15 @@ $page_title_data = array(
                                                   {!! Form::select('chartWidth[chart_'.$loop->index.']',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],@getMetaValue($chart->meta,'chartWidth'),["class"=>"no-margin-bottom aione-field select_2 browser-default  "])!!}
                                               </div>
                                           </div>
-
-                                    </div>
-                                  </li>
+      --}}                                       {!! FormGenerator::GenerateForm('available_chart_form',[],$columns) !!}
+                                   {{--  </div> --}}
+                                  
                                 @endforeach
                               @else
-                                <li class="repeater-li">
-                                  <div class="collapsible-header">first chart</div>
-                                  <div class="collapsible-body">
-                                        <div class="row mb-0">
+                                
+                                 
+                                  		 {!! FormGenerator::GenerateForm('available_chart_form',[],$columns) !!}
+                                        {{-- <div class="row mb-0">
                                              <label>Chart Title</label>
                                             <div class="col s12 m2 l12 aione-field-wrapper">
                                                  {!!Form::text('chart_title[chart_0]',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Chart Title'])!!}
@@ -172,15 +173,17 @@ $page_title_data = array(
                                             <div class="col s12 m2 l12 aione-field-wrapper">
                                                 {!! Form::select('chart_width[chart_0]',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],null,["class"=>"no-margin-bottom aione-field select_2 browser-default  "])!!}
                                             </div>
-                                        </div>
+                                        </div> --}}
 
-                                  </div>
-                                </li>
+                                  
                               @endif
-                          </ul>
-                          <div>
+                         
+                          {{-- <div>
                               <a href="#" class="btn blue add-more-chart">Add more chart</a>
-                          </div>
+                          </div> --}}
+                      </div>
+                      <div class="card-v2-footer">
+                        <a href="#" class="btn blue add-more-chart">Add more chart</a>
                       </div>
                   </div>
               </div>
@@ -194,7 +197,7 @@ $page_title_data = array(
                               @if(!empty(@json_decode($filters)))
                                 @foreach(json_decode($filters) as $key => $filter)
                                   <li>
-                                      <div class="row">
+                                     {{--  <div class="row">
                                           <div class="col l6 pr-7">
                                               <div class="col s12 m2 l12 aione-field-wrapper">
                                                   {!! Form::select('filter_columns[]',$columns,$filter->column,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Column'])!!}
@@ -205,13 +208,14 @@ $page_title_data = array(
                                                   {!! Form::select('filter_type[]',App\Model\Organization\Visualization::filterTypes(),$filter->type,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Filter Type'])!!}
                                               </div>
                                           </div>        
-                                      </div>
+                                      </div> --}}
+                                      {!! FormGenerator::GenerateForm('visualization_and_filter_chart') !!}
                                   </li>
                                 @endforeach
                               @else
                                 <li>
                                     <div class="row">
-                                        <div class="col l6 pr-7">
+                                       {{--  <div class="col l6 pr-7">
                                             <div class="col s12 m2 l12 aione-field-wrapper">
                                                 {!! Form::select('filter_columns[]',$columns,null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Column'])!!}
                                             </div>
@@ -220,14 +224,18 @@ $page_title_data = array(
                                               <div class="col s12 m2 l12 aione-field-wrapper">
                                                 {!! Form::select('filter_type[]',App\Model\Organization\Visualization::filterTypes(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Filter Type'])!!}
                                             </div>
-                                        </div>        
+                                        </div>      --}}
+                                        {!! FormGenerator::GenerateForm('visualization_and_filter_chart') !!}   
                                     </div>
                                 </li>
                               @endif
                           </ul>
-                          <div>
+                          {{-- <div>
                               <a href="#" class="btn blue add-filter">Add more filters</a>
-                          </div>
+                          </div> --}}
+                      </div>
+                      <div class="card-v2-footer">
+                          <a href="#" class="btn blue add-filter">Add more filters</a>
                       </div>
                   </div>
                  
@@ -245,13 +253,19 @@ $page_title_data = array(
 @include('common.pagecontentend')
 <style type="text/css">
     .card-v2{
-        border: 2px solid #f2f2f2;
-        box-shadow: 0px 0px 1px rgba(128, 128, 128, .2);
+        border: 1px solid #cfcfcf;
+            color: #676767;
         margin-bottom: 14px;
     }
     .card-v2 > .card-v2-header{
-        background-color: #f2f2f2;
-        padding: 10px;
+       border-bottom: 1px solid #cfcfcf;
+           padding: 0 15px;
+    line-height: 46px;
+    }
+    .card-v2-footer{
+      padding: 8px;
+      border-top: 1px solid #cfcfcf;
+      background-color: #F5F5F5;
     }
    .collapsible{
     border: none;
@@ -285,7 +299,10 @@ $page_title_data = array(
     display: block
    }
    .collapsible-header > i{
-    float: right;margin-right: 0px;font-size: 16px
+       margin-right: 0px;
+    font-size: 16px;
+    width: 10%;
+    text-align: right;
    }
    .p-8{
     padding: 8px;
@@ -327,6 +344,12 @@ $page_title_data = array(
         border: 1px solid #e8e8e8 !important;
     border-radius: 0px !important;
     height: 50px !important;
+  }
+   .aione-form-border > .aione-row{
+    padding: 0 ;
+  }
+  .field{
+    padding: 0;
   }
 </style>
 <script type="text/javascript">

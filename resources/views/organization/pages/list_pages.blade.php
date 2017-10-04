@@ -1,4 +1,19 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.store.page';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'store.page';
+  @endphp
+@endif
+@extends($layout)
+
+
 @section('content')
 @php
 $page_title_data = array(
@@ -15,9 +30,9 @@ $page_title_data = array(
 @include('common.list.datalist')
 <input type="hidden" name="_token" value="{{csrf_token()}}" class="page_token">
 @include('common.page_content_primary_end')
-@include('common.page_content_secondry_start')
-{!! Form::open(['route'=>'store.page' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Page','button_title'=>'Save','section'=>'pagesec1']])
+  @include('common.page_content_secondry_start')
+    {!! Form::open(['route'=>$route , 'class'=> 'form-horizontal','method' => 'post'])!!}
+  @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Page','button_title'=>'Save','section'=>'pagesec1']])
 {!!Form::close()!!}
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')		
@@ -33,9 +48,14 @@ $page_title_data = array(
       postedData['id']        	= $(this).parents('.switch').find('input[name=id]').val();
       postedData['status']      = $(this).prop('checked');
       postedData['_token']      = $('.page_token').val();
-
+      var from = '{{$from}}';
+      if(from == 'admin'){
+        var url = 'page/status/update'
+      }else{
+        var  url = 'pages/status/update'
+      }
       $.ajax({
-        url:route()+'/pages/status/update',
+        url:route()+'/'+url,
         type:'POST',
         data:postedData,
         success: function(res){

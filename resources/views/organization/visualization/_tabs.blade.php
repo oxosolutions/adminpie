@@ -1,4 +1,4 @@
-
+{{-- 
   
 @php
  
@@ -39,4 +39,31 @@
       color: black !important;font-weight: 500
    }
 </style>
+
+ --}}
+
+ @php
+ 
+    @$id = @request()->route()->parameters()['id'];
+ 
+ 
+@endphp
+<nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal"  >
+  <ul id="sortable_tabs" class="aione-tabs">
+      <li class="aione-tab {{(Request::route()->action['as'] == 'edit.visual')?'nav-item-current':''}}">
+        <a href="{{route('edit.visual',$id)}}"><span class="nav-item-text">Charts</span></a>
+      </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'setting.visualization')?'nav-item-current':''}}">
+        <a href="{{route('setting.visualization',$id)}}"><span class="nav-item-text">Settings </span></a>
+      </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'user.visualization')?'nav-item-current':''}}">
+        <a href="{{route('user.visualization',$id)}}"><span class="nav-item-text">Collaborate</span></a>
+      </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'customize.visualization')?'nav-item-current':''}}">
+        <a href="{{route('customize.visualization',$id)}}"><span class="nav-item-text">Customize</span></a>
+      </li>
+      <div class="clear"></div>
+  </ul>
+</nav>
+
 

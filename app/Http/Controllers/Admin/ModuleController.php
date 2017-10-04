@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalModule as Module;
 use App\Model\Admin\GlobalModuleRoute as Route;
 use App\Model\Admin\GlobalSubModule;
+use DB;
 class ModuleController extends Controller
 {
     
@@ -23,7 +24,12 @@ class ModuleController extends Controller
         if(@$subModule != null){
             $subModuleData = GlobalSubModule::where('id',$subModule)->first();
         }
-    	return view('admin.module.index',['listModule'=>$model,'moduleData'=>$moduleData,'subModuleData' => $subModuleData]);
+        $table_list = DB::select(" SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='oxo_adminpi' and TABLE_NAME like 'ocrm_175%' "); 
+
+      $tables =  collect(json_decode(json_encode($table_list),true))->pluck('TABLE_NAME')->all();
+     $tables =  array_combine($tables, $tables);
+     // dump($combine);
+    	return view('admin.module.index',['listModule'=>$model,'moduleData'=>$moduleData,'subModuleData' => $subModuleData, 'tables'=>$tables]);
     }
     public function create()
     {
@@ -289,6 +295,8 @@ class ModuleController extends Controller
 
     public function saveStyleModule(Request $request)
     {
+        
+        // dd($request['tables']);
         $model = Module::where('id',$request->modules_id)->update($request->except('_token','modules_id'));
         return back();  
     }

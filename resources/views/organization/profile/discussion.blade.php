@@ -19,7 +19,9 @@
 	<div class="row">
 	<div class="aione-card col l12">
 		<div class="aione-row"> 
+		{!! Form::open(['route'=>'save.discussion' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 			{!! FormGenerator::GenerateForm('aione_form_fields_test',[]) !!}
+		{!! Form::close()!!}
 		</div>
 	</div>
 	<div class="aione-card col l12">

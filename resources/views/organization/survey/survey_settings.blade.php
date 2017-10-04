@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('content')
 <style type="text/css">
-	#field_authentication_type,#field_role_list,#field_individual_list,
+	/*#field_authentication_type,#field_role_list,#field_individual_list,
 	#field_start_date,#field_expire_date,
 	#field_timer_type,#field_survey_duration,
 	#field_response_limit,#field_response_limit_type,
@@ -11,7 +11,7 @@
 	.setting-wrapper > div{
 		float: left;
 		width: 50%
-	}
+	}*/
 </style>
 @php
 	$page_title_data = array(
@@ -59,7 +59,7 @@ $route = 'org.save.form.settings';
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 		
-		<script type="text/javascript">
+		{{-- <script type="text/javascript">
 			$(document).ready(function(){
 
 				if( $('#field_authentication_required input[type=checkbox]').is(':checked')) {
@@ -152,7 +152,7 @@ $route = 'org.save.form.settings';
 			})
 			  
 		</script>
-		
+		 --}}
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

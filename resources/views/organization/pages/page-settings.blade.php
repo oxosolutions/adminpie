@@ -1,4 +1,18 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.save.page.settings';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'save.page.settings';
+  @endphp
+@endif
+@extends($layout)
+
 @section('content')
 	
 	{{-- <div class="row">
@@ -25,7 +39,14 @@
 	@include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 		@include('organization.pages._tabs')
-			{{-- {!! FormGenerator::GenerateForm('cms_display_settings') !!} --}}
+			@if($model != null)
+				{!! Form::model($model,['method' => 'POST' , 'route' => $route])!!}
+			@else
+				{!! Form::open(['method' => 'POST' , 'route' => $route])!!}
+			@endif
+				{!! FormGenerator::GenerateForm('cms_page_settings') !!}
+				<input type="hidden" name="page_id" value="{{request()->route()->parameters()['id']}}">
+			{!! Form::close()!!}
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 		

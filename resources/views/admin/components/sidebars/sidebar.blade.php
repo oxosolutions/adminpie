@@ -13,6 +13,39 @@
                     </span> --}}
                 </a>
             </li>
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('group'))?'active-state':''}}">
+                <a href="#">
+                    <span class="nav-item-icon side-bar-icon fa fa-users darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Groups
+                    </span>
+                    <span class="nav-item-arrow">
+                        
+                    </span>
+                </a>
+                <ul class="side-bar-submenu" >
+                    <li class="aione-nav-item level1 {{Request::is('list.group')?'active-state':''}}">
+                        <a href="{{ route('list.group') }}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Groups
+                        </span>
+                        </a>
+                    </li>
+                     <li class="aione-nav-item level1 {{Request::is('create.group')?'active-state':''}}">
+                        <a href="{{ route('create.group') }}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Add Group
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+                
+            </li>
             <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('organization/list','organization/create'))?'nav-item-current':''}}">
                 <a href="javascript:;">
                     <span class="nav-item-icon side-bar-icon fa fa-sitemap center-align side-bar-icon-bg white-text">
@@ -42,6 +75,71 @@
                             <span class="side-bar-text">
                                 Add Organization
                             </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('modules','module/create'))?'active-state':''}}">
+                <a href="javascript:;">
+                    <span class="nav-item-icon side-bar-icon fa fa-square-o darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Modules
+                    </span>
+                    <span class="nav-item-arrow">
+                            
+                        </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li class="aione-nav-item level1 {{Request::is('modules')?'active-state':''}}">
+                        <a href="{{Route('list.module')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-list darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Modules
+                        </span>
+                        </a>
+                    </li>
+                    <li class="aione-nav-item level1 {{Request::is('module/create')?'active-state':''}}">
+                        <a href="{{Route('create.module')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Add Module
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('widgets','widget/create'))?'active-state':''}}">
+                <a href="javascript:;">
+                    <span class="nav-item-icon side-bar-icon fa fa-th-large darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Widgets
+                    </span>
+                    <span class="nav-item-arrow">
+                            
+                        </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li class="aione-nav-item level1 {{Request::is('widgets')?'active-state':''}}">
+                        <a href="{{Route('index.widget')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-list darken-1 center-align side-bar-icon-bg" >
+                        </span>
+                        <span class="side-bar-text">
+                            Widgets
+                        </span>
+                        </a>
+                    </li>
+                    <li class="aione-nav-item level1 {{Request::is('widget/create')?'active-state':''}}">
+                        <a href="{{Route('create.widget')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Add Widget
+                        </span>
                         </a>
                     </li>
                 </ul>
@@ -78,122 +176,11 @@
                     </li>
                 </ul>
             </li>
-          
-            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('modules','module/create'))?'active-state':''}}">
-                <a href="javascript:;">
-                    <span class="nav-item-icon side-bar-icon fa fa-square-o darken-1 center-align side-bar-icon-bg white-text">
-                    </span>
-                    <span class="side-bar-text">
-                        Modules
-                    </span>
-                    <span class="nav-item-arrow">
-                            
-                        </span>
-                </a>
-                <ul class="side-bar-submenu " >
-                   <li class="aione-nav-item level1 {{Request::is('modules')?'active-state':''}}">
-                        <a href="{{Route('list.module')}}">
-                        <span class="nav-item-icon side-bar-icon fa fa-list darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Modules
-                        </span>
-                        </a>
-                    </li>
-                    <li class="aione-nav-item level1 {{Request::is('module/create')?'active-state':''}}">
-                        <a href="{{Route('create.module')}}">
-                        <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Add Module
-                        </span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('widgets','widget/create'))?'active-state':''}}">
-                <a href="javascript:;">
-                    <span class="nav-item-icon side-bar-icon fa fa-th-large darken-1 center-align side-bar-icon-bg white-text">
-                    </span>
-                    <span class="side-bar-text">
-                        Widgets
-                    </span>
-                    <span class="nav-item-arrow">
-                            
-                        </span>
-                </a>
-                <ul class="side-bar-submenu " >
-                   <li class="aione-nav-item level1 {{Request::is('widgets')?'active-state':''}}">
-                        <a href="{{Route('index.widget')}}">
-                        <span class="nav-item-icon side-bar-icon fa fa-list darken-1 center-align side-bar-icon-bg" >
-                        </span>
-                        <span class="side-bar-text">
-                            Widgets
-                        </span>
-                        </a>
-                    </li>
-                    <li class="aione-nav-item level1 {{Request::is('widget/create')?'active-state':''}}">
-                        <a href="{{Route('create.widget')}}">
-                        <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Add Widget
-                        </span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('settings'))?'active-state':''}}">
-                <a href="javascript:;">
-                    <span class="nav-item-icon side-bar-icon fa fa-cogs darken-1 center-align side-bar-icon-bg white-text">
-                    </span>
-                    <span class="side-bar-text">
-                        Settings
-                    </span>
-                    <span class="nav-item-arrow">
-                            
-                        </span>
-                 
-                </a>
-                <ul class="side-bar-submenu" >
-                   <li class="aione-nav-item level1 {{Request::is('settings')?'active-state':''}}">
-                        {{-- <a href="{{Route('list.settings')}}"> --}}
-                        <a href="{{Route('organization.settings')}}">
-                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Organization
-                        </span>
-                        </a>
-                    </li>
-                </ul>
-            </li>
+            
+            
             <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('users'))?'active-state':''}}">
                 <a href="#">
-                    <span class="nav-item-icon side-bar-icon fa fa-users darken-1 center-align side-bar-icon-bg white-text">
-                    </span>
-                    <span class="side-bar-text">
-                        Users
-                    </span>
-                    <span class="nav-item-arrow">
-                            
-                        </span>
-                </a>
-                <ul class="side-bar-submenu" >
-                    <li class="aione-nav-item level1 {{Request::is('users')?'active-state':''}}">
-                        <a href="{{ route('admin_users') }}">
-                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
-                        </span>
-                        <span class="side-bar-text">
-                            Users
-                        </span>
-                        </a>
-                    </li>
-                </ul>
-            </li> 
-            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('users'))?'active-state':''}}">
-                <a href="#">
-                    <span class="nav-item-icon side-bar-icon fa fa-users darken-1 center-align side-bar-icon-bg white-text">
+                    <span class="nav-item-icon side-bar-icon fa fa-map darken-1 center-align side-bar-icon-bg white-text">
                     </span>
                     <span class="side-bar-text">
                         Maps
@@ -216,7 +203,7 @@
             </li>
             <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('users'))?'active-state':''}}">
                 <a href="#">
-                    <span class="nav-item-icon side-bar-icon fa fa-users darken-1 center-align side-bar-icon-bg white-text">
+                    <span class="nav-item-icon side-bar-icon fa fa-history darken-1 center-align side-bar-icon-bg white-text">
                     </span>
                     <span class="side-bar-text">
                         Activity 
@@ -277,7 +264,121 @@
                         </a>
                     </li>
                 </ul>
+
             </li>
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('users'))?'active-state':''}}">
+                <a href="#">
+                    <span class="nav-item-icon side-bar-icon fa fa-user darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Users
+                    </span>
+                    <span class="nav-item-arrow">
+                            
+                        </span>
+                </a>
+                <ul class="side-bar-submenu" >
+                    <li class="aione-nav-item level1 {{Request::is('users')?'active-state':''}}">
+                        <a href="{{ route('admin_users') }}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Users
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li> 
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('settings'))?'active-state':''}}">
+                <a href="javascript:;">
+                    <span class="nav-item-icon side-bar-icon fa fa-cogs darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Settings
+                    </span>
+                    <span class="nav-item-arrow">
+                            
+                        </span>
+                 
+                </a>
+                <ul class="side-bar-submenu" >
+                   <li class="aione-nav-item level1 {{Request::is('settings')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('organization.settings')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Organization
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('settings'))?'active-state':''}}">
+                <a href="javascript:;">
+
+                    <span class="nav-item-icon side-bar-icon fa fa-handshake-o darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        CMS
+                    </span>
+                    <span class="nav-item-arrow"></span>
+                 
+                </a>
+                <ul class="side-bar-submenu" >
+                   <li class="aione-nav-item level1 {{Request::is('cms')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('list.pages')}}">
+                        <span class="nav-item-icon fa fa-handshake-o fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Pages
+                        </span>
+                        </a>
+                    </li>
+                   <li class="aione-nav-item level1 {{Request::is('cms')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('admin.media')}}">
+                        <span class="nav-item-icon fa fa-handshake-o fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Media
+                        </span>
+                        </a>
+                    </li>
+                   <li class="aione-nav-item level1 {{Request::is('cms')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('admin.categories')}}">
+                        <span class="nav-item-icon fa fa-handshake-o fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Categories
+                        </span>
+                        </a>
+                    </li>
+                   <li class="aione-nav-item level1 {{Request::is('cms')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('admin.list.posts')}}">
+                        <span class="nav-item-icon fa fa-handshake-o fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Posts
+                        </span>
+                        </a>
+                    </li>
+                   <li class="aione-nav-item level1 {{Request::is('cms')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('admin.list.menus')}}">
+                        <span class="nav-item-icon fa fa-handshake-o fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Menus
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            
             
         </ul>
 </nav>

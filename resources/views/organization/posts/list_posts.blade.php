@@ -1,4 +1,18 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.store.posts';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'store.posts';
+  @endphp
+@endif
+@extends($layout)
+
 @section('content')
 @php
 $page_title_data = array(
@@ -17,7 +31,7 @@ $page_title_data = array(
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 {!! Form::open(['route'=>'store.posts' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Post','button_title'=>'Save','section'=>'possec1']])
+  @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Post','button_title'=>'Save','section'=>'possec1']])
 {!!Form::close()!!}
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

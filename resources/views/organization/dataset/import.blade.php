@@ -8,22 +8,22 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Import Dataset',
-	'add_new' => '+ Create Dataset',
-	'route' => 'create.dataset'
+	'add_new' => 'All Datasets',
+	'route' => 'list.dataset'
 	); 
 @endphp
 
 @include('common.pageheader',$page_title_data) 
 	<div class="card" style="margin-top: 0px;padding: 14px;">
 		{!!Form::open(['route'=>'upload.dataset','files'=>true])!!}
-		<div class="row no-margin-bottom">
+		{{-- <div class="row no-margin-bottom">
 							
 			<div class="row mb-10">
 				<div class="col l3" style="line-height: 30px">
 					Dataset Name
 				</div>
 				<div class="col l9">
-					{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+					
 					 {!! Form::text('datasetName',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
 				</div>
 			</div>
@@ -40,20 +40,17 @@
 				    	<label for="test1">File Upload</label>    
 					</div>
 					<div class="col l12">
-						{{-- <input name="group1" type="radio" value="url" id="test2" /> --}}
+						
 						{!! Form::radio('import_source','url',false,['id' => 'test2' ]) !!}
 
 				     	<label for="test2">URL</label>
 					</div>
 					<div class="col l12">
-						{{-- <input name="group1" type="radio" value="file_on_server" id="test3" /> --}}
+						
 						{!! Form::radio('import_source','file_on_server',false,['id' => 'test3' ]) !!}
 				    	<label for="test3">File on server</label>    
 					</div>
-					{{-- <div class="col l12">
-						<input name="group1" type="radio" value="import_from_survey" id="test4" />
-						{!! Form::radio('import_source','import_from_survey',false,['id' => 'test4' ]) !!}
-				     	<label for="test4">Import from survey</label> --}}
+					
 					</div>
 				</div>
 			</div>
@@ -68,7 +65,7 @@
 							{!!Form::file('file')!!}
 						</div>
 						<div class="file-path-wrapper">
-							{{-- <input class="file-path validate" type="text"> --}}
+							
 							{!! Form::text('path',null,['class' => 'file-path validate' ]) !!}
 						</div>
 					</div>
@@ -79,7 +76,7 @@
 					Enter File URL
 				</div>
 				<div class="col l9">
-					{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+				
 					{!! Form::text('url',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
 				</div>
 			</div>
@@ -88,7 +85,7 @@
 					Enter File Path
 				</div>
 				<div class="col l9">
-					{{-- <input type="text" name="" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px "> --}}
+				
 					{!! Form::text('file_path',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
 				</div>
 			</div>
@@ -127,7 +124,8 @@
 					
 				</button>
 			</div>
-		</div>
+		</div> --}}
+		{!! FormGenerator::GenerateForm('import_dataset_form') !!}
 		{!!Form::close()!!}
 	</div>
 	<style type="text/css">

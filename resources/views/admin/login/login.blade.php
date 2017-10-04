@@ -3,7 +3,7 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 
-<div class="login-wrapper" >
+<div> 
 	<div class="aione-row" >
 		<div class="site-logo" >
 		</div>

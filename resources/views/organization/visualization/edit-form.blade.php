@@ -20,7 +20,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
-   		{!!Form::model($data,['route'=>['update.visualization' , $model['id']]])!!}
+   		{!!Form::model($model,['route'=>['update.visualization' , $model['id']]])!!}
         <input type="hidden" name="id" value="{{$model['id']}}">
 	    	{!!FormGenerator::GenerateSection('vissec1',['type'=>'inset'])!!}	 
         <input type="submit" value="submit">

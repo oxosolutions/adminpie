@@ -24,17 +24,18 @@
     
     $title = $form->form_title;
 
+
 @endphp
 @php
 $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Form: '.$title,
+  'page_title' => 'Edit Form: <span class="subtitle">('.$title.')</span>',
   'add_new' => '+ Apply leave'
 ); 
 @endphp
-
+{{-- (Request::route()->action['as'] == 'survey.sections.list')?'Survey:':'Form:' --}}
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -55,12 +56,12 @@ $page_title_data = array(
 
         <div class="module-wrapper">
             <div class="list-container">
-                <nav id="aione_nav" class="aione-nav dark vertical">
+                <nav id="aione_nav" class="aione-nav light vertical">
                     <div class="aione-nav-background"></div>
                     <ul id="sortable" class="aione-menu">
                         <li class="aione-nav-item level0 unsortable {{(Request::input('sections') == 'all' || empty(Request::input()))?'nav-item-current':''}}">
                             <a href="{{Request::url()}}?sections=all" id="all_list">
-                                <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-list"></i></span>
+                                <span class="nav-item-icon"><i class="fa fa-bars"></i></span>
                                 <span class="nav-item-text">
                                     All Sections
                                 </span>
@@ -73,8 +74,7 @@ $page_title_data = array(
     					@endphp
                         <li class="aione-nav-item level0 has-children {{(Request::input('sections') == $section->id)?'nav-item-current':''}}" section-id={{ $section->id }}>
                             <a href="{{Request::url()}}?sections={{$section->id}}">
-                                <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-th-large">
-                                    </i></span>
+                                <span class="nav-item-icon"><i class="fa fa-terminal"></i></span>
                                 <span class="nav-item-text">
                                     {{$section->section_name}}
                                 </span>
@@ -173,9 +173,12 @@ $page_title_data = array(
                                 <li class="collection-item" section-id="">
                                     <a href="{{Request::url()}}?sections={{$section->id}}">{{$section->section_name}} ({{$section->section_slug}})</a>
                                     <div class="item-options">
-                                        <a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field">
-                                            <i class="material-icons dp48 del red-text">clear</i>
+                                        <a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field confirm-delete">
+                                            <i class="material-icons dp48 del red-text ">clear</i>
+
                                         </a>
+                                        
+
                                          <a href="{{route($route_slug.'section.clone',$section->id)}}" class="delete-field">
                                             <i class="fa fa-clone"></i>
                                         </a>
@@ -238,9 +241,11 @@ $page_title_data = array(
                                         {{$field->field_title}} ({{$field->field_slug}})
                                     </a>
                                      <div class="item-options">
-                                        <a href="{{route($route_slug.'field.delete',$field->id)}}" class="delete-field">
+                                        <a href="{{route($route_slug.'field.delete',$field->id)}}" class="delete-field confirm-delete" >
                                             <i class="material-icons dp48 del red-text">clear</i>
+
                                         </a>
+                                       
 
                                         <a href="{{route($route_slug.'field.clone',$field->id)}}" class="delete-field">
                                             <i class="fa fa-clone"></i>
@@ -497,6 +502,13 @@ $page_title_data = array(
          .Detail-container .collection .collection-item:last-child:hover .arrow-downward{
             display: none
          }
+         .subtitle{
+                  font-size: 18px;
+    line-height: 32px;
+    font-weight: 500;
+    display: inline-block;
+    vertical-align: text-top;
+         }
         /*.add-section > button {
             float: right;
         }
@@ -514,6 +526,25 @@ $page_title_data = array(
     </style>
  
     <script type="text/javascript">
+
+        $(document).on('click','.confirm-delete',function(e){
+            e.preventDefault();
+            var href = $(this).attr("href");
+            swal({   
+                title: "Are you sure?",   
+                text: "You will not be able to recover this!",   
+                type: "warning",   
+                showCancelButton: true,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "Yes, delete it!",   
+                closeOnConfirm: false 
+            }, 
+            function(){
+                window.location = href;
+               swal("Deleted!", "Your Section/field has been deleted.", "success"); 
+           });
+        })
+
         
         $(document).ready(function(){
             $(document).on('click','.list-modules .arrow',function(){ 

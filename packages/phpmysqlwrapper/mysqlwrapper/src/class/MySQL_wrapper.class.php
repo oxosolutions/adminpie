@@ -921,6 +921,9 @@ class MySQL_wrapper {
 					return FALSE;
 				}
 			}
+            $columns[] = "`status` BOOLEAN NOT NULL DEFAULT TRUE";
+            $columns[] = "`parent` INT NOT NULL DEFAULT '0'";
+
 			$this->query("CREATE TABLE `{$table}` ( " . implode(', ', $columns) . " ) ENGINE=MYISAM DEFAULT CHARSET={$this->charset};");
 
 			$result = $this->importCSV2Table($file, $table, $delimiter, $enclosure, $escape, $ignore, $update, ($getColumnsFrom == 'generate') ? 'table' : 'file', $newLine);

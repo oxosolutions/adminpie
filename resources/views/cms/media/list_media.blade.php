@@ -1,4 +1,18 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.custom.save.pages';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'save.page.settings';
+  @endphp
+@endif
+@extends($layout)
+
 @section('content')
 @php
 $page_title_data = array(
@@ -15,13 +29,20 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
     <div class="row" style="margin: 0;height: inherit">
-        <div class="col l8" style="border-right: 1px solid #a9a9a9;height: 100%;overflow: auto;padding:20px">
+        <div class="col l8 gallery high" style="border-right: 1px solid #a9a9a9;height: 100%;overflow: auto;padding:20px">
             <div class="aione-tile-view" id="files" >
                 @include('common.gallery',$model)
             </div>
         </div>
         <div class="col l4 gallery-form" style="height: 100%;overflow: auto">
             <form id="gallery-form">
+                <img src="{{asset('media/')}}" width="100%">
+                {{-- <audio controls class="audio">
+                    <source src="" type="audio/mp3">
+                </audio>
+                <video controls class="video">
+                    <source src="" type="video/mp4">
+                </video> --}}
                 {!! FormGenerator::GenerateForm('survey_add_media_popup_form') !!}
                 <input type="hidden" name="gallery-id" value="">
             </form>
@@ -41,9 +62,18 @@ $page_title_data = array(
     }
     .aione-tile-view > div .desc{
         padding:10px 5px;
-           
-    margin-top: -3px;
+        margin-top: -3px;
     }
+    .high{
+        width: 100% !important;
+    }
+    .gallery-item-high{
+        width: 14% !important;
+    }
+    .gallery-item-small{
+        width: 23% !important;
+    }
+
     .aione-tile-view > div >img{
         height: 120px;
         width: 100%;
@@ -136,25 +166,31 @@ $page_title_data = array(
     })
 </script>
 <script type="text/javascript">
-$.ajaxSetup({
-   headers: {
-       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-   }
-});
-window.Laravel = <?php echo json_encode([
-    'csrfToken' => csrf_token(),
-]); ?>
+    $.ajaxSetup({
+       headers: {
+           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+       }
+    });
+    window.Laravel = <?php echo json_encode([
+        'csrfToken' => csrf_token(),
+    ]); ?>
 
     $(document).ready(function(){
-      
+
+
         $('#upload').change(function(){
             var file_data = $('#upload').prop('files')[0];   
             var form_data = new FormData();                  
             form_data.append('file', file_data);
             form_data.append("_token", Laravel.csrfToken );
-            console.log(form_data);                             
+            console.log(form_data);
+            if('{{$from}}' == 'admin'){
+                url = 'create/media';
+            }else{
+                url = 'media/create';
+            }                 
             $.ajax({
-                    url: route()+'cms/media/create', 
+                    url: route()+'/'+url, 
                     dataType: 'text',
                     cache: false,
                      headers: {'X-CSRF-TOKEN': Laravel.csrfToken },
@@ -174,7 +210,7 @@ window.Laravel = <?php echo json_encode([
         $(document).on('click','#input_add_media',function(){
             
             $.ajax({
-                url: route()+'cms/gallery', 
+                url: route()+'/gallery', 
                 headers: {'X-CSRF-TOKEN': Laravel.csrfToken },
                 type: 'get',
                 success: function(res){
@@ -184,18 +220,75 @@ window.Laravel = <?php echo json_encode([
             });
 
         });   
+        $(document).on('click','#gallery-form .aione-button',function(e){
+            e.preventDefault();
+            e.stoppropagation();
+            var data = $('#gallery-form').serialize();
+             if('{{$from}}' == 'admin'){
+                url = 'update/media/infos';
+            }else{
+                url = 'update/media/info';
+            }
+            $.ajax({
+               
+                url : route()+'/'+url,
+                type : 'POST',
+                data : {request : data , _token : $('input[name=_token]').val()},
+                success : function (res) {
+                    if(res == 'true'){
+                        Materialize.toast('Saved Successfully' ,4000);
+                    }
+                }
+            });
+        });
+
+        $('.gallery-form').hide();
+         if($('.gallery').hasClass('high')){
+            $('.gallery-item').addClass('gallery-item-high')
+        }
         $(document).on('click','.gallery-item',function(){
+            $('.gallery-form').show();
+            $('.gallery').removeClass('high');
+            $('.gallery-item').removeClass('gallery-item-high')
+            $('.gallery-item').addClass('gallery-item-small')
+            $('.gallery').addClass('small');
+
             var id = $(this).attr('gallery-item-id');
             $(this).addClass('selected');
             $(this).siblings().removeClass('selected');
+            var url  = '';
+            if('{{$from}}' == 'admin'){
+               url = 'gallery-items';
+            }else{
+               url = 'gallery-item';
+            }
+
+            console.log(route()+'/'+url);
+
             $.ajax({
-                url : route()+'cms/gallery-item',
-                type : 'post',
-                data : { id : id , _token : $('input[name=_token]').val()},
+                type : 'POST',
+                url : route()+'/'+url,
+                data : { id : id , test : 'test'},
                 success : function(res){
                     console.log(res);
+                    $('#gallery-form > img').attr('src','');
+                    var url = $('#gallery-form > img').attr('src');
+                    $('#gallery-form > img').attr('src',url+'/media/'+res.original_name);
+                    $('.gallery-form').find('input[name=alt_text]').val(res.alt_text);
+                    $('.gallery-form').find('input[name=caption]').val(res.caption);
+                    $('.gallery-form').find('input[name=slug]').val(res.slug);
+                    $('.gallery-form').find('textarea[name=description]').val(res.description);
+                    $('.gallery-form').find('input[name=link_to]').val(res.link_to);
                     $('.gallery-form').find('input[name=title]').val(res.original_name);
                     $('.gallery-form').find('input[name=gallery-id]').val(res.id);
+                        if(res.extension == "mp3"){
+                            var url = "{{asset('/media')}}";
+                            $('.audio > source').attr('src' , url+'/'+res.original_name);
+                        }
+                        if(res.extension == "mp4"){
+                            var url = "{{asset('/media')}}";
+                            $('.video > source').attr('src' , url+'/'+res.original_name);
+                        }
                 }
             });
         });
@@ -210,17 +303,30 @@ window.Laravel = <?php echo json_encode([
             });
             console.log(formData);
             $.ajax({
-                url : route()+'cms/gallery/save',
+                url : route()+'/gallery/save',
                 type : 'post',
                 data : {formData : formData , _token : $('input[name=_token]').val()},
                 success : function(res){
 
                 }
-
-
             });
+
         });
 
+        // e.preventDefault();
+        //     var data = [];
+        //         $('#gallery-form input , #gallery-form textarea').each(function(value){
+        //             data[$(this).attr('name')] = $(this).val();
+        //             data['gallery-id'] = $("input[name=gallery-id]").val();
+        //         });
+        //     $.ajax({
+        //         url : '/update/media/info',
+        //         type : 'POST',
+        //         data : {request : data , _token : $('input[name=_token]').val()},
+        //         success : function (res) {
+        //             console.log(res);
+        //         }
+        //     });
     });
 </script>
 @endsection

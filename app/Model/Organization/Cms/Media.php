@@ -3,7 +3,6 @@
 namespace App\Model\Organization\Cms;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Model\Cms\Media;
 use App\Model\Cms\MediaMeta;
 use Session;
 

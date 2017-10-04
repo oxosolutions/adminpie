@@ -4,7 +4,7 @@
 	<div class="aione-page-title-container">
 		<?php if(@$show_page_title != 'no'): ?>
 			<?php if(!empty(@$page_title)): ?>
-				<h3 class="aione-page-title"><?php echo e(@$page_title); ?></h3>
+				<h3 class="aione-page-title"><?php echo @$page_title; ?></h3>
 			<?php endif; ?>
 		<?php endif; ?>
 		<?php if(@$show_add_new_button  != 'no'): ?>

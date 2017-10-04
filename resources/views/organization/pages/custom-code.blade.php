@@ -1,4 +1,19 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.custom.save.pages';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'save.page.settings';
+  @endphp
+@endif
+@extends($layout)
+
+
 @section('content')
 	
 	{{-- <div class="row">
@@ -48,7 +63,7 @@
 		</div> --}}
 		
 
-		{!! Form::model($customCode,['route' => 'custom.save.pages' , 'method' => 'post']) !!}
+		{!! Form::model($customCode,['route' => $route , 'method' => 'post']) !!}
 		<input type="hidden" name="page_id" value="{{ request()->route()->parameters()['id'] }}">
 			{!! FormGenerator::GenerateForm('custom_code') !!}
 		{!! Form::close() !!}

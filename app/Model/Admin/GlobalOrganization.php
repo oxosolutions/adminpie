@@ -8,7 +8,7 @@ use Session;
 
 class GlobalOrganization extends Model
 {
-  protected $fillable =['name', 'description', 'email', 'modules', 'slug', 'primary_domain', 'secondary_domains','active_code'];
+  protected $fillable =['group_id', 'name', 'description', 'email', 'modules', 'slug', 'primary_domain', 'secondary_domains','active_code'];
 
   	public static function organizationsList(){
 		  return self::orderBy('id','asc')->pluck('name','id');

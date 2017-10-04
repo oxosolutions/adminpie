@@ -1,4 +1,6 @@
+
 @extends('admin.layouts.main')
+
 @section('content')
 @if(!empty(Session::get('success')))
 	<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">{{Session::get('success')}}</div></div>

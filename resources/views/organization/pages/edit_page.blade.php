@@ -1,4 +1,17 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+  @endphp
+@endif
+@extends($layout)
+
+{{-- @extends('layouts.main') --}}
 @section('content')
 	<style type="text/css">
 		.page-widgets > .boxed{

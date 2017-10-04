@@ -15,6 +15,13 @@ use Session;
 class PagesController extends Controller
 {
     
+    protected function assignModel($model){
+        if(Auth::guard('admin')->check()){
+            return 'App\\Model\\Admin\\'.$model;
+        }else{
+            return 'App\\Model\\Organization\\'.$model;
+        }
+    }
 
     public function create()
     {
@@ -22,20 +29,29 @@ class PagesController extends Controller
     }
     public function save(Request $request)
     {
-        $tbl = Session::get('organization_id');
+        $Associate = $this->assignModel('Page');
+        if(Auth::guard('admin')->check() == true){
+            $table = 'global_pages';
+        }else{
+            $tbl = Session::get('organization_id');
+            $table = $tbl.'_pages';
+        }
+
         $rules = [
-                    'slug' => 'required|unique:'.$tbl.'_pages',
+                    'slug' => 'required|unique:'.$table,
                     'title' => 'required'
                     ];
         $this->validate($request,$rules);
-        $page =   new Page();
+        $page = new $Associate;
         $request->request->add(['type'=>'page']);
         $page->fill($request->all());
         $page->save();
-        return redirect()->route('list.pages');
+        return back();
     }
     public function listPage(Request $request)
     {
+        $Associate = $this->assignModel('Page');
+
         $datalist = [];
         if($request->has('per_page')){
             $perPage = $request->per_page;
@@ -46,38 +62,54 @@ class PagesController extends Controller
             $perPage = 5;
           }
         $sortedBy = @$request->sort_by;
+        $order = $request->order;
+        if($request->orderby == null || $request->orderby == ''){
+          $sortedBy = 'created_at';
+          $order = 'desc';
+        }
             if($request->has('search')){
                 if($sortedBy != ''){
-                    $model = Page::where('type', 'page')->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                    $model = $Associate::where('type', 'page')->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$order)->paginate($perPage);
                 }else{
-                    $model = Page::where('type', 'page')->where('name','like','%'.$request->search.'%')->paginate($perPage);
+                    $model = $Associate::where('type', 'page')->where('name','like','%'.$request->search.'%')->paginate($perPage);
                 }
             }else{
                 if($sortedBy != ''){
-                    $model = Page::where('type', 'page')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                    $model = $Associate::where('type', 'page')->orderBy($sortedBy,$order)->paginate($perPage);
                 }else{
-                    $model = Page::where('type', 'page')->paginate($perPage);
+                    $model = $Associate::where('type', 'page')->paginate($perPage);
                 }
+            }
+            if(Auth::guard('admin')->check()){
+                $view = 'admin.page.view';
+                $edit = 'admin.edit.pages';
+                $delete = 'admin.delete.page';
+            }else{
+                $view = 'page.view';
+                $edit = 'edit.pages';
+                $delete = 'delete.page';
             }
             $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created At','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
+                        'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created','status'=>['type'=>'switch','title'=>'Status','class' => 'pageStatus']],
                         'actions' => [
-                                        'edit'    => ['title'=>'Edit','route'=>'edit.pages','class'=>'edit'],
-                                        'delete'  => ['title'=>'Delete','route'=>'delete.page'],
-                                        'view'  => ['title'=>'View','route'=>'page.view']
+                                        'edit'    => ['title'=>'Edit','route'=> $edit ,'class'=>'edit'],
+                                        'delete'  => ['title'=>'Delete','route'=>$delete],
+                                        'view'  => ['title'=>'View','route'=> $view]
                                     ]
                       ];
             return view('organization.pages.list_pages',$datalist);
         }
     public function edit($id)
     {
-        $page = Page::where('id',$id)->with(['pageMeta'])->first();
-       
+        $Associate = $this->assignModel('Page');
+        $page = $Associate::where('id',$id)->with(['pageMeta'])->first();
+        
         return view('organization.pages.edit_page',['page'=>$page]);
     }
     public function update(Request $request)
     {
+        $Associate = $this->assignModel('PageMeta');
 
         $data = [];
         foreach($request->except('_token') as $k => $v){
@@ -92,15 +124,15 @@ class PagesController extends Controller
             
         $meta = $request->except('_token','title','slug','description','content','tags','id','categories');
         foreach ($meta as $key => $value) {
-            $data = PageMeta::where(['page_id' => $request['id'] , 'key' => $key])->first();
+            $data = $Associate::where(['page_id' => $request['id'] , 'key' => $key])->first();
             if($data == null){
-                $model =  new PageMeta;
+                $model =  new $Associate;
                 $model->page_id = $request['id'];
                 $model->key = $key;
                 $model->value = $value;
                 $model->save();
             }else{
-                $model = PageMeta::where(['page_id' => $request['id'] , 'key'=>$key])->update(['value' => $value]);
+                $model = $Associate::where(['page_id' => $request['id'] , 'key'=>$key])->update(['value' => $value]);
             }
         }
         return back();
@@ -115,13 +147,15 @@ class PagesController extends Controller
      */
     public function updateStatus(Request $request)
     {
-        $update = Page::find($request->id);
+        $Associate = $this->assignModel('Page');
+
+        $update = $Associate::find($request->id);
         if($request['status'] == 'true'){
             $status = 1;
         }else{
             $status = 0;
         }
-        $odel = Page::where('id',$request->id)->update(['status' => $status]);
+        $odel = $Associate::where('id',$request->id)->update(['status' => $status]);
         return "true";
     }
     /**
@@ -134,7 +168,9 @@ class PagesController extends Controller
      */
     public function delete($id)
     {
-        $model = Page::find($id)->delete();
+        $Associate = $this->assignModel('Page');
+
+        $model = $Associate::find($id)->delete();
         return back();
     }
 
@@ -143,6 +179,8 @@ class PagesController extends Controller
     //Posts
     public function listposts(Request $request)
     {
+        $Associate = $this->assignModel('Posts');
+
         $datalist = [];
         if($request->has('per_page')){
             $perPage = $request->per_page;
@@ -155,66 +193,86 @@ class PagesController extends Controller
         $sortedBy = @$request->sort_by;
             if($request->has('search')){
                 if($sortedBy != ''){
-                    $model = Posts::where('type','posts')->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                    $model = $Associate::where('type','posts')->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
                 }else{
-                    $model = Posts::where('type','posts')->where('name','like','%'.$request->search.'%')->paginate($perPage);
+                    $model = $Associate::where('type','posts')->where('name','like','%'.$request->search.'%')->paginate($perPage);
                 }
             }else{
                 if($sortedBy != ''){
-                    $model = Posts::where('type','posts')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                    $model = $Associate::where('type','posts')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
                 }else{
-                    $model = Posts::where('type','posts')->paginate($perPage);
+                    $model = $Associate::where('type','posts')->paginate($perPage);
                 }
             }
+            if(Auth::guard('admin')->check()){
+                $edit = 'admin.edit.posts';
+                $delete = 'admin.delete.posts';
+            }else{
+                $edit = 'edit.posts';
+                $delete = 'delete.posts';
+            }
+
             $datalist =  [
                         'datalist'=>$model,
                         'showColumns' => ['title'=>'Title','created_at'=>'Created At','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
                         'actions' => [
-                                        'edit'    => ['title'=>'Edit','route'=>'edit.posts','class'=>'edit'],
-                                        'delete'  => ['title'=>'Delete','route'=>'delete.posts']
+                                        'edit'    => ['title'=>'Edit','route'=>$edit,'class'=>'edit'],
+                                        'delete'  => ['title'=>'Delete','route'=>$delete]
                                     ]
                       ];
             return view('organization.posts.list_posts',$datalist);
     }
 
     public function editposts($id){
-        $page = Page::where('id',$id)->first();
+        $Associate = $this->assignModel('Page');
+
+        $page = $Associate::where('id',$id)->first();
         return view('organization.posts.edit_post',['page'=>$page]);
     }
     public function savePosts(Request $request){
-        $page =   new Page();
+        $Associate = $this->assignModel('Page');
+
+        $page =   new $Associate;
         $request->request->add(['type'=>'posts']);
         $page->fill($request->all());
         $page->save();
         return redirect()->route('list.posts');
     }
     public function updatePosts(Request $request){
-        $update = Page::find($request->id);
+        $Associate = $this->assignModel('Page');
+
+        $update = $Associate::find($request->id);
         $update->fill($request->all());
         $update->post_type ="page";
         $update->save();
         return redirect()->route('list.posts');
     }
-    public function deletePosts(){
-        $model = Page::find($id)->delete();
+    public function deletePosts($id){
+        $Associate = $this->assignModel('Page');
+
+        $model = $Associate::find($id)->delete();
         return back();
     }
     public function updateStatusPosts(Request $request)
     {
-        $update = Page::find($request->id);
+        $Associate = $this->assignModel('Page');
+
+        $update = $Associate::find($request->id);
         if($request['status'] == 'true'){
             $status = 1;
         }else{
             $status = 0;
         }
-        $odel = Page::where('id',$request->id)->update(['status' => $status]);
+        $odel = $Associate::where('id',$request->id)->update(['status' => $status]);
         return "true";
     }
 
     //preview page
     public function viewPage($slug)
     {
-        $pageData = Page::where('slug',$slug)->first();
+        $Associate = $this->assignModel('Page');
+
+        $pageData = $Associate::where('slug',$slug)->with('pageMeta')->first();
         $form = [];
         $values= explode(PHP_EOL,@$pageData->description);
         if(@$values != null){
@@ -232,7 +290,7 @@ class PagesController extends Controller
             }
         }
         $menu = [];
-        $page = Page::where('id',$pageData->id)->with(['pageMeta'])->first();
+        $page = $Associate::where('id',$pageData->id)->with(['pageMeta'])->first();
          if($page->pageMeta != null){
             foreach ($page->pageMeta as $key => $value) {
                 if($value->key == "menu"){
@@ -253,13 +311,17 @@ class PagesController extends Controller
     }
     public function viewPageById($id)
     {
-        $pageData = Page::where('id',$id)->first();
+        $Associate = $this->assignModel('Page');
+
+        $pageData = $Associate::where('id',$id)->first();
         return redirect()->route('page.slug',$pageData->slug);
     }
     //this is a temprary method for design purpose 
     public function pageView($slug)
     {
-        $pageData = Page::where('slug',$slug)->first();
+        $Associate = $this->assignModel('Page');
+
+        $pageData = $Associate::where('slug',$slug)->first();
         $form = [];
         $values= explode(PHP_EOL,$pageData->description);
         if(@$values != null){
@@ -292,11 +354,35 @@ class PagesController extends Controller
     }
     public function pageSetting($id)
     {
-        return view('organization.pages.page-settings');
+        $Associate = $this->assignModel('PageMeta');
+
+        $meta = $Associate::select(['key','value'])->where('page_id',$id)->get()->toArray();
+        $model = [];
+        foreach($meta as $k => $value){
+            $model[$value['key']] = $value['value'];                
+        }
+        return view('organization.pages.page-settings',compact('model'));
+    }
+    public function savePageSetting( Request $request )
+    {
+        $Associate = $this->assignModel('PageMeta');
+
+        $page_id = $request['page_id'];
+        foreach ($request->except('_token','page_id') as $key => $value) {
+            $model = $Associate::firstOrNew(['page_id'=>$page_id, 'key' => $key]);
+            $model->page_id = $page_id;
+            $model->key = $key;
+            $model->value = $value;
+            $model->save();
+        }
+        return back();
+        
     }
     public function customeCode($id)
     {
-        $model = PageMeta::where(['page_id' => $id])->get();
+        $Associate = $this->assignModel('PageMeta');
+
+        $model = $Associate::where(['page_id' => $id])->get();
 
         if($model->isEmpty() ){
             $customCode = '';
@@ -310,17 +396,18 @@ class PagesController extends Controller
     }
     public function saveCustomeCode(Request $request)
     {
-
-        foreach ($request->except('_token') as $key => $value) {
-            $data = PageMeta::where(['page_id' => $request['page_id'] , 'key' => $key])->first();
+        $Associate = $this->assignModel('PageMeta');
+        
+       foreach ($request->except('_token') as $key => $value) {
+            $data = $Associate::where(['page_id' => $request['page_id'] , 'key' => $key])->first();
             if($data == null){
-                $model =  new PageMeta;
+                $model =  new $Associate;
                 $model->page_id = $request['page_id'];
                 $model->key = $key;
                 $model->value = $value;
                 $model->save();
             }else{
-                $model = PageMeta::where(['page_id' => $request['page_id'] , 'key'=>$key])->update(['value' => $value]);
+                $model = $Associate::where(['page_id' => $request['page_id'] , 'key'=>$key])->update(['value' => $value]);
             }
         }
         return back();

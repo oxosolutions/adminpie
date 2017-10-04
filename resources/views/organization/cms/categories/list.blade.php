@@ -1,4 +1,18 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.category.save';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'category.save';
+  @endphp
+@endif
+@extends($layout)
+
 @section('content')
 @php
 $page_title_data = array(
@@ -16,7 +30,8 @@ $page_title_data = array(
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 
-	{!!Form::open(['route'=>'category.save','method'=>'POST'])!!}
+
+	{!!Form::open(['route'=>$route,'method'=>'POST'])!!}
 	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Category','button_title'=>'Save','section'=>'catsec1']])
 
 	{!!Form::close()!!}	

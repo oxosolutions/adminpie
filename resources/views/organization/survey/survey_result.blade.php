@@ -189,10 +189,11 @@ $page_title_data = array(
 			</div>
 			<div class="aione-row result-options">
 				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}
-				<a href="{{route('delete.table',['table'=>$table])}}" onclick="confirm('Are you sure you want to delete all records?');"> <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
+				
 			</div>	
 				
 	{!! Form::close() !!}
+	<a href="{{route('delete.table',['table'=>$table])}}" onclick="confirm('Are you sure you want to delete all records?');"> <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
 </div>
 
 

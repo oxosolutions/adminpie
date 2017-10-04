@@ -59,6 +59,11 @@
 	if(empty($arrayOptions)){
 		$arrayOptions = $default_value;
 	}
+	$name = str_replace(' ','_',strtolower($collection->field_slug));
+	if(@$options['from'] == 'repeater'){
+		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
+	}
+	
 @endphp
 
-{!! Form::select(str_replace(' ','_',strtolower($collection->field_slug)),$arrayOptions,null,['class'=>'input_'.$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder])!!}
+{!! Form::select($name,$arrayOptions,null,['class'=>'input_'.$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder])!!}

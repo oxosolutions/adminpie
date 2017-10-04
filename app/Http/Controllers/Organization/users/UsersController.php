@@ -17,6 +17,7 @@ use App\Model\Organization\UsersRole;
 use App\Model\Organization\Employee;
 use App\Model\Organization\Client;
 use App\Model\Admin\GlobalOrganization;
+
 class UsersController extends Controller
 {
     protected $userRepo;
@@ -37,15 +38,20 @@ class UsersController extends Controller
             $perPage = 10;
           }
         $sortedBy = @$request->orderby;
+        $order = $request->order;
+        if($request->orderby == null || $request->orderby == ''){
+          $sortedBy = 'created_at';
+          $order = 'desc';
+        }
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$request->order)->paginate($perPage);
+                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->orderBy($sortedBy,$order)->paginate($perPage);
               }else{
                   $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$request->order)->with(['user_role_rel'=>function($query){
+                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['user_role_rel'=>function($query){
                       $query->with('roles');
                   },'userType'])->paginate($perPage);
               }else{
@@ -57,7 +63,7 @@ class UsersController extends Controller
           // dd($model);
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status'],
+                          'showColumns' => ['name'=>'Title','email'=>'Email','status' => 'Status'],
                           'actions' => [
                                           // 'view'   => ['title'=>'View','route'=>'account.profile','class'=>'view'],
                                           'view'   => ['title'=>'View','route'=>'user.preview','class'=>'view'],
@@ -77,40 +83,46 @@ class UsersController extends Controller
         return view('organization.user.create');
     }
 
-    public function store(Request $request){
-      $model = org_user::where(['email'=>$request->email])->first();
-      if(count($model) > 0){
+    // public function store(Request $request){
+    //   $model = org_user::where(['email'=>$request->email])->first();
+    //   if(count($model) > 0){
        
-        Session::flash('exist_email','Email already exist');
+    //     Session::flash('exist_email','Email already exist');
 
-        return back();
-      }else{
-        // $this->validateForm($request);
-        $model = new org_user;
-        $model->fill($request->except('_token','password','role_id'));
-        $model->password = Hash::make($request->password);
-        $model->status = 1;
-        $model->save();
-        if($request->has('role_id')){
-            foreach($request->role_id as $key => $role){
+    //     return back();
+    //   }else{
+    //     // $this->validateForm($request);
+    //     $model = new org_user;
+    //     $model->fill($request->except('_token','password','role_id'));
+    //     $model->password = Hash::make($request->password);
+    //     $model->status = 1;
+    //     $model->deleted_at= 0;
+    //     $model->save();
+    //     if($request->has('role_id')){
+    //         foreach($request->role_id as $key => $role){
             
-                $roleMapping = new UserRoleMapping;
-                $roleMapping->user_id = $model->id;
-                $roleMapping->role_id = (int) $role;
-                $roleMapping->status = 1;
-                $roleMapping->save();
-            }
-        }
-        $meta_data = $request->except('name','email','password','confirm-password','_token','role_id','action');
-        update_user_metas($meta_data, $model->id, true);
-        Session::flash('success','Created Successfully!!');
-        return redirect()->route('list.user');
+    //             $roleMapping = new UserRoleMapping;
+    //             $roleMapping->user_id = $model->id;
+    //             $roleMapping->role_id = (int) $role;
+    //             $roleMapping->status = 1;
+    //             $roleMapping->save();
+    //         }
+    //     }
+    //     $meta_data = $request->except('name','email','password','confirm-password','_token','role_id','action');
+    //     update_user_metas($meta_data, $model->id, true);
+    //     Session::flash('success','Created Successfully!!');
+    //     return redirect()->route('list.user');
 
-      }
+    //   }
+    // }
+    public function store(Request $request){
+
+      $status = 1;
+      return $this->public_store_user($request , $status);
     }
 
    
-    public function public_store_user(Request $request){
+    public function public_store_user(Request $request , $status = null){
    
      if($request->isMethod('post')){
 
@@ -119,19 +131,36 @@ class UsersController extends Controller
             Session::flash('exist_email','Email already exist');
             return back();
           }else{
+            if($status != null){
+              $status = $status;
+            }else{
+              $status = 0;
+            }
+
             $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
             $this->validate($request,$rules);
             $user = new org_user;
             $user->fill($request->only('name','email'));
             $user->password = Hash::make($request->password);
-            $user->status = 0;
+            $user->app_password = $request->password;
+            $user->status = $status;
+            $user->deleted_at = 0;
             $user->save();
             $user_id = $user->id;
-            $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password');
+            $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
             if(!empty($meta_data) && !empty($user_id)){
                 update_user_metas($meta_data, $user_id, true);
             }
-
+            if($request->has('role_id')){
+            foreach($request->role_id as $key => $role){
+            
+                $roleMapping = new UserRoleMapping;
+                $roleMapping->user_id = $user_id;
+                $roleMapping->role_id = (int) $role;
+                $roleMapping->status = 1;
+                $roleMapping->save();
+            }
+        }
           }
           Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
           return back();
@@ -282,7 +311,7 @@ class UsersController extends Controller
                   ];
       $this->validate($request , $validate);
 
-      $model = org_user::where('id',$request->user_id)->update(['password' => Hash::make($request->new_password)]);
+      $model = org_user::where('id',$request->user_id)->update(['password' => Hash::make($request->new_password) , 'app_password' => $request->new_password]);
       if($model){
           echo "<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>";
           return back();

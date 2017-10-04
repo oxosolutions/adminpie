@@ -4,6 +4,8 @@ namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
+use App\Model\Admin\Category as AdminCategory;
+use Auth;
 
 class Category extends Model
 {
@@ -31,7 +33,9 @@ class Category extends Model
     }
     public static function getCategories()
     {
-       return self::where('type','bookmark')->pluck('name','id');
+
+        return self::where('type','bookmark')->pluck('name','id');
+       
     }
     public static function Categories($type)
     {
@@ -40,7 +44,11 @@ class Category extends Model
 
     public static function getListByTypePage()
     {
-    	return self::where('type','page')->pluck('name','id');
+        if(Auth::guard('admin')->check()){
+            return AdminCategory::where('type','page')->pluck('name','id');
+        }else{
+    	   return self::where('type','page')->pluck('name','id');
+        }
     }
 
     public static function category_list_by_type($type)

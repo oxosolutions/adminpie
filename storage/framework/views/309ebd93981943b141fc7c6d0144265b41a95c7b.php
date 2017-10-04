@@ -17,17 +17,13 @@
                 <div class="aione-row">
                     <div id="aione_sidebar" class="aione-sidebar">
                         <div class="aione-row">
-                        
-                            <?php echo $__env->make('admin.components.sidebars.sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                        
+                                <?php echo $__env->make('admin.components.sidebars.sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                         </div><!-- .aione-row -->
                     </div><!-- #aione_sidebar -->
                     <div id="aione_content" class="aione-content">
                         <div class="aione-row">
                         
                             <?php echo $__env->yieldContent('content'); ?>
-                            
-                            <?php echo $__env->make('admin.components._footer2', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                             <?php echo $__env->make('admin.components._footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
                         </div><!-- .aione-row -->
                     </div><!-- #aione_content -->

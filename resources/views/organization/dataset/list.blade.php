@@ -6,7 +6,10 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Datasets',
-	'add_new' => '+ Create Dataset'
+	'add_new' => '+ Add Dataset',
+	'route' => 'create.dataset',
+	'second_button_title' => '+ Import Dataset',
+	'second_button_route' => 'import.dataset',
 ); 
 @endphp	
 @include('common.pageheader',$page_title_data) 

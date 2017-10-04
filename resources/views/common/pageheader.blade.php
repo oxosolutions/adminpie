@@ -4,7 +4,7 @@
 	<div class="aione-page-title-container">
 		@if(@$show_page_title != 'no')
 			@if(!empty(@$page_title))
-				<h3 class="aione-page-title">{{@$page_title}}</h3>
+				<h3 class="aione-page-title">{!!@$page_title!!}</h3>
 			@endif
 		@endif
 		@if(@$show_add_new_button  != 'no')

@@ -4,15 +4,13 @@
 	<title>Admin Panel | Admin Pie | OXO Solutions</title>
 
 
-		<!-- Global stylesheets -->
-	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/aione.css?ref='.rand(1111,9999))); ?>">
+		
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
     <link href="<?php echo e(asset('css/ocrm.css')); ?>" type="text/css" rel="stylesheet"  media="screen,projection"/>
-    <link href="<?php echo e(asset('assets/css/fullcalendar.min.css')); ?>" rel='stylesheet' />
 	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/spectrum.css')); ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/simple-iconpicker.min.css')); ?>">
     
@@ -30,10 +28,24 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('bower_components/sweetalert/dist/sweetalert.css')); ?>">
 
     <script src="<?php echo e(asset('bower_components/sweetalert/dist/sweetalert.min.js')); ?>"></script>
+
+    <script type="text/javascript" src="<?php echo e(asset('bower_components/jquery-form-validator/form-validator/jquery.form-validator.js')); ?>"></script>
+    <!-- Select 2 -->
+	<script type="text/javascript" src="<?php echo e(asset('bower_components/select2/dist/js/select2.js')); ?>"></script>
+
+	
+	<!-- Global stylesheets -->
+	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/aione.css?ref='.rand(1111,9999))); ?>">
+
+
 	
 	<script type="text/javascript">
         function route(){
-            return '<?php echo e(url('/')."/".Request::route()->getPrefix()); ?>';
+        	if('<?php echo e(Request::route()->getPrefix()); ?>' != ''){
+        		return '<?php echo e(url('/').stripslashes(Request::route()->getPrefix())); ?>';
+        	}else{
+        		return '<?php echo e(url('/')); ?>';
+        	}
         }
 
         function csrf(){

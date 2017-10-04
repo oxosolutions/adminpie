@@ -1,4 +1,18 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.custom.save.pages';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'save.page.settings';
+  @endphp
+@endif
+@extends($layout)
+
 @section('content')
 @php
 	$page_title_data = array(

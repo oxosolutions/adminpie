@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Session;
 class Visualization extends Model
 {
+   protected $fillable= ['dataset_id','name','description','created_by'];
 	public static $breadCrumbColumn = 'name';
     public function __construct(){
 

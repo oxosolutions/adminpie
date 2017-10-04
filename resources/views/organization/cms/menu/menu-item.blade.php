@@ -4,8 +4,7 @@
         <li id="menu-item-32" class="menu-item menu-item-page pending menu-item-depth-0 menu-item-edit-inactive" style="display: list-item; position: relative; left: 0px; top: 0px;">
             <dl class="menu-item-bar">
                 <dt class="menu-item-handle ui-sortable-handle">
-
-                    <span class="item-title" ><span class="menu-item-title">{{ $v->label }}</span> <span class="is-submenu" style="display: none;">sub item</span></span>
+                    <span class="item-title" ><span class="menu-item-title" item_id="{{ $v->id }}">{{ $v->label }}</span> <span class="is-submenu" style="display: none;">sub item</span></span>
                     <span class="item-controls">
                         <span class="item-type">Page</span>
                         <span class="item-type">

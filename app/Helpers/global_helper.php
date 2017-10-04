@@ -19,6 +19,35 @@ use App\Model\Admin\GlobalActivityTemplate;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\UserRoleMapping;
 use App\Mddel\Organization\OrganizationSetting;
+use App\Model\Organization\FormBuilder;
+
+
+/************************************************************
+*	@function field_options
+*	@description use in static survey to field options value
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return key value [code]
+************************************************************/
+function field_options($slug ,$id=null){
+	if(!empty($id)){	
+		$form = FormBuilder::with(['fieldMeta'=>function($query){
+			$query->where('key','field_options');
+		}])->where(['field_slug'=>$slug, 'id'=>$id])->first()->toArray();
+	}else{
+		$form = FormBuilder::with(['fieldMeta'=>function($query){
+			$query->where('key','field_options');
+		}])->where('field_slug',$slug)->first()->toArray();
+	}
+
+	if(!empty($form['field_meta'])){
+		if(!empty($form['field_meta'][0]['value'])){
+			return $options = collect(json_decode($form['field_meta'][0]['value'],true))->pluck('value','key')->all();
+		}	
+	}
+	return null;
+}
 
 /************************************************************
 *	@function g

@@ -13,6 +13,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	{!! FormGenerator::GenerateForm('cms_display_settings') !!}
+	{{-- {!! FormGenerator::GenerateForm('global_cms_settings') !!} --}}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 	

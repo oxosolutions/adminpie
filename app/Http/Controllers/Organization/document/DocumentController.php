@@ -12,7 +12,10 @@ use App\Model\Organization\Department;
 use App\Model\Organization\Designation;
 use App\Model\Organization\Shift;
 use App\Model\Organization\UsersRole;
+use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\User;
+use App\Model\Organization\UsersMeta;
+use PDF;
 
 class DocumentController extends Controller
 {
@@ -57,7 +60,15 @@ class DocumentController extends Controller
     }
     public function createDocument()
     {
-      return view('organization.documents.createDocument');
+      // $document = Document::where('id',$id)->first();
+      $params = [
+                  'departments'   => $data['departments'] = Department::pluck('name','id'),
+                  'designations'  => $data['designations'] = Designation::pluck('name','id'),
+                  'shifts'        => $data['shifts'] = Shift::pluck('name','id'),
+                  'roles'         => $data['roles'] = UsersRole::pluck('name','id'),
+                  'users'         => $data['users'] = User::pluck('name','id')
+                ];
+      return view('organization.documents.createDocument',compact('params'));
     }
     public function createLayouts()
     {
@@ -114,7 +125,7 @@ class DocumentController extends Controller
             }else{
                 $model = DocumentLayout::where('name','like','%'.$request->search.'%')->paginate($perPage);
             }
-        }else{
+        }else{ 
             if($sortedBy != ''){
                 $model = DocumentLayout::orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
@@ -211,7 +222,8 @@ class DocumentController extends Controller
       $model = new Document();
       $model->fill($request->except('_token'));
       $model->save();
-      return $this->index($request);
+      Session::flash('success','Document Created Successfully');
+      return back();;
     }
     public function viewDocument($id)
     {
@@ -239,5 +251,71 @@ class DocumentController extends Controller
     {
       $upadte = Document::where('id',$request['id'])->update($request->except('_token','id'));
       return back();
+    }
+    public function sendDocument(Request $request)
+    {
+        $document_id = $request['document_id'];
+        $user_id = [];
+        $send_to =  $request['send_to'][0];
+        $ids = $request['users'][$send_to];
+
+        if($send_to == 'roles'){
+            $data = [];
+                foreach ($ids as $key => $id) {
+                    $data[] = UserRoleMapping::select('user_id')->where(['role_id' => $id ])->get()->toArray();
+                }
+            $user_id = $this->getUsersList($data , 'user_id');
+        }
+
+        if($send_to == 'users'){
+            $data = [];
+                foreach ($ids as $key => $id) {
+                    $data[] = User::select('id')->where(['id' => $id ])->get()->toArray();
+                }
+            $user_id =  $this->getUsersList($data , 'id');
+        }
+        if($send_to == 'designation' || $send_to == 'department' || $send_to == 'shift'){
+            $data = [];
+                foreach ($ids as $key => $id) {
+                    $data[] = UsersMeta::select('user_id')->where(['key' => $send_to , 'value' => $id ])->get()->toArray();
+                }
+            $user_id = $this->getUsersList($data , 'user_id');
+        }
+        if($send_to == 'all'){
+            $users = User::select('id')->get()->toArray();
+            foreach ($users as $key => $value) {
+                foreach($value as $k => $v){
+                    $user_id[] = $v;
+                }
+            }
+        }
+        foreach ($user_id as $key => $id) {
+            $userMeta = new UsersMeta;
+            $userMeta->user_id = $id;
+            $userMeta->key = 'document';
+            $userMeta->value = $document_id;
+            $userMeta->type = 'document';
+            $userMeta->save();
+        }
+        return redirect()->route('documents'); 
+    }
+    function getUsersList($data , $field){
+      $user_id = [];
+      foreach ($data as $key => $value) {
+        if($value != null){
+          foreach($value as $k => $v){
+            $user_id[] = $v[$field];
+          }
+        }
+      }   
+      // dd($user_id);
+      return $user_id;
+    }
+    public function documentDownload($id)
+    {
+        $document = Document::with(['DocumentLayout' , 'DocumentTemplate'])->find($id);
+        view()->share('document',$document);
+            $pdf = PDF::loadView('organization.documents.downloadPDF',compact('document'));
+            return $pdf->download($document->title.'.pdf',compact('document'));
     }
 }

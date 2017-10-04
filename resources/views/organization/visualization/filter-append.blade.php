@@ -1,6 +1,6 @@
 <li>
     <div class="row">
-        <div class="col l6 pr-7">
+       {{--  <div class="col l6 pr-7">
             <div class="col s12 m2 l12 aione-field-wrapper">
                 {!! Form::select('filter_columns[]',$columns,null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Chart Type'])!!}
             </div>
@@ -9,7 +9,8 @@
               <div class="col s12 m2 l12 aione-field-wrapper">
                 {!! Form::select('filter_type[]',App\Model\Organization\Visualization::filterTypes(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Chart Type'])!!}
             </div>
-        </div>
+        </div> --}}
+         {!! FormGenerator::GenerateForm('visualization_and_filter_chart') !!}
         <i class="fa fa-close"></i>
     </div>
 </li>

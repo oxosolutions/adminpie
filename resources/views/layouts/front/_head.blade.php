@@ -1,10 +1,25 @@
 <head>
-	
-
 	@include('components._head')
 	{{-- @php
 		$sidebar_small = App\Model\Organization\UsersMeta::getUserMeta('layout_sidebar_small');
 	@endphp --}}
+		@php
+			$slug = request()->route()->parameters();
+		@endphp
+		@if(@$slug['slug'])
+			@php
+				$data = App\Model\Organization\Page::where('slug',$slug)->with('pageMeta')->first();
+			@endphp
+			@foreach(@$data->pageMeta->toArray() as $k => $v)
+				@if($v['key'] == 'css_code')
+					@if($v['value'] != null)
+						<style type="text/css">
+							{!! $v['value'] !!}
+						</style>
+					@endif
+				@endif
+			@endforeach
+		@endif
 	<style type="text/css">
 	/*css for new components*/
 

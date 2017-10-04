@@ -1,4 +1,17 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.create.menus';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'create.menus';
+  @endphp
+@endif
+@extends($layout)
 @section('content')
 @php
 	$page_title_data = array(
@@ -16,7 +29,7 @@
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 
-		{!! Form::open(['route'=>'create.menus' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+		{!! Form::open(['route'=>$route , 'class'=> 'form-horizontal','method' => 'post'])!!}
 			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Menu','button_title'=>'Add Menu','section'=>'add_menu_main']])
 		{!!Form::close()!!}
 

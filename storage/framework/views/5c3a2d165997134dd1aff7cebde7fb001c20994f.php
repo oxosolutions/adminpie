@@ -4,8 +4,7 @@
 
 	<title> AdminPie</title>
 
-	<!-- Global stylesheets -->
-	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/aione.css')); ?>">
+	
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -45,10 +44,22 @@
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="<?php echo e(asset('js/dropzone.js')); ?>"></script>
 
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+
+	<!-- Global stylesheets -->
+	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/aione.css?ref='.rand(1111,9999))); ?>">
+
 	
 	<script type="text/javascript">
         function route(){
-            return '<?php echo e(url('/')."/".Request::route()->getPrefix()); ?>';
+        	if('<?php echo e(Request::route()->getPrefix()); ?>' != ''){
+        		return '<?php echo e(url('/')."/".Request::route()->getPrefix()); ?>';
+        	}else{
+        		return '<?php echo e(url('/')); ?>';
+        	}
         }
         function csrf(){
             return '<?php echo e(csrf_token()); ?>';

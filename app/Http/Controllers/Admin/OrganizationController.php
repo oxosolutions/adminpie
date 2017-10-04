@@ -206,13 +206,55 @@ class OrganizationController extends Controller
     }
 	public function save(Request $request)
 	{
+        $this->global_create_organization($request);
+  //       $this->validate($request, $this->valid_fields);
+  //       if(!empty($request['modules'])) {
+  //          $request['modules'] = json_encode($request['modules']);
+  //       }
+		// $org = new ORG();
+		// $org->fill($request->all());
+		// $org->save();
+  //       $org_id = $org->id;
+  //       $active_code =  $org_id * 576;
+  //       ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
+  //       Session::put('organization_id',$org->id);
+  //       $checkMaster = GlobalSetting::where('key','primary_organization');
+  //       if($checkMaster->exists()){
+  //           $primary_orgnaization = $checkMaster->first();
+  //           $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
+  //           ($return=='table_exist')? $org_usr =  User::find(1):null;
+  //       }
+  //       if(!$checkMaster->exists() || $return=='table_not_exist'){
+  //           $this->create_db_through_migration($org_id);
+  //           $org_usr = new User();
+           
+  //       }
+  //       $org_usr->fill($request->all());
+
+  //       // $org_usr->role_id = 1;
+  //       // $org_usr->user_type = json_encode([1]);
+  //       $org_usr->password = Hash::make($request->password);
+  //       $org_usr->save(); 
+  //       $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
+  //       if(!$userRoleMapping->exists()){
+  //           $userRoleMapping = new UserRoleMapping();
+  //           $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
+  //           $userRoleMapping->save();
+  //       }
+
+  //       Session::flash('success', 'Organization create successfully');
+        return redirect()->route('list.organizations');
+    }
+
+    public function global_create_organization($request){
         $this->validate($request, $this->valid_fields);
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
         }
-		$org = new ORG();
-		$org->fill($request->all());
-		$org->save();
+      // dd($request->all());
+        $org = new ORG();
+        $org->fill($request->all());
+        $org->save();
         $org_id = $org->id;
         $active_code =  $org_id * 576;
         ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
@@ -242,7 +284,7 @@ class OrganizationController extends Controller
         }
 
         Session::flash('success', 'Organization create successfully');
-        return redirect()->route('list.organizations');
+        return $org_id.' has beenn created';
     }
 
     public function cloneOrganization($id)
@@ -310,10 +352,15 @@ class OrganizationController extends Controller
                                 '--schema'=>'role_id:integer, permisson_type:string, permisson_id:integer, permisson:string:nullable, status:integer:default(1)'
                             ]);
 
-		Artisan::call('make:migration:schema',[
-								'--model'=>false,
+    Artisan::call('make:migration:schema',[
+                '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users_metas',
                                 '--schema'=>'user_id:integer , key:string, value:text:nullable, type:string:nullable'
+                            ]);
+		Artisan::call('make:migration:schema',[
+								'--model'=>false,
+                                'name'=>'create_'.$org_id.'_media_meta',
+                                '--schema'=>'media_id:integer , key:string, value:text:nullable, type:string:nullable, status:integer:default(1)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -333,7 +380,7 @@ class OrganizationController extends Controller
     Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_category_meta',
-                                '--schema'=>'key:string, value:string, category_id:integer, status:integer:default(1)'
+                                '--schema'=>'key:string, value:text, category_id:integer, status:integer:default(1)'
                             ]);
     
 
@@ -402,10 +449,25 @@ class OrganizationController extends Controller
                             ]);*/
 
 	//TEAM MIGRATION
-		Artisan::call('make:migration:schema',[
-								'--model'=>false,
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
                                 'name'=>'create_'.$org_id.'_teams',
                                 '--schema'=>'title:string, description:text:nullable, member_ids:text:nullable'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_document',
+                                '--schema'=>'title:string, description:text:nullable, layout:integer, template:integer, status:integer, order:integer'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_document_layout',
+                                '--schema'=>'name:string, header:text:nullable, footer:text:nullable, order:integer, slug:string'
+                            ]);
+		Artisan::call('make:migration:schema',[
+								'--model'=>false,
+                                'name'=>'create_'.$org_id.'_document_template',
+                                '--schema'=>'name:string, content:text:nullable, subject:string:nullable, slug:string, status:integer, order:integer'
                             ]);
 
 		Artisan::call('make:migration:schema',[
@@ -546,7 +608,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_organization_settings',
-                                '--schema'=>'key:string , value:text:nullable'
+                                '--schema'=>'key:string , value:text:nullable, type:string'
                             ]);
 //ORGANIZATION METAS
 		
@@ -573,7 +635,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_datasets',
-                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, uploaded_by:string'
+                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, defined_columns:text, uploaded_by:string'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -647,7 +709,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_form_field_meta',
-                                '--schema'=>'form_id:integer, section_id:integer, field_id:integer, key:string, value:string:nullable' 
+                                '--schema'=>'form_id:integer, section_id:integer, field_id:integer, key:string, value:text:nullable' 
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -697,7 +759,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menus',
-                                '--schema'=>'title:string, description:text:nullable, order:integer, status:integer:default(1)']);         
+                                '--schema'=>'title:string, description:text:nullable, slug:string, order:integer, status:integer:default(1)']);         
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menu_settings',

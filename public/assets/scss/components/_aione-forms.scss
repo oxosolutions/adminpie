@@ -122,6 +122,7 @@ FIELD
 ***************************************/
 .field-wrapper{
     position: relative;
+    width:100%;
 }
 .field-label{
     text-align: left;
@@ -564,10 +565,22 @@ FORM SECTION STYLE ACCORDION/Collapsible
 .aione-collapsible .aione-form-section .aione-form-section-header,
 .aione-accordion .aione-form-section .aione-form-section-header{
     cursor: pointer; 
+    padding: 10px 10px 0 10px;
+    background-color: #fafafa;
+}
+.aione-collapsible .aione-form-section .aione-form-section-header .aione-form-section-title,
+.aione-accordion .aione-form-section .aione-form-section-header .aione-form-section-title{
+    color: #747474;
+    font-size: 16px; 
+}
+.aione-collapsible .aione-form-section.active .aione-form-section-header,
+.aione-accordion .aione-form-section.active .aione-form-section-header{
+    background-color: #f5f5f5;
 }
 .aione-collapsible .aione-form-section .aione-form-section-content,
 .aione-accordion .aione-form-section .aione-form-section-content{
     display: none;
+    padding: 0 10px;
 }
 .aione-collapsible .aione-form-section.active .aione-form-section-content,
 .aione-accordion .aione-form-section.active .aione-form-section-content{
@@ -575,11 +588,37 @@ FORM SECTION STYLE ACCORDION/Collapsible
 }
 .aione-collapsible .aione-form-section .aione-form-section-header:after,
 .aione-accordion .aione-form-section .aione-form-section-header:after{
-    content:""; 
+    content:"";
+    position: absolute;
+    top: 18px;
+    right: 15px;
+    border-top: 6px solid #989898;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
 }
 .aione-collapsible .aione-form-section.active .aione-form-section-header:after,
 .aione-accordion .aione-form-section.active .aione-form-section-header:after{
-    
+    top: 18px;
+    border-top: none;
+    border-bottom: 6px solid #989898;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+}
+
+.aione-form-section-border .aione-collapsible,
+.aione-form-section-border .aione-accordion{
+    border-top: 1px solid #e8e8e8; 
+}
+.aione-form-section-border .aione-collapsible .aione-form-section .aione-form-section-header,
+.aione-form-section-border .aione-accordion .aione-form-section .aione-form-section-header{
+    border-left: 1px solid #e8e8e8; 
+    border-right: 1px solid #e8e8e8; 
+}
+
+.aione-form-section-border .aione-collapsible .aione-form-section .aione-form-section-content,
+.aione-form-section-border .aione-accordion .aione-form-section .aione-form-section-content{
+    border-left: 1px solid #e8e8e8; 
+    border-right: 1px solid #e8e8e8; 
 }
 /***************************************
 FORM SECTION STYLE Tabs
@@ -647,6 +686,27 @@ FORM SECTION STYLE Tabs
 }
 
 
+/***************************************
+REPEATER SECTION
+***************************************/
+.repeater-wrapper .repeater-row{
+    position: relative;
+    border: 1px dotted #d8d8d8;
+    padding: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background: #fafafa;
+}
+.repeater-wrapper .repeater-row > i{
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    color: #757575;
+    cursor: pointer;
+}
+.repeater-wrapper > .repeater-row:hover > i {
+    color: #F44336;
+}
 /*
 .aione-form-field-border .field-wrapper:last-child{
     border-bottom:none;

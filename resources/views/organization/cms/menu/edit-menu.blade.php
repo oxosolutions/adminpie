@@ -1,4 +1,18 @@
-@extends('layouts.main')
+@if(Auth::guard('admin')->check() == true)
+  @php
+        $from = 'admin';
+        $layout = 'admin.layouts.main';
+        $route = 'admin.category.update';
+  @endphp
+@else
+  @php
+        $from = 'org';
+        $layout = 'layouts.main';
+        $route = 'category.update';
+  @endphp
+@endif
+@extends($layout)
+
 @section('content')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/simple-iconpicker.min.css') }}">
     <script type="text/javascript" src="{{ asset('js/simple-iconpicker.min.js') }}"></script>
@@ -301,8 +315,13 @@ $page_title_data = array(
                 $.map(unserialize_form_data, function(n, i){
                     form_data[n['name']] = n['value'];
                 });
+                    if('{{ $from }}' == 'admin'){
+                        var postUrl = 'admin/menus/item/update';
+                    }else{
+                        var postUrl = 'menus/item/update';
+                    }
                     $.ajax({
-                        url : route()+'cms/menus/item/update',
+                        url : route()+'/'+postUrl,
                         type :'get',
                         data : { form_data : form_data , menu_id : menu_id},
                         success : function(res){
@@ -319,9 +338,13 @@ $page_title_data = array(
 
                     var data_id = $(this).attr('data_id');
                     var menu_id = $(this).attr('menu_id');
-
+                    if('{{ $from }}' == 'admin'){
+                        var postUrl = 'admin/menus/item/update';
+                    }else{
+                        var postUrl = 'menus/item/update';
+                    }
                     $.ajax({
-                        url : route()+'cms/menus/item/update',
+                        url : route()+'menus/item/update',
                         type :'get',
                         data : { _token : $("input[name=_token]").val(), data_id : data_id ,menu_id : menu_id},
                         success : function(res){
@@ -345,9 +368,13 @@ $page_title_data = array(
                     var data_id = $(this).parents('.listData').attr('data_id');
                     var dataType = $(this).parents('.listData').attr('dataType');
                     var menu_id = $('.menu_id').val();
-
+                    if('{{ $from }}' == 'admin'){
+                        var postUrl = 'admin/menus/item/update';
+                    }else{
+                        var postUrl = 'menus/item/update';
+                    }
                     $.ajax({
-                        url : route()+'cms/menus/item/update',
+                        url : route()+'/'+postUrl,
                         type :'get',
                         data : { _token : $("input[name=_token]").val(), data_title : data_title ,data_id : data_id ,menu_id : menu_id ,dataType : dataType},
                         success : function(res){
@@ -364,8 +391,13 @@ $page_title_data = array(
             });
             function getMenuItem(){
                 var menu_id = $('.menu_id').val();
+                if('{{ $from }}' == 'admin'){
+                    var postUrl = 'admin/menus/item';
+                }else{
+                    var postUrl = 'cms/menus/item';
+                }
                 $.ajax({
-                        url : route()+'cms/menus/item',
+                        url : route()+'/'+postUrl,
                         type :'get',
                         data : { _token : $("input[name=_token]").val(), menu_id : menu_id},
                         success : function(res){
@@ -386,6 +418,37 @@ $page_title_data = array(
                 }
 
             });
+            $( function() {
+                
+                $( "#menu-to-edit" ).sortable({
+                    update : function(){
+                        var data = [];
+                        $($(this).find('.menu-item-title')).each(function(){
+                            data.push($(this).attr('item_id'));
+                        });
+                        console.log(data);
+                        // return false;
+                        if('{{ $from }}' == 'admin'){
+                            var postUrl = 'admin/change/order';
+                        }else{
+                            var postUrl = 'cms/change/order';
+                        }
+                        $.ajax({
+                            url : route()+'/'+postUrl,
+                            type : 'get',
+                            data : {request : data},
+                            success : function(res){
+                                if(res = 'true'){
+                                    Materialize.toast('SOrted',4000);
+                                }
+                            }
+                        });
+
+                    }
+                });
+                $( "#menu-to-edit" ).disableSelection();
+            });
+
         });
     </script>
 @include('common.page_content_primary_end')

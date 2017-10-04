@@ -15,148 +15,80 @@ $page_title_data = array(
     <div class="module-wrapper" >
         @include('admin.module._sidebar')
         <div class="Detail-container">
+
 	        @if(@$subModuleData == null)
 		        @if(@$moduleData != null)
+                    {!! Form::model($moduleData,['route' => 'save.style.subModule' , 'method' => 'post'])!!}
+                @else
                     {!! Form::open(['route' => 'save.style.subModule' , 'method' => 'post'])!!}
-                        <div id="" class="aione-tabs-wrapper">
-                            <nav class="aione-nav aione-nav-horizontal">
-                                <ul class="aione-tabs">
-                                    <li class="aione-tab ">
-                                        <a href="#aione_modules_settings">
-                                            <span class="nav-item-text">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li class="aione-tab ">
-                                        <a href="#aione_modules_custom_css">
-                                            <span class="nav-item-text">Custom CSS</span>
-                                        </a>
-                                    </li>
-                                    <li class="aione-tab ">
-                                        <a href="#aione_modules_custom_js">
-                                            <span class="nav-item-text">Custom JS</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                            <div class="aione-tabs-content-wrapper">
-                                <div id="aione_modules_settings" class="aione-tab-content">
-                                    <div class="row">
-                                        <div style="padding-top: 20px;">
-                                                <div class="col l4">
-                                                  {!! Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']) !!}
-
-                                                    {!! Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']) !!}                     
-
-                                                    <input type="hidden" name="modules_id" value="{{@request()->route()->parameters()['id']}}">                                  
-                                                    <div class="col l6 aione-field-wrapper">
-                                                        <label>Pick a color</label>
-
-                                                        <input type="text" id="custom" class="no-margin-bottom aione-field">
-                                                        
-                                                    </div>
-                                                    
-                                                    <div class="col l6 aione-field-wrapper">
-                                                        <label>Pick an icon</label>
-                                                        <input type="text" class="input1 input font-awesome"  placeholder="Pick an icon" />  
-                                                        <i class="fa "></i>
-                                                    </div>
-                                                    <script type="text/javascript">
-                                                        console.log($(document).find('.input1').val());
-                                                    </script>
-                                                </div>
-                                                <div class="col l8">
-                                                    
-                                                    <div class="col s12 m2 l6 aione-field-wrapper">
-                                                        <label>Name</label>
-                                                        <input type="text" name="name" value="{{@$moduleData->name}}" class="no-margin-bottom aione-field" >
-                                                    </div>
-                                                    <div class="col s12 m2 l6 aione-field-wrapper">
-                                                        <label>Route</label>
-                                                        {!!Form::select('route',App\Model\Admin\GlobalModule::getRouteListArray(),@$moduleData->route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
-                                                    </div>
-                                                </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="aione_modules_custom_css" class="aione-tab-content">
-                                    <div class="col l6">
-                                        <label>
-                                            Write css code here
-                                        </label>
-                                        <div id="editor-css" class="editor" >
-                                        </div>
-                                        {!! Form::hidden('css', @$moduleData->css,['class' => 'editor-css']) !!}
-
-                                    </div>
-                                </div>
-                                <div id="aione_modules_custom_js" class="aione-tab-content">
-                                    <div class="col l6">
-                                        <label>
-                                        Write Javascript code here
-                                        </label>
-                                        <div id="editor-js" class="editor">
-                                        </div>
-                                        {!! Form::hidden('js', @$moduleData->js,['class' => 'editor-js']) !!}
-
-                                    </div>
-                                </div>
-                                <div class="col l12">
-                                    <button class="btn blue">Save Module</button>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-
-                        </div>
-
-                    {!! Form::close() !!}
-
-                   {!! Form::open(['route' => 'sub.module.save' , 'method' => 'post'])!!}
-                        <div class="add-module">
-                            <button class="btn blue" type="submit">Add Sub-module</button>
-                                <span>
-                                    <input type="text" name="name">
-                                    <input type="hidden" name="module_id" value="{{@request()->route()->parameters()['id']}}">    
-                                </span>
-                            <div class="clear"></div>
-                        </div>
-                    {!! Form::close() !!}
-                        <ul class="collection">
-                            @foreach($moduleData->subModule as $key=>$value)
-                                <li class="collection-item">
-                                    <a href="{{ route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id]) }}">{{$value->name}}</a>
-                                    <a href="{{ route('subModule.delete',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
-                                        <i class="arrow-delete material-icons dp48">delete</i>
-                                    </a>
-                                    <script type="text/javascript">
-                                        $(document).on('click','.delete-submodule',function(e){
-                                            e.preventDefault();
-                                            var href = $(this).attr("href");
-                                            swal({   
-                                                title: "Are you sure?",   
-                                                text: "You will not be able to recover this imaginary file!",   
-                                                type: "warning",   
-                                                showCancelButton: true,   
-                                                confirmButtonColor: "#DD6B55",   
-                                                confirmButtonText: "Yes, delete it!",   
-                                                closeOnConfirm: false 
-                                            }, 
-                                            function(){
-                                                window.location = href;
-                                               swal("Deleted!", "Your Sub Module has been deleted.", "success"); 
-                                           });
-                                        })
-                                    </script>
-                                    <a href="{{route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
-                                        <i class="arrow-downward material-icons dp48">arrow_downward</i>
-                                    </a>
-                                    <a href="{{route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
-                                        <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                @endif 
+                    <div id="" class="aione-tabs-wrapper">
+                        <nav class="aione-nav aione-nav-horizontal">
+                            <ul class="aione-tabs">
+                                <li class="aione-tab ">
+                                    <a href="#aione_modules_settings">
+                                        <span class="nav-item-text">Settings</span>
                                     </a>
                                 </li>
-                            @endforeach
-                        </ul>
+                                <li class="aione-tab ">
+                                    <a href="#aione_modules_custom_css">
+                                        <span class="nav-item-text">Customize</span>
+                                    </a>
+                                </li>
+                           
+                            </ul>
+                        </nav>
+                        <div class="aione-tabs-content-wrapper">
+                            <div id="aione_modules_settings" class="aione-tab-content">
+                                <div class="row">
+                               
+                                    {!! Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']) !!}
+
+                                    {!! Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']) !!}                     
+
+                                    <input type="hidden" name="modules_id" value="{{@request()->route()->parameters()['id']}}">              
+                                    {!! FormGenerator::GenerateForm('module_setting_form') !!}
+                                </div>
+                            </div>
+                            <div id="aione_modules_custom_css" class="aione-tab-content">
+                              
+                                {!! FormGenerator::GenerateForm('custom_code') !!}
+                              
+                            </div>
+                            <div id="aione_modules_custom_js" class="aione-tab-content">
+                              
+                            </div>
+                       
+                            <div class="clear"></div>
+                        </div>
+
+                    </div>
+
+                {!! Form::close() !!}
+
+                {!! Form::open(['route' => 'sub.module.save' , 'method' => 'post'])!!}
+                  
+                     {!! FormGenerator::GenerateForm('add_submodule_form') !!}
+                {!! Form::close() !!}
+                    <ul class="collection">
+                        @foreach($moduleData->subModule as $key=>$value)
+                            <li class="collection-item">
+                                <a href="{{ route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id]) }}">{{$value->name}}</a>
+                                <a href="{{ route('subModule.delete',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
+                                    <i class="arrow-delete material-icons dp48">delete</i>
+                                </a>
+                               
+                                <a href="{{route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
+                                    <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                                </a>
+                                <a href="{{route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
+                                    <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
                     
-		        @endif
+		        
 			@endif
 
             @if(@$subModuleData != null)
@@ -268,7 +200,7 @@ $page_title_data = array(
                             @endif
                             @if(@$subModuleData == null && @$moduleData == null)
                             {!! Form::open(['route' => 'module.save' , 'method' => 'post'])!!}
-                            <div class="add-module">
+                           {{--  <div class="add-module">
 
                                 <button class="btn blue" type="submit">Add Module</button>
                                 <span>
@@ -276,7 +208,8 @@ $page_title_data = array(
                                 </span>
                                 <div class="clear"></div>
                                 
-                            </div>
+                            </div> --}}
+                            {!! FormGenerator::GenerateForm('add_module_form') !!}
                             {!! Form::close() !!}
                             <ul class="collection">
                             @foreach($listModule as $key => $val)
@@ -313,7 +246,7 @@ $page_title_data = array(
                             @endforeach
                             </ul>
                         </div>
-                        <div id="aione_modules_custom_css" class="aione-tab-content">
+                      {{--   <div id="aione_modules_custom_css" class="aione-tab-content">
                             <div class="col l6">
                                 <label>
                                     Write css code here
@@ -334,7 +267,7 @@ $page_title_data = array(
                                 {!! Form::hidden('js', @$subModuleData->js,['class' => 'editor-js']) !!}
 
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -611,43 +544,6 @@ $page_title_data = array(
                 $('.sp-preview-inner').css({'background-color': $('input[name=color]').val()});
             }
         });
-        var editorJs = ace.edit("editor-js");
-        editorJs.setTheme("ace/theme/monokai");
-        editorJs.getSession().setMode("ace/mode/javascript");
-        var editorCss = ace.edit("editor-css");
-        editorCss.setTheme("ace/theme/monokai");
-        editorCss.getSession().setMode("ace/mode/css");
-        // $("#custom").spectrum({
-        //     color: '#000',
-        //     showAlpha: true,
-        // });
-
-        editorJs.getSession().on("change", function () {
-            var code = editorJs.getValue();
-            $('input[name=js]').val(code);
-        });
-        editorCss.getSession().on("change", function () {
-            var code = editorCss.getValue();
-            $('input[name=css]').val(code);
-        });
-
-        if($('input[name=js]').val() != ""){
-            editorJs.setValue($('.editor-js').val());
-        } 
-        if($('input[name=css]').val() != ""){
-            editorCss.setValue($('.editor-css').val());
-        } 
-        $( function() {
-            $( "#sortable" ).sortable();
-            $( "#sortable" ).disableSelection();
-        });
-        
-        // $('body').on('click','.delete-reoute-permission', function(e){
-        //     e.preventDefault();
-        //     if($('.repeat-sub-row').length > 1){
-        //         $(this).parents('.repeat-sub-row').remove();
-        //     }
-        // });
-
+       
     </script>
 @endsection

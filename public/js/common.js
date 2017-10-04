@@ -3,11 +3,11 @@ $(document).ready(function(){
     
      $('.add-new-repeater').click(function(e){
         e.preventDefault();
-        var html = '<div class="repeater-row"><i class="material-icons dp48">close</i>'+$(this).parents('.repeater-group').find('.repeater-wrapper .repeater-row').html()+'<div>';
+        var html = '<div class="repeater-row ar"><i class="material-icons dp48">close</i>'+$(this).parents('.repeater-group').find('.repeater-wrapper .repeater-row').html()+'<div>';
         var repeaterLength = $(this).parents('.repeater-group').find('.repeater-row').length;
         console.log(repeaterLength);
         $(this).parents('.repeater-group').find('.repeater-wrapper').append(html);
-        $(this).parents('.repeater-group').find('.repeater-row:last').find('input').each(function(index){
+        $(this).parents('.repeater-group').find('.repeater-row:last').find('input,select').each(function(index){
             $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
         });
         $(this).parents('.repeater-group').find('.repeater-row:last').find('input,textarea,select').each(function(index){

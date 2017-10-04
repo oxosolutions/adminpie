@@ -28,9 +28,15 @@
 @include('common.page_content_secondry_start')
 
 	<!-- <div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div> -->
-
+@if($errors->any())
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#add_new_model').modal('open');
+		});
+	</script>
+@endif
 {!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
-	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add new user','button_title'=>'Save User','section'=>'organization_user_edit']])
+	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add new user','button_title'=>'Save User','section'=>'organization_user_add']])
 {!! Form::close() !!}
 
 {!! Form::open(['method' => 'POST','class' => '','route' => 'change.pass']) !!}

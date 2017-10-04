@@ -10,7 +10,7 @@
 				@endphp
 			@endif
 			@foreach($fieldOptions as $key => $value)
-				<div class="repeater-row">
+				<div class="repeater-row ar">
 					<i class="material-icons dp48 repeater-row-delete">close</i>
 					@php
 						$options = [];
@@ -58,7 +58,7 @@
 		@endforeach --}}
 	@else
 		<div class="repeater-wrapper">
-			<div class="repeater-row">
+			<div class="repeater-row ar">
 			<i class="material-icons dp48 repeater-row-delete">close</i>
 			@foreach($collection->fields as $secKey => $field)
 				@php
@@ -73,21 +73,9 @@
 	@endif
 	
 		
-	<button type="submit" class="btn add-new-repeater">Add New</button>
+	<button type="submit" class="aione-float-right aione-button add-new-repeater">Add New</button>
+	<div style="clear: both">
+		
+	</div>
 	
 </div>
-<style type="text/css">
-	.repeater-wrapper .repeater-row{
-		position: relative;
-		border: 1px solid #e8e8e8;
-    	padding: 20px;
-    	margin-bottom: 10px;
-	}
-	.repeater-wrapper .repeater-row > i{
-		position: absolute;
-		right: 8px;
-		top: 8px;
-		color: #757575;
-		cursor: pointer;
-	}
-</style>

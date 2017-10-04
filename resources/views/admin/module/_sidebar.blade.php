@@ -1,5 +1,5 @@
 <div class="list-container">
-    <nav id="aione_nav" class="aione-nav aione-nav-vertical">
+    <nav id="aione_nav" class="aione-nav light vertical">
         <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu sortable">
             <li class="aione-nav-item level0 unsortable">

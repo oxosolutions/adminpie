@@ -1,7 +1,11 @@
 <div id="aione_footer" class="aione-footer">
 	<div class="aione-row">
-			
-		&copy;<?php echo e(date("Y")); ?> <!--<a href="http://oxosolutions.com/" target="_blank">OXO Solutions</a>.--> All rights reserved. Designed and Developed by <a href="http://fhts.ac.in" target="_blank">FHTS</a>
+		<?php if(@$admin_footer_content): ?>
+		<?php echo @$admin_footer_content; ?>
+
+		<?php else: ?>
+			&copy;<?php echo e(date("Y")); ?> <a href="http://oxosolutions.com/" target="_blank">OXO Solutions</a>.All rights reserved. 
+		<?php endif; ?>
 		
 	</div><!-- .aione-row -->
 </div><!-- #aione_content --> 

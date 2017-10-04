@@ -233,7 +233,7 @@ $page_title_data = array(
 	</div>
 
 	@else
-	<div><h2> No Data Exist</h2></div>
+	<div><h2> No Data Exist 1 </h2></div>
 @endif
 <script>
 $('#more_condition').on('click',function(event){

@@ -14,7 +14,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
       {!! Form::model($model,['route'=>['visualization.settings.save',request()->route()->parameters()['id']] , 'method' => 'post']) !!}
-    	 <div class="card-v2">
+    	 {{-- <div class="card-v2">
             <div class="card-v2-header">
                 Visualization Settings
             </div>
@@ -30,9 +30,11 @@ $page_title_data = array(
                     </div>
                 </div>
                 
+               
             </div>
-        </div>
-        <button class="btn blue">Save Settings</button>
+        </div> --}}
+         {!!FormGenerator::GenerateForm('vizz')!!}
+        {{-- <button class="btn blue">Save Settings</button> --}}
       {!!Form::close()!!}          
 
                                  

@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Schema;
 use DB;
 use App\Model\Organization\FieldMeta;
 use App\Model\Organization\FormBuilder;
-
+Use Carbon\carbon;
+use App\Model\Organization\OrganizationSetting;
 
 class SurveyController extends Controller
 {
@@ -136,6 +137,12 @@ class SurveyController extends Controller
             $data['surveys']     = $surveys;           
             $data['groups']      = $groups;
             $data["users"]       = User::all();
+            $data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
+            $mediaArray = [];
+            if(isset($data['settings']['android_application_logo'])){
+                $mediaArray['android_application_logo'] = $data['settings']['android_application_logo'];
+            }
+            $data['media'] = $mediaArray;
         	return $data; 	
 }
             public function surveyPerview($form_id)
@@ -145,7 +152,8 @@ class SurveyController extends Controller
             }
 
     public function save_app_survey_filled_data(Request $request){
-         // dd($request->all());
+        // dd($request->all());
+        //dump($request['activation_code']);
          $organization = GO::where('active_code',$request['activation_code']);
          if($organization->exists()){
             $org_id = $organization->first()->id;
@@ -200,8 +208,17 @@ class SurveyController extends Controller
                         $dataKey = $questionId_slug[$dataKey];
                     }
                         $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
+
                      if(is_array($dataValue)) {
                         $dataValue = json_encode($dataValue);
+                     }
+                     if($dataKey=='accident_date'){
+                        $dataValue =  carbon::parse($dataValue)->format('Y-m-d');
+                     }
+                     if($dataKey=='created_at'){
+                     	$date = explode('-',$dataValue);
+                      	$formatedDate = $date[0]."-".$date[1]."-".$date[2];
+                     	$dataValue =  carbon::parse($formatedDate)->format('Y-m-d');
                      }
                      $values[$dataKey] = $dataValue;
                      $keys[] = $dataKey;
@@ -209,6 +226,7 @@ class SurveyController extends Controller
              }
             $newTableName = str_replace('ocrm_', '', $table_name);
          if(Schema::hasTable($newTableName)){
+         	// dd('table_exist', $colums);
             $table_column = Schema::getColumnListing($newTableName);
             $columnsdata  = collect($keys);
             $new_columns   = $columnsdata->diff($table_column)->toArray();
@@ -218,7 +236,7 @@ class SurveyController extends Controller
                 }
             }
       }else{ 
-        DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+      	DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
         DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
         }
             if(!empty($values['unique_id'])){

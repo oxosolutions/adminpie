@@ -1,7 +1,7 @@
 <li class="repeater-li">
-    <div class="collapsible-header">first chart<i class="fa fa-trash"></i></div>
+    <div class="collapsible-header"><div style="width: 90%;">first chart</div><i class="fa fa-trash"></i></div>
     <div class="collapsible-body">
-          <div class="row mb-0">
+         {{--  <div class="row mb-0">
                <label>Chart Title</label>
               <div class="col s12 m2 l12 aione-field-wrapper">
                    {!!Form::text('chart_title[chart_'.$length.']',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Chart Title'])!!}
@@ -67,7 +67,8 @@
               <div class="col s12 m2 l12 aione-field-wrapper">
                   {!! Form::select('chart_width[chart_'.$length.']',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],null,["class"=>"no-margin-bottom aione-field select_2 browser-default  "])!!}
               </div>
-          </div>
+          </div> --}}
+           {!! FormGenerator::GenerateForm('available_chart_form') !!}
 
     </div>
   </li>

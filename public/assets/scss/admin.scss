@@ -15,16 +15,6 @@ Aione layout
 @import "layout/aione-nav";
 @import "layout/aione-page-header";
 
-
-//Aione Componants
-@import "components/common";
-@import "components/aione-forms";
-@import "components/aione-datalist";
-@import "components/aione-datalist-pagination";
-@import "components/aione-tabs";
-@import "components/progressbar";
-@import "components/temp";
-
 // sweetalert
 @import "../../bower_components/sweetalert/dev/sweetalert";
 //font-awesome
@@ -78,3 +68,30 @@ Aione layout
 
 //clockpicker
 @import "../../bower_components/materialize-clockpicker/src/sass/clockpicker";
+//Select2
+@import "../../bower_components/select2/src/scss/core.scss"; 
+
+
+
+
+//Aione Componants
+@import "components/backgrounds";
+@import "components/typography";
+@import "components/model";
+@import "components/aione-forms";
+@import "components/aione-table";
+@import "components/aione-datalist";
+@import "components/aione-datalist-pagination";
+@import "components/aione-tabs";
+@import "components/progressbar";
+@import "components/temp";
+
+@import "components/common";
+@import "components/aione-grid";
+
+//Select 2 Aione Theme Style Overide
+@import "components/select2-aione-theme";
+
+
+//Spactrum Color Picker Style Overide
+@import "components/color-picker-aione-theme";

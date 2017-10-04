@@ -11,7 +11,7 @@
 		</div>
 		<div style="padding:20px 40px">
 			<h5>Hi {{@$model['name']}}</h5>
-			You recently requested to reset your password for your ocrm account. Click the button below to reset it.<br>
+			You recently requested to reset your password for your account. Click the button below to reset it.<br>
 			<div style="width: 100%;text-align: center;padding: 18px 0px;">
 				<a href="{{ route('edit.password') }}" style="background-color: #DB4F28;color: white;width: 200px;line-height: 38px;font-size: 18px;border: none">Reset Password</a>	
 			</div>
@@ -21,7 +21,7 @@
 			<p>
 				Thanks,
 				<br>
-				Oxo solutions pvt ltd
+				
 			</p>
 			<p>
 				Note:  PLEASE DO NOT REPLY TO THIS MAIL. THIS IS AN AUTO GENERATED MAIL.

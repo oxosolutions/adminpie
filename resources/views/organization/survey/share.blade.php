@@ -36,17 +36,42 @@ $id = "";
 			<div class="share-user">
 				
 				<div class="title">
-					share with users
+					How would you like to share this survey
 				</div>
 				{!!Form::open(['route'=>['save.shareto',request()->route()->parameters()['id']]])!!}
+				@php
+					$share_type = $survey['formsMeta']->where('key' , 'share_type');
+					foreach ($share_type->toArray() as $key => $value) {
+						$share_type_value = $value['value'];
+					}
+				@endphp
 				<div class="body-wrapper">
-					<div class="user-field">
-						{!! FormGenerator::GenerateField('email_user_share') !!}
+					<div class="ar share_status" style="margin-bottom: 20px">
+						<div class="ac l33">
+							<input type="radio" id="only_me" name="group1" {{ (@$share_type_value == 'only_me')?'checked="checked"':'' }}>
+							<label for="only_me">Only Me</label>
+						</div>
+						<div class="ac l33">
+							<input type="radio" id="public" name="group1" {{ (@$share_type_value == 'public')?'checked="checked"':'' }}>
+							<label for="public">Public</label>
+						</div>
+						<div class="ac l33">
+							<input type="radio" id="specific" name="group1" {{ (@$share_type_value == 'specific')?'checked="checked"':'' }}>
+							<label for="specific">Specific</label>
+						</div>
+						<input type="hidden" name="survey_id" value="{{ request()->route()->parameters()['id'] }}">
 						
 					</div>
-					<div class="share-button">
-						<div>{!! FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]) !!}</div>
-						<div><button>Add User</button></div>
+					
+					<div class="specific_user_field">
+						<div class="user-field">
+							{!! FormGenerator::GenerateField('email_user_share') !!}
+							
+						</div>
+						<div class="share-button">
+							<div>{!! FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]) !!}</div>
+							<div><button>Add User</button></div>
+						</div>
 					</div>
 					<div class="clear"></div>
 				</div>
@@ -180,7 +205,35 @@ $id = "";
 		    }
 		    return succeed;
 		}
+		$(document).ready(function(){
+			$('.specific_user_field , .list-users').hide();
+				if($('.share_status').find('#specific').attr('checked')){
+					$('.specific_user_field , .list-users').show();
+				}
+			$('body').on('change','.share_status input[type= radio]',function(){
+				var share_status = $(this).attr('id');
+				var survey_id = $('input[name=survey_id]').val();
 
+					if(share_status == 'specific'){
+						$('.specific_user_field , .list-users').show();
+					}else{
+						$('.specific_user_field , .list-users').hide();
+					}
+
+					$.ajax({
+						url : route()+'/change/survey/status',
+						type: 'get',
+						data : {share_status : share_status , survey_id : survey_id },
+						success : function(res){
+							if(res == "Success"){
+								Materialize.toast('Saved',4000);
+							}else{
+								Materialize.toast('Something went wrong',4000);
+							}
+						}
+					});
+			});
+		});
 	</script>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

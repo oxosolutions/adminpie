@@ -7,6 +7,7 @@
 
 		$custom_css = App\Model\Organization\OrganizationSetting::getSettings('admin_custom_css');
 		$custom_js = App\Model\Organization\OrganizationSetting::getSettings('admin_custom_js');
+		$admin_footer_content = App\Model\Organization\OrganizationSetting::getSettings('admin_footer_content');
 
 		$user_roles = get_user_roles(); 
 

@@ -10,6 +10,8 @@ use App\Model\Organization\section as OrgSection;
 use DB;
 class FormGenerator{
 	
+	protected static $formConditions = [];
+
 	/**
 	 * will generate the form according to the slug
 	 * @param [string] $form_slug 
@@ -70,6 +72,19 @@ class FormGenerator{
 			$collection = $FieldsCollection->field_type;
 			$status = 'single';
 		}
+		
+		if(isset($FieldsCollection->fieldMeta)){
+			$conditions = self::GetMetaValue($FieldsCollection->fieldMeta, 'field_conditions');
+			if($conditions != false){
+				self::$formConditions[$FieldsCollection->id] = [
+											'field_slug' => $FieldsCollection->field_slug,
+											'field_id' => $FieldsCollection->id,
+											'field_title' => $FieldsCollection->field_title,
+											'field_conditions' => json_decode($conditions,true)
+										  ];
+			}
+		}
+
 		if($FieldsCollection != null){
 			$HTMLField = self::GetHTMLField($collection, $FieldsCollection, $Options, $dataModel,$status);
 			return $HTMLField;
@@ -176,6 +191,10 @@ class FormGenerator{
 			$fields[] = $field->field_title;
 		}
 		return $fields;
+	}
+
+	public static function GetCurrentFormConditions(){
+		return self::$formConditions;
 	}
 
 }

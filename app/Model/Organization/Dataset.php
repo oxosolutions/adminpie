@@ -9,9 +9,8 @@ class Dataset extends Model
 {
 	public static $breadCrumbColumn = 'id';
     public function __construct(){
-    	if(!empty(Session::get('organization_id'))){
-
-	    	$this->table = Session::get('organization_id').'_datasets';
+    	if(!empty(get_organization_id())){
+	    	$this->table = get_organization_id().'_datasets';
 	    }
     }
 
@@ -45,6 +44,22 @@ class Dataset extends Model
     		//unset($row->id);
     		$records[] = array_values((array)$row);
     	}
-		return ['records'=>$records,'headers'=>$headers,'tableRecords'=>$tableRecords,'firstRecord'=>$firstRecordId,'dataset_name'=>$datasetName];
+		return ['records'=>$records,'headers'=>$headers,'tableRecords'=>$tableRecords,'firstRecord'=>$firstRecordId,'dataset_name'=>$datasetName,'columns'=>$tabaleHeader];
+    }
+
+    public static function getDatasetHeaders(){
+        $ArrayData = self::getDatasetTableData(request()->route()->parameters()['id']);
+        $records = $ArrayData['records'];
+        $headers = $ArrayData['headers'];
+        $headers = array_combine(array_keys((array)$ArrayData['columns']),$headers);
+        if(empty($headers)){
+            $headers['id'] = 'Id';
+        }
+        return $headers;
+    }
+
+    public static function getDatasetColumns(){
+        $ArrayData = self::getDatasetTableData(request()->route()->parameters()['id']);
+        return collect($ArrayData['columns'])->except(['id','status','parent']);
     }
 }

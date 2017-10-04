@@ -7,7 +7,7 @@ use Route;
 
 class GlobalModule extends Model
 {
-    protected $fillable = ['name', 'route', 'status'];   
+    protected $fillable = ['name', 'route','tables', 'status'];   
 
      public static function getRouteListArray()
     {

@@ -52,6 +52,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.admin' => \App\Http\Middleware\CheckIfAdminAuthenticated::class,
+        'auth.group' => \App\Http\Middleware\CheckIfGroupAuthenticated::class,
         'auth.org' => \App\Http\Middleware\CheckIfOrganizationAuthenticated::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -59,10 +60,12 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'guest.admin' => \App\Http\Middleware\RedirectIfAdminAuthenticated::class,
+        'guest.group' => \App\Http\Middleware\RedirectIfGroupAuthenticated::class,
         'guest.org' => \App\Http\Middleware\RedirectIfOrganizationAuthenticated::class,
         'role' => \App\Http\Middleware\CheckRole::class,
         'log' => \App\Http\Middleware\Logsystem::class,
         'page.auth' => \App\Http\Middleware\PageAuth::class,
+        'survey.auth' => \App\Http\Middleware\SurveyMiddleware::class,
     ];
 
 }

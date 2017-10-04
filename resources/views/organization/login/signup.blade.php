@@ -4,15 +4,15 @@
 @include('common.page_content_primary_start')
 	
 			@if (Session::has('success'))
-			 <div class="alert alert-info">{{ Session::get('success') }}</div>
+			 <div class="aione-message success">{{ Session::get('success') }}</div>
 			@endif
 
 			@if (Session::has('exist_email'))
-	 				<div class="alert alert-info">{{ Session::get('exist_email') }}</div>
+	 				<div class="aione-message warning">{{ Session::get('exist_email') }}</div>
 			@endif
 			@if ($errors->any())
-			    <div class="alert alert-danger">
-			        <ul>
+			    <div class="aione-message error">
+			        <ul class="aione-messages">
 			            @foreach ($errors->all() as $error)
 			                <li>{{ $error }}</li>
 			            @endforeach
@@ -26,7 +26,7 @@
 
 			<div class="aione-align-center" style="margin: 10px 0 20px 0">
 				Have you forgotten your password? <br>
-				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password ?</a>
+				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>
 			</div>
 			<div class="aione-align-center">
 				Already have a user account?

@@ -134,7 +134,7 @@ class VisualisationController extends Controller
 	public function edit($id){
 		$charts = VisualizationCharts::with(['meta'])->where('visualization_id',$id)->get();
 		$model = Visualization::with(['dataset','meta'])->find($id);
-		$dataset = DB::select('SELECT * FROM '.$model->dataset->dataset_table.' LIMIT 1');
+		$dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
 		$dataset = (array)$dataset[0];
 		unset($dataset['id']);
 		$columns = $dataset;
@@ -143,11 +143,10 @@ class VisualisationController extends Controller
 		if($filters == false){
 			$filters = [];
 		}
-		return view('organization.visualization.edit2',['columns'=>$columns,'charts'=>$charts, 'filters'=>$filters]);
+		return view('organization.visualization.edit2',['columns'=>$columns,'charts'=>$charts, 'filters'=>$filters,'model'=>$model]);
 	}
 
 	public function update(Request $request, $id){
-
 		$model = VS::findOrFail($id);
 
 		$this->modelValidate($request);
@@ -210,20 +209,21 @@ class VisualisationController extends Controller
     * return JSON to API
     */
 	public function createVisualization(Request $request)
-	{
+	{		
         try{
             $model = new Visualization();
-            $model->dataset_id = $request->select_dataset;
-            $model->name = $request->visualization_name;
+            $model->dataset_id = $request->dataset_id;
+            $model->name = $request->name;
             $model->description = $request->description;
             $model->created_by = Auth::guard('org')->User()->id;
             $model->save();
         }catch(\Exception $e){
-            if($e instanceOf \Illuminate\Database\QueryException){
+        	//throw $e;
+            /*if($e instanceOf \Illuminate\Database\QueryException){
                 return ['status'=>'error','message'=>'No dataset found!'];
             }else{
                 return ['status'=>'error','message'=>'something went wrong!'];
-            }
+            }*/
         }
         return back();
 	}
@@ -919,7 +919,7 @@ class VisualisationController extends Controller
 	public function getDataByAjax($id, $length){
 
 		$model = Visualization::with('dataset')->find($id);
-		$dataset = DB::select('SELECT * FROM '.$model->dataset->dataset_table.' LIMIT 1');
+		$dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
 		$dataset = (array)$dataset[0];
 		unset($dataset['id']);
 		$columns = $dataset;
@@ -944,13 +944,16 @@ class VisualisationController extends Controller
     }
     public function updateVizDetails(Request $request)
     {
-    	$data = [];
 
-		$data['name'] = $request['visualization_name'];
-		$data['dataset_id'] = $request['select_dataset'];
-		$data['description'] = $request['description'];
-
-		$data = Visualization::where('id',$request->id)->update($data);
+		$data = Visualization::where('id',$request->id)->update($request->except(['_token','id']));
 		return back();
+    }
+    public function addVisual()
+    {
+    	return view('organization.visualization.add');
+    }
+    public function customize_visualization()
+    {
+    	return view('organization.visualization.customize');
     }
 }
