@@ -43,12 +43,13 @@
     -o-transition: all 150ms ease-out;
     transition: all 150ms ease-out;	
 	}
-	.result-options input:hover{
+	/*.result-options input:hover{
 		background-color: #168dc5
-	}
+	}*/
 
 </style>
 @php
+
 if(!empty($data)){
 
 	$head = [
@@ -112,7 +113,7 @@ $page_title_data = array(
 
 				
 				<div style="float: left;width: 400px">{!! FormGenerator::GenerateForm('static_survey_form_to') !!}</div>
-				{!! Form::submit('Search',['class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button','style'=>'float:left']) !!}
+				{!! Form::submit('Submit',['class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button','style'=>'float:left']) !!}
 				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button','style'=>'float:right']) !!}
 				
 			</div>	
@@ -242,16 +243,20 @@ $page_title_data = array(
 	       					@endif
 	       				</td>
 	       				<td>@php
+	       					if(!empty($vals['vehicle_related_details'])){
 			       				$vehicle_involve = collect(json_decode($vals['vehicle_related_details'],true));
 			       				$vehicle_value = $vehicle_involve->pluck('SID2_GID9_QID89')->all();
 			       				$result = array_intersect_key( $vehicle_type , array_flip( $vehicle_value ) );
 			       				echo implode(',<br> ', $result);
+			       			}
 	       				 @endphp
 	       				 </td>
-	       				 <td>@php 
+	       				 <td>@php
+	       				 if(!empty($vals['sub_type_of_road'])){
 	       				 		$road_feature = array_filter(json_decode($vals['sub_type_of_road'],true));
 	       				 		$intersect = array_intersect_key( $type_of_road , $road_feature );
 	       				 		echo implode(',<br>', $intersect);
+	       				 	}
 							@endphp
 						</td>
 						<td>
@@ -364,7 +369,9 @@ $page_title_data = array(
 			<h3>{{$errorVal}}</h3>
 		@endforeach
 	@else --}}
-		<div><h2> No Data Exists.</h2></div>
+		<div class="aione-message warning">
+			No Data Available
+		</div>
 	{{-- @endif --}}
 @endif
 <script>

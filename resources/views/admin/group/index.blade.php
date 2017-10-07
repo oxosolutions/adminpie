@@ -5,7 +5,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Groups',
+  'page_title' => 'Groups1',
   'add_new' => '+ Add Module'
 ); 
 @endphp

@@ -79,6 +79,7 @@ $id = "";
      
     }
 </style>
+
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -201,52 +202,54 @@ $id = "";
                     <div></div>
                 </div>
             </div>
-            <div class="right-25 aione-table" >
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="2">Settings</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            @if($setting_questions != null)
+                <div class="right-25 aione-table" >
+                    <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">Settings</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($setting_questions as $settingKey => $settingVal)
+                                @if($settingKey=='_token')
+                                    @continue;
+                                @endif
+                                @if(!empty($settings[$settingKey]))
+                                    <tr>
+                                        <td>{{$loop->iteration}}.{{$settingVal}}</td>
+                                        <td>{{$settings[$settingKey]}}</td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                  {{--   <div class="center-align">
+                        <span class="card-title-bar">Settings</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="aione-survey-settings">
+                        <div class="aione-survey-setting">
                         @foreach($setting_questions as $settingKey => $settingVal)
                             @if($settingKey=='_token')
-                                @continue;
+                                    @continue;
                             @endif
-                            @if(!empty($settings[$settingKey]))
-                                <tr>
-                                    <td>{{$loop->iteration}}.{{$settingVal}}</td>
-                                    <td>{{$settings[$settingKey]}}</td>
-                                </tr>
-                            @endif
+                                        @if(!empty($settings[$settingKey]))
+                                    <div class="aione-survey-subsetting">
+                                            <span class="aione-survey-subsetting-key">{{$loop->iteration}}.
+                                                {{$settingVal}}
+                                            </span>
+                                            <span class="aione-survey-subsetting-value">{{$settings[$settingKey]}}</span>
+                                    </div>
+                                        @endif
                         @endforeach
-                    </tbody>
-                </table>
-
-              {{--   <div class="center-align">
-                    <span class="card-title-bar">Settings</span>
+                              
+                        </div>
+                    </div> --}}
+                        
                 </div>
-                <div class="divider"></div>
-                <div class="aione-survey-settings">
-                    <div class="aione-survey-setting">
-                    @foreach($setting_questions as $settingKey => $settingVal)
-                        @if($settingKey=='_token')
-                                @continue;
-                        @endif
-                                    @if(!empty($settings[$settingKey]))
-                                <div class="aione-survey-subsetting">
-                                        <span class="aione-survey-subsetting-key">{{$loop->iteration}}.
-                                            {{$settingVal}}
-                                        </span>
-                                        <span class="aione-survey-subsetting-value">{{$settings[$settingKey]}}</span>
-                                </div>
-                                    @endif
-                    @endforeach
-                          
-                    </div>
-                </div> --}}
-                    
-            </div>
+            @endif
         </div>
    
 
@@ -274,6 +277,7 @@ $id = "";
    
    
 @if(!empty($section))
+
     @foreach ($sections as $key => $value) 
         
         <div>Section Name{{$value['section_name']}}</div>

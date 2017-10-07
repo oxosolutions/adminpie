@@ -2,11 +2,14 @@
   @php
         $from = 'admin';
         $layout = 'admin.layouts.main';
+        $route = 'admin.update.page';
   @endphp
 @else
   @php
         $from = 'org';
         $layout = 'layouts.main';
+        $route = 'update.page';
+
   @endphp
 @endif
 @extends($layout)
@@ -73,7 +76,7 @@
 	@include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 		@include('organization.pages._tabs')
-		{!! Form::model($page,['route' => 'update.page' , 'method' => 'post']) !!}
+		{!! Form::model($page,['route' => $route , 'method' => 'post']) !!}
 			<div class="aione-row" style="position: relative;">
 				<div style="position: absolute;right: 0;top: -60px">
 					{{-- <div style="display: inline-block;width: 172px;">

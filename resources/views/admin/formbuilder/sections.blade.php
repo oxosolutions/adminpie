@@ -47,7 +47,6 @@ $page_title_data = array(
     @endif
     <input type="hidden" name="_token" value="{{csrf_token() }}">
     @if(!@$permission)
-        {{-- {{dump('You do not have permission!')}} --}}
         <div>
             <div class="access-denied">Access Denied</div>
             <div class="permission">You do not have permission!</div>

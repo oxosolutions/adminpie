@@ -79,7 +79,7 @@ class VisualisationController extends Controller
               if($sortedBy != ''){
                   $model = Visualization::with(['dataset'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
               }else{
-                   $model = Visualization::with(['dataset'])->paginate($perPage);
+                   $model = Visualization::with(['dataset'])->orderBy('id','DESC')->paginate($perPage);
               }
           }
           // dd($model);
@@ -87,6 +87,7 @@ class VisualisationController extends Controller
                           'datalist'=>$model,
                           'showColumns' => ['name'=>'Name', 'dataset.dataset_name' => 'Dataset','description'=>'Description','created_by'=>'Created By','created_at'=>'Created At'],
                           'actions' => [
+                                          'view' => ['title'=>'View','route'=>'visualization.view','class' => 'edit'],
                                           'edit' => ['title'=>'Edit','route'=>'edit.visualization','class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.visualization'],
                                           'Edit Charts'=>['title'=>'Edit Charts','route'=>'edit.visual']
@@ -234,12 +235,12 @@ class VisualisationController extends Controller
 	* return JSON to API
 	*/
 	public function saveCharts(Request $request, $visualization_id){
-		for($chartCount = 0; $chartCount < count($request->chart_title); $chartCount++){
+		for($chartCount = 0; $chartCount < count($request->available_chart); $chartCount++){
 			
-			$visualization_chart = $this->createChart($request, $chartCount, $visualization_id);
-			$this->createMeta($request, $chartCount, $visualization_chart, $visualization_id);
+			$visualization_chart = $this->createChart($request, $request->available_chart[$chartCount], $chartCount, $visualization_id);
+			$this->createMeta($request, $request->available_chart[$chartCount], $chartCount, $visualization_chart, $visualization_id);
 		}
-		if($request->has('filter_columns')){
+		if($request->has('filters')){
 			$visualizationMeta = VisualizationMeta::where(['visualization_id'=>$visualization_id,'key'=>'filters'])->first();
 			if($visualizationMeta == null){
 				$visualizationMeta = new VisualizationMeta;
@@ -247,8 +248,8 @@ class VisualisationController extends Controller
 			$visualizationMeta->visualization_id = $visualization_id;
 			$visualizationMeta->key = 'filters';
 			$filters = [];
-			for($filterCount = 0; $filterCount < count($request->filter_columns); $filterCount++){
-				$filters['filter_'.$filterCount] = ['type'=>$request->filter_type[$filterCount],'column'=>$request->filter_columns[$filterCount]];
+			for($filterCount = 0; $filterCount < count($request->filters); $filterCount++){
+				$filters['filter_'.$filterCount] = ['type'=>$request->filters[$filterCount]['filter_type'],'column'=>$request->filters[$filterCount]['filter_columns']];
 			}
 			$visualizationMeta->value = json_encode($filters);
 			$visualizationMeta->save();
@@ -268,15 +269,15 @@ class VisualisationController extends Controller
 		return back();
 	}
 
-	protected function createMeta($request, $chartCount, $visualization_chart, $visualization_id){
-		$metaData = $request->except([
-										'chart_title','variable_x_axis',
-										'variable_y_axis','chart_type',
-										'_token','filter_columns','filter_type',
-										'chart_id','area_code','tooltip_data']);
+	protected function createMeta($request, $chartData, $chartCount, $visualization_chart, $visualization_id){
+		//Unsetting Data From Array
+		$chartId = $chartData['chart_id'];
+		$metaData = $chartData;
+		unset($metaData['chart_title']);unset($metaData['variable_x_axis']);unset($metaData['variable_y_axis']);unset($metaData['chart_type']);unset($metaData['_token']);unset($metaData['filter_columns']);unset($metaData['filter_type']);unset($metaData['chart_id']);unset($metaData['area_code']);unset($metaData['tooltip_data']);
+
 		foreach ($metaData as $chart_meta_key => $chart_meta_value) {
-			if($request->has('chart_id') && @$request->chart_id['chart_'.$chartCount] != ''){
-				$visualization_chart_meta = VisualizationChartMeta::where(['visualization_id'=>$visualization_id,'chart_id'=>$request->chart_id['chart_'.$chartCount],'key'=>$chart_meta_key])->first();
+			if($chartId != ''){
+				$visualization_chart_meta = VisualizationChartMeta::where(['visualization_id'=>$visualization_id,'chart_id'=>$chartId,'key'=>$chart_meta_key])->first();
 				if($visualization_chart_meta == null){
 					$visualization_chart_meta = new VisualizationChartMeta();
 				}
@@ -286,37 +287,31 @@ class VisualisationController extends Controller
 			$visualization_chart_meta->visualization_id = $visualization_id;
 			$visualization_chart_meta->chart_id = $visualization_chart->id;
 			$visualization_chart_meta->key = $chart_meta_key;
-			if(isset($chart_meta_value['chart_'.$chartCount])){
-				if(is_array($chart_meta_value['chart_'.$chartCount])){
-					$chart_meta_value = json_encode($chart_meta_value['chart_'.$chartCount]);
-				}else{
-					$chart_meta_value = $chart_meta_value['chart_'.$chartCount];
-				}
-				$visualization_chart_meta->value = $chart_meta_value;
+			if(is_array($chart_meta_value)){
+				$chart_meta_value = json_encode($chart_meta_value);
+			}else{
+				$chart_meta_value = $chart_meta_value;
 			}
+			$visualization_chart_meta->value = $chart_meta_value;
 			
 			$visualization_chart_meta->save();
 		}
 	}
 
-	protected function createChart($request, $chartCount, $visualization_id){
-		if($request->has('chart_id') && @$request->chart_id['chart_'.$chartCount] != ''){
-			$visualization_chart = VisualizationCharts::find($request->chart_id['chart_'.$chartCount]);
+	protected function createChart($request, $chartData, $chartCount, $visualization_id){
+		if($chartData['chart_id'] != ''){
+			$visualization_chart = VisualizationCharts::find($chartData['chart_id']);
 		}else{
 			$visualization_chart = new VisualizationCharts();
 		}
-		if(isset($request->chart_type['chart_'.$chartCount])){
-			$chartType = $request->chart_type['chart_'.$chartCount];
-		}else{
-			$chartType = '';
-		}
+		$chartType = $chartData['chart_type'];
 		$visualization_chart->visualization_id = $visualization_id;
-		$visualization_chart->chart_title = ($request->chart_title['chart_'.$chartCount] == null)?'(no title)':$request->chart_title['chart_'.$chartCount];
-		$primaryColumn = ($chartType == 'CustomMap')?@$request->area_code['chart_'.$chartCount]:@$request->variable_x_axis['chart_'.$chartCount];
+		$visualization_chart->chart_title = ($chartData['chart_title'] == null || $chartData['chart_title'] == '')?'(no title)':$chartData['chart_title'];
+		$primaryColumn = ($chartType == 'CustomMap')?@$chartData['area_code']:@$chartData['variable_x_axis'];
 		$primaryColumn = $primaryColumn;
 		$visualization_chart->primary_column = ($primaryColumn != null)?$primaryColumn:'{}';
-		$visualization_chart->secondary_column = ($chartType == 'CustomMap')?json_encode(@$request->tooltip_data['chart_'.$chartCount]):json_encode(@$request->variable_y_axis['chart_'.$chartCount]);
-		$visualization_chart->chart_type = (@$request->chart_type['chart_'.$chartCount] != null)?@$request->chart_type['chart_'.$chartCount]:'not defined';
+		$visualization_chart->secondary_column = ($chartType == 'CustomMap')?json_encode(@$chartData['tooltip_data']):json_encode(@$chartData['variable_y_axis']);
+		$visualization_chart->chart_type = (@$chartData['chart_type'] != null && $chartData['chart_type'] != '')?@$chartData['chart_type']:'not defined';
 		$visualization_chart->status = 'true';
 		$visualization_chart->save();
 		return $visualization_chart;
@@ -948,12 +943,24 @@ class VisualisationController extends Controller
 		$data = Visualization::where('id',$request->id)->update($request->except(['_token','id']));
 		return back();
     }
-    public function addVisual()
-    {
-    	return view('organization.visualization.add');
+    public function addVisual($datasetId = null)
+    {	
+    	return view('organization.visualization.add',['datasetid'=>$datasetId]);
     }
-    public function customize_visualization()
+    public function customize_visualization($id)
     {
-    	return view('organization.visualization.customize');
+    	$model = VisualizationMeta::where('visualization_id',$id)->get();
+    	return view('organization.visualization.customize',['model'=>$model,'id'=>$id]);
+    }
+
+    public function udpateCustomize(Request $request, $id){
+    	foreach($request->except(['_token']) as $key => $value){
+    		$model = VisualizationMeta::firstOrNew(['key'=>$key,'visualization_id'=>$id]);
+    		$model->key = $key;
+    		$model->value = $value;
+    		$model->visualization_id = $id;
+    		$model->save();
+    	}
+    	return back();
     }
 }

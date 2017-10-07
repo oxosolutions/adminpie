@@ -52,6 +52,8 @@ class SurveyStatsController extends Controller
         }
         if(!empty($survey_data)){
     		$group_count = count($survey_data[0]['section']);
+        $ary = [];
+        $field = [];
         	 for($i=0; $i<$group_count; $i++){
             $field_collect  = collect($survey_data[0]['section'][$i]['fields']);
               $question_fields = $survey_data[0]['section'][$i]['fields']->toArray();
@@ -154,7 +156,7 @@ class SurveyStatsController extends Controller
     protected function validations($req){
 
       $customMessages = [
-    'fields.required' => 'Yo, which Fields data want to see in survey select atleast one field to view data?',
+    'fields.required' => 'Select atleast one field to view data.',
     ];
       return $this->validate($req,['fields'=>'required'], $customMessages );
     }
@@ -238,9 +240,9 @@ class SurveyStatsController extends Controller
               $to = $dt->toDateString();
               $from = $dt->subWeek(2)->toDateString();
               if($request->isMethod('post') && !empty($request['from']) &&  !empty($request['to'])){
-                if($request['from'] <  $request['to']){
+                if($request['from'] >  $request['to']){
                      $error['from_greater_to'] = 'from-date must be greater than to-date';
-                    return view('organization.survey.survey_static_result', compact('error') );
+                    return view('organization.survey.survey_static_result', compact('error','id') );
                 }
               }
 
@@ -265,7 +267,7 @@ class SurveyStatsController extends Controller
 
                  } catch (\Exception $e) {
                      $error['table_column_not_exist'] = "column not match";
-                     return view('organization.survey.survey_static_result', compact('error') );
+                     return view('organization.survey.survey_static_result', compact('error','id') );
                      // return $e->getMessage();
                   
                 }
@@ -300,7 +302,7 @@ class SurveyStatsController extends Controller
 
                     } catch (\Exception $e) {
                      $error['table_column_not_exist'] = "column not match";
-                     return view('organization.survey.survey_static_result', compact('error') );
+                     return view('organization.survey.survey_static_result', compact('error','id') );
                 }
             }elseif($id==5){
                try { 
@@ -338,7 +340,7 @@ class SurveyStatsController extends Controller
                     }
                  } catch (\Exception $e) {
                      $error['table_column_not_exist'] = "column not match";
-                     return view('organization.survey.survey_static_result', compact('error') );
+                     return view('organization.survey.survey_static_result', compact('error','id') );
                 }
             }
             $last_two_week = DB::table($table_name)->where('accident_date', '<=', $to) ->where('accident_date', '>=', $from)->count();

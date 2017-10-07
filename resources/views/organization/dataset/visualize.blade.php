@@ -6,9 +6,9 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset:',
+	'page_title' => 'Dataset: '.$dataset['dataset_name'],
 	'add_new' => '+ Add Visualization',
-	'route' => 'add.visual'
+	'route' => ['add.visual',['dataset_id'=>$dataset['id']]]
 	); 
 @endphp
 @include('common.pageheader',$page_title_data)
@@ -33,54 +33,22 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@include('organization.dataset._tabs')
-	<ul class="aione-list">
-		<li class="aione-item ar">
-			<div class="ac l25">Name of visualization</div>
-			<div class="ac l25">Created at</div>
-			<div class="ac l25">Description</div>
-			<div class="ac l25">Actions</div>
-		</li>
-		<li class="aione-item ar">
-			<div class="ac l25">Demo viz 1</div>
-			<div class="ac l25">02-10-2017</div>
-			<div class="ac l25 truncate">this is the demo decription sdfjsdjhsdjf sjdfhjsdfjsjdfjhsdjfsjk sdhfsdj</div>
-			<div class="ac l25">
-				<a href="">Edit</a> |
-				<a href="">View</a> |
-				<a href="">Share</a>
-			</div>
-		</li>
-		<li class="aione-item ar">
-			<div class="ac l25">Demo viz 2</div>
-			<div class="ac l25">02-10-2017</div>
-			<div class="ac l25 truncate">this is the demo decription</div>
-			<div class="ac l25">
-				<a href="">Edit</a> |
-				<a href="">View</a> |
-				<a href="">Share</a>
-			</div>
-		</li>
-		<li class="aione-item ar">
-			<div class="ac l25">Demo viz 3</div>
-			<div class="ac l25">01-10-2017</div>
-			<div class="ac l25 truncate">this is the demo decription</div>
-			<div class="ac l25">
-				<a href="">Edit</a> |
-				<a href="">View</a> |
-				<a href="">Share</a>
-			</div>
-		</li>
-		<li class="aione-item ar">
-			<div class="ac l25">Demo viz 4</div>
-			<div class="ac l25">29-09-2017</div>
-			<div class="ac l25 truncate">this is the demo decription</div>
-			<div class="ac l25">
-				<a href="">Edit</a> |
-				<a href="">View</a> |
-				<a href="">Share</a>
-			</div>
-		</li>
-	</ul>
+	@if($visualizations->isEmpty())
+		<div class="aione-message warning">
+			No Visualizations Found!
+		</div>
+	@else
+		<ul class="aione-list">
+			@foreach($visualizations as $key => $value)
+				<li class="aione-item ar">
+					<div class="ac l25">Name of visualization</div>
+					<div class="ac l25">Created at</div>
+					<div class="ac l25">Description</div>
+					<div class="ac l25">Actions</div>
+				</li>
+			@endforeach
+		</ul>
+	@endif
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 {{--  @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Visualization','button_title'=>'Save & Next','section'=>'vissec1']]) --}}

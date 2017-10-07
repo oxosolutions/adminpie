@@ -21,7 +21,7 @@ class forms extends Model
     }   
 
     public function section(){
-    	return $this->hasMany('App\Model\Organization\section','form_id','id')->orderBy('id','asc');
+    	return $this->hasMany('App\Model\Organization\section','form_id','id');
     }
 
     public function formsMeta(){

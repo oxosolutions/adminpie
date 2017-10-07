@@ -159,8 +159,14 @@ class UsersController extends Controller
                 $roleMapping->role_id = (int) $role;
                 $roleMapping->status = 1;
                 $roleMapping->save();
+              }
+            }else{
+                $roleMapping = new UserRoleMapping;
+                $roleMapping->user_id = $user_id;
+                $roleMapping->role_id = 8;
+                $roleMapping->status = 1;
+                $roleMapping->save();
             }
-        }
           }
           Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
           return back();

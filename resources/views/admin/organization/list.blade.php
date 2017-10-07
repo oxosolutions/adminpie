@@ -1,27 +1,20 @@
 
 @extends('admin.layouts.main')
-
 @section('content')
 @if(!empty(Session::get('success')))
 	<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">{{Session::get('success')}}</div></div>
-	{{-- <script type="text/javascript">
-		  Materialize.toast('I am a toast!', 4000);
-	</script>	 --}}
 @endif
-
 @if(!empty(Session::get('error')))
 	<div id="card-alert" class="card red lighten-5"><div class="card-content red-text">{{Session::get('error')}}</div></div>
-	{{-- <script type="text/javascript">
-		  Materialize.toast('I am a toast!', 4000);
-	</script>	 --}}
 @endif
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
+	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Organizations',
-	'add_new' => ''
+	'add_new' => '+ Add New Organization',
+	'route' => 'create.organization'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)

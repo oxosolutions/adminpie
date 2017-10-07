@@ -20,6 +20,8 @@ use App\Model\Organization\UsersMeta;
 use App\Model\Organization\UserRoleMapping;
 use App\Mddel\Organization\OrganizationSetting;
 use App\Model\Organization\FormBuilder;
+use App\Model\Organization\Page as Page;
+use App\Model\Admin\Page as GlobalPage;
 
 
 /************************************************************
@@ -797,6 +799,77 @@ function aione_list($headers = null, $records = null, $style = "default"){
 	
 	return $html;
 }
+
+
+/************************************************************
+*	@function get_posts
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm array			[array	optional	default	null]
+*	@perm global		[true/false	optional	default	false]
+*	@return posts [object]
+************************************************************/
+function get_posts($options = array(), $global = false){	
+
+	$posts = arrray();
+	
+	//Return posts
+	return $posts;
+}
+/************************************************************
+*	@function get_global_posts
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm array			[array	optional	default	null]
+*	@perm global		[true/false	optional	default	false]
+*	@return posts [object]
+************************************************************/
+function get_global_posts($options = array()){	
+
+	$posts = get_posts($options, true);
+	
+	//Return posts
+	return $posts;
+}
+/************************************************************
+*	@function get_post
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm id			[integer	optional	default	null]
+*	@perm global		[true/false	optional	default	false]
+*	@return filename [string]
+************************************************************/
+function get_post($id = null , $global = false, $array =false){	
+
+
+	if($global){
+		$post = GlobalPage::where(['id'=>$id])->first();
+	} else {
+		$post = Page::where(['id'=>$id])->first();
+	}
+
+	//Return $post
+	return $post;
+}
+/************************************************************
+*	@function get_global_post
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm id			[integer	optional	default	null]
+*	@return filename [string]
+************************************************************/
+function get_global_post($id = null){	
+	
+	$post = get_post($id , true, $array);
+
+	//Return $post
+	return $post;
+}
+
 /************************************************************
 *	@Module Tools
 *	@Section Widgets

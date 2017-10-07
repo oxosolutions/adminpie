@@ -8,7 +8,7 @@
  ?>
 
 
-<div id="aione_form_section_<?php echo e($collection->id); ?>" class="aione-form-section">
+<div id="aione_form_section_<?php echo e($collection->id); ?>" class="aione-form-section non-repeater">
 	<div class="aione-row">
 
 		<?php if( (@$form_settings->form_section_show_title && !empty($collection->section_name)) || (@$form_settings->form_show_section_description && !empty($collection->section_description))): ?>

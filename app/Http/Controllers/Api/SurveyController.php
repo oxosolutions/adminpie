@@ -247,7 +247,6 @@ class SurveyController extends Controller
                     return false; 
                 }
             }else{
-                
                  DB::table($newTableName)->insert($values);
                  return true;
             }

@@ -6,7 +6,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset:',
+	'page_title' => 'Dataset: '.$dataset['dataset_name'],
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -66,28 +66,35 @@
 	</div>
 	<div style="font-size: 13px;color: #757575">Showing 201 to 300 of total 15336 records</div>
 	<div class="aione-table" style="margin-top: 14px">
-		<table class="compact">
-			<thead>
-				<tr>
-					<th>Row Id</th>
-					@foreach($headers as $key => $header)
-						@if(!in_array($key,['id','parent','status']))
-							<th>{{$header}}</th>
-						@endif
-					@endforeach
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($records as $key => $record)
+		@if($headers == null)
+			<div class="aione-message warning">
+				No records found for validate!
+			</div>
+		@else
+			<table class="compact">
+				<thead>
 					<tr>
-						<td>{{$loop->index+1}}</td>
-						@foreach($record as $k => $column)
-							<td>{!!$column!!}</td>
+						<th>Row Id</th>
+						@foreach($headers as $key => $header)
+							@if(!in_array($key,['id','parent','status']))
+								<th>{{$header}}</th>
+							@endif
 						@endforeach
 					</tr>
-				@endforeach
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					@foreach($records as $key => $record)
+						<tr>
+							<td>{{$loop->index+1}}</td>
+							@foreach($record as $k => $column)
+								<td>{!!$column!!}</td>
+							@endforeach
+						</tr>
+					@endforeach
+				</tbody>
+			</table>
+		@endif
+		
 		@if(!empty($records))
 			{!!$paginate->render()!!}
 		@endif

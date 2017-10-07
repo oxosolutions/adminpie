@@ -80,7 +80,7 @@ class GroupController extends Controller
 
 
         // // ocrm_{id}_group_users
-            DB::statement('CREATE TABLE ocrm_'.$groupId.'_group_users (id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(200) , email VARCHAR(200), api_token VARCHAR(200), role_id INT(11), password VARCHAR(200), remember_token VARCHAR(100), created_at timestamp ,updated_at timestamp)');
+            DB::statement('CREATE TABLE ocrm_group_'.$groupId.'_users (id INT(11) AUTO_INCREMENT PRIMARY KEY, name VARCHAR(200) , email VARCHAR(200), api_token VARCHAR(200), role_id INT(11), password VARCHAR(200), remember_token VARCHAR(100), created_at timestamp ,updated_at timestamp)');
             return back();
     }
 

@@ -32,7 +32,7 @@ class SurveyController extends Controller
         }else{
           $perPage = 5;
         }
-        $model = forms::where(['type'=>'survey'])->with(['section'])->paginate($perPage);
+        $model = forms::where(['type'=>'survey'])->with(['section'])->orderBy('id','DESC')->paginate($perPage);
         // if($request->has('search')){
         //     if($sortedBy != ''){
         //         $model = forms::where('form_title','like','%'.$request->search.'%')->where(['type'=>'survey','created_by'=>get_user_id()])->orderBy($sortedBy,$request->order)->with(['section'])->get();
@@ -54,7 +54,7 @@ class SurveyController extends Controller
         //add relation in query of formMeta to get the share_type   --sandeep 28/sept
         // $collab = Collaborator::select('relation_id')->where(['type'=>'survey','email'=>Auth::guard('org')->user()->email])->get()->groupBy('relation_id')->toArray();
         // if(!empty($collab)){
-        //     $appendSurveys = forms::whereIn('id',array_keys($collab))->get();
+        //     $append` = forms::whereIn('id',array_keys($collab))->get();
         //     foreach($appendSurveys as $keyItem => $item){
         //         $model->push($item);
         //     }
@@ -118,10 +118,19 @@ class SurveyController extends Controller
     }
 
     public function save_survey(Request $request){
-        $form_id = $request['form_id'];
-         unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'] );
-        $res = $this->apisurvey->create_alter_insert_survey_table(get_organization_id(), $form_id,$request->all());
 
+
+        $form_id = $request['form_id'];
+        // if(Session::has('section')){
+        // 	$section = Session::get('section');
+        // 	unset($section[$request['section_id']]);
+        // }
+
+         unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'],  $request['section_id'], $request['section_slug']);
+        $inserted_id = $this->apisurvey->create_alter_insert_survey_table(get_organization_id(), $form_id,$request->all());
+       // if(!Session::has('inserted_id')){
+       //  	Session::put('inserted_id', $inserted_id);
+       // }
         Session::flash('sucess','Submitted Sucessfully');
         return back();
     }
@@ -185,34 +194,33 @@ class SurveyController extends Controller
     }
 
     public function embededSurvey($token){
-       
-        $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
+ $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
         if($form != null){
             $form = $form->first();
             $slug = $form->form_slug;
              $form_id = $form['id'];
-             Session::has('form_id');
-             $sections['session'] = $form->section->mapWithKeys(function($item){
-                    return [$item['id']=>$item['section_slug']];
-                 })->toArray();
-            if(Session::has('form_id')){
-                   dump('in');
-                //   Session::has('form_id');
-                 Session::forget(['form_id']);
-              $section =Session::forget('session');
-                unset($section[110]);
-                //  Session::forget("sec");
-                // Session::forget('section');
-                 dump(Session::all());
+            //  Session::has('form_id');
+            //  $sections['section'] = $form->section->mapWithKeys(function($item){
+            //         return [$item['id']=>$item['section_slug']];
+            //      })->toArray();
+            // if(Session::has('form_id')){
+            //         dump('in');
+            //     //   Session::has('form_id');
+            //      // Session::forget(['form_id']);
+            //  // $section =Session::forget('section');
+            //   //   unset($section[110]);
+            //     //  Session::forget("sec");
+            //     // Session::forget('section');
+            //      dump(Session::all());
                 
-            }else{
-                dump('out'); 
-                // dump($sections);
-                Session::put('form_id', $form_id);
-                Session::put($sections);
+            // }else{
+            //     dump('out'); 
+            //     // dump($sections);
+            //     Session::put('form_id', $form_id);
+            //     Session::put($sections);
 
-                 dump(Session::all()); 
-            }
+            //      dump(Session::all()); 
+            // }
             $survey_setting = $form['formsMeta']->pluck('value','key')->toArray();
             $maintain_error =  $error = $this->survey_error($survey_setting, $form_id );
             if(!empty($error) && $error !=1){  
@@ -222,7 +230,7 @@ class SurveyController extends Controller
                             $error = $maintain_error; 
                     }
                 }
-               $section_key = array_keys($sections);
+               // $section_key = array_keys($sections);
                 // return view('organization.survey.shared_survey',compact('error','section_key'));
             }
         }else{
@@ -231,18 +239,14 @@ class SurveyController extends Controller
         }
         if(!empty($survey_setting['survey_timer']) && ($survey_setting['survey_timer']==true)){
             if(!empty($survey_setting['timer_type'])&& ($survey_setting['timer_type']=="survey_expiry_time")){
-                
                 $expire_date_time = $survey_setting['expire_date'].' '.$survey_setting['survey_expire_time'];
                 $expire_date = Carbon::parse($expire_date_time);
                 $dt = Carbon::now();
                 $survey_setting['survey_time_lefts'] = $expire_date->diffForHumans($dt);
             }
         }
-
-   
-
-
-        return view('organization.survey.shared_survey',compact('slug' ,'form_id','survey_setting','sections'));
+        
+        return view('organization.survey.shared_survey',compact('slug' ,'form_id','survey_setting'));
     }
 
   

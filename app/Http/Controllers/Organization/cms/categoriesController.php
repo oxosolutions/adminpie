@@ -32,10 +32,10 @@ class categoriesController extends Controller
                 $perPage = 5;
               }
           $sortedBy = @$request->sort_by;
-          $order = $request->order;
+           $orders = $request->order;
           if($request->orderby == null || $request->orderby == ''){
             $sortedBy = 'created_at';
-            $order = 'desc';
+            $orders = 'desc';
           }
           if($request->has('search')){
               if($sortedBy != ''){

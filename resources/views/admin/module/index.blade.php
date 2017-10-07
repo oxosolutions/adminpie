@@ -13,115 +13,157 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
     <div class="module-wrapper" >
+        @php
+        $permission['permission']= [];
+        $index = 0;
+        if(@$moduleData != null){
+            foreach(@$moduleData->subModule as $key => $submodule){
+                foreach(@$submodule->moduleRoute as $routeKey => $route){
+
+                    $permission['permission'][$index]['routes'] = $route->route;
+                    $permission['permission'][$index]['route_name'] = $route->route_name;
+                    $index++;
+                }
+            }
+        }
+        @endphp
         @include('admin.module._sidebar')
         <div class="Detail-container">
-
+			<!-- http://admin.adminpie.com/modules/{id} -->
 	        @if(@$subModuleData == null)
-		        @if(@$moduleData != null)
-                    {!! Form::model($moduleData,['route' => 'save.style.subModule' , 'method' => 'post'])!!}
+              
+                @if(@$moduleData != null)
+                 	{!! Form::model($moduleData,['route' => 'edit.module' , 'method' => 'post'])!!}
                 @else
-                    {!! Form::open(['route' => 'save.style.subModule' , 'method' => 'post'])!!}
-                @endif 
-                    <div id="" class="aione-tabs-wrapper">
-                        <nav class="aione-nav aione-nav-horizontal">
-                            <ul class="aione-tabs">
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_settings">
-                                        <span class="nav-item-text">Settings</span>
-                                    </a>
-                                </li>
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_custom_css">
-                                        <span class="nav-item-text">Customize</span>
-                                    </a>
-                                </li>
+                    {!! Form::open(['route' => 'edit.module' , 'method' => 'post'])!!}
+                @endif
+                @if(@$moduleData != null)
+	                    <div id="" class="aione-tabs-wrapper">
+	                        <nav class="aione-nav aione-nav-horizontal">
+	                            <ul class="aione-tabs">
+	                                <li class="aione-tab active">
+	                                    <a href="#aione_modules_settings">
+	                                        <span class="nav-item-text">Settings</span>
+	                                    </a>
+	                                </li>
+	                                <li class="aione-tab ">
+	                                    <a href="#aione_modules_custom_css">
+	                                        <span class="nav-item-text">Customize</span>
+	                                    </a>
+	                                </li>
+	                           
+	                            </ul>
+	                        </nav>
+	                        <div class="aione-tabs-content-wrapper">
+	                            <div id="aione_modules_settings" class="aione-tab-content active">
+	                                <div class="row">
+	                               
+	                                    {!! Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']) !!}
+
+	                                    {!! Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']) !!}                     
+
+	                                    <input type="hidden" name="modules_id" value="{{@request()->route()->parameters()['id']}}">              
+	                                    {!! FormGenerator::GenerateForm('module_setting_form') !!}
+	                                </div>
+	                            </div>
+	                            <div id="aione_modules_custom_css" class="aione-tab-content">
+	                              
+	                                {!! FormGenerator::GenerateForm('custom_code') !!}
+	                              
+	                            </div>
+	                           
+	                       
+	                            <div class="clear"></div>
+	                        </div>
+
+	                    </div>
+               		{!! Form::close() !!}
+                    {!! Form::open(['route' => 'sub.module.save' , 'method' => 'post'])!!}
+                        <input type="hidden" name="module_id" value="{{ @request()->route()->parameters()['id'] }}">
+                        {!! FormGenerator::GenerateForm('add_submodule_form') !!}
+                    {!! Form::close() !!}
+                        @endif
+                
+
+                <ul class="collection">
+                    @if(@$moduleData->subModule != null)
+                    @foreach($moduleData->subModule as $key=>$value)
+                        <li class="collection-item">
+                            <a href="{{ route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id]) }}">{{$value->name}}</a>
+                            <a href="{{ route('subModule.delete',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
+                                <i class="arrow-delete material-icons dp48">delete</i>
+                            </a>
                            
-                            </ul>
-                        </nav>
-                        <div class="aione-tabs-content-wrapper">
-                            <div id="aione_modules_settings" class="aione-tab-content">
-                                <div class="row">
-                               
-                                    {!! Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']) !!}
+                            <a href="{{route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
+                                <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                            </a>
+                            <a href="{{route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
+                                <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                            </a>
 
-                                    {!! Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']) !!}                     
-
-                                    <input type="hidden" name="modules_id" value="{{@request()->route()->parameters()['id']}}">              
-                                    {!! FormGenerator::GenerateForm('module_setting_form') !!}
-                                </div>
-                            </div>
-                            <div id="aione_modules_custom_css" class="aione-tab-content">
-                              
-                                {!! FormGenerator::GenerateForm('custom_code') !!}
-                              
-                            </div>
-                            <div id="aione_modules_custom_js" class="aione-tab-content">
-                              
-                            </div>
-                       
-                            <div class="clear"></div>
-                        </div>
-
-                    </div>
-
-                {!! Form::close() !!}
-
-                {!! Form::open(['route' => 'sub.module.save' , 'method' => 'post'])!!}
-                  
-                     {!! FormGenerator::GenerateForm('add_submodule_form') !!}
-                {!! Form::close() !!}
-                    <ul class="collection">
-                        @foreach($moduleData->subModule as $key=>$value)
-                            <li class="collection-item">
-                                <a href="{{ route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id]) }}">{{$value->name}}</a>
-                                <a href="{{ route('subModule.delete',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
-                                    <i class="arrow-delete material-icons dp48">delete</i>
-                                </a>
-                               
-                                <a href="{{route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
-                                    <i class="arrow-downward material-icons dp48">arrow_downward</i>
-                                </a>
-                                <a href="{{route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
-                                    <i class="arrow-upward material-icons dp48">arrow_upward</i>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+                        </li>
+                    @endforeach
+                    @endif
+                </ul>
                     
 		        
 			@endif
-
+			<!-- http://admin.adminpie.com/modules/{id}/{submodule} -->
             @if(@$subModuleData != null)
                
                 <div id="" class="aione-tabs-wrapper">
                     <nav class="aione-nav aione-nav-horizontal">
                         <ul class="aione-tabs">
-                            <li class="aione-tab ">
+                            <li class="aione-tab active">
                                 <a href="#aione_modules_settings">
                                     <span class="nav-item-text">Settings</span>
                                 </a>
                             </li>
                             <li class="aione-tab ">
                                 <a href="#aione_modules_custom_css">
-                                    <span class="nav-item-text">Custom CSS</span>
+                                    <span class="nav-item-text">Customize</span>
                                 </a>
                             </li>
                             <li class="aione-tab ">
-                                <a href="#aione_modules_custom_js">
-                                    <span class="nav-item-text">Custom JS</span>
+                                <a href="#aione_modules_permissions">
+                                    <span class="nav-item-text">Permissions</span>
                                 </a>
                             </li>
+                          
                         </ul>
                     </nav>
                     <div class="aione-tabs-content-wrapper">
-                        <div id="aione_modules_settings" class="aione-tab-content">
-                            <div class="sub-div">
+                        
+                        <div id="aione_modules_settings" class="aione-tab-content active">
+                         
+                           {!! Form::model($subModuleData,['route' => 'save.style.module' , 'method' => 'post'])!!}
+                                <div class="row">
+                                 
+                                    <input type="hidden" name="sub_modules_id" value="{{@request()->route()->parameters()['subModule']}}">  
+                                    {!! FormGenerator::GenerateSection('submodule_settings') !!}
+                                  
+                                </div>
+                           
+                             {!! Form::close() !!}    
+                          
+                        </div>
+                        <div id="aione_modules_custom_css" class="aione-tab-content">
+	                        {!! Form::model($subModuleData,['route' => 'save.style.module' , 'method' => 'post'])!!}  
+                                <input type="hidden" name="sub_modules_id" value="{{@request()->route()->parameters()['subModule']}}">      
+							    {!! FormGenerator::GenerateForm('custom_code') !!}
+	                        {!! Form::close() !!}       
+					    </div>
+	                    
+                        <div id="aione_modules_permissions" class="aione-tab-content">
+                                  
+                            <!-- permission div starts -->
+                           {{--  <div class="sub-div">
                                 <div class="row">
                                     <div class="col l6">
                                         Routes For Permission
                                     </div>
                                     <div class="col l6 right-align">
-                                        <a href="javascript:;" class="btn green add-route-permission">add</a>
+                                        <a href="" class="btn green add-route-permission">add</a>
                                     </div>
                                 </div>
                                 {!! Form::open(['route' => 'edit.subModule','method' => 'POST'])!!}
@@ -156,123 +198,85 @@ $page_title_data = array(
                                 @endforeach
                                 <input type="submit" value="save Permission">
                                 {!!Form::close()!!}
-                            </div>
-                            {!! Form::open(['route' => 'save.style.module' , 'method' => 'post'])!!}
-                                <div class="row">
-                                    <div class="col l6">
-                                        <h6><strong>Edit sub Module</strong></h6>
-                                        <div class="col s12 m2 l12 aione-field-wrapper">
-                                            <label>Name</label>
-                                            <input type="text" name="name" value="{{@$subModuleData->name}}" class="no-margin-bottom aione-field" >
-                                        </div>
-                                        <div class="col s12 m2 l12 aione-field-wrapper">
-                                            <label>Route</label>
-                                            {!!Form::select('sub_module_route',App\Model\Admin\GlobalModule::getRouteListArray(),@$subModuleData->sub_module_route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']) !!}
-                                        </div>
-                                    </div>
-                                    <div class="col l6">
-                                      {!! Form::hidden('color', @$subModuleData->color ,['class' => 'color_picker']) !!}
-
-                                        {!! Form::hidden('icon', @$subModuleData->icon,['class' => 'font-awesome-text']) !!}                     
-
-                                        <input type="hidden" name="sub_modules_id" value="{{@request()->route()->parameters()['subModule']}}">                                  
-                                        <div class="col l6">
-                                            <h6>Pick a color for icon background</h6>
-
-                                            <input type="text" id="custom" >
-                                            
-                                        </div>
-                                        
-                                        <div class="col l6">
-                                            <h6>Pick an icon for menu</h6>
-                                            <input type="text" class="input1 input font-awesome"  placeholder="Pick an icon" />  
-                                        </div>
-                                    </div>
-                                    <div class="col l12">
-                                        
-                                        
-                                    </div>
-                                    <div class="col l12">
-                                        <button class="btn blue">Save submodule</button>
-                                    </div>
-                                </div>
-                            {!! Form::close() !!}
-                            @endif
-                            @if(@$subModuleData == null && @$moduleData == null)
-                            {!! Form::open(['route' => 'module.save' , 'method' => 'post'])!!}
-                           {{--  <div class="add-module">
-
-                                <button class="btn blue" type="submit">Add Module</button>
-                                <span>
-                                    <input type="text" name="name">    
-                                </span>
-                                <div class="clear"></div>
-                                
                             </div> --}}
-                            {!! FormGenerator::GenerateForm('add_module_form') !!}
-                            {!! Form::close() !!}
-                            <ul class="collection">
-                            @foreach($listModule as $key => $val)
-                                <li class="collection-item">
-                                    <a href="{{route('list.module',['id'=>$val->id])}}">{{$val->name}}</a> 
-                                    <a href="{{ route('module.delete',['id'=>$val->id]) }}" class="secondary-content delete-module">
-                                        <i class="arrow-delete material-icons dp48">delete</i>
-                                    </a>
-                                    <script type="text/javascript">
-                                        $(document).on('click','.delete-module',function(e){
-                                            e.preventDefault();
-                                            var href = $(this).attr("href");
-                                            swal({   
-                                                title: "Are you sure?",   
-                                                text: "You will not be able to recover this imaginary file!",   
-                                                type: "warning",   
-                                                showCancelButton: true,   
-                                                confirmButtonColor: "#DD6B55",   
-                                                confirmButtonText: "Yes, delete it!",   
-                                                closeOnConfirm: false 
-                                            }, 
-                                            function(){
-                                            window.location = href;
-                                               swal("Deleted!", "Your Module has been deleted.", "success"); 
-                                           });
-                                        })
-                                    </script>
-                                    <a href="{{route('module.sort.down',['id'=>$val->id]) }}" class="secondary-content">
-                                        <i class="arrow-downward material-icons dp48">arrow_downward</i>
-                                    </a>
-                                    <a href="{{ route('module.sort.up',['id'=>$val->id]) }}" class="secondary-content">     <i class="arrow-upward material-icons dp48">arrow_upward</i>
-                                    </a>
-                                </li>
-                            @endforeach
-                            </ul>
-                        </div>
-                      {{--   <div id="aione_modules_custom_css" class="aione-tab-content">
-                            <div class="col l6">
-                                <label>
-                                    Write css code here
-                                </label>
-                                <div id="editor-css" class="editor" >
-                                </div>
-                                {!! Form::hidden('css', @$subModuleData->css,['class' => 'editor-css']) !!}
+                            <!-- permission div ends -->
+                            
+                            <!--new permission div starts -->
+                            @if($permission != null)
+                                    {{ dump($permission) }}
+                                {!! Form::model($permission,['route' => 'edit.subModule','method' => 'POST'])!!}
+                            @else
+                                {!! Form::open(['route' => 'edit.subModule','method' => 'POST'])!!}
+                            @endif
+                                    {!! Form::model(@$route,['route' => 'edit.subModule','method' => 'POST'])!!}
 
-                            </div>
+                                     <input type="hidden" name="subModule_id" value="{{@request()->route()->parameters()['subModule']}}" placeholder="Enter route name" />
+                                        {!! FormGenerator::GenerateSection('permission',[],$permission) !!}
+                                                
+                                    <input type="submit" value="Save Permission">
+                                {!!Form::close()!!}
+                            <!--new permission div ends -->
+                                  
                         </div>
-                        <div id="aione_modules_custom_js" class="aione-tab-content">
-                            <div class="col l6">
-                                <label>
-                                Write Javascript code here
-                                </label>
-                                <div id="editor-js" class="editor">
-                                </div>
-                                {!! Form::hidden('js', @$subModuleData->js,['class' => 'editor-js']) !!}
-
-                            </div>
-                        </div> --}}
                     </div>
+                           
                 </div>
-
-               
             @endif
+
+			
+			<!-- http://admin.adminpie.com/modules -->
+            @if(@$subModuleData == null && @$moduleData == null)
+                {!! Form::open(['route' => 'module.save' , 'method' => 'post'])!!}
+                 
+                	{!! FormGenerator::GenerateForm('add_module_form') !!}
+                {!! Form::close() !!}
+                <ul class="collection">
+                    @foreach($listModule as $key => $val)
+                        <li class="collection-item" style="position: relative;">
+
+                            <a href="{{route('list.module',['id'=>$val->id])}}">{{$val->name}}</a> 
+                             <div style="display: inline-block;float: right;right: 140px;"> 
+                                @if($val->status == 0)
+                                    <a href="{{route('status.module',['id'=>$val->id])}}">Activate</a>
+                                @else
+                                    <a href="{{route('status.module',['id'=>$val->id])}}">Deactivate</a>
+                                @endif
+                                <label class="switch" for="input_">
+                                    <span class="handle"></span>
+                                </label>
+                             </div>
+                            <a href="{{ route('module.delete',['id'=>$val->id]) }}" class="secondary-content delete-module">
+                                <i class="arrow-delete material-icons dp48">delete</i>
+                            </a>
+                            <script type="text/javascript">
+                                $(document).on('click','.delete-module',function(e){
+                                    e.preventDefault();
+                                    var href = $(this).attr("href");
+                                    swal({   
+                                        title: "Are you sure?",   
+                                        text: "You will not be able to recover this imaginary file!",   
+                                        type: "warning",   
+                                        showCancelButton: true,   
+                                        confirmButtonColor: "#DD6B55",   
+                                        confirmButtonText: "Yes, delete it!",   
+                                        closeOnConfirm: false 
+                                    }, 
+                                    function(){
+                                    window.location = href;
+                                       swal("Deleted!", "Your Module has been deleted.", "success"); 
+                                   });
+                                })
+                            </script>
+                            <a href="{{route('module.sort.down',['id'=>$val->id]) }}" class="secondary-content">
+                                <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                            </a>
+                            <a href="{{ route('module.sort.up',['id'=>$val->id]) }}" class="secondary-content">     <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                            </a>
+                           
+                        </li>
+                    @endforeach
+                </ul>
+			@endif
         </div>
         <div class="clear"></div>
     </div>

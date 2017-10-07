@@ -10,11 +10,14 @@
 		@if(@$show_add_new_button  != 'no')
 			@if(!empty(@$add_new))
 				@if(array_key_exists('route', @$page_title_data))
-					<a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['route'])}}">{{@$add_new}}
-					</a>
-				@else
-					<a id="add_designation_button" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" data-target="add_new_model" href="#">{{@$add_new}}</a>
-				@endif
+          @if(is_array(@$page_title_data['route']))
+			<a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['route'][0],@$page_title_data['route'][1])}}">{{@$add_new}}</a>
+          @else
+            <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['route'])}}">{{@$add_new}}</a>
+          @endif
+			@else
+				<a id="add_designation_button" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" data-target="add_new_model" href="#">{{@$add_new}}</a>
+			@endif
         @if(array_key_exists('second_button_route', @$page_title_data))
           <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="{{route(@$page_title_data['second_button_route'])}}">{{@$second_button_title}}
           </a>

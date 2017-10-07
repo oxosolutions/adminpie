@@ -75,30 +75,53 @@
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 
-
-
 @if(@request()->route()->parameters['action'] == 'rivisions')
-@foreach($history as $k => $rows)
-	<div class="aione-table" style="margin-bottom: 20px">
-		<table class="compact">
-			<thead>
-				<tr>
-					<td>Key</td>
-					<td>Value</td>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($rows as $key => $value)
-					<tr>
+	@php
 
-						<td width="400px">{{$key}}</td>
-						<td style="width:400px;height: 20px;overflow: hidden">{{$value}}</td>
-					</tr>
-				@endforeach
-			</tbody>
-		</table>
+	$headers = (array) $tableheaders;
+	$history_data = (array) $history->toArray();
+
+	array_unshift($history_data, $headers);
+
+	$history_records = array();
+	foreach ($history_data as $column_key => $columns) {
+		foreach ($columns as $row => $record) {
+			$history_records[$row][$column_key] = $record;
+		}
+		unset($history_records['id']);
+		unset($history_records['status']);
+		unset($history_records['parent']);
+	}
+
+	@endphp
+	<div class="aione-table" style="margin-bottom: 20px">
+	 <table class="compact dataset-table" >
+	 	<thead>
+	 		<tr>
+	 			@foreach($history_data as $key => $value)
+	 				@if($key == 0)
+	 					<th> Column </th>
+					@else
+	 					<th> Revision_{{$key}} </th>
+					@endif
+	 			@endforeach
+			</tr>
+	 		
+	 	</thead>
+	 	<tbody>
+	 		@foreach($history_records as $row_key => $row)
+	 			<tr>
+		 			@foreach($row as $column_key => $column_value)	
+						<td>
+							{{$column_value}}
+						</td>
+		 			@endforeach
+	 			</tr>
+	 		@endforeach
+	 	</tbody>
+	 </table>
 	</div>
-@endforeach
+
 @endif
 @if(@request()->route()->parameters['action'] == 'view')
 	<div class="aione-table" style="margin-bottom: 20px">
@@ -159,7 +182,23 @@
 	</form>
 @endif
 <div class="aione-table" style="width: 99%;overflow-x: scroll;overflow-y: scroll;max-height: 500px;margin-bottom: 20px">
-	<table class="compact">
+	<button onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'xls'])}}'">Export XLS</button>
+	<button onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'csv'])}}'">Export CSV</button>
+	<button onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</button>
+	<button class="addRow" style="float: right;">Add Row</button>
+	<div class="add-dataset">
+		{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
+	
+			{!! FormGenerator::GenerateForm('create_column_dataset') !!}
+		
+		{!!Form::close()!!}
+		<div id="example2" style="width: 100%; font-size: 14px;">
+			
+		</div>	
+			
+	</div>
+	@if(!empty($tableheaders))
+	<table class="compact dataset-table">
 		<thead>
 			<tr>
 				<th>
@@ -175,8 +214,8 @@
 			</tr>
 		</thead>
 		<tbody>
-				
-			@foreach($records as $k => $rows)
+			@if(!empty($records))
+				@foreach($records as $k => $rows)
 					<tr>
 						<td>
 							<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'view','record_id'=>$rows->id])}}"><i class="fa fa-eye"></i></a>
@@ -215,10 +254,16 @@
 							@endif
 						@endforeach	
 					</tr>
-			@endforeach
+				@endforeach
+			@endif
 		</tbody>
 	</table>
-	
+	<div>
+		<button class="update-dataset hidden">Update Dataset</button>
+	</div>
+	@endif
+	<input type="hidden" name="_token" value="{{ csrf_token() }}">
+	<input type="hidden" name="dataset_id" value="{{ request()->route()->parameters()['id'] }}">
 </div>
 {{$records->render()}}
 <style type="text/css">
@@ -227,5 +272,43 @@
 		padding-right: 8px;
 		padding-bottom: 10px;
 	}
+	.hidden{
+		display: none
+	}
 </style>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(document).on('click' , '.addRow' ,function(){
+			var headerCount = $('.dataset-table tr th').length;
+			$('.dataset-table tbody').prepend('<tr class="appended_row"></tr>');
+
+			for(var i=0; i <=headerCount-1 ; i++){
+				$('.appended_row:first').append('<td contenteditable="true"></td>');
+			}
+			$('.update-dataset').show();
+			$('.appended_row td:first').removeAttr('contenteditable');
+		});
+		$(document).on('click','.update-dataset',function(){
+			var index = 0;
+			var data = [];
+			
+				$('.update-dataset').parent().siblings('.dataset-table').find('.appended_row').each(function($i){
+					var tableRow = [];
+					$(this).find('td').each(function(){
+						tableRow.push($(this).html());
+					});
+					data.push( tableRow);
+				});
+				
+				$.ajax({
+					url 	: route()+'/dataset/create/rows',
+					type 	: "POST",
+					data 	: { data : data , _token : $('input[name=_token]').val() , dataset_id : $('input[name=dataset_id]').val()},
+					success : function(res){
+						Materialize.toast('Updated Successfully',4000);
+					}
+				})
+		});
+	});
+</script>
 @endsection

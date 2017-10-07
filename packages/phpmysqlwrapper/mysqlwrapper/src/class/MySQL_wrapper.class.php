@@ -921,8 +921,8 @@ class MySQL_wrapper {
 					return FALSE;
 				}
 			}
-            $columns[] = "`status` BOOLEAN NOT NULL DEFAULT TRUE";
-            $columns[] = "`parent` INT NOT NULL DEFAULT '0'";
+            $columns[] = "`status` VARCHAR(255) DEFAULT '1'";
+            $columns[] = "`parent` VARCHAR(255) DEFAULT '0'";
 
 			$this->query("CREATE TABLE `{$table}` ( " . implode(', ', $columns) . " ) ENGINE=MYISAM DEFAULT CHARSET={$this->charset};");
 

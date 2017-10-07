@@ -23,7 +23,7 @@
 	<style type="text/css">
 	/*css for new components*/
 
-		.aione-topbar{
+		/*.aione-topbar{
 			background-color: #e8e8e8;
 		    position: absolute;
 		    top: 0;
@@ -32,7 +32,7 @@
 		    line-height: 28px;
 		    padding: 0px 10px;
 		    z-index: 999;
-		}
+		}*/
 
 		
 		/*********override css**************/
@@ -49,13 +49,13 @@
 		.aione-sidebar:before{
 			position: relative;
 		}
-		.aione-header{
+		/*.aione-header{
 			    top: 28px;
 			    height: 80px;
 			    position: absolute;
 			    background-color: white
-		}
-		#aione-menu > li:nth-child(2n+3){
+		}*/
+		/*#aione-menu > li:nth-child(2n+3){
 			display: none
 		}
 		.aione-main{
@@ -94,7 +94,7 @@
 		}
 		.aione-footer a{
 			color: white;
-		}
+		}*/
 
 
 

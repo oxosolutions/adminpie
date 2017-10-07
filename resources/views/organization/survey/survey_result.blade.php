@@ -76,10 +76,10 @@ $page_title_data = array(
 	 // $operator = ['>', '<','=','>=','<='];
 @endphp
 @if($errors->any())
-	 <div class="alert alert-danger">
-        <ul>
+	 <div class="aione-message warning aione-align-center">
+        <ul class="aione-messages">
             @foreach ($errors->all() as $error)
-                <li style="color: red;">{{ $error }}</li>
+                <li>{{ $error }}</li>
             @endforeach
         </ul>
     </div>
@@ -97,7 +97,7 @@ $page_title_data = array(
 						</label>
 					</div>
 					<div id="field_fields" class="field field-type-multi_select">
-						{!! Form::select('fields[]',$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
+						{!! Form::select('fields[]',$columns,array_slice($columns,0,6),['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
 					</div>
 				</div>
 				{{-- <div > 
@@ -120,10 +120,10 @@ $page_title_data = array(
 						 
 					</div>
 				</div> --}}
-				<div id='child'>
+				{{-- <div id='child'>
 					<div id="aione_form_wrapper_abc" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style-   ">
-						<div class="aione-row">
-							<div id="field_condition_field" class="field-wrapper field-wrapper-condition_field field-wrapper-type-select l4">
+						<div class="aione-row ar">
+							<div id="field_condition_field" class="field-wrapper field-wrapper-condition_field field-wrapper-type-select ac l33 m33 s100">
 								<div id="field_label_condition_field" class="field-label">
 
 									<label for="input_condition_field">
@@ -138,7 +138,7 @@ $page_title_data = array(
 									
 								</div>
 							</div>
-							<div id="field_operator" class="field-wrapper field-wrapper-operator field-wrapper-type-select l3">
+							<div id="field_operator" class="field-wrapper field-wrapper-operator field-wrapper-type-select ac l33 m33 s100">
 								<div id="field_label_operator" class="field-label">
 
 									<label for="input_operator">
@@ -160,7 +160,7 @@ $page_title_data = array(
 								</div>
 
 							</div>
-							<div id="field_condition_field_value" class="field-wrapper field-wrapper-condition_field_value field-wrapper-type-select l4">
+							<div id="field_condition_field_value" class="field-wrapper field-wrapper-condition_field_value field-wrapper-type-select ac l33 m33 s100">
 								<div id="field_label_condition_field_value" class="field-label">
 
 									<label for="input_condition_field_value">
@@ -178,14 +178,14 @@ $page_title_data = array(
 						</div>
 						
 					</div>
-				</div>
+				</div> --}}
 				<div id='append'>
 					
 				</div>
 			</div>
 			<div class="aione-row search-options">
 				<button id="more_condition" class="aione-button aione-button-large aione-button-light aione-button-square add-new-button"> + Add Filters</button>
-				{!! Form::submit('Search') !!} 
+				{!! Form::submit('Submit') !!} 
 			</div>
 			<div class="aione-row result-options">
 				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}

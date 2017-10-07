@@ -3,10 +3,11 @@
 @php
 $page_title_data = array(
   'show_page_title' => 'yes',
-  'show_add_new_button' => 'no',
+  'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
   'page_title' => 'Create Group',
-  'add_new' => '+ Add Module'
+  'add_new' => 'All Groups',
+  'route' => 'list.group'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)

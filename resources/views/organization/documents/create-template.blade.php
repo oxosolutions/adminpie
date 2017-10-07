@@ -3,10 +3,11 @@
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
+	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Create Template',
-	'add_new' => '+ Add Document'
+	'add_new' => 'All Templates',
+	'route' => 'document.templates'
 ); 
 @endphp	
 @include('common.pageheader',$page_title_data) 
@@ -19,7 +20,7 @@ $page_title_data = array(
 	{!! Form::open(['route'=>'save.document.template' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 @endif
 		{!!FormGenerator::GenerateSection('emasec3',['type'=>'inset'])!!}
-		<button type="submit" class="btn blue">Save Template</button>
+		<button type="submit" >Save Template</button>
 	{!!Form::close()!!}
 	@if(Session::has('success-update'))
 		<script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>

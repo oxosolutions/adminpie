@@ -129,7 +129,7 @@ $page_title_data = array(
   
     <div class="module-wrapper">
         <div class="list-container">
-            <nav id="aione_nav" class="aione-nav aione-nav-vertical">
+            <nav id="aione_nav" class="aione-nav light vertical">
                 <div class="aione-nav-background"></div>
                 <ul id="aione_menu" class="aione-menu sortable">
                     <li class="aione-nav-item level0 unsortable ">
@@ -254,14 +254,14 @@ $page_title_data = array(
                             </li>
                             <li class="aione-tab ">
                                 <a href="#aione_modules_custom_css">
-                                    <span class="nav-item-text">Custom CSS</span>
+                                    <span class="nav-item-text">Customize</span>
                                 </a>
                             </li>
-                            <li class="aione-tab ">
+                            {{-- <li class="aione-tab ">
                                 <a href="#aione_modules_custom_js">
                                     <span class="nav-item-text">Custom JS</span>
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </nav>
                         <div class="aione-tabs-content-wrapper">
@@ -270,7 +270,7 @@ $page_title_data = array(
                            <input type="hidden" name="id" class="id" value="{{ $widgetData->id }}">
                             <div id="aione_modules_settings" class="aione-tab-content active">
                                
-                                   <div class="row">
+                                 {{--   <div class="row">
                                         <div class="col l12" style="padding: 10px 0px;">
                                             title
                                         </div>
@@ -297,13 +297,14 @@ $page_title_data = array(
                                     </div>
                                     <div class="col s12 m2 l12 " style="padding: 10px 0px">
                                         {!! Form::textarea('description',null,['rows' => '10' ,'class' => 'materialize-textarea', 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;']) !!}
-                                    </div>
+                                    </div> --}}
 
                                     
-                               
+                                {!! FormGenerator::GenerateForm('add_edit_widget_form') !!}
                             </div>
+
                             <div id="aione_modules_custom_css" class="aione-tab-content">
-                                <div class="col l6">
+                                {{-- <div class="col l6">
                                     <label>
                                         Write css code here
                                     </label>
@@ -311,10 +312,11 @@ $page_title_data = array(
                                     </div>
                                     {!! Form::hidden('css', @$widgetData->css,['class' => 'editor-css']) !!}
 
-                                </div>
+                                </div> --}}
+                                 {!! FormGenerator::GenerateForm('custom_code') !!}
                             </div>
                             <div id="aione_modules_custom_js" class="aione-tab-content">
-                                <div class="col l6">
+                                {{-- <div class="col l6">
                                     <label>
                                     Write Javascript code here
                                     </label>
@@ -322,13 +324,13 @@ $page_title_data = array(
                                     </div>
                                     {!! Form::hidden('js', @$widgetData->js,['class' => 'editor-js']) !!}
 
-                                </div>
+                                </div> --}}
                             </div>
-                            <div class="row" style="padding: 10px 0px">
+                          {{--   <div class="row" style="padding: 10px 0px">
                                 <div class="col l6">
                                      {!! Form::submit('Update Widget', ['class' => 'btn btn-primary']) !!}
                                 </div>
-                            </div>
+                            </div> --}}
                             {!! Form::close() !!}
                         </div>
                 </div>

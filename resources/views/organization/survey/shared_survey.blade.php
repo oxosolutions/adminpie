@@ -63,12 +63,20 @@
 				{!! Form::model($slug,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post'])!!}
 					<input type="hidden" name="form_id" value="{{$form_id}}" >
 					<input type="hidden" name="ip_address" value="{{Request::ip()}}" >
-					{{-- @php 
-						echo $sec = collect($sections)->first();
-					@endphp
-						{{dump($sections)}}
+					@php 
+						// dump($section_array = Session::get('section'));
+						//  dump($key = array_keys($section_array));
 						
-					{!! FormGenerator::GenerateSection($sec,[],'','org') !!} --}}
+						//  dump($section_id = array_shift($key));
+						//  echo $section_slug = $section_array[$section_id];
+
+					@endphp
+					{{-- <input type="text" name="section_slug" value="{{$section_slug}}" >
+					<input type="text" name="section_id" value="{{$section_id}}" > --}}
+
+
+					
+					{{-- {!! FormGenerator::GenerateSection($section_slug,[],'','org') !!} --}}
 					{!! FormGenerator::GenerateForm($slug,[],'','org') !!}
 					<input type="hidden" name="form_slug" value="{{$slug}}" >
 					<input type="submit" value="{{@$survey_setting['form_save_button_text']}}">

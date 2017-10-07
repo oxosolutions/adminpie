@@ -16,8 +16,14 @@ class Dataset extends Model
 
     public static function datasetList(){
 
-    	return self::orderBy('id')->pluck('dataset_name','id');
+        return self::orderBy('id')->pluck('dataset_name','id');
     }
+
+    public static function datasetTableList(){
+
+    	return self::orderBy('id')->pluck('dataset_name','dataset_table');
+    }
+
 
     public static function getDatasetTableData($datasetId){
         $datasetDetails = self::find($datasetId);

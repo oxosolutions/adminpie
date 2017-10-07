@@ -48,9 +48,14 @@ $page_title_data = array(
       postedData['id']        	= $(this).parents('.switch').find('input[name=id]').val();
       postedData['status']      = $(this).prop('checked');
       postedData['_token']      = $('.page_token').val();
+      if('{{$from}}' == 'admin'){
+        var postURL = 'admin/posts/status/update'
+      }else{
+        var postURL = '/posts/status/update'
+      }
 
       $.ajax({
-        url:route()+'/posts/status/update',
+        url:route()+'/'+postURL,
         type:'POST',
         data:postedData,
         success: function(res){

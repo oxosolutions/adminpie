@@ -3,10 +3,11 @@
 @php
 $page_title_data = array(
     'show_page_title' => 'yes',
-    'show_add_new_button' => 'no',
+    'show_add_new_button' => 'yes',
     'show_navigation' => 'yes',
     'page_title' => 'Create Widget',
-    'add_new' => '+ Add Designation'
+    'add_new' => 'All Widgets',
+    'route' => 'list.widgets'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
@@ -24,7 +25,7 @@ $url = url()->current();
 @endif
 
     {{-- {!! FormGenerator::GenerateForm('create_widget_form') !!} --}}
-
+{{-- 
     <div class="row">
         <div class="col l12" style="padding: 10px 0px;">
             title
@@ -58,7 +59,9 @@ $url = url()->current();
         <div class="col l6">
              {!! Form::submit('Save Widget', ['class' => 'btn btn-primary']) !!}
         </div>
-    </div>
+    </div> --}}
+    {!! FormGenerator::GenerateForm('add_edit_widget_form') !!}
+    
 {!! Form::close() !!}
 </div>
 <style type="text/css">

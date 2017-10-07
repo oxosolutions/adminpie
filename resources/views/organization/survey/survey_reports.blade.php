@@ -23,7 +23,7 @@
 	}
 	.result-options input{
 		    float: left;
-    background-color: #168dc5;
+   
     color: white;
    
 	
@@ -44,7 +44,7 @@
     transition: all 150ms ease-out;	
 	}
 	.result-options input:hover{
-		background-color: #168dc5
+		background-color: none;
 	}
 </style>
 @php

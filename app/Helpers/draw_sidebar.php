@@ -12,7 +12,7 @@ class draw_sidebar{
     static function drawSidebar()
     {
         $orgModule = ORG::organization_module();
-        $model = Module::whereIn('id',$orgModule)->with(['subModule'=>function($query){
+        $model = Module::whereIn('id',$orgModule)->where('status',1)->with(['subModule'=>function($query){
                 $query->with('moduleRoute');
             }])->orderBy('orderBy','asc')->get();
 

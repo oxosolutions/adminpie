@@ -54,15 +54,33 @@ class CustomMapsController extends Controller
                 }
             }
         }
-        if(!Auth::guard('admin')->check()){
-            $deleteRoute = 'org.delete.custom.map';
-            $viewRoute = 'org.view.map';
-            $editRoute = 'org.getData.custom.map';
-        }else{
-            $deleteRoute = 'delete.custom.map';
-            $viewRoute =  'view.map';
-            $editRoute =  'getData.custom.map';
-        }
+          if($type == 'u'){
+            // org.global.view.map
+             if(!Auth::guard('admin')->check()){
+                  $deleteRoute = 'org.delete.custom.map';
+                  $editRoute = 'org.getData.custom.map';
+                  $viewRoute = 'org.view.map';
+              }else{
+                  $viewRoute = 'view.map';
+                  $deleteRoute = 'delete.custom.map';
+                  $editRoute =  'getData.custom.map';
+              }
+          }else{
+             if(!Auth::guard('admin')->check()){
+                  $deleteRoute = 'org.delete.custom.map';
+                  $editRoute = 'org.getData.custom.map';
+                  $viewRoute = 'org.global.view.map';
+              }else{
+                  $deleteRoute = 'delete.custom.map';
+                  $editRoute =  'getData.custom.map';
+                  $viewRoute = 'view.map';
+              }
+           
+          }
+
+// dd($viewRoute);        
+       
+
       	$datalist = [
                       	'datalist'=>$model,
                       	'showColumns' => ['title'=>'Title','table_code'=>'Map ID','code'=>'ISO Code','created_at'=>'Created At'],
@@ -72,6 +90,7 @@ class CustomMapsController extends Controller
                 $datalist['actions'] = [
                                           'view'    => ['title'=>'View','route'=>$viewRoute],
                                        ];
+
             }else{
                 $datalist['actions'] = [
                                           'edit'    => ['title'=>'Edit','route'=>$editRoute,'class'=>'edit'],
@@ -85,6 +104,7 @@ class CustomMapsController extends Controller
                                           'view'    => ['title'=>'View','route'=>$viewRoute],
                                           'delete'  => ['title'=>'Delete','route'=>$deleteRoute]
                                        ];
+
         }
     	return view('admin.custom-maps.custom-maps',$datalist);
     }
@@ -120,15 +140,17 @@ class CustomMapsController extends Controller
 
     public function getDataById($id){
          if(!Auth::guard('admin')->check()){
-            $model = Maps::find($id);;
+            $model = Maps::find($id);
+            $model['type'] = 'u';
         }else{
+            $model['type'] = 'g';
             $model = CustomMaps::find($id);
         }
         return view('admin.custom-maps.edit_custom',['model'=>$model]);
     }
 
     public function updateMap(Request $request, $id){
-      if(!Auth::guard('admin')->check()){
+      if($request->type == 'u'){
         $model = Maps::find($id);
       }else{
         $model = CustomMaps::find($id);
@@ -137,13 +159,19 @@ class CustomMapsController extends Controller
       $model->save();
       return back();
     }
-    public function viewmap($id){
-        if(!Auth::guard('admin')->check()){
-          $model = Maps::find($id);
-        }else{
-          $model = CustomMaps::find($id);
-        }
-        return view('admin.custom-maps.map-view',['model'=>$model]);
+    // changed by sandeep on the behalf of map/g and map/u
+
+    public function viewUserMap($id){
+      $model = Maps::find($id);
+      return view('admin.custom-maps.map-view',['model'=>$model]);
+    }
+    public function viewMapUsers($id)
+    {
+      return $this->viewMap($id);
+    }
+    public function viewMap($id){
+      $model = CustomMaps::where('id',$id)->first();
+      return view('admin.custom-maps.map-view',['model'=>$model]);
     }
 
     public function DeleteGlobalMap($id){

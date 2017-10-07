@@ -12,256 +12,250 @@ $page_title_data = array(
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <div class="module-wrapper" >
+        <?php 
+        $permission['permission']= [];
+        $index = 0;
+        if(@$moduleData != null){
+            foreach(@$moduleData->subModule as $key => $submodule){
+                foreach(@$submodule->moduleRoute as $routeKey => $route){
+
+                    $permission['permission'][$index]['routes'] = $route->route;
+                    $permission['permission'][$index]['route_name'] = $route->route_name;
+                    $index++;
+                }
+            }
+        }
+         ?>
         <?php echo $__env->make('admin.module._sidebar', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         <div class="Detail-container">
-
+			<!-- http://admin.adminpie.com/modules/{id} -->
 	        <?php if(@$subModuleData == null): ?>
-		        <?php if(@$moduleData != null): ?>
-                    <?php echo Form::model($moduleData,['route' => 'save.style.subModule' , 'method' => 'post']); ?>
+              
+                <?php if(@$moduleData != null): ?>
+                 	<?php echo Form::model($moduleData,['route' => 'edit.module' , 'method' => 'post']); ?>
 
                 <?php else: ?>
-                    <?php echo Form::open(['route' => 'save.style.subModule' , 'method' => 'post']); ?>
+                    <?php echo Form::open(['route' => 'edit.module' , 'method' => 'post']); ?>
 
-                <?php endif; ?> 
-                    <div id="" class="aione-tabs-wrapper">
-                        <nav class="aione-nav aione-nav-horizontal">
-                            <ul class="aione-tabs">
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_settings">
-                                        <span class="nav-item-text">Settings</span>
-                                    </a>
-                                </li>
-                                <li class="aione-tab ">
-                                    <a href="#aione_modules_custom_css">
-                                        <span class="nav-item-text">Customize</span>
-                                    </a>
-                                </li>
+                <?php endif; ?>
+                <?php if(@$moduleData != null): ?>
+	                    <div id="" class="aione-tabs-wrapper">
+	                        <nav class="aione-nav aione-nav-horizontal">
+	                            <ul class="aione-tabs">
+	                                <li class="aione-tab active">
+	                                    <a href="#aione_modules_settings">
+	                                        <span class="nav-item-text">Settings</span>
+	                                    </a>
+	                                </li>
+	                                <li class="aione-tab ">
+	                                    <a href="#aione_modules_custom_css">
+	                                        <span class="nav-item-text">Customize</span>
+	                                    </a>
+	                                </li>
+	                           
+	                            </ul>
+	                        </nav>
+	                        <div class="aione-tabs-content-wrapper">
+	                            <div id="aione_modules_settings" class="aione-tab-content active">
+	                                <div class="row">
+	                               
+	                                    <?php echo Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']); ?>
+
+
+	                                    <?php echo Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']); ?>                     
+
+	                                    <input type="hidden" name="modules_id" value="<?php echo e(@request()->route()->parameters()['id']); ?>">              
+	                                    <?php echo FormGenerator::GenerateForm('module_setting_form'); ?>
+
+	                                </div>
+	                            </div>
+	                            <div id="aione_modules_custom_css" class="aione-tab-content">
+	                              
+	                                <?php echo FormGenerator::GenerateForm('custom_code'); ?>
+
+	                              
+	                            </div>
+	                           
+	                       
+	                            <div class="clear"></div>
+	                        </div>
+
+	                    </div>
+               		<?php echo Form::close(); ?>
+
+                    <?php echo Form::open(['route' => 'sub.module.save' , 'method' => 'post']); ?>
+
+                        <input type="hidden" name="module_id" value="<?php echo e(@request()->route()->parameters()['id']); ?>">
+                        <?php echo FormGenerator::GenerateForm('add_submodule_form'); ?>
+
+                    <?php echo Form::close(); ?>
+
+                        <?php endif; ?>
+                
+
+                <ul class="collection">
+                    <?php if(@$moduleData->subModule != null): ?>
+                    <?php $__currentLoopData = $moduleData->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li class="collection-item">
+                            <a href="<?php echo e(route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id])); ?>"><?php echo e($value->name); ?></a>
+                            <a href="<?php echo e(route('subModule.delete',['id'=>$value->id])); ?>" class="secondary-content delete-submodule">
+                                <i class="arrow-delete material-icons dp48">delete</i>
+                            </a>
                            
-                            </ul>
-                        </nav>
-                        <div class="aione-tabs-content-wrapper">
-                            <div id="aione_modules_settings" class="aione-tab-content">
-                                <div class="row">
-                               
-                                    <?php echo Form::hidden('color', @$moduleData->color ,['class' => 'color_picker']); ?>
+                            <a href="<?php echo e(route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']])); ?>" class="secondary-content">
+                                <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                            </a>
+                            <a href="<?php echo e(route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']])); ?>" class="secondary-content">
+                                <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                            </a>
 
-
-                                    <?php echo Form::hidden('icon', @$moduleData->icon,['class' => 'font-awesome-text']); ?>                     
-
-                                    <input type="hidden" name="modules_id" value="<?php echo e(@request()->route()->parameters()['id']); ?>">              
-                                    <?php echo FormGenerator::GenerateForm('module_setting_form'); ?>
-
-                                </div>
-                            </div>
-                            <div id="aione_modules_custom_css" class="aione-tab-content">
-                              
-                                <?php echo FormGenerator::GenerateForm('custom_code'); ?>
-
-                              
-                            </div>
-                            <div id="aione_modules_custom_js" class="aione-tab-content">
-                              
-                            </div>
-                       
-                            <div class="clear"></div>
-                        </div>
-
-                    </div>
-
-                <?php echo Form::close(); ?>
-
-
-                <?php echo Form::open(['route' => 'sub.module.save' , 'method' => 'post']); ?>
-
-                  
-                     <?php echo FormGenerator::GenerateForm('add_submodule_form'); ?>
-
-                <?php echo Form::close(); ?>
-
-                    <ul class="collection">
-                        <?php $__currentLoopData = $moduleData->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <li class="collection-item">
-                                <a href="<?php echo e(route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id])); ?>"><?php echo e($value->name); ?></a>
-                                <a href="<?php echo e(route('subModule.delete',['id'=>$value->id])); ?>" class="secondary-content delete-submodule">
-                                    <i class="arrow-delete material-icons dp48">delete</i>
-                                </a>
-                               
-                                <a href="<?php echo e(route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']])); ?>" class="secondary-content">
-                                    <i class="arrow-downward material-icons dp48">arrow_downward</i>
-                                </a>
-                                <a href="<?php echo e(route('sub.module.sort.up',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']])); ?>" class="secondary-content">
-                                    <i class="arrow-upward material-icons dp48">arrow_upward</i>
-                                </a>
-                            </li>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </ul>
+                        </li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    <?php endif; ?>
+                </ul>
                     
 		        
 			<?php endif; ?>
-
+			<!-- http://admin.adminpie.com/modules/{id}/{submodule} -->
             <?php if(@$subModuleData != null): ?>
                
                 <div id="" class="aione-tabs-wrapper">
                     <nav class="aione-nav aione-nav-horizontal">
                         <ul class="aione-tabs">
-                            <li class="aione-tab ">
+                            <li class="aione-tab active">
                                 <a href="#aione_modules_settings">
                                     <span class="nav-item-text">Settings</span>
                                 </a>
                             </li>
                             <li class="aione-tab ">
                                 <a href="#aione_modules_custom_css">
-                                    <span class="nav-item-text">Custom CSS</span>
+                                    <span class="nav-item-text">Customize</span>
                                 </a>
                             </li>
                             <li class="aione-tab ">
-                                <a href="#aione_modules_custom_js">
-                                    <span class="nav-item-text">Custom JS</span>
+                                <a href="#aione_modules_permissions">
+                                    <span class="nav-item-text">Permissions</span>
                                 </a>
                             </li>
+                          
                         </ul>
                     </nav>
                     <div class="aione-tabs-content-wrapper">
-                        <div id="aione_modules_settings" class="aione-tab-content">
-                            <div class="sub-div">
+                        
+                        <div id="aione_modules_settings" class="aione-tab-content active">
+                         
+                           <?php echo Form::model($subModuleData,['route' => 'save.style.module' , 'method' => 'post']); ?>
+
                                 <div class="row">
-                                    <div class="col l6">
-                                        Routes For Permission
-                                    </div>
-                                    <div class="col l6 right-align">
-                                        <a href="javascript:;" class="btn green add-route-permission">add</a>
-                                    </div>
+                                 
+                                    <input type="hidden" name="sub_modules_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>">  
+                                    <?php echo FormGenerator::GenerateSection('submodule_settings'); ?>
+
+                                  
                                 </div>
+                           
+                             <?php echo Form::close(); ?>    
+                          
+                        </div>
+                        <div id="aione_modules_custom_css" class="aione-tab-content">
+	                        <?php echo Form::model($subModuleData,['route' => 'save.style.module' , 'method' => 'post']); ?>  
+                                <input type="hidden" name="sub_modules_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>">      
+							    <?php echo FormGenerator::GenerateForm('custom_code'); ?>
+
+	                        <?php echo Form::close(); ?>       
+					    </div>
+	                    
+                        <div id="aione_modules_permissions" class="aione-tab-content">
+                                  
+                            <!-- permission div starts -->
+                           
+                            <!-- permission div ends -->
+                            
+                            <!--new permission div starts -->
+                            <?php if($permission != null): ?>
+                                    <?php echo e(dump($permission)); ?>
+
+                                <?php echo Form::model($permission,['route' => 'edit.subModule','method' => 'POST']); ?>
+
+                            <?php else: ?>
                                 <?php echo Form::open(['route' => 'edit.subModule','method' => 'POST']); ?>
 
-                                <?php $__currentLoopData = $moduleData->subModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $submodule): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php if($submodule->id == @request()->route()->parameters()['subModule']): ?>
-                                        <div class="repeat_route_permission">
-                                            <?php $__currentLoopData = $submodule->moduleRoute; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $routeKey => $route): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                <div class="row repeat-sub-row">
-                                                    <div class="col s12 m2 l12 aione-field-wrapper" style="border: 1px solid #e8e8e8;padding: 14px; margin-top: 1%;">
-                                                        <div class="row valign-wrapper">
-                                                            <div class="col l5 pr-7">
-                                                                <label>Route name</label>
-                                                                <input type="hidden" name="subModule_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>" placeholder="Enter route name" />
-                                                                <input type="text" name="route_name[]" value="<?php echo e($route->route_name); ?>" placeholder="Enter route name" />
-                                                            </div>
-                                                            <div class="col l6 pl-7 pr-7">
-                                                                <label>Route</label>
-                                                                <?php echo Form::select('routes[]',App\Model\Admin\GlobalModule::getRouteListArray(),$route->route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']); ?>
+                            <?php endif; ?>
+                                    <?php echo Form::model(@$route,['route' => 'edit.subModule','method' => 'POST']); ?>
 
-                                                            </div>
-                                                            <div class="col l1 pl-7">
-                                                                <a href="<?php echo e(route('delete.subModule.permission',['id' => $submodule->id , 'route_name' => $route->route_name])); ?>" class="delete-reoute-permission"><i class="fa fa-close"></i></a>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                    </div>
-                                                   
-                                                    <hr class="style2">
-                                                </div>
-                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                        </div>
-                                    <?php endif; ?>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                <input type="submit" value="save Permission">
+
+                                     <input type="hidden" name="subModule_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>" placeholder="Enter route name" />
+                                        <?php echo FormGenerator::GenerateSection('permission',[],$permission); ?>
+
+                                                
+                                    <input type="submit" value="Save Permission">
                                 <?php echo Form::close(); ?>
 
-                            </div>
-                            <?php echo Form::open(['route' => 'save.style.module' , 'method' => 'post']); ?>
-
-                                <div class="row">
-                                    <div class="col l6">
-                                        <h6><strong>Edit sub Module</strong></h6>
-                                        <div class="col s12 m2 l12 aione-field-wrapper">
-                                            <label>Name</label>
-                                            <input type="text" name="name" value="<?php echo e(@$subModuleData->name); ?>" class="no-margin-bottom aione-field" >
-                                        </div>
-                                        <div class="col s12 m2 l12 aione-field-wrapper">
-                                            <label>Route</label>
-                                            <?php echo Form::select('sub_module_route',App\Model\Admin\GlobalModule::getRouteListArray(),@$subModuleData->sub_module_route, ['class'=>'form-control sel browser-default','placeholder'=>'url ']); ?>
-
-                                        </div>
-                                    </div>
-                                    <div class="col l6">
-                                      <?php echo Form::hidden('color', @$subModuleData->color ,['class' => 'color_picker']); ?>
-
-
-                                        <?php echo Form::hidden('icon', @$subModuleData->icon,['class' => 'font-awesome-text']); ?>                     
-
-                                        <input type="hidden" name="sub_modules_id" value="<?php echo e(@request()->route()->parameters()['subModule']); ?>">                                  
-                                        <div class="col l6">
-                                            <h6>Pick a color for icon background</h6>
-
-                                            <input type="text" id="custom" >
-                                            
-                                        </div>
-                                        
-                                        <div class="col l6">
-                                            <h6>Pick an icon for menu</h6>
-                                            <input type="text" class="input1 input font-awesome"  placeholder="Pick an icon" />  
-                                        </div>
-                                    </div>
-                                    <div class="col l12">
-                                        
-                                        
-                                    </div>
-                                    <div class="col l12">
-                                        <button class="btn blue">Save submodule</button>
-                                    </div>
-                                </div>
-                            <?php echo Form::close(); ?>
-
-                            <?php endif; ?>
-                            <?php if(@$subModuleData == null && @$moduleData == null): ?>
-                            <?php echo Form::open(['route' => 'module.save' , 'method' => 'post']); ?>
-
-                           
-                            <?php echo FormGenerator::GenerateForm('add_module_form'); ?>
-
-                            <?php echo Form::close(); ?>
-
-                            <ul class="collection">
-                            <?php $__currentLoopData = $listModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <li class="collection-item">
-                                    <a href="<?php echo e(route('list.module',['id'=>$val->id])); ?>"><?php echo e($val->name); ?></a> 
-                                    <a href="<?php echo e(route('module.delete',['id'=>$val->id])); ?>" class="secondary-content delete-module">
-                                        <i class="arrow-delete material-icons dp48">delete</i>
-                                    </a>
-                                    <script type="text/javascript">
-                                        $(document).on('click','.delete-module',function(e){
-                                            e.preventDefault();
-                                            var href = $(this).attr("href");
-                                            swal({   
-                                                title: "Are you sure?",   
-                                                text: "You will not be able to recover this imaginary file!",   
-                                                type: "warning",   
-                                                showCancelButton: true,   
-                                                confirmButtonColor: "#DD6B55",   
-                                                confirmButtonText: "Yes, delete it!",   
-                                                closeOnConfirm: false 
-                                            }, 
-                                            function(){
-                                            window.location = href;
-                                               swal("Deleted!", "Your Module has been deleted.", "success"); 
-                                           });
-                                        })
-                                    </script>
-                                    <a href="<?php echo e(route('module.sort.down',['id'=>$val->id])); ?>" class="secondary-content">
-                                        <i class="arrow-downward material-icons dp48">arrow_downward</i>
-                                    </a>
-                                    <a href="<?php echo e(route('module.sort.up',['id'=>$val->id])); ?>" class="secondary-content">     <i class="arrow-upward material-icons dp48">arrow_upward</i>
-                                    </a>
-                                </li>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </ul>
+                            <!--new permission div ends -->
+                                  
                         </div>
-                      
                     </div>
+                           
                 </div>
-
-               
             <?php endif; ?>
+
+			
+			<!-- http://admin.adminpie.com/modules -->
+            <?php if(@$subModuleData == null && @$moduleData == null): ?>
+                <?php echo Form::open(['route' => 'module.save' , 'method' => 'post']); ?>
+
+                 
+                	<?php echo FormGenerator::GenerateForm('add_module_form'); ?>
+
+                <?php echo Form::close(); ?>
+
+                <ul class="collection">
+                    <?php $__currentLoopData = $listModule; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <li class="collection-item" style="position: relative;">
+
+                            <a href="<?php echo e(route('list.module',['id'=>$val->id])); ?>"><?php echo e($val->name); ?></a> 
+                             <div style="display: inline-block;float: right;right: 140px;"> 
+                                <?php if($val->status == 0): ?>
+                                    <a href="<?php echo e(route('status.module',['id'=>$val->id])); ?>">Activate</a>
+                                <?php else: ?>
+                                    <a href="<?php echo e(route('status.module',['id'=>$val->id])); ?>">Deactivate</a>
+                                <?php endif; ?>
+                                <label class="switch" for="input_">
+                                    <span class="handle"></span>
+                                </label>
+                             </div>
+                            <a href="<?php echo e(route('module.delete',['id'=>$val->id])); ?>" class="secondary-content delete-module">
+                                <i class="arrow-delete material-icons dp48">delete</i>
+                            </a>
+                            <script type="text/javascript">
+                                $(document).on('click','.delete-module',function(e){
+                                    e.preventDefault();
+                                    var href = $(this).attr("href");
+                                    swal({   
+                                        title: "Are you sure?",   
+                                        text: "You will not be able to recover this imaginary file!",   
+                                        type: "warning",   
+                                        showCancelButton: true,   
+                                        confirmButtonColor: "#DD6B55",   
+                                        confirmButtonText: "Yes, delete it!",   
+                                        closeOnConfirm: false 
+                                    }, 
+                                    function(){
+                                    window.location = href;
+                                       swal("Deleted!", "Your Module has been deleted.", "success"); 
+                                   });
+                                })
+                            </script>
+                            <a href="<?php echo e(route('module.sort.down',['id'=>$val->id])); ?>" class="secondary-content">
+                                <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                            </a>
+                            <a href="<?php echo e(route('module.sort.up',['id'=>$val->id])); ?>" class="secondary-content">     <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                            </a>
+                           
+                        </li>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </ul>
+			<?php endif; ?>
         </div>
         <div class="clear"></div>
     </div>

@@ -3,10 +3,11 @@
 @php
 $page_title_data = array(
     'show_page_title' => 'yes',
-    'show_add_new_button' => 'no',
+    'show_add_new_button' => 'yes',
     'show_navigation' => 'yes',
     'page_title' => 'Add New Organization',
-    'add_new' => '+ Add Designation'
+    'add_new' => 'All Organizations',
+    'route' => 'list.organizations'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)

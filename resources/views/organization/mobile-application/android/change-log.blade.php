@@ -16,6 +16,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@include('organization.mobile-application.android._tabs')
+	{!! @get_global_post(8)->content !!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 	

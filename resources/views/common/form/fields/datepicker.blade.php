@@ -1,6 +1,8 @@
-
+@php
+	$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
+@endphp
 				
-{!!Form::date(str_replace(' ','_',strtolower($collection->field_slug)), null,['id'=>'input_'.$collection->field_slug,'class'=>'datepicker '.$collection->field_slug])!!}
+{!!Form::date(str_replace(' ','_',strtolower($collection->field_slug)), null,['id'=>'input_'.$collection->field_slug,'class'=>'datepicker '.$collection->field_slug,'placeholder'=>$placeholder,'readonly'=>'readonly'])!!}
 	
 @if(Session::has('date_error'))
 	<script type='text/javascript'>Materialize.toast('Date is already in use', 5000)</script>

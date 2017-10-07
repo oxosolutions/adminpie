@@ -24,7 +24,6 @@
     if($conditionsOptions != null){
         $model['field_conditions'] = json_decode($conditionsOptions->value,true);
     }
-    dump($model);
 @endphp
 
 {!!Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}

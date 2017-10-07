@@ -195,9 +195,11 @@ class OrganizationController extends Controller
         if(!empty($organizations)){
             foreach (json_decode(json_encode($organizations),true)  as $orgKey => $orgValue) {
                 $existed = $orgValue['TABLE_NAME'];
-                $new = str_replace($existed_id, $new_id, $existed);
-                DB::select("CREATE TABLE ".$new." LIKE ".$existed);
-                DB::select("INSERT ".$new." SELECT * FROM ".$existed);
+                if($existed != "ocrm_".$existed_id."_users"){
+                  $new = str_replace($existed_id, $new_id, $existed);
+                  DB::select("CREATE TABLE ".$new." LIKE ".$existed);
+                  DB::select("INSERT ".$new." SELECT * FROM ".$existed);
+                }
             } 
             return 'table_exist';
         }else{

@@ -4,6 +4,8 @@ namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
+use DB;
+use App\Model\Admin\CustomMaps;
 class Visualization extends Model
 {
    protected $fillable= ['dataset_id','name','description','created_by'];
@@ -63,6 +65,37 @@ class Visualization extends Model
    public function charts(){
 
       return $this->hasMany('App\Model\Organization\VisualizationCharts','visualization_id','id');
+   }
+
+   public static function getXColumns(){
+      $id = request()->route()->parameters()['id'];
+      $charts = VisualizationCharts::with(['meta'])->where('visualization_id',$id)->get();
+      $model = Visualization::with(['dataset','meta'])->find($id);
+      $dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
+      $dataset = (array)$dataset[0];
+      unset($dataset['id']);
+      unset($dataset['status']);
+      unset($dataset['parent']);
+      $columns = $dataset;
+      return $columns;
+   }
+
+   public static function getYColumns(){
+      $id = request()->route()->parameters()['id'];
+      $charts = VisualizationCharts::with(['meta'])->where('visualization_id',$id)->get();
+      $model = Visualization::with(['dataset','meta'])->find($id);
+      $dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
+      $dataset = (array)$dataset[0];
+      unset($dataset['id']);
+      unset($dataset['status']);
+      unset($dataset['parent']);
+      $columns = $dataset;
+      return $columns;
+   }
+
+   public static function mapsList(){
+      $maps = CustomMaps::get();
+      return $maps;
    }
 
 

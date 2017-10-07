@@ -110,7 +110,7 @@ class PagesController extends Controller
     public function update(Request $request)
     {
         $Associate = $this->assignModel('PageMeta');
-
+        $AssociatePage = $this->assignModel('Page');
         $data = [];
         foreach($request->except('_token') as $k => $v){
             $data[$k] = $v;
@@ -120,7 +120,7 @@ class PagesController extends Controller
         }
         
         unset($data['template'],$data['id'],$data['select_status'],$data['menu']);
-        $updatePage = Page::where('id',$request['id'])->update($data);
+        $updatePage = $AssociatePage::where('id',$request['id'])->update($data);
             
         $meta = $request->except('_token','title','slug','description','content','tags','id','categories');
         foreach ($meta as $key => $value) {

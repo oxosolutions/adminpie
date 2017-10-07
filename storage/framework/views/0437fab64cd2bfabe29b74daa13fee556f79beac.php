@@ -10,12 +10,14 @@
 		<?php if(@$show_add_new_button  != 'no'): ?>
 			<?php if(!empty(@$add_new)): ?>
 				<?php if(array_key_exists('route', @$page_title_data)): ?>
-					<a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="<?php echo e(route(@$page_title_data['route'])); ?>"><?php echo e(@$add_new); ?>
-
-					</a>
-				<?php else: ?>
-					<a id="add_designation_button" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" data-target="add_new_model" href="#"><?php echo e(@$add_new); ?></a>
-				<?php endif; ?>
+          <?php if(is_array(@$page_title_data['route'])): ?>
+			<a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="<?php echo e(route(@$page_title_data['route'][0],@$page_title_data['route'][1])); ?>"><?php echo e(@$add_new); ?></a>
+          <?php else: ?>
+            <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="<?php echo e(route(@$page_title_data['route'])); ?>"><?php echo e(@$add_new); ?></a>
+          <?php endif; ?>
+			<?php else: ?>
+				<a id="add_designation_button" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" data-target="add_new_model" href="#"><?php echo e(@$add_new); ?></a>
+			<?php endif; ?>
         <?php if(array_key_exists('second_button_route', @$page_title_data)): ?>
           <a class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" href="<?php echo e(route(@$page_title_data['second_button_route'])); ?>"><?php echo e(@$second_button_title); ?>
 

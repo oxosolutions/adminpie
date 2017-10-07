@@ -16,7 +16,42 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
       @include('organization.visualization._tabs')
          {{-- {{dd($charts)}} --}}
-        {!!Form::model(@$model,['route'=>['save.charts',request()->route()->parameters()['id']]])!!}
+         @php
+            $chartsModel = [];
+            $index = 0;
+            foreach($charts as $key => $chart){
+                // dump($chart);
+                $chartsModel['available_chart'][$index]['chart_title'] = $chart->chart_title;
+                $chartsModel['available_chart'][$index]['chart_type'] = $chart->chart_type;
+                $chartsModel['available_chart'][$index]['variable_x_axis'] = $chart->primary_column;
+                $chartsModel['available_chart'][$index]['variable_y_axis'] = json_decode($chart->secondary_column);
+                $chartsModel['available_chart'][$index]['chart_id'] = $chart->id;
+                $formula = $chart->meta->where('key','formula');
+                $width = $chart->meta->where('key','chartwidth');
+                if(!$formula->isEmpty()){
+                    $chartsModel['available_chart'][$index]['formula'] = $formula->first()->value;
+                }
+                if(!$width->isEmpty()){
+                    $chartsModel['available_chart'][$index]['chartwidth'] = $width->first()->value;
+                }
+                $index++;
+            }
+            $index = 0;
+            if(!$model->meta->isEmpty()){
+                $filters = $model->meta->where('key','filters');
+                if(!$filters->isEmpty()){
+                    $filtersArray = json_decode($filters->first()->value);
+                    foreach($filtersArray as $key => $filter){
+                        $chartsModel['filters'][$index]['filter_columns'] = $filter->column;
+                        $chartsModel['filters'][$index]['filter_type'] = $filter->type;
+                        $index++;
+                    }
+                    // dump($filtersArray);
+                }
+            }
+            // dd($chartsModel);
+         @endphp
+        {!!Form::model(@$chartsModel,['route'=>['save.charts',request()->route()->parameters()['id']]])!!}
           <div class="row">
               <div class="col l8 pr-7">
                   <div class="card-v2">
@@ -27,10 +62,8 @@ $page_title_data = array(
                         
                           
                               @if(!$charts->isEmpty())
-                                @foreach($charts as $chartKey => $chart)
-                                 
-                                    {{-- <input type="hidden" value="{{$chart->id}}" name="chart_id[chart_{{$loop->index}}]" />
-                                    <div class="collapsible-header"><div style="width: 90%;">{{$chart->chart_title}}</div><i class="fa fa-trash"></i></div>
+                                    {{-- <input type="hidden" value="{{$chart->id}}" name="chart_id[chart_{{$loop->index}}]" /> --}}
+                                    {{-- <div class="collapsible-header"><div style="width: 90%;">{{$chart->chart_title}}</div><i class="fa fa-trash"></i></div>
                                     <div class="collapsible-body"> --}}
                                         {{--   <div class="row mb-0">
                                                <label>Chart Title</label>
@@ -99,10 +132,10 @@ $page_title_data = array(
                                                   {!! Form::select('chartWidth[chart_'.$loop->index.']',['20'=>'20','25'=>'25','50'=>'50','75'=>'75','100'=>'100'],@getMetaValue($chart->meta,'chartWidth'),["class"=>"no-margin-bottom aione-field select_2 browser-default  "])!!}
                                               </div>
                                           </div>
-      --}}                                       {!! FormGenerator::GenerateForm('available_chart_form',[],$columns) !!}
+      --}}                                       
                                    {{--  </div> --}}
+                                   {!! FormGenerator::GenerateForm('available_chart_form',[],$chartsModel) !!}
                                   
-                                @endforeach
                               @else
                                 
                                  
@@ -195,7 +228,6 @@ $page_title_data = array(
                       <div class="card-v2-content p-8">
                           <ul class="filters">
                               @if(!empty(@json_decode($filters)))
-                                @foreach(json_decode($filters) as $key => $filter)
                                   <li>
                                      {{--  <div class="row">
                                           <div class="col l6 pr-7">
@@ -209,9 +241,8 @@ $page_title_data = array(
                                               </div>
                                           </div>        
                                       </div> --}}
-                                      {!! FormGenerator::GenerateForm('visualization_and_filter_chart') !!}
+                                      {!! FormGenerator::GenerateForm('visualization_and_filter_chart',[],$chartsModel) !!}
                                   </li>
-                                @endforeach
                               @else
                                 <li>
                                     <div class="row">
@@ -350,6 +381,10 @@ $page_title_data = array(
   }
   .field{
     padding: 0;
+  }
+  #field_1696{
+    display: none;
+
   }
 </style>
 <script type="text/javascript">

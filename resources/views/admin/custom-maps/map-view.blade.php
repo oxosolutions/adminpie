@@ -45,18 +45,18 @@ $page_title_data = array(
 </style>
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	<div class="row map-view">
-		<div class="col l9">
+	<div class="ar map-view">
+		<div class="ac l75 m75 s100">
 			<div class="box display-map">
-				{!!$model->map_data!!}
+				{!! $model->map_data !!}
 			</div>
 			<div class="box">
 				
 			</div>
 		</div>
-		<div class="col l3 aione-table">
+		<div class="ac l25 m25 s100 aione-table">
 			
-			<table class="wide">
+			<table class="compact">
 				<thead >
 					<tr><th colspan="2">Information</th></tr>
 				</thead>
@@ -88,30 +88,31 @@ $page_title_data = array(
 				</tbody>
 			</table>
 
-			<div class="box">
-				@php
-					if($model->map_keys != ''){
-						$map_keys = json_decode($model->map_keys, true);
-				@endphp
-				@foreach($map_keys as $key => $value)
-					<div class="row info">
-						{{$value['id']}}				
+			
+				{{-- @if($model->map_keys != '')
+					<div class="box">
+						@php
+								$map_keys = json_decode($model->map_keys, true);
+						@endphp
+						@if(@$map_keys != '')
+							@foreach(@$map_keys as $key => $value)
+								<div class="row info">
+									{{@$value['id']}}				
+								</div>
+							@endforeach
+						@endif
 					</div>
-				@endforeach
-				@php
-					}
-				@endphp
-			</div>
+				@endif --}}
 			<div class="box right-align no-border">
 				
 			</div>
-			
+
+			<h5 class="selected-part"></h5>
 			<div class="box get_value">
-						
 			</div>
 
 			<div>
-				<input type="text" name="link">
+				<textarea name="link" rows="10"> </textarea>
 			</div>
 		</div>
 	</div>
@@ -121,21 +122,43 @@ $page_title_data = array(
 	$(document).ready(function(){
 		url = 'http://manage.adminpie.com/public/custom-maps/GM-460161798027/green/';
 		$(document).on('click','.display-map .land',function(){
+			var selected_title = $(this).attr('title');
+			$('.selected-part').html(selected_title);
 			$(this).attr("class", "land active");
 			$(this).siblings().attr("class", "land");	
 			var ID = $(this).attr('id');
 			$('.get_value').empty();
-			$('.get_value').append('<input type="text" name="'+ID+'">')
+			$('.get_value').append('<input placeholder="Value" type="text" name="'+ID+'">')
 		});
 	
 		$(document).on('focusout','.get_value input',function(){
-			 url = url + $(this).attr('name') + '=' + $(this).val() + '+';
-			 $('input[name=link]').val(url);
+			var selected_title = $(this).attr('name');
+			var selected_value = $(this).val();
+			url = url + selected_title + '=' + selected_value + '+';
+			$('textarea[name=link]').val(url);
+
+			// if($('textarea[name=link]').val() != ''){
+			// 	var dataArray = $('textarea[name=link]').val().split('/');
+			// 	$.each(dataArray,function($k ,$v){
+			// 		if($v!=''){
+			// 			var new_array = $v.split('=');
+			// 			if(new_array.constructor === Array){
+			// 				if(new_array.length > 1){
+			// 					$.each(new)
+			// 				}
+			// 			}else{
+			// 				console.log("false");
+			// 			}
+			// 		}
+			// 	});
+			// }
+
 		});
-		$(document).on('focusin','input[name=link]',function(){
-			var f_url = $('input[name=link]').val();
+
+		$(document).on('focusin','textarea[name=link]',function(){
+			var f_url = $('textarea[name=link]').val();
 			f_url = f_url.substring(0, f_url.length - 1);
-			$('input[name=link]').val(f_url);
+			$('textarea[name=link]').val(f_url);
 		});
 	})
 		

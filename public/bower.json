@@ -28,6 +28,7 @@
     "jquery-form-validator": "^2.3.74",
     "uikit": "^2.27.4",
     "gridster": "^0.5.6",
-    "select2": "^4.0.3"
+    "select2": "^4.0.3",
+    "spectrum": "^1.8.0"
   }
 }

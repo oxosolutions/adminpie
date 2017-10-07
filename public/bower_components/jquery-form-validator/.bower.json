@@ -22,15 +22,14 @@
     "test",
     "tests"
   ],
-  "version": "2.3.74",
-  "_release": "2.3.74",
+  "version": "2.3.77",
+  "_release": "2.3.77",
   "_resolution": {
     "type": "version",
-    "tag": "2.3.74",
-    "commit": "caa14d336a0a61527f4006407b56d948e6464706"
+    "tag": "2.3.77",
+    "commit": "6bc133ba8d57bc6ce37bab95fd1c6360e4d984e7"
   },
   "_source": "https://github.com/victorjonsson/jQuery-Form-Validator.git",
   "_target": "^2.3.74",
-  "_originalSource": "jquery-form-validator",
-  "_direct": true
+  "_originalSource": "jquery-form-validator"
 }
