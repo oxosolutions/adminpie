@@ -27,4 +27,14 @@ class OrganizationSetting extends Model
    		}
    		
    }
+
+
+   public static function getAndroidApp(){
+      $file = scandir('application/android/',SCANDIR_SORT_DESCENDING);
+      if($file[0] != '..' && $file[0] != '.'){
+         return $file[0];
+      }else{
+         return '';
+      }
+   }
 }

@@ -6,7 +6,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset: '.$dataset['dataset_name'],
+	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 
@@ -30,6 +30,7 @@
 				<thead>
 					<tr>
 						<td>Column name</td>
+						<td>Edit header</td>
 						<td>Column type</td>
 						
 					</tr>
@@ -37,7 +38,12 @@
 				<tbody>
 					@foreach($columns->toArray() as $key => $columnName)
 						<tr>
-							<td width="500">{{$columnName}}</td>
+							<td width="300">{{$columnName}}</td>
+							<td width="300">
+								<div class="field field-type-text">
+									<input type="text" name="header[{{$key}}]" value="{{$columnName}}" class="browser-default" />
+								</div>
+							</td>
 							<td>
 								{!!Form::select($key,["/^[a-zA-Z][a-zA-Z\\s]+$/"=>'String','/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26]php)00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/'=>'Date','/^[0-9]+(\.[0-9]{1,5})?$/'=>'Number','area_code'=>'Area Code'],null,['class'=>'browser-default'])!!}
 								{{-- <select class="browser-default" name="{{$key}}">
@@ -52,7 +58,7 @@
 				</tbody>
 			</table>
 			<div style="margin-top: 15px">
-				<a href="" class="btn blue" data-target="add_new_column">Add New Column</a>
+				{{-- <a href="" class="btn blue" data-target="add_new_column">Add New Column</a> --}}
 				<button type="submit" class="btn blue" style="float: right">Save Changes</button>
 			</div>
 		</div>

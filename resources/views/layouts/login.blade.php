@@ -1,11 +1,16 @@
 @php
-	$login_theme = @$settings->where('key' , 'login_theme')->first();
-	$login_style = @$settings->where('key' , 'login_style')->first();
-	$Site_title = @$settings->where('key' , 'title')->first();
+
+	if(@$settings != null){
+		$login_theme = @$settings->where('key' , 'login_theme')->first();
+		$login_style = @$settings->where('key' , 'login_style')->first();
+		$Site_title = @$settings->where('key' , 'title')->first();
+		$bg_image = @$settings->where('key' , 'bg_image')->first();
+	}
 @endphp
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 	<meta charset="utf-8">
@@ -17,6 +22,13 @@
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/login.css?ref='.rand(544,44)) }}"> 
 
+	@if(@$bg_image)	
+		<style type="text/css">
+			.login-background, .login-theme-darlic .login-background{
+				background: url( {{ asset($bg_image->value) }} );
+			}
+		</style>
+	@endif
 </head>
 <body>
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme->value}} login-style-{{@$login_style->value}}">

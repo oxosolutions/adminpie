@@ -9,7 +9,8 @@
 ************************************************************/
 
 
-use App\Model\Organization\User;
+// use App\Model\Organization\User;
+use App\Model\Group\GroupUsers as User;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Admin\GlobalModuleRoute as route;
@@ -22,7 +23,9 @@ use App\Mddel\Organization\OrganizationSetting;
 use App\Model\Organization\FormBuilder;
 use App\Model\Organization\Page as Page;
 use App\Model\Admin\Page as GlobalPage;
-
+use App\Model\Organization\PageMeta as PageMeta;
+use App\Model\Admin\PageMeta as GlobalPageMeta;
+use App\Model\Admin\GlobalOrganization;
 
 /************************************************************
 *	@function field_options
@@ -675,10 +678,13 @@ if(!function_exists('get_user_role')){
 		}else{
 			$uid = $userid;
 		}
+
 		$model = UserRoleMapping::with(['roles'])->where(['user_id'=>$uid])->get();
 		if(!$model->isEmpty()){
 			foreach ($model as $modelKey => $value) {
-				$role_slugs[] = $value->roles->slug;
+				if($value->roles != null){
+					$role_slugs[] = $value->roles->slug;
+				}
 			}
 		}
 		return $role_slugs;
@@ -838,18 +844,28 @@ function get_global_posts($options = array()){
 *	@access	public
 *	@since	1.0.0.0
 *	@author	SGS Sandhu(sgssandhu.com)
-*	@perm id			[integer	optional	default	null]
+*	@perm id			[integer/string	optional	default	null]
 *	@perm global		[true/false	optional	default	false]
-*	@return filename [string]
+*	@return post [array/object]
 ************************************************************/
 function get_post($id = null , $global = false, $array =false){	
 
 
-	if($global){
-		$post = GlobalPage::where(['id'=>$id])->first();
+	
+	if(is_int($id)){
+		if($global){
+			$post = GlobalPage::where(['id'=>$id])->first();
+		} else {
+			$post = Page::where(['id'=>$id])->first();
+		}
 	} else {
-		$post = Page::where(['id'=>$id])->first();
+		if($global){
+			$post = GlobalPage::where(['slug'=>$id])->first();
+		} else {
+			$post = Page::where(['slug'=>$id])->first();
+		}
 	}
+
 
 	//Return $post
 	return $post;
@@ -859,15 +875,103 @@ function get_post($id = null , $global = false, $array =false){
 *	@access	public
 *	@since	1.0.0.0
 *	@author	SGS Sandhu(sgssandhu.com)
-*	@perm id			[integer	optional	default	null]
-*	@return filename [string]
+*	@perm id			[integer/string	optional	default	null]
+*	@return post [array/object]
 ************************************************************/
-function get_global_post($id = null){	
+function get_global_post($id = null, $array = false){	
 	
 	$post = get_post($id , true, $array);
 
 	//Return $post
 	return $post;
+}
+
+/************************************************************
+*	@function get_post_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm id			[integer/string	optional	default	null]
+*	@perm global		[true/false	optional	default	false]
+*	@return postmeta [array/object]
+************************************************************/
+function get_post_meta($id = null , $global = false, $array =false){	
+
+
+	
+	if(is_int($id)){
+		if($global){
+			$postmeta = GlobalPageMeta::where(['page_id'=>$id])->get();
+		} else {
+			$postmeta = PageMeta::where(['page_id'=>$id])->get();
+		}
+	} else {
+		if($global){
+			$post = get_post($id , true, $array);
+			$post_id = $post->id;
+
+			$postmeta = GlobalPageMeta::where(['page_id'=>$post_id])->get();
+		} else {
+			$post = get_post($id , false, $array);
+			$post_id = $post->id;
+			$postmeta = PageMeta::where(['page_id'=>$post_id])->get();
+		}
+	}
+	if($array){
+		$postmeta =  get_meta_array($postmeta);
+	}
+	//Return $postmeta
+	return $postmeta;
+}
+/************************************************************
+*	@function get_global_post_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm id			[integer/string	optional	default	null]
+*	@return postmeta [array/object]
+************************************************************/
+function get_global_post_meta($id = null, $array = false){	
+	
+	$postmeta = get_post_meta($id , true, $array);
+
+	//Return $postmeta
+	return $postmeta;
+}
+/************************************************************
+*	@function get_slider
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm slug			[string	optional	default	null]
+*	@return post [array/object]
+************************************************************/
+function get_slider($slug = null){	
+
+
+
+	if($global){
+		$post = GlobalPage::where(['slug'=>$id])->first();
+	} else {
+		$post = Page::where(['slug'=>$id])->first();
+	}
+
+	$slider = "Hello";
+	
+
+
+	//Return $slider
+	return $slider;
+}
+
+/**
+ * will return custom error view inside layout
+ *
+ * @return custom error view
+ * @author Rahul
+ **/
+function error($error_content = []){
+	return view('organization.errors.custom-error',$error_content);
 }
 
 /************************************************************
@@ -1112,6 +1216,112 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 			$activityLog->save();
 		}
 	}
+
+	/**
+	 * [is_primary_domain_exists description]
+	 * @param  [type]  $domain [description]
+	 * @return boolean         [description]
+	 */
+	function is_primary_domain_exists($domain){
+        $primary_domain_existance_status = GlobalOrganization::where('primary_domain',$domain)->first();
+        if($primary_domain_existance_status != null){
+            return $primary_domain_existance_status;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * [is_secondary_domain_exists description]
+     * @param  [type]  $domain [description]
+     * @return boolean         [description]
+     */
+    function is_secondary_domain_exists($domain){
+        $secondary_domain_existance_status = GlobalOrganization::where('secondary_domains',$domain)->first();
+        if($secondary_domain_existance_status != null){
+            return $secondary_domain_existance_status;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * get menus function
+     *
+     * @return menu array
+     * @author Rahul
+     **/
+    function get_menu($menu_id){
+    	return Menu::wlist($menu_id);
+    }
+
+    /**
+     * get_title function to get
+     *
+     * @return string
+     * @author Rahul
+     **/
+    function get_title($model, $id, $column){
+
+    	$model = $model::where(['id'=>$id])->first();
+    	if($model != null){
+    		return $model->{$column};
+    	}else{
+    		return null;
+    	}
+    }
+
+    /**
+     * get dataset name function
+     *
+     * @return string
+     * @author Rahul
+     **/
+    function get_dataset_title($id){
+
+    	$model = 'App\\Model\\Organization\\Dataset';
+    	$column = 'dataset_name';
+    	$dataset_name = get_title($model,$id,$column);
+    	return $dataset_name;
+    }
+
+    /**
+     * get_survey_title function
+     *
+     * @return string
+     * @author Rahul
+     **/
+    function get_survey_title($id){
+    	$model = 'App\\Model\\Organization\\forms';
+    	$column = 'form_title';
+    	$survey_name  = get_title($model,$id,$column);
+    	return $survey_name;
+    }
+
+    /**
+     * get_visusualzaition_title function
+     *
+     * @return string
+     * @author Rahul
+     **/
+    function get_visualization_title($id){
+    	$model = 'App\\Model\\Organization\\Visualization';
+    	$column = 'name';
+    	$visualization_name = get_title($model,$id,$column);
+    	return $visualization_name;
+    }
+
+
+     /**
+     * get_form_title function
+     *
+     * @return string
+     * @author Rahul
+     **/
+    function get_form_title($id){
+    	return get_survey_title($id);
+    }
+
 	/************************************************************
 	*	@function activity_log
 	*	@access	public

@@ -10,11 +10,12 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
-@include('admin.settings._tabs')
+
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+@include('admin.settings._tabs')
 	{!!Form::open(['route'=>'save.organizationSettings','method'=>'POST'])!!}
-		<div class="col l3" style="line-height: 30px">
+		{{-- <div class="col l3" style="line-height: 30px">
 			Primary Organization
 		</div>
 		<div class="col l9">
@@ -23,9 +24,10 @@ $page_title_data = array(
 				$organizationListArray[0] = 'Default';
 			@endphp
 			{!! Form::select('primary_organization',$organizationListArray,$model,['placeholder'=>'Select Primary Organization'])!!}
-		</div>
+		</div> --}}
 		<input type="hidden" name="key" value="primary_organization">
-		<button type="submit" class="btn blue">Save</button>
+		{!! FormGenerator::GenerateForm('organization_setting_form') !!}
+		<button type="submit" class="">Save</button>
 	{!!Form::close()!!}
 	@include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

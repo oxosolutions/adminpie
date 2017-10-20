@@ -11,7 +11,8 @@ use App\Model\Organization\forms;
 use App\Model\Organization\Cms\Menu\Menu;
 use Auth;
 use Session;
-
+use App\Model\Admin\GlobalOrganization;
+use Menu as wMenu;
 class PagesController extends Controller
 {
     
@@ -69,9 +70,9 @@ class PagesController extends Controller
         }
             if($request->has('search')){
                 if($sortedBy != ''){
-                    $model = $Associate::where('type', 'page')->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$order)->paginate($perPage);
+                    $model = $Associate::where('type', 'page')->where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$order)->paginate($perPage);
                 }else{
-                    $model = $Associate::where('type', 'page')->where('name','like','%'.$request->search.'%')->paginate($perPage);
+                    $model = $Associate::where('type', 'page')->where('title','like','%'.$request->search.'%')->paginate($perPage);
                 }
             }else{
                 if($sortedBy != ''){
@@ -80,15 +81,12 @@ class PagesController extends Controller
                     $model = $Associate::where('type', 'page')->paginate($perPage);
                 }
             }
-            if(Auth::guard('admin')->check()){
-                $view = 'admin.page.view';
-                $edit = 'admin.edit.pages';
-                $delete = 'admin.delete.page';
-            }else{
-                $view = 'page.view';
-                $edit = 'edit.pages';
-                $delete = 'delete.page';
-            }
+            
+            $view = 'page.view.byid';
+            $edit = 'edit.pages';
+            $delete = 'delete.page';
+            
+            // dd($view);
             $datalist =  [
                         'datalist'=>$model,
                         'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created','status'=>['type'=>'switch','title'=>'Status','class' => 'pageStatus']],
@@ -109,34 +107,33 @@ class PagesController extends Controller
     }
     public function update(Request $request)
     {
-        $Associate = $this->assignModel('PageMeta');
-        $AssociatePage = $this->assignModel('Page');
         $data = [];
         foreach($request->except('_token') as $k => $v){
-            $data[$k] = $v;
-            if(is_array($v)){
-                $data[$k] = json_encode($v);
+            if($v != null || $v != '' || $k == 'content'){
+                $data[$k] = $v;
+                if(is_array($v)){
+                    $data[$k] = json_encode($v);
+                }
             }
-        }
-        
-        unset($data['template'],$data['id'],$data['select_status'],$data['menu']);
-        $updatePage = $AssociatePage::where('id',$request['id'])->update($data);
             
+        }
+        unset($data['template'],$data['id'],$data['select_status'],$data['menu']);
+        $updatePage = Page::where('id',$request['id'])->update($data);
+
         $meta = $request->except('_token','title','slug','description','content','tags','id','categories');
         foreach ($meta as $key => $value) {
-            $data = $Associate::where(['page_id' => $request['id'] , 'key' => $key])->first();
-            if($data == null){
-                $model =  new $Associate;
+            if($value != null || $value != '' ){
+                $model = PageMeta::firstOrNew(['page_id' => $request['id'] , 'key'=>$key]);
                 $model->page_id = $request['id'];
                 $model->key = $key;
                 $model->value = $value;
                 $model->save();
-            }else{
-                $model = $Associate::where(['page_id' => $request['id'] , 'key'=>$key])->update(['value' => $value]);
             }
         }
         return back();
     }   
+
+
     /**
      * @param  none
      * @return [true]
@@ -270,37 +267,38 @@ class PagesController extends Controller
     //preview page
     public function viewPage($slug)
     {
-        $Associate = $this->assignModel('Page');
+        $this->authOrganization();
 
+        $Associate = $this->assignModel('Page');
         $pageData = $Associate::where('slug',$slug)->with('pageMeta')->first();
         $form = [];
-        $values= explode(PHP_EOL,@$pageData->description);
-        if(@$values != null){
-
-            foreach ($values as $key => $value) {
-                preg_match_all('/\[(.*?)\]/' , $value , $matches ,PREG_PATTERN_ORDER );
-                if($matches[0] != "" && !empty($matches[0])){
-                    foreach($matches[0] as $k => $v){
-                        preg_match('/(form_slug = (\"(.*)\"))|(form_slug = (\'(.*)\'))/', $v , $form_match );
-                        $form[]['form'] = $form_match[3];
-                    }        
-                }else{
-                    $form[] = $value;
-                }
-            }
-        }
-        $menu = [];
-        $page = $Associate::where('id',$pageData->id)->with(['pageMeta'])->first();
-         if($page->pageMeta != null){
-            foreach ($page->pageMeta as $key => $value) {
-                if($value->key == "menu"){
-                   $menu = Menu::where('id',$value->value)->with('menuItem')->get();
-                }
-            }
-        }
-        // organization.pages.viewPage
-        return view('organization.pages.viewPage')->with(['pageData' => $pageData , 'formData' => $form , 'menu' => $menu]);
+        
+        $menu = wMenu::wlist(6);
+        return view('organization.pages.viewPage')->with(['pageData' => $pageData , 'formData' => $form , 'menu' => $menu])->compileShortcodes();
     }
+
+    protected function authOrganization(){
+
+        $completeDomain = request()->getHost();
+        $primary_domain =  is_primary_domain_exists($completeDomain);
+        $secondary_domain = is_secondary_domain_exists($completeDomain);
+        if($primary_domain == false){
+            if($secondary_domain == false){
+                $domain = explode('.', request()->getHost());
+                $subdomain = $domain[0];
+                $model = GlobalOrganization::where('slug',$subdomain)->first();
+                if($model == null){
+                    return redirect()->route('demo5');
+                }
+                Session::put('organization_id',$model->id);
+            }else{
+                Session::put('organization_id',$secondary_domain->id);
+            }
+        }else{
+            Session::put('organization_id',$primary_domain->id);
+        }
+    }
+
     public function menusList()
     {
        return view('organization.cms.menu.menu'); 
@@ -311,10 +309,12 @@ class PagesController extends Controller
     }
     public function viewPageById($id)
     {
+        
         $Associate = $this->assignModel('Page');
-
         $pageData = $Associate::where('id',$id)->first();
-        return redirect()->route('page.slug',$pageData->slug);
+        
+        $route = 'view.pages';
+        return redirect()->route($route,$pageData->slug);
     }
     //this is a temprary method for design purpose 
     public function pageView($slug)
@@ -324,6 +324,7 @@ class PagesController extends Controller
         $pageData = $Associate::where('slug',$slug)->first();
         $form = [];
         $values= explode(PHP_EOL,$pageData->description);
+
         if(@$values != null){
 
             foreach ($values as $key => $value) {
@@ -346,10 +347,9 @@ class PagesController extends Controller
         //             $form[] = $form_match[3];
         //         }        
         //     }
-        
-        
+
         // }
-        return view('common.front')->with(['pageData' => $pageData , 'formData' => $form]);
+        return view('layouts.front')->with(['pageData' => $pageData , 'formData' => $form]);
         // return view('common.front');
     }
     public function pageSetting($id)
@@ -359,9 +359,12 @@ class PagesController extends Controller
         $meta = $Associate::select(['key','value'])->where('page_id',$id)->get()->toArray();
         $model = [];
         foreach($meta as $k => $value){
-            $model[$value['key']] = $value['value'];                
+            $model[$value['key']] = $value['value']; 
         }
-        return view('organization.pages.page-settings',compact('model'));
+        $AssociatePage = $this->assignModel('Page');
+        $page = $AssociatePage::where('id',$id)->with(['pageMeta'])->first();
+
+        return view('organization.pages.page-settings',compact('model','page'));
     }
     public function savePageSetting( Request $request )
     {
@@ -369,11 +372,13 @@ class PagesController extends Controller
 
         $page_id = $request['page_id'];
         foreach ($request->except('_token','page_id') as $key => $value) {
-            $model = $Associate::firstOrNew(['page_id'=>$page_id, 'key' => $key]);
-            $model->page_id = $page_id;
-            $model->key = $key;
-            $model->value = $value;
-            $model->save();
+            if($value != ''){
+                $model = $Associate::firstOrNew(['page_id'=>$page_id, 'key' => $key]);
+                $model->page_id = $page_id;
+                $model->key = $key;
+                $model->value = $value;
+                $model->save();
+            }
         }
         return back();
         
@@ -389,10 +394,15 @@ class PagesController extends Controller
         }else{
             $customCode = [];
             foreach($model as $key => $value){
-                $customCode[$value->key] = $value->value;
+                if($value != null || $value != ''){
+                    $customCode[$value->key] = $value->value;
+                }
             }
         }
-        return view('organization.pages.custom-code',compact('customCode'));
+        $AssociatePage = $this->assignModel('Page');
+        $page = $AssociatePage::where('id',$id)->with(['pageMeta'])->first();
+
+        return view('organization.pages.custom-code',compact('customCode','page'));
     }
     public function saveCustomeCode(Request $request)
     {
@@ -400,14 +410,21 @@ class PagesController extends Controller
         
        foreach ($request->except('_token') as $key => $value) {
             $data = $Associate::where(['page_id' => $request['page_id'] , 'key' => $key])->first();
-            if($data == null){
-                $model =  new $Associate;
+            // if($data == null){
+            //     $model =  new $Associate;
+            //     $model->page_id = $request['page_id'];
+            //     $model->key = $key;
+            //     $model->value = $value;
+            //     $model->save();
+            // }else{
+            //     $model = $Associate::where(['page_id' => $request['page_id'] , 'key'=>$key])->update(['value' => $value]);
+            // }
+            if($value != null || $value != ''){
+                $model = $Associate::firstOrNew(['page_id' => $request['page_id'] , 'key'=>$key]);
                 $model->page_id = $request['page_id'];
                 $model->key = $key;
                 $model->value = $value;
                 $model->save();
-            }else{
-                $model = $Associate::where(['page_id' => $request['page_id'] , 'key'=>$key])->update(['value' => $value]);
             }
         }
         return back();

@@ -12,15 +12,23 @@ use App\Model\Organization\User;
 use App\Model\Organization\UsersType;
 use DB;
 use Auth;
+use App\Model\Group\GroupUsers;
 use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalSetting;
 use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UserRoleMapping;
+use stdClass;
+use App\Http\Controllers\Group\GroupOrganizationController;
 
 class OrganizationController extends Controller
 {
+  protected $generate_organization;
+  public function __construct(GroupOrganizationController $build_organization){
+    $this->generate_organization = $build_organization;
+  }
+
     protected $valid_fields  = [
                 'email'             => 'bail|required|unique:global_organizations|email',
                 'slug'              => 'bail|required|unique:global_organizations|regex:/^[a-z0-9-]+$/|min:3|max:300',
@@ -99,7 +107,7 @@ class OrganizationController extends Controller
                 return redirect()->to('http://'.$organization->secondary_domains.'/login/'.$tokenString);
 
             }else{
-                return redirect()->to('http://'.$organization->slug.'.adminpie.com/login/'.$tokenString);
+                return redirect()->to('http://'.$organization->slug.'.scolm.com/login/'.$tokenString);
             }
         }
     }
@@ -132,13 +140,11 @@ class OrganizationController extends Controller
 	}
 
 	public function create(){
-        $modules = GlobalModule::pluck('name','id');
-		return view('admin.organization.create',['modules'=>$modules]);
+       // $modules = GlobalModule::pluck('name','id');
+		return view('admin.organization.create');
 	}
     public function edit(Request $request, $id){
-
-        // try{
-        //     DB::beginTransaction();
+      
             $org_data = ORG::findOrFail($id);
              if($request->isMethod('post')){
                 $ex[] = 'form_id';
@@ -177,6 +183,7 @@ class OrganizationController extends Controller
                         unset($request['modules']);
                     }
                 ORG::where('id',$id)->update($request->except($ex));
+                Session::flash('success','Updated successfully');
                 return back();
                 //$org_data = ORG::find($id);
             }
@@ -208,7 +215,10 @@ class OrganizationController extends Controller
     }
 	public function save(Request $request)
 	{
-        $this->global_create_organization($request);
+    // dd($request->all());
+    Session::put('group_id',$request->group_id); 
+    echo $this->generate_organization->global_create_organization($request);
+    //$this->global_create_organization($request);
   //       $this->validate($request, $this->valid_fields);
   //       if(!empty($request['modules'])) {
   //          $request['modules'] = json_encode($request['modules']);
@@ -249,7 +259,22 @@ class OrganizationController extends Controller
     }
 
     public function global_create_organization($request){
-        $this->validate($request, $this->valid_fields);
+      if($request->primary_domain == '' || $request->primary_domain == null){
+      	$validateFields = $this->valid_fields;
+      	unset($validateFields['primary_domain']);
+      	$validateFields = $validateFields;
+      }else{
+        $validateFields = $this->valid_fields;
+      }
+
+    	$checkUserExist = GroupUsers::where('email',$request->email)->first();
+    	if($checkUserExist != null){
+    		unset($validateFields['email']);
+    		unset($validateFields['password']);
+    		unset($validateFields['confirm_password']);
+    	}
+        $this->validate($request, $validateFields);
+        
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
         }
@@ -265,20 +290,28 @@ class OrganizationController extends Controller
         if($checkMaster->exists()){
             $primary_orgnaization = $checkMaster->first();
             $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
-            ($return=='table_exist')? $org_usr =  User::find(1):null;
+            //($return=='table_exist')? $org_usr =  User::find(1):null;
         }
+        
         if(!$checkMaster->exists() || $return=='table_not_exist'){
             $this->create_db_through_migration($org_id);
-            $org_usr = new User();
-           
         }
-        $org_usr->fill($request->all());
-
-        // $org_usr->role_id = 1;
-        // $org_usr->user_type = json_encode([1]);
-        $org_usr->password = Hash::make($request->password);
-        $org_usr->save(); 
-        $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
+        if($checkUserExist == null){
+        	$org_usr = new GroupUsers();
+	        $org_usr->fill($request->all());
+	        // $org_usr->status = 1;
+	        $org_usr->password = Hash::make($request->password);
+	        $org_usr->app_password = $request->password;
+	        $org_usr->save(); 
+        }else{
+        	$org_usr = new stdClass;
+        	$org_usr->id = $checkUserExist->id;
+        }
+        $userMapping = new User;
+        $userMapping->user_id = $org_usr->id;
+        $userMapping->deleted_at = 0;
+        $userMapping->save();
+        $userRoleMapping = UserRoleMapping::where(['user_id'=>$org_usr->id, 'role_id'=>1]);
         if(!$userRoleMapping->exists()){
             $userRoleMapping = new UserRoleMapping();
             $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
@@ -325,7 +358,7 @@ class OrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users',
-                                '--schema'=>'name:string, email:string, password:string, api_token:char(60), remember_token:string, status:integer:default(1), user_type:string, deleted_at:integer:default(0)'
+                                '--schema'=>'user_id:integer, user_type:string:nullable, status:integer:default(1), deleted_at:integer:default(0)'
                             ]);
         Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -637,7 +670,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_datasets',
-                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, defined_columns:text, uploaded_by:string'
+                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, defined_columns:longtext, uploaded_by:string'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -761,7 +794,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menus',
-                                '--schema'=>'title:string, description:text:nullable, slug:string, order:integer, status:integer:default(1)']);         
+                                '--schema'=>'name:string, order:integer, status:integer:default(1)']);         
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menu_settings',
@@ -769,7 +802,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menu_items',
-                                '--schema'=>'menu_id:integer, label:string:nullable, description:text:nullable, title:string:nullable, class:string:nullable, title_attribute:string:nullable, link:string:nullable, target:string:nullable, type:string:nullable, parent:integer:nullable, order:integer:nullable, icon:string:nullable, status:integer:default(1)']);            
+                                '--schema'=>'label:string, link:string, parent:integer:default(0), sort:integer:default(0), class:string:nullable, menu:integer,depth:integer:default(0)']);            
 		Artisan::call('migrate');
         // $userTypes = [
         //     ['type'=>'Admin','status'=>1],

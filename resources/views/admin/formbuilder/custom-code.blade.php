@@ -12,11 +12,17 @@
 @extends($layout)
 @section('content')
 @php
+    
+    $title = $form->form_title;
+
+
+@endphp
+@php
 $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Custom Code',
+  'page_title' => 'Form <span>'.$title.'</span>',
   'add_new' => '+ Add Module'
 ); 
 @endphp
@@ -29,7 +35,7 @@ $page_title_data = array(
 @else
     {!! Form::open(['route'=>['save.form.custom',request()->route()->parameters()['id']]]) !!}
 @endif
-<div class="row">
+{{-- <div class="row">
     <div class="col l6" style="padding-right: 20px">
         <label>
             Write css code here
@@ -51,11 +57,12 @@ $page_title_data = array(
 
     </div>
     <button>save</button>
-</div>
+</div> --}}
+    {!! FormGenerator::GenerateForm('custom_code') !!}
 {!!Form::close()!!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
-	<script type="text/javascript">
+	{{-- <script type="text/javascript">
 		$(document).ready(function(){
 			var editorJs = ace.edit("editor-js");
         editorJs.setTheme("ace/theme/monokai");
@@ -81,7 +88,16 @@ $page_title_data = array(
         } 
 		})
 		  
-	</script>
+	</script> --}}
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+<style type="text/css">
+   .subtitle{
+                
+   
+    font-weight: 500;
+    display: inline-block;
+
+         }
+</style>
 @endsection

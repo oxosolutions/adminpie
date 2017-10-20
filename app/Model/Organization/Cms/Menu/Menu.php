@@ -8,14 +8,14 @@ use Auth;
 use App\Model\Admin\Menu as AdminMenu;
 class Menu extends Model
 {
-	protected $fillable = ['title', 'description', 'order','slug'];
+	protected $fillable = ['title','order'];
 	public function __construct(){
 		if(!empty(Session::get('organization_id'))){
 			$this->table = Session::get('organization_id').'_menus';
 		}
 	}
 	function menuItem(){
-		return $this->hasMany('App\Model\Organization\Cms\Menu\MenuItem','menu_id','id');
+		return $this->hasMany('App\Model\Organization\Cms\Menu\MenuItem','menu','id');
 	}
 	public function menuAlign()
 	{
@@ -26,7 +26,7 @@ class Menu extends Model
 		if(Auth::guard('admin')->check()){
             return AdminMenu::pluck('title','id');
         }else{
-            return $this->pluck('title','id');
+            return $this->pluck('name','id');
         }
 		
 	}

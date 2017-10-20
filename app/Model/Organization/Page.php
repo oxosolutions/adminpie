@@ -31,4 +31,9 @@ class Page extends Model
          return $this->hasMany('App\Model\Organization\PageMeta','page_id','id');
       }
 
+      public static function pagesList(){
+
+         return Self::pluck('title','id');
+      }
+
 }

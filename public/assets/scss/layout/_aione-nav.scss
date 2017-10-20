@@ -7,7 +7,6 @@ NAVIGATION
     background-color: #ffffff;
     width: 100%;
     height: auto;
-
     .aione-nav-background{
         display:none;
     }
@@ -26,7 +25,6 @@ NAVIGATION
             font-size: 16px;
             line-height: 30px;
             font-weight: 400;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
             font-family: "Open Sans", Arial, Helvetica, sans-serif;
             webkit-transition: all 150ms ease-out;
             -moz-transition: all 150ms ease-out;
@@ -90,9 +88,6 @@ NAVIGATION
                     -o-transition: all 150ms ease-out;
                     transition: all 150ms ease-out;
                 }
-            }
-            &:first-child{
-                border-top: 1px solid rgba(0,0,0,.07);
             }
             &.nav-item-current{
                 border-bottom: none;

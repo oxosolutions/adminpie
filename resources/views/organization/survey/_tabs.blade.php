@@ -29,7 +29,7 @@
       </li>
       <li class="aione-tab survey-report-tab  {{(Request::route()->action['as'] == 'survey.stats.report')?'nav-item-current':''}}">
 
-        <a href="{{route('survey.stats.report',$id)}}"><span class="nav-item-text">Report</span></a>
+        <a href="{{route('survey.reports',$id)}}"><span class="nav-item-text">Report</span></a>
       </li>
       
       @if(App\Model\Organization\Collaborator::checkAccess($id,'survey') == null)

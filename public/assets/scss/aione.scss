@@ -15,6 +15,11 @@ Aione layout
 @import "layout/aione-nav";
 @import "layout/aione-page-header";
 
+@import "components/common";
+@import "components/color";
+
+
+
 // sweetalert
 @import "../../bower_components/sweetalert/dev/sweetalert";
 //font-awesome
@@ -24,8 +29,8 @@ Aione layout
 
 // Materialize Mixins
 //@import "../../bower_components/materialize/sass/components/prefixer";
-@import "../../bower_components/materialize/sass/components/mixins";
-@import "../../bower_components/materialize/sass/components/color";
+//@import "../../bower_components/materialize/sass/components/mixins";
+//@import "../../bower_components/materialize/sass/components/color";
 
 // Materialize Variables;
 @import "../../bower_components/materialize/sass/components/variables";
@@ -73,6 +78,8 @@ Aione layout
 
 
 
+@import "components/aione-grid";
+
 
 //Aione Componants
 @import "components/backgrounds";
@@ -86,8 +93,8 @@ Aione layout
 @import "components/progressbar";
 @import "components/temp";
 
-@import "components/common";
-@import "components/aione-grid";
+
+
 
 //Select 2 Aione Theme Style Overide
 @import "components/select2-aione-theme";

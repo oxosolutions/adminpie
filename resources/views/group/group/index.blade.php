@@ -1,5 +1,10 @@
 @extends('admin.layouts.main')
 @section('content')
+@if(!empty(Session::get('success')))
+  <div class="aione-message success">
+    {{Session::get('success')}}
+  </div>
+@endif
 @php
 $page_title_data = array(
   'show_page_title' => 'yes',

@@ -83,7 +83,7 @@ class CustomMapsController extends Controller
 
       	$datalist = [
                       	'datalist'=>$model,
-                      	'showColumns' => ['title'=>'Title','table_code'=>'Map ID','code'=>'ISO Code','created_at'=>'Created At'],
+                      	'showColumns' => ['title'=>'Title','table_code'=>'ID','code'=>'ISO Code','created_at'=>'Created At'],
                   	];
         if(!Auth::guard('admin')->check()){
             if($type != 'u'){
@@ -130,12 +130,20 @@ class CustomMapsController extends Controller
     }
 
 
+
     public function publicMaps($map_id, $theme = 'default', $data = null){
     	$mapData = CustomMaps::where('table_code',$map_id)->first();
     	if($mapData == null){
     		$mapData = 'No Data available';
     	}
     	return view('admin.public.custom-map',['mapdata'=>$mapData,'theme'=>$theme,'data'=>$data]);
+    }
+    public function public_maps($map_id, $theme = 'default', $source = 'inline', $data = null){
+      $mapData = CustomMaps::where('table_code',$map_id)->first();
+      if($mapData == null){
+        $mapData = 'No Data available';
+      }
+      return view('admin.public.custom-map',['mapdata'=>$mapData,'theme'=>$theme, 'source'=>$source, 'data'=>$data]);
     }
 
     public function getDataById($id){
@@ -184,6 +192,10 @@ class CustomMapsController extends Controller
         Maps::find($id)->delete();
         Session::flash('success','Successfully deleted!');
         return back();
+    }
+    public function addMap()
+    {
+      return view('admin.custom-maps.add-map');
     }
     
 }

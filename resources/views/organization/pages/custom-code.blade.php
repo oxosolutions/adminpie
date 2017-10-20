@@ -32,7 +32,7 @@
 	    'show_page_title' => 'yes',
 	    'show_add_new_button' => 'no',
 	    'show_navigation' => 'yes',
-	    'page_title' => 'Edit Page',
+	    'page_title' => 'Custom Code :<span>'.$page->title.'</span>',
 	    'add_new' => '+ Add Media'
 	); 
 	@endphp 

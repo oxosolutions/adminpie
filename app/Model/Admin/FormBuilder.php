@@ -45,4 +45,46 @@ class FormBuilder extends Model
         $list = $this->where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->pluck('field_title','id');
         return $list;
     }
+
+    public function formFieldTypes()
+    {
+        $types = ['text' => 'Text', 
+                    'textarea' => 'Textarea', 
+                    'number' => 'Number', 
+                    'email' => 'Email', 
+                    'password' => 'Password', 
+                    'datepicker' => 'Datepicker', 
+                    'timepicker' => 'Timepicker', 
+                    'code' => 'Code',
+                    'auto-generator' => 'Auto-generator',
+                    'image' => 'Image',
+                    'file' => 'File',
+                    'select' => 'Select',
+                    'multi_select' => 'Multi-select',
+                    'checkbox' => 'Checkbox',
+                    'radio' => 'Radio',
+                    'button' => 'Button',
+                    'message' => 'Message',
+                    'switch' => 'Switch',
+                    'color' => 'Color',
+                    'icon' => 'Icon'
+                ];
+        return $types;
+    }
+    public function surveyFieldTypes()
+    {
+        $types = [
+                    'text' => 'Text', 
+                    'checkbox' => 'Checkbox',
+                    'radio' => 'Radio',
+                    'select' => 'Select',
+                    'textarea' => 'Textarea', 
+                    'datepicker' => 'Datepicker', 
+                    'location_picker' => 'Location Picker', 
+                    'message' => 'Message',
+                    'timepicker' => 'Timepicker', 
+                    'number' => 'Number', 
+                ];
+        return $types;
+    }
 }

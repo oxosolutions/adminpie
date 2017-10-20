@@ -87,14 +87,13 @@ class DatasetController extends Controller
             }
         }
         
-        if($request->import_source == 'file_server'){
-            $filePath = $request->filepath;
+        if($request->import_source == 'file_on_server'){
+            $filePath = $request->file_path;
             $filep = explode('/',$filePath);
             $filename = $filep[count($filep)-1];
         }
-
         if($request->import_source == 'url'){
-            $filePath = $request->fileurl;
+            $filePath = $request->url;
             $filep = explode('/',$filePath);
             $filename = $filep[count($filep)-1];
         }
@@ -107,7 +106,6 @@ class DatasetController extends Controller
                 $result = $this->replaceDataset($request, $request->dataset_name, $filePath);
             }
         }
-
         if($request->import_source == 'import_survey'){
 
             $result = $this->exportSurveyToDataset($request->survey, $request->dataset_name);
@@ -116,7 +114,7 @@ class DatasetController extends Controller
             return redirect()->route('view.dataset',$result['dataset_id']);
         }
         
-
+        return redirect()->route('view.dataset',$result['id']);
     }
     protected function validateRequst($request){
         $errors = [];
@@ -247,13 +245,12 @@ class DatasetController extends Controller
         
         $filePath = $filename;
         $org_id =  Session::get('organization_id');
-
-
-        if($source == 'url'){
+        if($source == 'url' || $source == 'file_on_server'){
             $randName = 'downloaded_dataset_'.time().'.'.File::extension($filename);
-            $path = 'datasets/';
+            $path = 'downloaded_datasets/';
             copy($filename, $path.$randName);
-            $filePath = 'datasets/'.$randName;
+            $filePath = 'downloaded_datasets/'.$randName;
+            //$filePath = $filename; // Without copy file in downloaded_dataset
         }
         if(!File::exists($filePath)){
             return ['status'=>'false','id'=>'','message'=>'File not found on given path!'];
@@ -348,7 +345,7 @@ class DatasetController extends Controller
                 $model->save();
                 DB::commit();
                 Session::flash('message','Dataset upload successfully!');
-                return back();
+                return ['id'=>$model->id];
             }else{
                 DB::rollback();
                 return ['status'=>'false','id'=>'','message'=>$result['error']];
@@ -422,6 +419,8 @@ class DatasetController extends Controller
                 }
             }
             unset($oldTable[0]->id);
+            unset($oldTable[0]->status);
+            unset($oldTable[0]->parent);
             $new = (array)$headers;
             $old = (array)$oldTable[0];
             $new = preg_replace("/[^a-zA-Z 0-9]+/", "", $new );
@@ -532,8 +531,6 @@ class DatasetController extends Controller
         // $model = DB::table($datasetTable)->insert();
     }
     public function updateRecords(Request $request, $id){
-        dump($id);
-        dd($request->all());
         $dataset = Dataset::find($id);
         $datasetHeaders = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->first();
         foreach($request->records as $key => $record){
@@ -594,7 +591,7 @@ class DatasetController extends Controller
     public function deleteDataset($id){
         $model = Dataset::find($id);
         if(!empty($model['dataset_table'])){
-            if(Schema::hasTable($model['dataset_table'])){
+            if(Schema::hasTable(str_replace('ocrm_','', $model['dataset_table']))){
                 $datsetTable = $model->dataset_table;
                 DB::select('DROP TABLE IF EXISTS '.$datsetTable);
             }
@@ -614,13 +611,14 @@ class DatasetController extends Controller
     }
      public function defineDataset(Request $request, $id){
         $dataset = Dataset::find($id);
+        $datasetTable = Dataset::find($id)->dataset_table;
         if($request->isMethod('post')){
             $defined = $request->except(['_token']);
             $dataset->defined_columns = json_encode($defined);
             $dataset->save();
+            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->update($request->header);
             Session::flash('success','Successfully defined!');
         }
-        $datasetTable = Dataset::find($id)->dataset_table;
         $headers = DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->first();
         $columns = collect($headers)->except(['id','status','parent']);
         return view('organization.dataset.define',['columns'=>$columns,'dataset'=>$dataset]);
@@ -733,13 +731,15 @@ class DatasetController extends Controller
         $visualize = Visualization::where('dataset_id',$dataset_id)->get();
         return view('organization.dataset.visualize',['dataset'=>$model,'visualizations'=>$visualize]);
     }
-     public function collaborateDataset()
+     public function collaborateDataset($id)
     {
-        return view('organization.dataset.collaborate');
+        $model = Dataset::find($id);
+        return view('organization.dataset.collaborate',compact('model'));
     }
-    public function customizeDataset()
+    public function customizeDataset($id)
     {
-        return view('organization.dataset.customize');
+        $model = Dataset::find($id);
+        return view('organization.dataset.customize',compact('model'));
     }
 
     public function updateDataset(Request $request)

@@ -5,8 +5,8 @@
 			'show_page_title' => 'yes',
 			'show_add_new_button' => 'no',
 			'show_navigation' => 'yes',
-			'page_title' => 'View Survey',
-			'add_new' => '+ Add Feedback'
+			'add_new' => '+ Add Feedback',
+			'page_title' => 'View Survey  <span>'.get_survey_title(request()->route()->parameters()['form_id']).'</span>',
 		); 
 @endphp
 @include('common.pageheader',$page_title_data) 
@@ -16,7 +16,12 @@
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 		@include('organization.survey._tabs')
-		@if(!@$permission)
+		@if(!empty($error))
+		<div class="aione-message warning">
+            {{$error}}
+        </div>
+
+		@elseif(!@$permission)
 			<div class='aione-message aione-message-error'>Access Denied</div>
 		@else
 			{!! Form::model($slug,['route' => 'filled.survey', 'class'=> 'form-horizontal','method' => 'post'])!!}

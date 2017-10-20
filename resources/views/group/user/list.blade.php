@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('group.layouts.main')
 @section('content')
 <style type="text/css">
 	#card-alert{
@@ -17,7 +17,8 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Users',
-	'add_new' => '+ Add User'
+	'add_new' => '+ Add User',
+	'route' => 'create.group.users'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)		
@@ -26,7 +27,14 @@
 @include('common.list.datalist')
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+{!! Form::open(['method' => 'POST','class' => '','route' => 'save.group.user']) !!}
+	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add new user','button_title'=>'Save User','section'=>'group_user_add']])
+{!! Form::close() !!}
 
+{{-- {!! Form::open(['method' => 'POST','class' => '','route' => 'change.pass']) !!}
+	<input type="hidden" name="_token" value="{{csrf_token()}}">
+	@include('common.modal-onclick',['data'=>['modal_id'=>'change_password','heading'=>'Change Password','button_title'=>'Save ','section'=>'changepasssec2']])
+{!! Form::close() !!} --}}
 	<!-- <div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div> -->
 @if($errors->any())
 	<script type="text/javascript">
@@ -35,14 +43,7 @@
 		});
 	</script>
 @endif
-{!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
-	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add new user','button_title'=>'Save User','section'=>'organization_user_add']])
-{!! Form::close() !!}
 
-{!! Form::open(['method' => 'POST','class' => '','route' => 'change.pass']) !!}
-	<input type="hidden" name="_token" value="{{csrf_token()}}">
-	@include('common.modal-onclick',['data'=>['modal_id'=>'change_password','heading'=>'Change Password','button_title'=>'Save ','section'=>'changepasssec2']])
-{!! Form::close() !!}
 
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

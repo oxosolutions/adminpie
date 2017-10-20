@@ -47,6 +47,6 @@ class ApplicationController extends Controller
     }
     public function documentation()
     {
-    	return view('organization.mobile-application.android.settings');
+    	return view('organization.mobile-application.android.documentation');
     }
 }

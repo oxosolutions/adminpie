@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "barryvdh/laravel-dompdf": "^0.8.1",
         "dompdf/dompdf": "^0.8.0",
+        "gornymedia/laravel-shortcodes": "^1.2",
         "intervention/image": "^2.4",
         "khill/lavacharts": "3.0.*",
         "laravel/framework": "5.4.*",
@@ -31,7 +32,8 @@
         ],
         "psr-4": {
             "App\\": "app/",
-            "PHPMySQLWrapper\\MySQLWrapper\\" : "packages/phpmysqlwrapper/mysqlwrapper/src"
+            "PHPMySQLWrapper\\MySQLWrapper\\" : "packages/phpmysqlwrapper/mysqlwrapper/src",
+            "OxoSolutions\\Menu\\" : "packages/oxosolutions/laravel-menu/src"
         },
         "files": ["app/Helpers/widget_function.php", "app/Helpers/global_helper.php", "app/Helpers/aione_forms.php"]
     },

@@ -21,11 +21,11 @@ $page_title_data = array(
 );
 @endphp
 @include('common.pageheader',$page_title_data) 
-{{-- @include('common.pagecontentstart') --}}
-{{-- @include('common.page_content_primary_start') --}}
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 	{{-- @include('common.list.datalist') --}}
-{{-- @include('common.page_content_primary_end') --}}
-{{-- @include('common.page_content_secondry_start') --}}
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
 	{!! Form::model($model,['route'=>[$route,$model->id]]) !!}
 		{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Custom Map','button_title'=>'Save','section'=>'custommapsection']]) --}}
 			<input type="hidden" name="id" value="{{$model->id}}">
@@ -33,6 +33,6 @@ $page_title_data = array(
 			{!!FormGenerator::GenerateSection('custommapsection')!!}
 			<input type="submit" value="submit">
 	{!!Form::close()!!}
-{{-- @include('common.page_content_secondry_end') --}}
-{{-- @include('common.pagecontentend') --}}
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

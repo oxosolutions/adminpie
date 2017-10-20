@@ -5,7 +5,7 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Stats',
+    'page_title' => 'Stats :<span>'.@$form_data->form_title.'</span>',
     'add_new' => '+ Add Media'
 ); 
 $id = "";
@@ -85,13 +85,12 @@ $id = "";
 @include('common.page_content_primary_start')
     @include('organization.survey._tabs')
         <div class="aione-row">
-            <div class="left-75">
-                 @if(!empty($error))
-                    <div class="slider-container">
-                        <div class="row">
-                            <h1> {{$error}}</h1>
+            
+                @if(!empty($error))
+                        <div class="aione-message warning">
+                            {{ __('survey.survey_results_table_missing') }}
                         </div>
-                    </div>
+                   
                 @else
 
                 <div>
@@ -103,7 +102,7 @@ $id = "";
                                             border:1px solid grey;
                                     }
                                 </style> --}}
-                                <table class="wide"> 
+                               {{--  <table class="wide"> 
                                     <thead>
                                         <tr>
                                             <th>Group Name</th>
@@ -117,7 +116,7 @@ $id = "";
                                         </tr>
                                     </tbody>
                                     @endforeach
-                                 </table>
+                                 </table> --}}
                             @endif
                         </div>
                     </div>
@@ -204,7 +203,7 @@ $id = "";
             </div>
             @if($setting_questions != null)
                 <div class="right-25 aione-table" >
-                    <table>
+                   {{--  <table>
                         <thead>
                             <tr>
                                 <th colspan="2">Settings</th>
@@ -224,7 +223,7 @@ $id = "";
                             @endforeach
                         </tbody>
                     </table>
-
+ --}}
                   {{--   <div class="center-align">
                         <span class="card-title-bar">Settings</span>
                     </div>

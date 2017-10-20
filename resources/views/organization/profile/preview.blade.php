@@ -10,7 +10,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Profile',
+	'page_title' => 'View Profile',
 	'add_new' => ''
 ); 
 @endphp
@@ -22,7 +22,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
-		@include('organization.profile._tabs')
+		{{-- @include('organization.profile._profile_tabs') --}}
 		<div class="row">
 			<div class="aione-table">
 				<table class="wide">

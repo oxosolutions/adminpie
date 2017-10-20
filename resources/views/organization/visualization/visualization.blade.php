@@ -1,32 +1,21 @@
 @extends('layouts.visualization')
 @section('content')
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 <?php
 
-$visualization_id = $visualizations['visualization_id'];
-$visualization_name = $visualizations['visualization_name'];
+	$visualization_id = $visualizations['visualization_id'];
+	$visualization_name = $visualizations['visualization_name'];
 
-$meta = $visualizations['visualization_meta'];
-$charts = $visualizations['visualizations'];
-$visualization_theme = 'minimal';
-
-if(isset($meta['select_theme']) && $meta['select_theme'] != ''){
-	$visualization_theme = $meta['select_theme'];
-}
-$sidebar_class="no-sidebar";
-if(
-	isset($meta['filter_position']) 
-	&& ($meta['filter_position'] == 'left' || $meta['filter_position'] == 'right') 
-){
-	$sidebar_class = $meta['filter_position']."-sidebar";
-}
-
-
-/*
-echo "<pre>";
-//print_r($javascript['chart_0']['chart_settings']);
-print_r($visualizations);
-echo "</pre>";
-*/
+	$meta = $visualizations['visualization_meta'];
+	$charts = $visualizations['visualizations'];
+	$visualization_theme = 'minimal';
+	if(isset($meta['select_theme']) && $meta['select_theme'] != ''){
+		$visualization_theme = $meta['select_theme'];
+	}
+	$sidebar_class="no-sidebar";
+	if( isset($meta['filter_position']) && ($meta['filter_position'] == 'left' || $meta['filter_position'] == 'right') ){
+		$sidebar_class = $meta['filter_position']."-sidebar";
+	}
 
 ?>
 
@@ -109,14 +98,12 @@ echo "</pre>";
 										$chart_enabled = 1;//$chart['enableDisable'];
 										$chart_width = @$chart['chart_width'];
 										$chart_settings = json_decode(@$chart['chart_settings'], true);
-										
 										if(empty($chart_settings['custom_map_theme'])){
 											$chart_settings['custom_map_theme'] = "PuBu";
 										}
 										if(empty($chart_settings['custom_map_classification_method'])){
 											$chart_settings['custom_map_classification_method'] = "quantile";
 										}
-										
 										//$chart_settings  = json_decode($chart_settings);
 										
 										// echo "<pre>";
@@ -136,6 +123,8 @@ echo "</pre>";
 													@endif
 
 													<div class="aione-section-title">{{$chart_title}}</div>
+													
+													
 												</div>
 												<div class="aione-section-header-actions">
 													@if(isset($meta['collapsible_chart_widgets']) && $meta['collapsible_chart_widgets'] == 1)
@@ -145,19 +134,40 @@ echo "</pre>";
 													<span class="aione-section-header-action aione-widget-toggle aione-widget-close"></span>
 													@endif
 												</div>
+												
+												<label for="modal">
+													<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;margin-top: 8px;color: #757575"></i>
+												</label>
+												<input type="checkbox" id="modal" />
+												<label for="modal" class="modal-bg" id="{{$chart['chart_id']}}"></label>
+												<div class="modal-content" id="{{$chart['chart_id']}}_setings">
+													<label for="modal" class="close">
+														<i class="fa fa-times hide_modal" aria-hidden="true"></i>
+													</label>
+													<header>
+														<h2>Model Heading</h3>
+													</header>
+													<article class="content">
+															
+													</article>
+													<footer>
+														<a href="" target="_parent" class="button success">Accept</a>
+														<label for="modal" class="button danger">Decline</label>
+													</footer>
+												</div>
+
 												<div class="clear"></div>
 											</div>
 											@endif
 											
 											<div id="" class="aione-chart-content" 
-											data-theme="{{@$chart_settings['custom_map_theme']}}"  
-											data-classification-method="{{@$chart_settings['custom_map_classification_method']}}"
-											data-show-tooltip="{{@$chart_settings['custom_map_show_tooltip']}}"
-											data-tooltip-event="{{@$chart_settings['custom_map_tooltip_event']}}"
-											data-show-popup="{{@$chart_settings['custom_map_show_popup']}}"
-											data-popup-event="{{@$chart_settings['custom_map_popup_event']}}"
-											data-click-callback="{{@$chart_settings['custom_map_click_callback']}}"
-											
+											data-theme="{{@$chart_settings['chart_settings']['custom_map_theme']}}"  
+											data-classification-method="{{@$chart_settings['chart_settings']['custom_map_classification_method']}}"
+											data-show-tooltip="{{@$chart_settings['chart_settings']['custom_map_show_tooltip']}}"
+											data-tooltip-event="{{@$chart_settings['chart_settings']['custom_map_tooltip_event']}}"
+											data-show-popup="{{@$chart_settings['chart_settings']['custom_map_show_popup']}}"
+											data-popup-event="{{@$chart_settings['chart_settings']['custom_map_popup_event']}}"
+											data-click-callback="{{@$chart_settings['chart_settings']['custom_map_click_callback']}}"
 											>	
 
 												@if($chart_type == 'CustomMap')
@@ -366,19 +376,19 @@ echo "</pre>";
 					//quantile.setColorCode(colors[3])
 					$.each(JSON.parse(chart_view_data), function(key, value){
 						if(themeSubString == 'select_theme'){
-							elem.find('#'+key).attr('class','mapArea');
+							elem.find('#'+key).attr('class','map_area');
 						}else{
-							elem.find('#'+key).css({fill:quantile.getColorInRange(chart_data_array[index])}).attr('class','mapArea');
+							elem.find('#'+key).css({fill:quantile.getColorInRange(chart_data_array[index])}).attr('class','map_area');
 						}
 						index++;
 					});
 				}				
 			});
-			$('.map-wrapper .mapArea').mouseover(function (e) {
+			$('.map-wrapper .map_area path').mouseover(function (e) {
 					var area_id = $(this).attr('id');
 					var area_title = $(this).attr('title'); 
 					var tooltip_data = $(this).parents('.aione-chart-content').find('.tooltip_data').html();
-					if(tooltip_data != undefined){
+					if(area_title != undefined){
 						tooltip_data = JSON.parse(tooltip_data);
 						var html = '<span class="title">'+area_title+'</span>';
 						$.each(tooltip_data[area_id], function(key, value){
@@ -407,7 +417,7 @@ echo "</pre>";
 				});
 			});
 
-			$('.map-wrapper .mapArea').click(function (e) {
+			$('.map-wrapper .map_area').click(function (e) {
 				if($(this).parents('.aione-chart-content').attr('data-show-popup') == 'yes'){
 					var area_id = $(this).attr('id');
 					try{
@@ -512,4 +522,149 @@ echo "</pre>";
 }
 	</style>
 @endif
+<style type="text/css">
+		label {
+			cursor: pointer;
+		}
+		.aione-topbar-header .content{
+			height: 450px;
+    		overflow-x: hidden;
+    		overflow-y: scroll;
+		}
+		/*.modal-btn {
+		position: relative;
+		display: table-cell;
+		width: 44px;
+		height: 44px;
+		background-color: #2c3e50;
+		box-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+		border-radius: 50%;	
+		font-size: 36px;
+		color: white;
+		text-align: center;
+		line-height: 2.75;
+		transition: box-shadow 250ms ease;
+		}*/
+		/*.modal-btn:hover {
+		box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+		}*/
+
+		.modal-bg {
+			margin: 0;
+			position: fixed;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			opacity: 0;
+			z-index: 10;
+			visibility: hidden;
+			transition: background-color 250ms linear;
+		}
+
+		.modal-content {
+			position: fixed;
+			top: 38%;
+		    left: 40%;
+		    width: 63%;
+			height: auto;
+			margin-top: -18%;
+			margin-left: -25%;
+			padding: 30px;
+			background-color: white;
+			border-radius: 4px;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+			transform: scale(0);
+			transition: transform 250ms ease;
+			visibility: hidden;
+			z-index: 20;
+		}
+		.modal-content .close {
+			position: relative;
+			float: right;
+			font-size: 18px;
+			/*transition: transform 500ms ease;*/
+			z-index: 11;
+		}
+		.modal-content .close:hover {
+			color: #3498db;
+			transform: rotate(540deg);
+		}
+		.modal-content header {
+			position: relative;
+			display: block;
+			border-bottom: 1px solid #eee;
+		}
+		.modal-content header h2 {
+			margin: 0 0 10px;
+			padding: 0;
+			font-size: 28px;
+		}
+		.modal-content article {
+			position: relative;
+			display: block;
+			margin: 0;
+			padding: 0;
+			font-size: 16px;
+			line-height: 1.75;
+		}
+		.modal-content footer {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			width: 100%;
+			margin: 0;
+			padding: 10px 0 0;
+		}
+		.modal-content footer .button {
+			position: relative;
+			padding: 10px 30px;
+			border-radius: 3px;
+			font-size: 14px;
+			font-weight: 400;
+			color: white;
+			text-transform: uppercase;
+			overflow: hidden;
+		}
+		.modal-content footer .button:before {
+			position: absolute;
+			content: '';
+			top: 0;
+			left: 0;
+			width: 0;
+			height: 100%;
+			background-color: rgba(255, 255, 255, 0.2);
+			transition: width 250ms ease;
+			z-index: 0;
+		}
+		.modal-content footer .button:hover:before {
+			width: 100%;
+		}
+		.modal-content footer .button.success {
+			margin-right: 5px;
+			background-color: #2ecc71;
+		}
+		.modal-content footer .button.danger {
+			background-color: #e74c3c;
+		}
+
+		#modal {
+			display: none;
+		}
+		/* #modal:checked ~ .modal-bg {
+			visibility: visible;
+			background-color: black;
+			opacity: 0.7;
+			transition: background-color 250ms linear;
+		} */
+		/*#modal:checked ~ .modal-content {
+			visibility: visible;
+			transform: scale(1);
+			transition: transform 250ms ease;
+			z-index: 111;
+		}*/
+
+	</style>
+	
 @endsection 

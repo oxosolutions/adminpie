@@ -50,12 +50,13 @@ class FormBuilderController extends Controller
         $model = new $modelName;
         $model->fill($request->all());
         $model->save();
-        return back();
-        /*if(Auth::guard('admin')->check()){
+        Session::flash('success','Form created successfully');
+        // return redirect()->route('list.forms');
+        if(Auth::guard('admin')->check()){
             return redirect()->route('list.forms');
         }else{
             return redirect()->route('org.list.forms');
-        }*/
+        }
     }
 
     public function listForm(Request $request)
@@ -105,11 +106,13 @@ class FormBuilderController extends Controller
             }
         }
         if(Auth::guard('admin')->check()){
+            $previewRoute = 'form.preview';
             $deleteRoute = 'delete.form';
             $sectionRoute = 'list.sections';
             $settingsRoute = 'form.settings';
             $cloneRoute = 'form.clone';
         }else{
+            $previewRoute = 'org.form.preview';
             $deleteRoute = 'org.delete.form';
             $sectionRoute = 'org.list.sections';
             $settingsRoute = 'org.form.settings';
@@ -117,12 +120,13 @@ class FormBuilderController extends Controller
         }
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['form_title'=>'Form Title','form_slug'=>'Form Slug','created_at'=>'Created','section[1].id'=>'Section Count'],
+                        'showColumns' => ['form_title'=>'Form Title','form_slug'=>'ID','created_at'=>'Created'],
                         'actions' => [
-                                'delete'=>['title'=>'Delete','route'=>$deleteRoute],
-                                'section'=>['title'=>'Sections','route'=>['route'=>$sectionRoute]],
+                                'view'=>['title'=>'View','route'=>$previewRoute],
+                                'section'=>['title'=>'Edit','route'=>['route'=>$sectionRoute]],
                                 'settings'=>['title'=>'Settings','route'=>$settingsRoute],
-                                'clone'=>['title'=>'clone','route'=>$cloneRoute],
+                                'clone'=>['title'=>'Clone','route'=>$cloneRoute],
+                                'delete'=>['title'=>'Delete','route'=>$deleteRoute],
                                 ]
                     ];
 
@@ -141,6 +145,14 @@ class FormBuilderController extends Controller
         }
     }
 
+    public function updateFormDetails(Request $request)
+    {
+        // dd($request->all());
+
+        $modelName = $this->assignModel('forms');
+        $model = $modelName::where('id',$request->id)->update($request->except('_token','id'));
+        return back();
+    }
     // end form 
 
     protected function validateAddModule($request){
@@ -496,13 +508,16 @@ class FormBuilderController extends Controller
 
     public function formSettings($id){ 
         $modelName = $this->assignModel('FormsMeta');
+        $formModel = $this->assignModel('forms');
+        $form = $formModel::find($id);
+
         $model = $modelName::with(['forms'])->where('form_id',$id)->get();
         $modelData = [];
         foreach ($model as $key => $value) {
             $modelData[$value->key] = $value->value;
         }
         $modelData['id'] = $id;
-        return view('admin.formbuilder.form-settings',['model'=>$modelData]);
+        return view('admin.formbuilder.form-settings',['model'=>$modelData,'form'=>$form]);
     }
 
     public function storeSettings(Request $request, $id){
@@ -795,6 +810,9 @@ class FormBuilderController extends Controller
     public function customForm($id)
     {
         $modelName = $this->assignModel('FormsMeta');
+        $formModel = $this->assignModel('forms');
+        $form = $formModel::find($id);
+
         $model = $modelName::where(['form_id'=>$id])->whereIn('key', [ 'js','css'])->get()->toArray();
         $data = [];
         foreach($model as $key => $value){
@@ -802,7 +820,7 @@ class FormBuilderController extends Controller
                     $data[$value['key']] = $value['value']; 
                 }
         }
-        return view('admin.formbuilder.custom-code',compact('data'));
+        return view('admin.formbuilder.custom-code',compact('data','form'));
     }
     public function updateCustomForm(Request $request , $id)
     {
@@ -827,8 +845,10 @@ class FormBuilderController extends Controller
     public function previewForm($id)
     {
         $modelName = $this->assignModel('forms');
+
+        $form = $modelName::find($id);
         $slug = $modelName::select('form_slug')->where('id',$id)->first()->form_slug;
-        return view('admin.formbuilder.preview',compact('slug'));
+        return view('admin.formbuilder.preview',compact('slug','form'));
     }
     public function sectionMove(Request $request)
     {
@@ -858,7 +878,7 @@ class FormBuilderController extends Controller
 
                 $sectionId = $request['sectionId'];
                 $modelName = $this->assignModel('FormBuilder');
-                $sectionMeta = $modelName::with(['fieldMeta'=>function($query) use( $sectionId , $form_id){
+                $sectionMeta = $modelName::with(['fieldMeta'=>function($query) use( $sectionId , $form_id, $request){
                     $query->where(['section_id'=>$request['sectionId'] , 'form_id' => $form_id]);
                 }])->where(['section_id'=>$request['sectionId'] , 'form_id' => $form_id])->get()->toArray();
 

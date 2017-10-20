@@ -1,4 +1,4 @@
-@if($settings != null)
+@if(@$settings != null)
 	@php
 		$check_login_logo = $settings->where('key' , 'login-form-show-logo')->first();
 		$check_form_show_title = $settings->where('key' , 'login-form-show-title')->first();

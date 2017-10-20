@@ -47,15 +47,16 @@
 		@if(View::exists('common.form.fields.'.$field))
 			@include('common.form.fields.'.$field)
 		@else 
-			<div class="aione-error">
+			<div class="aione-message error">
 				{{ __('messages.form_field_missing') }}
 			</div>
 		@endif
 
-	<span class="error-red">
+	
 		@if(@$errors->has(str_replace(' ','_',strtolower($collection->field_title))))
+			<span class="aione-field-error">
 			{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+			</span>
 		@endif
-	</span>
 	</div><!-- field -->
 </div><!-- field wrapper -->

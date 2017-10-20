@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Organization\account;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
-use App\Model\Organization\User;
+use App\Model\Group\GroupUsers as User;
 use Hash;
 use Carbon\Carbon;
 use App\Model\Organization\Employee;
-use App\Model\Organization\User as US;
+use App\Model\Group\GroupUsers as US;
 use App\Model\Organization\UsersMeta as UM;
 use App\Model\Organization\LogSystem as LS;
 use App\Model\Organization\Project;
@@ -83,12 +83,10 @@ class AccountController extends Controller
     {
       $user_log = $this->listActivities();
         if($id == null){
-             $id = Auth::guard('org')->user()->id;
+            $id = Auth::guard('org')->user()->id;
         }
         $userDetails = User::with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
-
-
 
         $userDetails->password = '';
         if($userMeta != false){
@@ -107,6 +105,7 @@ class AccountController extends Controller
         }
         return view('organization.profile.preview',['model' => $userDetails , 'user_log' => $user_log]);
     }
+
     protected function listActivities()
     {
         $user_id = Auth::guard('org')->user()->id;
@@ -267,7 +266,7 @@ class AccountController extends Controller
         return back();
     }
     public function uploadProfile(Request $request ){
-
+        
         $destination_path = upload_path('user_profile_picture');
 
         $new_filename = generate_filename();
@@ -313,19 +312,45 @@ class AccountController extends Controller
         
         return back();
     }
+    public function checkExistingPassword(request $request)
+    {
+         $validate = [
+                        'old_password'      => 'required',
+                        'new_password'      => 'required|min:6',
+                        'confirm_password'  => 'required|same:new_password|min:6'
+                    ];
+        $this->validate($request , $validate);
+                    
+        $model = US::where('id',get_user_id())->first();
+        $password = $model->password;
+
+        if(Hash::check($request->old_password , $password) ){
+       
+
+        $model = US::where('id',get_user_id())->update(['password' => Hash::make($request->new_password)]);
+            if($model){
+                Session::flash('success-password' , 'Password change successfully');
+            }else{
+                Session::flash('error-password' , 'Your Old Password is not correct');
+            }
+        }
+        return back();
+    }
     public function changePassword(Request $request)
     {
         $validate = [
                         'new_password'      => 'required|min:6',
                         'confirm_password'  => 'required|same:new_password|min:6'
                     ];
+
         $this->validate($request , $validate);
         $model = US::where('id',$request->id)->update(['password' => Hash::make($request->new_password)]);
 
         if($model){
             Session::flash('success-password' , 'Password change successfully');
-            return back();
         }
+                    return back();
+
     }
     public function listProjects($id = null)
     {

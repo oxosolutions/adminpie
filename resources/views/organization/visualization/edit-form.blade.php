@@ -22,7 +22,7 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
    		{!!Form::model($model,['route'=>['update.visualization' , $model['id']]])!!}
         <input type="hidden" name="id" value="{{$model['id']}}">
-	    	{!!FormGenerator::GenerateSection('vissec1',['type'=>'inset'])!!}	 
+	    	{!!FormGenerator::GenerateForm('edit_visualization_form')!!}	 
         <input type="submit" value="submit">
 	    {!!Form::close()!!}
     @include('common.page_content_primary_end')

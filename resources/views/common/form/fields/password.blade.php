@@ -8,8 +8,9 @@
 @endif
 {{-- @if(isset($options['type']))
 	@if($options['type'] == 'inset') --}}
-		
+				
 				{!!Form::password(str_replace(' ','_',strtolower($collection->field_slug)).$fieldType,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug])!!}
+				
 				
 	{{-- @else
 		<div class="row" style="padding:10px 0px">

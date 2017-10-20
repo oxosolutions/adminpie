@@ -20,6 +20,21 @@ PAGE HEADER
 	font-weight: 100;
 	font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
+.aione-page-header .aione-page-title-container .aione-page-title span{
+    color: #168dc5;
+    font-weight: 400;
+    font-size: 18px;
+}
+.aione-page-header .aione-page-title-container .aione-page-title span:before{
+    content: "[";
+    font-size: 20px;
+    font-weight: 400;
+}
+.aione-page-header .aione-page-title-container .aione-page-title span:after{
+    content: "]";
+    font-size: 20px;
+    font-weight: 400; 
+}
 .aione-page-header .aione-page-title-container .aione-button{
 	
 }

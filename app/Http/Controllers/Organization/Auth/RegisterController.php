@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers\Organization\Auth;
 
-use App\User;
+// use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Model\Group\GroupUsers as org_user;
+use App\Model\Organization\User;
+use Illuminate\Http\Request;
+use Session;
+use Hash;
+use App\Model\Organization\UserRoleMapping;
+use App\Model\Admin\GlobalOrganization;
+use Mail;
+use App\Mail\userRegister;
 
 class RegisterController extends Controller
 {
@@ -68,4 +77,71 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+    
+    public function userRegister(Request $request, $status = null )
+    {
+        if($request->isMethod('post')){
+
+            $model = org_user::where(['email'=>$request->email])->first();
+            if(count($model) > 0){
+                Session::flash('exist_email','Email already exist');
+                return back();
+            }else{
+                if($status != null){
+                    $status = $status;
+                }else{
+                    $status = 0;
+                }
+
+                $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
+                $this->validate($request,$rules);
+                $user = new org_user;
+                $user->fill($request->only('name','email'));
+                $user->password = Hash::make($request->password);
+                $user->app_password = $request->password;
+                $user->status = $status;
+                $user->deleted_at = 0;
+                $user->save();
+                $user_id = $user->id;
+                $org_user =  new User();
+                $org_user->user_id =  $user_id;
+                $org_user->save();
+
+                $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
+                if(!empty($meta_data) && !empty($user_id)){
+                    update_user_metas($meta_data, $user_id, true);
+                }
+                if($request->has('role_id')){
+                    foreach($request->role_id as $key => $role){
+                        $roleMapping = new UserRoleMapping;
+                        $roleMapping->user_id = $user_id;
+                        $roleMapping->role_id = (int) $role;
+                        $roleMapping->status = 1;
+                        $roleMapping->save();
+                    }
+                }else{
+                    $roleMapping = new UserRoleMapping;
+                    $roleMapping->user_id = $user_id;
+                    $roleMapping->role_id = 8;
+                    $roleMapping->status = 1;
+                    $roleMapping->save();
+                }
+            }
+                Session::put('new_user_register_email',$request->email);
+                Session::put('new_user_register_name',$request->name);
+
+                $org_email = GlobalOrganization::where('id',get_organization_id())->first();
+                $to_email = $org_email->email;
+                Mail::to($to_email)->send(new userRegister);
+                Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
+                return back();
+          }
+      return view('organization.login.signup');
+
+    }
+
+
+
+
+
 }

@@ -180,6 +180,7 @@ class SettingController extends Controller
 		$this->validate($request, $rules);
     }
     public function orgSetting(){
+    	
     	$model = OrganizationSetting::get();
     	$settingsModel = [];
     	foreach($model as $key => $value){
@@ -190,12 +191,19 @@ class SettingController extends Controller
     }
 
     public function saveOrganizationSettings(Request $request){
+
+    	$organizationId = Session::get('organization_id');
+    	
     	if($request->has('logo_delete')){
     		$del_logo = OrganizationSetting::where(['key' => 'logo'])->delete();
     		return back();
     	}
-    	$organizationId = Session::get('organization_id');
     	foreach($request->except(['_token']) as $key => $value){
+    		if($key == 'bg_image_status'){
+    			if($key == 0){
+    				OrganizationSetting::where('key' , 'bg_image')->delete();
+    			}
+    		}
     		if($key == 'logo'){
     			$path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/images';
 
@@ -208,6 +216,17 @@ class SettingController extends Controller
 				$resize_300x300 = $filename.'_300x300'.$fileExt;
 				$img->save($path.'/'.$resize_300x300);
 
+
+                $model = OrganizationSetting::firstOrNew(['key'=>$key]);
+	    		$model->key = $key;
+	    		$model->value = $path.'/'.$filename.$fileExt;
+	    		$model->save();
+    		}elseif($key == 'bg_image'){
+    			$path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/bg_image';
+
+    			$filename = date('Ymdhis');
+    			$fileExt = '.'.$request->file('bg_image')->getClientOriginalExtension();
+                $uploadFile = $request->file('bg_image')->move($path, $filename.$fileExt);
 
                 $model = OrganizationSetting::firstOrNew(['key'=>$key]);
 	    		$model->key = $key;
@@ -249,14 +268,7 @@ class SettingController extends Controller
     	}
     	return view('organization.settings.hrm',['model'=>$modelArray]);
     }
-    public function userSetting(){
-    	$model = OrganizationSetting::get();
-    	$modelArray = [];
-    	foreach($model as $key => $value){
-    		$modelArray[$value->key] = $value->value;
-    	}
-    	return view('organization.settings.user',['model'=>$modelArray]);
-    }
+    
     public function employeeSetting()
     {
     	return view('organization.settings.employee-settings');

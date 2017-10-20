@@ -1,6 +1,6 @@
 @php
 	$fieldType  = '';
-
+	$model = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
 @endphp
 @if(isset($options['field_type']) && $options['field_type'] == 'array')
 	@php
@@ -18,6 +18,12 @@
 @endif
 
 @php
+	if($model != false && $model != '' && $model != null){
+		$exploded = explode('@',$model);
+		$result = new $exploded[0];
+		$exploded[1] = str_replace('()', '', $exploded[1]);
+		$default_value = @$result->{$exploded[1]}();
+	}
 	if(@$settings['form_field_show_placeholder']){
 		$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
 	}else{

@@ -14,6 +14,8 @@ use App\Model\Admin\GlobalOrganization as ORG;
 use Session;
 use Hash;
 use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
+use App\Model\Group\GroupUserMapping;
 use App\Model\Organization\UsersType;
 use DB;
 use Auth;
@@ -23,7 +25,7 @@ use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UserRoleMapping;
-
+use stdClass;
 class GroupOrganizationController extends Controller
 {	
     protected $valid_fields  = [
@@ -65,9 +67,9 @@ class GroupOrganizationController extends Controller
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created At'],
                       'actions' => [
-                                      'edit'    =>  ['title'=>'Edit','route'=>'edit.organization' , 'class' => 'edit'],
-                                      'delete'  =>  ['title'=>'Delete','route'=>'delete.organization'],
-                                      'clone'   =>  ['title'=>'Clone','route'=>'create.organizationClone'],
+                                      'edit'    =>  ['title'=>'Edit','route'=>'edit.groupOrganization' , 'class' => 'edit'],
+                                      'delete'  =>  ['title'=>'Delete','route'=>'delete.groupOrganization'],
+                                      'clone'   =>  ['title'=>'Clone','route'=>'create.groupOrganizationClone'],
                                       'auth'    =>  ['title'=>'Login Organization','route'=>'auth.organization'],
                                       'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.org.status']
                                    ],
@@ -128,22 +130,19 @@ class GroupOrganizationController extends Controller
               }
                       DB::commit();
 
-        Session::flash('success','Successfully deleted!');
+        Session::flash('success', __('manage.organization_deleted') );
         }catch(\Exception $e){
           // throw $e;
             DB::rollback();
-            Session::flash('error','Somthing goes wrong Try again.');
+            Session::flash('error', __('manage.something_went_wrong'));
         }
         return redirect()->route('list.groupOrganizations');
 	}
 
 	public function create(){
-		$group_id = Auth::guard('group')->user()->group_id;
-		$group_module = Group::select('modules')->where('id',$group_id)->first();
-        $modules_ids =  array_map('intval', json_decode($group_module->modules));
-        $modules = GlobalModule::whereIn('id', $modules_ids)->pluck('name','id');
-        dump($modules);
-		return view('group.organization.create',['modules'=>$modules]);
+		
+        // dump($modules);
+		return view('group.organization.create');
 	}
     public function edit(Request $request, $id){
 
@@ -187,6 +186,7 @@ class GroupOrganizationController extends Controller
                         unset($request['modules']);
                     }
                 ORG::where('id',$id)->update($request->except($ex));
+                Session::flash('success','Updated successfully');
                 return back();
                 //$org_data = ORG::find($id);
             }
@@ -257,7 +257,25 @@ class GroupOrganizationController extends Controller
     }
 
     public function global_create_organization($request){
-        $this->validate($request, $this->valid_fields);
+
+        if($request->primary_domain == '' || $request->primary_domain == null){
+            $validateFields = $this->valid_fields;
+            unset($validateFields['primary_domain']);
+            $validateFields = $validateFields;
+        }else{
+            $validateFields = $this->valid_fields;
+        }
+
+    	$checkUserExist = GroupUsers::where('email',$request->email)->first();
+    	if($checkUserExist != null){
+    		unset($validateFields['email']);
+    		unset($validateFields['password']);
+    		unset($validateFields['confirm_password']);
+    	}
+        /*dump($checkUserExist);
+        dump($validateFields);
+        dd($request->all());*/
+        $this->validate($request, $validateFields);
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
         }
@@ -273,19 +291,27 @@ class GroupOrganizationController extends Controller
         if($checkMaster->exists()){
             $primary_orgnaization = $checkMaster->first();
             $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
-            ($return=='table_exist')? $org_usr =  User::find(1):null;
+            //($return=='table_exist')? $org_usr =  GroupUsers::find(1):null;
         }
+        
         if(!$checkMaster->exists() || $return=='table_not_exist'){
             $this->create_db_through_migration($org_id);
-            $org_usr = new User();
-           
         }
-        $org_usr->fill($request->all());
-
-        // $org_usr->role_id = 1;
-        // $org_usr->user_type = json_encode([1]);
-        $org_usr->password = Hash::make($request->password);
-        $org_usr->save(); 
+        if($checkUserExist == null){
+        	$org_usr = new GroupUsers();
+	        $org_usr->fill($request->all());
+	        $org_usr->status = 1;
+	        $org_usr->password = Hash::make($request->password);
+	        $org_usr->app_password = $request->password;
+	        $org_usr->save(); 
+        }else{
+        	$org_usr = new stdClass;
+        	$org_usr->id = $checkUserExist->id;
+        }
+        $userMapping = new User;
+        $userMapping->user_id = $org_usr->id;
+        $userMapping->deleted_at = 0;
+        $userMapping->save();
         $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
         if(!$userRoleMapping->exists()){
             $userRoleMapping = new UserRoleMapping();
@@ -293,7 +319,7 @@ class GroupOrganizationController extends Controller
             $userRoleMapping->save();
         }
 
-        Session::flash('success', 'Organization create successfully');
+        Session::flash('success', __('manage.organization_created'));
         return $org_id.' has beenn created';
     }
 
@@ -311,7 +337,7 @@ class GroupOrganizationController extends Controller
         $org->fill($organization);
         $org->save();
         $this->create_organization_database($id , $org->id);
-        Session::flash('success', 'Organization create successfully');
+        Session::flash('success', __('manage.organization_created') );
         return back();
     }
    
@@ -333,7 +359,7 @@ class GroupOrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users',
-                                '--schema'=>'name:string, email:string, password:string, api_token:char(60), remember_token:string, status:integer:default(1), user_type:string, deleted_at:integer:default(0)'
+                                '--schema'=>'user_id:integer, user_type:string:nullable, status:integer:default(1), deleted_at:integer:default(0)'
                             ]);
         Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -540,31 +566,13 @@ class GroupOrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_product_meta',
                                 '--schema'=>'product_id:integer, key:string, value:text:nullable'
                             ]);
-        // Artisan::call('make:migration:schema',[
-								// '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_services',
-        //                         '--schema'=>'type:integer, name:string, description:text:nullable, created_by:integer:nullable, status:integer:default(1)'
-        //                     ]);
-        // Artisan::call('make:migration:schema',[
-        //                         '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_service_meta',
-        //                         '--schema'=>'service_id:integer, key:string, value:text:nullable'
-        //                     ]);
+       
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_invoices',
                                 '--schema'=>'invoice_no:integer, customer_id:integer, payment_method_id:integer, total:integer, status:integer:default(0)'
                             ]);
-        // Artisan::call('make:migration:schema',[
-        //                         '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_orders',
-        //                         '--schema'=>'invoice_id:integer, name:string, description:text:nullable, cost:decimal(10,2), quantity:string, status:default(1)'
-        //                     ]);
-        // Artisan::call('make:migration:schema',[
-        //                         '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_order_metas',
-        //                         '--schema'=>'order_id:integer, key:string, value:text:nullable'
-        //                     ]);
+        
       
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -613,7 +621,7 @@ class GroupOrganizationController extends Controller
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_organization_settings',
-                                '--schema'=>'key:string , value:text:nullable'
+                                '--schema'=>'key:string , value:text:nullable, type:string'
                             ]);
 //ORGANIZATION METAS
 		
@@ -640,7 +648,7 @@ class GroupOrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_datasets',
-                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, uploaded_by:string'
+                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, defined_columns:longtext, uploaded_by:string'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -772,7 +780,7 @@ class GroupOrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menu_items',
-                                '--schema'=>'menu_id:integer, label:string:nullable, description:text:nullable, title:string:nullable, class:string:nullable, title_attribute:string:nullable, link:string:nullable, target:string:nullable, type:string:nullable, parent:integer:nullable, order:integer:nullable, icon:string:nullable, status:integer:default(1)']);            
+                                '--schema'=>'label:string, link:string, parent:integer:default(0), sort:integer:default(0), class:string:nullable, menu:integer,depth:integer:default(0)']);            
 		Artisan::call('migrate');
         // $userTypes = [
         //     ['type'=>'Admin','status'=>1],
@@ -822,5 +830,70 @@ class GroupOrganizationController extends Controller
 	// 	$res = $this->organization->global_create_organization($request);
 	// 	return back();
 	// }
+    
+
+    /**
+      * users function
+      *
+      * @return view
+      * @author Rahul
+      **/
+    public function users(Request $request, $id){
+        Session::put('organization_id',$id);
+        $datalist= [];
+        if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+                $perPage = 999999999999999;
+            }
+        }else{
+                $perPage = 5;
+        }
+        $sortedBy = @$request->sort_by;
+        if($request->has('search')){
+            if($sortedBy != ''){
+                $model = GroupUsers::has('organization_user')->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->ORGc_asc)->paginate($perPage);
+            }else{
+                $model = GroupUsers::has('organization_user')->where('name','like','%'.$request->search.'%')->paginate($perPage);
+            }
+        }else{
+            if($sortedBy != ''){
+                $model = GroupUsers::has('organization_user')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                $model = GroupUsers::has('organization_user')->paginate($perPage);
+            }
+        }
+        $datalist =  [
+                      'datalist'=>  $model,
+                      'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status','created_at'=>'Created At'],
+                      'actions' => [
+                                      'delete'  =>  ['title'=>'Delete','route'=>'revoke.user'],
+                                   ]
+                  ];
+        return view('group.organization.users',$datalist);
+    }
+
+    public function addNewUserToOrganization(Request $request, $organization_id){
+        $user = new User;
+        $user->user_id = $request->select_user;
+        $user->deleted_at = 0;
+        $user->save();
+        $role = new UserRoleMapping;
+        $role->user_id = $user->id;
+        $role->role_id = $request->select_role;
+        $role->status = 1;
+        $role->save();
+        Session::flash('success','Successfully added!!');
+        return back();
+    }
+
+    public function revokeUser($user_id){
+        $user = User::where('user_id',$user_id);
+        $userId = $user->first()->id;
+        $user->delete();
+        $role = UserRoleMapping::where('user_id',$userId)->delete();
+        Session::flash('success','Successfully deleted!');
+        return back();
+    }
     
 }

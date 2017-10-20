@@ -1,10 +1,5 @@
-
-  
-@php
- 
+@php 
   $link=$_SERVER['REQUEST_URI'];
-  
-  
 @endphp
 
 <div class="col l12"  >

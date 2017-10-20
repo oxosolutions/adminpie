@@ -16,8 +16,15 @@
 @endphp
 
 @if($modelRelated != false && $modelRelated != '' && $modelRelated != null)
-				
-			{!! Form::select($name.'[]',$result->$exploded[1](),null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
+				@php
+					try{
+						$arrayOptions = $result->$exploded[1]();
+					}catch(\Exception $e){
+						$arrayOptions = [];
+					}
+					
+				@endphp
+			{!! Form::select($name.'[]',$arrayOptions,null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
 		
 
 @else
@@ -38,3 +45,7 @@
 			{!! Form::select($name.'[]',$arrayOptions,null,['class'=>$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'multiple'])!!}
 
 @endif
+<div class="field-actions">
+	<a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a> / 
+	<a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a> 
+</div>

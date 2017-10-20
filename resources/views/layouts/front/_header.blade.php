@@ -17,15 +17,18 @@
 	</div><!-- .aione-row --> --}}
 	<div class="row-wrapper">
 		<div class="ar">
-			<div class="ac l40 m50 s100 left-content">
+			<div class="ac l100 m100 s100">
+				{{-- 
 				<div id="aione_header_logo" class="aione-header-item">
-					<img src="{{ asset('assets/images/logo.svg') }}">
+					<img src="{{ asset('assets/images/logo.svg') }}"> 
 				</div><!-- .aione-topbar-item -->
-				<div id="aione_header_title" class="aione-header-item">
-					<h4>OXO Solutions</h4>
-					<p>Developing the .com Trend...</p>
+				--}}
+				<div id="aione_header_title">
+					<h2 class="aione-align-center">Urban Slum Study</h2>
+					<h4 class="aione-align-center">a study conducted by FHTS</h4>
 				</div><!-- .aione-topbar-item -->
 			</div>
+			{{--
 			<div class="ac l60 m50 s100 right-content">
 				<div id="" class="aione-header-item">
 					<i class="fa fa-check-circle-o"></i>
@@ -51,6 +54,8 @@
 				<div id="" class="aione-header-item">
 					<button class="aione-header-button">GET A QUOTE</button>
 				</div><!-- .aione-topbar-item -->
+
+				--}}
 			</div>
 		</div>
 	</div><!-- .row-wrapper -->

@@ -21,14 +21,16 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Custom Maps',
+	'page_title' => 'Maps',
+	'route' => 'add.map'
 );
 if(Auth::guard('admin')->check() != true){
 	if($url != 'g'){
-		$page_title_data['add_new'] = '+ Add Custom Map';
+		$page_title_data['add_new'] = '+ Add Map';
+		// $page_title_data['route'] = 'add.map';
 	}
 }else{
-	$page_title_data['add_new'] = '+ Add Custom Map';
+	$page_title_data['add_new'] = '+ Add Map';
 }
 
 @endphp
@@ -42,14 +44,14 @@ if(Auth::guard('admin')->check() != true){
 	
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
-	@if(!Auth::guard('admin')->check())
+	{{-- @if(!Auth::guard('admin')->check())
 		{!!Form::open(['route'=>'org.save.custom.map'])!!}
 	@else
 		{!!Form::open(['route'=>'save.custom.map'])!!}
 	@endif
 		@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Custom Map','button_title'=>'Save','section'=>'custommapsection']])
 		<input type="hidden" name="type" value="{{$url}}">
-	{!!Form::close()!!}
+	{!!Form::close()!!} --}}
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

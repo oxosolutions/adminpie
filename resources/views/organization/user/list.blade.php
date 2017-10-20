@@ -17,7 +17,8 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Users',
-	'add_new' => '+ Add User'
+	'add_new' => '+ Add User',
+	'route' => 'create.user'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)		
@@ -35,14 +36,14 @@
 		});
 	</script>
 @endif
-{!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
+{{-- {!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
 	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add new user','button_title'=>'Save User','section'=>'organization_user_add']])
-{!! Form::close() !!}
-
+{!! Form::close() !!} --}}
+{{-- 
 {!! Form::open(['method' => 'POST','class' => '','route' => 'change.pass']) !!}
 	<input type="hidden" name="_token" value="{{csrf_token()}}">
 	@include('common.modal-onclick',['data'=>['modal_id'=>'change_password','heading'=>'Change Password','button_title'=>'Save ','section'=>'changepasssec2']])
-{!! Form::close() !!}
+{!! Form::close() !!} --}}
 
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

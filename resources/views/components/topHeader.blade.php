@@ -64,15 +64,16 @@ $user_profile_picture = App\Model\Organization\UsersMeta::getUserMeta('user_prof
 					</div> <!-- .aione-widget-header -->
 					<div class="aione-widget-content">
 						<ul class="profile-menu">
-						
-							<!--
-							<li><a href="#" class="">Profile</a></li>
-							
-							<li>{{user_info()}}</li>
+							<li><a class="" href="{{route('profile.view')}}">View Profile</a></li>
+							<li><a class="" href="{{route('profile.edit')}}">Edit Profile</a></li>
+							<li><a class="" href="{{route('profile.changepassword')}}">Change Password</a></li>
+							<li><a class="" href="{{route('profile-picture.details')}}">Profile Picture</a></li>
+
+							{{-- <li>{{user_info()}}</li> --}}
+							{{-- <li><a href="#" class="">Profile</a></li>
 							<li><a href="#" class="">Privacy</a></li>
 							<li><a href="#" class="">Notifications</a></li>
-							<li><a href="#" class="">Settings</a></li>
-							-->
+							<li><a href="#" class="">Settings</a></li> --}}
 						</ul>
 
 					</div> <!-- .aione-widget-content -->

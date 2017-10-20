@@ -21,7 +21,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Menus : '.$menu->title,
+	'page_title' => 'Menus : '.$menu,
 	'add_new' => '+ Add Designation'
 ); 
 @endphp
@@ -30,6 +30,7 @@ $page_title_data = array(
         display: none !important
     }
 </style>
+
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')

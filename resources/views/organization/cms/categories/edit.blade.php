@@ -14,16 +14,15 @@
 @extends($layout)
 
 @section('content')
-{{-- @php
+@php
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Project Categories',
-	'add_new' => '+ Add Category'
+	'page_title' => 'Edit Categories : <span>'.$modelData->name.'</span>',
 );
-@endphp --}}
-{{-- @include('common.pageheader',$page_title_data) --}}
+@endphp
+@include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('common.page_content_primary_end')

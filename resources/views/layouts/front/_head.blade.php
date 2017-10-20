@@ -8,7 +8,12 @@
 		@endphp
 		@if(@$slug['slug'])
 			@php
-				$data = App\Model\Organization\Page::where('slug',$slug)->with('pageMeta')->first();
+			if(Auth::guard('admin')->check()){
+	            $pageRoute = 'App\\Model\\Admin\\Page';
+	        }else{
+	            $pageRoute = 'App\\Model\\Organization\\Page';
+	        }
+				$data = $pageRoute::where('slug',$slug)->with('pageMeta')->first();
 			@endphp
 			@foreach(@$data->pageMeta->toArray() as $k => $v)
 				@if($v['key'] == 'css_code')

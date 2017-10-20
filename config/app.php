@@ -170,6 +170,8 @@ return [
         Yajra\Datatables\HtmlServiceProvider::class,
         Yajra\Datatables\ButtonsServiceProvider::class,
         Spatie\Fractal\FractalServiceProvider::class,
+        OxoSolutions\Menu\MenuServiceProvider::class,
+        Gornymedia\Shortcodes\ShortcodesServiceProvider::class,
         
 
         /*
@@ -249,6 +251,8 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Fractal' => Spatie\Fractal\FractalFacade::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Menu' => OxoSolutions\Menu\Facades\Menu::class,
+        'Shortcode' => Gornymedia\Shortcodes\Facades\Shortcode::class,
     ],
 
 ];

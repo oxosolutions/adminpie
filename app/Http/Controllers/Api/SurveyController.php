@@ -15,19 +15,26 @@ use App\Model\Organization\FieldMeta;
 use App\Model\Organization\FormBuilder;
 Use Carbon\carbon;
 use App\Model\Organization\OrganizationSetting;
+use App\Model\Group\GroupUsers;
 
 class SurveyController extends Controller
 {
     public function surveys(Request $request){
-        // $org_id = GO::where('active_code',$request['activation_key'])->first()->id;
-
+        // $org_id = GO::where('active_code',$request['activation_key'])->first()->id; 
          $org = GO::where('active_code',$request['activation_key']);
 
         if(!$org->exists()){
             return ['status'=>'error', 'message'=>'active code not exist'];
         }
         $org_id = $org->first()->id;
-    	Session::put('organization_id',$org_id);
+        $group_id = $org->first()->group_id;
+        Session::put('organization_id',$org_id);
+    	Session::put('group_id',$group_id);
+      //  $users = User::with('belong_group')->get()->keyBy('belong_group');
+        $users = GroupUsers::has('organization_user')->get();
+        // dump($group_orgnization_user->toArray());
+        // dd($group_orgnization_user->toArray());
+ 
     	$form  =  forms::with(['section'=>function($query){
                                         $query->orderBy('order','asc');
                                     },
@@ -136,7 +143,7 @@ class SurveyController extends Controller
             $data['questions']      = $question;
             $data['surveys']     = $surveys;           
             $data['groups']      = $groups;
-            $data["users"]       = User::all();
+            $data["users"]       = $users;//GroupUsers::all();
             $data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
             $mediaArray = [];
             if(isset($data['settings']['android_application_logo'])){
@@ -206,9 +213,9 @@ class SurveyController extends Controller
                 if($dataKey !="id"){
                     if(!empty($questionId_slug[$dataKey])) {
                         $dataKey = $questionId_slug[$dataKey];
+                        $dataKey = str_replace('-', '_', $dataKey);
                     }
-                        $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
-
+                    $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
                      if(is_array($dataValue)) {
                         $dataValue = json_encode($dataValue);
                      }
@@ -220,8 +227,9 @@ class SurveyController extends Controller
                       	$formatedDate = $date[0]."-".$date[1]."-".$date[2];
                      	$dataValue =  carbon::parse($formatedDate)->format('Y-m-d');
                      }
-                     $values[$dataKey] = $dataValue;
-                     $keys[] = $dataKey;
+                     $newDataKey = str_replace('-', '_', $dataKey);
+                     $values[$newDataKey] = $dataValue;
+                     $keys[] = $newDataKey;
                 }
              }
             $newTableName = str_replace('ocrm_', '', $table_name);
@@ -232,7 +240,7 @@ class SurveyController extends Controller
             $new_columns   = $columnsdata->diff($table_column)->toArray();
             if(!empty($new_columns)){
                 foreach ($new_columns as $key => $value) {
-                    DB::select("ALTER TABLE `{$table_name}` ADD $value text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");
+                    DB::select("ALTER TABLE `{$table_name}` ADD `{$value}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");
                 }
             }
       }else{ 
@@ -247,7 +255,13 @@ class SurveyController extends Controller
                     return false; 
                 }
             }else{
-                 DB::table($newTableName)->insert($values);
+                if(Session::has('inserted_id')){
+                    $insert_id =  Session::get('inserted_id');
+                    DB::table($newTableName)->where('id',$insert_id)->update($values);
+                    return true;
+                }
+                 $id = DB::table($newTableName)->insertGetId($values);
+                 Session::put('inserted_id', $id);
                  return true;
             }
     }

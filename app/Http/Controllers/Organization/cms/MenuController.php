@@ -9,6 +9,7 @@ use App\Model\Organization\Cms\Menu\MenuItem;
 use App\Model\Organization\Page;
 use App\Model\Organization\Posts;
 use Auth;
+use Session;
 class MenuController extends Controller
 {
     protected function assignModel($model){
@@ -39,9 +40,9 @@ class MenuController extends Controller
         $sortedBy = @$request->orderby;
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = $AssignModel::where('title','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
+                $model = $AssignModel::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
             }else{
-                $model = $AssignModel::where('title','like','%'.$request->search.'%')->paginate($perPage);
+                $model = $AssignModel::where('name','like','%'.$request->search.'%')->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
@@ -63,7 +64,7 @@ class MenuController extends Controller
         }
         $datalist =  [
                         'datalist'    => $model,
-                        'showColumns' => ['title'=>'Title','description'=>'Description','slug' => 'Slug' ,'created_at'=>'Created'],
+                        'showColumns' => ['name'=>'Title','description'=>'Description','slug' => 'Slug' ,'created_at'=>'Created'],
                         'actions'     => [
                                             'edit' => ['title'=>'Edit','route'=>$edit],
                                             'delete'=>['title'=>'Delete','route'=>$delete]
@@ -90,8 +91,10 @@ class MenuController extends Controller
         $request['order'] = $order;
         
         $model = new $AssignModel;
-        $model->fill($request->except('_token','action'));
+        $model->name = $request->title;
+        $model->order = $request->order;
         $model->save();
+        Session::flash('success','Successfully created!');
         return back();
     }
 
@@ -103,16 +106,17 @@ class MenuController extends Controller
      */
     public function edit($id)
     {
-      $AssignModel = $this->assignModel('Menu');
-      $MenuItem = $this->assignModel('MenuItem');
-      $pageModel = $this->pageModel('Page');
+      // $AssignModel = $this->assignModel('Menu');
+      // $MenuItem = $this->assignModel('MenuItem');
+      // $pageModel = $this->pageModel('Page');
 
-        $menu = $AssignModel::where('id',$id)->first();
-        $menuItem = $MenuItem::where('menu_id',$id)->get();
-        $pages = $pageModel::where('type' , 'page')->with(['MenuItem'])->get();
-        $posts = $pageModel::where('type' , 'posts')->with(['MenuItem'])->get();
-        $selectedPage = $MenuItem::all();
-        return view('organization.cms.menu.edit-menu',compact(['menu', 'menuItem','pages','posts','selectedPage']));
+      //   $menu = $AssignModel::where('id',$id)->first();
+      //   $menuItem = $MenuItem::where('menu_id',$id)->get();
+      //   $pages = $pageModel::where('type' , 'page')->with(['MenuItem'])->get();
+      //   $posts = $pageModel::where('type' , 'posts')->with(['MenuItem'])->get();
+      //   $selectedPage = $MenuItem::all();
+      //   return view('organization.cms.menu.edit-menu',compact(['menu', 'menuItem','pages','posts','selectedPage']));
+        return view('organization.cms.menu.edit-wpmenu');
     }
 
     public function delete($id)

@@ -8,14 +8,13 @@
 		<div class="site-logo" >
 		</div>
 		<div class="site-title" >
-			Admin<span>Pie</span>
+			Login
 		</div>
 		<div class="site-tagline" >
 		</div>
 	@if(Session::has('login_fails'))
-		<div class="row error">
-			<span><i class="fa fa-ban"></i></span>
-			{{Session::get('login_fails')}}<a href="">recover your password</a> 
+		<div class="aione-message error">
+			{{Session::get('login_fails')}} 
 		</div>
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'group.post']) !!}
@@ -29,6 +28,14 @@
 
 	</div>
 	</div> 
-</div> 
+</div>
+<style type="text/css">
+	.login-background{
+    background-image: url(assets/images/bg-pattern.png),linear-gradient(to bottom,#168dc5,#096996);
+	background-size: auto,auto;
+    background-repeat: repeat,no-repeat;
+    background-attachment: fixed,scroll;
+	}
+</style>
 @include('common.page_content_primary_end')
 @endsection

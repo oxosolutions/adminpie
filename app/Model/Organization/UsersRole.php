@@ -30,6 +30,10 @@ class UsersRole extends Model
 
       return self::orderBy('id','asc')->pluck('name','id');
    }
+   public function rolesList(){
+
+      return self::orderBy('id','asc')->pluck('name','id');
+   }
    //function used where role  delete and assign to another role.
    public static function getRoles()
    {

@@ -88,9 +88,14 @@ return [
             'model' => App\Model\Admin\User::class,
         ],
 
-        'org' => [
+        /*'org' => [
             'driver' => 'eloquent',
             'model' => App\Model\Organization\User::class,
+        ],*/
+
+        'org' => [
+            'driver' => 'eloquent',
+            'model' => App\Model\Group\GroupUsers::class,
         ],
 
         'group' => [

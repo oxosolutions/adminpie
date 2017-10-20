@@ -21,17 +21,14 @@
 @extends($layout)
 @section('content')
 @php
-    
-    $title = $form->form_title;
-
-
+    @$title = $form->form_title;
 @endphp
 @php
 $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Edit Form: <span class="subtitle">('.$title.')</span>',
+  'page_title' => 'Form <span>'.@$title.'</span>',
   'add_new' => '+ Apply leave'
 ); 
 @endphp
@@ -39,6 +36,19 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+
+@if(!empty($error))
+ @include('organization.survey._tabs')
+    <div class="aione-message warning">
+        {{$error}}
+     </div>
+
+@elseif(!@$permission)
+        <div>
+            <div class="access-denied">Access Denied</div>
+            <div class="permission">You do not have permission!</div>
+        </div>
+@else
     
     @if($form->type == 'survey')
         @include('organization.survey._tabs')
@@ -46,12 +56,8 @@ $page_title_data = array(
         @include('admin.formbuilder._tabs')
     @endif
     <input type="hidden" name="_token" value="{{csrf_token() }}">
-    @if(!@$permission)
-        <div>
-            <div class="access-denied">Access Denied</div>
-            <div class="permission">You do not have permission!</div>
-        </div>
-    @else
+
+    
 
         <div class="module-wrapper">
             <div class="list-container">
@@ -143,7 +149,11 @@ $page_title_data = array(
                     @endif
 
                     @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
-                         {!! FormGenerator::GenerateForm('add_survey_form') !!}
+                        {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
+                            <input type="hidden" name="id" value="{{$form->id}}">
+                            {!! FormGenerator::GenerateForm('edit_form_form') !!}
+                        {!! Form::close() !!}
+
                         {!! Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
                             <div class="add-section">
                               {{--   <button class="btn blue" type="submit">Add Section</button>
@@ -166,8 +176,15 @@ $page_title_data = array(
                         {!!Form::close()!!}
                     @endif
 
-                    <ul class="collection">
+                    <ul class="collection aione-form-section-border">
+                        
                         @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
+                            <div id="aione_form_section_header" class="aione-form-section-header">
+                                <div class="aione-row">
+                                    <h3 class="aione-form-section-title aione-align-center">Sections</h3>
+                                    <h4 class="aione-form-section-description aione-align-center">List of all sections in this form.</h4>
+                                </div> <!-- .aione-row -->
+                            </div>
                             @foreach($sections as $k => $section)
                                 <li class="collection-item" section-id="">
                                     <a href="{{Request::url()}}?sections={{$section->id}}">{{$section->section_name}} ({{$section->section_slug}})</a>
@@ -223,6 +240,12 @@ $page_title_data = array(
                             @endforeach
                         @endif
                         @if(Request::has('sections') && Request::input('sections') != 'all')
+                            <div id="aione_form_section_header" class="aione-form-section-header">
+                                <div class="aione-row">
+                                    <h3 class="aione-form-section-title aione-align-left ">Fields</h3>
+                                    <h4 class="aione-form-section-description aione-align-left">List of all fields in this section</h4>
+                                </div> <!-- .aione-row -->
+                            </div>
                             @foreach($sections->where('id',Request::input('sections'))->first()->fields as $k => $field)
                                 <li class="collection-item" field_id="{{$field->id}}">
                                     @if($form->type == 'survey')
@@ -455,13 +478,17 @@ $page_title_data = array(
         /*******************************/
         .Detail-container .collection{
             border: none;
-                padding-top: 15px;
+                padding: 15px;
+                border: 1px solid #e8e8e8
         }
         .Detail-container .collection .collection-item{
             border: 1px solid #e8e8e8;
                margin-bottom: 10px;
             position: relative;
                 padding: 10px;
+        }
+        .Detail-container .collection .collection-item:last-child{
+            margin-bottom: 0px
         }
          .Detail-container .collection .collection-item a{
             color: #666;
@@ -471,11 +498,11 @@ $page_title_data = array(
             float: right;
         }
         .Detail-container .collection .collection-item .question-id{
-               position: absolute;
-    top: -15px;
-    padding: 3px 22px;
-    background-color: #e8e8e8;
-    font-size: 13px;
+            position: absolute;
+            top: -15px;
+            padding: 3px 22px;
+            background-color: #e8e8e8;
+            font-size: 13px;
 
         }
    
@@ -502,11 +529,11 @@ $page_title_data = array(
             display: none
          }
          .subtitle{
-                  font-size: 18px;
-    line-height: 32px;
-    font-weight: 500;
-    display: inline-block;
-    vertical-align: text-top;
+                
+   
+            font-weight: 500;
+            display: inline-block;
+
          }
         /*.add-section > button {
             float: right;

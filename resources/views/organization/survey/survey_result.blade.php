@@ -1,3 +1,4 @@
+
 @extends('layouts.main')
 @section('content')
 <style type="text/css">
@@ -49,8 +50,11 @@
 </style>
 @php
 if(!empty($data)){
-// $data = json_decode(json_encode($data->all()),true);
-$keys = array_keys($data[0]);
+    dump($keys = collect($data->first())->keys());
+
+ // $data = json_decode(json_encode($data->all()),true);
+	// dd($data);
+// $keys = array_keys($data[0]);
 }
 $page_title_data = array(
     'show_page_title' => 'yes',
@@ -69,10 +73,10 @@ $page_title_data = array(
 @php
 // dump($condition_data , $errors);
 	$th = $option='';
-	foreach($keys as $key =>$val){
-		$option[$val] = $val;
-		$th .= "<th>$val</th>";
-	}
+	// foreach($keys as $key =>$val){
+	// 	$option[$val] = $val;
+	// 	$th .= "<th>$val</th>";
+	// }
 	 // $operator = ['>', '<','=','>=','<='];
 @endphp
 @if($errors->any())
@@ -85,20 +89,63 @@ $page_title_data = array(
     </div>
 @endif
 
-
 <div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
+
 	<p>Filters</p>
 		{!! Form::open(['route'=>['results.survey',$id],'method' => 'post' ]) !!}
+		<div class="ar">
+	<div class="ac l50">
+		<div class=" aione-box">
+			<div id="aione_form_section_374" class="aione-form-section non-repeater">
+				<div class="aione-row">
+
+					<div id="aione_form_section_header" class="aione-form-section-header">
+						<div class="aione-row">
+							<h3 class="aione-form-section-title aione-align-left">Vertical Filteration</h3>
+						</div> <!-- .aione-row -->
+					</div> <!-- .aione-form-header -->
+					<div id="aione_form_section_content" class="aione-form-section-content">
+						<div class="aione-row ar">
+							<div id="field_1590" data-conditions="0" data-field-type="multi_select" class="field-wrapper ac field-wrapper-select_column field-wrapper-type-multi_select ">
+								<div id="field_label_select_column" class="field-label">
+									<label for="input_select_column">
+										<h4 class="field-title" id="Select Column">Select Column</h4>
+									</label>
+								</div><!-- field label-->
+								<div id="field_select_column" class="field field-type-multi_select">
+									{!! Form::select('fields[]',$columns,array_slice($columns,0,6),['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select no-margin-bottom aione-field select2-hidden-accessible'])  !!}
+	 									<div class="field-actions">
+											<a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a> / 
+											<a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a> 
+										</div>
+								</div><!-- field -->
+							</div><!-- field wrapper -->
+
+						</div> <!-- .aione-row -->
+					</div> <!-- .aione-form-content -->
+				</div> <!-- .aione-row -->
+			</div> <!-- .aione-form-section -->
+		</div>
+	</div>		
+	<div class="ac l50 ">
+		<div class="aione-box">
+		{!! FormGenerator::GenerateSection('horizontal_filtration',[],request()->all()) !!}
+		</div>
+
+	</div>
+</div>
 			<div id='parent'>
 				<div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
+
+
 					<div id="field_label_select_status" class="field-label">
 						<label for="input_select_status">
 							<h4 class="field-title" id="select_fiellds">Select Fields</h4>
 						</label>
 					</div>
-					<div id="field_fields" class="field field-type-multi_select">
+					{{-- <div id="field_fields" class="field field-type-multi_select">
 						{!! Form::select('fields[]',$columns,array_slice($columns,0,6),['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
-					</div>
+					</div> --}}
 				</div>
 				{{-- <div > 
 					<div  class="field select field-type-select">
@@ -199,6 +246,7 @@ $page_title_data = array(
 
 
 	<div id="table-structure" class="aione-table scrollx">
+<div class="ac l80" style="line-height: 48px">Showing {{$data->firstItem()}} to {{$data->lastItem()}} of {{$data->total()}} records</div>
 		<table class="compact">
 	        <thead>
 				<tr>
@@ -222,6 +270,7 @@ $page_title_data = array(
 				@endforeach
 	        </tbody>
 	    </table>
+	    {{ $data->links() }}
 	</div>
 
 
@@ -229,7 +278,9 @@ $page_title_data = array(
 	</div>
 
 	@else
-	<div><h2> No Data Exist</h2></div>
+	<div class="aione-message warning">
+		{{ __('survey.survey_results_table_missing') }}
+	</div>
 @endif
 <script>
 $('#more_condition').on('click',function(event){

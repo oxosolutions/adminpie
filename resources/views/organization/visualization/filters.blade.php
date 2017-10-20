@@ -10,7 +10,7 @@
 			
 			<div class="filter-title" >
 				<center> 
-					<h6 style="margin: 0px;font-size: 18px;font-weight: 600;color: grey">Filters <span><a href="javascript:;"><img src="{{asset('arrow-down1.png')}}" alt=""></a></span></h6>
+					<h6 style="margin: 0px;font-size: 18px;font-weight: 600;color: grey">Filters <span><a href="javascript:;"><img src="{{-- {{asset('arrow-down1.png')}} --}}" alt=""></a></span></h6>
 				</center>
 			</div>
 			

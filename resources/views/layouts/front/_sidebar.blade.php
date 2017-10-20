@@ -58,12 +58,14 @@
             </li>
           @endif
         @endforeach --}} 
-        @foreach($menu as $key => $sidebar)
-            @foreach($sidebar->menuItem as $k => $menuItem)
-                <li class="aione-nav-item level0 "> 
-                    <a href="{{$menuItem->link}}">{{$menuItem->label}}</a>
-                </li>
+        @if(@$menu)
+            @foreach($menu as $key => $sidebar)
+                @foreach($sidebar->menuItem as $k => $menuItem)
+                    <li class="aione-nav-item level0 "> 
+                        <a href="{{$menuItem->link}}">{{$menuItem->label}}</a>
+                    </li>
+                @endforeach 
             @endforeach 
-        @endforeach 
+        @endif
     </ul>
 </nav>

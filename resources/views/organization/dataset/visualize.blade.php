@@ -6,9 +6,9 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset: '.$dataset['dataset_name'],
+	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Visualization',
-	'route' => ['add.visual',['dataset_id'=>$dataset['id']]]
+	'route' => ['visualization.view',['dataset_id'=>$dataset['id']]]
 	); 
 @endphp
 @include('common.pageheader',$page_title_data)

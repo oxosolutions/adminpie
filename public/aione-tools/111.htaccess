@@ -1,0 +1,10 @@
+
+	
+# Block Access to Tools for all
+# Allow Access to Tools to Super Admin	
+
+<Files *> 
+	order Deny,Allow 
+	Deny from all 
+	Allow from 103.232.151.163
+</Files>

@@ -60,7 +60,7 @@
 	    'show_page_title' => 'yes',
 	    'show_add_new_button' => 'no',
 	    'show_navigation' => 'yes',
-	    'page_title' => 'Edit Page',
+	    'page_title' => 'Edit Page :<span>'.$page->title.'</span>',
 	    'add_new' => '+ Add Media'
 	); 
 	@endphp
@@ -82,8 +82,16 @@
 					{{-- <div style="display: inline-block;width: 172px;">
 						{!! FormGenerator::GenerateField('select_status') !!}	
 					</div> --}}
-					<a href="" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" style="line-height: 40px">Preview</a>
-					<button style="display: inline-block;line-height: 18px;margin-left: 10px">Update</button>
+
+					@php
+						if(Auth::guard('admin')->check()){
+							$route = 'view.pages';
+						}else{
+							$route = 'view.pages';
+						}
+					@endphp
+					<a href="{{ route($route ,$page->slug ) }}" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" style="line-height: 40px">Preview</a>
+					<button type="submit" style="display: inline-block;line-height: 18px;margin-left: 10px">Update</button>
 				</div>
 				<div class="l6" style="width: 75%;float: left;padding-right:15px ">
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}

@@ -18,7 +18,7 @@ class Designation extends Model
 	   protected $fillable = [ 'name', 'status'];
 
 	public function designationList(){
-        return self::orderBy('id')->pluck('name','id');
+        	return self::orderBy('id')->pluck('name','id');
     }
 
 }

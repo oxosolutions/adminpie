@@ -7,6 +7,7 @@ use Session;
 use DB;
 class Dataset extends Model
 {
+    
 	public static $breadCrumbColumn = 'id';
     public function __construct(){
     	if(!empty(get_organization_id())){
@@ -15,7 +16,6 @@ class Dataset extends Model
     }
 
     public static function datasetList(){
-
         return self::orderBy('id')->pluck('dataset_name','id');
     }
 
@@ -23,7 +23,6 @@ class Dataset extends Model
 
     	return self::orderBy('id')->pluck('dataset_name','dataset_table');
     }
-
 
     public static function getDatasetTableData($datasetId){
         $datasetDetails = self::find($datasetId);
@@ -61,6 +60,9 @@ class Dataset extends Model
         if(empty($headers)){
             $headers['id'] = 'Id';
         }
+        unset($headers['status']);
+        unset($headers['parent']);
+        $headers['id'] = 'At First';
         return $headers;
     }
 

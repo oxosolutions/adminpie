@@ -12,7 +12,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
-    <div class="card" style="margin-top:0px;padding: 10px ">
+   
         @php
             $model = 'App\\Model\\Admin\\GlobalModule';
             $array = json_decode($org_data['modules']);
@@ -28,7 +28,7 @@ $page_title_data = array(
             </button>   --}}
         </div>    
     {!! Form::close() !!}        
-    </div>
+    
     @include('common.page_content_primary_end')
     @include('common.page_content_secondry_start')
 

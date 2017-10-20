@@ -41,7 +41,6 @@
 					</div><!-- #aione_sidebar -->
 					<div id="aione_content" class="aione-content">
 						<div class="aione-row">
-						
 							@yield('content')
 							
 							@include('components._footer')

@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 @php
-	$site_logo = App\Model\Organization\OrganizationSetting::getSettings('logo');
-	$site_title = App\Model\Organization\OrganizationSetting::getSettings('title');
+	@$site_logo = App\Model\Organization\OrganizationSetting::getSettings('logo');
+	@$site_title = App\Model\Organization\OrganizationSetting::getSettings('title');
+	@$bg_image  = App\Model\Organization\OrganizationSetting::getSettings('bg_image');
+	 
 
 @endphp
+
 	@php
 		$slug = request()->route()->parameters();
 		$meta = [];
 	@endphp
 	@if(@$slug['slug'])
 		@php
-			$data = App\Model\Organization\Page::where('slug',$slug)->with('pageMeta')->first();
+			if(Auth::guard('admin')->check()){
+	            $pageRoute = 'App\\Model\\Admin\\Page';
+	        }else{
+	            $pageRoute = 'App\\Model\\Organization\\Page';
+	        }
+			$data = $pageRoute::where('slug',$slug)->with('pageMeta')->first();
 		@endphp
 		@foreach(@$data->pageMeta->toArray() as $k => $v)
 			@php
@@ -22,27 +30,41 @@
 
 	@if(@$meta['select_menu'])
 		@php
-			$menu = App\Model\Organization\Cms\Menu\Menu::where('id',$meta['select_menu'])->with('menuItem')->get();
+			if(Auth::guard('admin')->check()){
+	            $menuRoute = 'App\\Model\\Admin\\Menu';
+	        }else{
+	            $menuRoute = 'App\\Model\\Organization\\Cms\\Menu\\Menu';
+	        }
+			$menu = $menuRoute::where('id',$meta['select_menu'])->with('menuItem')->get();
 		@endphp
 	@endif
+		
 @include('layouts.front._head')
 <body>
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide aione-theme-arcane">
 		<div class="aione-row">
+			{{--
 			@if(@$meta['show_topbar'] == 1)
 				@include('layouts.front._topbar')
 			@endif
+			--}}
 			@if(@$meta['show_header'] == 1)
 				@include('layouts.front._header')
 			@endif
+
+			@include('layouts.front._menu')
+			
 			{{-- @if(@$meta['show_page_title'] == 1)  --}}
-				@include('layouts.front._pagetitle')
+				{{-- @include('layouts.front._pagetitle') --}}
 			{{-- @endif --}}
-			@if(@$meta['show_slider'] == 1)
+			{{-- @if(@$meta['show_slider'] == 1)
 				@include('layouts.front._slider')
 			@endif
+			--}}
+			@include('layouts.front._slider')
 			<div id="aione_main" class="aione-main ">
 				<div class="aione-row">
+					{{--
 					<div id="aione_sidebar" class="aione-sidebar">
 						<div class="aione-row">
 							@if(@$meta['show_sidenav'] == 1)
@@ -50,6 +72,7 @@
 							@endif
 						</div><!-- .aione-row -->
 					</div><!-- #aione_sidebar -->
+					--}}
 					<div id="aione_content" class="aione-content" >
 						<div class="aione-row">
 					        @yield('content')
@@ -61,9 +84,12 @@
 					<div class="clear"></div><!-- .clear -->
 				</div><!-- .aione-row -->
 			</div><!-- #aione_main -->
+			{{--
+
 			@if(@$meta['show_footer'] == 1)
 				@include('layouts.front._footer')
 			@endif
+			--}}
 			@if(@$meta['show_copyright'] == 1)
 				@include('layouts.front._copyright')
 			@endif
@@ -74,6 +100,20 @@
 
 </body>
 <style type="text/css">
+.aione-main {
+    padding-top: 0px;
+}
+#aione_menu{
+    text-align: center;
+    width: 550px;
+    margin: 0 auto;
+}
+.aione-nav ul li a {
+    padding: 0 25px;
+    font-size: 18px;
+    line-height: 60px;
+    font-weight: 400;
+}
 	.aione-theme-arcane .aione-topbar{
 		background-color: #1C201A;
 		color: white
@@ -89,10 +129,10 @@
 		padding: 10px 0;
 	}
 	.aione-theme-arcane .aione-header{
-		position: inherit;
+		position: relative;
 		height: auto;
-		background-color: white;
-		padding: 20px 0;
+		background-color: #28568a;
+		padding: 0 0 20px 0;
 	}
 	.aione-theme-arcane .aione-header #aione_header_logo img{
 	    height: 60px;
@@ -101,10 +141,11 @@
 		display: inline-block;
 		padding: 0 10px
 	}
+	.aione-theme-arcane .aione-header #aione_header_title h2{
+		color: #ffffff;
+	}
 	.aione-theme-arcane .aione-header #aione_header_title h4{
-		margin:0;
-		font-weight: 800;
-		color: #168DC5;;
+		color: #a4cefe;
 	}
 	.aione-theme-arcane .aione-header #aione_header_title p{
 		font-style: italic;
@@ -175,7 +216,7 @@
 
 	.aione-theme-arcane .aione-pagetitle > .row-wrapper{
 		padding: 28px 0;
-    	background-color: rgba(17, 17, 17, 0.69);
+    	background-color: #333333;
 	}
 	.aione-theme-arcane .aione-pagetitle h4.page-title{
 		text-align: center;
@@ -192,9 +233,16 @@
 	}
 	.aione-theme-arcane .aione-copyright{
 		padding: 25px;
-	    background-color: #282828;
-	    color: #838383;
-	 }
+	    background-color: #121212;
+	    color: #999999;
+	    text-align: center;
+	}
+	.aione-theme-arcane .aione-copyright a{
+	    color: #888888;
+	}
+	.aione-theme-arcane .aione-copyright a:hover{
+	    color: #d2d2d2;
+	}
 </style>
 
 @php
@@ -202,7 +250,12 @@
 @endphp
 @if(@$slug['slug'])
 	@php
-		$data = App\Model\Organization\Page::where('slug',$slug)->with('pageMeta')->first();
+		if(Auth::guard('admin')->check()){
+            $pageRoute = 'App\\Model\\Admin\\Page';
+        }else{
+            $pageRoute = 'App\\Model\\Organization\\Page';
+        }
+		$data = $pageRoute::where('slug',$slug)->with('pageMeta')->first();
 	@endphp
 	@foreach(@$data->pageMeta->toArray() as $k => $v)
 		@if($v['key'] == 'js_code')

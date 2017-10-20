@@ -1,12 +1,17 @@
 
 @extends('admin.layouts.main')
 @section('content')
-@if(!empty(Session::get('success')))
-	<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">{{Session::get('success')}}</div></div>
+{{-- @if(!empty(Session::get('success')))
+	<div class="aione-message success">
+		{{Session::get('success')}}
+	</div>
 @endif
 @if(!empty(Session::get('error')))
-	<div id="card-alert" class="card red lighten-5"><div class="card-content red-text">{{Session::get('error')}}</div></div>
-@endif
+	<div class="aione-message error">
+		{{Session::get('error')}}
+	</div>
+@endif --}}
+
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',

@@ -8,7 +8,7 @@ use Session;
 class forms extends Model
 {
     protected $fillable = ['form_title','form_slug','form_description','type','created_by'];
-    protected $table	= 'global_forms';
+    protected $table	= '';
     
     public function __construct(){
 		    	if(!empty(Session::get('organization_id'))){
@@ -23,6 +23,10 @@ class forms extends Model
     public function section(){
     	return $this->hasMany('App\Model\Organization\section','form_id','id');
     }
+
+    // public function section_with_order(){
+    //     return $this->hasMany('App\Model\Organization\section','form_id','id')->orderBy('order','asc');
+    // }
 
     public function formsMeta(){
     	return $this->hasMany('App\Model\Organization\FormsMeta','form_id','id');

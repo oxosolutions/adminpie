@@ -217,3 +217,21 @@ HEADER
 .aione-header .aione-header-right .aione-clock{
 	font-size:14px;
 }
+.aione-header .aione-header-right .aione-header-item .aione-profile-widget .aione-widget-content{
+	padding:0;
+}
+.aione-header .aione-header-right .aione-header-item .aione-profile-widget .profile-menu li{
+	border-bottom: 1px solid #e8e8e8;
+}
+.aione-header .aione-header-right .aione-header-item .aione-profile-widget .profile-menu li:last-child{
+	border-bottom: none;
+}
+.aione-header .aione-header-right .aione-header-item .aione-profile-widget .profile-menu li a{
+	color: #168dc5;
+    padding: 8px 10px;
+    display: block;
+}
+.aione-header .aione-header-right .aione-header-item .aione-profile-widget .profile-menu li a:hover{
+	color: #FFFFFF;
+	background-color: #168dc5;
+}

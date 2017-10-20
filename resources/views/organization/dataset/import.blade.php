@@ -14,121 +14,17 @@
 @endphp
 
 @include('common.pageheader',$page_title_data) 
-	<div class="card" style="margin-top: 0px;padding: 14px;">
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
 	
 		{!!Form::open(['route'=>'upload.dataset','files'=>true])!!}
-		{{-- <div class="row no-margin-bottom">
-							
-			<div class="row mb-10">
-				<div class="col l3" style="line-height: 30px">
-					Dataset Name
-				</div>
-				<div class="col l9">
-					
-					 {!! Form::text('datasetName',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-				</div>
-			</div>
-			<div class="row mb-10">
-				<div class="col l3" style="line-height: 30px">
-					Import Source
-				</div>
-				<div class="col l9">
-					<div class="col l12">
-
-						
-						{!! Form::radio('import_source','file',true,['id' => 'test1' ]) !!}
-
-				    	<label for="test1">File Upload</label>    
-					</div>
-					<div class="col l12">
-						
-						{!! Form::radio('import_source','url',false,['id' => 'test2' ]) !!}
-
-				     	<label for="test2">URL</label>
-					</div>
-					<div class="col l12">
-						
-						{!! Form::radio('import_source','file_on_server',false,['id' => 'test3' ]) !!}
-				    	<label for="test3">File on server</label>    
-					</div>
-					
-					</div>
-				</div>
-			</div>
-			<div class="row mb-10 box file">
-				<div class="col l3" style="line-height: 30px">
-					Select CSV / XLSX / SQL File
-				</div>
-				<div class="col l9">
-					<div class="file-field input-field" style="margin-top: 0px">
-						<div class="btn">
-							<span>File</span>
-							{!!Form::file('file')!!}
-						</div>
-						<div class="file-path-wrapper">
-							
-							{!! Form::text('path',null,['class' => 'file-path validate' ]) !!}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row mb-10 box url">
-				<div class="col l3" style="line-height: 30px">
-					Enter File URL
-				</div>
-				<div class="col l9">
-				
-					{!! Form::text('url',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-				</div>
-			</div>
-			<div class="row mb-10 box file_on_server">
-				<div class="col l3" style="line-height: 30px">
-					Enter File Path
-				</div>
-				<div class="col l9">
-				
-					{!! Form::text('file_path',null,['class' => 'aione-setting-field' , 'style' => 'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ;']) !!}
-				</div>
-			</div>
-			<div class="row mb-10 box import_from_survey">
-				<div class="col l3" style="line-height: 30px">
-					Import from survey
-				</div>
-				<div class="col l9">
-					{!!Form::select('survey',['Option 1','Option 2','Option 3'],null,['placeholder'=>'Select Survey'])!!}
-				</div>
-			</div>
-			<div class="row mb-10 box2">
-				<div class="col l3" style="line-height: 30px">
-					Add, Replace or Append?
-				</div>
-				<div class="col l9">
-					<select class="action_type" name="add_replace">
-						<option value="new">Add New</option>
-						<option value="append">Append</option>
-						<option value="replace">Replace</option>
-				    </select>
-				</div>
-			</div>
-			<div class="row mb-10 box2">
-				<div class="col l3" style="line-height: 30px">
-					Table to replace or append to:
-				</div>
-				<div class="col l9">
-					{!!Form::select('replace_or_append',App\Model\Organization\Dataset::datasetList(),null,['placeholder'=>'Select Dataset','class'=>'datasets_list','disabled'=>'disabled'])!!}
-				</div>
-			</div>
-			
-
-			<div class="col s12 m6 l12 aione-field-wrapper">
-				<button class="btn blue" type="submit">Import
-					
-				</button>
-			</div>
-		</div> --}}
 		{!! FormGenerator::GenerateForm('import_dataset_form') !!}
 		{!!Form::close()!!}
-	</div>
+	@include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+     
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 	<style type="text/css">
 		.aione-setting-field:focus{
 		border-bottom: 1px solid #a8a8a8 !important;

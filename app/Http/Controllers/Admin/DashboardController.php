@@ -9,6 +9,9 @@ use App\Model\Admin\User as US;
 use App\Model\Admin\forms as FBuild;
 use App\Model\Admin\GlobalWidget as WIDGET;
 use App\Model\Admin\GlobalModule as MODULE;
+use App\Model\Admin\GlobalGroup as GROUP;
+use App\Model\Admin\CustomMaps as MAPS;
+use App\Model\Admin\Page as PAGE;
 
 class DashboardController extends Controller
 {
@@ -43,31 +46,50 @@ class DashboardController extends Controller
     private function getDashboardData()
     {
         $model = [
+                    'groups'        =>  [
+                                            'count'     => GROUP::count(),
+                                            'list'      => GROUP::all(),
+                                            'route'     => 'list.group'
+                                        ],
                     'organizations' => [
                                             'count'     => GLOR::count(),
                                             'list'      => GLOR::all(),
                                             'route'     => 'list.organizations'
                                         ],
-                    'users'         => [
-                                            'count'     => US::count(),
-                                            'list'      => US::all(),
-                                            'route'     => 'admin_users'
-                                        ],
-                    'forms'         => [
-                                            'count'     => FBuild::count(),
-                                            'list'      => FBuild::all(),
-                                            'route'     => 'list.forms'
+                    'modules'        =>  [
+                                            'count'     => MODULE::count(),
+                                            'list'      => MODULE::all(),
+                                            'route'     => 'list.module'
                                         ],
                     'widgets'        =>  [
                                             'count'     => WIDGET::count(),
                                             'list'      => WIDGET::all(),
                                             'route'     => 'index.widget'
                                         ],
-                    'modules'        =>  [
-                                            'count'     => MODULE::count(),
-                                            'list'      => MODULE::all(),
-                                            'route'     => 'list.module'
+                    'forms'         => [
+                                            'count'     => FBuild::count(),
+                                            'list'      => FBuild::all(),
+                                            'route'     => 'list.forms'
+                                        ],
+                    'maps'         => [
+                                            'count'     => MAPS::count(),
+                                            'list'      => MAPS::all(),
+                                            'route'     => 'custom.maps'
+                                        ],
+                    'pages'         => [
+                                            'count'     => PAGE::count(),
+                                            'list'      => PAGE::all(),
+                                            'route'     => 'admin.list.pages'
+                                        ],
+                    'users'         => [
+                                            'count'     => US::count(),
+                                            'list'      => US::all(),
+                                            'route'     => 'admin.list.users'
                                         ]
+                   
+                   
+                   
+                   
                 ];
                 return $model;
     } 

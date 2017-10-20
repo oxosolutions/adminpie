@@ -18,7 +18,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Survey Settings',
+	'page_title' => 'Survey Settings <span>'.get_survey_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Feedback'
 ); 
 @endphp
@@ -37,7 +37,11 @@ $route = 'org.save.form.settings';
 @include('common.pagecontentstart')
 	@include('organization.survey._tabs')
 	@include('common.page_content_primary_start')
-		@if(!@$permission)
+		@if(!empty($error))
+			<div class="aione-message warning">
+                       	 {{$error }}
+               </div>
+		@elseif(!@$permission)
 			{{dump('You don\'t have permission!')}}
 		@else
 			<div class="survey-settings-wrapper">

@@ -161,6 +161,22 @@ FIELD
     word-wrap: break-word;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
+.aione-field-error{
+    display: block;
+    color: #f44336;
+    text-align: left;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 400;
+    padding: 5px 0 0 0;
+    margin: 0;
+    word-wrap: break-word;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+.aione-field-error:empty{
+    padding: 0;
+    display:none;
+}
 
 .media-type-image{
     max-width:100%;
@@ -542,6 +558,7 @@ FORM STYLE BORDERED
 ***************************************/
 .aione-form-border{
     border:1px solid #e8e8e8;
+    margin-bottom: 15px;
 }
 .aione-form-border > .aione-row{
     padding: 15px;
@@ -551,6 +568,7 @@ FORM STYLE BORDERED
 }
 .aione-form-section-border .aione-form-section-header{
     border-bottom:1px solid #e8e8e8;
+    margin-bottom: 15px;
 }
 .aione-form-field-border .field-wrapper{
     border-bottom:1px solid #e8e8e8;
@@ -567,6 +585,7 @@ FORM SECTION STYLE ACCORDION/Collapsible
     cursor: pointer; 
     padding: 10px 10px 0 10px;
     background-color: #fafafa;
+    margin-bottom: 0;
 }
 .aione-collapsible .aione-form-section .aione-form-section-header .aione-form-section-title,
 .aione-accordion .aione-form-section .aione-form-section-header .aione-form-section-title{
@@ -663,7 +682,7 @@ FORM SECTION STYLE Tabs
     display: none;
     position: absolute;
     border:1px solid #e8e8e8;
-        padding: 15px;
+    padding: 15px;
 }
 .aione-tabs-horizontal .aione-form-section{
     float:left;

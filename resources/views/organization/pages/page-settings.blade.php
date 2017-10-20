@@ -26,12 +26,13 @@
 		</div>
 		
 	</div> --}}
+
 	@php
 	$page_title_data = array(
 	    'show_page_title' => 'yes',
 	    'show_add_new_button' => 'no',
 	    'show_navigation' => 'yes',
-	    'page_title' => 'Edit Page',
+	    'page_title' => 'Edit Page Setting :<span>'.$page->title.'</span>',
 	    'add_new' => '+ Add Media'
 	); 
 	@endphp 

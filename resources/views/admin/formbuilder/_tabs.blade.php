@@ -27,7 +27,7 @@
         <a href="{{ route($route_slug.'form.preview',$id) }}"><span class="nav-item-text">Preview</span></a>
       </li>
       <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''}}">
-        <a href="{{ route($route_slug.'form.custom',$id) }}"><span class="nav-item-text">Custom Code</span></a>
+        <a href="{{ route($route_slug.'form.custom',$id) }}"><span class="nav-item-text">Customize</span></a>
       </li>
       <div class="clear"></div>
   </ul>

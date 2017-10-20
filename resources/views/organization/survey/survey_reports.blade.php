@@ -21,17 +21,10 @@
 	.result-options a{
 		float:right;
 	}
-	.result-options input{
-		    float: left;
-   
+	.result-options input{float: left;
     color: white;
-   
-	
     display: inline-block;
     padding: 0 10px;
-   
-   
-   
     font-size: 16px;
     line-height: 30px;
     font-weight: 400;
@@ -50,7 +43,7 @@
 @php
 if(!empty($data)){
 // $data = json_decode(json_encode($data->all()),true);
-$keys = array_keys($data[0]);
+	$keys = array_keys($data[0]);
 }
 $page_title_data = array(
     'show_page_title' => 'yes',
@@ -65,12 +58,9 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
 @include('organization.survey._tabs')
 
-
-
-
 <div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
 	<p>Filters</p>
-		{!! Form::open(['route'=>['survey.reports',$id],'method' => 'post' ]) !!}
+		{!! Form::open(['route'=>['survey.reports',@$id],'method' => 'post' ]) !!}
 			<div id='parent'>
 				<div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
 					<div id="field_label_select_status" class="field-label">
@@ -79,7 +69,7 @@ $page_title_data = array(
 						</label>
 					</div>
 					<div id="field_fields" class="field field-type-multi_select">
-						{!! Form::select('fields[]',$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
+						{!! Form::select('fields[]',@$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
 					</div>
 				</div>
 
@@ -161,7 +151,7 @@ $page_title_data = array(
 
 							</div>
 							
-							<a  class="remove_condition" onclick="remove_parent(this)"> <i class="fa fa-trash-o"></i></a>
+							<a  class="remove_condition disappear" onclick="remove_parent(this)"> <i class="fa fa-trash-o"></i></a>
 						</div>
 						
 					</div>
@@ -174,15 +164,19 @@ $page_title_data = array(
 				<button id="more_condition" class="aione-button aione-button-large aione-button-light aione-button-square add-new-button"> + Add Concat</button>
 				{!! Form::submit('Search') !!} 
 			</div>
-			<div class="aione-row result-options">
+			{{-- <div class="aione-row result-options">
 				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}
-				{{-- <a href="{{route('delete.table',['table'=>$table])}}" > <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a> --}}
-			</div>	
+				<a href="{{route('delete.table',['table'=>$table])}}" > <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
+			</div> --}}	
 				
 	{!! Form::close() !!}
 </div>
+@if(empty($data))
+		<div class="aione-message warning">
+            {{ __('survey.survey_results_table_missing') }}
+        </div>
+@else
 
-@if(!empty($data))
 	@if($errors->any())
 		 <div class="alert alert-danger">
 	        <ul>
@@ -193,53 +187,114 @@ $page_title_data = array(
 	    </div>
 	@endif
 @php
-// dump($condition_data , $errors);
 	$th = $option='';
 	foreach($keys as $key =>$val){
 		$option[$val] = $val;
 		$th .= "<th>$val</th>";
 	}
-	 // $operator = ['>', '<','=','>=','<='];
 @endphp
-
 	<div id="table-structure" class="aione-table scrollx">
 		<table class="compact">
 	        <thead>
 				<tr>
 					@foreach($keys as $key =>$val)
+						@if(!empty($options_val[$val]))
+							@foreach($options_val[$val] as $optKey => $optVal)
+								<th>
+									<span class="aione-tooltip truncate" tooltip-data="{{@$formQuestion[$val]}}">
+										{{$val}}_{{$optKey}}
+									</span>
+								</th>
+							@endforeach
+						@else
 						<th>
-							<span class="aione-tooltip truncate" tooltip-data="{{@$formQuestion[$val]}}"> {{@$val}} </span>
+							<span class="aione-tooltip truncate" tooltip-data="{{@$formQuestion[$val]}}">
+								{{@$val}}
+							</span>
 						</th>
+						@endif
 					@endforeach
 				</tr>
 	        </thead>
 	        <tbody>
+	        {{-- {{dump($data)}} --}}
 		        @foreach($data as $keys => $vals )
 					<tr>
 						@foreach($vals as $queKey => $queVal)
-							<td>
+						 @if(!empty($options_val[$queKey]))
+						 	@php
+						 		$array_val = json_decode($queVal,true);
+						 	@endphp
+							@foreach($options_val[$queKey] as $optKey => $optVal)
+								<td>
+									<span class="aione-tooltip truncate" tooltip-data="{{$queVal}}">
+										{{-- {{$optKey}} {{$optVal}} {{dump($array_val)}} --}}
+										@if(is_array($array_val))
+								 				@if(in_array($optKey, $array_val))
+								 					yes
+								 					@else
+								 					no
+								 				@endif
+							 			@endif
+
+										
+
+									</span>	
+								</td>
+							@endforeach
+
+						@else
+						<td>
+							<span class="aione-tooltip truncate" tooltip-data="{{$queVal}}">
+								{{$queVal}}
+							</span>	
+						</td>
+						@endif
+							
+							{{-- <td>
 								<span class="aione-tooltip truncate" tooltip-data="{{$queVal}}">
-								{{$queVal}}</span>
-							</td>
+								 @php 
+									 if(!empty($options_val[$queKey])){
+									 	$flip = array_flip($options_val[$queKey]);
+									 	$array_val = json_decode($queVal,true);
+										if(is_array($array_val)){
+										   	$intersect = array_intersect($flip, $array_val);
+											echo  implode(', ', array_keys($intersect));
+										}
+									}else{
+										echo $queVal;
+									}
+
+								 @endphp
+								</span>
+							</td> --}}
+
 	 					@endforeach
 					</tr>
 				@endforeach
 	        </tbody>
 	    </table>
+	</div>          
 	</div>
-
-
-            
-	</div>
-
-	@else
-	<div><h2> No Data Exist 1 </h2></div>
 @endif
+
+
+<style>
+	.disappear{
+		display:none;
+	}
+	.appear{
+		display:block;
+	}
+</style>
+
 <script>
 $('#more_condition').on('click',function(event){
+	$("#child").html();
 	event.preventDefault();
 	childs = $("#child").html();
 	$("#append").append(childs);
+	$("#append").find('a.remove_condition').addClass('appear');
 });
 
 function remove_parent(event){

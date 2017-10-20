@@ -18,7 +18,7 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => $title,
-	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form1',
+	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form',
 	'route' => ($title == 'Survey')?'create.survey':$route
 ); 
 @endphp

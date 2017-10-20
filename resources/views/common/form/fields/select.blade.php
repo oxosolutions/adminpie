@@ -5,13 +5,7 @@
 		$result = new $exploded[0];
 		$exploded[1] = str_replace('()', '', $exploded[1]);
 	}
-	//field_value
-	/*$selectedArray = null;
-	if(FormGenerator::GetMetaValue($collection->fieldMeta,'field_value') == 'id'){
-		if(!empty(request()->route()->parameters)){
-			$selectedArray[] = request()->route()->parameters['id'];
-		}
-	}*/
+	
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
 @endphp
 @if(isset($options['default_value']) && $options['default_value'] != '')
@@ -32,9 +26,7 @@
 			$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
 		}else{
 			$collect = collect($optionValues);
-			/*$keys = array_keys($collect->groupBy('key')->toArray());
-			$values = array_keys($collect->groupBy('value')->toArray());
-			$arrayOptions = array_combine($keys, $values);*/
+			
 			$arrayOptions =null;
 			if(!empty($collect->toArray())){
 				
@@ -46,7 +38,11 @@
 			}
 		}
 	}else{
-		$arrayOptions = @$result->{$exploded[1]}();
+		try{
+			$arrayOptions = @$result->{$exploded[1]}();
+		}catch(\Exception $e){
+			$arrayOptions = [];
+		}
 	}
 @endphp
 

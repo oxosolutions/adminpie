@@ -16,6 +16,7 @@ use App\Model\Admin\CustomMaps;
 use App\Model\Organization\VisualizationCharts;
 use App\Model\Organization\VisualizationChartMeta;
 use App\Model\Organization\VisualizationMeta;
+use File;
 class VisualisationController extends Controller
 {
 	protected $ipAdress;
@@ -25,40 +26,11 @@ class VisualisationController extends Controller
 	  $this->ipAdress =  $request->ip();
 	  DB::enableQueryLog();  
 	}
-	function index(){
 
-		$plugin = [
-					'css'  =>  ['datatables'],
-					'js'   =>  ['datatables','custom'=>['gen-datatables']]
-				   ];
 
-		return view('visualisation.index',$plugin);
-	}
+	
 
-	public function indexData(){
-
-		$model = VS::orderBy('id','desc')->get();
-		return Datatables::of($model)
-			->addColumn('actions',function($model){
-				return view('visualisation._actions',['model' => $model])->render();
-			})->editColumn('dataset_id',function($model){
-				try{
-					return $model->dataset->dataset_name;
-				}catch(\Exception $e){
-					return '';
-				}
-			})->editColumn('created_by',function($model){
-				try{
-						return $model->createdBy->name;
-					}catch(\Exception $e)
-					{
-						return '';
-					}
-
-			})->make(true);
-	}
-
-	public function create(Request $request){
+	public function index(Request $request){
 		
 		if($request->has('per_page')){
             $perPage = $request->per_page;
@@ -89,11 +61,10 @@ class VisualisationController extends Controller
                           'actions' => [
                                           'view' => ['title'=>'View','route'=>'visualization.view','class' => 'edit'],
                                           'edit' => ['title'=>'Edit','route'=>'edit.visualization','class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.visualization'],
-                                          'Edit Charts'=>['title'=>'Edit Charts','route'=>'edit.visual']
+                                          'delete'=>['title'=>'Delete','route'=>'delete.visualization']
                                        ]
                       ];
-		return view('organization.visualization.create',$datalist);
+		return view('organization.visualization.list',$datalist);
 
 	}
 
@@ -131,10 +102,18 @@ class VisualisationController extends Controller
 		$this->validate($request,$rules);
 	}
 
-
+	/**
+	 * Visualization edit charts
+	 * @param  [integer] $id [visualization id]
+	 * @return [type]  rendered view
+	 * @author Rahul
+	 */
 	public function edit($id){
 		$charts = VisualizationCharts::with(['meta'])->where('visualization_id',$id)->get();
 		$model = Visualization::with(['dataset','meta'])->find($id);
+		if($model->dataset == null){
+			return error(['message'=>'No dataset found','link'=>'visualizations']);
+		}
 		$dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
 		$dataset = (array)$dataset[0];
 		unset($dataset['id']);
@@ -144,7 +123,70 @@ class VisualisationController extends Controller
 		if($filters == false){
 			$filters = [];
 		}
-		return view('organization.visualization.edit2',['columns'=>$columns,'charts'=>$charts, 'filters'=>$filters,'model'=>$model]);
+		$chartsModel = $this->re_arrangeMeta($charts, $model);
+		return view('organization.visualization.edit2',['columns'=>$columns,'chartsModel'=>$chartsModel, 'filters'=>$filters,'model'=>$model]);
+	}
+
+
+	/**
+	 * will manupulate the meta data and prepare array
+	 *
+	 * @return array of charts
+	 * @author Rahul
+	 **/
+	protected function re_arrangeMeta($charts, $model){
+		$chartsModel = [];
+        $index = 0;
+        foreach($charts as $key => $chart){
+            $chartsModel['available_chart'][$index]['chart_title'] = $chart->chart_title;
+            $chartsModel['available_chart'][$index]['chart_type'] = $chart->chart_type;
+            $chartsModel['available_chart'][$index]['variable_x_axis'] = $chart->primary_column;
+            $chartsModel['available_chart'][$index]['variable_y_axis'] = json_decode($chart->secondary_column);
+            $chartsModel['available_chart'][$index]['chart_id'] = $chart->id;
+            $formula = $chart->meta->where('key','formula');
+            $width = $chart->meta->where('key','chartwidth');
+
+            $maparea = $chart->meta->where('key','maparea');
+            $viewdata = $chart->meta->where('key','viewdata');
+            $customdata = $chart->meta->where('key','customdata');
+            $tooltip_data = $chart->meta->where('key','tooltip_data');
+            $area_code = $chart->meta->where('key','area_code');
+            if(!$viewdata->isEmpty()){
+            	$chartsModel['available_chart'][$index]['viewdata'] = $viewdata->first()->value;
+            }
+            if(!$maparea->isEmpty()){
+            	$chartsModel['available_chart'][$index]['maparea'] = $maparea->first()->value;
+            }
+            if(!$customdata->isEmpty()){
+            	$chartsModel['available_chart'][$index]['customdata'] = json_decode($customdata->first()->value);
+            }
+            if(!$tooltip_data->isEmpty()){
+            	$chartsModel['available_chart'][$index]['tooltip_data'] = json_decode($tooltip_data->first()->value);
+            }
+            if(!$formula->isEmpty()){
+                $chartsModel['available_chart'][$index]['formula'] = $formula->first()->value;
+            }
+            if(!$width->isEmpty()){
+                $chartsModel['available_chart'][$index]['chartwidth'] = $width->first()->value;
+            }
+            if(!$area_code->isEmpty()){
+                $chartsModel['available_chart'][$index]['area_code'] = $area_code->first()->value;
+            }
+            $index++;
+        }
+        $index = 0;
+        if(!$model->meta->isEmpty()){
+            $filters = $model->meta->where('key','filters');
+            if(!$filters->isEmpty()){
+                $filtersArray = json_decode($filters->first()->value);
+                foreach($filtersArray as $key => $filter){
+                    $chartsModel['filters'][$index]['filter_columns'] = $filter->column;
+                    $chartsModel['filters'][$index]['filter_type'] = $filter->type;
+                    $index++;
+                }
+            }
+        }
+        return $chartsModel;
 	}
 
 	public function update(Request $request, $id){
@@ -273,8 +315,8 @@ class VisualisationController extends Controller
 		//Unsetting Data From Array
 		$chartId = $chartData['chart_id'];
 		$metaData = $chartData;
-		unset($metaData['chart_title']);unset($metaData['variable_x_axis']);unset($metaData['variable_y_axis']);unset($metaData['chart_type']);unset($metaData['_token']);unset($metaData['filter_columns']);unset($metaData['filter_type']);unset($metaData['chart_id']);unset($metaData['area_code']);unset($metaData['tooltip_data']);
-
+		unset($metaData['chart_title']);unset($metaData['variable_x_axis']);unset($metaData['variable_y_axis']);unset($metaData['chart_type']);unset($metaData['_token']);unset($metaData['filter_columns']);unset($metaData['filter_type']);unset($metaData['chart_id']);
+		
 		foreach ($metaData as $chart_meta_key => $chart_meta_value) {
 			if($chartId != ''){
 				$visualization_chart_meta = VisualizationChartMeta::where(['visualization_id'=>$visualization_id,'chart_id'=>$chartId,'key'=>$chart_meta_key])->first();
@@ -449,9 +491,13 @@ class VisualisationController extends Controller
 
 	public function getFIlters($table, $columns, $columnNames){
         
+        $data = [];
         $columnsWithType = $columns;
         $columns = (array)$columns;
         $columns = array_column($columns, 'column');
+        if($columns[0] == null){
+        	return [];
+        }
         $resultArray = [];
         $model = DB::table($table)->select($columns)->where('id','!=',1)->get()->toArray();
         $tmpAry = [];
@@ -549,15 +595,14 @@ class VisualisationController extends Controller
 
     	// Finaly it will generate query: "select * from `126_data_table_1495705270` where `column_3` in (?) and `column_4` in (?, ?) or `id` = ?"
     	//dd($db->toSql());
-    	
-    	return $db->select($columns)->get()->toArray(); // return final query result in the form or array
+    	return $db->select($columns)->whereIn('status',['status',1])->whereIn('parent',['parent',0])->get()->toArray(); // return final query result in the form or array
     	
     }
 
    
     protected function getSVGMaps($chartMeta){
     	$map = '';
-    	$mapId = $this->getMetaValue($chartMeta,'mapArea');
+    	$mapId = $this->getMetaValue($chartMeta,'maparea');
     	$model = CustomMaps::find($mapId);
     	return $model->map_data;
     }
@@ -626,6 +671,14 @@ class VisualisationController extends Controller
     }
 
     protected function string_number_to_numeric($array_data){
+    	$array_data = $array_data['chart_settings'];
+    	//dd($array_data);
+    	unset($array_data['forceIFrame']);
+    	unset($array_data['areaOpacity']);
+    	unset($array_data['enableInteractivity']);
+    	unset($array_data['keepAspectRatio']);
+    	unset($array_data['colorAxis']);
+    	unset($array_data['sizeAxis']);
     	if(!empty($array_data)){
     		
     		$settings_array = [];
@@ -667,13 +720,6 @@ class VisualisationController extends Controller
     }
 
 	public function embedVisualization(Request $request){
-		
-		/*$embedModel = Embed::where('embed_token',$request->id)->first();
-		
-		if(empty($embedModel)){
-			$this->put_in_errors_list('Wrong embed token!', true);
-		}
-		Session::put('org_id',$embedModel->org_id);*/ // putting organization id into session for get the data from models
 
 		$visualization = Visualization::with([
 
@@ -709,10 +755,12 @@ class VisualisationController extends Controller
 			}
 			if($chart->chart_type == 'CustomMap'){
 
-				$viewData_meta = $this->getMetaValue($chart->meta,'viewData');
-				$customData_meta = json_decode($this->getMetaValue($chart->meta,'customData'));
-				
-				$columns[] = $viewData_meta;
+				$viewData_meta = $this->getMetaValue($chart->meta,'viewdata');
+				$customData_meta = json_decode($this->getMetaValue($chart->meta,'customdata'));
+
+				if($viewData_meta != false){
+					$columns[] = $viewData_meta;
+				}
 				if(!empty($customData_meta)){
 					foreach ($customData_meta as $customColumn) {
 						$columns[] = $customColumn;
@@ -727,9 +775,8 @@ class VisualisationController extends Controller
 				if($request->has('applyFilter')){
 					$dataset_records = $this->apply_filters($request, $dataset_table, $columns);
 				}else{
-					$dataset_records = DB::table($dataset_table)->select($columns)->get()->toArray(); //getting records with selected columns from dataset table
+					$dataset_records = DB::table($dataset_table)->select($columns)->where(['status'=>1,'parent'=>0])->get()->toArray(); //getting records with selected columns from dataset table
 				}
-
 				$formula = $this->getMetaValue($chart->meta,'formula');
 				if($formula != 'no' && $formula != false){
 					$dataset_records = $this->apply_formula($dataset_records, $formula);
@@ -757,12 +804,11 @@ class VisualisationController extends Controller
 				foreach($dataset_records as $record){ // convert associative array into indexd array
 					$records_array[] = array_values($record);
 				}
-
 				if(!empty($records_array)){ // if after filter or without filter there is no data in records list
 					if(!in_array($chart->chart_type, ['CustomMap','ListChart'])){
 						$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
-						$visualization_settings = $this->getMetaValue($chart->meta,'visual_settings');
-						
+						$visualization_settings = $this->getMetaValue($chart->meta,'chart_settings');
+
 						if(!empty($visualization_settings) && $visualization_settings != false){
 							$visualization_settings = $this->string_number_to_numeric(json_decode($visualization_settings,true));
 						}else{
@@ -771,6 +817,9 @@ class VisualisationController extends Controller
 						lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
 					}elseif($chart->chart_type == 'CustomMap'){
 						$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
+						$mapSettings = $this->getMetaValue($chart->meta,'chart_settings');
+						
+						$drawer_array['visualizations']['chart_'.$key]['chart_settings'] = $mapSettings;
 						$header_with_column = $headers;
 						$headers = array_values($headers);
 						$customMapDate = $this->create_map_array($dataset_records, $headers, $chart, $header_with_column);
@@ -782,13 +831,13 @@ class VisualisationController extends Controller
 						}
 						$drawer_array['visualizations']['chart_'.$key]['list'] = $list_array;
 					}
-					// dd($records_array);
 					/*
 					* Prepare data for draw visualization
 					* on front
 					*/
 					$chartTitles['chart_'.$key] = $chart->chart_title; //collect all chart titles in single array
 					$drawer_array['visualizations']['chart_'.$key]['chart_type'] = $chart->chart_type;
+					$drawer_array['visualizations']['chart_'.$key]['chart_id'] = $chart->id;
 					$drawer_array['visualizations']['chart_'.$key]['title'] = $chart->chart_title;
 					$drawer_array['visualizations']['chart_'.$key]['enableDisable'] = $this->getMetaValue($chart->meta,'enableDisable');
 				}else{
@@ -799,7 +848,7 @@ class VisualisationController extends Controller
 			}catch(\Exception $e){
 				$drawer_array['visualizations']['chart_'.$key]['error'] = $e->getMessage();
 				//$this->put_in_errors_list($e->getMessage());
-				//throw $e;
+				throw $e;
 			}
 		}
 		/*
@@ -837,25 +886,21 @@ class VisualisationController extends Controller
 	}
 
 	public function create_map_array($records, $headers, $chart, $header_with_column){
-		
 		$records = collect($records);
 		$getFirstPrimaryColumn = collect($records);
 		$collectionData = collect($getFirstPrimaryColumn->first());
 		$columnForGroup = $collectionData->keys()->first();
 	
 
-		$viewData_meta[] = $this->getMetaValue($chart->meta,'viewData');
+		$viewData_meta[] = $this->getMetaValue($chart->meta,'viewdata');
 		$tooltipData = json_decode($chart->secondary_column);
-		$popupData = json_decode($this->getMetaValue($chart->meta,'customData'));
-
+		$popupData = json_decode($this->getMetaValue($chart->meta,'customdata'));
 		$viewData_array = [];
 		$tooltipData_array = [];
 		$popupData_array = [];
-
 		$recordsArray = $records->groupBy($columnForGroup)->toArray();
 		$index = 0;
 		foreach($recordsArray as $key => $record){
-			
 			foreach($record as $k => $value){
 				foreach($viewData_meta as $ck => $column_key){
 					$viewData_array[$key][str_replace(' ', '_', $k)] = $value[$column_key];
@@ -945,7 +990,7 @@ class VisualisationController extends Controller
     }
     public function addVisual($datasetId = null)
     {	
-    	return view('organization.visualization.add',['datasetid'=>$datasetId]);
+    	return view('organization.visualization.create',['datasetid'=>$datasetId]);
     }
     public function customize_visualization($id)
     {
@@ -963,4 +1008,40 @@ class VisualisationController extends Controller
     	}
     	return back();
     }
+
+    /**
+     * Save charts settings
+     * @param  Request $request [posted data]
+     * @return [back]           [back]
+     * @author Rahul
+     */
+    public function saveChartSettings(Request $request){
+    	// VisualizationChartMeta
+		$model = VisualizationChartMeta::firstOrNew(['key'=>'chart_settings','chart_id'=>$request->chart_id,'visualization_id'=>$request->visual_id]);
+		$model->key = 'chart_settings';
+		$model->value = json_encode($request->except(['_token','chart_id','visual_id','submit']));
+		$model->chart_id = $request->chart_id;
+		$model->visualization_id = $request->visual_id;
+		$model->save();
+    	return back();
+    }
+
+    /**
+     * get chart settings function
+     * @param  Request $request [posted data]
+     * @return [view]           [blade view output]
+     * @author Rahul
+     */
+    public function getChartSettings(Request $request){
+    	$model = VisualizationChartMeta::where(['key'=>'chart_settings','chart_id'=>$request->chartid,'visualization_id'=>$request->visualid])->first();
+    	if($model != null){
+    		$model = json_decode($model->value,true);
+    	}else{
+    		$model = [];
+    	}
+    	$jsonData = File::get('json.php');
+    	$jsonData = collect(json_decode($jsonData));
+    	return view('organization.visualization.chart-settings',['jsonData'=>$jsonData,'chart_type'=>$request->charttype,'request'=>$request,'model'=>$model]);
+    }
+
 }

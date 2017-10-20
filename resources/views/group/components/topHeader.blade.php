@@ -1,5 +1,7 @@
 @php
-$sidebar_small = 1
+$sidebar_small = 1;
+	
+$orgData = App\Model\Admin\GlobalGroup::where('id',Session::get('group_id'))->first();
 
 @endphp
 <div id="aione_header_left" class="aione-header-left">
@@ -14,13 +16,9 @@ $sidebar_small = 1
 				</div> <!-- .aione-header-item -->
 			@endif
 		@endif
-		@if(@$show_title)
-			@if(!empty($site_title))
 				<div class="aione-header-item aione-site-title">
-					 <h1 class="site-title">{{$site_title}}</h1>
+					 <h1 class="site-title">{{ $orgData->name }}</h1>
 				</div> <!-- .aione-header-item -->
-			@endif
-		@endif
 		@if(@$show_tagline)
 			@if(!empty($site_tagline))
 				<div class="aione-header-item aione-site-tagline">
@@ -74,7 +72,7 @@ $sidebar_small = 1
 			
 		</div> <!-- .aione-header-item -->
 		
-		<div class="aione-header-item aione-notifications">
+		{{-- <div class="aione-header-item aione-notifications">
 			<a href="#"><span class="aione-icon"><i class="fa fa-bell"></i></a>
 			<div class="aione-header-widget aione-notifications-widget">
 				<div class="aione-row">
@@ -94,9 +92,9 @@ $sidebar_small = 1
 				</div> <!-- .aione-row -->
 			</div> <!-- .aione-header-widget -->
 			
-		</div> <!-- .aione-header-item -->
+		</div> <!-- .aione-header-item --> --}}
 		
-		<div class="aione-header-item aione-activity">
+		{{-- <div class="aione-header-item aione-activity">
 			<a href="#"><span class="aione-icon"><i class="fa fa-circle-o"></i></a>
 			<div class="aione-header-widget aione-activity-widget">
 				<div class="aione-row">
@@ -115,9 +113,9 @@ $sidebar_small = 1
 				</div> <!-- .aione-row -->
 			</div> <!-- .aione-header-widget -->
 			
-		</div> <!-- .aione-header-item -->
+		</div> <!-- .aione-header-item --> --}}
 		
-		<div class="aione-header-item aione-chat">
+		{{-- <div class="aione-header-item aione-chat">
 			<a href="#"><span class="aione-icon"><i class="fa fa-comments"></i></a>
 			<div class="aione-header-widget aione-chat-widget">
 				<div class="aione-row">
@@ -136,15 +134,15 @@ $sidebar_small = 1
 				</div> <!-- .aione-row -->
 			</div> <!-- .aione-header-widget -->
 			
-		</div> <!-- .aione-header-item -->
+		</div> <!-- .aione-header-item --> --}}
 		
-		<div class="aione-header-item aione-clock"> 
+		{{-- <div class="aione-header-item aione-clock"> 
 			<div class="" id="clock"></div>
-		</div> <!-- .aione-header-item -->
+		</div> <!-- .aione-header-item --> --}}
 		
-		<div class="aione-header-item aione-clock"> 
+		{{-- <div class="aione-header-item aione-clock"> 
 			<div class=""></div>
-		</div> <!-- .aione-header-item -->
+		</div> <!-- .aione-header-item --> --}}
 	
 	</div><!-- .aione-row -->
 </div><!-- #aione_header_right -->

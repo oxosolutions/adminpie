@@ -15,7 +15,7 @@ use App\Model\Organization\User;
 use App\Mail\forgetPassword;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting;
-
+use App\Model\Group\GroupUsers;
 class LoginController extends Controller
 {
     /*
@@ -36,7 +36,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -52,19 +52,21 @@ class LoginController extends Controller
         if($id != null){
             $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
             if($organizationToken != null){
+                Session::put('group_id',$organizationToken->group_id);
                 $organizationToken->auth_login_token = '';
                 $organizationToken->save();
                 try{
 
-                    $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
+                    $model = GroupUsers::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
                         $query->where('role_id',1);
                     })->first();
+                    
                     Auth::guard('org')->loginUsingId($model->id);
                     $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
                     Session::put('user_role',$putRole->role_id);
-                    return redirect()->route('org.login');
+                    return redirect()->route('org.dashboard');
                 }catch(\Exception $e){
-                    //throw $e;
+                    throw $e;
                 }
             }
         }
@@ -72,23 +74,29 @@ class LoginController extends Controller
         $completeDomain = $request->getHost();
         $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
+        $settings = OrganizationSetting::all();
         if($primary_domain == false){
             if($secondary_domain == false){
                 $domain = explode('.', $request->getHost());
                 $subdomain = $domain[0];
                 $model = GlobalOrganization::where('slug',$subdomain)->first();
+
                 if($model == null){
                     return redirect()->route('demo5');
                 }
+
                 Session::put('organization_id',$model->id);
-                return view('organization.login.login',compact('arraySetting'));
+                Session::put('group_id',$model->group_id);
+                return view('organization.login.login',compact('settings'));
             }else{
                 Session::put('organization_id',$secondary_domain->id);
-                return view('organization.login.login',compact('arraySetting'));
+                Session::put('group_id',$secondary_domain->group_id);
+                return view('organization.login.login',compact('settings'));
             }
+
         }else{
-            $settings = OrganizationSetting::all();
             Session::put('organization_id',$primary_domain->id);
+            Session::put('group_id',$primary_domain->group_id);
             return view('organization.login.login',compact('settings'));
         }
 
@@ -118,24 +126,30 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
-        $model = User::where('email',$request->email)->first();
+        $model = GroupUsers::where('email',$request->email)->first();
         if(count(@$model) > 0){
-            if(@$model->status == 1){
-                $credentials = [
-                    'email' => $request->input('email'),
-                    'password' => $request->input('password'),
-                    'status' => 1
-                ];
-                if(Auth::guard('org')->attempt($credentials)) {
-                    $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
-                    @Session::put('user_role',@$putRole->role_id);
-                    return redirect('/'); 
+            $ifUserAllowForOrganization = User::where('user_id',$model->id)->first();
+            if($ifUserAllowForOrganization != null){
+                if(@$model->status == 1){
+                    $credentials = [
+                        'email' => $request->input('email'),
+                        'password' => $request->input('password'),
+                        'status' => 1
+                    ];
+                    if(Auth::guard('org')->attempt($credentials)) {
+                        $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
+                        @Session::put('user_role',@$putRole->role_id);
+                        return redirect('/'); 
+                    }else{
+                        Session::flash('login_fails' , 'wrong user credientals.');
+                        return back();
+                    }
                 }else{
-                    Session::flash('login_fails' , 'wrong user credientals.');
+                    Session::flash('login_fails' , 'Your account is temporary Blocked , please contact the Organization Admin');
                     return back();
                 }
             }else{
-                Session::flash('login_fails' , 'Your account is temporary Blocked , please contact the Organization Admin');
+                Session::flash('login_fails' , 'wrong user credientals. ');
                 return back();
             }
         }else{
@@ -212,8 +226,8 @@ class LoginController extends Controller
     {
         $arraySetting = [];
         $completeDomain = $request->getHost();
-        $primary_domain = $this->is_primary_domain_exists($completeDomain);
 
+        $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $settings = OrganizationSetting::all();
         Session::put('organization_id',$primary_domain->id);
         return view('organization.login.signup',compact('settings'));

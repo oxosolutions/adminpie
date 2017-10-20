@@ -33,6 +33,11 @@
     <!-- Select 2 -->
 	<script type="text/javascript" src="{{ asset('bower_components/select2/dist/js/select2.js')}}"></script>
 
+		<!-- OWL Carausel -->
+	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/owl.carousel/dist/assets/owl.carousel.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
+	<script src="{{ asset('bower_components/owl.carousel/dist/owl.carousel.min.js') }}"></script>
+
 	
 	<!-- Global stylesheets -->
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/aione.css?ref='.rand(1111,9999)) }}">

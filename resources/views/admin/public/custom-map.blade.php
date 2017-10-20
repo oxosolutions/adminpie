@@ -6,6 +6,9 @@
 		<title>Visualizations</title>
 		<!-- Tell the browser to be responsive to screen width -->
 		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="google-signin-scope" 
+      content="https://www.googleapis.com/auth/spreadsheets">
+    <meta name="google-signin-client_id" content="{YOUR CLIENT ID}">
 		<style>
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -240,7 +243,7 @@ AIONE LOADER
 								$map = $mapdata['map_data'];	
 								echo $map;
 							} else {
-								echo "NO DATQA";
+								echo "NO DATA";
 							}
 							@endphp
 
@@ -313,6 +316,9 @@ AIONE LOADER
 			$('#aione_loader').hide();	    
 		});
 		*/
+    var source = "{{@$source}}";
+
+    console.log("source== "+source);
 
 		var map_data = $('.aione-tooltip-data').text();
 		map_data = map_data.split('+');

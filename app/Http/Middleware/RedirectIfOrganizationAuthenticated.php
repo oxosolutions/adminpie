@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Route;
 use App\Model\Admin\GlobalOrganization;
 use Session;
+use App\Model\Organization\OrganizationSetting;
+use App\Model\Organization\Page;
 class RedirectIfOrganizationAuthenticated
 {
     /**
@@ -19,6 +21,10 @@ class RedirectIfOrganizationAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        $organization_settings = OrganizationSetting::getSettings('default_page');
+        if($organization_settings != ''){
+            $page_slug = Page::find($organization_settings)->slug;
+        }
         $completeDomain = $request->getHost();
         $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
@@ -33,23 +39,34 @@ class RedirectIfOrganizationAuthenticated
                 Session::put('organization_id',$model->id);
                 $auth = Auth::guard('org');
                 if ($auth->check()) {
-                    return redirect('/dashboard');
+                    if($organization_settings != ''){
+                        return redirect()->route('view.pages',$page_slug);
+                    }else{
+                        return redirect('/dashboard');
+                    }
                 }
             }else{
                 Session::put('organization_id',$secondary_domain->id);
                 $auth = Auth::guard('org');
                 if ($auth->check()) {
-                    return redirect('/dashboard');
+                    if($organization_settings != ''){
+                        return redirect()->route('view.pages',$page_slug);
+                    }else{
+                        return redirect('/dashboard');
+                    }
                 }
             }
         }else{
             Session::put('organization_id',$primary_domain->id);
             $auth = Auth::guard('org');
             if ($auth->check()) {
-                return redirect('/dashboard');
+                if($organization_settings != ''){
+                    return redirect()->route('view.pages',$page_slug);
+                }else{
+                    return redirect('/dashboard');
+                }
             }
         }
-
         return $next($request);
     }
 

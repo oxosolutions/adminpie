@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Schema;
 
 class DatasetOperationController extends Controller
 {
+
+    public function duplicate($id){
+        dump($id);
+        $dataset = Dataset::find($id);
+        echo $datasetTable = Dataset::find($id)->dataset_table;
+        //$records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',1)->where('status' , 1)
+    }
     public function mergeDataset(Request $request)
     {
     	if($request->isMethod('post')){
@@ -36,6 +43,9 @@ class DatasetOperationController extends Controller
     		$index =1;
     		
     		foreach ($raw_colums as $key => $value) {
+                if($value=='status' || $value=='parent' ){
+                    continue;
+                }
     			$names = "column_".$index++;
     			$colums[]= "`$names` text COLLATE utf8_unicode_ci DEFAULT NULL";
     			$insert_val[$names] = $value;
@@ -49,8 +59,12 @@ class DatasetOperationController extends Controller
 	            $dataset->save();
 	            $data_set_id = $dataset->id;
 		       	DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-    			DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+                DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+                DB::select("ALTER TABLE `{$table_name}` ADD `status` VARCHAR(100)  NULL  COMMENT 'status' ");
+    			DB::select("ALTER TABLE `{$table_name}` ADD `parent` VARCHAR(100)  NULL  COMMENT 'parent ID' ");
     			$table = str_replace('ocrm_','', $table_name);
+                $insert_val['status'] = 'status';
+                $insert_val['parent'] = 'parent';
     			DB::table($table)->insert($insert_val);
 //first dataset insert 
     			$this->merge_data_into_table($first_table, $insert_val, $table_name );
@@ -81,5 +95,7 @@ class DatasetOperationController extends Controller
 		}
 		return $first_table;
     }
+
+
 
 }

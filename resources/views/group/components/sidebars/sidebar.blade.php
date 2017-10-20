@@ -2,7 +2,7 @@
     <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu">
             <li class="aione-nav-item level0 {{in_array(Request::path(),array('/'))?'active-state':''}}">
-                <a href="{{route('admin.dashboard')}}">
+                <a href="{{route('group.dashboard')}}">
                     <span class="nav-item-icon side-bar-icon fa fa-tachometer center-align side-bar-icon-bg white-text">
                     </span>
                     <span class="side-bar-text">
@@ -42,6 +42,39 @@
                             </span>
                             <span class="side-bar-text">
                                 Add Organization
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('group.users'))?'active-state':''}}">
+                <a href="javascript:;">
+                    <span class="nav-item-icon side-bar-icon fa fa-users center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Users
+                    </span>
+                   {{--  <span class="arrow">
+                        <i class="fa fa-chevron-right" ></i>
+                    </span> --}}
+                </a>
+                <ul class="side-bar-submenu">
+                    <li class="aione-nav-item level1 {{Request::is('group.users')?'active-state':''}}">
+                        <a href="{{route('group.users')}}">
+                            <span class="nav-item-icon side-bar-icon fa fa-list darken-1 center-align side-bar-icon-bg">
+                            </span>
+                            <span class="side-bar-text">
+                                Users
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="aione-nav-item level1 {{Request::is('create.group.users')?'active-state':''}}">
+                        <a href="{{route('create.group.users')}}">
+                            <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
+                            </span>
+                            <span class="side-bar-text">
+                                Add User
                             </span>
                         </a>
                     </li>

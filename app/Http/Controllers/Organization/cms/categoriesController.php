@@ -14,7 +14,7 @@ class categoriesController extends Controller
         if(Auth::guard('admin')->check()){
             return 'App\\Model\\Admin\\'.$model;
         }else{
-            return 'App\\Model\\Organization\\Cms\\'.$model;
+            return 'App\\Model\\Organization\\'.$model;
         }
     }
 

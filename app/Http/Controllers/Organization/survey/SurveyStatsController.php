@@ -14,7 +14,9 @@ use App\Model\Admin\FormBuilder as GFB;
 use Session;
 use Carbon\carbon;
 use Auth;
-
+/**
+ * SurveyStatsController all work done by Paljnder Singh
+ */
 class SurveyStatsController extends Controller
 {
     protected  function get_survey_table_name($form_id){
@@ -109,8 +111,16 @@ class SurveyStatsController extends Controller
     }
     public function survey_structure($id){
         $id =intval($id);
-        $survey_data = forms::with('section.fields.fieldMeta')->where('id',$id)->get()->toArray();
-        return view('organization.survey.survey_structure',compact('survey_data') );
+        $survey_data = forms::with(['formsMeta','section'=>function($query){
+                                $query->orderBy('order','asc');
+                              } ,
+                              'section.fields'=>function($query_field){
+                                   $query_field->orderBy('order','asc');
+                              },
+                               'section.fields.fieldMeta'])->where('id',$id)->get()->toArray();
+        $count_form_slug = forms::where('form_slug',$survey_data[0]['form_slug'])->count();
+        $setting_questions = GFB::orderBy('order','asc')->whereIn('form_id',[93,76])->pluck('field_title', 'field_slug');
+        return view('organization.survey.survey_structure',compact('survey_data','setting_questions','count_form_slug') );
     }
     public function survey_result(Request $request, $id)
     {  $condition_data =null;
@@ -124,24 +134,32 @@ class SurveyStatsController extends Controller
        if($metaTable->exists()){
           $table =   $metaTable->first()->value;
           $table_name = str_replace('ocrm_', '', $table);
+          if(!Schema::hasTable($table_name)){
+            return view('organization.survey.survey_result');
+          }
           if($request->isMethod('post')){
             $this->validations($request);
+            
               $data = $this->filter_on_suvey_result($request, $table_name);
-              if(!empty($data['condition_data'])){
-                 $condition_data = $data['condition_data'];
-                 unset($data['condition_data']);
+              $condition = json_decode($data->get(), true);
+              if(!empty($condition['condition_data'])){
+                dd(1213);
+                 $condition_data = $condition['condition_data'];
+                 unset($condition['condition_data']);
               }
              if(!empty($request['export'])){
                   $file_name ='ocrm'.$table_name.'-'.date('Y-m-d-h-i-s');
-                     Excel::create($file_name, function($excel) use($data){
-                      $excel->sheet('mySheet', function($sheet) use($data){
-                        $sheet->fromArray($data);
+                     Excel::create($file_name, function($excel) use($condition_data){
+                      $excel->sheet('mySheet', function($sheet) use($condition_data){
+                        $sheet->fromArray($condition_data);
                       });
                     })->export('csv');
                 }
+                $data = $data->paginate(5);
           }else{
-              $data = DB::table($table_name)->get();
-              $data = json_decode($data,true);
+              // $data = DB::table($table_name)->get();
+              $data =  DB::table($table_name)->paginate(5);
+              // $data = json_decode($data,true);
           }
           $table_column = Schema::getColumnListing($table_name);
           $columns = array_combine($table_column,$table_column);
@@ -179,54 +197,62 @@ class SurveyStatsController extends Controller
                 }
           }
          if(!empty($where)){
-            $data = DB::table($table_name)->select($request['fields'])->where($where)->get();
+            $data = DB::table($table_name)->select($request['fields'])->where($where);//->get();
             $data['condition_data'] = $where;
          }else{
-            $data = DB::table($table_name)->select($request['fields'])->get();
+            $data = DB::table($table_name)->select($request['fields']);//->get();
          }
-            $data = json_decode($data,true);
+            // $data = json_decode($data,true);
             return $data;
     }
 
     public function reports(Request $request, $id){
        
         $table = Session::get('organization_id')."_survey_results_".$id;
+        if(!Schema::hasTable($table)){
+          return view('organization.survey.survey_reports');
+        }
         $table_column = Schema::getColumnListing($table);
         $columns = array_combine($table_column,$table_column);
-        $data=[];
-
-
+        $options_val = $data=[];
          $field = FormBuilder::with(['fieldMeta'=>function($query){
           $query->where('key','question_id');
          }])->where('form_id',$id)->get()->toArray();
          $slug_question_id = collect($field)->mapWithKeys(function($item){
-          return [$item['field_slug']=>$item['field_meta'][0]['value']];
+          return [$item['field_slug']=>[$item['field_type'] , $item['field_meta'][0]['value'], $item['id']]];
          });
-
-          $columns  = collect($columns)->map(function($items, $key)use($slug_question_id) {
+        $columns  = collect($columns)->map(function($items, $key)use($slug_question_id) {
             if(!empty($slug_question_id[$key])){
-                $items = $items.' ('.$slug_question_id[$key].')';
+                $items = $items.' ('.$slug_question_id[$key][1].')';
             }
             return $items;
          });
 
-         if($request->isMethod('post')){         
-            $req = $request->toArray();
-            $concat_name =   $req['concat_name'][0];
-            $concat_field = collect($request['concat_fields'])->implode( ",' ',");
-            //         // echo  $fields = collect($request['fields'])->implode( ", ");
-            array_push($req['fields'] , DB::raw("CONCAT( $concat_field ) as $concat_name"));
+         if($request->isMethod('post')){
+              $req = $request->toArray();
+           if(!empty($request['concat_fields'][0])){        
+              $concat_name =   $req['concat_name'][0];
+              $concat_field = collect($request['concat_fields'])->implode( ",' ',");
+              //         // echo  $fields = collect($request['fields'])->implode( ", ");
+              array_push($req['fields'] , DB::raw("CONCAT( $concat_field ) as $concat_name"));
+            }
+            foreach($req['fields'] as $key => $val){
+                if(!empty($slug_question_id[$val]))
+                {
+                  if($slug_question_id[$val][0]=='checkbox' || $slug_question_id[$val][0] =='multi_select'){
+
+                    // dump(field_options($val, $slug_question_id[$val][2]));
+                    $options_val[$val] =  field_options($val, $slug_question_id[$val][2]);
+                  }
+                }
+              }
             
             $data = DB::table($table)->select($req['fields'])->get();
             $data = json_decode($data,true);
-            // dd($data , $id , $columns , $table);
          }
-      return view('organization.survey.survey_reports',compact('data','id','columns','table'));
+      return view('organization.survey.survey_reports',compact('data','id','columns','table','options_val'));
 
     }
-
-//DB::raw("CONCAT(users.first_name,' ',users.last_name) as full_name"))
-
     public function survey_static_result(Request $request ,$id){
 
 // dd($id);

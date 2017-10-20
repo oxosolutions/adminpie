@@ -15,7 +15,12 @@ $id = "";
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.survey._tabs')
-	@if(!@$permission)
+	@if(!empty($error))
+
+		<div class="aione-message warning">
+            {{ __('survey.survey_not_exit') }}
+        </div>
+	@elseif(!@$permission)
 		{{dump('You don\'t have permission!')}}
 	@else
 		<div class="share-wrapper">
@@ -87,6 +92,7 @@ $id = "";
 				        </thead>
 
 				        <tbody>
+				        @if(!empty($collab))
 							@foreach($collab as $key => $value)
 								<tr>
 									<td>{{$value->email}}</td>
@@ -94,6 +100,7 @@ $id = "";
 									<td><a href="{{route('survey.remove.shareto',$value->id)}}" style="color: #757575"><i class="material-icons dp48">clear</i></a></td>
 								</tr>
 							@endforeach
+						@endif
 				        </tbody>
 				    </table>
 				</div>

@@ -19,6 +19,11 @@ class User extends Authenticatable
    }
    protected $softDelete = true;
    protected $dates = ['deleted_at'];
+
+   public function belong_group(){
+
+    return $this->belongsTo('App\Model\Group\GroupUsers','user_id', 'id');
+   }
    public function user_role_rel(){
       return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','id');
    }

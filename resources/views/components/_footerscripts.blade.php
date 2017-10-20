@@ -39,6 +39,34 @@
 	$(document).ready(function() {
 
 		/*****************************************************
+		/*  Aione Slider
+		/*****************************************************/
+
+		$(".owl-carousel").owlCarousel({
+		    items:1,
+		    loop:true,
+		    autoplay:true,
+		    autoplayTimeout:2000,
+		    autoplayHoverPause:true
+		});
+
+		/*****************************************************
+		/*  Aione Collapsible
+		/*****************************************************/
+		$('.aione-collapsible .aione-item-header').click(function(e){
+			e.preventDefault();
+			$(this).parent().toggleClass('active'); 
+		})
+
+		/*****************************************************
+		/*  Aione Collapsible
+		/*****************************************************/
+		$('.aione-accordion .aione-item-header').click(function(e){
+			e.preventDefault();
+			$(this).parent().toggleClass('active').siblings().removeClass('active'); 
+		})
+
+		/*****************************************************
 		/*  Hide Form Fields with conditions
 		/*****************************************************/
 		$('.field-wrapper').each(function(e){
@@ -47,11 +75,10 @@
 			}
 		});
 
+
 		/*****************************************************
 		/*  Show Form Fields when conditions are true
 		/*****************************************************/
-
-
 		$('.aione-form-wrapper').click(function(e){
 			var conditions = JSON.parse($(this).find('.form_conditions').val());
 			var form_id = $(this).attr('id');
@@ -59,12 +86,11 @@
 				
 				if($(this).attr('data-conditions') == 1){
 					var field_id = $(this).attr('id').replace("field_","");
-					console.log(field_id);
 					var field_type = $(this).attr('data-field-type');
 					var field_conditions = conditions[field_id]['field_conditions'];
 
 					var show = [];
-					
+
 					$(field_conditions).each(function(index, value){
 						var field_elem = $('#field_'+value.condition_column);
 
@@ -88,7 +114,6 @@
 							break;
 							case'radio':
 								var condition = '"'+field_elem.find('input:checked').val()+'" '+value.condition_operator+' "'+value.condition_value+'"';
-								console.log(condition)
 								if(eval(condition)){
 									show.push('true');
 								}else{
@@ -98,7 +123,7 @@
 
 							case'select':
 								var condition = '"'+field_elem.find('select').val()+'" '+value.condition_operator+' "'+value.condition_value+'"';
-								console.log(condition);
+								//console.log(condition);
 								if(eval(condition)){
 									show.push('true');
 								}else{
@@ -120,6 +145,11 @@
 				}
 			});
 		});
+
+		/*****************************************************
+		/*  On Start Show Form Fields where conditions are true
+		/*****************************************************/
+		$('.aione-form-wrapper').click();
 
 
 
@@ -260,6 +290,18 @@
 		  theme: "aione",
 		  width: '100%'
 		});
+		$('.non-repeater .field-type-multi_select select option[value=""]').remove();
+
+		$('.aione-form-multiselect-all').click(function(e){
+			e.preventDefault();
+			$(this).parent().parent().find('select > option').prop("selected","selected");
+        	$(this).parent().parent().find('select').trigger("change");;
+		})
+		$('.aione-form-multiselect-none').click(function(e){
+			e.preventDefault();
+			$(this).parent().parent().find('select > option').prop("selected",false);
+        	$(this).parent().parent().find('select').trigger("change");;
+		})
 
 		/*****************************************************
 		/*  Aione Form Selct 2
@@ -374,13 +416,13 @@
 			//console.log(" theme = "+theme+" mode = "+mode+" index = "+index + " value = " + value );
 			
 			require("ace/ext/emmet");
-
 			var editor = ace.edit(editor_wrappper_id);
 			editor.setValue($('#'+value).val()); 
 			editor.setTheme(theme);
 			editor.getSession().setMode(mode);
 			editor.setShowPrintMargin(false);
 			editor.setOption("enableEmmet", true); 
+			editor.setOptions('enableBasicAutocompletion',true);
 			editor.getSession().on("change", function () {
 				$('#'+value).val(editor.getSession().getValue());
 			});
@@ -392,7 +434,7 @@
 		/*****************************************************/
 
 		$(".field-type-color input").spectrum({
-		    color: "#168dc5",
+		    // color: "#168dc5",
 		    flat: false,
 		    showInput: true,
 		    showInitial: true,
@@ -407,12 +449,13 @@
 		    clickoutFiresChange: true,
 		    cancelText: "Cancel",
 		    chooseText: "Select",
-		    togglePaletteMoreText: "More",
-		    togglePaletteLessText: "Less",
+		    togglePaletteMoreText: "more",
+		    togglePaletteLessText: "less",
 		    containerClassName: "Class1",
 		    replacerClassName: "Class2",
 		    preferredFormat: "Class3",
 		    maxSelectionSize: 5,
+		    preferredFormat: "rgb",
 		    //selectionPalette: ['#168dc5'],
 		    palette: [
 						["#ffebee","#ffcdd2","#ef9a9a","#e57373","#ef5350","#f44336","#e53935","#d32f2f","#c62828","#b71c1c"],
@@ -436,20 +479,6 @@
 						["#eceff1","#cfd8dc","#b0bec5","#90a4ae","#78909c","#607d8b","#546e7a","#455a64","#37474f","#263238"], 
 		        ]
 		});
-
-
-
-
-
-
-
-
-
-
-	
-
-
-
 
 	});
 </script>

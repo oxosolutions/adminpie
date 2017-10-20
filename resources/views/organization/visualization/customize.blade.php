@@ -15,8 +15,8 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
     	@php
     		if(!@$model->isEmpty()){
-    			$model['css_code'] = $model->where('key','css_code')->first()->value;
-    			$model['js_code'] = $model->where('key','js_code')->first()->value;
+    			$model['css_code'] = @$model->where('key','css_code')->first()->value;
+    			$model['js_code'] = @$model->where('key','js_code')->first()->value;
     		}
     	@endphp
     	{!!Form::model($model,['route'=>['update.customize.visualization',$id]])!!}

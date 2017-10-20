@@ -20,6 +20,7 @@ use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalOrganization;
 use App\Model\Admin\forms;
 use App\Model\Admin\FormsMeta;
+use File;
 class DashboardController extends Controller
 {
 	
@@ -98,6 +99,7 @@ class DashboardController extends Controller
 
     public function index($slug = null){
     	// get_settings();
+    	
 		$user_id = get_user_id();
 		$dashboards = get_user_meta($user_id,'dashboards');
 		$allowed_widgets = array();
@@ -150,8 +152,7 @@ class DashboardController extends Controller
 			'current_dashboard'		=>	$slug,
 			'listWidgets'			=>	$listWidgets,
 			'allowed_widgets'		=>	$allowed_widgets,
-			'widgets'				=>	$widgets,
-			
+			'widgets'				=>	$widgets
 		);
 
 		return view('organization.dashboard.index',$data);

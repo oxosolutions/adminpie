@@ -6,7 +6,7 @@ $(document).ready(function(){
         var html = '<div class="repeater-row ar"><i class="material-icons dp48">close</i>'+$(this).parents('.repeater-group').find('.repeater-wrapper .repeater-row').html()+'<div>';
         var repeaterLength = $(this).parents('.repeater-group').find('.repeater-row').length;
         $(this).parents('.repeater-group').find('.repeater-wrapper').append(html);
-        $(this).parents('.repeater-group').find('.repeater-row:last').find('input,select').each(function(index){
+        $(this).parents('.repeater-group').find('.repeater-row:last').find('input,select,textarea').each(function(index){
             if($(this).attr('name') != undefined){
               $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
             }
@@ -14,19 +14,112 @@ $(document).ready(function(){
         $(this).parents('.repeater-group').find('.repeater-row:last').find('input,textarea,select').each(function(index){
           $(this).val('');
         });
-        /*$('.field-type-multi_select select').select2({
-          theme: "aione",
-          width: '100%'
-        });*/
-      });
-    
-      $('body').on('click','.repeater-row-delete', function(){
-        if($(this).parents('.repeater-wrapper').find('.repeater-row-delete').length > 1){
-          $(this).parents('.repeater-row').remove();
-        }
-      });
 
-	
+        /* code for visualization page */
+        	$('.field-wrapper-mapArea, .field-wrapper-viewData, .field-wrapper-tooltip_data, .field-wrapper-tooltip_data, .field-wrapper-customData, .field-wrapper-area_code').hide();
+        /* code for visualization page */
+    });
+    
+	    $('body').on('click','.repeater-row-delete', function(){
+	        if($(this).parents('.repeater-wrapper').find('.repeater-row-delete').length > 1){
+	          $(this).parents('.repeater-row').remove();
+	        }
+	    });
+
+      	$('#field_459').find('input[name=email]').blur(function(){
+      		var emailId = $(this).val();
+      		var elem = $(this);
+      		$.ajax({
+      			type:'GET',
+      			url: route()+'user/validate',
+      			data: {email:emailId},
+      			success: function(result){
+      				if(result == 'exist'){
+      					elem.parent('div').find('span').html('Note: That user already exists! But you can still create the organization with the same user and you don\'t need to fill password.');
+      					$('#field_461, #field_460').find('input').prop('disabled',true);
+      				}else{
+      					elem.parent('div').find('span').html('');
+      					$('#field_461, #field_460').find('input').prop('disabled',false);
+      				}
+      			}
+      		});
+      	});
+
+
+	/* code for visualization page */	
+		$('.chart_settings').click(function(){
+			var chartType = $(this).data('chart_type');
+			var chartId = $(this).data('chartid');
+			var visual_id = $(this).data('visualizationid');
+			$.ajax({
+				type:'GET',
+				url: route()+'/chartsettings',
+				data: {charttype: chartType, chartid: chartId, visualid: visual_id},
+				success: function(result){
+					$('#'+chartId+'_setings').find('.content').html(result);
+				}
+			});
+			var data_target = $(this).attr('data-target');
+			$('.modal-bg:first').css({
+				'visibility': 'visible',
+				'background-color': 'black',
+				'opacity': '0.7',
+				'transition': 'background-color 250ms linear'
+			});
+			$('#'+data_target).css({
+				'transform':'scale(1)',
+				'visibility':'visible',
+				'transition': 'transform 250ms ease'
+			}).show();
+			$('.modal-bg').css({
+				'transform':'scale(1)',
+				'visibility':'visible',
+				'transition': 'transform 250ms ease'
+			}).show();
+		});
+
+		$('body').on('click','.hide_modal', function(){
+			$(this).parents('.modal-content').css({
+				'transform':'scale(1)',
+				'visibility':'hidden',
+				'transition': 'transform 250ms ease'
+			}).hide();
+			$('.modal-bg').css({
+				'transform':'scale(1)',
+				'visibility':'hidden',
+				'transition': 'transform 250ms ease'
+			}).hide();
+		});
+
+		$('.field-wrapper-mapArea, .field-wrapper-viewData, .field-wrapper-tooltip_data, .field-wrapper-customData, .field-wrapper-area_code').hide();
+		//$('.add-new-repeater').css('display','none');
+		$('.add-more-chart').click(function(){
+			$('.add-new-repeater').click();
+		});
+		$('.repeater-row').each(function(){
+	    	var divs = $(`.field-wrapper-mapArea, 
+						.field-wrapper-viewData, 
+						.field-wrapper-tooltip_data, 
+						.field-wrapper-customData, 
+						.field-wrapper-area_code`);
+	    	if($(this).find('.input_chart_type').val() == 'CustomMap'){
+	    		$(this).find(divs).show();
+	    	}
+	    });
+		$('body').on('change','.input_chart_type', function(){
+			var divs = $(`.field-wrapper-mapArea, 
+							.field-wrapper-viewData, 
+							.field-wrapper-tooltip_data, 
+							.field-wrapper-customData, 
+							.field-wrapper-area_code`);
+			if($(this).val() == 'CustomMap'){
+				$(this).parents('.repeater-row').find(divs).show();
+			}else{
+				$(this).parents('.repeater-row').find(divs).hide();
+			}
+		});
+	/* code for visualization page */
+
 function clock(){
 
 	var today = new Date();
@@ -159,12 +252,19 @@ setInterval(function(){clock();},100);
     $('.add_new_user').click(function(){
         $('.add-user').slideToggle(300);
     });
+    try{
+    	$('select').material_select();
+    }catch(e){
 
-	$('select').material_select();
+    }
 	// $('.shift-select').material_select();
 
    $(document).ready(function() {
-    $('select').material_select();
+   	try{
+   		$('select').material_select();
+   	}catch(e){
+
+   	}
   });
    $('.closeDialog').click(function(){
     $('#modal1').modal('close');

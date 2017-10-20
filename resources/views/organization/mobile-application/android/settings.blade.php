@@ -3,10 +3,11 @@
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
+	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Android',
-	'add_new' => '+ Add Designation'
+	'page_title' => 'Android Application Settings',
+	'add_new' => 'Download',
+	'route' => 'download.android',
 ); 
 	
   
@@ -16,7 +17,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@include('organization.mobile-application.android._tabs')
-	{!!Form::model($model,['route'=>'settings.update','files'=>true])!!}
+	{!!Form::model(@$model,['route'=>'settings.update','files'=>true])!!}
 		{!! FormGenerator::GenerateForm('android_application_setting_form') !!}
 	{!!Form::close()!!}
 @include('common.page_content_primary_end')

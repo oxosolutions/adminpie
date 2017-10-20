@@ -9,6 +9,7 @@ class SupportsController extends Controller
 {
     public function index()
     {
+        echo "tickets";
     	# code...
     }
     public function Categories()
@@ -17,10 +18,10 @@ class SupportsController extends Controller
      } 
      public function knowledgeBase()
      {
-        # code...
+        echo "knowldge base";
      }
      public function FAndQ()
      {
-     	# code...
+        echo "frequently Asked question";
      }
 }

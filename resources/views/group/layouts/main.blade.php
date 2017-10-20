@@ -22,7 +22,16 @@
                     </div><!-- #aione_sidebar -->
                     <div id="aione_content" class="aione-content">
                         <div class="aione-row">
-                        
+                            @if(!empty(Session::get('success')))
+                                <div class="aione-message success">
+                                    {{Session::get('success')}}
+                                </div>
+                            @endif
+                            @if(!empty(Session::get('error')))
+                                <div class="aione-message error">
+                                    {{Session::get('error')}}
+                                </div>
+                            @endif
                             @yield('content')
                             
                           {{--   @include('group.components._footer2') --}}
@@ -36,7 +45,7 @@
         </div><!-- .aione-row -->
     </div><!-- #aione_wrapper -->
     
-    @include('components._footerscripts')
+    @include('group.components._footerscripts')
 
 </body>
 </html>

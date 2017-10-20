@@ -16,6 +16,7 @@
 	</div>
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
+		
 		{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
 			<div class="aione-align-center" style="margin: 10px 0 20px 0">
 				Have you forgotten your password? <br>
@@ -29,6 +30,7 @@
 				<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
 			@endif
 	{!!Form::close()!!}
+
 
 		{{-- @include('components._footer') --}}
 
