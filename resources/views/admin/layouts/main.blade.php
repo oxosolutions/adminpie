@@ -22,7 +22,7 @@
                     </div><!-- #aione_sidebar -->
                     <div id="aione_content" class="aione-content">
                         <div class="aione-row">
-                            @if(!empty(Session::get('success')))
+                            {{-- @if(!empty(Session::get('success')))
                                 <div class="aione-message success">
                                     {{Session::get('success')}}
                                 </div>
@@ -31,7 +31,7 @@
                                 <div class="aione-message error">
                                     {{Session::get('error')}}
                                 </div>
-                            @endif
+                            @endif --}}
                             @yield('content')
                             @include('admin.components._footer')
                         </div><!-- .aione-row -->

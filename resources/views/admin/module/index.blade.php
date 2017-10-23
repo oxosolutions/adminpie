@@ -246,7 +246,7 @@ $page_title_data = array(
                                 </label>
                              </div>
                             <a href="{{ route('module.delete',['id'=>$val->id]) }}" class="secondary-content delete-module">
-                                <i class="arrow-delete material-icons dp48">delete</i>
+                                <i class="arrow-delete material-icons dp48 red">close</i>
                             </a>
                             <script type="text/javascript">
                                 $(document).on('click','.delete-module',function(e){
@@ -268,9 +268,9 @@ $page_title_data = array(
                                 })
                             </script>
                             <a href="{{route('module.sort.down',['id'=>$val->id]) }}" class="secondary-content">
-                                <i class="arrow-downward material-icons dp48">arrow_downward</i>
+                                <i class="arrow-downward material-icons dp48 orange">arrow_downward</i>
                             </a>
-                            <a href="{{ route('module.sort.up',['id'=>$val->id]) }}" class="secondary-content">     <i class="arrow-upward material-icons dp48">arrow_upward</i>
+                            <a href="{{ route('module.sort.up',['id'=>$val->id]) }}" class="secondary-content">     <i class="arrow-upward material-icons dp48 green">arrow_upward</i>
                             </a>
                            
                         </li>

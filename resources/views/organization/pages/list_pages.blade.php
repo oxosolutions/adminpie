@@ -32,7 +32,7 @@ $page_title_data = array(
 @include('common.page_content_primary_end')
   @include('common.page_content_secondry_start')
     {!! Form::open(['route'=>$route , 'class'=> 'form-horizontal','method' => 'post'])!!}
-  @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Page','button_title'=>'Save','section'=>'pagesec1']])
+  @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Page','button_title'=>'Save','form'=>'add_page_form']])
 {!!Form::close()!!}
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')		

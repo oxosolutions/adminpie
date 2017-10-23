@@ -13,6 +13,10 @@ use App\Model\Organization\UsersRole;
 use App\Model\Group\GroupUserMeta;
 use App\Model\Organization\Client;
 use App\Model\Organization\User;
+use App\Model\Organization\OrganizationSetting;
+use App\Model\Organization\forms as Forms;
+use App\Model\Organization\FormBuilder;
+
 
 class UsersController extends Controller
 {
@@ -23,7 +27,15 @@ class UsersController extends Controller
      * @author sandip
      **/
     public function createUser(){
-      return view('organization.user.add');
+    	$form_slug = null;
+    	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
+        if($additionalForm != null){
+            $additionalForm = Forms::find($additionalForm->value);
+            if($additionalForm != null){
+                $form_slug = $additionalForm->form_slug;
+            }
+        }
+      	return view('organization.user.add',['form_slug'=>$form_slug]);
     }
 
     /**
@@ -40,7 +52,6 @@ class UsersController extends Controller
                 Session::flash('error','Email already exist');
                 return back();
             }else{
-
                 $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
                 $this->validate($request,$rules);
                 $user = new org_user;
@@ -78,11 +89,6 @@ class UsersController extends Controller
             Session::flash('success' , 'User Created Successfully');
             return redirect()->route('list.user');
         }
-
-
-
-
-
     /**
      * undocumented function
      *
@@ -91,6 +97,7 @@ class UsersController extends Controller
      **/
     public function index(Request $request)
     {
+        
     	$datalist = [];
         if($request->has('items')){
             $perPage = $request->items;
@@ -98,8 +105,9 @@ class UsersController extends Controller
                 $perPage = 999999999999999;
             }
         }else{
-            $perPage = 10;
+            $perPage = get_items_per_page();
         }
+
         $sortedBy = @$request->orderby;
         $order = $request->order;
         if($request->orderby == null || $request->orderby == ''){
@@ -134,9 +142,6 @@ class UsersController extends Controller
         return view('organization.user.list',$datalist);
 
     }
-
-
-    
     /**
      * undocumented function
      *  
@@ -145,29 +150,54 @@ class UsersController extends Controller
      **/
     public function userView($id = null)
     {
-        // $user_log = $this->listActivities();
         if($id == null){
             $id = Auth::guard('org')->user()->id;
+        }else{
+            $model = org_user::where('id',$id)->first()->toArray();
+            $id = $model['id'];
         }
-        $userDetails = org_user::with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
+
+
+        $userDetails = org_user::select(['id','name','email'])->with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
 
-        $userDetails->password = '';
-        if($userMeta != false){
-            @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
-            @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
-            $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
-            
-            // dd($userDetails);
-            @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
-            @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
-        }
-        if(!$userDetails->metas->isEmpty()){
-            foreach($userDetails->metas as $key => $value){
-                $userDetails->{$value->key} = $value->value;
+        $role_data = $userDetails->metas->where('key','role')->first();
+        $userDetails['role'] = $role_data->value;
+        $additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
+        if($additionalForm != null){
+
+            $additionalForm = Forms::with(['section'])->find($additionalForm->value);
+            if($additionalForm != null){
+                $form_slug = $additionalForm->form_slug;
+                    $form_id = $additionalForm['id'];
+                    $section_id = $additionalForm->section[0]['id'];
+                $fields = FormBuilder::where(['form_id' => $form_id,'section_id'=> $section_id])->get();
+
+                foreach ($fields as $key => $field) {
+                    $field_key = $field->field_slug;
+                    $user_meta = get_user_meta($id,$field_key,true);
+                    $field_title = $field->field_title;
+                    $field_type = $field->field_type;
+
+                    if(!empty($user_meta)){
+                        if($field_type == 'radio'){
+                            $field_options = field_options($field->field_slug , $id= null);
+                            $userDetails[$field_title] = $field_options[$user_meta];
+                        } else {
+                            $userDetails[$field_title] = $user_meta;
+                        }
+                        
+                    }
+                }
+            }else{
+                $userDetails = $userDetails; 
             }
+
         }
-        return view('organization.user.view',['model' => $userDetails ]);
+
+
+
+        return view('organization.user.view',['model' => $userDetails]);
         // return view('organization.user.preview',['model' => $userDetails , 'user_log' => $user_log]);
     }
 
@@ -179,11 +209,19 @@ class UsersController extends Controller
      * @author sandip
      **/
       public function userDetails($id = null){   
-        if($id == null){
-          $id = get_user_id();
-        }
+	        if($id == null){
+	          $id = get_user_id();
+	        }
+	        $form_slug = null;
+	       	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
+	        if($additionalForm != null){
+	            $additionalForm = Forms::find($additionalForm->value);
+	            if($additionalForm != null){
+	                $form_slug = $additionalForm->form_slug;
+	            }
+	        }
           $model = org_user::with(['user_role_rel','metas'])->find($id);
-          return view('organization.user.edit',['model' => $model]);
+          return view('organization.user.edit',['model' => $model,'form_slug'=>$form_slug]);
       }
 
 
@@ -234,7 +272,7 @@ class UsersController extends Controller
               $model = org_user::find($id);
               $model->name = $request->name;
               $model->email = $request->email;
-              $model->user_type = 'employee';
+              // $model->user_type = 'employee';
               $model->save();
               $notToDeleteIds = [];
               $currentStoredRoles = UserRoleMapping::where(['user_id'=>$id])->pluck('role_id')->toArray();
@@ -284,7 +322,7 @@ class UsersController extends Controller
 
               $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
               if(!empty($meta_data) && !empty($id)){
-                  update_user_metas($meta_data, $id, true);
+                update_user_metas($meta_data, $id, true);
               }
               UserRoleMapping::whereNotIn('id',$notToDeleteIds)->where('user_id',$id)->delete();
               return back();
@@ -328,11 +366,11 @@ class UsersController extends Controller
          **/
         public function changeStatus($id)
         {
-            $model = User::where('user_id',$id)->first();
+            $model = org_user::where('id',$id)->first();
                 if($model['status'] == 0){
-                    User::where('user_id',$id)->update(['status' => 1]);
+                    org_user::where('id',$id)->update(['status' => 1]);
                 }else{
-                    User::where('user_id',$id)->update(['status' => 0]);
+                    org_user::where('id',$id)->update(['status' => 0]);
                 }
             return back();
         }

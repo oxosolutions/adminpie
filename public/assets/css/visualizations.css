@@ -1148,18 +1148,20 @@ img {
   margin-bottom: 10px;
   border: 1px solid #e8e8e8
 }
-.aione-accordion .aione-item .aione-item-header,
-.aione-collapsible .aione-item .aione-item-header {
-  display: block;
-  position: relative;
-  cursor: pointer;
+.aione-item-header {
   padding: 15px 15px 15px 45px;
   color: #666;
   background-color: #fafafa;
   font-size: 18px;
   line-height: 1.4;
   font-weight: 100;
-  font-family: "Open Sans",Arial,sans-serif;
+  font-family: "Open Sans",Arial,sans-serif
+}
+.aione-accordion .aione-item .aione-item-header,
+.aione-collapsible .aione-item .aione-item-header {
+  display: block;
+  position: relative;
+  cursor: pointer;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale
 }
@@ -1197,10 +1199,12 @@ img {
   height: 0;
   margin-top: -1px
 }
+.aione-item-content {
+  padding: 20px
+}
 .aione-accordion .aione-item .aione-item-content,
 .aione-collapsible .aione-item .aione-item-content {
   display: none;
-  padding: 20px;
   color: #666;
   font-size: 16px;
   line-height: 1.4;
@@ -1274,6 +1278,15 @@ img {
 }
 .display-block {
   display: block
+}
+.display-inline {
+  display: inline
+}
+.display-inline-block {
+  display: inline-block
+}
+.display-none {
+  display: none
 }
 .bold {
   font-weight: 700
@@ -2285,6 +2298,39 @@ input[type=file]:hover {
 }
 .aione-tabs > .aione-tab.active > a {
   color: #454545
+}
+.aione-nav-tabs {
+  padding: 0;
+  margin: 0 0 20px 0;
+  background-color: #fff;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none
+}
+.aione-nav-tabs .aione-tabs > .aione-tab {
+  border-bottom: 1px solid #e8e8e8
+}
+.aione-nav-tabs .aione-tabs > .aione-tab:first-child {
+  border-top: none
+}
+.aione-nav-tabs .aione-tabs > .aione-tab.nav-item-current {
+  border: 1px solid #e8e8e8;
+  border-bottom: none;
+  background-color: #fff
+}
+.aione-nav-tabs .aione-tabs > .aione-tab.nav-item-current:hover {
+  background-color: #f2f2f2
+}
+.aione-nav-tabs .aione-tabs > .aione-tab > a {
+  color: #666;
+  padding: 0 10px
+}
+.aione-nav-tabs .aione-tabs > .aione-tab > a:hover {
+  color: #666
+}
+.aione-nav-tabs .aione-tabs > .aione-tab.nav-item-current > a {
+  color: #454545;
+  font-weight: 600
 }
 .aione-account-tabs {
   padding: 0;

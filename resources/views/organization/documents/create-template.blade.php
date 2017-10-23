@@ -19,7 +19,7 @@ $page_title_data = array(
 @else
 	{!! Form::open(['route'=>'save.document.template' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 @endif
-		{!!FormGenerator::GenerateSection('emasec3',['type'=>'inset'])!!}
+		{!!FormGenerator::GenerateForm('document_create_template')!!}
 		<button type="submit" >Save Template</button>
 	{!!Form::close()!!}
 	@if(Session::has('success-update'))

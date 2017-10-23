@@ -16,8 +16,9 @@ $page_title_data = array(
 @endphp
 @php
 	$mapModel = 'App\\Model\\Organization\\UsersRole';
-
-	$role = $mapModel::whereIn('id',$model->user_role_rel->pluck('role_id'))->get();
+	if(@$model->role != null){
+		$role = $mapModel::whereIn('id',$model->role->pluck('role_id'))->get();
+	}
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
@@ -36,17 +37,21 @@ $page_title_data = array(
 					<tbody>
 
 						
-					@foreach($AdditionalData as $key => $value)
-						<tr>
-							<td>
-								{{ ucfirst(str_replace('_', " ", $key)) }}
-							</td>
-							<td>
-								{{ $value }}
-							</td>
-						</tr>	
+					@foreach($model as $key => $value)
+						@if(!is_array($value))
+							@if($value != '')
+								<tr>
+									<td>
+										{{ ucfirst(str_replace('_', " ", $key)) }}
+									</td>
+									<td>
+										{{ $value }}
+									</td>
+								</tr>	
+							@endif
+						@endif
 					@endforeach
-					@if($role != null)
+					@if(@$role != null)
 						<tr>
 							<td>
 								Roles

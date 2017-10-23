@@ -5,10 +5,10 @@
 @endif
 <style type="text/css">
 
-.handson-table-button{
-	margin-bottom: 10px;
-	height: 36px
-}
+	.handson-table-button{
+		margin-bottom: 10px;
+		height: 36px
+	}
 	.handson-table-button > li > a{
 		    line-height: 28px;
     border: 1px solid #CCCCCC;
@@ -62,7 +62,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset: <span>'.$dataset['dataset_name'].'</span>',
+	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -76,24 +76,24 @@
 	<a href="javascript:;" class="btn blue save_dataset" style="margin-top: 3%; display: none;">Update Dataset</a> 
 
 
-@if(@request()->route()->parameters['action'] == 'rivisions')
-	@php
+	@if(@request()->route()->parameters['action'] == 'rivisions')
+		@php
 
-	$headers = (array) $tableheaders;
+		$headers = (array) $tableheaders;
 
-	$history_data = (array) $history->toArray();
+		$history_data = (array) $history->toArray();
 
-	array_unshift($history_data, $headers);
+		array_unshift($history_data, $headers);
 
-	$history_records = array();
-	foreach ($history_data as $column_key => $columns) {
-		foreach ($columns as $row => $record) {
-			$history_records[$row][$column_key] = $record;
+		$history_records = array();
+		foreach ($history_data as $column_key => $columns) {
+			foreach ($columns as $row => $record) {
+				$history_records[$row][$column_key] = $record;
+			}
+			unset($history_records['id']);
+			unset($history_records['status']);
+			unset($history_records['parent']);
 		}
-		unset($history_records['id']);
-		unset($history_records['status']);
-		unset($history_records['parent']);
-	}
 
 	@endphp
 	<div class="aione-table" style="margin-bottom: 20px">
@@ -298,14 +298,13 @@
 			var index = 0;
 			var data = [];
 			
-				$('.update-dataset').parent().siblings('.dataset-table').find('.appended_row').each(function($i){
+				$('.update-dataset').parent().siblings('.table-wrapper').find('.appended_row').each(function($i){
 					var tableRow = [];
 					$(this).find('td').each(function(){
 						tableRow.push($(this).html());
 					});
 					data.push( tableRow);
 				});
-				
 				$.ajax({
 					url 	: route()+'/dataset/create/rows',
 					type 	: "POST",

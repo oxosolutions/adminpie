@@ -29,7 +29,7 @@ $page_title_data = array(
 @include('common.page_content_secondry_start')
 
 	{!!Form::model($modelData,['route'=>[$route,$modelData['id']],'method'=>'POST'])!!}
-		{!! FormGenerator::GenerateSection('catsec1') !!}
+		{!! FormGenerator::GenerateForm('edit_category_form') !!}
 		<input type="hidden" name="id" value="{{$modelData['id']}}">
 		<input type="submit" value="submit">
 	{!!Form::close()!!}	

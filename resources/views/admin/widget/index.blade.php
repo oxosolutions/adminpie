@@ -208,7 +208,7 @@ $page_title_data = array(
                                 <label for="test{{$check_id}}"> {{$val->title}}</label>
                                 
                                 <a href="{{route('delete.widget',['id'=>$val->id])}}" class="delete-field">
-                                    <i class="material-icons dp48 del">clear</i>
+                                    <i class="material-icons dp48 del red">clear</i>
                                 </a>
                                 <script type="text/javascript">
                                     $(document).on('click','.delete-field',function(e){
@@ -230,10 +230,10 @@ $page_title_data = array(
                                     })
                                 </script>
                                 <a href="{{ route('sort.down',['id'=>$val->id]) }}" class="arrow-downward">
-                                    <i class="material-icons dp48">arrow_downward</i>
+                                    <i class="material-icons dp48 orange">arrow_downward</i>
                                 </a>
                                 <a href="{{ route('sort.up',['id'=>$val->id]) }}" class="arrow-upward">
-                                    <i class="material-icons dp48">arrow_upward</i>
+                                    <i class="material-icons dp48 green">arrow_upward</i>
                                 </a>
                             </li>
                             

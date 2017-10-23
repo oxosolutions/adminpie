@@ -21,7 +21,7 @@ class CustomMapsController extends Controller
 	          $perPage = 999999999999999;
 	        }
 	      }else{
-	        $perPage = 5;
+	        $perPage = 10;
 	      }
         if($type == 'g'){
             $sortedBy = @$request->orderby;
@@ -95,14 +95,14 @@ class CustomMapsController extends Controller
                 $datalist['actions'] = [
                                           'edit'    => ['title'=>'Edit','route'=>$editRoute,'class'=>'edit'],
                                           'view'    => ['title'=>'View','route'=>$viewRoute],
-                                          'delete'  => ['title'=>'Delete','route'=>$deleteRoute]
+                                          'delete'  => ['title'=>'Delete','class'=>'red','route'=>$deleteRoute]
                                        ];
             }
         }else{
             $datalist['actions'] = [
                                           'edit'    => ['title'=>'Edit','route'=>$editRoute,'class'=>'edit'],
                                           'view'    => ['title'=>'View','route'=>$viewRoute],
-                                          'delete'  => ['title'=>'Delete','route'=>$deleteRoute]
+                                          'delete'  => ['title'=>'Delete','class'=>'red','route'=>$deleteRoute]
                                        ];
 
         }

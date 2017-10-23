@@ -41,7 +41,7 @@ class FormBuilderController extends Controller
 
     public function createForm(Request $request)
     {
-
+        // dd($request->type);
         $created_by = get_user_id();
         $request['created_by'] = $created_by; 
 
@@ -50,12 +50,17 @@ class FormBuilderController extends Controller
         $model = new $modelName;
         $model->fill($request->all());
         $model->save();
-        Session::flash('success','Form created successfully');
         // return redirect()->route('list.forms');
+        Session::flash('success','Form created successfully');
         if(Auth::guard('admin')->check()){
             return redirect()->route('list.forms');
         }else{
-            return redirect()->route('org.list.forms');
+            if($request['type'] == 'survey'){
+                Session::flash('success','Survey created successfully');
+                return redirect()->route('list.survey');
+            }else{
+                return redirect()->route('org.list.forms');
+            }
         }
     }
 
@@ -90,7 +95,7 @@ class FormBuilderController extends Controller
             $perPage = 999999999999999;
           }
         }else{
-          $perPage = 5;
+          $perPage = 10; //get_items_per_page();
         }
         if($request->has('search')){
             if($sortedBy != ''){
@@ -126,7 +131,7 @@ class FormBuilderController extends Controller
                                 'section'=>['title'=>'Edit','route'=>['route'=>$sectionRoute]],
                                 'settings'=>['title'=>'Settings','route'=>$settingsRoute],
                                 'clone'=>['title'=>'Clone','route'=>$cloneRoute],
-                                'delete'=>['title'=>'Delete','route'=>$deleteRoute],
+                                'delete'=>['title'=>'Delete','class'=>'red','route'=>$deleteRoute],
                                 ]
                     ];
 
@@ -188,32 +193,6 @@ class FormBuilderController extends Controller
         $section->key = 'modelName';
         $section->value = $request->section_type;
         return back();
-
-        /*$newData = $request->except('section_type');
-        $this->validate($request, $this->valid_sections);
-        $modelName = $this->assignModel('section');
-        $model = new $modelName;
-        $model->fill($newData);
-        $model->form_id = $id;
-        $model->save();
-        if($model){
-            $section_id = $modelName::select('id')->orderBy('id','DESC')->limit('1')->get();
-            $section_id = $section_id[0]->id;
-            $newMeta = $request->except('section_name','section_slug','section_description','_token');
-            foreach($newMeta as $key => $value){
-                $modelName = $this->assignModel('SectionMeta');
-                $sectionMeta = new $modelName;
-                $sectionMeta->section_id = $section_id;
-                $sectionMeta->key = $key;
-                $sectionMeta->value = $value;
-                $sectionMeta->save();
-            }
-        }
-        if(Auth::guard('admin')->check()){
-            return redirect()->route('list.sections',['form_id' => $id]);
-        }else{
-            return redirect()->route('org.list.sections',['form_id' => $id]);
-        }*/
     } 
 
     protected function validateUpdateSection($request){
@@ -304,6 +283,7 @@ class FormBuilderController extends Controller
         $model = $modelName::orderBy('order','ASC')->where('form_id',$form_id)->with(['fields'=>function($query){
             $query->with('fieldMeta')->orderBy('order','ASC');
         },'sectionMeta','form'])->get();
+        // dd($model);
         return view('admin.formbuilder.sections')->with([ 'sections' => $model,'plugins'=> $plugins,'form'=>$form,'permission'=>$permission]);
     }
 

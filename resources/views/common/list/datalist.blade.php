@@ -211,7 +211,7 @@ foreach($columns as $column){
 															}
 														@endphp
 														{{-- <a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a> --}}
-														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red-text action-{{$action_key}}">{{$action_value['title']}}</a>
+														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red action-{{$action_key}}">{{$action_value['title']}}</a>
 													@elseif($action_key == 'model')
 														<a href="#" data-target="{{$action_value['data-target']}}" class="{{$action_value['class']}}" id="{{$dataset->id}}" style="padding-right:10px">{{$action_value['title']}}</a>
 													@elseif($action_key == 'status_option')

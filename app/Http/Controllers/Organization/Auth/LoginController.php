@@ -16,6 +16,7 @@ use App\Mail\forgetPassword;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Group\GroupUsers;
+use App\Model\Organization\forms as Forms;
 class LoginController extends Controller
 {
     /*
@@ -226,11 +227,19 @@ class LoginController extends Controller
     {
         $arraySetting = [];
         $completeDomain = $request->getHost();
-
+        $form_slug = null;
         $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $settings = OrganizationSetting::all();
         Session::put('organization_id',$primary_domain->id);
-        return view('organization.login.signup',compact('settings'));
+
+        $additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
+        if($additionalForm != null){
+            $additionalForm = Forms::find($additionalForm->value);
+            if($additionalForm != null){
+                $form_slug = $additionalForm->form_slug;
+            }
+        }
+        return view('organization.login.signup',compact('settings'))->with(['form_slug'=>$form_slug]);
     }
 
     protected function is_primary_domain_exists($domain){

@@ -15,6 +15,9 @@
 		@if(isset($data['section']))
 			{!!FormGenerator::GenerateSection($data['section'],['type'=>'inset'],'','admin')!!}
 		@endif
+		@if(isset($data['form']))
+			{!!FormGenerator::GenerateForm($data['form'],['type'=>'inset'],'','admin')!!}
+		@endif
 		@if(isset($data['group']))
 			{!!FormGenerator::GenerateGroup($data['group'],['type'=>'inset'],'','admin')!!}
 		@endif

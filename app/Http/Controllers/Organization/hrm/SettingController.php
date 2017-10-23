@@ -191,7 +191,7 @@ class SettingController extends Controller
     }
 
     public function saveOrganizationSettings(Request $request){
-
+    	// dd($request->all());
     	$organizationId = Session::get('organization_id');
     	
     	if($request->has('logo_delete')){
@@ -296,7 +296,7 @@ class SettingController extends Controller
 	                $perPage = 999999999999999;
 	              }
 	            }else{
-	              $perPage = 5;
+	              $perPage = get_items_per_page();;
 	            }
 	        $sortedBy = @$request->orderby;
 	        $orgId = Session::get('organization_id');

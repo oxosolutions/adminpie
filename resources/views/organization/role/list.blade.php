@@ -22,7 +22,7 @@ $page_title_data = array(
             <div class="box-footer">
               {!! Form::submit('Save Role', ['class' => 'btn btn-primary']) !!}
             </div> --}}
-            @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Role','button_title'=>'Save','section'=>'rolsec1']])
+            @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Role','button_title'=>'Save','form'=>'organization_add_role_form']])
           {!! Form::close() !!}
      
     @include('common.page_content_secondry_end')

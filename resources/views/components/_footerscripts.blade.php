@@ -414,15 +414,17 @@
 				mode= "ace/mode/"+mode;
 			}
 			//console.log(" theme = "+theme+" mode = "+mode+" index = "+index + " value = " + value );
-			
+			//require.config({paths: { "ace" : "../lib/ace"}});
 			require("ace/ext/emmet");
 			var editor = ace.edit(editor_wrappper_id);
 			editor.setValue($('#'+value).val()); 
 			editor.setTheme(theme);
 			editor.getSession().setMode(mode);
+			editor.setAutoScrollEditorIntoView(true);
 			editor.setShowPrintMargin(false);
 			editor.setOption("enableEmmet", true); 
-			editor.setOptions('enableBasicAutocompletion',true);
+			editor.setOption('enableBasicAutocompletion',true);
+			editor.setAutoScrollEditorIntoView(true);
 			editor.getSession().on("change", function () {
 				$('#'+value).val(editor.getSession().getValue());
 			});

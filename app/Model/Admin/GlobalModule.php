@@ -37,9 +37,9 @@ class GlobalModule extends Model
             $group_id = Auth::guard('group')->user()->group_id;
             $group_module = Group::select('modules')->where('id',$group_id)->first();
             $modules_ids =  array_map('intval', json_decode($group_module->modules));
-            return Self::whereIn('id', $modules_ids)->pluck('name','id');
+            return Self::whereIn('id', $modules_ids)->where('status',1)->orderBy('orderBy','asc')->pluck('name','id');
         }else{
-            return Self::pluck('name','id');
+            return Self::where('status',1)->orderBy('orderBy','asc')->pluck('name','id');
         }
     }
     // public function permissons()

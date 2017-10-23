@@ -38,7 +38,7 @@ class LeavesController extends Controller
         //       $perPage = 999999999999999;
         //     }
         //   }else{
-        //     $perPage = 5;
+        //     $perPage = get_items_per_page();;
         //   }
         //   $orgId = Session::get('organization_id');
         //   $sortedBy = @$request->orderby;
@@ -91,7 +91,7 @@ class LeavesController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 5;
+            $perPage = get_items_per_page();;
           }
       $sortedBy = @$request->orderby;
       if($request->has('search')){

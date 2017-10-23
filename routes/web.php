@@ -147,6 +147,11 @@
 
 
 			Route::group(['middleware' => ['auth.org']], function(){
+
+				//Roles Routes
+				
+				include_once 'custom/organization/roles.php';
+
 				Route::get('/survey', ['as'=>'display.survey', 'uses'=>'survey\SurveyController@display_survey']);
 				Route::post('/survey/save', ['as'=>'filled.survey', 'uses'=>'survey\SurveyController@save_survey']);
 				Route::get('/survey/delete/table/{table_name}', ['as'=>'delete.table', 'uses'=>'survey\SurveyController@delete_survey_table']);
@@ -362,6 +367,9 @@
 				
 				
 
+
+
+
 				//Employee	
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
 
@@ -394,7 +402,7 @@
 							Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
 							Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 							Route::get('/holidays/{id?}',			['as'=> 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
-							Route::get('roles',						['as'=>	'list.role', 'uses'=>'UserRoleController@listRole']);
+							
 							Route::post('/attendance/import',		['as'=> 'upload.attendance' , 'uses' => 'AttendanceController@attendance_import']);
 							Route::get('/attendance/import',		['as' => 'import.form.attendance' , 'uses' => 'AttendanceController@import_form']);
 							Route::post('employee/update', 			['as' => 'update.employee' , 'uses' => 'EmployeeController@update']);
@@ -425,9 +433,7 @@
 
 						//ROLE PERMISSON ROUTE
 						// Route::get('role/create',['as'=>'create.role', 'uses'=>'UserRoleController@create']);
-						Route::post('role/save',['as'=>'role.store', 'uses'=>'UserRoleController@save']);
-						Route::match(['get','post'],'role/delete/{id?}',['as'=>'role.delete', 'uses'=>'UserRoleController@Delete']);
-						Route::get('role/assign/{id}',['middleware'=>'role', 'as'=>'role.assign', 'uses'=>'UserRoleController@assign']);
+						
 						
 						//END ROLE PERMISSON ROUTE
 						//employee

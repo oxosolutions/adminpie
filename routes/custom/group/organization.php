@@ -1,7 +1,6 @@
 <?php
 	
 	Route::get('group/organization/create',		['as'=>'create.grouporganization','uses'=>'GroupOrganizationController@create']);
-	Route::post('/organization/save',			['as'=>'save.grouporganization','uses'=>'GroupOrganizationController@save']);
 	Route::get('/organization/create',			['as'=>'create.groupOrganization','uses'=>'GroupOrganizationController@create']);
 	Route::post('/organization/save',			['as'=>'save.groupOrganization','uses'=>'GroupOrganizationController@save']);
 	Route::get('/organization/list',			['as'=>'list.groupOrganizations','uses'=>'GroupOrganizationController@listOrg']);

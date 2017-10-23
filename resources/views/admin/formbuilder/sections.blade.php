@@ -185,59 +185,66 @@ $page_title_data = array(
                                     <h4 class="aione-form-section-description aione-align-center">List of all sections in this form.</h4>
                                 </div> <!-- .aione-row -->
                             </div>
-                            @foreach($sections as $k => $section)
-                                <li class="collection-item" section-id="">
-                                    <a href="{{Request::url()}}?sections={{$section->id}}">{{$section->section_name}} ({{$section->section_slug}})</a>
-                                    <div class="item-options">
-                                        <a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field confirm-delete">
-                                            <i class="material-icons dp48 del red-text ">clear</i>
+                            @if($sections->count() > 0)
+                                @foreach($sections as $k => $section)
+                                
+                                    <li class="collection-item" section-id="">
+                                        <a href="{{Request::url()}}?sections={{$section->id}}">{{$section->section_name}} ({{$section->section_slug}})</a>
+                                        <div class="item-options">
+                                            <a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field confirm-delete">
+                                                <i class="material-icons dp48 del red">clear</i>
 
-                                        </a>
-                                        
+                                            </a>
+                                            
 
-                                         <a href="{{route($route_slug.'section.clone',$section->id)}}" class="delete-field">
-                                            <i class="fa fa-clone"></i>
-                                        </a>
+                                             <a href="{{route($route_slug.'section.clone',$section->id)}}" class="delete-field">
+                                                <i class="fa fa-clone"></i>
+                                            </a>
+                                            
+                                            <a href="javascript:;" class="arrow-upward">
+                                                <i class=" material-icons dp48 green">arrow_upward</i>   
+                                            </a>
+                                            
+                                            <a href="javascript:;" class="arrow-downward">
+                                                <i class=" material-icons dp48 orange">arrow_downward</i>    
+                                            </a>
+                                            <a href="javascript:;" class="move" section-id="{{ $section->id }}" data-target="list-forms">
+                                                <i class=" material-icons dp48 blue">forward</i>    
+                                            </a>
+                                        </div>
+                                       
+                                        <div id="list-forms" class="modal modal-fixed-footer" style="overflow-y: hidden;">
+                                            <div class="modal-header">
+                                                <h5>Select form where you want to move this section</h5>  
+                                                <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+                                            </div>
+                                             {!! Form::open([ 'method' => 'POST', 'route' =>$route_slug.'section.move' ,'class' => 'form-horizontal']) !!}
+                                            <div class="modal-content">
+                                                 {!! Form::select('move_to',listForms(),null,['class'=>' browser-default ','id'=>'input_','placeholder'=>'Select form'])!!}
+                                                    <input type="hidden" name="sectionId" value="">
+                                                 {!! FormGenerator::GenerateField('want_to') !!}
+                                                  
+                                            </div>
+                                            <div class="modal-footer">
+                                               
+                                                <button class="btn blue " type="submit" name="action">Proceed
+                                                </button>
+                                            </div>
+                                            {!! Form::close() !!}  
+                                        </div>
+                                        <script type="text/javascript">
+                                            $('#list-forms').modal({
+                                                 dismissible: true
+                                            });
+                                        </script>
                                         
-                                        <a href="javascript:;" class="arrow-upward">
-                                            <i class=" material-icons dp48">arrow_upward</i>   
-                                        </a>
-                                        
-                                        <a href="javascript:;" class="arrow-downward">
-                                            <i class=" material-icons dp48">arrow_downward</i>    
-                                        </a>
-                                        <a href="javascript:;" class="move" section-id="{{ $section->id }}" data-target="list-forms">
-                                            <i class=" material-icons dp48">forward</i>    
-                                        </a>
-                                    </div>
-                                   
-                                    <div id="list-forms" class="modal modal-fixed-footer" style="overflow-y: hidden;">
-                                        <div class="modal-header">
-                                            <h5>Select form where you want to move this section</h5>  
-                                            <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
-                                        </div>
-                                         {!! Form::open([ 'method' => 'POST', 'route' =>$route_slug.'section.move' ,'class' => 'form-horizontal']) !!}
-                                        <div class="modal-content">
-                                             {!! Form::select('move_to',listForms(),null,['class'=>' browser-default ','id'=>'input_','placeholder'=>'Select form'])!!}
-                                                <input type="hidden" name="sectionId" value="">
-                                             {!! FormGenerator::GenerateField('want_to') !!}
-                                              
-                                        </div>
-                                        <div class="modal-footer">
-                                           
-                                            <button class="btn blue " type="submit" name="action">Proceed
-                                            </button>
-                                        </div>
-                                        {!! Form::close() !!}  
-                                    </div>
-                                    <script type="text/javascript">
-                                        $('#list-forms').modal({
-                                             dismissible: true
-                                        });
-                                    </script>
-                                    
-                                </li>
-                            @endforeach
+                                    </li>
+                                @endforeach
+                            @else
+                                <div class="aione-message warning">
+                                    {{ __('forms.no_section_available') }}
+                                </div>
+                            @endif
                         @endif
                         @if(Request::has('sections') && Request::input('sections') != 'all')
                             <div id="aione_form_section_header" class="aione-form-section-header">
@@ -246,125 +253,134 @@ $page_title_data = array(
                                     <h4 class="aione-form-section-description aione-align-left">List of all fields in this section</h4>
                                 </div> <!-- .aione-row -->
                             </div>
-                            @foreach($sections->where('id',Request::input('sections'))->first()->fields as $k => $field)
-                                <li class="collection-item" field_id="{{$field->id}}">
-                                    @if($form->type == 'survey')
-                                        @php
-                                            $question_id = '';
-                                            $questionID = $field->fieldMeta->where('key','question_id')->first();
-                                            if($questionID != null){
-                                                $question_id = $questionID->value;
-                                            }
-                                        @endphp
-                                        <span class="question-id">{{$question_id}}</span>
-                                    @endif
-                                   
-                                    <a href="{{Request::url()}}?sections={{Request::input('sections')}}&field={{$field->id}}">
-                                        {{$field->field_title}} ({{$field->field_slug}})
-                                    </a>
-                                     <div class="item-options">
-                                        <a href="{{route($route_slug.'field.delete',$field->id)}}" class="delete-field confirm-delete" >
-                                            <i class="material-icons dp48 del red-text">clear</i>
-
-                                        </a>
+                            @php
+                                $fields = $sections->where('id',Request::input('sections'))->first()->fields;
+                            @endphp
+                            @if($fields->count() > 0)
+                                @foreach($sections->where('id',Request::input('sections'))->first()->fields as $k => $field)
+                                    <li class="collection-item" field_id="{{$field->id}}">
+                                        @if($form->type == 'survey')
+                                            @php
+                                                $question_id = '';
+                                                $questionID = $field->fieldMeta->where('key','question_id')->first();
+                                                if($questionID != null){
+                                                    $question_id = $questionID->value;
+                                                }
+                                            @endphp
+                                            <span class="question-id">{{$question_id}}</span>
+                                        @endif
                                        
-
-                                        <a href="{{route($route_slug.'field.clone',$field->id)}}" class="delete-field">
-                                            <i class="fa fa-clone"></i>
+                                        <a href="{{Request::url()}}?sections={{Request::input('sections')}}&field={{$field->id}}">
+                                            {{$field->field_title}} ({{$field->field_slug}})
                                         </a>
+                                         <div class="item-options">
+                                            <a href="{{route($route_slug.'field.delete',$field->id)}}" class="delete-field confirm-delete" >
+                                                <i class="material-icons dp48 del red">clear</i>
 
-                                        
-                                        @if(Auth::guard('admin')->check())
+                                            </a>
+                                           
+
+                                            <a href="{{route($route_slug.'field.clone',$field->id)}}" class="delete-field">
+                                                <i class="fa fa-clone"></i>
+                                            </a>
+
                                             
-                                            @php
-                                                $down = 'field.down.sort';
-                                                $up = 'field.up.sort';
-                                            @endphp
-                                        @else   
-                                            @php
-                                                $down = 'org.field.down.sort';
-                                                $up = 'org.field.up.sort';
-                                            @endphp
-                                        @endif
-                                        
-                                        <a href="{{ route($up,$field->id) }}" class="arrow-upward">
-                                            <i class=" material-icons dp48">arrow_upward</i>    
-                                        </a>
-                                        
-                                        <a href="{{ route($down,$field->id) }}" class="arrow-downward">
-                                            <i class=" material-icons dp48">arrow_downward</i>    
-                                        </a>
-                                         <a href="javascript:;" class="move field_move" field_id="{{ $field->id }}" data-target="sections-list">
-                                            <i class=" material-icons dp48">forward</i>    
-                                        </a>
-                                    </div>
-                                    <div id="sections-list" class="modal modal-fixed-footer" style="overflow-y: hidden;">
-                                        <div class="modal-header">
-                                            <h5>Destination</h5>  
-                                            <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
-                                        </div>
-                                        @if(Auth::guard('admin')->check())
-                                            @php
-                                                $route = 'field.move';
-                                            @endphp
-                                        @else   
-                                            @php
-                                                $route = 'org.field.move';
-                                            @endphp
-                                        @endif
-                                        @php
-                                            $sectionData = '';
-                                        @endphp
-                                         {!! Form::open([ 'method' => 'POST', 'route' =>[$route,$field->id] ,'class' => 'form-horizontal']) !!}
-                                        <div class="modal-content">
-                                                Select Form
-                                            {!! Form::select('move_to_form',listForms(),null,['class'=>' browser-default form-list','id'=>'input_','placeholder'=>'Select form'])!!}
-                                                Select Section
+                                            @if(Auth::guard('admin')->check())
                                                 
-                                            {{-- {!! Form::select('move_to_section',[] , null,['class'=>' browser-default section-list ','id'=>'input_','placeholder'=>'Select form'])!!} --}}
-                                            <input type="hidden" name="field_id">
-                                            <select name="move_to_section" class="browser-default section-list">
-                                                <option>Select Section</option>
-                                            </select>
-                                             {!! FormGenerator::GenerateField('want_to') !!}
-                                              
+                                                @php
+                                                    $down = 'field.down.sort';
+                                                    $up = 'field.up.sort';
+                                                @endphp
+                                            @else   
+                                                @php
+                                                    $down = 'org.field.down.sort';
+                                                    $up = 'org.field.up.sort';
+                                                @endphp
+                                            @endif
+                                            
+                                            <a href="{{ route($up,$field->id) }}" class="arrow-upward">
+                                                <i class=" material-icons dp48 green">arrow_upward</i>    
+                                            </a>
+                                            
+                                            <a href="{{ route($down,$field->id) }}" class="arrow-downward">
+                                                <i class=" material-icons dp48 orange">arrow_downward</i>    
+                                            </a>
+                                             <a href="javascript:;" class="move field_move" field_id="{{ $field->id }}" data-target="sections-list">
+                                                <i class=" material-icons dp48 blue">forward</i>    
+                                            </a>
                                         </div>
+                                        <div id="sections-list" class="modal modal-fixed-footer" style="overflow-y: hidden;">
+                                            <div class="modal-header">
+                                                <h5>Destination</h5>  
+                                                <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+                                            </div>
+                                            @if(Auth::guard('admin')->check())
+                                                @php
+                                                    $route = 'field.move';
+                                                @endphp
+                                            @else   
+                                                @php
+                                                    $route = 'org.field.move';
+                                                @endphp
+                                            @endif
+                                            @php
+                                                $sectionData = '';
+                                            @endphp
+                                             {!! Form::open([ 'method' => 'POST', 'route' =>[$route,$field->id] ,'class' => 'form-horizontal']) !!}
+                                            <div class="modal-content">
+                                                    Select Form
+                                                {!! Form::select('move_to_form',listForms(),null,['class'=>' browser-default form-list','id'=>'input_','placeholder'=>'Select form'])!!}
+                                                    Select Section
+                                                    
+                                                {{-- {!! Form::select('move_to_section',[] , null,['class'=>' browser-default section-list ','id'=>'input_','placeholder'=>'Select form'])!!} --}}
+                                                <input type="hidden" name="field_id">
+                                                <select name="move_to_section" class="browser-default section-list">
+                                                    <option>Select Section</option>
+                                                </select>
+                                                 {!! FormGenerator::GenerateField('want_to') !!}
+                                                  
+                                            </div>
 
-                                        <script type="text/javascript">
-                                            $(document).unbind("change").on('change','.form-list',function(e){
-                                                e.stopPropagation();
-                                                var formId = $(this).val();
-                                                $.ajax({
-                                                    url:route()+'/section',
-                                                    type:'post',
-                                                    data:{_token:$('input[name=_token]').val(),formId:formId},
-                                                    success:function(res){
-                                                         $('#section_name').remove();
-                                                        $.each(res,function(i,v){
-                                                           
-                                                            $('.section-list').append('<option id="section_name" value="'+i+'">'+v+'</option>');
-                                                        });
-                                                    }
+                                            <script type="text/javascript">
+                                                $(document).unbind("change").on('change','.form-list',function(e){
+                                                    e.stopPropagation();
+                                                    var formId = $(this).val();
+                                                    $.ajax({
+                                                        url:route()+'/section',
+                                                        type:'post',
+                                                        data:{_token:$('input[name=_token]').val(),formId:formId},
+                                                        success:function(res){
+                                                             $('#section_name').remove();
+                                                            $.each(res,function(i,v){
+                                                               
+                                                                $('.section-list').append('<option id="section_name" value="'+i+'">'+v+'</option>');
+                                                            });
+                                                        }
+                                                    });
                                                 });
-                                            });
-                                            $(document).unbind('click').on('click','.field_move',function(){
-                                                var field_id = $(this).attr('field_id');
-                                                $('input[name=field_id]').val(field_id);
+                                                $(document).unbind('click').on('click','.field_move',function(){
+                                                    var field_id = $(this).attr('field_id');
+                                                    $('input[name=field_id]').val(field_id);
+                                                });
+                                            </script>
+                                            <div class="modal-footer">
+                                                <button class="btn blue " type="submit" name="action">Proceed
+                                                </button>
+                                            </div>
+                                            {!! Form::close() !!}  
+                                        </div>
+                                        <script type="text/javascript">
+                                            $('#sections-list').modal({
+                                                 dismissible: true
                                             });
                                         </script>
-                                        <div class="modal-footer">
-                                            <button class="btn blue " type="submit" name="action">Proceed
-                                            </button>
-                                        </div>
-                                        {!! Form::close() !!}  
-                                    </div>
-                                    <script type="text/javascript">
-                                        $('#sections-list').modal({
-                                             dismissible: true
-                                        });
-                                    </script>
-                                </li>
-                            @endforeach
+                                    </li>
+                                @endforeach
+                            @else
+                                <div class="aione-message warning">
+                                    {{ __('forms.no_fields_available') }}
+                                </div>
+                            @endif
                         @endif
                     </ul>
                 @endif

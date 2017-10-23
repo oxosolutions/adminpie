@@ -21,6 +21,9 @@
 			@endif
 				{!! Form::open(['route'=>'signup.user'])!!}
 				{!! FormGenerator::GenerateSection('organization_user_registration_form_section_1',['type'=>'inset'])!!}
+				@if(@$form_slug != '' && $form_slug != null)
+					{!! FormGenerator::GenerateForm($form_slug,['type'=>'inset'],[],'org')!!}
+				@endif
 				<button type="submit">Register</button>
 			{!! Form::close() !!}
 

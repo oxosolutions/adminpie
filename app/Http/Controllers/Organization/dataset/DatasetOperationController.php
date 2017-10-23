@@ -13,11 +13,22 @@ use Illuminate\Support\Facades\Schema;
 class DatasetOperationController extends Controller
 {
 
-    public function duplicate($id){
-        dump($id);
-        $dataset = Dataset::find($id);
-        echo $datasetTable = Dataset::find($id)->dataset_table;
-        //$records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',1)->where('status' , 1)
+    public function duplicate( $id){
+         $dataset = Dataset::find($id);
+        if(empty($dataset)){
+            $data['error'] ="This Dataset does'nt exist."; 
+        }else{
+            $datasetTable = $dataset->dataset_table;
+            $without_ocrm_tab_name = str_replace('ocrm_', '', $datasetTable );
+            if(empty(Schema::hasTable($without_ocrm_tab_name))){
+                $data['error'] = "Dataset table not exist."; 
+            }else{
+                $column_list =  Schema::getColumnListing(str_replace('ocrm_', '', $datasetTable ));
+                unset($column_list[0]);
+                $data['duplicate_data'] =  DB::select("select ".implode(', ', $column_list).", count(id) as total_duplicate from ".$datasetTable." group by ".implode(', ', $column_list)." having count(*)>1 ");
+            }
+        }
+        return view('organization.dataset.duplicate_records',compact('data'));
     }
     public function mergeDataset(Request $request)
     {

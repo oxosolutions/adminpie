@@ -7,7 +7,8 @@ use App\Model\Group\AdminUsers;
 use DB;
 use Hash;
 use App\Model\Admin\GlobalModule;
-
+use App\Model\Group\GroupUsers as GUsers;
+use Session;
 class GroupController extends Controller
 {
     /**
@@ -23,7 +24,7 @@ class GroupController extends Controller
             $perPage = 999999999999999;
           }
         }else{
-          $perPage = 5;
+          $perPage = 10;
         }
 
         $sortedBy = @$request->orderby;
@@ -49,22 +50,33 @@ class GroupController extends Controller
                         'showColumns' => ['name'=>'Title','description'=>'Description','created_at'=>'Created At'],
                         'actions' => [
                                         'edit' => ['title'=>'Edit','route'=>'edit.group'],
-                                        'delete' => ['title'=>'Delete','route'=>'delete.group'],
+                                        'delete' => ['title'=>'Delete','route'=>'delete.group','class'=>'red'],
                                         // 'delete'=>['title'=>'Delete','route'=>'delete.holiday']
                                      ]
                     ];
 
-        return view('group.group.index' , $datalist); 
-        // return view('group.group.index');
+        return view('admin.group.index' , $datalist); 
+        // return view('admin.group.index');
     }
 
     public function create()
     {   
-        return view('group.group.create');
+        return view('admin.group.create');
+    }
+
+    protected function validateGroupRequest($request){
+
+        $rules = [
+
+            'email' => 'required|unique:group_admins|email',
+            'password' => 'required'
+        ];
+
+        $this->validate($request,$rules);
     }
     public function store(Request $request)
     {
-
+        $this->validateGroupRequest($request);
         $model = new Group;
         $model->fill($request->all('_token','modules','email','password'));
         $model->modules = json_encode($request['modules']);
@@ -84,6 +96,7 @@ class GroupController extends Controller
             DB::statement('CREATE TABLE ocrm_group_'.$groupId.'_users (`id` INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,`name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,`email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,`password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,`api_token` char(60) COLLATE utf8mb4_unicode_ci NOT NULL,`remember_token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,`status` int(11) NULL DEFAULT "0",`created_at` timestamp NULL DEFAULT NULL,`updated_at` timestamp NULL DEFAULT NULL,`deleted_at` int(11) DEFAULT "0",`app_password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL)');
             /*DB::statement('CREATE TABLE ocrm_group_'.$groupId.'_user_mapping (id INT(11) AUTO_INCREMENT PRIMARY KEY, user_id INT(11) UNSIGNED NOT NULL, organization_id INT(11) UNSIGNED NOT NULL, role_id INT(11), created_at timestamp, updated_at timestamp)');*/
             DB::statement('CREATE TABLE ocrm_group_'.$groupId.'_user_meta ( `id` INT(50) NOT NULL AUTO_INCREMENT , `user_id` INT(50) UNSIGNED NOT NULL , `key` VARCHAR(255) NOT NULL , `value` VARCHAR(255) NOT NULL , `created_at` TIMESTAMP NOT NULL , `updated_at` TIMESTAMP NOT NULL , PRIMARY KEY (`id`))');
+            Session::flash('success','Group created successfully');
             return redirect()->route('list.group');
     }
 
@@ -109,7 +122,7 @@ class GroupController extends Controller
        
         $modules = GlobalModule::pluck('name','id');
         
-        return view('group.group.edit',['group_data'=>$group_data,'modules'=> $modules ]);
+        return view('admin.group.edit',['group_data'=>$group_data,'modules'=> $modules ]);
     }
 
     /**
@@ -133,31 +146,23 @@ class GroupController extends Controller
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     * @author Rahul
      */
     public function destroy($id)
     {
-        dd($id);
-        /*try{
-            DB::beginTransaction();
-            $model = ORG::findOrFail($id);
-            $model->delete();
-
-            $data =   DB::select("select CONCAT('DROP TABLE `',t.table_schema,'`.`',t.table_name,'`;') AS dropTable
-                      FROM information_schema.tables t
-                      WHERE t.table_schema = '".env('DB_DATABASE', 'forge')."'
-                      AND t.table_name LIKE 'ocrm_".$id."%' 
-                      ORDER BY t.table_name");
-            foreach ($data as $key => $value) {
-                 DB::select($value->dropTable);
-              }
-                      DB::commit();
-
-        Session::flash('success','Successfully deleted!');
-        }catch(\Exception $e){
-          // throw $e;
-            DB::rollback();
-            Session::flash('error','Somthing goes wrong Try again.');
+        $prefix = DB::getTablePrefix();
+        $group_organization = Group::has('group_orgaization')->where('id',$id)->first();
+        if(empty($group_organization)){
+            Group::find($id)->delete();
+            AdminUsers::where('group_id',$id)->delete();
+            DB::select("DROP TABLE ".$prefix."group_".$id."_users");
+            DB::select("DROP TABLE ".$prefix."group_".$id."_user_meta");
+            Session::flash('success','Successfully deleted!');
+            return back();
+        }else{
+            Session::flash('warning','This Group associate with organization. It not deleted');
+            return back();
         }
-        return redirect()->route('list.organizations');*/
+        
     }
 }

@@ -60,7 +60,7 @@ class PagesController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 5;
+            $perPage = get_items_per_page();;
           }
         $sortedBy = @$request->sort_by;
         $order = $request->order;
@@ -92,7 +92,7 @@ class PagesController extends Controller
                         'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created','status'=>['type'=>'switch','title'=>'Status','class' => 'pageStatus']],
                         'actions' => [
                                         'edit'    => ['title'=>'Edit','route'=> $edit ,'class'=>'edit'],
-                                        'delete'  => ['title'=>'Delete','route'=>$delete],
+                                        'delete'  => ['title'=>'Delete','class'=>'red','route'=>$delete],
                                         'view'  => ['title'=>'View','route'=> $view]
                                     ]
                       ];
@@ -165,6 +165,7 @@ class PagesController extends Controller
      */
     public function delete($id)
     {
+        
         $Associate = $this->assignModel('Page');
 
         $model = $Associate::find($id)->delete();
@@ -185,7 +186,7 @@ class PagesController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 5;
+            $perPage = get_items_per_page();;
           }
         $sortedBy = @$request->sort_by;
             if($request->has('search')){
@@ -214,7 +215,7 @@ class PagesController extends Controller
                         'showColumns' => ['title'=>'Title','created_at'=>'Created At','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
                         'actions' => [
                                         'edit'    => ['title'=>'Edit','route'=>$edit,'class'=>'edit'],
-                                        'delete'  => ['title'=>'Delete','route'=>$delete]
+                                        'delete'  => ['title'=>'Delete','class'=>'red','route'=>$delete]
                                     ]
                       ];
             return view('organization.posts.list_posts',$datalist);

@@ -29,7 +29,7 @@ class categoriesController extends Controller
                   $perPage = 999999999999999;
                 }
               }else{
-                $perPage = 5;
+                $perPage = get_items_per_page();;
               }
           $sortedBy = @$request->sort_by;
            $orders = $request->order;
@@ -64,7 +64,7 @@ class categoriesController extends Controller
                           'showColumns' => ['name'=>'Name','description'=>'description'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>$edit , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>$delete]
+                                          'delete'=>['title'=>'Delete','class'=>'red','route'=>$delete]
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]

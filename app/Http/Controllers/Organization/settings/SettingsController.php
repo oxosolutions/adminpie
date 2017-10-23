@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\UsersMeta;
 use Auth;
 use Session;
+use App\Model\Organization\OrganizationSetting;
 class SettingsController extends Controller
 {
     /**
@@ -17,7 +18,7 @@ class SettingsController extends Controller
      **/
     public function user_settings(){
 
-    	$model = UsersMeta::get();
+    	$model = OrganizationSetting::where(['type'=>'web'])->get();
     	$modelArray = [];
     	foreach($model as $key => $value){
     		$modelArray[$value->key] = $value->value;
@@ -34,10 +35,10 @@ class SettingsController extends Controller
     public function save_user_settings(Request $request){
 
 		foreach($request->except(['_token']) as $key  => $value){
-			$model = UsersMeta::firstOrNew(['key'=>$key]);
+			$model = OrganizationSetting::firstOrNew(['key'=>$key]);
 			$model->key = $key;
 			$model->value = $value;
-			$model->user_id = Auth::guard('org')->user()->id;
+			$model->type = 'web';
 			$model->save();
 		}
 		Session::flash('success', 'Successfully Updated!');

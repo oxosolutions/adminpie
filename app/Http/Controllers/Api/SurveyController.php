@@ -22,7 +22,6 @@ class SurveyController extends Controller
     public function surveys(Request $request){
         // $org_id = GO::where('active_code',$request['activation_key'])->first()->id; 
          $org = GO::where('active_code',$request['activation_key']);
-
         if(!$org->exists()){
             return ['status'=>'error', 'message'=>'active code not exist'];
         }
@@ -232,6 +231,23 @@ class SurveyController extends Controller
                      $keys[] = $newDataKey;
                 }
              }
+
+            // $colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`survey_started_on` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`survey_completed_on` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
+            // $colums[] =    "`survey_submitted_by` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`survey_submitted_from` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
+            // $colums[] =    "`device_detail` text NULL DEFAULT  NULL";
+            // $colums[] =    "`created_by` int(11)  NULL";
+            // $colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
+            // $colums[] =    "`deleted_at` timestamp NULL DEFAULT NULL";
+
+
+
             $newTableName = str_replace('ocrm_', '', $table_name);
          if(Schema::hasTable($newTableName)){
          	// dd('table_exist', $colums);
@@ -246,6 +262,7 @@ class SurveyController extends Controller
       }else{ 
       	DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
         DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+        DB::select("ALTER TABLE `{$table_name}` ADD `created_at` TIMESTAMP NOT NULL");
         }
             if(!empty($values['unique_id'])){
                 if(!DB::table($newTableName)->where('unique_id',$values['unique_id'])->exists()){

@@ -1,48 +1,33 @@
 @php
 	$model = "App\Model\Organization\Dataset";
+	$item_count = $model::all()->count();
+	$items = $model::orderBy('id','DESC')->limit(3)->get();
 @endphp
-@extends('layouts.widget')
-
-@section('front')
-
-	<div class="front" >
-		<div class="card shadow mt-0 fix-height" >
-			<div class="row center-align aione-widget-header mb-10" ><h5 class="m-0"><a href="#">{{ucfirst($data['widgets']->slug)}}</a></h5></div>
-			<div class="row center-align aione-widget-content mb-10" >
-					{{$model::all()->count()}}
-			</div>
-			<div class="row aione-widget-footer mb-10" >
-				<button href="#" class="all blue white-text">All {{$data['widgets']->slug}}</button>
-				<button href="#" class="recent blue white-text flip-btn-1">Recent {{$data['widgets']->slug}}</button>
-			</div>
+@include('organization.widgets.includes.widget-start')
+    @include('organization.widgets.includes.widget-front-start')
+        <div class="aione-widget-title" >{{ucfirst($widget_title)}}</div>
+		<div class="aione-widget-content-wrapper">
+			<span class="aione-hero-text aione-counter">{{$item_count}}</span>
 		</div>
-	</div>
-@overwrite
-
-@section('back')
-	<div class="back">
-		<div class="card shadow mt-0 fix-height" > 
-			<div class="row center-align aione-widget-header m-0" ><h5 class="m-0"><a href="#">{{ucfirst('Recent '.$data['widgets']->slug)}}</a></h5>
-				<a href="#" class="btn-unflip-1 btn-unflip"><i class="material-icons dp48">clear</i></a>
-			</div>
-			<div class="row aione-widget-list m-0" >
-				<ul class="recent-five">
-				@php
-					$data2 = $model::orderBy('id','DESC')->limit(5)->get();
-				@endphp
-				@if($data2 == null || $data2->isEmpty())
-					{{dump("No Data Found")}}
-				@else
-					@foreach($data2 as $k => $v)
-						<li class="waves-effect">
-							{{$v->dataset_name}}
-							<a href="{{route('view.dataset',@$v->id)}}">view</a>
+		<div class="aione-widget-footer"></div>
+    @include('organization.widgets.includes.widget-front-end')
+    @include('organization.widgets.includes.widget-back-start')
+    	<div class="aione-widget-title">{{ucfirst($widget_title)}}</div>
+    	<div class="aione-widget-content-wrapper">
+            <ul class="aione-recent-items">
+				@if(!$items->isEmpty())
+    				@foreach($items as $item_key => $item)
+						<li class="item waves-effect" style="overflow: hidden; text-overflow: ellipsis;">{{$item->dataset_name}}
+							<a class="item-action" href="{{route('view.dataset',$item->id)}}">view</a>
 						</li>
 					@endforeach
-				@endif
-					<div class="divider"></div>
-				</ul>
-			</div>
+    			@else 
+    				<div class="aione-widget-error">
+    					{{ __('messages.widget_empty_list', ['entity' => 'dataset']) }}
+    				</div>
+    			@endif
+			</ul>
 		</div>
-	</div>
-@overwrite
+		<div class="aione-widget-footer"></div>
+     @include('organization.widgets.includes.widget-back-end')
+@include('organization.widgets.includes.widget-end')

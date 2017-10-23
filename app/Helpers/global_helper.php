@@ -19,7 +19,6 @@ use App\Model\Organization\ActivityLog;
 use App\Model\Admin\GlobalActivityTemplate;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\UserRoleMapping;
-use App\Mddel\Organization\OrganizationSetting;
 use App\Model\Organization\FormBuilder;
 use App\Model\Organization\Page as Page;
 use App\Model\Admin\Page as GlobalPage;
@@ -346,8 +345,9 @@ function generate_filename($length = 30, $timestamp = true){
 	
 	//prepend timestamp in filename
 	if($timestamp){
-		$filename .= date('Ymdhis');
-		$filename .= round(microtime(true));
+		$datetime = date('Ymdhis');
+		$microtime = substr(explode(".", explode(" ", microtime())[0])[1], 0, 6);
+		$filename .= $datetime.$microtime;
 	}
 	
 	//Check if filename length is achieved or exceeded
@@ -362,6 +362,20 @@ function generate_filename($length = 30, $timestamp = true){
 	
 	//Return generated filename
 	return $filename;
+}
+
+/************************************************************
+*	@function get_timestamp
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return current_timestamp [string]
+************************************************************/
+function get_timestamp(){
+	
+	$current_timestamp = generate_filename(20,true);
+	//Return generated filename
+	return $current_timestamp;
 }
 
 /************************************************************
@@ -601,7 +615,11 @@ function update_user_metas(Array $meta, $uid = null, $return = false){
 	foreach($meta as $metaKey => $metaValue){
 		$model = UsersMeta::firstOrNew(['key'=>$metaKey,'user_id'=>$uid]);
 		$model->key = $metaKey;
-		$model->value = $metaValue;
+		if(is_array($metaValue)){
+			$model->value = json_encode($metaValue);
+		}else{
+			$model->value = $metaValue;
+		}
 		$model->user_id = $uid;
 		$model->save();
 		$updatedMeta[$metaKey] = $metaValue;
@@ -806,6 +824,36 @@ function aione_list($headers = null, $records = null, $style = "default"){
 	return $html;
 }
 
+/************************************************************
+*	@function aione_message
+*	@description Display Aione Messages
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm type			[string	optional	default	null]
+*	@perm messages		[array	optional	default	null]
+*	@return html [html]
+************************************************************/
+function aione_message($messages = null, $type = '', $align = 'center'){
+	
+	$html = '';
+	$html .= '<div class="aione-message '.$type.'">';
+	if(!empty($messages)){
+		if(is_array($messages)){
+			$html .= '<ul class="aione-messages">';
+				foreach ($messages as $key => $message) {
+					$html .= '<li class="aione-align-'.$align.'">'.$message.'</li>';
+				}
+			    
+			$html .= '</ul>';
+		} else {
+			$html .= $messages;
+		}
+	}
+	$html .= '</div>';
+	
+	return $html;
+}
 
 /************************************************************
 *	@function get_posts
@@ -1035,16 +1083,6 @@ function get_website_alexa_rank( $url = null ){
 
 
 
-
-
-
-
-
-
-
-
-
-
 	/**
 	 * [user_info to get current user information & employee Info]
 	 * @return [collection] [user information]
@@ -1168,6 +1206,33 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 		 return Null;
 	}
 	/************************************************************
+	*	@function get_items_per_page
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm key		[$key]
+	*	@perm array		[	]
+	*	@return value or null
+	************************************************************/
+
+	function get_items_per_page(){
+		try{
+			$perPageSetting = org_setting::where(['key' => 'perpagelist'])->first();
+			if($perPageSetting != '' || $perPageSetting != null){
+				$perPage = $perPageSetting->value;
+			}else{
+				$perPage = 2;
+			}
+			return $perPage;
+		}catch(\Exception $e){
+			return null;
+		}
+		
+	}
+
+
+
+	/************************************************************
 	*	@function check_route_permisson
 	*	@access	public
 	*	@since	1.0.0.0
@@ -1281,6 +1346,20 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 
     	$model = 'App\\Model\\Organization\\Dataset';
     	$column = 'dataset_name';
+    	$dataset_name = get_title($model,$id,$column);
+    	return $dataset_name;
+    }
+
+    /**
+     * get dataset name function
+     *
+     * @return string
+     * @author sandip
+     **/
+    function get_map_title($id){
+
+    	$model = 'App\\Model\\Admin\\CustomMaps';
+    	$column = 'title';
     	$dataset_name = get_title($model,$id,$column);
     	return $dataset_name;
     }

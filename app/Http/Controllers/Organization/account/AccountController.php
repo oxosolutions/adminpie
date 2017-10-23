@@ -21,6 +21,7 @@ use App\Model\Organization\EmailLayout;
 use App\Model\Organization\EmailTemplate;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\Document;
+use App\Http\Controllers\Organization\settings\SettingsController;
 
 class AccountController extends Controller
 {
@@ -38,7 +39,7 @@ class AccountController extends Controller
                   $perPage = 999999999999999;
                 }
               }else{
-                $perPage = 5;
+                $perPage = get_items_per_page();;
               }
           $sortedBy = @$request->orderby;
           if($id == null){

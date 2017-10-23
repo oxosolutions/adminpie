@@ -20,11 +20,11 @@ $page_title_data = array(
   @include('common.list.datalist')
 @include('common.page_content_primary_end')
     @include('common.page_content_secondry_start')
-    <style type="text/css">
+   <!--  <style type="text/css">
       .options{
         display: block !important;
       }
-    </style>
+    </style> -->
     @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

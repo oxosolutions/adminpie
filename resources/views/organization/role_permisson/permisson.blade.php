@@ -1,26 +1,70 @@
 @extends('layouts.main')
-
 @section('content')
- @php
-      if(!empty($filled_data))
-          {
-              if(isset($filled_data['module'])){
-                $moduleFilled = $filled_data['module']->keyBy('permisson_id')->toArray();
-                $submoduleFilled = $filled_data['submodule']->keyBy('permisson_id')->toArray();
-                $routeFilled = $filled_data['route']->keyBy('permisson_id')->toArray();
-              }
-               if(isset($filled_data['widget'])){
-                $widgetFilled = $filled_data['widget']->keyBy('permisson_id')->toArray();
+@php
 
-               }
-          }
-    @endphp
+if(!empty($filled_data)){
+  if(isset($filled_data['module'])){
+    $moduleFilled = $filled_data['module']->keyBy('permisson_id')->toArray();
+    $submoduleFilled = $filled_data['submodule']->keyBy('permisson_id')->toArray();
+    $routeFilled = $filled_data['route']->keyBy('permisson_id')->toArray();
+  }
+  if(isset($filled_data['widget'])){
+    $widgetFilled = $filled_data['widget']->keyBy('permisson_id')->toArray();
+  }
+}
+
+$page_title_data = array(
+  'show_page_title' => 'yes',
+  'show_add_new_button' => 'no',
+  'show_navigation' => 'yes',
+  'page_title' => 'Role Permissions <span>'.$role_data[0]['name'].'</span>',
+  'add_new' => ''
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
+@include('common.pagecontentstart')
+  @include('common.page_content_primary_start')
+
+  <div id="page_role_permissions" class="page-role-permissions">
+    {!! Form::open(['route'=>'save.role_permisson'])!!}
+    <input type="hidden" name="role_id" value="{{$role_data[0]['id']}}">
+    <!-- Modules -->
+    <div class="ar">
+        <div class="ac s100 m100 l100 pb-15">
+          <div class="aione-widget aione-border bg-grey bg-lighten-5">
+            <div class="aione-title">
+              <h5 class="font-weight-400 aione-border-bottom m-0 p-10 white bg-blue-grey bg-darken-4">
+                Widget Permissions<span class="aione-float-right">Status</span>
+              </h5>
+            </div>
+            @foreach($widget as $widgetKey =>$widgetVal)
+              <input type="hidden" name="widget[{{$widgetVal->id}}][permisson_type]" value="widget">
+              <input type="hidden" name="widget[{{$widgetVal->id}}][permisson_id]" value="{{$widgetVal->id}}" >
+              <div class="aione-border-bottom blue-grey darken-2">
+                <label class="display-inline-block pv-15 ph-10" for="filled-in-box_{{$loop->iteration}}">{{$widgetVal->title}}</label>
+                <span class="aione-float-right display-inline-block p-10">
+                  @if(!empty($widgetFilled[$widgetVal->id]['permisson']) && $widgetFilled[$widgetVal->id]['permisson']=='on' )
+                  <input checked="checked" name='widget[{{$widgetVal->id}}][permisson]' type="checkbox" class="filled-in" id="filled-in-box_{{$loop->iteration}}"  />
+                  @else
+                  <input name='widget[{{$widgetVal->id}}][permisson]' type="checkbox" class="filled-in" id="filled-in-box_{{$loop->iteration}}"  />
+                  @endif
+                </span>
+              </div>
+            @endforeach
+            <div class="aione-border-top bg-grey bg-lighten-4">
+            {!! Form::submit('Save Widget Permissions', ['class' => 'aione-button ']) !!}
+            </div>
+          </div>
+        </div>
+    </div>
+    {!!Form::close() !!}
+  </div>
+
+
+
 
 <div class="row">
 
-    <div class="card" style="padding: 10px;margin-top: 0px;margin-bottom: 14px">
-        <h5>Permissions for:<strong>{{$role_data[0]['name']}} </strong></h5>
-    </div>
 
 
     <div class="card section-1"  style="margin: 0px;margin-bottom: 14px">
@@ -143,6 +187,11 @@
 
     </div>
 </div>
+
+
+  @include('common.page_content_primary_end')
+  @include('common.page_content_secondry_start')
+
 <style type="text/css">
     #assign_role >  ul > li:first-child{
         background-color: #24425C;
@@ -185,4 +234,13 @@ $('.checkAll').on('click',function(){
     }
 });
 </script>
+
+
+
+
+
+
+
+  @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

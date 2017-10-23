@@ -64,7 +64,7 @@
 			<strong>Column:</strong>{{$columns}}, &nbsp;&nbsp;&nbsp;&nbsp;<strong>Row:</strong>{{$key}}<br>
 		@endforeach
 	</div>
-	<div style="font-size: 13px;color: #757575">Showing 201 to 300 of total 15336 records</div>
+	<div style="font-size: 13px;color: #757575">Showing {{ $paginate->firstItem() }} to {{ $paginate->lastItem() }} of total {{ $paginate->total() }} records</div>
 	<div class="aione-table" style="margin-top: 14px">
 		@if($headers == null)
 			<div class="aione-message warning">

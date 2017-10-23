@@ -2,6 +2,19 @@
 	$ArrayData = App\Model\Organization\Dataset::getDatasetTableData(request()->route()->parameters()['id']);
 	$records = $ArrayData['records'];
 	$headers = $ArrayData['headers'];
+	$lastCount = count($headers);
+	unset($headers[$lastCount-1]);
+	unset($headers[$lastCount-2]);
+	
+	$newArray = [];
+
+	foreach($records as $rKey => $rValue){
+		$lastCount = count($rValue);
+		unset($rValue[$lastCount-1]);
+		unset($rValue[$lastCount-2]);
+		$newArray[] = $rValue;
+	}
+	$records = $newArray;
 	if(empty($records)){
 		$tempArray = [];
 		$index = 0;
@@ -64,10 +77,29 @@
 	    contextMenu: ['row_above','row_below','---------','col_right','---------','remove_row','remove_row','---------','undo','redo','---------','make_read_only','alignment'],
 	    afterChange: function(changes, source){
 	    	if(source == 'edit'){
-	    		changedDataRecords.push(hot2.getData()[changes[0][0]]);
+	    		//console.log(changes[0]);
+	    		var tableData = hot2.getData();
+	    		if(tableData[changes[0][0]][0] == null){
+	    			var newId = tableData[changes[0][0]-1][0];
+	    			hot2.setDataAtCell(changes[0][0], 0, parseInt(newId)+1);
+	    		}
+	    		var status = false;
+	    		var record = $.grep(changedDataRecords,function(value,key){
+	    			if(value[0] == hot2.getData()[changes[0][0]][0]){
+						status = true; 
+						changedDataRecords[key] = hot2.getData()[changes[0][0]]; 				
+	    			}
+	    		});
+	    		if(status == false){
+	    			changedDataRecords.push(hot2.getData()[changes[0][0]]);
+	    		}
+	    		//console.log(changedDataRecords);
 	    		$('.save_dataset').fadeIn(200);
 	    	}
 	    }
+	    /*afterCreateRow: function(index,amount){
+	    	console.log(index);
+	    }*/
 	  });
 
 	  hot2.updateSettings({

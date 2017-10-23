@@ -9,8 +9,10 @@ use App\Model\Group\GroupUsers;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\forms as Forms;
 use App\Model\Organization\FormBuilder as FormBuilder;
+use App\Model\Organization\FieldMeta;
 use Session;
 use Hash;
+use App\Model\Organization\OrganizationSetting;
 class ProfileController extends Controller
 {
 	/**
@@ -20,33 +22,43 @@ class ProfileController extends Controller
 	 */
     public function view(){
 
+        $form_slug = null;
         $model = Auth::guard('org')->user();
-        $additionalForm = UsersMeta::where(['key'=>'user_profile_form','user_id'=>Auth::guard('org')->user()->id])->first();
+        $userDetails['name'] = $model->name;
+        $userDetails['email'] = $model->email;
+
+        $additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
-            $additionalForm = Forms::find($additionalForm->value);
+
+            $additionalForm = Forms::with(['section'])->find($additionalForm->value);
             if($additionalForm != null){
                 $form_slug = $additionalForm->form_slug;
-            }
-        }
-        $form_id = [];
-        $section_id = [];
-        $getFormFields = Forms::where('form_slug',$form_slug)->with(['section'])->first();
-        foreach($getFormFields->section as $k => $v){
-            $form_id[] = $v->form_id;
-            $section_id[] = $v->id;
-        }
-        $fields = FormBuilder::where(['form_id' => $form_id,'section_id'=> $section_id])->get();
-        $AdditionalData = [];
-        $AdditionalData['name'] = $model['name'];
-        $AdditionalData['email'] = $model['email'];
+                    $form_id = $additionalForm['id'];
+                    $section_id = $additionalForm->section[0]['id'];
+                $fields = FormBuilder::where(['form_id' => $form_id,'section_id'=> $section_id])->get();
 
-        foreach ($fields as $key => $value) {
-            $processMeta = UsersMeta::where(['user_id'=>Auth::guard('org')->user()->id , 'key'=>$value->field_slug])->first();
-            if($processMeta != ''){
-                $AdditionalData[$value->field_title] = $processMeta->value;
+                foreach ($fields as $key => $field) {
+                    $field_key = $field->field_slug;
+                    $user_meta = get_user_meta($model->id,$field_key,true);
+                    $field_title = $field->field_title;
+                    $field_type = $field->field_type;
+
+                    if(!empty($user_meta)){
+                        if($field_type == 'radio'){
+                            $field_options = field_options($field->field_slug , $id= null);
+                            $userDetails[$field_title] = $field_options[$user_meta];
+                        } else {
+                            $userDetails[$field_title] = $user_meta;
+                        }
+                        
+                    }
+                }
+            }else{
+                $userDetails = $userDetails; 
             }
+
         }
-    	return view('organization.my-profile.preview',['model'=>$model,'AdditionalData'=>$AdditionalData]);
+        return view('organization.my-profile.preview',['model' => $userDetails]);
     }
 
     /**
@@ -59,15 +71,24 @@ class ProfileController extends Controller
     	$model = Auth::guard('org')->user();
     	$processMeta = UsersMeta::where(['user_id'=>Auth::guard('org')->user()->id])->get();
     	foreach($processMeta as $key => $value){
-    		$model[$value->key] = $value->value;
+            try{
+                $decodeValue = json_decode($value->value);
+                if(is_array($decodeValue) || $decodeValue == ''){
+                    $model[$value->key] = $decodeValue;
+                }else{
+                    $model[$value->key] = $value->value;
+                }
+            }catch(\Exception $e){
+                $model[$value->key] = $value->value;
+            }
     	}
-    	$additionalForm = UsersMeta::where(['key'=>'user_profile_form','user_id'=>Auth::guard('org')->user()->id])->first();
-    	if($additionalForm != null){
-    		$additionalForm = Forms::find($additionalForm->value);
-    		if($additionalForm != null){
-    			$form_slug = $additionalForm->form_slug;
-    		}
-    	}
+    	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
+        if($additionalForm != null){
+            $additionalForm = Forms::find($additionalForm->value);
+            if($additionalForm != null){
+                $form_slug = $additionalForm->form_slug;
+            }
+        }
     	return view('organization.my-profile.edit',['model'=>$model,'additional_form'=>$form_slug]);
     }
 
@@ -149,7 +170,12 @@ class ProfileController extends Controller
     	foreach($request->except(['_token','email','name']) as $key => $value){
     		$userMetaModel = UsersMeta::firstOrNew(['key'=>$key]);
     		$userMetaModel->key = $key;
-    		$userMetaModel->value = $value;
+            
+            if(!is_array($value)){
+                $userMetaModel->value = $value;
+            }else{
+                $userMetaModel->value = json_encode($value);
+            }
     		$userMetaModel->user_id = Auth::guard('org')->user()->id;
     		$userMetaModel->save();
     	}

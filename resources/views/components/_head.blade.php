@@ -31,7 +31,7 @@
     
  
 	<script type="text/javascript" src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js"></script>
+
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/handsontable/0.31.2/handsontable.full.min.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/removeRow/handsontable.removeRow.css" />
@@ -53,6 +53,13 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/owl.carousel/dist/assets/owl.carousel.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
 	<script src="{{ asset('bower_components/owl.carousel/dist/owl.carousel.min.js') }}"></script>
+
+	<!-- load emmet code and snippets compiled for browser -->
+	<script type="text/javascript" src="{{ asset('bower_components/ace-builds/src-min/ace.js')}}"></script>
+	<!-- load emmet code and snippets compiled for browser -->
+	<script type="text/javascript" src="https://cloud9ide.github.io/emmet-core/emmet.js"></script>
+	<script type="text/javascript" src="{{ asset('bower_components/ace-builds/src-min/ext-emmet.js')}}"></script>
+	
 
 	<!-- Global stylesheets -->
 	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/aione.css?ref='.rand(1111,9999)) }}">

@@ -17,7 +17,7 @@ class SliderController extends Controller
             $perPage = 999999999999999;
           }
         }else{
-          $perPage = 5;
+          $perPage = get_items_per_page();;
         }
         $sortedBy = @$request->orderby;
         if($request->has('search')){
@@ -57,13 +57,11 @@ class SliderController extends Controller
     {
         $destination_path = upload_path('slides');
         foreach($request->slider as $k => $v){
-            // dd($v);
-            // dd($v['file']->getClientOriginalName());
-            // $file_extension = '.'.$v['file']->getClientOriginalExtension();
-            // $complete_file_name = $new_filename.$file_extension;
             $new_filename = $v['file']->getClientOriginalName();
             $uploadFile = $v['file']->move($destination_path, $new_filename);
+            // $v['file'] = $new_filename;             
         }
+        dd($request->all());
         foreach ($request->except('_token') as $key => $value) {
             if($key == 'slider'){
                 foreach ($request->slider as $k => $v) {
@@ -79,11 +77,11 @@ class SliderController extends Controller
                 }
             }
         }
-        dump($newData);
+        // dump($newData);
         // dump($request->slider[0]['file']->getClientOriginalName());
         // dump($request->slider);
-        dd();
-        dd(json_encode($request->slider));
+        // dd();
+        dd(json_encode($request->all()));
         $model = new Slider;
         $model->name =  $request->name;
         $model->description = $request->description;

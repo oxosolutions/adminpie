@@ -14,7 +14,7 @@ $page_title_data = array(
     @include('common.page_content_primary_start')
     @include('group.organization._tabs')
    
-	{!!Form::model($org_data, ['route' => ['edit.organization', $org_data->id]])!!}
+	{!!Form::model($org_data, ['route' => ['edit.groupOrganization', $org_data->id]])!!}
         {!! FormGenerator::GenerateForm('edit_organization_form') !!}           
     {!! Form::close() !!}        
   

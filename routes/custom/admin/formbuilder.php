@@ -10,7 +10,7 @@
 	Route::post('update/form/custom/{id}',['as' => 'update.form.custom' , 'uses' => 'FormBuilderController@updateCustomForm']);
 	Route::get('/forms/delete/{id}',	['as'=>'delete.form','uses'=>'FormBuilderController@deleteForm']);
 	Route::get('/form/{form_id}/sections',['as'=>'list.sections','uses'=>'FormBuilderController@sectionsList']);
-	Route::post('/create/sections/{id}',		['as'=>'create.sections','uses'=>'FormBuilderController@createSection']);
+	Route::post('/sections/create/{id}',		['as'=>'create.sections','uses'=>'FormBuilderController@createSection']);
 	Route::get('/delete/sections/{id}',	['as'=>'del.section','uses'=>'FormBuilderController@deleteSection']);
 	Route::get('/form/create',			['as'=>'create.form','uses'=>'FormBuilderController@index']);
 	Route::get('/forms/fields/{form_id}/{section_id}',['as'=>'list.field','uses'=>'FormBuilderController@listFields']);

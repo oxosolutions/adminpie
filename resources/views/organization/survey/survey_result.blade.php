@@ -50,7 +50,8 @@
 </style>
 @php
 if(!empty($data)){
-    dump($keys = collect($data->first())->keys());
+
+    $keys = collect($data->first())->keys();
 
  // $data = json_decode(json_encode($data->all()),true);
 	// dd($data);
@@ -60,7 +61,7 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Survey Raw Data',
+    'page_title' => 'Survey Data <span>' .get_survey_title(request()->route()->parameters()['id']). '</span>',
     'add_new' => '+ Add Media'
 ); 
 @endphp 

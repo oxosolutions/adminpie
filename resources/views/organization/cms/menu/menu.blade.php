@@ -30,7 +30,7 @@
 	@include('common.page_content_secondry_start')
 
 		{!! Form::open(['route'=>$route , 'class'=> 'form-horizontal','method' => 'post'])!!}
-			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Menu','button_title'=>'Add Menu','section'=>'add_menu_main']])
+			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Menu','button_title'=>'Add Menu','form'=>'add_menu_form']])
 		{!!Form::close()!!}
 
 	@include('common.page_content_secondry_end')

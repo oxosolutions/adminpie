@@ -26,7 +26,7 @@ class UsersController extends Controller
             $perPage = 999999999999999;
           }
         }else{
-          $perPage = 5;
+          $perPage = 10;
         }
         $sortedBy = @$request->orderby;
         if($request->has('search')){
@@ -52,7 +52,7 @@ class UsersController extends Controller
                         'actions' => [
                                         'edit' =>           ['title'    =>  'Edit'  ,               'route'=>'admin.user.get'],
                                         'changePassword'=>  ['title'    =>  'Change Password',      'route'=>'admin.changepass.user'],
-                                        'delete'=>          ['title'    =>  'Delete',               'route'=>'delete.admin.user']
+                                        'delete'=>          ['title'    =>  'Delete','route'=>'delete.admin.user','class'=>'red']
                                      ]
                     ];
         return view('admin.users.list' , $datalist); 

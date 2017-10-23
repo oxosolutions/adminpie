@@ -9,23 +9,18 @@ use Auth;
 use App\Model\Admin\GlobalOrganization;
 use App\Model\Group\GroupUsers;
 
-
-class DashboardController extends Controller
-{
-	
+class DashboardController extends Controller{
     public function index(){
-        Session::put('group_id',Auth::guard('group')->user()['group_id']);
-    	$list_org = GlobalOrganization::where('group_id',Auth::guard('group')->user()['id'])->get();
-    	$list_user = GroupUsers::all();
+        $group_id = Auth::guard('group')->user()['group_id'];
     	$model = [
     				'Organizations' => [
-    								'count' => GlobalOrganization::where('group_id',Auth::guard('group')->user()['id'])->count(),
-				    				'list'	=> GlobalOrganization::all(),
+    								'count' => GlobalOrganization::where('group_id',$group_id)->count(),
+				    				'list'	=> null,
                                     'route' => 'list.groupOrganizations'
     							],
     				'Users' => [
     								'count' =>	GroupUsers::count(),
-				    				'list'	=>	GroupUsers::all(),
+				    				'list'	=>	null,
                                     'route' => 'group.users'
     								]
     			];

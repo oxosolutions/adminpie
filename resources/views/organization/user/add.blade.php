@@ -17,7 +17,10 @@ $id = "";
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	{!! Form::open(['method' => 'POST','class' => '','route' => 'store.user']) !!}
-		{!! FormGenerator::GenerateSection('organization_user_add') !!}
+		{!! FormGenerator::GenerateForm('organization_add_user_form') !!}
+        @if($form_slug != null)
+                {!! FormGenerator::GenerateForm($form_slug,[],null,'org') !!}
+        @endif
 		<button>Save</button>
 	{!! Form::close() !!}
 @include('common.page_content_primary_end')

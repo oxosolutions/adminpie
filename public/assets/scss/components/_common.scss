@@ -65,11 +65,7 @@ $i: 1;
     margin-bottom: 10px;
     border: 1px solid #e8e8e8;
 }
-.aione-accordion .aione-item .aione-item-header,
-.aione-collapsible .aione-item .aione-item-header {
-    display: block;
-    position:relative;
-    cursor: pointer;
+.aione-item-header{
     padding: 15px 15px 15px 45px;
     color: #666666;
     background-color: #fafafa;
@@ -77,6 +73,12 @@ $i: 1;
     line-height: 1.4;
     font-weight: 100;
     font-family: "Open Sans",Arial,sans-serif;
+}
+.aione-accordion .aione-item .aione-item-header,
+.aione-collapsible .aione-item .aione-item-header {
+    display: block;
+    position:relative;
+    cursor: pointer;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
@@ -117,10 +119,12 @@ $i: 1;
     height:0;
     margin-top: -1px;
 }
+.aione-item-content{
+    padding: 20px;
+}
 .aione-accordion .aione-item .aione-item-content,
 .aione-collapsible .aione-item .aione-item-content{
     display: none;
-    padding: 20px;
     color: #666666;
     font-size: 16px;
     line-height: 1.4;
@@ -207,6 +211,15 @@ COMMON
 
 .display-block{
     display: block;
+}
+.display-inline{
+    display: inline;
+}
+.display-inline-block{
+    display: inline-block;
+}
+.display-none{
+    display: none;
 }
 .bold{
     font-weight:bold;

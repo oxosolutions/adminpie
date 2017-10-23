@@ -15,9 +15,9 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
    {!!Form::model(['dataset_id'=>$datasetid],['route'=>'save.visualization'])!!}
          {{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Visualization','button_title'=>'Save & Next','section'=>'vissec1']]) --}}
-         {!! FormGenerator::GenerateSection('vissec1') !!}
+         {!! FormGenerator::GenerateForm('add_visualization_form') !!}
          
-         <button type="submit">Add Visualization</button>
+         {{-- <button type="submit">Add Visualization</button> --}}
       {!!Form::close()!!}
 	
 @include('common.page_content_primary_end')

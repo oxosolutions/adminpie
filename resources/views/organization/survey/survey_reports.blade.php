@@ -49,7 +49,7 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Survey Report',
+    'page_title' => 'Survey Report <span>'.get_survey_title(request()->route()->parameters()['id']).'</span>',
     'add_new' => '+ Add Media'
 ); 
 @endphp 
@@ -58,6 +58,11 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
 @include('organization.survey._tabs')
 
+@if(!empty($error))
+	<div class="aione-message warning">
+	            {{ __("survey.survey_results_table_missing") }}
+	</div>
+@else
 <div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
 	<p>Filters</p>
 		{!! Form::open(['route'=>['survey.reports',@$id],'method' => 'post' ]) !!}
@@ -71,6 +76,7 @@ $page_title_data = array(
 					<div id="field_fields" class="field field-type-multi_select">
 						{!! Form::select('fields[]',@$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
 					</div>
+
 				</div>
 
 				{{-- <div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
@@ -171,6 +177,7 @@ $page_title_data = array(
 				
 	{!! Form::close() !!}
 </div>
+
 @if(empty($data))
 		<div class="aione-message warning">
             {{ __('survey.survey_results_table_missing') }}
@@ -276,6 +283,7 @@ $page_title_data = array(
 	    </table>
 	</div>          
 	</div>
+@endif
 @endif
 
 

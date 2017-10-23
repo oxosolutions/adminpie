@@ -29,7 +29,7 @@ class DocumentController extends Controller
                   $perPage = 999999999999999;
                 }
               }else{
-                $perPage = 5;
+                $perPage = get_items_per_page();;
               }
           $sortedBy = @$request->orderby;
           if($request->has('search')){
@@ -115,7 +115,7 @@ class DocumentController extends Controller
                 $perPage = 999999999999999;
               }
             }else{
-              $perPage = 5;
+              $perPage = get_items_per_page();;
             }
         $sortedBy = @$request->orderby;
         $orgId = Session::get('organization_id');
@@ -164,7 +164,7 @@ class DocumentController extends Controller
                 $perPage = 999999999999999;
               }
             }else{
-              $perPage = 5;
+              $perPage = get_items_per_page();;
             }
         $sortedBy = @$request->orderby;
         $orgId = Session::get('organization_id');

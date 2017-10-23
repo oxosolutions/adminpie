@@ -51,7 +51,7 @@
 	<div class="ac l50 right-align" style="float: right;"><button onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button></div>
 	<div class="ar">
 		@if(!$records->isEmpty())
-			<div class="ac l80" style="line-height: 48px">Showing {{$records->firstItem()}} to {{$records->lastItem()}} of {{$records->total()}} records</div>
+			<div class="ac l80" style="line-height: 48px">Showing {{$records->firstItem()}} to {{$records->lastItem()}} of total {{$records->total()}} records</div>
 		@endif
 	</div>
 	

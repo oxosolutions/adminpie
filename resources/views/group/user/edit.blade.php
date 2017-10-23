@@ -15,7 +15,7 @@
 @include('common.page_content_primary_start')
 @include('group.user._tabs')
 	{!!Form::model($model,['route'=>['update.group.user',$model->id]])!!}
-		{!! FormGenerator::GenerateSection('group_user_edit') !!}
+		{!! FormGenerator::GenerateForm('edit_group_user_form') !!}
 		<button type="submit">Save</button>
 	{!!Form::close()!!}
 @include('common.page_content_primary_end')

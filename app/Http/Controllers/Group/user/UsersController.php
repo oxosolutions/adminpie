@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Model\Group\GroupUsers;
 use Session;
 use Hash;
+use Auth;
+use App\Model\Organization\OrganizationSetting;
+use App\Model\Organization\forms as Forms;
+
 
 class UsersController extends Controller
 {
@@ -82,7 +86,6 @@ class UsersController extends Controller
    	 **/
    	public function createUser()
     {
-      
       return view('group.user.create');
     }
 
@@ -93,19 +96,29 @@ class UsersController extends Controller
      * @author snadip
      **/
     public function store(Request $request){
-    	$this->validateUseForm($request);
-    	$model = new GroupUsers;
-    	$model->name = $request->name;
-    	$model->email = $request->email;
-    	$model->password = Hash::make($request->password);
-    	$model->app_password = $request->password;
-    	$model->save();
-        Session::flash('success','User created succesfully');
-    	return redirect()->route('group.users'); 
+      $model = GroupUsers::where(['email'=>$request->email])->first();
+      if($request->password != $request->confirm_password){
+        Session::flash('error','Password and Confirm password must be same');
+          return back();
+      }
+      if(count($model) > 0){
+          Session::flash('error','Email already exist');
+          return back();
+      }else{
+          $this->validateUseForm($request);
+          $model = new GroupUsers;
+          $model->name = $request->name;
+          $model->email = $request->email;
+          $model->password = Hash::make($request->password);
+          $model->app_password = $request->password;
+          $model->save();
+            Session::flash('success','User created succesfully');
+          return redirect()->route('group.users'); 
+      }
     }
     
 
-   	public function edit(Request $request, $id){
+   	public function userDetails(Request $request, $id){
         $model = GroupUsers::find($id);
         return view('group.user.edit',['model'=>$model]);
     }
@@ -170,7 +183,7 @@ class UsersController extends Controller
 
           public function changePassword(Request $request)
           {
-
+            // dd(GroupUsers::where('id',$request->user_id)->first());
             $validate = [
                             'new_password'      => 'required|min:6',
                             'confirm_password'  => 'required|same:new_password|min:6'
@@ -180,7 +193,7 @@ class UsersController extends Controller
 
             $model = GroupUsers::where('id',$request->user_id)->update(['password' => $new_pass , 'app_password' => $request->new_password]);
             if($model){
-                echo "<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>";
+                Session::flash('success','password Change Successfully');
                 return back();
             }
           } 

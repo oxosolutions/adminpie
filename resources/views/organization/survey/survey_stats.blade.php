@@ -5,251 +5,214 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Stats :<span>'.@$form_data->form_title.'</span>',
+    'page_title' => 'Stats <span>'.get_survey_title(request()->route()->parameters()['id']).'</span>',
     'add_new' => '+ Add Media'
-); 
-$id = "";
+);
 
 @endphp 
-<style type="text/css">
-    .aione-row > .left-75{
-        width: 70%;
-        float: left;
-        padding-right: 10px
-    }
-    .aione-row > .right-25{
-        width: 30%;
-        float: right;
-    }
-    .aione-row.theme-1 > .card-4{
-        width: 25%;
-        float: left;
-        padding: 30px 0px;
-        text-align: center;
-    }
-    .aione-row > .card-4 > h3, .aione-row > .card-4 > p{
-        padding:0;
-        margin: 0;
-    }
-    .aione-row > .card-4 > p{
-        line-height: 28px;
-        font-size: 16px;
-        text-transform: uppercase;
-        font-weight: 300;
-        color: #676767;
-    }
-    .aione-row > .card-4:nth-child(odd) > h3{
-        color:#DF735E 
-    }
-    .aione-row > .card-4:nth-child(even) > h3{
-        color:#79C3A9 
-    }
-    .aione-border.theme-1{
-        border:1px solid #e8e8e8;
-        border-radius: 4px
-    }
-    .aione-border.theme-1 > .card-4{
-        border-right: 1px solid #e8e8e8;
-    }
-
-     .aione-row.theme-2 > .card-4{
-        width: 24%;
-        margin-right: 10px;
-        float: left;
-        padding: 30px 0px;
-        text-align: center;
-    }
-     .aione-row.theme-2 > .card-4:last-child{
-        margin-right: 0px
-     }
-    .aione-border.theme-2 > .card-4{
-        border: 1px solid #e8e8e8;
-        border-radius: 4px
-    }
-
-     .aione-row.theme-3 > .card-4{
-        width: 50%;
-        float: left;
-        padding: 30px 0px;
-        text-align: center;
-    }
-     
-    .aione-border.theme-3 > .card-4{
-        border: 1px solid #e8e8e8;
-     
-    }
-</style>
-
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
     @include('organization.survey._tabs')
-        <div class="aione-row">
-            
-                @if(!empty($error))
-                        <div class="aione-message warning">
-                            {{ __('survey.survey_results_table_missing') }}
-                        </div>
-                   
-                @else
 
-                <div>
-                    <div class="row">
-                        <div class="aione-table">
-                            @if(!empty($section_question_count))
-                               {{--  <style>
-                                   table  td , th{
-                                            border:1px solid grey;
-                                    }
-                                </style> --}}
-                               {{--  <table class="wide"> 
-                                    <thead>
-                                        <tr>
-                                            <th>Group Name</th>
-                                            <th>Total Question</th>
-                                        </tr>
-                                    </thead>
-                                    @foreach($section_question_count as $groupName => $queCount)
-                                    <tbody>
-                                        <tr>
-                                           <td> {{str_replace('-', ' ',$groupName)}}</td> <td>{{$queCount}}</td> 
-                                        </tr>
-                                    </tbody>
-                                    @endforeach
-                                 </table> --}}
-                            @endif
-                        </div>
-                    </div>
-                </div>
-               
-                <div class="aione-row aione-border theme-2" style="margin-bottom: 10px">
-                    <div class="card-4">
-                        <h3>{{$group_count}}</h3>
-                        <p>Groups</p>
-                    </div>
-                    <div class="card-4">
-                        <h3>{{$question_count}}</h3>
-                        <p>Questions</p>
-                    </div>
-                     <div class="card-4">
-                        <h3> {{$survey_completed_count}}</h3>
-                        <p>Completed Surveys</p>
-                    </div>
-                     <div class="card-4">
-                        <h3>47</h3>
-                        <p>Incompleted Surveys</p>
-                    </div>
-                </div>
+    @if($data['status'] == 'error')
+        {!!aione_message($data['errors'],'error','center')!!}
+    @endif
 
-                <div class="aione-table row">
-                    <div class="col l6">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th colspan="2"><center>Errors</center></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td ><center>Count</center></td>
-                                    <td ><center>0</center></td>
-
-                                </tr>
-                               @foreach($errors_warnings as $errorKey => $errorVal)
-                                <tr>
-                                     <td ><center>Slug : {{$errorKey}} <br> Question: {{$errorVal['question']}} <br> Field:{{$errorVal['field_type']}}</center></td>
-                                    <td ><center> {{$errorVal['error']['error']}}</center></td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+        <div class="ar pb-20">
+            <div class="ac s100 m50 l25">
+                <div class="aione-widget aione-border bg-grey bg-lighten-5">
+                    <div class="aione-title">
+                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 mb-10 bg-grey bg-lighten-4">Sections</h5>
                     </div>
-                    <div class="col l6">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th colspan="2"><center>Warnings</center></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                     <td ><center>Count</center></td>
-                                    <td ><center>0</center></td>
-
-
-                                </tr>
-                                <tr>
-                                   <td ><center>lorem impsum</center></td>
-                                    <td ><center>1</center></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                                
-                </div>
-             
-                <div class="card-style-1">
-                    <div class="title">Total Errors</div>
-                    <div class="count">{{count($ques_slug_error)}}
-                            {{-- {{$ques_slug_error->keys()->implode(',')}} --}}
-                    </div>
-                    <div></div>
-                </div>
-                 <div class="card-style-1">
-                    <div class="title">Total Warnings</div>
-                    <div class="count">158</div>
-                    <div></div>
+                    <div class="aione-align-center p-30 font-size-64 font-weight-600 blue-grey darken-2">{{@$data['count']['sections']}}</div>
                 </div>
             </div>
-            @if($setting_questions != null)
-                <div class="right-25 aione-table" >
-                   {{--  <table>
-                        <thead>
-                            <tr>
-                                <th colspan="2">Settings</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($setting_questions as $settingKey => $settingVal)
-                                @if($settingKey=='_token')
-                                    @continue;
-                                @endif
-                                @if(!empty($settings[$settingKey]))
-                                    <tr>
-                                        <td>{{$loop->iteration}}.{{$settingVal}}</td>
-                                        <td>{{$settings[$settingKey]}}</td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                        </tbody>
-                    </table>
- --}}
-                  {{--   <div class="center-align">
-                        <span class="card-title-bar">Settings</span>
+            <div class="ac s100 m50 l25">
+                <div class="aione-widget aione-border bg-grey bg-lighten-5">
+                    <div class="aione-title">
+                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 mb-10 bg-grey bg-lighten-4">Questions</h5>
                     </div>
-                    <div class="divider"></div>
-                    <div class="aione-survey-settings">
-                        <div class="aione-survey-setting">
-                        @foreach($setting_questions as $settingKey => $settingVal)
-                            @if($settingKey=='_token')
-                                    @continue;
-                            @endif
-                                        @if(!empty($settings[$settingKey]))
-                                    <div class="aione-survey-subsetting">
-                                            <span class="aione-survey-subsetting-key">{{$loop->iteration}}.
-                                                {{$settingVal}}
-                                            </span>
-                                            <span class="aione-survey-subsetting-value">{{$settings[$settingKey]}}</span>
-                                    </div>
-                                        @endif
-                        @endforeach
-                              
-                        </div>
-                    </div> --}}
-                        
+                    <div class="aione-align-center p-30 font-size-64 font-weight-600 blue-grey darken-2">{{@$data['count']['fields']}}</div>
                 </div>
-            @endif
+            </div>
+            <div class="ac s100 m50 l25">
+                <div class="aione-widget aione-border bg-grey bg-lighten-5">
+                    <div class="aione-title">
+                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 mb-10 bg-grey bg-lighten-4">Completed Responses</h5>
+                    </div>
+                        <div class="aione-align-center p-30 font-size-64 font-weight-600 blue-grey darken-2">{{@$data['count']['completed']}}</div>
+                </div>
+            </div>
+            <div class="ac s100 m50 l25">
+                <div class="aione-widget aione-border bg-grey bg-lighten-5">
+                    <div class="aione-title">
+                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 mb-10 bg-grey bg-lighten-4">Incomplete Responses</h5>
+                    </div>
+                    <div class="aione-align-center p-30 font-size-64 font-weight-600 blue-grey darken-2">{{@$data['count']['incomplete']}}</div>
+                </div>
+            </div>
         </div>
+
+        <div class="ar pb-20">
+            <div class="ac s100 m100 l50">
+                <div class="aione-widget bg-grey bg-lighten-5">
+                    <div class="aione-title aione-border-top aione-border-right aione-border-left">
+                        <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4">
+                            User Responses
+                        </h5>
+                    </div>
+                    <div class="aione-table">
+                        <table class="compact">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th colspan="3">Responses</th>
+                                </tr>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Total</th>
+                                    <th>Complate </th>
+                                    <th>Incomplete </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               @if(isset($data['user_by']) && !empty($data['user_by'])) 
+                                    @foreach($data['user_by'] as $user_key => $user_val)
+                                        <tr>
+                                            <td>{{$user_val->user_id}}</td>
+                                            <td>{{$user_val->total}}</td>
+                                            <td>{{$user_val->completed}}</td>
+                                            <td>{{$user_val->uncompleted}}</td>
+                                        </tr>
+                                    @endforeach
+                                    @else
+                                    {!!aione_message('No Data Exist','error','center')!!}
+                                @endif
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="ac s100 m100 l50">
+                <div class="aione-widget bg-grey bg-lighten-5">
+                    <div class="aione-title aione-border-top aione-border-right aione-border-left">
+                        <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4">
+                            Daywise Responses
+                        </h5>
+                    </div>
+                    <div class="aione-table">
+                        <table class="compact">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th colspan="3">Responses</th>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Completed </th>
+                                    <th>Incomplete </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @if(isset($data['date_by']) && !empty($data['date_by'])) 
+                                @foreach($data['date_by'] as $date_key => $date_val)
+                                    <tr>
+                                        <td>{{$date_val->date}}</td>
+                                        <td>{{$date_val->total}}</td>
+                                        <td>{{$date_val->completed}}</td>
+                                        <td>{{$date_val->uncompleted}}</td>
+                                    </tr>
+                                @endforeach
+                                 @else
+                                    {!!aione_message('No Data Exist','error','center')!!}
+                            @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ar pb-20">
+            <div class="ac s100 m100 l50">
+                <div class="aione-widget bg-grey bg-lighten-5">
+                    <div class="aione-title aione-border-top aione-border-right aione-border-left">
+                        <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4">
+                            User Responses
+                        </h5>
+                    </div>
+                    <div class="aione-table">
+                        <table class="compact">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th colspan="3">Responses</th>
+                                </tr>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Total</th>
+                                    <th>Web</th>
+                                    <th>Application</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              @if(isset($data['user_submit_from']) && !empty($data['user_submit_from'])) 
+                                @foreach($data['user_submit_from'] as $user_submit_key => $user_submit_val)
+                                <tr>
+                                    <td>{{$user_submit_val->user_id}}</td>
+                                    <td>{{$user_submit_val->total}}</td>
+                                    <td>{{$user_submit_val->web}}</td>
+                                    <td>{{$user_submit_val->application}}</td>
+                                </tr>
+                                @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="ac s100 m100 l50">
+                <div class="aione-widget bg-grey bg-lighten-5">
+                    <div class="aione-title aione-border-top aione-border-right aione-border-left">
+                        <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4">
+                            Daywise Responses
+                        </h5>
+                    </div>
+                    <div class="aione-table">
+                        <table class="compact">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th colspan="3">Responses</th>
+                                </tr>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Web</th>
+                                    <th>Application </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(isset($data['date_submit_from']) && !empty($data['date_submit_from'])) 
+                                    @foreach($data['date_submit_from'] as $date_submit_key => $date_submit_val)
+                                    <tr>
+                                        <td>{{$date_submit_val->date}}</td>
+                                        <td>{{$date_submit_val->total}}</td>
+                                        <td>{{$date_submit_val->web}}</td>
+                                        <td>{{$date_submit_val->application}}</td>
+                                    </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
    
 
     
@@ -273,191 +236,8 @@ $id = "";
       });
 
     </script>
-   
-   
-@if(!empty($section))
-
-    @foreach ($sections as $key => $value) 
-        
-        <div>Section Name{{$value['section_name']}}</div>
-        @foreach($value['fields'] as $fieldKey => $fieldVal)
-            <div>  Question {{$fieldVal['field_title']}} ({{$fieldVal['field_type']}})</div>
-            @php 
-            $collection = collect($fieldVal['field_meta'])->mapWithKeys(function($item){
-                return [$item['key']=>$item['value']];
-            });
-
-           $meta = $collection->toArray();
-            @endphp
-            @foreach($meta as $metaKey=> $metaVal)
-                {{$metaKey}} - {{$metaVal}} <br>
-            @endforeach
-        @endforeach
-
-    @endforeach
-@endif
-
-
-@endif
-        <style type="text/css">
-            .card-style-1{
-                padding: 20px;
-                border: 1px solid #e8e8e8;
-                width: 20%
-
-            }
-            .card-style-1 .title{
-                text-align: center;
-                font-size: 20px;
-                font-weight: 500;
-                color: #757575;
-                padding-bottom: 20px;
-                border-bottom: 1px solid #e8e8e8
-            }
-            .card-style-1 .count{
-                text-align: center;
-                font-size: 48px;
-                font-weight: 200;
-                color: #454545;
-                padding-top: 20px
-
-            }
-        </style>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
-   <style type="text/css">
-         }
-        .slider-container{
-            margin-top: 20px;
-        }
-        .card{
-            margin: 0px !important; 
-        }
-        .header-top{
-            border-bottom: 1px solid #ddd;
-            box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
-            padding:5px;
-            background-color: #fff;
-        }
-        .header-top h5{
-            padding-left: 10px;
-
-
-        }
-        .card-section{
-            min-height: 90px;
-            background: #fff;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-            border-radius: 2px;
-            
-        }
-        .card-content{
-            background-color: #fff;
-            text-align: center;
-            float: left;
-            width: 70%;
-            
-        }
-        .card-inner{
-            display: inline;
-            float: right;
-            width: 30%;
-            min-height: 90px;
-            text-align: center;
-            font-size: 1.6em;
-            color: #fff;
-            padding-top: 28px;
-        }
-        .card-part1{
-            font-size: 15px;
-            padding-top: 17px;
-            display: block;
-        }
-        .card-part2{
-            font-size: 20px;
-            padding-top: 5px;
-            display: block;
-        }
-        .text_style{
-            background-color: #606CA8!important;
-        }
-        .radio_style {
-            background-color: #26a69a!important;
-        }
-        .dropdown_style{
-            background-color: #214469!important;
-        }
-        .text_only_style{
-            background-color: #9E9E9E!important;
-        }
-        .clear{
-            clear: both;
-        }
-        .aione-survey-settings .aione-survey-setting {
-            padding:10px;
-            border-bottom: 1px solid #e8e8e8;
-        }
-        .aione-survey-settings .aione-survey-setting:last-child{
-            border-bottom: none;
-        }
-        .aione-survey-settings .aione-survey-setting .aione-survey-setting-value {
-            float: right;
-        }
-        .aione-survey-settings .aione-survey-setting .aione-survey-subsetting{
-            padding:5px 0px;
-            border-bottom: 1px solid #e8e8e8;
-        }
-        .aione-survey-settings .aione-survey-setting .aione-survey-subsetting:last-child{
-            border-bottom: none;
-        }
-        .aione-survey-settings .aione-survey-setting .aione-survey-subsetting .aione-survey-subsetting-key{
-            display:block;
-            
-        }
-        .aione-survey-settings .aione-survey-setting .aione-survey-subsetting .aione-survey-subsetting-value{
-            display:block;
-            text-align: right;
-            color: #777;
-            font-size: 14px;
-        } 
-        .aione-survey-subsetting-value-enable{
-            display:block;
-            text-align: right;
-            color: #777;
-            font-size: 14px;
-            padding-top: 10px;
-        }
-        .card-title-bar{
-            font-size: 24px;
-            padding: 5px 10px;
-            display: block;
-        }
-        .thead{
-            border: 1px solid #eee;
-            padding: 5px;
-            font-size: 12px;
-            text-align: center;
-            color: #777;
-        }
-        .tbody{
-            border: 1px solid #eee;
-            padding: 5px;
-            font-size: 13px;
-        }
-        .z-depth-1, nav, .card-panel, .card, .toast, .btn, .btn-large, .btn-floating, .dropdown-content, .collapsible, .side-nav{
-            box-shadow: none;
-        }
-        .collapsible-body{
-            padding: 0px;
-        }
-        .collapsible{
-            border-left: 0px;
-            border-right: 0px;
-            margin:0px;
-        }
-
-
-   </style>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

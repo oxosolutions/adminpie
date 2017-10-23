@@ -38,7 +38,7 @@ class VisualisationController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 5;
+            $perPage = get_items_per_page();;
           }
           $sortedBy = @$request->sort_by;
           if($request->has('search')){
@@ -464,10 +464,12 @@ class VisualisationController extends Controller
 	protected function put_in_errors_list($error = '', $break = false){
 		array_push($this->errors_list, $error);
 		if($break == true){
-			echo view('web_visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
+			echo view('organization.visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
+			// echo view('web_visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
 			die;
 		}else{
-			echo view('web_visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
+			echo view('organization.visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
+			// echo view('web_visualization.errors',['errors'=>$this->errors_list])->render(); // load error view
 			return true;
 		}
 	}

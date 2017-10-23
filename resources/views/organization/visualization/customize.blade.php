@@ -5,7 +5,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Customize',
+  'page_title' => 'Customize <span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
   'add_new' => ''
 ); 
 @endphp

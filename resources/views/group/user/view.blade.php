@@ -9,6 +9,7 @@
 	'page_title' => 'View User',
 	'add_new' => '+ Add User'
 ); 
+	
 @endphp
 @include('common.pageheader',$page_title_data)		
 @include('common.pagecontentstart')
@@ -23,7 +24,7 @@
 				<td><b>Value</b></td>
 			</tr>
 			@foreach($model->toArray() as $key => $value)
-				@if(in_array($key,['name','email','created_at']))
+				@if(in_array($key,['name','email']))
 				<tr>
 					<td>{{ucfirst(str_replace('_',' ',$key))}}</td>
 					<td>{{$value}}</td>

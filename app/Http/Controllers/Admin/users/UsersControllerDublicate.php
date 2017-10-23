@@ -35,7 +35,7 @@ class UsersController extends Controller
             $perPage = 999999999999999;
           }
         }else{
-          $perPage = 5;
+          $perPage = 10;
         }
         $sortedBy = @$request->orderby;
         if($request->has('search')){

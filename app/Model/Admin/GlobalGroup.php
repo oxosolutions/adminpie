@@ -13,5 +13,9 @@ class GlobalGroup extends Model
     	return self::where('status',1)->pluck('name', 'id');
     }
     
+    public function group_orgaization()
+    {
+    	return $this->hasMany('App\Model\Admin\GlobalOrganization','group_id', 'id');
+    }
 
 }

@@ -97,7 +97,7 @@ $page_title_data = array(
                 @php $index = 1; $rowCount=0; $slug = []; @endphp
                 <div style="color: red;font-size:20px;padding: 10px">{{ucfirst(Session::get('sameSlugmessage'))}}</div>
                  @foreach($model as $key => $value)
-                    @include('admin.formbuilder._row',$value)
+                    {{-- @include('admin.formbuilder._row',$value) --}}
                     @php $index++; $rowCount++; @endphp
                   @endforeach
                  <div class="form-rows">

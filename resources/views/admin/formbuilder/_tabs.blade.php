@@ -20,15 +20,25 @@
       <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'list.sections')?'nav-item-current':''}}">
         <a href="{{ route($route_slug.'list.sections',$id) }}"><span class="nav-item-text">Edit</span></a>
       </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.preview')?'nav-item-current':''}}">
+        <a href="{{ route($route_slug.'form.preview',$id) }}"><span class="nav-item-text">View</span></a>
+      </li>
       <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.settings')?'nav-item-current':''}}">
         <a href="{{ route($route_slug.'form.settings',$id) }}"><span class="nav-item-text">Settings</span></a>
-      </li>
-      <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.preview')?'nav-item-current':''}}">
-        <a href="{{ route($route_slug.'form.preview',$id) }}"><span class="nav-item-text">Preview</span></a>
       </li>
       <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''}}">
         <a href="{{ route($route_slug.'form.custom',$id) }}"><span class="nav-item-text">Customize</span></a>
       </li>
+
+
+
+      @if(Auth::guard('org')->check())
+        <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''}}">
+          <a href="{{ route($route_slug.'form.custom',$id) }}"><span class="nav-item-text">new tabs</span></a>
+        </li>
+
+      @endif
+
       <div class="clear"></div>
   </ul>
 </nav>

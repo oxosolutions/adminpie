@@ -20,14 +20,12 @@ use App\Model\Organization\UsersRole as Role;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UserRoleMapping;
 use stdClass;
-use App\Http\Controllers\Group\GroupOrganizationController;
 
 class OrganizationController extends Controller
 {
-  protected $generate_organization;
-  public function __construct(GroupOrganizationController $build_organization){
-    $this->generate_organization = $build_organization;
-  }
+ 
+ public $generate_organization;
+
 
     protected $valid_fields  = [
                 'email'             => 'bail|required|unique:global_organizations|email',
@@ -35,7 +33,8 @@ class OrganizationController extends Controller
                 'primary_domain'    => 'unique:global_organizations',//pendinggg
                 'name'              => 'required|unique:global_organizations|max:300',
                 'password'          => 'required|min:8',
-                'confirm_password'  => 'required|same:password'
+                'confirm_password'  => 'required|same:password',
+                'group_id'			=> 'required'
                 ];
 
 	public function listOrg(Request $request)
@@ -47,7 +46,7 @@ class OrganizationController extends Controller
                 $perPage = 999999999999999;
             }
         }else{
-                $perPage = 5;
+                $perPage = 10;
         }
         $sortedBy = @$request->sort_by;
         if($request->has('search')){
@@ -68,7 +67,7 @@ class OrganizationController extends Controller
                       'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created At'],
                       'actions' => [
                                       'edit'    =>  ['title'=>'Edit','route'=>'edit.organization' , 'class' => 'edit'],
-                                      'delete'  =>  ['title'=>'Delete','route'=>'delete.organization'],
+                                      'delete'  =>  ['title'=>'Delete','route'=>'delete.organization','class'=>'red'],
                                       'clone'   =>  ['title'=>'Clone','route'=>'create.organizationClone'],
                                       'auth'    =>  ['title'=>'Login Organization','route'=>'auth.organization'],
                                       'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.org.status']
@@ -188,6 +187,7 @@ class OrganizationController extends Controller
                 //$org_data = ORG::find($id);
             }
             $modules = GlobalModule::pluck('name','id');
+            
             return view('admin.organization.edit',['org_data'=>$org_data,'modules'=> $modules ]);
         // }catch(Exception $e){
         //              Session::flash('error','Somthing goes wrong Try again.');
@@ -213,49 +213,14 @@ class OrganizationController extends Controller
             return 'table_not_exist';
             }
     }
-	public function save(Request $request)
-	{
-    // dd($request->all());
-    Session::put('group_id',$request->group_id); 
-    echo $this->generate_organization->global_create_organization($request);
-    //$this->global_create_organization($request);
-  //       $this->validate($request, $this->valid_fields);
-  //       if(!empty($request['modules'])) {
-  //          $request['modules'] = json_encode($request['modules']);
-  //       }
-		// $org = new ORG();
-		// $org->fill($request->all());
-		// $org->save();
-  //       $org_id = $org->id;
-  //       $active_code =  $org_id * 576;
-  //       ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
-  //       Session::put('organization_id',$org->id);
-  //       $checkMaster = GlobalSetting::where('key','primary_organization');
-  //       if($checkMaster->exists()){
-  //           $primary_orgnaization = $checkMaster->first();
-  //           $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
-  //           ($return=='table_exist')? $org_usr =  User::find(1):null;
-  //       }
-  //       if(!$checkMaster->exists() || $return=='table_not_exist'){
-  //           $this->create_db_through_migration($org_id);
-  //           $org_usr = new User();
-           
-  //       }
-  //       $org_usr->fill($request->all());
-
-  //       // $org_usr->role_id = 1;
-  //       // $org_usr->user_type = json_encode([1]);
-  //       $org_usr->password = Hash::make($request->password);
-  //       $org_usr->save(); 
-  //       $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
-  //       if(!$userRoleMapping->exists()){
-  //           $userRoleMapping = new UserRoleMapping();
-  //           $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
-  //           $userRoleMapping->save();
-  //       }
-
-  //       Session::flash('success', 'Organization create successfully');
-        return redirect()->route('list.organizations');
+	public function save(Request $request){
+		$rule = [
+			'group_id' => 'required'
+		];
+		$this->validate($request,$rule);
+	    Session::put('group_id',$request->group_id); 
+	    $this->global_create_organization($request);
+	    return redirect()->route('list.organizations');
     }
 
     public function global_create_organization($request){
@@ -278,7 +243,6 @@ class OrganizationController extends Controller
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
         }
-      // dd($request->all());
         $org = new ORG();
         $org->fill($request->all());
         $org->save();
@@ -340,9 +304,8 @@ class OrganizationController extends Controller
         return back();
     }
    
-    protected function create_db_through_migration($org_id)
-    {
-     //Widget Permisson
+    public function create_db_through_migration($org_id){
+     	//Widget Permisson
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_widget_permissons',
@@ -354,7 +317,7 @@ class OrganizationController extends Controller
                                 '--schema'=>'user_id:integer, name:string:nullable, slug:string:nullable'
                             ]);
     
-	// USERS
+		// USERS
 		Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users',
@@ -387,7 +350,7 @@ class OrganizationController extends Controller
                                 '--schema'=>'role_id:integer, permisson_type:string, permisson_id:integer, permisson:string:nullable, status:integer:default(1)'
                             ]);
 
-    Artisan::call('make:migration:schema',[
+    	Artisan::call('make:migration:schema',[
                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users_metas',
                                 '--schema'=>'user_id:integer , key:string, value:text:nullable, type:string:nullable'
@@ -407,19 +370,19 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_users_todos',
                                 '--schema'=>'user_id:integer, title:string, description:text, start:dateTime:nullable, end:dateTime:nullable, priority:string:default("low"), status:integer:default(0)'
                             ]);
-	Artisan::call('make:migration:schema',[
+		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_categories',
                                 '--schema'=>'name:text, description:text:nullable, type:string, parent_id:integer:nullable, status:integer:default(1)'
                             ]);
-    Artisan::call('make:migration:schema',[
+    	Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_category_meta',
                                 '--schema'=>'key:string, value:text, category_id:integer, status:integer:default(1)'
                             ]);
     
 
-	Artisan::call('make:migration:schema',[
+		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_leaves',
                                 '--schema'=>'name:text, employee_id:integer, reason_of_leave:string:nullable, leave_category_id:integer, from:date, to:date, description:text:nullable, total_days:integer:nullable, apply_by:string, approved_by:string:nullable, status:integer'
@@ -436,54 +399,40 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_collaborators',
                                 '--schema'=>'type:string, relation_id:integer, email:string, userid:string, access:string, status:string'
                             ]);
-//Shifts
+		//Shifts
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_shifts',
                                 '--schema'=>'name:string, from:string, to:string: status:integer:default(1), working_days:string'
                             ]);	
-	//Pages 
-			Artisan::call('make:migration:schema',[
+		//Pages 
+		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_pages',
-                                '--schema'=>'title:string:nullable, sub_title:string:nullable, slug:string:nullable,description:text:nullable, content:text:nullable, tags:text:nullable, categories:string:nullable, post_type:string:nullable, attachments:string:nullable, version:string:nullable, revision:string:nullable, created_by:string:nullable, post_status:string:nullable, status:integer:default(1), type:string'
+                                '--schema'=>'title:string:nullable, sub_title:string:nullable, slug:string:nullable,description:text:nullable, content:longText:nullable, tags:text:nullable, categories:string:nullable, post_type:string:nullable, attachments:string:nullable, version:string:nullable, revision:string:nullable, created_by:string:nullable, post_status:string:nullable, status:integer:default(1), type:string'
                             ]);
-				Artisan::call('make:migration:schema',[
+		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_page_metas',
                                 '--schema'=>'page_id:integer, key:string, value:text'
                             ]);
-	//EMPLOYEE
-		/*Artisan::call('make:migration:schema',[
-								'--model'=>false,
-                                'name'=>'create_'.$org_id.'_employees',
-                                '--schema'=>'user_id:integer, employee_id:string:nullable, designation:text:nullable, department:string:nullable, marital_status:string:nullable, experience:string:nullable, blood_group:string:nullable, joining_date:dateTime:nullable, leaving_date:dateTime:nullable, disability_percentage:string:nullable, status:integer:default(0), deleted_at:timestamp:nullable'
-                            ]);*/
-	//Department
+	
+		//Department
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_departments',
                                 '--schema'=>'name:string, description:text:nullable, status:integer:default(1)'
                             ]);
-		/*Artisan::call('make:migration:schema',[ // No need to generate
-								'--model'=>false,
-                                'name'=>'create_'.$org_id.'_employee_meta',
-                                '--schema'=>'employee_id:integer , key:string, value:text'
-                            ]);*/
-	//STUDENT
+		
+		//STUDENT
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_students',
                                 '--schema'=>'user_id:integer, student_id:integer:nullable, dob:string:nullable,  qualification:string:nullable, college_university:string:nullable, joining_date:dateTime:nullable, status:integer:default(0)'
                             ]);
 
-		/*Artisan::call('make:migration:schema',[ // No need to generate
-								'--model'=>false,
-                                'name'=>'create_'.$org_id.'_student_meta',
-                                '--schema'=>'student_id:integer, key:string, value:text'
-                            ]);*/
 
-	//TEAM MIGRATION
+		//TEAM MIGRATION
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_teams',
@@ -531,11 +480,7 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_clients',
                                 '--schema'=>'name:string, company_name:string:nullable, address:string:nullable, country:string:nullable, state:string:nullable, city:string:nullable, user_id:integer:nullable, phone:string:nullable, additional_info:text:nullable'
                             ]);
-		/*Artisan::call('make:migration:schema',[ //No need to generate
-								'--model'=>false,
-                                'name'=>'create_'.$org_id.'_client_metas',
-                                '--schema'=>'client_id:integer, key:string , value:text, type:string'
-                            ]);*/
+	
 
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -547,8 +492,6 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_holidays',
                                 '--schema'=>'title:string:nullable, description:text:nullable , date_of_holiday:date, status:integer:default(1)'
                             ]);
-
-		
 		
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -570,31 +513,12 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_product_meta',
                                 '--schema'=>'product_id:integer, key:string, value:text:nullable'
                             ]);
-        // Artisan::call('make:migration:schema',[
-								// '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_services',
-        //                         '--schema'=>'type:integer, name:string, description:text:nullable, created_by:integer:nullable, status:integer:default(1)'
-        //                     ]);
-        // Artisan::call('make:migration:schema',[
-        //                         '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_service_meta',
-        //                         '--schema'=>'service_id:integer, key:string, value:text:nullable'
-        //                     ]);
+      
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_invoices',
                                 '--schema'=>'invoice_no:integer, customer_id:integer, payment_method_id:integer, total:integer, status:integer:default(0)'
                             ]);
-        // Artisan::call('make:migration:schema',[
-        //                         '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_orders',
-        //                         '--schema'=>'invoice_id:integer, name:string, description:text:nullable, cost:decimal(10,2), quantity:string, status:default(1)'
-        //                     ]);
-        // Artisan::call('make:migration:schema',[
-        //                         '--model'=>false,
-        //                         'name'=>'create_'.$org_id.'_order_metas',
-        //                         '--schema'=>'order_id:integer, key:string, value:text:nullable'
-        //                     ]);
       
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -616,19 +540,19 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_project_categories',
                                 '--schema'=>'name:text, description:text:nullable, status:integer:default(1)'
                             ]);
-//_project_metas
+		//_project_metas
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_project_metas',
                                 '--schema'=>'project_id:integer, key:string , value:text, type:string'
                             ]);
-//_project_tasks
+		//_project_tasks
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_project_tasks',
                                 '--schema'=>'project_id:integer, title:string, description:text:nullable, assign_to:string:nullable, priority:string:default("low"), attachment:text:nullable, end_date:dateTime:nullable, status:integer:default(0)'
                             ]);
-//ORGANIZATION TODOS
+		//ORGANIZATION TODOS
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_project_todos',
@@ -639,13 +563,13 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_project_notes',
                                 '--schema'=>'project_id:integer, title:string, description:text:nullable, status:integer:default(1)'
                             ]);
-//ORGANIZATION METAS
+		//ORGANIZATION METAS
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_organization_settings',
                                 '--schema'=>'key:string , value:text:nullable, type:string'
                             ]);
-//ORGANIZATION METAS
+		//ORGANIZATION METAS
 		
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -786,11 +710,7 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_campaigns',
                                 '--schema'=>'campaign_name:string, campaign_desc:text:nullable, send_to:text, selected_users:text, layout:integer, template:integer, send_to_users:text, scheduled:boolean:default(0), exec_time:dateTime:nullable'
                             ]);
-        Artisan::call('make:migration:schema',[
-                                '--model'=>false,
-                                'name'=>'create_'.$org_id.'_surveys',
-                                '--schema'=>'survey_table:string, name:string:nullable, created_by:string:nullable, description:text, status:integer:default(1)']);
-//Menu 
+		//Menu 
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menus',
@@ -825,6 +745,7 @@ class OrganizationController extends Controller
         $org_setting =[['key'=>'employee_role', 'value'=>2],['key'=>'client_role', 'value'=>3], ['key'=>'applicant_role', 'value'=>4]];
         org_setting::insert($org_setting);
     }
+    
     public function changeStatus($id)
     {
         $model = ORG::find($id);

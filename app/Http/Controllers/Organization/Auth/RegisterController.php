@@ -79,7 +79,7 @@ class RegisterController extends Controller
     }
     
     public function userRegister(Request $request, $status = null )
-    {
+    {   
         if($request->isMethod('post')){
 
             $model = org_user::where(['email'=>$request->email])->first();
@@ -93,40 +93,31 @@ class RegisterController extends Controller
                     $status = 0;
                 }
 
-                $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
-                $this->validate($request,$rules);
-                $user = new org_user;
-                $user->fill($request->only('name','email'));
-                $user->password = Hash::make($request->password);
-                $user->app_password = $request->password;
-                $user->status = $status;
-                $user->deleted_at = 0;
-                $user->save();
-                $user_id = $user->id;
-                $org_user =  new User();
-                $org_user->user_id =  $user_id;
-                $org_user->save();
+                    $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
+                    $this->validate($request,$rules);
+                    $user = new org_user;
+                    $user->fill($request->only('name','email'));
+                    $user->password = Hash::make($request->password);
+                    $user->app_password = $request->password;
+                    $user->status = $status;
+                    $user->deleted_at = 0;
+                    $user->save();
+                    $user_id = $user->id;
+                    $org_user =  new User();
+                    $org_user->user_id =  $user_id;
+                    $org_user->save();
 
-                $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
-                if(!empty($meta_data) && !empty($user_id)){
-                    update_user_metas($meta_data, $user_id, true);
-                }
-                if($request->has('role_id')){
-                    foreach($request->role_id as $key => $role){
-                        $roleMapping = new UserRoleMapping;
-                        $roleMapping->user_id = $user_id;
-                        $roleMapping->role_id = (int) $role;
-                        $roleMapping->status = 1;
-                        $roleMapping->save();
+                    $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
+                    if(!empty($meta_data) && !empty($user_id)){
+                        update_user_metas($meta_data, $user_id, true);
                     }
-                }else{
+                    $organizationMeta = get_organization_meta();
                     $roleMapping = new UserRoleMapping;
                     $roleMapping->user_id = $user_id;
-                    $roleMapping->role_id = 8;
+                    $roleMapping->role_id = $organizationMeta['user_role_default'];
                     $roleMapping->status = 1;
                     $roleMapping->save();
                 }
-            }
                 Session::put('new_user_register_email',$request->email);
                 Session::put('new_user_register_name',$request->name);
 

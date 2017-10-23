@@ -44,7 +44,7 @@ class ActivityTemplateController extends Controller
                 $perPage = 999999999999999;
             }
         }else{
-                $perPage = 5;
+                $perPage = 10;
         }
         $sortedBy = @$request->sort_by;
         if($request->has('search')){

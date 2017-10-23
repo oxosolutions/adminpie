@@ -41,7 +41,10 @@
 			{{-- {!! FormGenerator::GenerateForm('edit_user_form') !!} --}}
 
 
-			{!! FormGenerator::GenerateSection('organization_user_edit') !!}
+			{!! FormGenerator::GenerateForm('organization_edit_user_form') !!}
+			@if($form_slug != null)
+                {!! FormGenerator::GenerateForm($form_slug,[],null,'org') !!}
+       		@endif
 			<button type="submit">save</button>
 	{!!Form::close()!!}
 	@include('common.page_content_primary_end')

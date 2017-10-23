@@ -31,7 +31,7 @@ class DatasetController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 10;
+            $perPage = get_items_per_page();
           }
         $sortedBy = @$request->orderby;
         $order = $request->order;
@@ -55,7 +55,17 @@ class DatasetController extends Controller
         $dataset =  [
                         'datalist'=>$datasetList,
                         'showColumns' => ['dataset_name'=>'Title','dataset_table'=>'Dataset Table','description'=>'Description','created_at'=>'Created'],
-                        'actions' => ['view'=>['route'=>'view.dataset','title'=>'View'],'delete'=>['route'=>'delete.dataset','title'=>'Delete']]
+                        'actions' => [
+                                        'view'=>['route'=>'view.dataset','title'=>'View'],
+                                        'edit'=>['route'=>'edit.dataset','title'=>'Edit'],
+                                        'define'=>['route'=>'define.dataset','title'=>'Define'],
+                                        'filter'=>['route'=>'filter.dataset','title'=>'Filter'],
+                                        'validate'=>['route'=>'validate.dataset','title'=>'Validate'],
+                                        'visualize'=>['route'=>'visualize.dataset','title'=>'Visualization'],
+                                        'collaborate'=>['route'=>'collaborate.dataset','title'=>'Collaborate'],
+                                        'customize'=>['route'=>'customize.dataset','title'=>'Customize'],
+                                        'delete'=>['route'=>'delete.dataset','title'=>'Delete','class'=>'red']
+                                    ]
                     ];
     	return view('organization.dataset.list',$dataset);
     }
@@ -242,7 +252,6 @@ class DatasetController extends Controller
     }
 
     protected function storeInDatabase($filename, $origName, $source, $orName, $tableNameFrom = null){
-        
         $filePath = $filename;
         $org_id =  Session::get('organization_id');
         if($source == 'url' || $source == 'file_on_server'){
@@ -297,7 +306,6 @@ class DatasetController extends Controller
                     continue;
                 }
             }
-            //dd($finalArray);
             $headers = array_combine($assoc, array_values($headers));
             if($tableNameFrom == null){
                 DB::select("CREATE TABLE `{$tableName}` ( " . implode(', ', $columns) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
@@ -323,6 +331,10 @@ class DatasetController extends Controller
                 $model->user_id = Auth::guard('org')->user()->id;
                 $model->uploaded_by = Auth::guard('org')->user()->name;
                 $model->save();
+                $upd = Dataset::find($model->id);
+                $upd->dataset_table = "ocrm_{$org_id}_data_table_{$model->id}";
+                $upd->save();
+                DB::select("RENAME TABLE `ocrm_{$tableName}` TO `ocrm_{$org_id}_data_table_{$model->id}`");
             }
             return ['status'=>'true','id'=>@$model->id,'message'=>'Dataset upload successfully!'];
         }else{
@@ -343,6 +355,10 @@ class DatasetController extends Controller
                 $model->user_id = Auth::guard('org')->user()->id;
                 $model->uploaded_by = Auth::guard('org')->user()->name;
                 $model->save();
+                $upd = Dataset::find($model->id);
+                $upd->dataset_table = "ocrm_{$org_id}_data_table_{$model->id}";
+                $upd->save();
+                DB::select("RENAME TABLE `{$tableName}` TO `ocrm_{$org_id}_data_table_{$model->id}`");
                 DB::commit();
                 Session::flash('message','Dataset upload successfully!');
                 return ['id'=>$model->id];
@@ -354,11 +370,9 @@ class DatasetController extends Controller
     }
 
     protected function replaceDataset($request, $origName, $filename){
-        // dd($request->all());
         ini_set('memory_limit', '2048M');
         $model = Dataset::find($request->replace_or_append);
         DB::select('TRUNCATE TABLE ocrm_'.str_replace('ocrm_','',$model->dataset_table));
-        //dd($model->dataset_table);
         $this->storeInDatabase($filename, $origName, $request->import_source, $orName = '', $model->dataset_table);
         if($model){
             return ['status'=>'true','id'=>$model->id,'message'=>'Dataset replaced successfully!'];
@@ -466,19 +480,26 @@ class DatasetController extends Controller
         $this->validate($request, $rules);
     }
 
+    /**
+     * Save new dataset
+     * @param  Request $request [posted data]
+     * @return [route]           [will redirect back]
+     */
     public function store(Request $request){
 
         $this->validateStoreRequest($request);
         try{
             $org_id =  Session::get('organization_id');
-            $tableName = DB::getTablePrefix().$org_id.'_data_table_'.time();
-            DB::select("CREATE TABLE `{$tableName}` ( id INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID', `status` VARCHAR(255) DEFAULT '1', `parent` VARCHAR(255) DEFAULT '0' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-            DB::table(str_replace('ocrm_','',$tableName))->insert(['status'=>'status','parent'=>'parent']);
+            $nextId = @Dataset::orderBy('id','desc')->first()->id + 1;
+            $tableName = DB::getTablePrefix().$org_id.'_data_table_'.$nextId;
             $model = new Dataset;
+            $model->id = $nextId;
             $model->dataset_name = $request->dataset_name;
             $model->description = $request->dataset_description;
             $model->dataset_table = $tableName;
             $model->save();
+            DB::select("CREATE TABLE `{$tableName}` ( id INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID', `status` VARCHAR(255) DEFAULT '1', `parent` VARCHAR(255) DEFAULT '0' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+            DB::table(str_replace('ocrm_','',$tableName))->insert(['status'=>'status','parent'=>'parent']);
             $newDatasetId = $model->id;
             Session::flash('success','Dataset created successfully!');
             
@@ -493,8 +514,8 @@ class DatasetController extends Controller
         $history = [];
         $dataset = Dataset::find($id);
         $datasetTable = Dataset::find($id)->dataset_table;
-        $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',1)->where('status' , 1)->paginate(100);
-        $tableHeader = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id',1)->first();
+        $tableHeader = DB::table(str_replace('ocrm_', '', $datasetTable))->first();
+        $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',$tableHeader->id)->where('status' , 1)->paginate(100);
         if($action != null){
             if($action == 'view' || $action == 'edit'){
                 if($record_id != null){
@@ -533,7 +554,11 @@ class DatasetController extends Controller
     public function updateRecords(Request $request, $id){
         $dataset = Dataset::find($id);
         $datasetHeaders = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->first();
+        unset($datasetHeaders['status']);
+        unset($datasetHeaders['parent']);
         foreach($request->records as $key => $record){
+            // dump(array_keys($datasetHeaders));
+            // dump($record);
             $recordArray = array_combine(array_keys($datasetHeaders), $record);
             $isRecordExists = DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->first();
             if($isRecordExists != null){
@@ -549,11 +574,11 @@ class DatasetController extends Controller
         $datasetTable = Dataset::find($id)->dataset_table;
         $columnName = 'column_'.rand(111,999);
         DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
-        $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->first();
+        $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->first();
         if($ifRecordsExist != null){
-            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->update([$columnName=>$request->column_name]);
+            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$request->column_name]);
         }else{
-            DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$request->column_name]);
+            DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$request->column_name,'status'=>'Status','parent'=>'Parent']);
         }
         return back();
     }
@@ -601,25 +626,25 @@ class DatasetController extends Controller
         return back();
     }
 
-    public function craeteDataset(){
-
+    public function craeteDataset(){        
         return view('organization.dataset.create');
     }
-     public function editDataset($id){
+    public function editDataset($id){
         $dataset = Dataset::find($id);
         return view('organization.dataset.edit',['dataset'=>$dataset]);
     }
      public function defineDataset(Request $request, $id){
         $dataset = Dataset::find($id);
         $datasetTable = Dataset::find($id)->dataset_table;
+        $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
         if($request->isMethod('post')){
             $defined = $request->except(['_token']);
             $dataset->defined_columns = json_encode($defined);
             $dataset->save();
-            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->update($request->header);
+            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$headers->id)->update($request->header);
+            $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
             Session::flash('success','Successfully defined!');
         }
-        $headers = DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->first();
         $columns = collect($headers)->except(['id','status','parent']);
         return view('organization.dataset.define',['columns'=>$columns,'dataset'=>$dataset]);
     }
@@ -631,10 +656,11 @@ class DatasetController extends Controller
         if($request->has('select_column')){
             
             $datasetTable = Dataset::find($id)->dataset_table;
-            $headers = DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->first();
-            $records = DB::table(str_replace('ocrm_', '', $datasetTable))->select($request->select_column)->where('id','!=',1)->where('status' , 1);
+            $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+            $records = DB::table(str_replace('ocrm_', '', $datasetTable))->select($request->select_column)->where('id','!=',$headers->id)->where('status' , 1);
             $headers = collect($headers)->except(['id','status','parent'])->toArray();
             if(isset($request->horizontal_filtration[0]['column'])){
+
                 $records->where(function($query) use ($request){
                     foreach($request->horizontal_filtration as $key => $filter){
                         $query->where($filter['column'],$filter['operation'],$filter['value']);
@@ -691,6 +717,12 @@ class DatasetController extends Controller
         return back();
     }
 
+    /**
+     * [validateDataset validate uploaded dataset records]
+     * @param  Request $request [posted data]
+     * @param  [type]  $id      [dataset id]
+     * @return [type]           [view]
+     */
     public function validateDataset(Request $request, $id){
         $dataset = Dataset::find($id);
         $definedColumns = $dataset->defined_columns;
@@ -699,8 +731,8 @@ class DatasetController extends Controller
         }
         $errorInfo = [];
         $datasetTable = Dataset::find($id)->dataset_table;
-        $headers = DB::table(str_replace('ocrm_','',$datasetTable))->where('id',1)->first();
-        $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',1)->where('status' , 1)->paginate(50);
+        $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+        $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',$headers->id)->where('status' , 1)->paginate(50);
         $recordsArray = [];
         $row = 1;
         if($definedColumns != ''){

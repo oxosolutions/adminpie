@@ -23,7 +23,7 @@ class PagesController extends Controller
               $perPage = 999999999999999;
             }
           }else{
-            $perPage = 5;
+            $perPage = 10;
           }
         $sortedBy = @$request->sort_by;
         $order = $request->order;
@@ -54,7 +54,7 @@ class PagesController extends Controller
                         'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created','status'=>['type'=>'switch','title'=>'Status','class' => 'pageStatus']],
                         'actions' => [
                                         'edit'    => ['title'=>'Edit','route'=> $edit ,'class'=>'edit'],
-                                        'delete'  => ['title'=>'Delete','route'=>$delete],
+                                        'delete'  => ['title'=>'Delete','route'=>$delete,'class'=>'red'],
                                         'view'  => ['title'=>'View','route'=> $view]
                                     ]
                       ];
@@ -200,7 +200,11 @@ class PagesController extends Controller
         return back();
     }
 
-
+    public function delete($id)
+    {
+        $model = Page::find($id)->delete();
+        return back();
+    }
     /**
      * Will update page content when user edit the page
      * @param  Request $request [having posted data instanse of request]

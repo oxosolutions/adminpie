@@ -5,7 +5,7 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Survey Share',
+    'page_title' => 'Collaborate <span>'.get_survey_title(request()->route()->parameters()['id']).'</span>',
     'add_new' => '+ Add Media'
 ); 
 $id = "";

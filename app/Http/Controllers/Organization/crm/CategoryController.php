@@ -19,7 +19,7 @@ protected function datalist($request, $type){
                   $perPage = 999999999999999;
                 }
               }else{
-                $perPage = 5;
+                $perPage = get_items_per_page();;
               }
           $sortedBy = @$request->sort_by;
           if($request->has('search')){

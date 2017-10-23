@@ -48,12 +48,12 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         // dd($exception);
-        if($exception instanceof \Illuminate\Database\QueryException){
+        /*if($exception instanceof \Illuminate\Database\QueryException){
             if($exception->errorInfo[0] == '42S02'){
                 $this->createTableIfNotExists($exception->errorInfo);
                 return redirect()->route(request()->route()->action['as']);
             }
-        }
+        }*/
         if ($exception instanceof TokenMismatchException){
             // Redirect to a form. Here is an example of how I handle mine
             return redirect($request->fullUrl())->with('csrf_error',"Oops! Seems you couldn't submit form for a long time. Please try again.");
@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
         // dump($exception->getFile());
         // dump($request);
         //if(env('APP_DEBUG')){
-           // return parent::render($request, $exception);
+           return parent::render($request, $exception);
         //}else{
             
             if($exception instanceof \Illuminate\Validation\ValidationException || $exception instanceof MethodNotAllowedHttpException){

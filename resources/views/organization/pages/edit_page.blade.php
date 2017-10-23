@@ -95,7 +95,7 @@
 				</div>
 				<div class="l6" style="width: 75%;float: left;padding-right:15px ">
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}
-					{!! FormGenerator::GenerateForm('edit_pages_form') !!}
+					{!! FormGenerator::GenerateForm('edit_page_form') !!}
 				</div>
 				<div class="l6 page-widgets" style="width: 25%;float: left">
 					<input type="hidden" name="id" value="{{ request()->route()->parameters()['id'] }}">

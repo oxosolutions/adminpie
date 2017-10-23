@@ -15,8 +15,16 @@ $page_title_data = array(
 @endphp
 @php
 	$mapModel = 'App\\Model\\Organization\\UsersRole';
-
-	$role = $mapModel::whereIn('id',$model->user_role_rel->pluck('role_id'))->get();
+	// dd($model->toArray());
+	// ->pluck('role_id')
+	if(array_key_exists('role', $model->toArray())){
+		if(!is_array($model->role)){
+			$role[] = $mapModel::where('id',$model->role)->first()->name;
+		}else{
+			$role = $mapModel::whereIn('id',$model->role->pluck('role_id'))->get();
+		}
+	}
+	unset($model->role , $model->id);
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
@@ -34,18 +42,18 @@ $page_title_data = array(
 			          </thead>
 					<tbody>
 
-						
 					@foreach($model->toArray() as $key => $value)
-						@if($key == 'name' ||  $key == 'email' || $key == 'phone_number' || $key == 'organization_name' || $key == 'organization_block' || $key == 'organization_city' || $key == 'organization_district' || $key == 'organization_state' || $key == 'organization_pin_code' || $key == 'role_id')
-							<tr>
-								<td>
-									{{ ucfirst(str_replace('_', " ", $key)) }}
-								</td>
-								<td>
-									{{ $value }}
-								</td>
-							</tr>
-							
+						@if(!is_array($value))
+							@if($value != '')
+								<tr>
+									<td>
+										{{ ucfirst(str_replace('_', " ", $key)) }}
+									</td>
+									<td>
+										{{ $value }}
+									</td>
+								</tr>	
+							@endif
 						@endif
 					@endforeach
 					@if($role != null)
@@ -54,7 +62,7 @@ $page_title_data = array(
 								Roles
 							</td>
 							<td>
-								@foreach($role->pluck('name') as $k => $v)
+								@foreach($role as $k => $v)
 									{{ $v }}
 									@if(!$loop->last)
 										{{ ' ,' }}

@@ -3,9 +3,9 @@
 	@include('organization.settings._header')
     @include('common.pagecontentstart')
 		@include('common.page_content_primary_start')
-			{{--
+			{{-- 
 				@include('organization.settings._tabs')
-			--}}
+			 --}}
 			
 			@include('organization.settings._form')
 		@include('common.page_content_primary_end')

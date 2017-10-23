@@ -30,39 +30,10 @@ class SurveyController extends Controller
             $perPage = 999999999999999;
           }
         }else{
-          $perPage = 5;
+          $perPage = get_items_per_page();
         }
         $model = forms::where(['type'=>'survey'])->with(['section'])->orderBy('id','DESC')->paginate($perPage);
-        // if($request->has('search')){
-        //     if($sortedBy != ''){
-        //         $model = forms::where('form_title','like','%'.$request->search.'%')->where(['type'=>'survey','created_by'=>get_user_id()])->orderBy($sortedBy,$request->order)->with(['section'])->get();
-        //         // ->paginate($perPage)
-        //     }else{
-        //         $model = forms::where('form_title','like','%'.$request->search.'%')->where(['type'=>'survey','created_by'=>get_user_id()])->with(['section'])->get();
-        //     }
-        // }else{
-        //     if($sortedBy != ''){
-        //         $model = forms::where('type','survey')->orderBy($sortedBy,$request->order)->where('created_by',get_user_id())->with(['section' ,'formsMeta' => function($query){
-        //             $query->where('key' , 'share_type')->get();
-        //          }])->get();
-        //     }else{
-        //          $model = forms::where('type','survey')->where('created_by',get_user_id())->with(['section','formsMeta' => function($query){
-        //             $query->where(['key' => 'share_type' , 'value' => 'public'])->get();
-        //          }])->get();
-        //     }
-        // }
-        //add relation in query of formMeta to get the share_type   --sandeep 28/sept
-        // $collab = Collaborator::select('relation_id')->where(['type'=>'survey','email'=>Auth::guard('org')->user()->email])->get()->groupBy('relation_id')->toArray();
-        // if(!empty($collab)){
-        //     $append` = forms::whereIn('id',array_keys($collab))->get();
-        //     foreach($appendSurveys as $keyItem => $item){
-        //         $model->push($item);
-        //     }
-        // }
-        // $user_id = get_user_id();
-        // dd($model);  
-        // $newData = $model;
-        // dd($model);
+       
 
         $deleteRoute = 'org.delete.form';
         $sectionRoute = 'org.list.sections';
@@ -72,12 +43,16 @@ class SurveyController extends Controller
                         'datalist'=>$model,
                         'showColumns' => ['form_title'=>'Survey Title','form_slug'=>'Survey ID','created_at'=>'Created'],
                         'actions' => [
-                                //'edit'=>['title'=>'Edit','route'=>'survey.sections.list'],
+                                'edit'=>['title'=>'Edit','route'=>'survey.sections.list'],
                                 'preview'=>['title'=>'View','route'=>'survey.perview'],
+                                'settings' => ['title'=>'Settings','route'=>'survey.settings'],
+                                'stats' => ['title'=>'Stats','route'=>'stats.survey'],
                                 'data'=>['title'=>'Raw Data','route'=>'results.survey'],
                                 'report'=>['title'=>'Report','route'=>'survey.stats.report'],
-                                //'delete'=>['title'=>'Delete','route'=>$deleteRoute],
-                                //'clone'=>['title'=>'clone','route'=>$cloneRoute]
+                                'share'=>['title'=>'Share','route'=>'share.survey'],
+                                'customize'=>['title'=>'Customize','route'=>'custom.survey'],
+                                'clone'=>['title'=>'Clone','route'=>$cloneRoute],
+                                'delete'=>['title'=>'Delete','route'=>$deleteRoute,'class'=>'red']
                                 ],
                         'title' => 'Survey',
                         

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('group.components._head')
+    @include('components._head')
 </head>
 <body>
     <div id="aione_wrapper" class="aione-wrapper aione-layout-wide aione-theme-arcane">
@@ -17,24 +17,12 @@
                 <div class="aione-row">
                     <div id="aione_sidebar" class="aione-sidebar">
                         <div class="aione-row">
-                                @include('group.components.sidebars.sidebar')
+                                @include('group.components.sidebar')
                         </div><!-- .aione-row -->
                     </div><!-- #aione_sidebar -->
                     <div id="aione_content" class="aione-content">
                         <div class="aione-row">
-                            @if(!empty(Session::get('success')))
-                                <div class="aione-message success">
-                                    {{Session::get('success')}}
-                                </div>
-                            @endif
-                            @if(!empty(Session::get('error')))
-                                <div class="aione-message error">
-                                    {{Session::get('error')}}
-                                </div>
-                            @endif
                             @yield('content')
-                            
-                          {{--   @include('group.components._footer2') --}}
                             @include('group.components._footer')
                         </div><!-- .aione-row -->
                     </div><!-- #aione_content -->
@@ -45,7 +33,7 @@
         </div><!-- .aione-row -->
     </div><!-- #aione_wrapper -->
     
-    @include('group.components._footerscripts')
+    @include('components._footerscripts')
 
 </body>
 </html>

@@ -32,7 +32,7 @@ $page_title_data = array(
 
 
 	{!!Form::open(['route'=>$route,'method'=>'POST'])!!}
-	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Category','button_title'=>'Save','section'=>'catsec1']])
+	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Category','button_title'=>'Save','form'=>'add_category_form']])
 
 	{!!Form::close()!!}	
 

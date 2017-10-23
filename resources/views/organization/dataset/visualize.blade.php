@@ -39,12 +39,16 @@
 		</div>
 	@else
 		<ul class="aione-list">
-			@foreach($visualizations as $key => $value)
 				<li class="aione-item ar">
 					<div class="ac l25">Name of visualization</div>
-					<div class="ac l25">Created at</div>
 					<div class="ac l25">Description</div>
-					<div class="ac l25">Actions</div>
+					<div class="ac l25">Created at</div>
+				</li>
+			@foreach($visualizations as $key => $value)
+				<li class="aione-item ar">
+					<div class="ac l25">{{$value->name}}</div>
+					<div class="ac l25">{{$value->description}}</div>
+					<div class="ac l25">{{$value->created_at->format('Y-m-d')}}</div>
 				</li>
 			@endforeach
 		</ul>

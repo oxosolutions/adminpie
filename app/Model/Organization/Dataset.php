@@ -49,6 +49,7 @@ class Dataset extends Model
     		//unset($row->id);
     		$records[] = array_values((array)$row);
     	}
+
 		return ['records'=>$records,'headers'=>$headers,'tableRecords'=>$tableRecords,'firstRecord'=>$firstRecordId,'dataset_name'=>$datasetName,'columns'=>$tabaleHeader];
     }
 

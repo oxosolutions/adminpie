@@ -390,10 +390,11 @@
 @include('common.page_content_secondry_start')
 	@if($current_dashboard != null)
 		@php
-		$model_data = [];
-		$current_data = $dashboards[$current_dashboard];
-		$model_data['title'] = $current_data['title'];
-		$model_data['description'] = $current_data['description'];
+			$model_data = [];
+			$current_data = $dashboards[$current_dashboard];
+			$model_data['title'] = $current_data['title'];
+			$model_data['description'] = $current_data['description'];
+		
 		@endphp
 		{!! Form::model($model_data ,['route' => 'update.edit.dashboard' ,'method' => 'POST']) !!}
 			<input type="hidden" name="old_slug" value="{{ $current_data['slug'] }}">

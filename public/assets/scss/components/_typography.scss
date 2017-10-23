@@ -15,10 +15,6 @@ html{
   color:#606c71; 
 }
 
-
-
-
-
 a {
   text-decoration: none;
 }
@@ -70,3 +66,27 @@ small { font-size: 75%; }
 .font-weight-700{ font-weight: 700; }
 .font-weight-800{ font-weight: 800; }
 .font-weight-900{ font-weight: 900; }
+
+$i: 1;
+@while $i <= 100 {
+  .font-size-#{$i} {
+    font-size: $i+px;
+  }
+  $i: $i + 1;
+}
+$i: 110;
+@while $i <= 200 {
+  .font-size-#{$i} {
+    font-size: $i+px;
+  }
+  $i: $i + 10;
+}
+
+$i: 1;
+@while $i <= 100 {
+  .line-height-#{$i} {
+    line-height: $i+px;
+  }
+  $i: $i + 1;
+}
+
