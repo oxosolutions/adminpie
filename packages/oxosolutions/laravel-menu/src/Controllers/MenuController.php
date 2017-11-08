@@ -48,6 +48,7 @@ class MenuController extends Controller
 				$menuitem->label = $value['label'];
 				$menuitem->link = $value['link'];
 				$menuitem->class = $value['class'];
+				$menuitem->target = $value['target'];
 				$menuitem->save();
 			}
 		}else{
@@ -55,6 +56,7 @@ class MenuController extends Controller
 			$menuitem->label = request()->input("label");
 			$menuitem->link = request()->input("url");
 			$menuitem->class = request()->input("clases");
+			$menuitem->target = request()->input("target");
 			$menuitem->save();
 		}
 	}

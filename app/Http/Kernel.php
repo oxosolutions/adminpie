@@ -54,6 +54,7 @@ class Kernel extends HttpKernel
         'auth.admin' => \App\Http\Middleware\CheckIfAdminAuthenticated::class,
         'auth.group' => \App\Http\Middleware\CheckIfGroupAuthenticated::class,
         'auth.org' => \App\Http\Middleware\CheckIfOrganizationAuthenticated::class,
+        'org.status' => \App\Http\Middleware\CheckOrganizationActivatedStatus::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,

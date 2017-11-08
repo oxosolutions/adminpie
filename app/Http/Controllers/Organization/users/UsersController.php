@@ -27,6 +27,7 @@ class UsersController extends Controller
      * @author sandip
      **/
     public function createUser(){
+
     	$form_slug = null;
     	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
@@ -46,13 +47,18 @@ class UsersController extends Controller
      **/
         public function store(Request $request)
         {
-            $model = org_user::where(['email'=>$request->email])->first();
+            $emailValidate = [
+                'email'      => 'required|email',
+            ];
+            $this->validate($request , $emailValidate);
 
+          
+          $model = org_user::where(['email'=>$request->email])->first();
             if(count($model) > 0){
                 Session::flash('error','Email already exist');
                 return back();
             }else{
-                $rules = ['name' => 'required', 'email' =>  'required', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
+                $rules = ['name' => 'required', 'email' =>  'required|email', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
                 $this->validate($request,$rules);
                 $user = new org_user;
                 $user->fill($request->only('name','email'));
@@ -66,24 +72,27 @@ class UsersController extends Controller
                 $org_user->user_id =  $user_id;
                 $org_user->save();
 
-                $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
+                $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role');
                 if(!empty($meta_data) && !empty($user_id)){
                     update_user_metas($meta_data, $user_id, true);
                 }
-                if($request->has('role_id')){
-                    foreach($request->role_id as $key => $role){
+                if(isset($request['role'])){
+                  if(is_array($request->role)){
+                    foreach($request->role as $key => $role){
                         $roleMapping = new UserRoleMapping;
                         $roleMapping->user_id = $user_id;
                         $roleMapping->role_id = (int) $role;
                         $roleMapping->status = 1;
                         $roleMapping->save();
                     }
-                }else{
+                  }else{
                     $roleMapping = new UserRoleMapping;
                     $roleMapping->user_id = $user_id;
-                    $roleMapping->role_id = 8;
+                    $roleMapping->role_id = (int) $request['role'];
                     $roleMapping->status = 1;
                     $roleMapping->save();
+                    
+                  }
                 }
             }
             Session::flash('success' , 'User Created Successfully');
@@ -97,7 +106,7 @@ class UsersController extends Controller
      **/
     public function index(Request $request)
     {
-        
+        //dd(org_user::has('organization_user')->get());
     	$datalist = [];
         if($request->has('items')){
             $perPage = $request->items;
@@ -116,21 +125,41 @@ class UsersController extends Controller
         }
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->has('organization_user')->orderBy($sortedBy,$order)->paginate($perPage);
+                  $model = org_user::where('deleted_at',0)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType','groupUser'])->has('organization_user')->orderBy($sortedBy,$order)->paginate($perPage);
               }else{
-                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType'])->has('organization_user')->paginate($perPage);
+                  $model = org_user::where('deleted_at',0)->where('id','!=',Auth::guard('org')->user()->id)->where('name','like','%'.$request->search.'%')->with(['user_role_rel','userType','groupUser'])->has('organization_user')->paginate($perPage);
+                  
               }
           }else{
               if($sortedBy != ''){
-                  $model = org_user::where('deleted_at',0)->where('id','!=',1)->where('id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['user_role_rel'=>function($query){
+              		/*$model = User::where('deleted_at',0)->where('user_id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['groupUser'])->paginate($perPage);*/
+                  	$model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['user_role_rel'=>function($query){
                       $query->with('roles');
-                  },'userType'])->has('organization_user')->paginate($perPage);
+                  },'userType','organization_user'])->has('organization_user')->paginate($perPage);
               }else{
               }
           }
-          $datalist =  [
+          // foreach ($model as $key => $value) {
+            
+          // }
+          // dd();
+          // dd(UsersRole::where('id',$model[0]->user_role_rel[0]->role_id)->get());
+
+			/* by sandeep */
+	            foreach($model as $k => &$v){
+	            	$v->status = $v->organization_user->status;
+	            	$roleName = [];
+	            		foreach ($v->user_role_rel->toArray() as $key => $value) {
+	            			$roleName[] = $value['roles']['name'];
+	            		}
+	            			$v->role = json_encode($roleName);
+	            			$processRole = str_replace(['["','"]'], '', $v->role);
+	            			$v->role = str_replace(['","'], ',', $processRole);
+              	}
+			/* by sandeep */
+          	$datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Title','email'=>'Email','status' => 'Status'],
+                          'showColumns' => ['name'=>'Title','email'=>'Email','role' => 'User Role','status' => 'Status'],
                           'actions' => [
                                         'view'   => ['title'=>'View','route'=>'user.view','class'=>'view'],
                                         'edit'   => ['title'=>'Edit','route'=>'user.details','class'=>'edit'],
@@ -142,6 +171,9 @@ class UsersController extends Controller
         return view('organization.user.list',$datalist);
 
     }
+
+	    
+
     /**
      * undocumented function
      *  
@@ -157,12 +189,21 @@ class UsersController extends Controller
             $id = $model['id'];
         }
 
-
         $userDetails = org_user::select(['id','name','email'])->with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
 
         $role_data = $userDetails->metas->where('key','role')->first();
-        $userDetails['role'] = $role_data->value;
+        if($role_data == ''){
+        	foreach($userDetails->user_role_rel as $k => $v){
+        		if(array_key_exists('role_id', $v->toArray())){
+        			$userDetails['role'] = $v['role_id'];
+        		}
+        	}
+        	// $role_id = $userDetails::where()
+        }else{
+        	$userDetails['role'] = $role_data->value;
+        }
+
         $additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
 
@@ -194,10 +235,35 @@ class UsersController extends Controller
             }
 
         }
+        $newData = [];
+        foreach ($userDetails->toArray() as $key => $value) {
+        	if(!is_array($value)){
+	        	json_decode($value);
+	    		if (json_last_error() === JSON_ERROR_NONE){
+	    			if(is_array( json_decode($value) )){
+                            $array_field = $fields->where('field_title',$key)->first();
+                            if($array_field != null){
+                            	$array_field_slug = $array_field->field_slug;
+	                            $array_field_options = field_options($array_field_slug);
+	                            foreach (json_decode($value) as $ke => $val) {
+	                                if(array_key_exists($val, $array_field_options)){
+	                                    $newData[$key][] = $array_field_options[$val];
+	                                }
+	                            }
 
-
-
-        return view('organization.user.view',['model' => $userDetails]);
+                            }
+	    				// $newData[$key] = json_decode($value);
+	    			}else{
+	    				$newData[$key] = $value;
+	    			}
+	    		}else{
+	    			$newData[$key] = $value;
+	    		}
+        	}else{
+        		$newData[$key] = $value;
+        	}
+        }
+        return view('organization.user.view',['model' => $newData]);
         // return view('organization.user.preview',['model' => $userDetails , 'user_log' => $user_log]);
     }
 
@@ -220,8 +286,31 @@ class UsersController extends Controller
 	                $form_slug = $additionalForm->form_slug;
 	            }
 	        }
-          $model = org_user::with(['user_role_rel','metas'])->find($id);
-          return view('organization.user.edit',['model' => $model,'form_slug'=>$form_slug]);
+            $model = org_user::with(['user_role_rel','metas'])->find($id);
+
+			foreach($model->metas as $k => $v){
+                $model[$v->key] = $v->value;
+			}
+          	$newData = [];
+	        foreach ($model->toArray() as $key => $value) {
+	        	if(!is_array($value)){
+		        	json_decode($value);
+		    		if (json_last_error() === JSON_ERROR_NONE){
+		    			if(is_array( json_decode($value) )){
+		    				$newData[$key] = json_decode($value);
+		    			}else{
+		    				$newData[$key] = $value;
+		    			}
+		    		}else{
+		    			$newData[$key] = $value;
+		    		}
+	        	}else{
+	        		$newData[$key] = $value;
+	        	}
+
+	        }
+
+          return view('organization.user.edit',['model' => $newData,'form_slug'=>$form_slug]);
       }
 
 
@@ -257,7 +346,7 @@ class UsersController extends Controller
 
           $model = org_user::where('id',$request->user_id)->update(['password' => Hash::make($request->new_password) , 'app_password' => $request->new_password]);
           if($model){
-              echo "<script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script>";
+              Session::flash('success','Password Change Successfully');
               return back();
           }
         }
@@ -269,6 +358,12 @@ class UsersController extends Controller
          **/
           public function updateUserDetails(Request $request, $id)
           {
+            dd($request->all());
+            $emailValidate = [
+                'email'      => 'required|email',
+            ];
+            $this->validate($request , $emailValidate);
+
               $model = org_user::find($id);
               $model->name = $request->name;
               $model->email = $request->email;
@@ -276,11 +371,11 @@ class UsersController extends Controller
               $model->save();
               $notToDeleteIds = [];
               $currentStoredRoles = UserRoleMapping::where(['user_id'=>$id])->pluck('role_id')->toArray();
-                if($request->has('role_id') != ''){
-                    $newSelectedRoles = array_map('intval',$request->role_id);
+                if($request->has('role') != ''){
+                    $newSelectedRoles = array_map('intval',$request->role);
                     $this->deleteFromRelatedTables($currentStoredRoles, $newSelectedRoles, $id);
                     
-                    foreach($request->role_id as $key => $role){
+                    foreach($request->role as $key => $role){
                         $model = UsersRole::find($role);
 
                         if($model->slug == 'employee'){
@@ -299,7 +394,7 @@ class UsersController extends Controller
                             $mappingModel->save();
                             $notToDeleteIds[] = $mappingModel->id;
                       }
-                      foreach($request->role_id as $key => $role){
+                      foreach($request->role as $key => $role){
                           $model = UsersRole::find($role);
 
                           if($model->slug == 'employee'){
@@ -366,11 +461,11 @@ class UsersController extends Controller
          **/
         public function changeStatus($id)
         {
-            $model = org_user::where('id',$id)->first();
+            $model = User::where('user_id',$id)->first();
                 if($model['status'] == 0){
-                    org_user::where('id',$id)->update(['status' => 1]);
+                    User::where('user_id',$id)->update(['status' => 1]);
                 }else{
-                    org_user::where('id',$id)->update(['status' => 0]);
+                    User::where('user_id',$id)->update(['status' => 0]);
                 }
             return back();
         }
@@ -383,9 +478,21 @@ class UsersController extends Controller
          **/
         public function deleteUser ($id)
         {
+            
             $model = org_user::where('id',$id)->delete();
+            UserRoleMapping::where('user_id',$id)->delete();
+            User::where('user_id',$id)->delete();
             return back();
         }
+
+        public function UserMetaUpdate(Request $request){
+
+          $model = GroupUserMeta::firstOrNew(['user_id'=>Auth::guard('org')->user()->id,'key'=>'layout_sidebar_small']);
+          $model->key = 'layout_sidebar_small';
+          $model->user_id = Auth::guard('org')->user()->id;
+          $model->value = $request->layout_sidebar_small;
+          $model->save();
+      }
 
 
 

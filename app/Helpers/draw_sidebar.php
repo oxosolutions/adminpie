@@ -2,8 +2,8 @@
 namespace App\Helpers;
     use App\Model\Admin\GlobalOrganization as ORG;
     use App\Model\Admin\GlobalModule as Module;
-	use App\Model\Admin\GlobalModuleRoute as Route;
-	use App\Model\Admin\GlobalSubModule;
+    use App\Model\Admin\GlobalModuleRoute as Route;
+    use App\Model\Admin\GlobalSubModule;
     use App\Model\Organization\RolePermisson as Permisson;
     use App\Model\Organization\User;
     use Auth;
@@ -13,7 +13,7 @@ class draw_sidebar{
     {
         $orgModule = ORG::organization_module();
         $model = Module::whereIn('id',$orgModule)->where('status',1)->with(['subModule'=>function($query){
-                $query->with('moduleRoute');
+                $query->where('status',1)->with('moduleRoute');
             }])->orderBy('orderBy','asc')->get();
 
         return $model;

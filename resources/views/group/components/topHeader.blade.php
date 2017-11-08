@@ -1,8 +1,6 @@
 @php
 $sidebar_small = 1;
-	
-$orgData = App\Model\Admin\GlobalGroup::where('id',Session::get('group_id'))->first();
-
+	$orgData = App\Model\Admin\GlobalGroup::where('id',Auth::guard('group')->user()->group_id)->first();
 @endphp
 <div id="aione_header_left" class="aione-header-left">
 	<div class="aione-row">

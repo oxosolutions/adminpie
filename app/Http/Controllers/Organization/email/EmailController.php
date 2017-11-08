@@ -94,7 +94,7 @@ class EmailController extends Controller
                       'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created At'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'edit.template' , 'class' => 'edit'],
-                                      'delete'=>['title'=>'Delete','route'=>'email.templates.delete']
+                                      'delete'=>['title'=>'Delete','route'=>'edit.template']
                                    ],
                       
                     ];
@@ -157,7 +157,8 @@ class EmailController extends Controller
         $data['designations'] = Designation::pluck('name','id');
         $data['shifts'] = Shift::pluck('name','id');
         $data['roles'] = UsersRole::pluck('name','id');
-        $data['users'] = User::pluck('name','id');
+        $data['users'] = User::getEmployeeList();
+
         if($id != null){
             $model = Campaign::find($id);
             $model->send_to = json_decode($model->send_to);
@@ -169,6 +170,7 @@ class EmailController extends Controller
             $model->selected_users = $selected_users_array;
             $data['model'] = $model;
         }
+
         return view('organization.emails.send-email',$data);
     }
 
@@ -246,6 +248,17 @@ class EmailController extends Controller
     }
     public function saveTemplate(Request $request)
     {
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+        $table = Session::get('organization_id').'_email_template';
+        $rules = [
+                'name' => 'required',
+                'content' => 'required',
+                'slug' => 'required|unique:'.$table,
+                'subject' => 'required'
+        ];        
+        $this->validate($request,$rules);
+
         $obj = new EmailTemplate();
         $obj->fill($request->all());
         $obj->save();

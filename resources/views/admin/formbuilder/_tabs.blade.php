@@ -33,9 +33,9 @@
 
 
       @if(Auth::guard('org')->check())
-        <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''}}">
+       {{--  <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''}}">
           <a href="{{ route($route_slug.'form.custom',$id) }}"><span class="nav-item-text">new tabs</span></a>
-        </li>
+        </li> --}}
 
       @endif
 

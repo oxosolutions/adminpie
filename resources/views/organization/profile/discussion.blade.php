@@ -36,7 +36,7 @@
 	
 	{{--
 	{!! FormGenerator::GenerateForm('form_setting_form',[]) !!}
-	 {!! FormGenerator::GenerateSection('addempsec1') !!} --}}
+	  --}}
 
 	@include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

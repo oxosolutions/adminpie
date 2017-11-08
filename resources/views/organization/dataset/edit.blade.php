@@ -38,7 +38,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => 'Dataset Edit <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -46,6 +46,9 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@include('organization.dataset._tabs')
+		{!! Form::model($dataset,['route'=>['update.dataset.details',$dataset->id]]) !!}
+			{!! FormGenerator::GenerateForm('edit_dataset_form') !!}
+		{!! Form::close() !!}
 	{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
 		
 		{!! FormGenerator::GenerateForm('create_column_dataset') !!}

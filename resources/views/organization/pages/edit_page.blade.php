@@ -13,8 +13,6 @@
   @endphp
 @endif
 @extends($layout)
-
-{{-- @extends('layouts.main') --}}
 @section('content')
 	<style type="text/css">
 		.page-widgets > .boxed{
@@ -60,7 +58,7 @@
 	    'show_page_title' => 'yes',
 	    'show_add_new_button' => 'no',
 	    'show_navigation' => 'yes',
-	    'page_title' => 'Edit Page :<span>'.$page->title.'</span>',
+	    'page_title' => 'Edit Page <span>'.$page->title.'</span>',
 	    'add_new' => '+ Add Media'
 	); 
 	@endphp
@@ -97,79 +95,20 @@
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}
 					{!! FormGenerator::GenerateForm('edit_page_form') !!}
 				</div>
+				@php
+					$uri = explode('/',request()->route()->uri);
+				@endphp
 				<div class="l6 page-widgets" style="width: 25%;float: left">
 					<input type="hidden" name="id" value="{{ request()->route()->parameters()['id'] }}">
-					{{-- <div class="boxed">
-						<div class="header">
-							Publish
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('select_status') !!}
-							<button>save</button>
-						</div>
-					</div> --}}
-					<div class="boxed">
-						<div class="header">
-							Status
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('select_status') !!}
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Menu
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateSection('menu_section') !!}
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Categories
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('categories') !!}
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Tags
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateSection('tags_section') !!}
-							
-							<div class="field-wrapper">
-								<a href="javascript:;" id="input_add" class="add"> Add </a>	
-							</div>
-							
-							<div class="tags">
-								
-							</div>
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Page Attributes
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('template') !!}
-						</div>
-					</div>
+					{!! FormGenerator::GenerateForm('page_options_form') !!}
 				</div>
 			</div>
-			<button type="submit">Save</button>
+			{{-- <button type="submit">Save</button> --}}
 		{!! Form::close() !!}
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 		<script type="text/javascript">
-			$(document).on('click','#input_add',function(){
+			$(document).on('click','.add',function(){
 				var tag = $(this).parents('.field-wrapper').prev().find('.input-tag').val();
 				$('#input_tag').val('');
 				$(this).parents('.field-wrapper').next().append('<span>'+tag+'<i class="fa fa-close"></i></span>');

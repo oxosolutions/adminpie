@@ -1,5 +1,9 @@
 <div id="aione_copyright" class="aione-copyright">
 	<div class="aione-row">
-		&copy;{{ date("Y") }} <a href="http://fhts.ac.in" target="_blank">Foundation of Healthcare Technologies Society</a>. All rights reserved.
+		@if(!empty(@$design_settings['copyright_content']))
+			{!!@$design_settings['copyright_content']!!}
+		@else
+			&copy;{{ date("Y") }} {!!get_organization_meta('title')!!}. All rights reserved.
+		@endif
 	</div><!-- .aione-row -->
 </div>

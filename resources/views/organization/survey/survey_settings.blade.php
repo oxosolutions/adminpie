@@ -25,7 +25,9 @@ $route = 'org.save.form.settings';
 	@include('organization.survey._tabs')
 	@include('common.page_content_primary_start')
 		@if(!@$permission)
-			{{dump('You don\'t have permission!')}}
+		<div class="aione-message warning">
+            	{{ __('survey.survey_with_no_permisson') }}
+        </div>
 		@else
 			<div class="survey-settings-wrapper">
 				<div class="ar">

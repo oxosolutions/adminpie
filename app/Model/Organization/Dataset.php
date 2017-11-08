@@ -7,7 +7,8 @@ use Session;
 use DB;
 class Dataset extends Model
 {
-    
+   
+
 	public static $breadCrumbColumn = 'id';
     public function __construct(){
     	if(!empty(get_organization_id())){
@@ -33,7 +34,7 @@ class Dataset extends Model
         if($tabaleHeader != null){
             $firstRecordId = $tabaleHeader->id;
         }
-    	$tableRecords = DB::table(str_replace('ocrm_','',$datasetDataTable))->where('id','!=',$firstRecordId)->paginate(30);
+    	$tableRecords = DB::table(str_replace('ocrm_','',$datasetDataTable))->where('id','!=',$firstRecordId)->where('status','!=',0)->paginate(30);
     	$headers = [];
         if($tabaleHeader != null){
             foreach($tabaleHeader as $key => $row){
@@ -70,5 +71,14 @@ class Dataset extends Model
     public static function getDatasetColumns(){
         $ArrayData = self::getDatasetTableData(request()->route()->parameters()['id']);
         return collect($ArrayData['columns'])->except(['id','status','parent']);
+    }
+
+    public function dataset_meta(){
+
+        return $this->hasMany('App\Model\Organization\DatasetMeta','dataset_id','id');
+    }
+
+    public function collaborate(){
+        return $this->hasMany('App\Model\Organization\Collaborator','relation_id','id')->where('type','dataset');
     }
 }

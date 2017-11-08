@@ -19,7 +19,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Edit Categories : <span>'.$modelData->name.'</span>',
+	'page_title' => 'Edit Categories <span>'.$modelData->name.'</span>',
 );
 @endphp
 @include('common.pageheader',$page_title_data)

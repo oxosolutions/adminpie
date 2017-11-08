@@ -57,7 +57,6 @@ class LoginController extends Controller
                 $organizationToken->auth_login_token = '';
                 $organizationToken->save();
                 try{
-
                     $model = GroupUsers::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
                         $query->where('role_id',1);
                     })->first();
@@ -127,9 +126,22 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
+        // dd($request->all());
         $model = GroupUsers::where('email',$request->email)->first();
         if(count(@$model) > 0){
+            if($model->status == 0){
+                Session::flash('error','Your account is deactivated from group admin!');
+                return back();
+            }
             $ifUserAllowForOrganization = User::where('user_id',$model->id)->first();
+            if($ifUserAllowForOrganization == null){
+                Session::flash('error','You don\'t have rights to access this organization!');
+                return back();
+            }elseif($ifUserAllowForOrganization->status == 0){
+                Session::flash('error','Your account is deactivated by organization admin!');
+                return back();
+            }
+            
             if($ifUserAllowForOrganization != null){
                 if(@$model->status == 1){
                     $credentials = [
@@ -142,19 +154,19 @@ class LoginController extends Controller
                         @Session::put('user_role',@$putRole->role_id);
                         return redirect('/'); 
                     }else{
-                        Session::flash('login_fails' , 'wrong user credientals.');
+                        Session::flash('error' , 'wrong user credientals.');
                         return back();
                     }
                 }else{
-                    Session::flash('login_fails' , 'Your account is temporary Blocked , please contact the Organization Admin');
+                    Session::flash('error' , 'Your account is temporary Blocked , please contact the Organization Admin');
                     return back();
                 }
             }else{
-                Session::flash('login_fails' , 'wrong user credientals. ');
+                Session::flash('error' , 'wrong user credientals. ');
                 return back();
             }
         }else{
-            Session::flash('login_fails' , 'wrong user credientals. ');
+            Session::flash('error' , 'wrong user credientals. ');
             return back();
         }
         
@@ -228,18 +240,54 @@ class LoginController extends Controller
         $arraySetting = [];
         $completeDomain = $request->getHost();
         $form_slug = null;
-        $primary_domain = $this->is_primary_domain_exists($completeDomain);
-        $settings = OrganizationSetting::all();
-        Session::put('organization_id',$primary_domain->id);
+        
 
-        $additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
-        if($additionalForm != null){
-            $additionalForm = Forms::find($additionalForm->value);
-            if($additionalForm != null){
-                $form_slug = $additionalForm->form_slug;
+        $settings = OrganizationSetting::all();
+
+
+        $additionalForm = $settings->where('key','user_profile_form')->first();
+        
+        $primary_domain = $this->is_primary_domain_exists($completeDomain);
+        $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
+        if($primary_domain == false){
+            if($secondary_domain == false){
+                $domain = explode('.', $request->getHost());
+                $subdomain = $domain[0];
+                $model = GlobalOrganization::where('slug',$subdomain)->first();
+                if($model == null){
+                    return redirect()->route('demo5');
+                }
+                Session::put('organization_id',$model->id);
+                $auth = Auth::guard('org');
+                if($additionalForm != null){
+                    $additionalForm = Forms::find($additionalForm->value);
+                    if($additionalForm != null){
+                        $form_slug = $additionalForm->form_slug;
+                    }
+                }
+                return view('organization.login.signup',compact('settings'))->with(['form_slug'=>$form_slug]);
+                    
+            }else{
+                Session::put('organization_id',$secondary_domain->id);
+                if($additionalForm != null){
+                    $additionalForm = Forms::find($additionalForm->value);
+                    if($additionalForm != null){
+                        $form_slug = $additionalForm->form_slug;
+                    }
+                }
+                return view('organization.login.signup',compact('settings'))->with(['form_slug'=>$form_slug]);
             }
+        }else{
+            Session::put('organization_id',$primary_domain->id);
+            $auth = Auth::guard('org');
+            if($additionalForm != null){
+                $additionalForm = Forms::find($additionalForm->value);
+                if($additionalForm != null){
+                    $form_slug = $additionalForm->form_slug;
+                }
+            }
+            return view('organization.login.signup',compact('settings'))->with(['form_slug'=>$form_slug]);
         }
-        return view('organization.login.signup',compact('settings'))->with(['form_slug'=>$form_slug]);
     }
 
     protected function is_primary_domain_exists($domain){

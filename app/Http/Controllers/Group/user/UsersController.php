@@ -10,7 +10,8 @@ use Hash;
 use Auth;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\forms as Forms;
-
+use App\Model\Admin\GlobalOrganization;
+use DB;
 
 class UsersController extends Controller
 {
@@ -18,7 +19,7 @@ class UsersController extends Controller
 
     	$rules = [
     		'name' => 'required',
-    		'email' => 'required',
+    		'email' => 'required|email',
     		'password' => 'required',
     		'confirm_password' => 'required'
     	];
@@ -71,11 +72,26 @@ class UsersController extends Controller
      * undocumented function
      *
      * @return user details with id
-     * @author sandip
+     * @author Sandip,Rahul
      **/
     public function view($id){
    		$model = GroupUsers::find($id);
-   		return view('group.user.view',['model'=>$model]);
+   		$organizations = GlobalOrganization::where(['group_id'=>Auth::guard('group')->user()->group_id])->get();
+   		$prefix = DB::getTablePrefix();
+   		$organizationsList = [];
+   		$index = 0;
+   		foreach($organizations as $key => $organization){
+   			$user = DB::table($organization->id."_users")->where(['user_id'=>$id])->get();
+   			$roles = $organization->id.'_users_roles';
+   			$mappingTable = $organization->id."_user_role_mappings";
+   			$userRoles = DB::table($mappingTable)->leftjoin($roles,$roles.'.id','=',$mappingTable.'.role_id','LEFT')->where(['user_id'=>$id])->get()->toArray();
+   			if(!$user->isEmpty()){
+   				$organizationsList[$index]['name'] = $organization->name;
+   				$organizationsList[$index]['roles'] = $userRoles;
+   				$index++;
+   			}
+   		}
+   		return view('group.user.view',['model'=>$model,'organizationsList'=>$organizationsList]);
    	}
 
    	/**
@@ -193,7 +209,7 @@ class UsersController extends Controller
 
             $model = GroupUsers::where('id',$request->user_id)->update(['password' => $new_pass , 'app_password' => $request->new_password]);
             if($model){
-                Session::flash('success','password Change Successfully');
+                Session::flash('success','Password Change Successfully');
                 return back();
             }
           } 

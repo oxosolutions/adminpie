@@ -1,10 +1,13 @@
-<div class="form-group">
-{!!Form::label('title', 'Enter Project Title:', ['class' => 'col-lg-3 control-label']);
-!!}
-	{{-- <label class="col-lg-3 control-label">Enter Project Title:</label> --}}
+{{-- <div class="form-group">
+{!!Form::label('title', 'Enter Project Title:', ['class' => 'col-lg-3 control-label']) !!}
 	<div class="col-lg-9">
 	{!!Form::text('name',null,['class' => 'form-control'])!!}
-		{{-- <input type="text" name="name" class="form-control" placeholder="Enter Project Title"> --}}
+ --}}	
+
+{{-- <label class="col-lg-3 control-label">Enter Project Title:</label> --}}
+{{-- <input type="text" name="name" class="form-control" placeholder="Enter Project Title"> --}}
+	
+{{-- 
 	</div>
 </div>
 <div class="form-group">
@@ -14,7 +17,8 @@
 		<textarea name="description" rows="5"  cols="5" class="form-control" placeholder="Short Project Description"></textarea>
 	</div>
 </div>
-
+ --}}
+{!! FormGenerator::GenerateForm('team') !!}
 
 
 
@@ -43,7 +47,7 @@
 		<input type="number" class="form-control" name="progress" placeholder="Enter Progress">
 	</div>
 </div>
- <div class="form-group">
+<div class="form-group">
 	<label class="col-lg-3 control-label">Select your state:</label>
 	<div class="col-lg-9">
 		<select data-placeholder="Select your state" class="select form-control">

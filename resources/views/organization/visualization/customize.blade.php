@@ -10,9 +10,10 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
-@include('organization.visualization._tabs')
+
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
+    @include('organization.visualization._tabs')
     	@php
     		if(!@$model->isEmpty()){
     			$model['css_code'] = @$model->where('key','css_code')->first()->value;

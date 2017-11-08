@@ -17,14 +17,14 @@ $page_title_data = array(
 	$mapModel = 'App\\Model\\Organization\\UsersRole';
 	// dd($model->toArray());
 	// ->pluck('role_id')
-	if(array_key_exists('role', $model->toArray())){
-		if(!is_array($model->role)){
-			$role[] = $mapModel::where('id',$model->role)->first()->name;
+	if(array_key_exists('role', $model)){
+		if(!is_array($model['role'])){
+			$role[] = $mapModel::where('id',$model['role'])->first()->name;
 		}else{
-			$role = $mapModel::whereIn('id',$model->role->pluck('role_id'))->get();
+			$role = $mapModel::whereIn('id',$model['role']->pluck('role_id'))->get();
 		}
 	}
-	unset($model->role , $model->id);
+	unset($model['role'] , $model['id'] , $model['metas'], $model['user_role_rel']);
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
@@ -42,9 +42,9 @@ $page_title_data = array(
 			          </thead>
 					<tbody>
 
-					@foreach($model->toArray() as $key => $value)
-						@if(!is_array($value))
-							@if($value != '')
+					@foreach($model as $key => $value)
+						@if($value != '' || $value != null || !empty($value))
+							@if(!is_array($value))
 								<tr>
 									<td>
 										{{ ucfirst(str_replace('_', " ", $key)) }}
@@ -53,16 +53,34 @@ $page_title_data = array(
 										{{ $value }}
 									</td>
 								</tr>	
+							@else
+								<tr>
+									<td>
+										{{ ucfirst(str_replace('_', " ", $key)) }}
+									</td>
+									<td>
+										@foreach($value as $k => $v)
+											@php
+											$array_key = array_keys($value);
+												if(end($array_key) != $k){
+													echo $v.' , ';
+												}else{
+													echo $v;
+												}
+											@endphp
+										@endforeach
+									</td>
+								</tr>	
 							@endif
 						@endif
 					@endforeach
-					@if($role != null)
+					@if(@$role != null)
 						<tr>
 							<td>
 								Roles
 							</td>
 							<td>
-								@foreach($role as $k => $v)
+								@foreach(@$role as $k => $v)
 									{{ $v }}
 									@if(!$loop->last)
 										{{ ' ,' }}

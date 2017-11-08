@@ -20,15 +20,16 @@ $page_title_data = array(
   'page_title' => 'Role Permissions <span>'.$role_data[0]['name'].'</span>',
   'add_new' => ''
 ); 
+
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
   @include('common.page_content_primary_start')
 
-  <div id="page_role_permissions" class="page-role-permissions">
+  {{-- <div id="page_role_permissions" class="page-role-permissions">
     {!! Form::open(['route'=>'save.role_permisson'])!!}
     <input type="hidden" name="role_id" value="{{$role_data[0]['id']}}">
-    <!-- Modules -->
+    
     <div class="ar">
         <div class="ac s100 m100 l100 pb-15">
           <div class="aione-widget aione-border bg-grey bg-lighten-5">
@@ -60,10 +61,10 @@ $page_title_data = array(
     {!!Form::close() !!}
   </div>
 
+ --}}
 
 
-
-<div class="row">
+  {{-- <div class="row">
 
 
 
@@ -129,7 +130,7 @@ $page_title_data = array(
                  {{$moduleVal->name}}
                 <input type="hidden" name="moduleRoute[{{$moduleVal->id}}][permisson_type]" value="module">
                 <input type="hidden" name="moduleRoute[{{$moduleVal->id}}][permisson_id]" value="{{$moduleVal->id}}">
-                {{-- <input type="hidden" name="moduleRoute[{{$moduleVal->id}}][permisson]" value="Null"> --}}
+               
                 @if(!empty($moduleFilled[$moduleVal->id]['permisson']))
                 
                     <input checked="checked" name='moduleRoute[{{$moduleVal->id}}][permisson]' type="checkbox" class="filled-in checkAll" id="filled-in-box-module{{$loop->iteration}}" />
@@ -186,54 +187,145 @@ $page_title_data = array(
         {!! Form::close() !!}
 
     </div>
-</div>
+  </div>
 
+ --}}
 
+    <div class="ar">
+        <div class="ac l70">
+
+            <div class="aione-border p-10">
+                {!! Form::open(['route'=>'save.role_permisson'])!!}
+                <input type="hidden" name="role_id" value="{{$role_data[0]['id']}}">
+                <h5 class="aione-border-bottom mb-10 pb-10">Role Permissions</h5>
+                <div class="aione-collapsible">
+                    @foreach($module_data as $moduleKey => $moduleVal)  
+                    <input type="hidden" name="moduleRoute[{{$moduleVal->id}}][permisson_type]" value="module">
+                    <input type="hidden" name="moduleRoute[{{$moduleVal->id}}][permisson_id]" value="{{$moduleVal->id}}">
+                    <div class="aione-item">
+                        <div class="aione-item-header">
+                            {{@$moduleVal->name}}
+                        </div>
+                        <div class="aione-item-content p-10">
+                          <div class="aione-border p-15 mb-10 bg-grey bg-lighten-4 module-permissions">
+                            <label class="light-blue darken-2" For="filled-in-box-module{{$loop->iteration}}">{{@$moduleVal->name}}</label>
+                            @if(!empty($moduleFilled[$moduleVal->id]['permisson']))
+                                <input checked="checked" name='moduleRoute[{{$moduleVal->id}}][permisson]' type="checkbox" class="filled-in checkAll aione-float-right" id="filled-in-box-module{{$loop->iteration}}" />
+                            @else
+                                <input  name='moduleRoute[{{$moduleVal->id}}][permisson]' type="checkbox" class="filled-in checkAll aione-float-right" id="filled-in-box-module{{$loop->iteration}}"  />
+                            @endif
+                          </div>
+
+                            <ul>
+                                @foreach($moduleVal['subModule'] as $subModuleKey =>$subModuleVal)
+                                <li class="aione-border mb-10">
+                                    <div class="aione-border-bottom p-10 ">
+                                        <div class="ar">
+                                            <div class="ac l90">
+                                                 <label for="filled-in-box-sub-module{{$subModuleVal->id}}">{{$subModuleVal->name}}</label>      
+                                            </div>
+                                            <div class="ac l10">
+                                                @if(!empty($subModuleVal->sub_module_route))
+                                                    <input type="hidden" name="subModuleRoute[{{$subModuleVal->id}}][permisson_type]" value="submodule">
+                                                    <input type="hidden" name="subModuleRoute[{{$subModuleVal->id}}][permisson_id]" value="{{$subModuleVal->id}}">
+                                                    @if(!empty($submoduleFilled[$subModuleVal->id]['permisson']))
+                                                        <input checked="checked" name='subModuleRoute[{{$subModuleVal->id}}][permisson]' type="checkbox" class="filled-in aione-float-right" id="filled-in-box-sub-module{{$subModuleVal->id}}"  />
+                                                    @else
+                                                        <input  name='subModuleRoute[{{$subModuleVal->id}}][permisson]' type="checkbox" class="filled-in aione-float-right" id="filled-in-box-sub-module{{$subModuleVal->id}}"  />
+                                                    @endif
+                                                    <label for="filled-in-box-sub-module{{$subModuleVal->id}}" style="float: right"></label>
+                                                @endif        
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        @foreach($subModuleVal['moduleRoute'] as $routeKey => $routeVal)
+                                         <div class="aione-border p-10 m-10 mb-5 widget-checkbox-label">
+                                            <div class="ar">
+                                                <div class="ac l90">
+                                                     <label for="filled-in-box-sub-module-multi-{{str_slug($routeVal->route_name)}}-{{$loop->iteration}}"> {{$routeVal->route_name}}</label>      
+                                                </div>
+                                                <div class="ac l10">
+                                                    @if(!empty($subModuleVal->sub_module_route))
+                                                        <input type="hidden" name="subModuleMultiRoute[{{$routeVal->id}}][permisson_type]" value="route">
+                                                        <input type="hidden" name="subModuleMultiRoute[{{$routeVal->id}}][permisson_id]" value="{{$routeVal->id}}">
+                                                        @if(!empty($routeFilled[$routeVal->id]['permisson']))
+                                                            <input checked="checked" name='subModuleMultiRoute[{{$routeVal->id}}][permisson]' type="checkbox" class="filled-in aione-float-right" id="filled-in-box-sub-module-multi-{{str_slug($routeVal->route_name)}}-{{$loop->iteration}}"  />
+                                                        @else
+                                                            <input  name='subModuleMultiRoute[{{$routeVal->id}}][permisson]' type="checkbox" class="filled-in aione-float-right" id="filled-in-box-sub-module-multi-{{str_slug($routeVal->route_name)}}-{{$loop->iteration}}"  />
+                                                        @endif
+                                                        <label for="filled-in-box-sub-module-multi-{{str_slug($routeVal->route_name)}}-{{$loop->iteration}}" style="float: right"></label>
+                                                    @endif  
+                                                </div>
+                                                
+                                            </div>
+                                            
+                                        </div>
+                                        @endforeach 
+                                    </div>  
+                                        
+                                </li>
+                               
+                                @endforeach 
+                            </ul>
+                        </div>
+                    </div>
+                    @endforeach 
+                </div>   
+                {!! Form::submit('Save Role Permisson') !!}
+                {!! Form::close() !!}
+            </div>
+        </div>
+        <div class="ac l30">
+            <div class="aione-border p-10 mb-10">
+                {!! Form::open(['route'=>'save.role_permisson'])!!}
+                    <input type="hidden" name="role_id" value="{{$role_data[0]['id']}}">
+                    <h5 class="aione-border-bottom mb-10 pb-10">Widget Permissions</h5>
+                    <ul>
+                        @foreach($widget as $widgetKey =>$widgetVal)
+                            <input type="hidden" name="widget[{{$widgetVal->id}}][permisson_type]" value="widget">
+                            <input type="hidden" name="widget[{{$widgetVal->id}}][permisson_id]" value="{{$widgetVal->id}}" >
+                            <li class="aione-border-bottom p-10 mb-10 widget-checkbox-label">
+                                
+                                <div class="ar">
+                                    <div class="ac l90">
+                                         <label For="check_{{$loop->iteration}}">{{$widgetVal->title}}</label>      
+                                    </div>
+                                    <div class="ac l10">
+                                        @if(!empty($widgetFilled[$widgetVal->id]['permisson']) && $widgetFilled[$widgetVal->id]['permisson']=='on' )
+                                            <input checked="checked" id="check_{{$loop->iteration}}" name='widget[{{$widgetVal->id}}][permisson]' type="checkbox" name="" class="aione-float-right ">    
+                                        @else
+                                            <input id="check_{{$loop->iteration}}" type="checkbox" name='widget[{{$widgetVal->id}}][permisson]' class="aione-float-right "> 
+                                        @endif    
+                                    </div>
+                                    
+                                </div>
+                            </li>
+                        @endforeach
+                            
+                    </ul>
+                     {!! Form::submit('Save Widget Permissions', ['class' => 'aione-button ']) !!}
+                {!!Form::close() !!}
+            </div>
+        </div>
+    </div>
+    
+   
+  
   @include('common.page_content_primary_end')
   @include('common.page_content_secondry_start')
 
-<style type="text/css">
-    #assign_role >  ul > li:first-child{
-        background-color: #24425C;
-        color: white;       
-        font-weight: bold;
-    }
-    #assign_role >  ul > li{
-         padding: 15px 10px;
-    }
-    .collapsible [type="checkbox"].filled-in:not(:checked)+label:after{
-        top:50% !important;
-    }
-    .collapsible [type="checkbox"].filled-in:checked+label:before{
-        top:50% !important;
-    }
-    .collapsible [type="checkbox"].filled-in:checked+label:after{
-        top:50% !important;
-    }
-     .collapsible li.active i {
-      
-      transform: rotate(180deg);
-    }
-    .page-content{
-            padding-top: 118px;
-    }
-    .section-1 [type="checkbox"]+label{
-        height: 15px !important;
-    }
-    .collapsible{
-        border: none;
-        box-shadow: none;
-    }
-</style>
 <script type="text/javascript">
-$('.checkAll').on('click',function(){
+$('.module-permissions .checkAll').on('click',function(){
     if($(this).is(':checked')){
-        $(this).parents('.collapsible-header').siblings().find('input[type="checkbox"]').prop('checked','checked');
-        }else{        
-             $(this).parents('.collapsible-header').siblings().find('input[type="checkbox"]').prop('checked','');
+      $(this).parent().parent().find('input[type="checkbox"]').prop('checked','checked');
+    }else{        
+      $(this).parent().parent().find('input[type="checkbox"]').prop('checked','');
     }
 });
 </script>
+
 
 
 

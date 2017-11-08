@@ -62,7 +62,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => 'Dataset View <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -70,125 +70,48 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.dataset._tabs')
+	<nav id="aione_nav" class="aione-nav horizontal light">
+        <div class="aione-nav-background"></div>
+        <ul id="aione_menu" class="aione-menu custom-aione-menu">
+			<li class="aione-nav-item level0 bg-cyan bg-darken-1 "> 
+				<a class="white" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</a>
+			</li>
+		
+			<li class="aione-nav-item level0 bg-teal bg-darken-1 "> 
+				<a class="white" href="http://master.scolm.com/form/fields/100/349">Export</a>
+			    <ul class="side-bar-submenu">
+			        <li class="aione-nav-item level1 "> 
+						<a onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'xls'])}}'">Export as XLS</a>
+					</li>
+					<li class="aione-nav-item level1 "> 
+						<a onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'csv'])}}'">Export as CSV</a>
+					</li>
+				</ul>
+			</li>
+
+		</ul>
+		<div class="aione-nav-toggle">
+			<a href="#" class="nav-toggle "></a>
+		</div>
+		<div class="clear"></div>
+	</nav>
 	<div id="example2" style="width: 100%; font-size: 14px;">
 		
 	</div>
 	<a href="javascript:;" class="btn blue save_dataset" style="margin-top: 3%; display: none;">Update Dataset</a> 
 
 
-	@if(@request()->route()->parameters['action'] == 'rivisions')
-		@php
+	
+	<div class="aione-table" {{-- style="width: 99%;overflow-x: scroll;overflow-y: scroll;max-height: 500px;margin-bottom: 20px" --}}>
+	<div class="aione-float-right">
+		{{-- <button class="aione-button" onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'xls'])}}'">Export XLS</button>
+		<button class="aione-button" onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'csv'])}}'">Export CSV</button> --}}
+		{{-- <button class="aione-button" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</button>
+		<button class="aione-button" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Export</button> --}}
 
-		$headers = (array) $tableheaders;
-
-		$history_data = (array) $history->toArray();
-
-		array_unshift($history_data, $headers);
-
-		$history_records = array();
-		foreach ($history_data as $column_key => $columns) {
-			foreach ($columns as $row => $record) {
-				$history_records[$row][$column_key] = $record;
-			}
-			unset($history_records['id']);
-			unset($history_records['status']);
-			unset($history_records['parent']);
-		}
-
-	@endphp
-	<div class="aione-table" style="margin-bottom: 20px">
-	 <table class="compact dataset-table" >
-	 	<thead>
-	 		<tr>
-	 			@foreach($history_data as $key => $value)
-	 				@if($key == 0)
-	 					<th> Column </th>
-					@else
-	 					<th> Revision_{{$key}} </th>
-					@endif
-	 			@endforeach
-			</tr>
-	 		
-	 	</thead>
-	 	<tbody>
-	 		@foreach($history_records as $row_key => $row)
-	 			<tr>
-		 			@foreach($row as $column_key => $column_value)	
-						<td>
-							{{$column_value}}
-						</td>
-		 			@endforeach
-	 			</tr>
-	 		@endforeach
-	 	</tbody>
-	 </table>
 	</div>
-
-@endif
-@if(@request()->route()->parameters['action'] == 'view')
-	<div class="aione-table" style="margin-bottom: 20px">
-		<table class="compact">
-			<thead>
-				<tr>
-					<td>Key</td>
-					<td>Value</td>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach($tableheaders as $k => $rows)
-					@if(!in_array($k,['id','status','parent']))
-						<tr>
-							<td width="400px">{{$rows}}</td>
-							<td>{{ $viewrecords[0]->{$k} }}</td>
-						</tr>
-					@endif
-				@endforeach
-			</tbody>
-		</table>
-	</div>
-@endif
-
-@if(@request()->route()->parameters['action'] == 'edit')
-	<form action="{{route('dataset.update')}}" method="POST" class="aione-table">
-		{{csrf_field()}}
-		<input type="hidden" name="dataset_id" value="{{ request()->route()->parameters()['id'] }}">
-		<table class="compact">
-			<thead>
-				<tr>
-					<td>Key</td>
-					<td>Value</td>
-				</tr>
-			</thead>
-			<tbody>
-					
-				@foreach($tableheaders as $k => $rows)
-					@if(!in_array($k,['id','status','parent']))
-						<tr>
-							<td width="400px">{{$rows}}</td>
-							<td>
-								<div id="field_{{$k}}" class="field-wrapper field-wrapper-{{$k}} field-wrapper-type-text ">
-									<div id="field_{{$k}}" class="field field-type-text" style="padding: 0">
-										<input type="text" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
-									</div>
-								</div>
-							</td>
-						</tr>
-					@else
-						<input type="hidden" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
-					@endif
-				@endforeach
-
-			</tbody>
-		</table>
-		<input type="submit" name="update_data" value="Update Record" />
-	</form>
-@endif
-<div class="aione-table" {{-- style="width: 99%;overflow-x: scroll;overflow-y: scroll;max-height: 500px;margin-bottom: 20px" --}}>
-	<button class="aione-button" onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'xls'])}}'">Export XLS</button>
-	<button class="aione-button" onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'csv'])}}'">Export CSV</button>
-	<button class="aione-button" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</button>
-	<button class="aione-button" onclick="window.location.href='{{route('duplicate.dataset',$dataset['id'])}}'">Find duplicate records</button>
-	<button class="addRow aione-button" style="float: right;">Add Row</button>
+	
+	{{-- <button class="aione-button" onclick="window.location.href='{{route('duplicate.dataset',$dataset['id'])}}'">Find duplicate records</button> --}}
 	<div class="add-dataset" style="margin: 20px 0">
 		{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
 	
@@ -200,74 +123,200 @@
 		</div>	
 			
 	</div>
-	@if(!empty($tableheaders))
-	<div style="" class="table-wrapper">
-		<table class="compact dataset-table" >
-			<thead>
-				<tr>
-					<th>
-						Action
-					</th>
-					@foreach($tableheaders as $k => $header)
+	@if(@request()->route()->parameters['action'] == 'rivisions')
+		@php
+
+			$headers = (array) $tableheaders;
+
+			$history_data = (array) $history->toArray();
+
+			array_unshift($history_data, $headers);
+
+			$history_records = array();
+			foreach ($history_data as $column_key => $columns) {
+				foreach ($columns as $row => $record) {
+					$history_records[$row][$column_key] = $record;
+				}
+				unset($history_records['id']);
+				unset($history_records['status']);
+				unset($history_records['parent']);
+			}
+
+		@endphp
+		<div class="aione-table" style="margin-bottom: 20px">
+			<table class="compact dataset-table" >
+			 	<thead>
+			 		<tr>
+			 			@foreach($history_data as $key => $value)
+			 				@if($key == 0)
+			 					<th> Column </th>
+							@else
+			 					<th> Revision_{{$key}} </th>
+							@endif
+			 			@endforeach
+					</tr>
+			 		
+			 	</thead>
+			 	<tbody>
+			 		@foreach($history_records as $row_key => $row)
+			 			<tr>
+				 			@foreach($row as $column_key => $column_value)	
+								<td>
+									{{$column_value}}
+								</td>
+				 			@endforeach
+			 			</tr>
+			 		@endforeach
+			 	</tbody>
+		 	</table>
+		</div>
+
+	@endif
+
+	@if(@request()->route()->parameters['action'] == 'view')
+		<div class="aione-table" style="margin-bottom: 20px">
+			<table class="compact">
+				<thead>
+					<tr>
+						<td>Key</td>
+						<td>Value</td>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($tableheaders as $k => $rows)
 						@if(!in_array($k,['id','status','parent']))
-							<th>
-								{{$header}}
-							</th>
+							<tr>
+								<td width="400px">{{$rows}}</td>
+								<td>{{ $viewrecords[0]->{$k} }}</td>
+							</tr>
 						@endif
 					@endforeach
+				</tbody>
+			</table>
+		</div>
+	@endif
+
+	@if(@request()->route()->parameters['action'] == 'edit')
+		<form action="{{route('dataset.update')}}" method="POST" class="aione-table">
+			{{csrf_field()}}
+			<input type="hidden" name="dataset_id" value="{{ request()->route()->parameters()['id'] }}">
+			<table class="compact">
+				<thead>
+					<tr>
+						<td>Key</td>
+						<td>Value</td>
+					</tr>
+				</thead>
+				<tbody>
+						
+					@foreach($tableheaders as $k => $rows)
+						@if(!in_array($k,['id','status','parent']))
+							<tr>
+								<td width="400px">{{$rows}}</td>
+								<td>
+									<div id="field_{{$k}}" class="field-wrapper field-wrapper-{{$k}} field-wrapper-type-text ">
+										<div id="field_{{$k}}" class="field field-type-text" style="padding: 0">
+											<input type="text" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
+										</div>
+									</div>
+								</td>
+							</tr>
+						@else
+							<input type="hidden" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
+						@endif
+					@endforeach
+
+				</tbody>
+			</table>
+			<input type="submit" name="update_data" value="Update Record" />
+		</form>
+	@endif
+	<div>
+		<table class="compact">
+			<thead>
+				<tr>
+					<td>Key</td>
+					<td>Value</td>
 				</tr>
 			</thead>
-			<tbody>
-				@if(!empty($records))
-					@foreach($records as $k => $rows)
-						<tr>
-							<td>
-								<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'view','record_id'=>$rows->id])}}"><i class="fa fa-eye"></i></a>
-								<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'edit','record_id'=>$rows->id])}}"><i class="fa fa-pencil"></i></a>
-								<a href="{{route('delete.record',['id'=>$dataset->id,'record_id'=>$rows->id])}}" class="delete-row"><i class="fa fa-trash " style="color: red"></i></a>
-								<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'rivisions','record_id'=>$rows->id])}}"><i class="fa fa-history"></i></a>
-								 <script type="text/javascript">
-	                                    $(document).on('click','.delete-row',function(e){
-	                                        e.preventDefault();
-	                                        var href = $(this).attr("href");
-
-	                                        swal({   
-	                                            title: "Are you sure?",   
-	                                            text: "You will not be able to recover this row!",   
-	                                            type: "warning",   
-	                                            showCancelButton: true,   
-	                                            confirmButtonColor: "#DD6B55",   
-	                                            confirmButtonText: "Yes, delete it!",   
-	                                            closeOnConfirm: false 
-	                                        }, 
-	                                        function(){
-	                                        window.location = href;
-	                                           swal("Deleted!", "Your Row has been deleted.", "success"); 
-	                                       });
-	                                    })
-	                                </script>
-							</td>
-							@foreach($rows as $key => $value)
-								@if(!in_array($key,['id','status','parent']))
-									<td class="aione-tooltip" title="{{$value}}">
-										<span class="truncate">
-											{{$value}}	
-										</span>
-										
-									</td>
-								@endif
-							@endforeach	
-						</tr>
-					@endforeach
-				@endif
+			<tbody class="addNewDatasetRow">
+				
 			</tbody>
+
 		</table>
+				<button class="AddNewDatasetRowButton hidden" style="float: right;">Update Dataset</button>
+
 	</div>
+	<button class="addRow aione-button" style="float: right;margin-right: 1%">Add Row</button>
+	@if(!empty($tableheaders))
+		<div style="" class="table-wrapper">
+			<table class="compact dataset-table" >
+				<thead>
+					<tr>
+						<th>
+							Action
+						</th>
+						@foreach($tableheaders as $k => $header)
+							@if(!in_array($k,['id','status','parent']))
+								<th>
+									{{$header}}
+								</th>
+							@endif
+						@endforeach
+					</tr>
+				</thead>
+				<tbody>
+					@if(!empty($records))
+						@foreach($records as $k => $rows)
+							<tr>
+								<td>
+									<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'view','record_id'=>$rows->id])}}"><i class="fa fa-eye"></i></a>
+									<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'edit','record_id'=>$rows->id])}}"><i class="fa fa-pencil"></i></a>
+									<a href="{{route('delete.record',['id'=>$dataset->id,'record_id'=>$rows->id])}}" class="delete-row"><i class="fa fa-trash " style="color: red"></i></a>
+									<a href="{{route('view.dataset',['id'=>$dataset->id,'action'=>'rivisions','record_id'=>$rows->id])}}"><i class="fa fa-history"></i></a>
+									 <script type="text/javascript">
+		                                    $(document).on('click','.delete-row',function(e){
+		                                        e.preventDefault();
+		                                        var href = $(this).attr("href");
+
+		                                        swal({   
+		                                            title: "Are you sure?",   
+		                                            text: "You will not be able to recover this row!",   
+		                                            type: "warning",   
+		                                            showCancelButton: true,   
+		                                            confirmButtonColor: "#DD6B55",   
+		                                            confirmButtonText: "Yes, delete it!",   
+		                                            closeOnConfirm: false 
+		                                        }, 
+		                                        function(){
+		                                        window.location = href;
+		                                           swal("Deleted!", "Your Row has been deleted.", "success"); 
+		                                       });
+		                                    })
+		                                </script>
+								</td>
+								@foreach($rows as $key => $value)
+									@if(!in_array($key,['id','status','parent']))
+										<td class="aione-tooltip" title="{{$value}}">
+											<span class="truncate">
+												{{$value}}	
+											</span>
+											
+										</td>
+									@endif
+								@endforeach	
+							</tr>
+						@endforeach
+					@endif
+				</tbody>
+			</table>
+		</div>
 		
-	<div>
-		<button class="update-dataset hidden">Update Dataset</button>
-	</div>
+		<div>
+			<button class="update-dataset hidden">Update Dataset</button>
+		</div>
 	@endif
+
 	<input type="hidden" name="_token" value="{{ csrf_token() }}">
 	<input type="hidden" name="dataset_id" value="{{ request()->route()->parameters()['id'] }}">
 </div>
@@ -281,18 +330,59 @@
 	.hidden{
 		display: none
 	}
+	.custom-aione-menu{
+		    float: right;
+    position: absolute;
+    right: 0;
+    margin-top: -64px !important;
+    margin-right: 20px !important;
+	}
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$(document).on('click' , '.addRow' ,function(){
-			var headerCount = $('.dataset-table tr th').length;
-			$('.dataset-table tbody').prepend('<tr class="appended_row"></tr>');
+		// $(document).on('click' , '.addRow' ,function(){
+		// 	var headerCount = $('.dataset-table tr th').length;
+		// 	$('.dataset-table tbody').prepend('<tr class="appended_row"></tr>');
 
-			for(var i=0; i <=headerCount-1 ; i++){
-				$('.appended_row:first').append('<td contenteditable="true"></td>');
-			}
-			$('.update-dataset').show();
-			$('.appended_row td:first').removeAttr('contenteditable');
+		// 	for(var i=0; i <=headerCount-1 ; i++){
+		// 		$('.appended_row:first').append('<td contenteditable="true"></td>');
+		// 	}
+		// 	$('.update-dataset').show();
+		// 	$('.appended_row td:first').removeAttr('contenteditable');
+		// });
+		$(document).on('click' , '.addRow' ,function(){
+			var th = [];
+			var countTh = $('.dataset-table').find('th').length;
+			$.each($('.dataset-table').find('th'),function(value){
+			th.push($(this).html());
+			});
+			th = th.slice(1);
+			$(th).each(function(key , value){
+				$('.addNewDatasetRow').append('<tr><td width="400px" class="label">'+value+'</td><td><input type="text" class="add-new-value" /></td></tr>');
+				$('.addRow').hide();
+				$('.AddNewDatasetRowButton').show();
+			});
+		});
+
+		$(document).on('click','.AddNewDatasetRowButton',function(){
+			var data = [];
+			$.each($(this).siblings('table').find('tr'),function(){
+				if($(this).find('.label').html() != undefined || $(this).find('.add-new-value').val() != undefined){
+					// console.log($(this).find('.label').html());
+					data.push($(this).find('.add-new-value').val());
+				}
+			});
+
+			$.ajax({
+					url 	: route()+'/dataset/create/rows',
+					type 	: "POST",
+					data 	: { data : data , _token : $('input[name=_token]').val() , dataset_id : $('input[name=dataset_id]').val()},
+					success : function(res){
+						Materialize.toast('Updated Successfully',4000);
+						window.location.reload();
+					}
+				});
+		// alert('rahul sir is working on dataset controller i will do this later -- sandeep');
 		});
 		$(document).on('click','.update-dataset',function(){
 			var index = 0;
@@ -305,15 +395,16 @@
 					});
 					data.push( tableRow);
 				});
-				$.ajax({
+			$.ajax({
 					url 	: route()+'/dataset/create/rows',
 					type 	: "POST",
 					data 	: { data : data , _token : $('input[name=_token]').val() , dataset_id : $('input[name=dataset_id]').val()},
 					success : function(res){
 						Materialize.toast('Updated Successfully',4000);
 					}
-				})
-		});
+				});
+			// alert('rahul sir is working on dataset controller i will do this later -- sandeep');
+		});		
 	});
 </script>
 @include('common.page_content_primary_end')

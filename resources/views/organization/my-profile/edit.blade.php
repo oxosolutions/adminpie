@@ -18,10 +18,9 @@
 			$model['user_type'] = array_map('intval',$data);
 		@endphp --}}
 		
-
 	{!! Form::model($model,['route'=>['update.profile',$model['id']]], ['class'=> 'form-horizontal','method' => 'post','id'=>'save-user-details'])!!}
 
-			{{-- {!! FormGenerator::GenerateSection('organization_user_edit') !!} --}}
+			
 			{!! FormGenerator::GenerateForm('user_registration_form') !!}
 			@if($additional_form != null)
 				{!! FormGenerator::GenerateForm($additional_form,[],null,'org') !!}

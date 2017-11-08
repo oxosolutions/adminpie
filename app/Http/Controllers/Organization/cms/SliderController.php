@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
+use Session;
 
 class SliderController extends Controller
 {
@@ -55,33 +56,23 @@ class SliderController extends Controller
     }
     public function saveSlider(Request $request)
     {
-        $destination_path = upload_path('slides');
-        foreach($request->slider as $k => $v){
-            $new_filename = $v['file']->getClientOriginalName();
-            $uploadFile = $v['file']->move($destination_path, $new_filename);
-            // $v['file'] = $new_filename;             
-        }
-        dd($request->all());
-        foreach ($request->except('_token') as $key => $value) {
-            if($key == 'slider'){
-                foreach ($request->slider as $k => $v) {
-                    foreach($v as $ke => $val){
-                    $newData= [];
+        // $destination_path = upload_path('slides');
+        // $sliderData = $request->all();
+        // foreach($sliderData['slider'] as $k => $v){
+        //     $new_filename = $v['file']->getClientOriginalName();
+        //     $uploadFile = $v['file']->move($destination_path, $new_filename);
+        //     $sliderData['slider'][$k]['file'] = $new_filename;             
+        // }
+        $table = Session::get('organization_id').'_sliders';
+        $rules = [
+                    'slug' => 'required|unique:'.$table,
+                    'name' => 'required'
+                    ];
+        $this->validate($request,$rules);
 
-                        if($ke == 'file'){
-                            $newData[][$ke] = $val->getClientOriginalName();
-                        }else{
-                            $newData[][$ke] = $val;
-                        }
-                    }
-                }
-            }
-        }
-        // dump($newData);
-        // dump($request->slider[0]['file']->getClientOriginalName());
-        // dump($request->slider);
-        // dd();
-        dd(json_encode($request->all()));
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+
         $model = new Slider;
         $model->name =  $request->name;
         $model->description = $request->description;
@@ -92,30 +83,60 @@ class SliderController extends Controller
     }
     public function sliderEdit($id)
     {
-        // $model = Slider::where('id',$id)->get();
         $model = Slider::find($id);
         return view('organization.cms.slider.edit',compact('model'));
+    }
+    public function sliderUpdate(Request $request)
+    {
+        $destination_path = upload_path('slides');
+        $sliderData = $request->all();
+        // foreach($sliderData['slider'] as $k => $v){
+        //     $new_filename = $v['file']->getClientOriginalName();
+        //     $uploadFile = $v['file']->move($destination_path, $new_filename);
+        //     $sliderData['slider'][$k]['file'] = $new_filename;             
+        // }
+        $table = Session::get('organization_id').'_sliders';
+        $rules = [
+                    'slug' => 'required|unique:'.$table,
+                    'title' => 'required'
+                ];
+        
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+        $checkSlug = Slider::where('id',$request['slider_id'])->first();
+        if($checkSlug->slug != $request->slug){
+            $this->validate($request,$rules); 
+        }
+
+        $model = Slider::firstOrNew(['id' => $request['slider_id']]);
+        $model->name =  $request->name;
+        $model->description = $request->description;
+        $model->slug = $request->slug;
+        $model->slider = json_encode($request->slider);
+        $model->save();
+        return back();
+
     }
     public function deleteSlider($id)
     {
         $model = Slider::where('id',$id)->delete();
         return back();
     }
-    public function sliderOptions()
-    {
-        return view('organization.cms.slider.options');
+    public function sliderOptions($id)
+    {   
+        $options = Slider::where('id',$id)->first();
+        $optionsData = json_decode($options->options , true);
+        return view('organization.cms.slider.options',compact('optionsData'));
     }
     public function saveSliderOptions(Request $request)
     {
-        $model = Slider::where('id',$request->slider_id)->update(['options' => json_encode($request->except('_token','slider_id'))]);
+        $model = Slider::where('id',$request['slider_id'])->update(['options' => json_encode($request->except('_token','slider_id') ,true)]);
+        
         return back();
     }
-    public function sliderSettings($value='')
+    public function saveSliderSettings(Request $request)
     {
-        # code...
-    }
-    public function saveSliderSettings($value='')
-    {
-        # code...
+        $model = Slider::where('id',$request['slider_id'])->update(['setting' => json_encode($request->except('_token','slider_id') ,true)]);
+        return back();
     }
 }

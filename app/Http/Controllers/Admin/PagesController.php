@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin\Page;
 use App\Model\Admin\PageMeta;
 use Auth;
+use Session;
 class PagesController extends Controller
 {	
 	/**
@@ -82,7 +83,9 @@ class PagesController extends Controller
      */
     public function edit($id){
         $page = Page::where('id',$id)->with(['pageMeta'])->first();
-        
+        foreach ($page->pageMeta as $key => $value) {
+            $page[$value['key']] = $value['value'];
+        }
         return view('admin.pages.edit_page',['page'=>$page]);
     }
 
@@ -154,13 +157,11 @@ class PagesController extends Controller
 
         $page_id = $request['page_id'];
         foreach ($request->except('_token','page_id') as $key => $value) {
-            if($value != ''){
-                $model = PageMeta::firstOrNew(['page_id'=>$page_id, 'key' => $key]);
-                $model->page_id = $page_id;
-                $model->key = $key;
-                $model->value = $value;
-                $model->save();
-            }
+            $model = PageMeta::firstOrNew(['page_id'=>$page_id, 'key' => $key]);
+            $model->page_id = $page_id;
+            $model->key = $key;
+            $model->value = $value;
+            $model->save();
         }
         return back();
     }
@@ -184,6 +185,7 @@ class PagesController extends Controller
      * @param  Request $request [Having posted data instanse of request]
      * @return [back]           [will return back to same page]
      * @author Rahul
+     * @lastUpdate sandeep [ woring on slug change camelCase to camel_case ]
      */
     public function save(Request $request){
         
@@ -191,18 +193,25 @@ class PagesController extends Controller
         $rules = [
                     'slug' => 'required|unique:'.$table,
                     'title' => 'required'
-                    ];
+                ];
+
         $this->validate($request,$rules);
+
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+
         $page = new Page;
         $request->request->add(['type'=>'page']);
         $page->fill($request->all());
         $page->save();
+        Session::flash('success','Page created successfully');
         return back();
     }
 
     public function delete($id)
     {
         $model = Page::find($id)->delete();
+        Session::flash('success','Deleted successfully');
         return back();
     }
     /**
@@ -212,24 +221,37 @@ class PagesController extends Controller
      * @author Rahul
      */
     public function update(Request $request){
-
         $data = [];
+        $table = 'global_pages';
+        $rules = [
+                    'slug' => 'required|unique:'.$table,
+                    'title' => 'required'
+                ];
+        
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+        $checkSlug = Page::where('id',$request['id'])->first();
+        if($checkSlug->slug != $request->slug){
+            $this->validate($request,$rules); 
+        }
+
         foreach($request->except('_token') as $k => $v){
-            if($v != null || $v != ''){
+            if($k == 'content'){
                 $data[$k] = $v;
                 if(is_array($v)){
                     $data[$k] = json_encode($v);
                 }
-            }
-            
+            }else{
+                $data[$k] = $v;
+            }           
         }
+
         unset($data['template'],$data['id'],$data['select_status'],$data['menu']);
         $updatePage = Page::where('id',$request['id'])->update($data);
             
         $meta = $request->except('_token','title','slug','description','content','tags','id','categories');
         foreach ($meta as $key => $value) {
             if($value != null || $value != '' ){
-                dd($value);
                 $model = PageMeta::firstOrNew(['page_id' => $request['id'] , 'key'=>$key]);
                 $model->page_id = $request['id'];
                 $model->key = $key;
@@ -237,6 +259,7 @@ class PagesController extends Controller
                 $model->save();
             }
         }
+        Session::flash('success','Updated successfully');
         return back();
     }   
 

@@ -3,13 +3,14 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	
-			@if (Session::has('success'))
+		{{-- 	@if (Session::has('success'))
 			 <div class="aione-message success">{{ Session::get('success') }}</div>
 			@endif
 
 			@if (Session::has('exist_email'))
 	 				<div class="aione-message warning">{{ Session::get('exist_email') }}</div>
-			@endif
+			@endif --}}
+
 			@if ($errors->any())
 			    <div class="aione-message error">
 			        <ul class="aione-messages">
@@ -20,10 +21,20 @@
 			    </div>
 			@endif
 				{!! Form::open(['route'=>'signup.user'])!!}
-				{!! FormGenerator::GenerateSection('organization_user_registration_form_section_1',['type'=>'inset'])!!}
-				@if(@$form_slug != '' && $form_slug != null)
-					{!! FormGenerator::GenerateForm($form_slug,['type'=>'inset'],[],'org')!!}
-				@endif
+					{!! FormGenerator::GenerateSection('organization_user_registration_form_section_1',['type'=>'inset'])!!}
+					@if(@$form_slug != '' && $form_slug != null)
+						{!! FormGenerator::GenerateForm($form_slug,['type'=>'inset'],[],'org')!!}
+					@endif
+
+					@if($settings->where('key' ,'user_role_default') != '' && !$settings->where('key' ,'user_role_default')->isEmpty())
+						@if( $settings->where('key' ,'user_role_default')->first()->value != null)
+							{{dump("here")}}
+							<input type="hidden" name="role" value="{{$settings->where('key' ,'user_role_default')->first()->value}}">
+						@else
+							<input type="hidden" name="role" value="2">
+						@endif
+					@endif
+
 				<button type="submit">Register</button>
 			{!! Form::close() !!}
 

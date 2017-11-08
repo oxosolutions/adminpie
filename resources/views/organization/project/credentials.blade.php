@@ -34,7 +34,7 @@
 		</div>
 		<div class="modal-content">
 		{!!FormGenerator::GenerateSection('cresec1',['type'=>'inset',@$model])!!}
-		{{-- {!!FormGenerator::GenerateSection('cresec2',['type'=>'inset'],@$model)!!} --}}
+		
 			<div class="row" style="margin-bottom: 20px">
 				<div id="repeat" class="col l12" >
 					<div class="row" style="border: 1px solid #e8e8e8;padding: 10px">

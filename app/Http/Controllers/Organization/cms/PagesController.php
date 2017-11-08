@@ -13,6 +13,7 @@ use Auth;
 use Session;
 use App\Model\Admin\GlobalOrganization;
 use Menu as wMenu;
+use App\Model\Organization\OrganizationSetting;
 class PagesController extends Controller
 {
     
@@ -43,10 +44,15 @@ class PagesController extends Controller
                     'title' => 'required'
                     ];
         $this->validate($request,$rules);
+
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+
         $page = new $Associate;
         $request->request->add(['type'=>'page']);
         $page->fill($request->all());
         $page->save();
+        Session::flash('success','Page created successfully');
         return back();
     }
     public function listPage(Request $request)
@@ -102,21 +108,42 @@ class PagesController extends Controller
     {
         $Associate = $this->assignModel('Page');
         $page = $Associate::where('id',$id)->with(['pageMeta'])->first();
-        
+            foreach ($page->pageMeta as $key => $value) {
+                $page[$value['key']] = $value['value'];
+            }
         return view('organization.pages.edit_page',['page'=>$page]);
     }
     public function update(Request $request)
     {
         $data = [];
+        if(Auth::guard('admin')->check() == true){
+            $table = 'global_pages';
+        }else{
+            $tbl = Session::get('organization_id');
+            $table = $tbl.'_pages';
+        }
+        $rules = [
+                    'slug' => 'required|unique:'.$table,
+                    'title' => 'required'
+                    ];
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+
+        $checkSlug = Page::where('id',$request['id'])->first();
+        if($checkSlug->slug != $request->slug){
+            $this->validate($request,$rules); 
+        }
         foreach($request->except('_token') as $k => $v){
-            if($v != null || $v != '' || $k == 'content'){
+            if($k == 'content'){
                 $data[$k] = $v;
                 if(is_array($v)){
                     $data[$k] = json_encode($v);
                 }
+            }else{
+                $data[$k] = $v;
             }
-            
         }
+
         unset($data['template'],$data['id'],$data['select_status'],$data['menu']);
         $updatePage = Page::where('id',$request['id'])->update($data);
 
@@ -130,6 +157,7 @@ class PagesController extends Controller
                 $model->save();
             }
         }
+        Session::flash('success','Updated successfully');
         return back();
     }   
 
@@ -169,10 +197,9 @@ class PagesController extends Controller
         $Associate = $this->assignModel('Page');
 
         $model = $Associate::find($id)->delete();
+        Session::flash('success','Page deleted successfully');
         return back();
     }
-
-
 
     //Posts
     public function listposts(Request $request)
@@ -223,9 +250,17 @@ class PagesController extends Controller
 
     public function editposts($id){
         $Associate = $this->assignModel('Page');
-
+        $data = [];
         $page = $Associate::where('id',$id)->first();
-        return view('organization.posts.edit_post',['page'=>$page]);
+        foreach ($page->toArray() as $key => $value) {
+            $decode = json_decode($value);
+            if(json_last_error() !== JSON_ERROR_NONE){
+                $data[$key] = $value;
+            }else{
+                $data[$key] = json_decode($value);
+            }
+        }
+        return view('organization.posts.edit_post',['page'=>$data]);
     }
     public function savePosts(Request $request){
         $Associate = $this->assignModel('Page');
@@ -234,21 +269,43 @@ class PagesController extends Controller
         $request->request->add(['type'=>'posts']);
         $page->fill($request->all());
         $page->save();
+        Session::flash('success','Post created successfully');
         return redirect()->route('list.posts');
     }
     public function updatePosts(Request $request){
+        $tags= [];
+        if($request->has('tags')){
+            foreach (explode(',', $request->tags) as $key => $value) {
+                if($value != ""){
+                    $tags[] = $value;
+                }
+            }
+        }
+        $request['tags'] = $tags;
+
+        $data = [];
+        foreach ($request->all() as $key => $value) {
+            if(is_array($value)){
+                $data[$key] =  json_encode($value);
+            }else{
+                $data[$key] =  $value;
+            }
+        }
         $Associate = $this->assignModel('Page');
 
         $update = $Associate::find($request->id);
-        $update->fill($request->all());
+        $update->fill($data);
         $update->post_type ="page";
         $update->save();
-        return redirect()->route('list.posts');
+        Session::flash('success','Updated successfully');
+        return back();
+        // return redirect()->route('list.posts');
     }
     public function deletePosts($id){
         $Associate = $this->assignModel('Page');
 
         $model = $Associate::find($id)->delete();
+        Session::flash('success','Post deleted successfully');
         return back();
     }
     public function updateStatusPosts(Request $request)
@@ -273,7 +330,9 @@ class PagesController extends Controller
         $Associate = $this->assignModel('Page');
         $pageData = $Associate::where('slug',$slug)->with('pageMeta')->first();
         $form = [];
-        
+        if($pageData == null){
+            return view('errors.404');
+        }
         $menu = wMenu::wlist(6);
         return view('organization.pages.viewPage')->with(['pageData' => $pageData , 'formData' => $form , 'menu' => $menu])->compileShortcodes();
     }
@@ -304,9 +363,22 @@ class PagesController extends Controller
     {
        return view('organization.cms.menu.menu'); 
     }
-    public function designSettings()
-    {
-       return view('organization.cms.design-setting.design-setting');
+    public function designSettings(Request $request)
+    {   
+        if($request->isMethod('post')){
+            $model = OrganizationSetting::firstOrNew(['key'=>'design_settings','type'=>'web']);
+            $model->key = 'design_settings';
+            $model->value = json_encode($request->except(['_token']));
+            $model->type = 'web';
+            $model->save();
+            Session::flash('success','Settings saved successfully!');
+        }
+        $data = [];
+        $model = OrganizationSetting::where(['key'=>'design_settings','type'=>'web'])->first();
+        if($model != null){
+            $data = json_decode($model->value,true);
+        }
+        return view('organization.cms.design-setting.design-setting',['model'=>$data]);
     }
     public function viewPageById($id)
     {
@@ -373,13 +445,17 @@ class PagesController extends Controller
 
         $page_id = $request['page_id'];
         foreach ($request->except('_token','page_id') as $key => $value) {
-            if($value != ''){
+           
                 $model = $Associate::firstOrNew(['page_id'=>$page_id, 'key' => $key]);
                 $model->page_id = $page_id;
                 $model->key = $key;
-                $model->value = $value;
+                if($value == null){
+                    $model->value = '';
+                }else{
+                    $model->value = $value;
+                }
+
                 $model->save();
-            }
         }
         return back();
         
@@ -402,8 +478,11 @@ class PagesController extends Controller
         }
         $AssociatePage = $this->assignModel('Page');
         $page = $AssociatePage::where('id',$id)->with(['pageMeta'])->first();
-
-        return view('organization.pages.custom-code',compact('customCode','page'));
+        if($page->type != 'posts'){
+            return view('organization.pages.custom-code',compact('customCode','page'));
+        }else{
+            return view('organization.posts.custom-code',compact('customCode','page'));
+        }
     }
     public function saveCustomeCode(Request $request)
     {

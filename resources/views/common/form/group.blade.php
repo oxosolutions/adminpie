@@ -17,6 +17,7 @@
 			@if(@$model[strtolower($collection->section_slug)] != '')
 				@php
 					$fieldOptions = $model[strtolower($collection->section_slug)];
+					
 					if(!is_array($fieldOptions)){
 						$fieldOptions = json_decode($fieldOptions,true);
 					}

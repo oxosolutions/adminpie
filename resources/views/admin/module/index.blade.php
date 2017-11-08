@@ -90,10 +90,20 @@ $page_title_data = array(
                     @foreach($moduleData->subModule as $key=>$value)
                         <li class="collection-item">
                             <a href="{{ route('list.module',['id'=>@request()->route()->parameters()['id'],'subModule'=>$value->id]) }}">{{$value->name}}</a>
+
+
+                            @if($value->status == 1)
+                                <a href="{{ route('status.change.submodule',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
+                                    Deactivate
+                                </a>
+                            @else
+                                <a href="{{ route('status.change.submodule',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
+                                    Activate
+                                </a>
+                            @endif
                             <a href="{{ route('subModule.delete',['id'=>$value->id]) }}" class="secondary-content delete-submodule">
                                 <i class="arrow-delete material-icons dp48">delete</i>
                             </a>
-                           
                             <a href="{{route('sub.module.sort.down',['subModule'=>$value->id,'id'=> @request()->route()->parameters()['id']]) }}" class="secondary-content">
                                 <i class="arrow-downward material-icons dp48">arrow_downward</i>
                             </a>

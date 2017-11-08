@@ -306,6 +306,7 @@ class AttendanceController extends Controller
 
 	public function list_attendance(Request $request)
 	{
+
 			$plugins = [
 				'js' => ['custom'=>['attendance']],
 				'css' => ['custom'=>['attendance']]
@@ -338,7 +339,8 @@ class AttendanceController extends Controller
 			return [$holiday_date=> $data['title']];
 		});
 		
-		$user_data = User::with('metas_for_attendance')->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
+		$user_data = User::with(['metas_for_attendance','belong_group'])->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
+		// dump($user_data);
 		$attendance  =Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 		 $leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 

@@ -1,29 +1,28 @@
 <?php
 
 namespace App\Http\Controllers\Group;
-
-use Illuminate\Http\Request;
-use App\Model\Admin\GlobalGroup as Group;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\View;
-use Artisan;
+use App\Model\Organization\OrganizationSetting as org_setting;
+use App\Model\Organization\RolePermisson as Permisson;
+use App\Http\Controllers\Admin\OrganizationController;
 use App\Model\Admin\GlobalOrganization as ORG;
-use Session;
-use Hash;
-use App\Model\Organization\User;
-use App\Model\Group\GroupUsers;
+use App\Model\Organization\UsersRole as Role;
+use App\Model\Organization\UserRoleMapping;
+use App\Model\Admin\GlobalGroup as Group;
 use App\Model\Group\GroupUserMapping;
 use App\Model\Organization\UsersType;
-use DB;
-use Auth;
-use App\Model\Admin\GlobalModule;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\View;
 use App\Model\Admin\GlobalSetting;
-use App\Model\Organization\RolePermisson as Permisson;
-use App\Model\Organization\UsersRole as Role;
-use App\Model\Organization\OrganizationSetting as org_setting;
-use App\Model\Organization\UserRoleMapping;
+use App\Model\Admin\GlobalModule;
+use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
+use Illuminate\Http\Request;
 use stdClass;
-use App\Http\Controllers\Admin\OrganizationController;
+use Artisan;
+use Session;
+use Auth;
+use Hash;
+use DB;
 
 class GroupOrganizationController extends Controller
 {	
@@ -66,6 +65,7 @@ class GroupOrganizationController extends Controller
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created At'],
                       'actions' => [
+                                      'view'    =>  ['title'=>'View','route'=>'view.groupOrganizations'],
                                       'edit'    =>  ['title'=>'Edit','route'=>'edit.groupOrganization' , 'class' => 'edit'],
                                       'delete'  =>  ['title'=>'Delete','route'=>'delete.groupOrganization'],
                                       'clone'   =>  ['title'=>'Clone','route'=>'create.groupOrganizationClone'],
@@ -351,13 +351,36 @@ class GroupOrganizationController extends Controller
         return view('group.organization.users',$datalist);
     }
 
+    /**
+     * [validateAdduserRequest validate posted data request]
+     * @param  [type] $request [posted data]
+     * @return [type]          [instance of request]
+     * @author Rahul
+     */
+    protected function validateAdduserRequest($request){
+
+        $rules = [
+            'select_user' => 'required',
+            'select_role' => 'required'
+        ];
+
+        $this->validate($request, $rules);
+    }
+
+    /**
+     * [addNewUserToOrganization add user to organization manually]
+     * @param Request $request         [posted data]
+     * @param [ineteger]  $organization_id [organization id]
+     * @author Rahul
+     */
     public function addNewUserToOrganization(Request $request, $organization_id){
+        $this->validateAdduserRequest($request);
         $user = new User;
         $user->user_id = $request->select_user;
         $user->deleted_at = 0;
         $user->save();
         $role = new UserRoleMapping;
-        $role->user_id = $user->id;
+        $role->user_id = $request->select_user;
         $role->role_id = $request->select_role;
         $role->status = 1;
         $role->save();
@@ -369,9 +392,35 @@ class GroupOrganizationController extends Controller
         $user = User::where('user_id',$user_id);
         $userId = $user->first()->id;
         $user->delete();
-        $role = UserRoleMapping::where('user_id',$userId)->delete();
+        $role = UserRoleMapping::where('user_id',$user_id)->delete();
         Session::flash('success','Successfully deleted!');
         return back();
+    }
+    /**
+     * [View single org]
+     * @param ************
+     * @param **************
+     * @author Ashish, Rahul
+     */
+    public function viewOrg($id){
+        Session::put('organization_id',$id);
+        $model = ORG::find($id);
+        $modules = GlobalModule::whereIn('id',json_decode($model->modules,true))->get();
+        $users = User::with(['belong_group'])->get();
+        $organizationData['modules'] = $modules->pluck('name');
+        $organizationData['model'] = $model;
+        $organizationData['users'] = $users;
+        return view('group.organization.view',$organizationData);
+    }
+    /**
+     * [View single org]
+     * @param ************
+     * @param **************
+     * @author Ashish
+     */
+    public function share()
+    {
+        return view('group.organization.share');
     }
     
 }

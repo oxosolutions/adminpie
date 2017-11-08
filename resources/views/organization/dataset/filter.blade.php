@@ -6,7 +6,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => 'Dataset Filters <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -30,25 +30,41 @@
 	{!!Form::open(['method'=>'GET'])!!}
 		<div class="ar">
 			<div class="ac l50">
-				<div class=" aione-box">
-					{!! FormGenerator::GenerateSection('vertical_filtration') !!}	
-					{{@Session::get('success')}}
+				<div class="aione-border">
+		            <div class="">
+		                <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
+		                    vertical Filteration
+		                </h5>
+		            </div>
+		            <div class="p-15">
+		            	{!! FormGenerator::GenerateSection('vertical_filtration') !!}	
+						{{@Session::get('success')}}	
+		            </div>
+					
 				</div>
 				
 			</div>		
 			<div class="ac l50 ">
-				<div class="aione-box">
-					{!! FormGenerator::GenerateSection('horizontal_filtration',[],request()->all()) !!}
+				<div class="aione-border">
+				  	<div class="">
+		                <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
+		                    Horizontal Filteration
+		                </h5>
+	            	</div>
+	            	<div class="p-15">
+	            		{!! FormGenerator::GenerateSection('horizontal_filtration',[],request()->all()) !!}	
+	            	</div>
+					
 				</div>
-				
 			</div>
 		</div>
-	<div class="ar" style="margin: 14px 0px">
-		<div class="ac l50"><button data-target="create-modal">Create Subset</button></div>
-		<div class="ac l50 right-align" style="float: right;"><button>Apply Filters</button></div>
+	<div class="ar aione-float-right" style="margin: 14px 0px">
+		<button class="aione-button" data-target="create-modal">Create Subset</button>
+		<button class="aione-button">Apply Filters</button>
+		<button class="aione-button" onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button>
 	</div>
 	{!!Form::close()!!}
-	<div class="ac l50 right-align" style="float: right;"><button onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button></div>
+	{{-- <div class="ac l50 right-align" style="float: right;"><button onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button></div> --}}
 	<div class="ar">
 		@if(!$records->isEmpty())
 			<div class="ac l80" style="line-height: 48px">Showing {{$records->firstItem()}} to {{$records->lastItem()}} of total {{$records->total()}} records</div>

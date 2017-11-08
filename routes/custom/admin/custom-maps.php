@@ -8,6 +8,8 @@
 	Route::get('/map/edit/{id}',	['as'=>'getData.custom.map','uses'=>'CustomMapsController@getDataById']);
 	Route::post('/map/update/{id}',	['as'=>'update.custom.map','uses'=>'CustomMapsController@updateMap']);
 	Route::get('/map/view/{id}',	['as'=>'view.map','uses'=>'CustomMapsController@viewMap']);
-	Route::get('/map/add',	['as'=>'add.map','uses'=>'CustomMapsController@addMap']);
+	Route::get('/map/add',			['as'=>'add.map','uses'=>'CustomMapsController@addMap']);
+	Route::post('/map/export',		['as'=>'export.map','uses'=>'CustomMapsController@processExcelFile']);
+
 
 ?>

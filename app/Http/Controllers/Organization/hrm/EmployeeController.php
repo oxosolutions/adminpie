@@ -10,6 +10,7 @@ use App\Model\Organization\Department As DEP;
 use App\Model\Organization\Category as CAT;
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\User;
+use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersMeta;
 use Session;
@@ -19,16 +20,23 @@ use Crypt;
 use Config;
 use App\Model\Organization\OrganizationSetting;
 use Datatables;
+use App\Model\Group\GroupUsers;
+use Hash;
 class EmployeeController extends Controller
 {
     protected $user;
     public function __construct(UserRepositoryContract $user)
     {
+
         $this->user = $user;
 
     }
     public function index(Request $request, $id=null)
     {
+        //
+        //  $lists = GroupUsers::with('organization_user')->has('organization_user')->get();
+        // dd($lists->toArray());
+
         $search = $this->saveSearch($request);
         if($search != false && is_array($search)){
             $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
@@ -143,32 +151,51 @@ class EmployeeController extends Controller
         $designation_name = '';
         $sortedBy = @$request->orderby;
 
-        $model = $this->getQueryResult($request,$sortedBy,$perPage);
+         $model = $this->getQueryResult($request,$sortedBy,$perPage);
+       
 
-        foreach ($model as $key => $record) {
-            $model[$key]['department'] = '';
-            $model[$key]['designation'] = '';
-            $model[$key]['employee_id'] = '';
-            foreach($record['metas'] as $metaKey => $metaValue){
-                if($metaValue['key'] == 'department'){
-                    $department = DEP::find($metaValue['value']);
-                    if(!empty($department)){
-                      $model[$key]['department'] =     $department->name;
-                    }
-                }
-                if($metaValue['key'] == 'designation'){
-                    $designation = DES::find($metaValue['value']);
-                    if($designation != null){
-                        $model[$key]['designation'] = $designation->name;
-                    }else{
-                        $model[$key]['designation'] = '';
-                    }
-                }
-                if($metaValue['key'] == 'employee_id'){
-                    $model[$key]['employee_id'] = $metaValue['value'];
-                }
-            }
-        }
+        // foreach ($model as $key => $record) {
+        //     dump($record['belong_group']['email']);
+        //     $model[$key]['department'] = '';
+        //     $model[$key]['designation'] = '';
+        //     $model[$key]['employee_id'] = '';
+        //     $model[$key]['email'] = $record['belong_group']['email'];
+        //     $model[$key]['name'] =  $record['belong_group']['name'];
+            
+
+               // $model[$key] = collect($record['metas'])->mapWithKeys(function($item){
+
+               //  return [$item['key']= $item['value'] ];
+               //  });
+
+            // dump($model);
+
+
+
+            // foreach($record['metas'] as $metaKey => $metaValue){
+            //     if($metaValue['key'] == 'department'){
+            //         $department = DEP::find($metaValue['value']);
+            //         if(!empty($department)){
+            //           $model[$key]['department'] =     $department->name;
+            //         }
+            //     }
+            //     if($metaValue['key'] == 'designation'){
+            //         $designation = DES::find($metaValue['value']);
+            //         if($designation != null){
+            //             $model[$key]['designation'] = $designation->name;
+            //         }else{
+            //             $model[$key]['designation'] = '';
+            //         }
+            //     }
+            //     if($metaValue['key'] == 'employee_id'){
+            //         $model[$key]['employee_id'] = $metaValue['value'];
+            //     }
+            // }
+
+        // }
+
+
+           
         $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['employee_id'=>'Employee ID','name'=>'Name','department'=>'Department','designation'=>'Designation','email'=>'Email ID','created_at'=>'Created At','status'=>'Status'],
@@ -188,26 +215,31 @@ class EmployeeController extends Controller
       if(!empty($id) || $id != null || $id != ''){
         $data['data'] = EMP::where('id',$id)->first();
       }
+       // dd($model);
         return view('organization.employee.list',$datalist)->with(['data' => $data]);
     }
 
     protected function getQueryResult($request, $sortedBy, $items){
-        if($request->has('search')){
-            if($sortedBy != ''){
-                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
-            }else{
-                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
-            }
-        }else{
-            if($sortedBy != ''){
-                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
-            }else{
-                $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
-            }
-        }
+
+        // if($request->has('search')){
+        //     if($sortedBy != ''){
+        //         $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+        //     }else{
+        //         $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+        //     }
+        // }else{
+        //     if($sortedBy != ''){
+        //         $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+        //     }else{
+        //         $model = User::with(['metas'])->where(['user_type'=>'employee'])->paginate($items);
+        //     }
+        // }
+        $model = User::with(['belong_group','metas'])->where(['user_type'=>'employee'])->paginate($items);
         return $model;
     }
+ 
 
+    
     public function employeeListDatatable(){
         // Get employee list on the behalf of role
         /*$model = User::with(['metas','user_role_rel'])->whereHas('user_role_rel', function($query){
@@ -215,7 +247,25 @@ class EmployeeController extends Controller
                 $query->where('slug','employee');
             });
         })->get();*/
-        $model = User::with(['metas'])->where(['user_type'=>'employee'])->get();
+        $model = User::with(['belong_group','metas'])->where(['user_type'=>'employee'])->get();//->toArray();
+        foreach($model as $key => $val){
+            $model[$key]->name    =    $val->belong_group->name;
+            $model[$key]->email   =    $val->belong_group->email;
+            // unset($model[$key]['belong_group']);
+        }
+
+        // $new =   json_decode($model, true);
+        // $maps = array_map(function('mapp', $new);
+
+
+//         $csmap_data = array_map(function($arr){
+//     return $arr + ['flag' => 1];
+// }, $csmap_data);
+
+       // $new = $model->map(function ($item, $key) {
+       //      return $item + ['name'=>123];
+       //  });
+        // $model = collect($model);
 
         return Datatables::of($model)
         ->addColumn('user', function($model){
@@ -312,37 +362,84 @@ class EmployeeController extends Controller
         $designation  = DES::where('status',1)->pluck('name','id');
         return view('organization.employee._list_ajax',['data'=>$data,'designation'=>$designation])->render();
     }
-
+    /**
+     * [save Add new employee]
+     * author work by Paljinder singh
+     * @param  Request $request [description]
+     * @return [redirect to employee list]           [description]
+     */
     public function save(Request $request)
     {
-        $request['joining_date'] = date("Y-m-d");
-        $model = OrganizationSetting::where('key' , 'employee_role')->first();
-
-        if(count($model) > 0){
-            $employee_id = $model->value;
-        }else{
-            $employee_id = 2;
+        if(empty(setting_val_by_key('employee_role'))){
+            Session::flash('error','Need to set Role Id for employee in setting.');
+            return back();
         }
 
-        $tbl = Session::get('organization_id');
+        $request['date_of_joining'] = date("Y-m-d");
+        $tbl = Session::get('group_id');
         $valid_fields = [
-                            'name'          => 'required',
-                            'email'         => 'required|email|unique:'.$tbl.'_users',
-                            'password'      => 'required|min:8',
-                            'employee_id'   => 'required|min:4|regex:/^[a-z0-9-]+$/|max:256'
+                            'name'          =>  'required',
+                            'email'         =>  'required|email|unique:group_'.$tbl.'_users',
+                            'password'      =>  'required|min:8',
+                            'employee_id'   =>  'required|min:4|regex:/^[a-z0-9-]+$/|max:256',
+                            'user_shift'    =>  'required',
+                            'designation'   =>  'required',
+                            'department'    =>  'required',
+                            'employee_id'   =>  'required'
                         ];
         $this->validate($request , $valid_fields);
-        $request['role_id'] =  setting_val_by_key('employee_role');
-        $user_id = $this->user->create($request->all(), $employee_id, 'employee');
-        foreach($request->all() as $key => $value){
-            if(in_array($key,['designation','department','shift','employee_id'])){
-                $userMeta = new UsersMeta;
-                $userMeta->user_id = $user_id;
-                $userMeta->key = $key;
-                $userMeta->value = $value;
-                $userMeta->save();
+        $manadatory_field = ['designation','department','user_shift','employee_id']; 
+        if(count(array_intersect(array_keys($request->all()) , $manadatory_field))== count($manadatory_field)){
+            $user =  new GroupUsers();
+            $user->fill($request->except('password'));
+            $user->password =  Hash::make($request['password']);
+            $user->save();
+            $user_id = $user->id;
+
+            $userTable = new User();
+            $userTable->user_id = $user_id;
+            $userTable->user_type = 'employee';
+            $userTable->save();
+            $u_id = $userTable->id;
+
+            $assign_role = new UserRoleMapping();
+            $assign_role->user_id = $u_id;
+            $assign_role->role_id = setting_val_by_key('employee_role');
+            $assign_role->status = 1;
+            $assign_role->save();
+
+            foreach($request->all() as $key => $value){
+                if(in_array($key,['designation','department','user_shift','employee_id','date_of_joining'])){
+                    $userMeta = new UsersMeta;
+                    $userMeta->user_id = $u_id;
+                    $userMeta->key = $key;
+                    $userMeta->value = $value;
+                    $userMeta->save();
+                }
             }
+        }else{
+            Session::flash('error','Need to fill all fields.');
+            return back();
         }
+
+       
+         return redirect()->route('list.employee');
+
+
+        // Hash::make($data['password']);
+        dd($request->all());
+
+        // $request['role_id'] =  setting_val_by_key('employee_role');
+        // $user_id = $this->user->create($request->all(), $employee_id, 'employee');
+        // foreach($request->all() as $key => $value){
+        //     if(in_array($key,['designation','department','shift','employee_id'])){
+        //         $userMeta = new UsersMeta;
+        //         $userMeta->user_id = $user_id;
+        //         $userMeta->key = $key;
+        //         $userMeta->value = $value;
+        //         $userMeta->save();
+        //     }
+        // }
         /*$emp = new EMP();
         $emp->user_id = $user_id;
         $emp->status = 1;
@@ -354,8 +451,52 @@ class EmployeeController extends Controller
         $shifts_insert['key']       = 'shift';
         $shifts_insert['value']     = $request->shift;
         $shifts_insert->save();*/
-        return redirect()->route('list.employee');
+       
     }
+
+    // public function save(Request $request)
+    // {
+    //     $request['joining_date'] = date("Y-m-d");
+    //     $model = OrganizationSetting::where('key' , 'employee_role')->first();
+
+    //     if(count($model) > 0){
+    //         $employee_id = $model->value;
+    //     }else{
+    //         $employee_id = 2;
+    //     }
+
+    //     $tbl = Session::get('organization_id');
+    //     $valid_fields = [
+    //                         'name'          => 'required',
+    //                         'email'         => 'required|email|unique:'.$tbl.'_users',
+    //                         'password'      => 'required|min:8',
+    //                         'employee_id'   => 'required|min:4|regex:/^[a-z0-9-]+$/|max:256'
+    //                     ];
+    //     $this->validate($request , $valid_fields);
+    //     $request['role_id'] =  setting_val_by_key('employee_role');
+    //     $user_id = $this->user->create($request->all(), $employee_id, 'employee');
+    //     foreach($request->all() as $key => $value){
+    //         if(in_array($key,['designation','department','shift','employee_id'])){
+    //             $userMeta = new UsersMeta;
+    //             $userMeta->user_id = $user_id;
+    //             $userMeta->key = $key;
+    //             $userMeta->value = $value;
+    //             $userMeta->save();
+    //         }
+    //     }
+    //     /*$emp = new EMP();
+    //     $emp->user_id = $user_id;
+    //     $emp->status = 1;
+    //     $emp->fill($request->all());
+    //     $emp->save();*/
+
+    //     /*$shifts_insert = new UsersMeta;
+    //     $shifts_insert['user_id']   =  $emp->id;
+    //     $shifts_insert['key']       = 'shift';
+    //     $shifts_insert['value']     = $request->shift;
+    //     $shifts_insert->save();*/
+    //     return redirect()->route('list.employee');
+    // }
     function editEmployee()
     {
         
@@ -376,9 +517,10 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-        $model = User::where('id',$id)->delete();
-        $model_meta = UsersMeta::where('user_id',$id)->delete();
-        return back();
+        dd($id);
+        // $model = User::where('id',$id)->delete();
+        // $model_meta = UsersMeta::where('user_id',$id)->delete();
+        // return back();
     }
 
     public function updateEmployeeName(Request $request){

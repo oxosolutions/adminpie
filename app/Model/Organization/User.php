@@ -6,6 +6,8 @@ use Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Model\Group\GroupUsers;
+
 class User extends Authenticatable 
 {
    use SoftDeletes;
@@ -40,7 +42,7 @@ class User extends Authenticatable
    }
    public function metas_for_attendance()
    {
-   	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id')->whereIn('key',['user_shift','employee_id','date_of_joining','designation','department']);
+   	return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');//->whereIn('key',['user_shift','employee_id','date_of_joining','designation','department']);
    }
    public static function userList()
    {
@@ -58,14 +60,14 @@ class User extends Authenticatable
    {
       return $this->hasOne('App\Model\Organization\Employee','user_id','id');
    }
-   public static function getTeamById($data = null){
+    public static function getTeamById($data = null){
          $array = self::where('id',$data)->get();
       return $array;
-   }
-   public static function getAdmin($data = null){
+    }
+    public static function getAdmin($data = null){
       return User::where('user_type','[1]')->pluck('name','id');
-   }
-   public function department_rel(){ //due to wrong function name i just created new function to use in employee profile
+    }
+    public function department_rel(){ //due to wrong function name i just created new function to use in employee profile
         return $this->belongsTo('App\Model\Organization\Department','department','id');
     }
 
@@ -73,31 +75,65 @@ class User extends Authenticatable
         return $this->belongsTo('App\Model\Organization\Designation','designation','id');
     }
     public function client_rel(){
-      return $this->hasOne('App\Model\Organization\Client','user_id','id');
+        return $this->hasOne('App\Model\Organization\Client','user_id','id');
     }
-    /*public function userRole() // Should remove
-    {
-      return $this->hasOne('App\Model\Organization\UsersRole','id','role_id');
-    }*/
     public function userType()
     {
-      return $this->hasMany('App\Model\Organization\UsersType','id','user_type');
+        return $this->hasMany('App\Model\Organization\UsersType','id','user_type');
     }
 
     public function employees()
     {
-      return self::where('user_type','employee')->pluck('name','id');
+        return self::where('user_type','employee')->pluck('name','id');
     }
+
     public static function getEmployeesId(){
-      $data = self::with(['metas'])->whereHas('metas',function($query){
-        $query->where('key','employee_id')->whereNotNull('value');
-      })->where('user_type','employee')->get();
-      $optionsArray = [];
-      foreach ($data as $key => $value) {
-        if($value->metas->pluck('value')[0] != '' && $value->metas->pluck('value')[0] != null){
-            $optionsArray[$value->metas->pluck('value')[0]]=$value->name.' ('.$value->metas->pluck('value')[0].' )';
+        $data = self::with(['metas'])->whereHas('metas',function($query){
+            $query->where('key','employee_id')->whereNotNull('value');
+        })->where('user_type','employee')->get();
+        $optionsArray = [];
+        foreach ($data as $key => $value) {
+            if($value->metas->pluck('value')[0] != '' && $value->metas->pluck('value')[0] != null){
+                $optionsArray[$value->metas->pluck('value')[0]]=$value->name.' ('.$value->metas->pluck('value')[0].' )';
+            }
+        }
+        return $optionsArray;
+    }
+
+    public function groupUser(){
+    	return $this->belongsTo('App\Model\Group\GroupUsers','user_id','id');
+    }
+
+    public function listEmployee()
+    {
+      $employee_id = [];
+      $user_id = self::where('user_type' ,'employee')->get();
+      foreach ($user_id as $key => $value) {
+        $employee_id[] = GroupUsers::where('id',$value->id)->pluck('name','id');
+      }
+      $processEmployee= [];
+      foreach ($employee_id as $key => $value) {
+        foreach ($value->toArray() as $k => $v) {
+          $processEmployee[$k] = $v;
         }
       }
-      return $optionsArray;
+      return $processEmployee;
+
     }
-}
+    public static function getEmployeeList()
+    {
+      $employee_id = [];
+      $user_id = self::where('user_type' ,'employee')->get();
+      foreach ($user_id as $key => $value) {
+        $employee_id[] = GroupUsers::where('id',$value->id)->pluck('name','id');
+      }
+      $processEmployee= [];
+      foreach ($employee_id as $key => $value) {
+        foreach ($value->toArray() as $k => $v) {
+          $processEmployee[$k] = $v;
+        }
+      }
+      return $processEmployee;
+
+    }
+  }

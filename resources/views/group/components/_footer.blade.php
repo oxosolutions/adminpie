@@ -1,5 +1,5 @@
 	@php
-		$orgData = App\Model\Admin\GlobalGroup::where('id',Session::get('group_id'))->first();
+		$orgData = App\Model\Admin\GlobalGroup::where('id',Auth::guard('group')->user()->group_id)->first();
 	@endphp
 <div id="aione_footer" class="aione-footer">
 	<div class="aione-row">

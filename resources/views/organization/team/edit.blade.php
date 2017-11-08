@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+
 {{-- {{dd(json_decode($data->member_ids))}} --}}
 	@if($data)
 
@@ -36,8 +37,8 @@ $page_title_data = array(
 
 {!!Form::model($data,['route'=>'edit.team','method'=>'POST'])!!}
 	<input type="hidden" name="id" value="{{$id}}">
-	{!!FormGenerator::GenerateSection('prosec2')!!}
-	<input type="submit" value="submit">
+	{{-- {!!FormGenerator::GenerateSection('prosec2')!!} --}}
+	{!! FormGenerator::GenerateForm('team') !!}
 {!!Form::close()!!}	
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

@@ -57,7 +57,7 @@ function addcustommenu() {
 }
 
 function updateitem(id = 0) {
-	
+		alert("here");
 	if(id){
 		var label = $("#idlabelmenu_" + id).val()
 		var clases = $("#clases_menu_" + id).val()

@@ -188,14 +188,13 @@ class SurveyController extends Controller
     }
 
     public function create_alter_insert_survey_table($org_id, $form_id,$data){
-        // dd($org_id, intval($form_id), $data);
-        $form_id = intval($form_id);
-        $question =  FormBuilder::with(['fieldMeta'=>function($query){
-          $query->where('key','question_id');
-        }])->where('form_id',$form_id)->get()->toArray();
+        $form_id    =   intval($form_id);
+        $question   =   FormBuilder::with(['fieldMeta'=>function($query){
+                            $query->where('key','question_id');
+                        }])->where('form_id',$form_id)->get()->toArray();
         $questionId_slug = collect($question)->mapWithKeys(function($items){
-          return [$items['field_meta'][0]['value']=>$items['field_slug']];
-        });
+            return [$items['field_meta'][0]['value']=>$items['field_slug']];
+        })->toArray();
         $table_name = 'ocrm_'.$org_id.'_survey_results_'.$form_id;
         $form_meta = FormsMeta::where(['form_id'=>$form_id,'key'=>'survey_data_table', 'value'=>$table_name]);
         if(!$form_meta->exists() || $form_meta->count() >1){
@@ -208,49 +207,50 @@ class SurveyController extends Controller
             $formMeta->value = $table_name;
             $formMeta->save();
         }
+            $prefix_field = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status','survey_submitted_by','survey_submitted_from','mac_address','imei','device_detail','created_by', 'created_at', 'deleted_at'];
         foreach ($data as $dataKey => $dataValue){
+                    if($dataKey !="id" && !in_array($dataKey, $prefix_field)){
+                        if(!empty($questionId_slug[$dataKey])) {
+                            $dataKey = $questionId_slug[$dataKey];
+                            $dataKey = str_replace('-', '_', $dataKey);
+                        }
+                        $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
+                         if(is_array($dataValue)) {
+                            $dataValue = json_encode($dataValue);
+                         }
+                         if($dataKey=='accident_date'){
+                            $dataValue =  carbon::parse($dataValue)->format('Y-m-d');
+                         }
+                         if($dataKey=='created_at'){
+                            $date = explode('-',$dataValue);
+                            $formatedDate = $date[0]."-".$date[1]."-".$date[2];
+                            $dataValue =  carbon::parse($formatedDate)->format('Y-m-d');
+                         }
+                         $newDataKey = str_replace('-', '_', $dataKey);
+                         $keys[] = $newDataKey;
+                }
+                if($dataKey=='created_at'){
+                    $date = explode('-',$dataValue);
+                    $formatedDate = $date[0]."-".$date[1]."-".$date[2];
+                    $dataValue =  carbon::parse($formatedDate)->format('Y-m-d');
+                 }
+                 if(is_array($dataValue)) {
+                            $dataValue = json_encode($dataValue);
+                         }
+                if($dataKey=='accident_date'){
+                            $dataValue =  carbon::parse($dataValue)->format('Y-m-d');
+                         }
+
                 if($dataKey !="id"){
-                    if(!empty($questionId_slug[$dataKey])) {
-                        $dataKey = $questionId_slug[$dataKey];
-                        $dataKey = str_replace('-', '_', $dataKey);
-                    }
-                    $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
-                     if(is_array($dataValue)) {
-                        $dataValue = json_encode($dataValue);
-                     }
-                     if($dataKey=='accident_date'){
-                        $dataValue =  carbon::parse($dataValue)->format('Y-m-d');
-                     }
-                     if($dataKey=='created_at'){
-                     	$date = explode('-',$dataValue);
-                      	$formatedDate = $date[0]."-".$date[1]."-".$date[2];
-                     	$dataValue =  carbon::parse($formatedDate)->format('Y-m-d');
-                     }
-                     $newDataKey = str_replace('-', '_', $dataKey);
-                     $values[$newDataKey] = $dataValue;
-                     $keys[] = $newDataKey;
+                    $newKey = str_replace('-', '_', $dataKey);
+                    $values[$newKey] = $dataValue;
                 }
              }
-
-            // $colums[] =    "`ip_address` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`survey_started_on` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`survey_completed_on` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`survey_status` int(1) NULL DEFAULT  NULL";
-            // $colums[] =    "`survey_submitted_by` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`survey_submitted_from` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`mac_address` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`imei` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`unique_id` varchar(255) NULL DEFAULT  NULL";
-            // $colums[] =    "`device_detail` text NULL DEFAULT  NULL";
-            // $colums[] =    "`created_by` int(11)  NULL";
-            // $colums[] =    "`created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP";
-            // $colums[] =    "`deleted_at` timestamp NULL DEFAULT NULL";
-
-
-
+            
+            $colums = array_unique($colums);
             $newTableName = str_replace('ocrm_', '', $table_name);
          if(Schema::hasTable($newTableName)){
-         	// dd('table_exist', $colums);
+            $keys = array_unique($keys);
             $table_column = Schema::getColumnListing($newTableName);
             $columnsdata  = collect($keys);
             $new_columns   = $columnsdata->diff($table_column)->toArray();
@@ -260,10 +260,23 @@ class SurveyController extends Controller
                 }
             }
       }else{ 
-      	DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-        DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
-        DB::select("ALTER TABLE `{$table_name}` ADD `created_at` TIMESTAMP NOT NULL");
+            $colums[] =    "`ip_address` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_started_on` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_completed_on` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_status` text NULL COLLATE utf8_unicode_ci DEFAULT NULL";
+            $colums[] =    "`survey_submitted_by` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_submitted_from` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`mac_address` varchar(255) COLLATE utf8_unicode_ci  NULL DEFAULT  NULL";
+            $colums[] =    "`imei` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`unique_id` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`device_detail` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`created_by` int(11) COLLATE utf8_unicode_ci NULL";
+            $colums[] =    "`created_at` text COLLATE utf8_unicode_ci  NULL DEFAULT NUll";
+            $colums[] =    "`deleted_at` timestamp COLLATE utf8_unicode_ci NULL DEFAULT NULL";
+            DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+            DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
         }
+       
             if(!empty($values['unique_id'])){
                 if(!DB::table($newTableName)->where('unique_id',$values['unique_id'])->exists()){
                    DB::table($newTableName)->insert($values);
@@ -272,6 +285,7 @@ class SurveyController extends Controller
                     return false; 
                 }
             }else{
+                $values = array_merge($values, ['created_at'=> date('Y-m-d')]);
                 if(Session::has('inserted_id')){
                     $insert_id =  Session::get('inserted_id');
                     DB::table($newTableName)->where('id',$insert_id)->update($values);

@@ -130,11 +130,10 @@ $page_title_data = array(
                 @if(!Request::has('field'))
 
                     @if(Request::has('sections') && Request::input('sections') != 'all')
-
                         {!!Form::model($data,['route'=>[$route_slug.'section.update',request()->form_id]])!!}
                             <input type="hidden" name="section_id" value="{{Request::input('sections')}}" />
                             <div class="row no-margin-bottom">
-                              
+                                
                                 {!! FormGenerator::GenerateForm('form_generator_section_edit') !!}
                                 @if(@$errors->has())
                                     @foreach($errors->all() as $kay => $err)
@@ -176,7 +175,7 @@ $page_title_data = array(
                         {!!Form::close()!!}
                     @endif
 
-                    <ul class="collection aione-form-section-border">
+                    <ul class="collection aione-form-section-border" id="sortable-fields">
                         
                         @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
                             <div id="aione_form_section_header" class="aione-form-section-header">
@@ -188,7 +187,7 @@ $page_title_data = array(
                             @if($sections->count() > 0)
                                 @foreach($sections as $k => $section)
                                 
-                                    <li class="collection-item" section-id="">
+                                    <li class="collection-item section_id" section_id="{{$section->id}}">
                                         <a href="{{Request::url()}}?sections={{$section->id}}">{{$section->section_name}} ({{$section->section_slug}})</a>
                                         <div class="item-options">
                                             <a href="{{route($route_slug.'section.delete',$section->id)}}" class="delete-field confirm-delete">
@@ -258,7 +257,7 @@ $page_title_data = array(
                             @endphp
                             @if($fields->count() > 0)
                                 @foreach($sections->where('id',Request::input('sections'))->first()->fields as $k => $field)
-                                    <li class="collection-item" field_id="{{$field->id}}">
+                                    <li class="collection-item field_id" field_id="{{$field->id}}">
                                         @if($form->type == 'survey')
                                             @php
                                                 $question_id = '';
@@ -587,7 +586,41 @@ $page_title_data = array(
            });
         })
 
-        
+        $('#sortable-fields').sortable({
+            stop: function(){
+                if($(this).find('li').attr('section_id')){
+                    var ids = [];
+                    $('#sortable-fields > .section_id').each(function(){
+                        if($(this).attr('section_id') != undefined){
+                            ids.push($(this).attr('section_id'));
+                        }
+                    });
+                    $.ajax({
+                        url : route()+'/section/sort',
+                        type : 'post',
+                        data : {id : ids , _token : $('input[name=_token]').val() },
+                        success : function(){
+                            Materialize.toast('sorted successfully',4000);
+                        }
+                    });
+               }else{
+                    var field_order = [];
+                    $('#sortable-fields > .field_id').each(function(){
+                        if($(this).attr('field_id') != undefined){
+                            field_order.push($(this).attr('field_id'));
+                        }
+                    });
+                    $.ajax({
+                        url : route()+'/field/sort',
+                        type : 'get',
+                        data : {data : field_order , _token : $('input[name=_token]').val() },
+                        success : function(){
+                            Materialize.toast('sorted successfully',4000);
+                        }
+                    });
+               }
+            }
+        });
         $(document).ready(function(){
             $(document).on('click','.list-modules .arrow',function(){ 
                 if($(this).parents('li').hasClass('list-active')){
@@ -596,7 +629,6 @@ $page_title_data = array(
                     $(this).parents('li').addClass('list-active');
                     $(this).parents('li').siblings().removeClass('list-active');    
                 }
-                
             });
 
             // $('.input1').iconpicker(".input1");

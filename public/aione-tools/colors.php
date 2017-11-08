@@ -181,8 +181,8 @@
          <div class="p-10 light-green lighten-4">light-green lighten-4</div>
          <div class="p-10 light-green lighten-3">light-green lighten-3</div>
          <div class="p-10 light-green lighten-2">light-green lighten-2</div>
-         <div class="p-10 light-green lighten-1">green lighten-1</div>
-         <div class="p-10 light-green "> light-green</div>
+         <div class="p-10 light-green lighten-1">light-green lighten-1</div>
+         <div class="p-10 light-green">light-green</div>
          <div class="p-10 light-green darken-1">light-green darken-1</div>
          <div class="p-10 light-green darken-2">light-green darken-2</div>
          <div class="p-10 light-green darken-3">light-green darken-3</div>
@@ -435,7 +435,7 @@
         <div class="p-10 bg-light-blue">bg-light-blue</div>
         <div class="p-10 bg-light-blue bg-darken-1">bg-light-blue bg-darken-1</div>
         <div class="p-10 bg-light-blue bg-darken-2">bg-light-blue bg-darken-2</div>
-        <div class="p-10 bg-light-blue bg-darken-3">bg-light-blue bg-darken-</div>
+        <div class="p-10 bg-light-blue bg-darken-3">bg-light-blue bg-darken-3</div>
         <div class="p-10 bg-light-blue bg-darken-4">bg-light-blue bg-darken-4</div>
         <div class="p-10 bg-light-blue bg-accent-1">bg-light-blue bg-accent-1</div>
         <div class="p-10 bg-light-blue bg-accent-2">bg-light-blue bg-accent-2</div>
@@ -661,7 +661,7 @@
          <div class="p-10 mb-5 aione-border border-width-5 border-pink border-darken-3">border-pink border-darken-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-pink border-darken-4">border-pink border-darken-4</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-pink border-accent-1">border-pink border-accent-1</div>
-         <div class="p-10 mb-5 aione-border border-width-5 border-pink border-accent-2">bg-pink border-accent-2</div>
+         <div class="p-10 mb-5 aione-border border-width-5 border-pink border-accent-2">border-pink border-accent-2</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-pink border-accent-3">border-pink border-accent-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-pink border-accent-4">border-pink border-accent-4</div>
       </div>
@@ -672,11 +672,11 @@
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-lighten-2">border-purple border-lighten-2</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-lighten-1">border-purple border-lighten-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple">border-purple</div>
-         <div class="p-10 mb-5 aione-border border-width-5 border-purple border-darken-">border-purple border-darken-1</div>
+         <div class="p-10 mb-5 aione-border border-width-5 border-purple border-darken-1">border-purple border-darken-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-darken-2">border-purple border-darken-2</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-darken-3">border-purple border-darken-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-darken-4">border-purple border-darken-3</div>
-         <div class="p-10 mb-5 aione-border border-width-5 border-purple border-accent-">border-purple border-accent-1</div>
+         <div class="p-10 mb-5 aione-border border-width-5 border-purple border-accent-1">border-purple border-accent-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-accent-2">border-purple border-accent-2</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-accent-3">border-purple border-accent-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-purple border-accent-4">border-purple border-accent-4</div>
@@ -690,7 +690,7 @@
          <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple">border-deep-purple</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-darken-1">border-deep-purple border-darken-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-darken-2">border-deep-purple border-darken-2</div>
-         <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-darken- 3">border-deep-purple border-darken-3</div>
+         <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-darken-3">border-deep-purple border-darken-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-darken-4">border-deep-purple border-darken-4</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-accent-1">border-deep-purple border-accent-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-deep-purple border-accent-2">border-deep-purple border-accent-2</div>
@@ -738,7 +738,7 @@
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue">border-light-blue</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-darken-1">border-light-blue border-darken-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-darken-2">border-light-blue border-darken-2</div>
-         <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-darken-3">border-light-blue border-darken-</div>
+         <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-darken-3">border-light-blue border-darken-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-darken-4">border-light-blue border-darken-4</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-accent-1">border-light-blue border-accent-1</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-accent-2">border-light-blue border-accent-2</div>
@@ -746,7 +746,7 @@
          <div class="p-10 mb-5 aione-border border-width-5 border-light-blue border-accent-4">border-light-blue border-accent-4</div>
       </div>
       <div class="ac s100 m50 l25 mb-15">
-         <div class="p-10 mb-5 aione-border border-width-5 border-cyan border-lighten-5 ">border-cyan border-lighten-5</div>
+         <div class="p-10 mb-5 aione-border border-width-5 border-cyan border-lighten-5">border-cyan border-lighten-5</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-cyan border-lighten-4">border-cyan border-lighten-4</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-cyan border-lighten-3">border-cyan border-lighten-3</div>
          <div class="p-10 mb-5 aione-border border-width-5 border-cyan border-lighten-2">border-cyan border-lighten-2</div>

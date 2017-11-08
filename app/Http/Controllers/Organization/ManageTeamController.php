@@ -11,7 +11,7 @@ class ManageTeamController extends Controller
 {
     public function create()
     {
-
+        return View('organization.team.create');
     }
     Public function listTeam(Request $request , $id = null) 
     {
@@ -21,33 +21,34 @@ class ManageTeamController extends Controller
       // }
         $datalist= [];
         $data= [];
-          if($request->has('per_page')){
-            $perPage = $request->per_page;
-            if($perPage == 'all'){
-              $perPage = 999999999999999;
+            if($request->has('per_page')){
+                $perPage = $request->per_page;
+                if($perPage == 'all'){
+                  $perPage = 999999999999999;
+                }
+            }else{
+                $perPage = get_items_per_page();;
             }
-          }else{
-            $perPage = get_items_per_page();;
-          }
-          $sortedBy = @$request->sort_by;
-          if($request->has('search')){
-              if($sortedBy != ''){
-                  $model = Team::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                  $model = Team::where('name','like','%'.$request->search.'%')->paginate($perPage);
-              }
-          }else{
-              if($sortedBy != ''){
-                  $model = Team::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                   $model = Team::paginate($perPage);
-              }
-          }
+            
+            $sortedBy = @$request->sort_by;
+            if($request->has('search')){
+                if($sortedBy != ''){
+                    $model = Team::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                }else{
+                    $model = Team::where('name','like','%'.$request->search.'%')->paginate($perPage);
+                }
+            }else{
+                if($sortedBy != ''){
+                    $model = Team::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                }else{
+                    $model = Team::paginate($perPage);
+                }
+            }
           // foreach($model as $key => $value){
           //   $user_data = User::whereIn('id',json_decode($value->member_ids))->get();
           //   $model[] = $user_data;
           // }
-          $datalist =  [
+            $datalist =  [
                         'datalist'=>  $model,
                         'showColumns' => ['title'=>'Title','created_at'=>'Created At'],
                         'actions' => [
@@ -58,11 +59,11 @@ class ManageTeamController extends Controller
                         'css'=> ['custom'=>['list-designation']]
                       ];
         // $id = null;
-        if(!empty($id) || $id != null || $id != ''){
-          $data['data'] = Team::where('id',$id)->first();
-        }
+            if(!empty($id) || $id != null || $id != ''){
+                $data['data'] = Team::where('id',$id)->first();
+            }
 
-        return view('organization.team.list',$datalist)->with(['data' => $data]);
+            return view('organization.team.list',$datalist)->with(['data' => $data]);
         /*$plugins = [
                         'js' => ['select2']
                     ];
@@ -71,8 +72,8 @@ class ManageTeamController extends Controller
     }
     public function getTeamById($id)
     {
-      $data = Team::find($id);
-      return view('organization.team.edit',compact('data'));
+        $data = Team::find($id);
+        return view('organization.team.edit',compact('data'));
     }
     public function save(Request $request)
     {   
@@ -81,14 +82,15 @@ class ManageTeamController extends Controller
         $team->description = $request->description;
         $team->member_ids = json_encode($request->member_ids);
 	    $team->save();
+
 	    return redirect()->route('list.team');
     }
     public function deleteTeam($id)
     {
-      $model = Team::where('id',$id)->delete();
-      if($model){
-        return back();
-      }
+        $model = Team::where('id',$id)->delete();
+        if($model){
+            return back();
+        }
     }
     public function info($id)
     {	
@@ -113,7 +115,7 @@ class ManageTeamController extends Controller
 		}
 		
         $plugins = [
-                'js' => ['dragula','blockui','custom'=>['team']]
+                'js' => ['custom'=>['team']]
         ];
 
     	return view('organization.team.team_info',['members'=> $members ,'team'=>$team , 'employee'=> $user_list, 'plugins'=>$plugins]);

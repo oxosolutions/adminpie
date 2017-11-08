@@ -12,4 +12,8 @@ class Slider extends Model
 			$this->table = Session::get('organization_id').'_sliders';
     	}
     }
+    public function listSlider()
+    {
+    	return self::pluck('name','id');
+    }
 }

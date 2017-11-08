@@ -80,12 +80,14 @@ class categoriesController extends Controller
     	$model = new $Associate;
     	$model->fill($request->except('action'));
     	$model->save();
+      Session::flash('success','Category created successfully');
         return back();
     }
     public function delete($id)
     {
       $Associate = $this->assignModel('Category');
         $model = $Associate::find($id)->delete();
+         Session::flash('success','Category deleted successfully');
         return back();
     }
     public function getDataById($id)
@@ -98,6 +100,7 @@ class categoriesController extends Controller
     {
       $Associate = $this->assignModel('Category');
         $model = $Associate::where('id',$request->id)->update($request->except('_token','id'));
+         Session::flash('success','Updated successfully');
         return back();
     }
 }

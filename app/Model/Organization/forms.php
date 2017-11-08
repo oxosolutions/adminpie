@@ -18,7 +18,11 @@ class forms extends Model
     public function listForm()
     {
         return self::pluck('form_title','id');
-    }   
+    }
+
+    public function collabrate(){
+        return $this->hasMany('App\Model\Organization\Collaborator','relation_id','id')->where('type','survey');
+    }
 
     public function section(){
     	return $this->hasMany('App\Model\Organization\section','form_id','id');
@@ -36,5 +40,11 @@ class forms extends Model
 
         $this->table = $table;
     }
+
+    public static function surveyList(){
+
+        return self::where('type','survey')->pluck('form_title','id');
+    }
+
 }
 

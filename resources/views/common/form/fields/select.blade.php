@@ -50,7 +50,7 @@
 	if(isset($settings['form_show_field_placeholder']) && $settings['form_show_field_placeholder'] != '' && $settings['form_show_field_placeholder'] == 'yes'){
 		$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
 	}else{
-		$placeholder = '';
+		$placeholder = 'Select Value';
 	}
 	if(empty($arrayOptions)){
 		$arrayOptions = $default_value;

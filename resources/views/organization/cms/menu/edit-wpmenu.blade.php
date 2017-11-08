@@ -16,12 +16,21 @@
 @section('content')
     <link rel="stylesheet" type="text/css" href="{{ asset('css/simple-iconpicker.min.css') }}">
     <script type="text/javascript" src="{{ asset('js/simple-iconpicker.min.js') }}"></script>
+
+
 @php
+        if(Auth::guard('admin')->check()){
+            $model =  'App\\Model\\Admin\\Menu';
+        }else{
+            $model =   'App\\Model\\Organization\\Cms\\Menu\\Menu';
+        }
+    $menuId = $model::where('id',request()->route()->parameters()['id'])->first();
+
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Menus : ',
+	'page_title' => 'Menus <span>'.$menuId->name.'</span>',
 	'add_new' => '+ Add Designation'
 ); 
 @endphp

@@ -19,7 +19,7 @@
 
 	{!!Form::open(['route'=>['change.group.user.pass']])!!}
 		<input type="hidden" name="user_id" value="{{request()->route()->parameters()['id']}}">
-		{{-- {!! FormGenerator::GenerateSection('group_user_change_pass') !!} --}}
+		
 		{!! FormGenerator::GenerateForm('user_change_password_form') !!}
 	{!!Form::close()!!}
 

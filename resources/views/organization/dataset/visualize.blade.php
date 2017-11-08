@@ -6,7 +6,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => 'Dataset Visualization <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Visualization',
 	'route' => ['visualization.view',['dataset_id'=>$dataset['id']]]
 	); 
@@ -42,13 +42,14 @@
 				<li class="aione-item ar">
 					<div class="ac l25">Name of visualization</div>
 					<div class="ac l25">Description</div>
-					<div class="ac l25">Created at</div>
+					<div class="ac l25">Created</div>
 				</li>
 			@foreach($visualizations as $key => $value)
+			
 				<li class="aione-item ar">
-					<div class="ac l25">{{$value->name}}</div>
+					<div class="ac l25"><a href="{{ url('visualization/edit/'.$value->id) }}">{{$value->name}}</a></div>
 					<div class="ac l25">{{$value->description}}</div>
-					<div class="ac l25">{{$value->created_at->format('Y-m-d')}}</div>
+					<div class="ac l25">{{$value->created_at->diffForHumans()}}</div>
 				</li>
 			@endforeach
 		</ul>

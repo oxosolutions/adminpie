@@ -185,13 +185,13 @@ foreach($columns as $column){
 					@foreach($showColumns as $k => $column)
 						@if($loop->index == 0)
 							<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
-								<div class="row valign-wrapper">
-									<div class="col">
-										<div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
+								<div class="ar">
+									<div class="ac s10">
+										<div class="bg-orange bg-accent-2 white">
 											{{ucfirst(($dataset->{$k} != '')?$dataset->{$k}[0]:'0')}}
 										</div>	
 									</div>
-									<div class="col" style="padding-left: 10px">
+									<div class="ac s90">
 										<div> {!! (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
 										@if(isset($actions))
 											<div class="options" style=" display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">

@@ -159,12 +159,12 @@ class AccountController extends Controller
         if($data->id == $id){
             if($data->email == $request->email){
                     $valid_fields = [
-                                  'email' => 'required'
+                                  'email' => 'required|email'
                                 ];
                     $this->validate($request , $valid_fields) ;
             }else{
                 $valid_fields = [
-                                  'email' => 'required|unique:'.$tbl.'_users'
+                                  'email' => 'required|email|unique:'.$tbl.'_users'
                                 ];
                 $this->validate($request , $valid_fields) ;
             }

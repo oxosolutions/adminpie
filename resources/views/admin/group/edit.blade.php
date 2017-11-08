@@ -1,19 +1,21 @@
 @extends('admin.layouts.main')
 @section('content')
 {{-- page header is not working here  --}}
+
 @php
+
 $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Edit Group',
+    'page_title' => 'Edit Group&nbsp;&nbsp;<span>'.$group_data->name.'</span>',
     'add_new' => '+ Add User'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
   @include('common.page_content_primary_start')
-
+  @include('admin.group._tabs')
   @php
     $selectedModule = json_decode($group_data->modules);
     $selectedModuleArray = App\Model\Admin\GlobalModule::whereIn('id',$selectedModule)->pluck('id','name');

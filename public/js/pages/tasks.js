@@ -7,7 +7,7 @@ $(document).ready(function(){
     var id = $(this).parents('li').find('input[name=id]').val();
     var token = $(this).parents('li').find('input[name=_token]').val();
     $.ajax({
-      url   : route()+'account/tasks/delete',
+      url   : route()+'/account/tasks/delete',
       type  : 'POST',
       data  : {id : id,_token : token},
       success : function(){
@@ -32,7 +32,7 @@ $(document).ready(function(){
         var status = ui.item.parents('ul').attr('status');
         var token = ui.item.find('input[name=_token]').val();
         $.ajax({
-        	url : route()+'account/tasks/status/update',
+        	url : route()+'/account/tasks/status/update',
         	type : "POST",
         	data : {id : id,status : status,_token : token},
         	success : function(res){
@@ -78,7 +78,7 @@ $(document).ready(function(){
             _token :      $('.token').val()
           }
    $.ajax({
-    url : route()+'account/tasks/update',
+    url : route()+'/account/tasks/update',
     type : 'POST',
     data : data,
       success : function(res){
@@ -103,7 +103,7 @@ $(document).ready(function(){
           project_id = 'null';
         }
         $.ajax({
-          url : route()+'account/tasks/priority/filter',
+          url : route()+'/account/tasks/priority/filter',
           type : "POST",
           data : {priorityStatus : priorityStatus,project_id : project_id,_token : token},
           success : function(res){
@@ -125,7 +125,7 @@ $(document).ready(function(){
         var Employee_filter = $(this).val();
         var token = $('input[name=_token]').val();
         $.ajax({
-          url : route()+'account/tasks/priority/filter',
+          url : route()+'/account/tasks/priority/filter',
           type : "POST",
           data : {Employee_filter : Employee_filter,_token : token},
           success : function(res){
@@ -147,7 +147,7 @@ $(document).ready(function(){
         var project_filter = $(this).val();
         var token = $('input[name=_token]').val();
         $.ajax({
-          url : route()+'account/tasks/priority/filter',
+          url : route()+'/account/tasks/priority/filter',
           type : "POST",
           data : {project_filter : project_filter,_token : token},
           success : function(res){

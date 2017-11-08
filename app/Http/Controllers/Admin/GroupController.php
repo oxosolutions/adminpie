@@ -9,6 +9,7 @@ use Hash;
 use App\Model\Admin\GlobalModule;
 use App\Model\Group\GroupUsers as GUsers;
 use Session;
+use App\Model\Admin\GlobalOrganization;
 class GroupController extends Controller
 {
     /**
@@ -49,8 +50,10 @@ class GroupController extends Controller
                         'datalist'=>$model,
                         'showColumns' => ['name'=>'Title','description'=>'Description','created_at'=>'Created At'],
                         'actions' => [
+                                        'view' => ['title'=>'View','route'=>'view.group'],
                                         'edit' => ['title'=>'Edit','route'=>'edit.group'],
                                         'delete' => ['title'=>'Delete','route'=>'delete.group','class'=>'red'],
+                                        'auth' => ['title'=>'Login Group','route'=>'group.auth.login'],
                                         // 'delete'=>['title'=>'Delete','route'=>'delete.holiday']
                                      ]
                     ];
@@ -164,5 +167,41 @@ class GroupController extends Controller
             return back();
         }
         
+    }
+
+    /**
+     * login group admin directly from admin
+     *
+     * @param  $group_id group id to login
+     * @return redirect to specific route
+     * @author Rahul
+     **/
+    function authGroup($group_id){
+        $auth_token = str_random();
+        $model = AdminUsers::where('group_id',$group_id)->first();
+        if($model != null){
+            $model->auth_token = $auth_token;
+            $model->save();
+            return redirect()->route('group.login',$auth_token);
+        }
+    }
+
+    /**
+     *  view group details function
+     * @param integer $id having group id
+     * @return view
+     * @author Rahul
+     **/
+    public function viewGroup($id){
+
+        $group_data = Group::find($id);
+        $modules = GlobalModule::whereIn('id',json_decode($group_data->modules,true))->get();
+        $groupModules = json_decode($group_data->modules,true);
+        if(!empty($groupModules)){
+            $moduleNames = $modules->whereIn('id',$groupModules)->pluck('name')->toArray();
+            $group_data->modules = $moduleNames;
+        }
+        $oragnizationsList = GlobalOrganization::where('group_id',$id)->pluck('name','id');
+        return view('admin.group.view',['group_data'=>$group_data,'oragnizations'=>$oragnizationsList]);
     }
 }

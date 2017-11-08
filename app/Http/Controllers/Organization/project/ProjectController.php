@@ -38,6 +38,14 @@ class ProjectController extends Controller
                             ];
         return $this->validate($request, $validation);
     }
+    public function createCategories()
+    {
+      return view('organization.categories.createCategories');
+    }
+    public function create()
+    {
+      return view('organization.project._form');
+    }
     public function save(Request $request)
     {
       $this->validation($request);
@@ -300,8 +308,8 @@ class ProjectController extends Controller
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
                       'actions' => [
-                                      'edit' => ['title'=>'Edit','route'=>'designations' , 'class' => 'edit'],
-                                      'delete'=>['title'=>'Delete','route'=>'delete.designation']
+                                      'edit' => ['title'=>'Edit','route'=>'categories.edit' , 'class' => 'edit'],
+                                      'delete'=>['title'=>'Delete','route'=>'delete.category' ]
                                    ],
                       'js'  => ['custom'=>['project-categories']],
                       
@@ -325,12 +333,19 @@ class ProjectController extends Controller
         $model->save();
         return redirect()->route('categories.project');
     }
-
+    public function editCategories($id)
+    {
+        $data = CAT::find($id);
+        return view('organization.categories.createCategories',compact('data'));
+    }
     public function updateCategory(Request $request){
-        $model = CAT::find($request->id);
-        $model->name = $request->value;
-        $model->save();
-        return $request->value;
+        $model = CAT::where(['id' => $request->id])->update($request->except('_token','id'));
+        return back();
+    }
+    public function deleteCategories($id)
+    {
+        $model = CAT::where(['id' => $id])->delete();
+        return back();
     }
     public function tasks($id = null)
     {

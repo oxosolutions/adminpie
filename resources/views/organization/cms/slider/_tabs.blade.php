@@ -12,9 +12,7 @@
         <li class="aione-tab {{(Request::route()->action['as'] == 'options.slider')?'nav-item-current':''}}">
             <a href="{{ route('options.slider',$id) }}"><span class="nav-item-text">Options</span></a>
         </li>
-         <li class="aione-tab {{(Request::route()->action['as'] == 'settings.slider')?'nav-item-current':''}}">
-            <a href="{{ route('settings.slider',$id) }}"><span class="nav-item-text">Settings</span></a>
-        </li>
+    
 
         <div class="clear"></div>
     </ul>

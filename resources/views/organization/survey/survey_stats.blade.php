@@ -80,18 +80,30 @@ $page_title_data = array(
                                @if(isset($data['user_by']) && !empty($data['user_by'])) 
                                     @foreach($data['user_by'] as $user_key => $user_val)
                                         <tr>
-                                            <td>{{$user_val->user_id}}</td>
+                                            <td>
+                                                @if(!empty($user_val->user_id))
+                                                    @if(get_user(false, true, $user_val->user_id))
+                                                        {{get_user(false, true, $user_val->user_id)['name']}}
+                                                    @else
+                                                    {{$user_val->user_id}}
+                                                    @endif
+                                                @else
+                                                unknown 
+                                                @endif
+                                            </td>
                                             <td>{{$user_val->total}}</td>
                                             <td>{{$user_val->completed}}</td>
                                             <td>{{$user_val->uncompleted}}</td>
                                         </tr>
                                     @endforeach
-                                    @else
-                                    {!!aione_message('No Data Exist','error','center')!!}
-                                @endif
-                               
-                            </tbody>
+                                    </tbody>
                         </table>
+                                @else
+                                 </tbody>
+                        </table>
+                                {!!aione_message('No Data Exist','error','center')!!} </td>
+                                
+                                @endif
                     </div>
                 </div>
             </div>
@@ -126,11 +138,14 @@ $page_title_data = array(
                                         <td>{{$date_val->uncompleted}}</td>
                                     </tr>
                                 @endforeach
-                                 @else
-                                    {!!aione_message('No Data Exist','error','center')!!}
-                            @endif
-                            </tbody>
+                                 </tbody>
                         </table>
+                                @else
+                                 </tbody>
+                        </table>
+                                {!!aione_message('No Data Exist','error','center')!!} </td>
+                                
+                                @endif
                     </div>
                 </div>
             </div>
@@ -162,15 +177,30 @@ $page_title_data = array(
                               @if(isset($data['user_submit_from']) && !empty($data['user_submit_from'])) 
                                 @foreach($data['user_submit_from'] as $user_submit_key => $user_submit_val)
                                 <tr>
-                                    <td>{{$user_submit_val->user_id}}</td>
+                                     <td>
+                                        @if(!empty($user_submit_val->user_id))
+                                            @if(get_user(false, true, $user_submit_val->user_id))
+                                                {{get_user(false, true, $user_submit_val->user_id)['name']}}
+                                            @else
+                                            {{$user_submit_val->user_id}}
+                                            @endif
+                                        @else
+                                        unknown 
+                                        @endif
+                                    </td>
                                     <td>{{$user_submit_val->total}}</td>
                                     <td>{{$user_submit_val->web}}</td>
                                     <td>{{$user_submit_val->application}}</td>
                                 </tr>
                                 @endforeach
-                                @endif
-                            </tbody>
+                                </tbody>
                         </table>
+                                @else
+                                 </tbody>
+                        </table>
+                                {!!aione_message('No Data Exist','error','center')!!} </td>
+                                
+                                @endif
                     </div>
                 </div>
             </div>
@@ -205,9 +235,15 @@ $page_title_data = array(
                                         <td>{{$date_submit_val->application}}</td>
                                     </tr>
                                     @endforeach
-                                @endif
                             </tbody>
                         </table>
+                                @else
+                                 </tbody>
+                        </table>
+                                {!!aione_message('No Data Exist','error','center')!!} </td>
+                                
+                                @endif
+                            
                     </div>
                 </div>
             </div>

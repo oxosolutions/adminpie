@@ -25,6 +25,7 @@ class CheckRole
      */
     public function handle($request, Closure $next, $role = null)
     {  
+     
       $current_route =  $request->route();
       //dd($current_route->uri);
       $uri =str_replace('/{id}','',$current_route->uri);

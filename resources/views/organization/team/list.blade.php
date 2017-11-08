@@ -30,6 +30,7 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Teams',
+	'route' => 'create.team',
 	'add_new' => '+ Add New Team' 
 ); 
 @endphp

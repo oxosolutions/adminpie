@@ -193,18 +193,24 @@ class SettingController extends Controller
     public function saveOrganizationSettings(Request $request){
     	// dd($request->all());
     	$organizationId = Session::get('organization_id');
+    	if($request->has('employee_role')){
+    		update_organization_metas($request->all());
+    		return back();
+    	}
     	
     	if($request->has('logo_delete')){
     		$del_logo = OrganizationSetting::where(['key' => 'logo'])->delete();
     		return back();
     	}
     	foreach($request->except(['_token']) as $key => $value){
+    		//echo " <br>===".$key." --- ".$value;
     		if($key == 'bg_image_status'){
     			if($key == 0){
     				OrganizationSetting::where('key' , 'bg_image')->delete();
     			}
     		}
-    		if($key == 'logo'){
+    		if($key == 'logo' && !empty($value)){
+
     			$path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/images';
 
     			$filename = date('Ymdhis');
@@ -221,7 +227,7 @@ class SettingController extends Controller
 	    		$model->key = $key;
 	    		$model->value = $path.'/'.$filename.$fileExt;
 	    		$model->save();
-    		}elseif($key == 'bg_image'){
+    		}elseif($key == 'bg_image' && !empty($value)){
     			$path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/bg_image';
 
     			$filename = date('Ymdhis');

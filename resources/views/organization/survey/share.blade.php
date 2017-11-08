@@ -54,7 +54,7 @@ $id = "";
 					<div class="ar share_status" style="margin-bottom: 20px">
 						<div class="ac l33">
 							<input type="radio" id="only_me" name="group1" {{ (@$share_type_value == 'only_me')?'checked="checked"':'' }}>
-							<label for="only_me">Only Me</label>
+							<label for="only_me">Private</label>
 						</div>
 						<div class="ac l33">
 							<input type="radio" id="public" name="group1" {{ (@$share_type_value == 'public')?'checked="checked"':'' }}>
@@ -96,7 +96,18 @@ $id = "";
 							@foreach($collab as $key => $value)
 								<tr>
 									<td>{{$value->email}}</td>
-									<td>{{$value->access}}</td>
+									<td>
+										@php
+											$jsonDecoded = json_decode($value->access,true);
+											if(is_array($jsonDecoded)){
+												foreach($jsonDecoded as $k => $v){
+										@endphp
+												<span class="bg-cyan white p-5 display-inline-block mb-5" style="cursor: pointer;">{{ ucfirst($v) }}</span>
+										@php
+												}
+											}
+										@endphp
+									</td>
 									<td><a href="{{route('survey.remove.shareto',$value->id)}}" style="color: #757575"><i class="material-icons dp48">clear</i></a></td>
 								</tr>
 							@endforeach
@@ -213,6 +224,7 @@ $id = "";
 		    return succeed;
 		}
 		$(document).ready(function(){
+			
 			$('.specific_user_field , .list-users').hide();
 				if($('.share_status').find('#specific').attr('checked')){
 					$('.specific_user_field , .list-users').show();
@@ -232,7 +244,8 @@ $id = "";
 						type: 'get',
 						data : {share_status : share_status , survey_id : survey_id },
 						success : function(res){
-							if(res == "Success"){
+							console.log(res);
+							if(res.trim() == "Success"){
 								Materialize.toast('Saved',4000);
 							}else{
 								Materialize.toast('Something went wrong',4000);

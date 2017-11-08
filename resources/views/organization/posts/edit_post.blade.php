@@ -57,9 +57,13 @@
 	    'show_page_title' => 'yes',
 	    'show_add_new_button' => 'no',
 	    'show_navigation' => 'yes',
-	    'page_title' => 'Edit Post : <span>'.$page->title.'</span>',
+	    'page_title' => 'Edit Post <span>'.$page['title'].'</span>',
 	    'add_new' => '+ Add Media'
 	); 
+	$tags = $page['tags'];
+	if($tags != null){
+		$page['tags'] = implode(',', $tags);
+	}
 	@endphp
 	<style type="text/css">
 		textarea[name=content] , textarea[name=html_viewer]{
@@ -98,71 +102,49 @@
 							<button>save</button>
 						</div>
 					</div> --}}
-					<div class="boxed">
-						<div class="header">
-							Status
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('select_status') !!}
-						</div>
+					{!! FormGenerator::GenerateForm('page_options_form') !!}
+					{!! FormGenerator::GenerateForm('page_options_category_form') !!}
+					{{-- {{dump($page)}}
+					<div>
+						<label>Tags</label>
+						@foreach($page['tags'] as $k => $v)
+							<span class="chips">{{$v}}</span>
+						@endforeach
+					</div> --}}
+					<div class="selected_tags">
+						@if($tags != '' || $tags != null)
+							@foreach($tags as $k => $v)
+									
+								<span style="padding: 4px 8px;background: lightblue;border-radius: 12px;"> {{ $v }} <i class="fa fa-close"></i></span>
+							@endforeach
+						@endif
 					</div>
-					<div class="boxed">
-						<div class="header">
-							Menu
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateSection('menu_section') !!}
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Categories
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('categories') !!}
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Tags
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateSection('tags_section') !!}
-							
-							<div class="field-wrapper">
-								<a href="javascript:;" id="input_add" class="add"> Add </a>	
-							</div>
-							
-							<div class="tags">
-								
-							</div>
-						</div>
-					</div>
-					<div class="boxed">
-						<div class="header">
-							Page Attributes
-							<i class="fa fa-chevron-circle-right"></i>
-						</div>
-						<div class="content">
-							{!! FormGenerator::GenerateField('template') !!}
-						</div>
-					</div>
+					{!! FormGenerator::GenerateForm('page_options_tags_form') !!}
+					<input type="button" id='input_add' value="Add">
+					<input type="hidden" class="hidden_tags_input" value="" name="tags">
+					
 				</div>
 			</div>
-			<button type="submit">Save</button>
+			{{-- <button type="submit">Save</button> --}}
 		{!! Form::close() !!}
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 		<script type="text/javascript">
-			$(document).on('click','#input_add',function(){
-				var tag = $(this).parents('.field-wrapper').prev().find('.input-tag').val();
+			$(document).on('click','#input_add',function(e){
+				e.preventDefault();
+				e.stopPropagation();
+
+				var tag = $('#input_tag').val();
+				console.log(tag);
 				$('#input_tag').val('');
-				$(this).parents('.field-wrapper').next().append('<span>'+tag+'<i class="fa fa-close"></i></span>');
-			})
+				if(tag != ''){
+					$('.selected_tags').append('<span style="padding: 4px 8px;background: lightblue;border-radius: 12px;">'+tag+'<i class="fa fa-close"></i></span>');
+					var previous_tags = $('.hidden_tags_input').val();
+					$('.hidden_tags_input').val('');
+					$('.hidden_tags_input').val(previous_tags+','+tag+',');
+				}
+			});
+			// $('#input_tag').val('');
 		</script>
 	@include('common.page_content_secondry_end')
 	@include('common.pagecontentend')

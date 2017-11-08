@@ -43,7 +43,7 @@ class UserRoleController extends Controller{
         }
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['name'=>'Name','description'=>'Description','created_at'=>'Created At'],
+                        'showColumns' => ['name'=>'Role Name','slug'=>'Role Id','description'=>'Role Description','created_at'=>'Created'],
                         'actions' => [
                                         'edit' => ['title'=>'Assign Permission','route'=>'role.assign'],
                                         'delete'=>['title'=>'Delete','route'=>'role.delete']
@@ -72,15 +72,11 @@ class UserRoleController extends Controller{
     }
     public function Delete(Request $request , $id = null)
     {   
-
-       // dd($request->all());
         if($request->isMethod('POST'))
-         { 
-          
-           Role::where('id',$request['old_role_id'])->delete();
+        { 
+            Role::where('id',$request['old_role_id'])->delete();
             try{
                 DB::beginTransaction();
-                   // Role::where('id',$request['old_role_id'])->delete();
                     if(!empty($request['user'])){
                         $checkUserExist = UserRoleMapping::whereIn('user_id',$request['user'])->update(['role_id'=>$request['new_role_id']]);
                     }
@@ -92,22 +88,26 @@ class UserRoleController extends Controller{
                 }
             return redirect()->route('list.role');    
         }
-        if(empty($id) && $id==1){
+        if(empty($id)){
             return redirect()->route('access.denied');
         }else{
-
-            // $roleUser = User::with('metas')->where('role_id',$id)->get();
-            // $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
-            // $roleData = compact("roleUser", "roleList" ,'id'); 
-
-            $roleUser = User::with(['user_role_rel', 'metas'])->whereHas('user_role_rel',function($query) use($id){
+            if($id != 1){
+                $roleUser = User::with(['user_role_rel', 'metas'])->whereHas('user_role_rel',function($query) use($id){
                 $query->where('role_id',$id);
-            })->get();// UserRoleMapping::where('role_id',$id)->get();
+                })->get();// UserRoleMapping::where('role_id',$id)->get();
+                if($roleUser->toArray() == null){
+                    Role::where('id',$id)->delete();
+                    return back();
+                }else{                    
+                    $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
+                    $roleData = compact("roleUser", "roleList" ,'id');
 
-            //dd($roleUser);
-            $roleList = Role::whereNotIn('id',[1])->get()->keyBy('id');
-            $roleData = compact("roleUser", "roleList" ,'id');
-          return view('organization.role.roleUser', $roleData);
+                    return view('organization.role.roleUser', $roleData);
+                }
+            }else{
+                Session::flash('error','You Cant Delete the Administrator role');
+                return redirect()->route('list.role');
+            }
         }
         // $model = OrganizationSetting::where(['value'=>$id , 'type' => 'role'])->first();
         // $model = OrganizationSetting::select(['value','key'])->whereIn('key',['employee_role','client_role'])->get()->keyBy('value')->toArray();
@@ -144,11 +144,11 @@ class UserRoleController extends Controller{
         }
         
         $orgModule = ORG::organization_module();
-        $widget = Widget::whereStatus(1)->whereIn('module_id',array_collapse([$orgModule , [0]]))->get();
+        $widget = Widget::whereStatus(1)->whereIn('module_id',array_collapse([$orgModule , [0]]))->orderBy('order','asc')->get();
         $role_data = Role::with(['permisson'])->where('id',$id)->get();
         $data = collect($role_data[0]['permisson']);
         $filled_data = $data->groupBy('permisson_type');
-        $module_data = Module::with('subModule.moduleRoute')->whereIn('id',$orgModule)->get();
+        $module_data = Module::with('subModule.moduleRoute')->whereIn('id',$orgModule)->orderBy('orderBy','asc')->get();
         return view('organization.role_permisson.permisson', ['role_data'=>$role_data, 'filled_data'=> $filled_data, 'module_data'=>$module_data ,'widget'=>$widget]);
     }
     public function role_permisson_save(Request $request)

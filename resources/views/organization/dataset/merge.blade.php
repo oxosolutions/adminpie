@@ -46,13 +46,13 @@ $page_title_data = array(
     @if(Session::has('error'))
         <p style="color:red;"> {{Session::get('error')}}</p>
     @endif
-     @if(Session::has('success'))
+     {{-- @if(Session::has('success'))
         <div class="aione-message success">
             <ul class="aione-messages">
                 <li>{{Session::get('success')}}</li>
             </ul>
         </div>
-    @endif
+    @endif --}}
    {!! Form::open(['route'=>'merge.dataset'])!!}
     {!! FormGenerator::GenerateForm('merge_datasets_form')  !!}
     

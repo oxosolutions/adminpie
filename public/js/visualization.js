@@ -1,9 +1,9 @@
 $(document).ready(function(){
 
 	//Hide Loader
-	$(window).load(function() {
-		$( '.aione-loader' ).hide(); 
-	});
+	// $(window).load(function() {
+	// 	$( '.aione-loader' ).hide(); 
+	// });
 
 	//Inialize Seclct2 for Multiselect for Filters
 	$('.aione-multi-select').select2();

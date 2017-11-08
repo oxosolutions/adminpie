@@ -27,4 +27,8 @@ class FormsMeta extends Model
     public function forms(){
         return $this->belongsTo('App\Model\Organization\forms','form_id','id');
     }
+
+    public function collabrate(){
+        return $this->hasMany('App\Model\Organization\Collaborator','relation_id','form_id')->where('type','survey');
+    }
 }

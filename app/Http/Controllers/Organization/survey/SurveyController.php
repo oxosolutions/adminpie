@@ -14,9 +14,18 @@ use DB;
 use App\Http\Controllers\Api\SurveyController as apisurvey;
 use Session;
 use Carbon\Carbon;
+/**
+ * Paljinder singh only work  on following Method
+ *     survey_filled_data_save
+ *     embededSurvey
+ */
 class SurveyController extends Controller
 {   
     protected $apisurvey;
+    protected $valid_fields = [
+                            'form_title' => 'required',
+                            'form_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300'
+                        ];
     public function __construct(apisurvey $apisurvey)
     {
         $this->apisurvey = $apisurvey;
@@ -32,9 +41,16 @@ class SurveyController extends Controller
         }else{
           $perPage = get_items_per_page();
         }
-        $model = forms::where(['type'=>'survey'])->with(['section'])->orderBy('id','DESC')->paginate($perPage);
-       
-
+        $model = forms::where(['type'=>'survey', 'created_by'=>Auth::guard('org')->user()->id])->with(['section'])->orWherehas('formsMeta', function($query){
+            $query->where('key','share_type')->where('value','=','public')->where('value','!=','only_me')->orWhereHas('collabrate',function($query){
+                $query->whereHas('survey', function($query){
+                    $query->whereHas('formsMeta',function($query){
+                        $query->where('key','share_type')->where('value','!=','only_me');
+                    });
+                });
+            });
+        })->orderBy('id','DESC')->paginate($perPage);
+        
         $deleteRoute = 'org.delete.form';
         $sectionRoute = 'org.list.sections';
         $settingsRoute = 'org.form.settings';
@@ -47,8 +63,9 @@ class SurveyController extends Controller
                                 'preview'=>['title'=>'View','route'=>'survey.perview'],
                                 'settings' => ['title'=>'Settings','route'=>'survey.settings'],
                                 'stats' => ['title'=>'Stats','route'=>'stats.survey'],
+                                'structure' => ['title'=>'Structure','route'=>'structure.survey'],
                                 'data'=>['title'=>'Raw Data','route'=>'results.survey'],
-                                'report'=>['title'=>'Report','route'=>'survey.stats.report'],
+                                'report'=>['title'=>'Report','route'=>'survey.reports'],
                                 'share'=>['title'=>'Share','route'=>'share.survey'],
                                 'customize'=>['title'=>'Customize','route'=>'custom.survey'],
                                 'clone'=>['title'=>'Clone','route'=>$cloneRoute],
@@ -65,8 +82,23 @@ class SurveyController extends Controller
     }
     public function createSurvey()
     {
-    	 return view('organization.survey.survey_add',['type'=>'survey']);
+    	 return view('organization.survey.create',['type'=>'survey']);
     }
+
+    public function storeSurvey(Request $request){
+        $created_by = get_user_id();
+        $request['created_by'] = $created_by;
+        $this->validate($request, $this->valid_fields);
+        $model = new forms;
+        $model->fill($request->all());
+        $model->save();
+        // return redirect()->route('list.forms');
+        Session::flash('success','Form created successfully');
+        Session::flash('success','Survey created successfully');
+        return redirect()->route('list.survey');
+            
+    }
+
     public function surveySettings($survey_id){
         $permission = $this->collaboratorAccesses($survey_id,'settings');
         $model = FormsMeta::where(['form_id'=>$survey_id]);
@@ -104,8 +136,18 @@ class SurveyController extends Controller
         return view('admin.formbuilder.sections')->with([ 'sections' => $model,'plugins'=> $plugins,'form'=>$form,'permission'=>$permission]);
     }
 
-    public function save_survey(Request $request){
-       
+    public function survey_filled_by_view(Request $request){
+        if(Session::has('inserted_id')){
+            Session::forget('inserted_id');
+        }
+            $form_id    =   $request['form_id'];
+            unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'],  $request['section_id'], $request['section_slug']);
+            $this->apisurvey->create_alter_insert_survey_table(get_organization_id(), $form_id,$request->all());
+            Session::flash('success','Survey filled successfully.');
+            return back();
+    }
+
+    public function survey_filled_data_save(Request $request){
         $form_id    =   $request['form_id'];
         if(isset($request['section_id'])){
             $section_id  =   $request['section_id'];
@@ -116,12 +158,13 @@ class SurveyController extends Controller
         unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'],  $request['section_id'], $request['section_slug']);
         $this->apisurvey->create_alter_insert_survey_table(get_organization_id(), $form_id,$request->all());
         Session::flash('sucess','Submitted Sucessfully');
+        
         if(Session::has('section')){
                 $all_sec = Session::get('section');
                 Session::forget('section');
                 unset($all_sec[$section_id]);
                 if(empty($all_sec)){
-                     $this->forget_session_survey('section');
+                    $this->forget_session_survey('section');
                     Session::flash('sucess', 'Successfull filled survey.');
                 }else{
                     Session::put('section', $all_sec);
@@ -199,10 +242,9 @@ class SurveyController extends Controller
         }else if($survey->embed_token == '' || $survey->embed_token == null){
             $survey->embed_token = str_random();
             $survey->save();
-            $collab = Collaborator::where(['type'=>'survey','relation_id'=>$id])->get();
         }
-          
-            return view('organization.survey.share',['token'=>$survey->embed_token,'collab'=>$collab,'permission'=>$permission,'survey' => $survey]);
+        $sharedSurvey = Collaborator::where(['type'=>'survey','relation_id'=>$id,'userid'=>Auth::guard('org')->user()->id])->get();
+        return view('organization.survey.share',['token'=>$survey->embed_token,'collab'=>$sharedSurvey,'permission'=>$permission,'survey' => $survey]);
         
     }
 
@@ -228,15 +270,14 @@ class SurveyController extends Controller
     }
 
     public function embededSurvey($token){
+
         $current_data = [];
         $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
         if($form != null){
             $survey = $form = $form->first();
-            
-            $slug = $form->form_slug;
+            $survey_slug = $form->form_slug;
             $form_id = $form['id'];
             $survey_setting = $form['formsMeta']->pluck('value','key')->toArray();
-            // dump($survey_setting);
             if(!empty($survey_setting['save_survey']) && ($survey_setting['save_survey']=='section') ){
                 if(Session::has('form_fiel_id')){
                     $this->forget_session_survey('question');
@@ -274,6 +315,7 @@ class SurveyController extends Controller
                     $this->forget_session_survey('question');
                     $this->forget_session_survey('section');
             }
+ 
             $maintain_error =  $error = $this->survey_error($survey_setting, $form_id );
             if(!empty($error) && $error !=1){  
                 if(!empty($survey_setting['custom_error_messages'] ==true) && is_array($error)){
@@ -285,6 +327,7 @@ class SurveyController extends Controller
             }else{
                 $error = NULL;
             }
+           //unique_id $data->survey_id.''.date('YmdHis').''.substr((string)microtime(), 2, 6).''.rand(1000,9999); 
         }else{
             $error['survey_id_not_exist'] = "Invalid survey ID.";
             return view('organization.survey.shared_survey',compact('error'));
@@ -308,9 +351,8 @@ class SurveyController extends Controller
                 $current_data = json_decode(json_encode($data),true);
             }
         }
-            // dump($survey_setting['survey_timer'], $survey_setting['timer_type'] ,   @$survey_setting['survey_time_lefts']);
-         // dump('error',$error);
-        return view('organization.survey.shared_survey',compact('slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
+
+        return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
     }
 
   
@@ -378,28 +420,33 @@ class SurveyController extends Controller
         } 
           // survey_response_limit  response_limit response_limit_type 
             if(isset($setting['survey_response_limit']) && ($setting['survey_response_limit']==true)){
-            	if(isset( $setting['response_limit_type']) && ($setting['response_limit_type'] =="per_ip")){
-            		$organization_id = Session::get('organization_id');
-            		$table = $organization_id.'_survey_results_'.$survey_id;	
-            		 $ip = \Request::ip();
-            		$filled_count = DB::table($table)->where('ip_address',$ip)->count();
-            		 if(!empty($setting['response_limit'] <= $filled_count)){
-            			return ["survey_responce_limit"=>"Across survey limit for this ip"];            	
-            		 }
-            	}
+                if(isset( $setting['response_limit_type']) && ($setting['response_limit_type'] =="per_ip")){
+                    $organization_id = Session::get('organization_id');
+                    $table = $organization_id.'_survey_results_'.$survey_id;    
+                     $ip = \Request::ip();
+                    if(Schema::hasTable($table)){
+                        $filled_count = DB::table($table)->where('ip_address',$ip)->count();
+                         if(!empty($setting['response_limit'] <= $filled_count)){
+                            return ["survey_responce_limit"=>"Across survey limit for this ip"];                
+                         }
+                     }
+                }
 
                  if(!empty($setting['authentication_required']) && ($setting['authentication_required'] ==true)){
                        $user_id = Auth::guard('org')->user()->id;
-                	if(!empty( $setting['response_limit_type'] =="per_user")){
-                		$organization_id = Session::get('organization_id');
-                		$table = $organization_id.'_survey_results_'.$survey_id;	
-                		 $ip = \Request::ip();
-                		$filled_count = DB::table($table)->where('survey_submitted_by',$user_id)->count();
-                		 if(!empty($setting['response_limit']) && ($setting['response_limit'] <=$filled_count)){
-                			return ["survey_responce_limit" =>"Across survey limit for this user"];            	
-                		 }
-                	}
+                    if(!empty( $setting['response_limit_type'] =="per_user")){
+                        $organization_id = Session::get('organization_id');
+                        $table = $organization_id.'_survey_results_'.$survey_id;    
+                         $ip = \Request::ip();
+                    if(Schema::hasTable($table)){
+                        $filled_count = DB::table($table)->where('survey_submitted_by',$user_id)->count();
+                         if(!empty($setting['response_limit']) && ($setting['response_limit'] <=$filled_count)){
+                            return ["survey_responce_limit" =>"Across survey limit for this user"];             
+                         }
+                        }
+                    }
                 }
+       
             }            
         return true;
     }
@@ -423,6 +470,7 @@ class SurveyController extends Controller
         $model->relation_id = $id;
         $model->email = $request->email_user_share;
         $model->access = json_encode($request['user-share-edit-view']);
+        $model->userid = Auth::guard('org')->user()->id;
         $model->status = 1;
         $model->save();
         return back();
@@ -477,5 +525,9 @@ class SurveyController extends Controller
             }
          }
          return back();
+    }
+
+    public function convertToDataset($id){
+        return view('organization.survey.convert-dataset');
     }
 }

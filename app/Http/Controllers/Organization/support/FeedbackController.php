@@ -8,7 +8,7 @@ use App\Model\Organization\Feedback;
 
 class FeedbackController extends Controller
 {
-    public function index(Request $request,$id = null)
+    public function listFeedbacks(Request $request,$id = null)
     {
 	    $datalist = [];
 	    if($request->has('items')){
@@ -46,7 +46,7 @@ class FeedbackController extends Controller
 			}else{
 				$datafeed = "";
 			}
-	      return view('organization.support.index',$datalist)->with(['data' => $datafeed]);
+	      return view('organization.support.feedback.list',$datalist)->with(['data' => $datafeed]);
     }
     public function create(Request $request)
     {
@@ -71,5 +71,9 @@ class FeedbackController extends Controller
     {
     	$model = Feedback::find($request['id'])->update($request->except('_token','action'));
     	return redirect()->route('list.feedback');
+    }
+    public function createFeedback()
+    {
+    	return view('organization.support.feedback.create');
     }
 }

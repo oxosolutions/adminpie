@@ -82,6 +82,7 @@ class UsersController extends Controller
     {
         $id = $id;
         $del_user = admin_user::where('id',$id)->delete();
+         Session::flash('success','User deleted successfully');
         return back();
     }
 
@@ -93,6 +94,11 @@ class UsersController extends Controller
      **/
     public function createUser(Request $request)
     {
+        $validate = [
+                'email'      => 'required|email',
+            ];
+        $this->validate($request , $validate);
+        
         $data = new admin_user;
         $data->fill($request->except('_token')); 
         $data->password = Hash::make($request->password);
@@ -129,6 +135,12 @@ class UsersController extends Controller
      **/
     public function editUser(Request $request , $id)
     {
+        $validate = [
+                'email'      => 'required|email',
+            ];
+        $this->validate($request , $validate);
+
+
     	$model = admin_user::where('id',$id)->update($request->except(['_token','id']));
     	if($model){
             Session::flash('success','Updated successfully');

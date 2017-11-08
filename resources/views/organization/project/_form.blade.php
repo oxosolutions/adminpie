@@ -1,80 +1,33 @@
-<div class="form-group">
-{!!Form::label('title', 'Enter Project Title:', ['class' => 'col-lg-3 control-label']);
-!!}
-	{{-- <label class="col-lg-3 control-label">Enter Project Title:</label> --}}
-	<div class="col-lg-9">
-	{!!Form::text('name',null,['class' => 'form-control'])!!}
-		{{-- <input type="text" name="name" class="form-control" placeholder="Enter Project Title"> --}}
-	</div>
-</div>
-<div class="form-group">
-{!! Form::label('desc','Enter Description:')!!}
-	<label class="col-lg-3 control-label">Enter Description:</label>
-	<div class="col-lg-9">
-		<textarea name="description" rows="5"  cols="5" class="form-control" placeholder="Short Project Description"></textarea>
-	</div>
-</div>
+@extends('layouts.main')
+@section('content')
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'no',
+	'show_navigation' => 'yes',
+	'page_title' => 'Create Project',
+	// 'add_new' => '+ Add New Team' 
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+	@if(@$data)
+		{!! Form::model(@$data,['route'=>'update.project', 'class'=> 'form-horizontal','method' => 'post'])!!} 
+			<input type="hidden" name="id" value="{{$id}}">
+	@else	
+		{!! Form::open(['route'=>'save.project', 'class'=> 'form-horizontal','method' => 'post'])!!}
+	@endif
+		{!! FormGenerator::GenerateForm('addproject') !!}
 
+			{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Projects','button_title'=>'Save','section'=>'prosec1']]) --}}
+	{!!Form::close()!!}
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 
-
-{{--<div class="form-group">
-	<label class="col-lg-3 control-label">No of Employee:</label>
-	<div class="col-lg-9">
-		<input name="number_of_employee" type="number" class="form-control" placeholder="Enter Number of Employee working on project">
-	</div>
-</div>
-<div class="form-group">
-	<label class="col-lg-3 control-label">Project Start Date:</label>
-	<div class="col-lg-9">
-		<input name="start_at" type="text" class="form-control" placeholder="10-09-2017">
-	</div>
-</div>
-<div class="form-group">
-	<label class="col-lg-3 control-label">Project Deadline Date :</label>
-	<div class="col-lg-9">
-		<input name="end_at" type="text" class="form-control" placeholder="09-10-2017">
-	</div>
-</div>
-
-<div class="form-group">
-	<label class="col-lg-3 control-label">Progress:</label>
-	<div class="col-lg-9">
-		<input type="number" class="form-control" name="progress" placeholder="Enter Progress">
-	</div>
-</div>
- <div class="form-group">
-	<label class="col-lg-3 control-label">Select your state:</label>
-	<div class="col-lg-9">
-		<select data-placeholder="Select your state" class="select form-control">
-			<option></option>
-			<optgroup label="Alaskan/Hawaiian Time Zone">
-				<option value="AK">Alaska</option>
-				<option value="HI">Hawaii</option>
-			</optgroup>
-			<optgroup label="Pacific Time Zone">
-				<option value="CA">California</option>
-				<option value="OR">Oregon</option>
-				<option value="WA">Washington</option>
-			</optgroup>
-			<optgroup label="Mountain Time Zone">
-				<option value="AZ">Arizona</option>
-				<option value="CO">Colorado</option>
-				<option value="WY">Wyoming</option>
-			</optgroup>
-			<optgroup label="Central Time Zone">
-				<option value="AL">Alabama</option>
-				<option value="KS">Kansas</option>
-				<option value="KY">Kentucky</option>
-			</optgroup>
-			<optgroup label="Eastern Time Zone">
-				<option value="CT">Connecticut</option>
-				<option value="DE">Delaware</option>
-				<option value="WV">West Virginia</option>
-			</optgroup>
-		</select>
-	</div>
-</div> --}}
 <script type="text/javascript">
 	 $('.chips').material_chip();
  
@@ -84,3 +37,5 @@
   });
       
 </script>
+
+@endsection

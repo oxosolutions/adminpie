@@ -4,7 +4,7 @@ $currentUrl = url()->current();
 ?>
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-<link href="{{asset('vendor/oxosolutions-menu/style.css')}}" rel="stylesheet">
+<link href="{{asset('vendor/oxosolutions-menu/style.css?rand=').rand(111,999)}}" rel="stylesheet">
 <div id="hwpwrap">
 	<div class="custom-wp-admin wp-admin wp-core-ui js   menu-max-depth-0 nav-menus-php auto-fold admin-bar">
 		<div id="wpwrap">
@@ -236,6 +236,13 @@ $currentUrl = url()->current();
 																		<label for="edit-menu-item-url-{{$m->id}}"> Url
 																			<br>
 																			<input type="text" id="url_menu_{{$m->id}}" class="widefat code edit-menu-item-url" id="url_menu_{{$m->id}}" value="{{$m->link}}">
+																		</label>
+																	</p>
+
+																	<p class="field-css-target description description-wide m-10">
+																		<label for="edit-menu-item-url-{{$m->id}}"> Open in new tab
+																			
+																			<input type="checkbox" id="target_menu_{{$m->id}}" class="edit-menu-item-target" value="_blank" {{ ($m->target == '_blank')?'checked':'' }}>
 																		</label>
 																	</p>
 

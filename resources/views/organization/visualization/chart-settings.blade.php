@@ -4,32 +4,39 @@
 {!!Form::hidden('chart_id',$request->chartid)!!}
 {!!Form::hidden('visual_id',$request->visualid)!!}
 <div class="form">
-	<div class="settings-collapsable">
-		<div class="settings-collapsable-header">
-			<h4>General</h4>
-			<div class="arrow arrow-down"></div>
-		</div>
-		<div class="collapsable-content">
-			@foreach($jsonData as $key => $value)
-				@if(in_array($chart_type,$value->chartType))
-					@if($value->isArray == 'false')
-						<div class="row fields">
-							<div class="col-md-12">
-								<div class="label">
+	<div class="aione-accordion">
+		<div class="aione-item">
+			<div class="aione-item-header">
+				General
+				{{-- <div class="arrow arrow-down"></div> --}}
+			</div>
+			<div class="aione-item-content aione-form-field-border">
+				@foreach($jsonData as $key => $value)
+					@if(in_array($chart_type,$value->chartType))
+						@if($value->isArray == 'false')
+							<div class="field-wrapper">
+								<div class="label field-label">
 									<label><strong>{{$value->label}}</strong></label>
 								</div>
-								@if($value->type != 'select')
-									{!!Form::{$value->type}('chart_settings['.$key.']',null)!!}
-								@else
-									{!!Form::{$value->type}('chart_settings['.$key.']',$value->options,null,['placeholder'=>'Select Value'])!!}
-								@endif
+								<div class="field">
+									@if($value->type != 'select')
+
+										{!!Form::{$value->type}('chart_settings['.$key.']',null)!!}
+									@else
+										{!!Form::{$value->type}('chart_settings['.$key.']',$value->options,null,['placeholder'=>'Select Value'])!!}
+									@endif
+								</div>
 							</div>
-						</div>
-						<hr />
+									
+										
+							
+							{{-- <hr /> --}}
+						@endif
 					@endif
-				@endif
-			@endforeach
+				@endforeach
+			</div>
 		</div>
+			
 	</div>
 	
 	@foreach($jsonData as $key => $value)
@@ -46,7 +53,7 @@
 		@endif
 	@endforeach
 </div>
-<input type="submit" name="submit" value="Save Settings" />
+{{-- <input type="submit" name="submit" value="Save Settings" /> --}}
 {!!Form::close()!!}
 <style type="text/css">
 	.settings-collapsable{
@@ -185,3 +192,20 @@
 		});
 	});
 </script>
+{{-- <div id="field_1808" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-name field-wrapper-type-text ">
+	<div id="field_label_name" class="field-label">
+
+		<label for="input_name">
+			<h4 class="field-title" id="Organization Title">Organization Title</h4>
+		</label>
+
+	</div><!-- field label-->
+				
+
+	<div id="field_name" class="field field-type-text">
+	
+		<input class="input-name" id="input_name" placeholder="" data-validation="" name="name" type="text"> 
+		
+	
+	</div><!-- field -->
+</div> --}}

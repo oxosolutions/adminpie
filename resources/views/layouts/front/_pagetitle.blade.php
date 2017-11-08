@@ -1,17 +1,15 @@
+@if( !empty( @$post->title ) || !empty( @$post->description ) )
 <div id="aione_pagetitle" class="aione-pagetitle">
-	{{-- <div class="aione-row">
-	
-		<div class="left">
-			ashish9436@gmail.com111
-		</div>
-		<div class="right">
-			Buttons
-		</div>
-	</div><!-- .aione-row --> --}}
 	<div class="row-wrapper">
 		<div class="ar">
-			<h4 class="page-title">About Us</h4>
-			<p class="page-subtitle">This is the decription of the page</p>
+			@if( !empty( @$post->title ) )
+				<h4 class="aione-page-title pb-20 m-0 aione-align-center">{{@$post->title}}</h4>
+			@endif
+			@if( !empty( @$post->description ) )
+				<p class="aione-page-description font-size-16 aione-align-center">{{@$post->description}}</p>
+			@endif
 		</div>
 	</div><!-- .row-wrapper -->
 </div><!-- #aione_header -->
+@endif
+

@@ -24,21 +24,17 @@
         <a href="{{route('structure.survey',$id)}}"><span class="nav-item-text">Structure</span></a>
       </li>
       <li class="aione-tab survey-data-tab {{(Request::route()->action['as'] == 'results.survey')?'nav-item-current':''}}"> 
-
         <a href="{{route('results.survey',$id)}}"><span class="nav-item-text">Raw Data</span></a>
       </li>
       <li class="aione-tab survey-report-tab {{(Request::route()->action['as'] == 'survey.reports')?'nav-item-current':''}}">
-
         <a href="{{route('survey.reports',$id)}}"><span class="nav-item-text">Report</span></a>
       </li>
-      
       @if(App\Model\Organization\Collaborator::checkAccess($id,'survey') == null)
         <li class="aione-tab survey-share-tab {{(Request::route()->action['as'] == 'share.survey')?'nav-item-current':''}}">
           <a href="{{route('share.survey',$id)}}"><span class="nav-item-text">Collaborate</span></a>
         </li>
       @endif
        <li class="aione-tab survey-customize-tab  {{(Request::route()->action['as'] == 'custom.survey')?'nav-item-current':''}}">
-
         <a href="{{route('custom.survey',$id)}}"><span class="nav-item-text">Customize</span></a>
       </li>
       

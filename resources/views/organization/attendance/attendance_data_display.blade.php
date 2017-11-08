@@ -58,6 +58,7 @@
 					@endif
  			</div>
 			<div style="clear:both;"> </div>
+			{{ dump($user_data) }}
 			@foreach($user_data as $userKey => $value)
 				@php
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
@@ -65,7 +66,6 @@
 						 }); 
 					if(!empty($user_meta['employee_id']) && !empty($user_meta['user_shift']) && !empty($user_meta['date_of_joining']))
 					{
-							
  						if(!empty($fweek_no) || !empty($fdate)){
 							echo "<br>";
 							if(!empty($fdate))
@@ -84,14 +84,17 @@
 									
 									}
 							}
-						}else{
+						}else{	
+								if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year ){
+									continue;
+								}
 								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year ){
 									continue;
 								}
  						}
 							echo '<div class="attendance-sheet">';
 								echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].'</div>';
-								echo '<div class="attendanc-sheet content">'.$value['name'].'  </div>';
+								echo '<div class="attendanc-sheet content">'.$value['belong_group']['name'].'  </div>';
 							echo '</div>';
 						if(!empty($attendance_data[$user_meta['employee_id']]))
 						{

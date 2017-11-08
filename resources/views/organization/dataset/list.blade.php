@@ -13,7 +13,10 @@ $page_title_data = array(
 ); 
 @endphp	
 @include('common.pageheader',$page_title_data) 
-
+@include('common.pagecontentstart')
+    @include('common.page_content_primary_start')
+  
+   
 <div id="projects" class="projects list-view">
 	<div class="row">
 		<div class="col l3  pl-7" style="float: right;margin-bottom: 14PX;">
@@ -124,4 +127,9 @@ $page_title_data = array(
 	}
 
 </style>
+ @include('common.page_content_primary_end')
+    @include('common.page_content_secondry_start')
+
+    @include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection

@@ -66,25 +66,17 @@ class OrganizationController extends Controller
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created At'],
                       'actions' => [
-                                      'edit'    =>  ['title'=>'Edit','route'=>'edit.organization' , 'class' => 'edit'],
-                                      'delete'  =>  ['title'=>'Delete','route'=>'delete.organization','class'=>'red'],
-                                      'clone'   =>  ['title'=>'Clone','route'=>'create.organizationClone'],
-                                      'auth'    =>  ['title'=>'Login Organization','route'=>'auth.organization'],
-                                      'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.org.status']
+                                    'edit'    =>  ['title'=>'Edit','route'=>'edit.organization' , 'class' => 'edit'],
+                                    'delete'  =>  ['title'=>'Delete','route'=>'delete.organization','class'=>'red'],
+                                    'clone'   =>  ['title'=>'Clone','route'=>'create.organizationClone'],
+                                    'auth'    =>  ['title'=>'Login Organization','route'=>'auth.organization'],
+                                    'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.org.status']
                                    ],
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                   ];
-       
+                  
         return view('admin.organization.list',$datalist);
-
-
-
-  //       $org_list = ORG::select(['id','name'])->get();
-  //       $plugins = [
-  //               'js' => ['custom'=>['list']]
-  //       ];
-		// return View::make('admin.organization.list', ['org_list'=>$org_list,'plugins'=>$plugins]);
 	}
 	
     public function authAttemptOrganization($organizationID){
@@ -142,58 +134,46 @@ class OrganizationController extends Controller
        // $modules = GlobalModule::pluck('name','id');
 		return view('admin.organization.create');
 	}
+
+
     public function edit(Request $request, $id){
-      
+            
+            $rules = [];    
             $org_data = ORG::findOrFail($id);
              if($request->isMethod('post')){
-                $ex[] = 'form_id';
-                $ex[] = 'form_slug';
-                $ex[] = 'form_title';
-                unset($this->valid_fields['password'], $this->valid_fields['confirm_password']);
-                $ex[] = '_token';
-                $ex[] = 'password';
-                if($org_data['email']== $request['email'])
-                {
-                $ex[] ='email';
-                unset($this->valid_fields['email']);
-                }
+                if($request->primary_domain == null){
+                    $rules['slug'] = 'required';
+                }               
 
-                if($org_data['slug']== $request['slug'])
-                {
-                $ex[] ='slug';
-                unset($this->valid_fields['slug']);
-                }
-
-                if($org_data['name']== $request['name'])
-                {
-                $ex[] ='name';
-                unset($this->valid_fields['name']);
-                }
-
-                if($org_data['primary_domain']== $request['primary_domain'])
-                {
-                $ex[] ='primary_domain';
-                unset($this->valid_fields['primary_domain']);
-                }
-                $this->validate($request, $this->valid_fields);
-                if(!empty($request['modules'])) {
-                    $request['modules'] = json_encode($request['modules']);
+                // if($request->primary_domain == null && $request->secondary_column == null){
+                //     $rules['slug'] = 'required';
+                // }
+                
+                $rules['name'] = 'required';
+                $rules['email'] = 'required|email';
+                $rules['group_id'] = 'required';
+                $rules['slug'] = 'required';
+                $messages = [
+                    // 'slug.required' => 'slug or primary_domain or secondary_column must be filled'
+                    // 'primary_domain.required' => 'Primary domain is required if slug is empty!',
+                    // 'secondary_domains.required' => 'Secondary domain is required if slug and primary domain is empty!'
+                ];
+                $this->validate($request,$rules,$messages);
+                foreach($request->except('_token') as $k => $v){
+                    if(is_array($v)){
+                        $processData[$k] = json_encode($v);
                     }else{
-                        unset($request['modules']);
+                        $processData[$k] = $v;
                     }
-                ORG::where('id',$id)->update($request->except($ex));
+                }   
+                
+                ORG::where('id',$id)->update($processData);
                 Session::flash('success','Updated successfully');
                 return back();
-                //$org_data = ORG::find($id);
             }
             $modules = GlobalModule::pluck('name','id');
             
             return view('admin.organization.edit',['org_data'=>$org_data,'modules'=> $modules ]);
-        // }catch(Exception $e){
-        //              Session::flash('error','Somthing goes wrong Try again.');
-        //         return back();
-
-        // }
     }
 
     protected function create_organization_database($existed_id , $new_id)
@@ -263,7 +243,7 @@ class OrganizationController extends Controller
         if($checkUserExist == null){
         	$org_usr = new GroupUsers();
 	        $org_usr->fill($request->all());
-	        // $org_usr->status = 1;
+	        $org_usr->status = 1;
 	        $org_usr->password = Hash::make($request->password);
 	        $org_usr->app_password = $request->password;
 	        $org_usr->save(); 
@@ -274,6 +254,7 @@ class OrganizationController extends Controller
         $userMapping = new User;
         $userMapping->user_id = $org_usr->id;
         $userMapping->deleted_at = 0;
+        $userMapping->status = 1;
         $userMapping->save();
         $userRoleMapping = UserRoleMapping::where(['user_id'=>$org_usr->id, 'role_id'=>1]);
         if(!$userRoleMapping->exists()){
@@ -354,6 +335,16 @@ class OrganizationController extends Controller
                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_users_metas',
                                 '--schema'=>'user_id:integer , key:string, value:text:nullable, type:string:nullable'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_sliders',
+                                '--schema'=>'name:string , description:text:nullable, slug:string:nullable, slider:text, options:text:nullable, setting:text, status:integer:default(1)'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_medias',
+                                '--schema'=>'title:string , slug:string, original_name:string:nullable, type:string:nullable, extension:string:nullable, mime_type:string:nullable, dimension:string:nullable, size:string:nullable, status:integer:default(1)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -594,8 +585,15 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_datasets',
-                                '--schema'=>'dataset_name:string, description:text, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, defined_columns:longtext, uploaded_by:string'
+                                '--schema'=>'dataset_name:string, description:text:nullable, dataset_table:string, dataset_file:string, dataset_file_name:string, user_id:string, defined_columns:longtext, uploaded_by:string'
                             ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_dataset_meta',
+                                '--schema'=>'dataset_id:integer, key:string, value:text:nullable'
+                            ]);
+
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_maps',
@@ -605,7 +603,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_visualizations',
-                                '--schema'=>'dataset_id:integer, name:string, description:text, created_by:string'
+                                '--schema'=>'dataset_id:integer, name:string, description:text, embed_token:string, created_by:string'
                             ]);
 
         Artisan::call('make:migration:schema',[
@@ -617,7 +615,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_visualization_chart_meta',
-                                '--schema'=>'visualization_id:integer, chart_id:integer, key:text, value:text'
+                                '--schema'=>'visualization_id:integer, chart_id:integer, key:text, value:text:nullable'
                             ]);
 
         Artisan::call('make:migration:schema',[
@@ -688,7 +686,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_email_layout',
-                                '--schema'=>'name:string, content:text, order:integer, slug:string'
+                                '--schema'=>'name:string, header:text,footer:text, order:integer, slug:string'
                             ]);
       /*  Artisan::call('make:migration:schema',[
                                 '--model'=>false,
@@ -722,7 +720,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_menu_items',
-                                '--schema'=>'label:string, link:string, parent:integer:default(0), sort:integer:default(0), class:string:nullable, menu:integer,depth:integer:default(0)']);            
+                                '--schema'=>'label:string, link:string, parent:integer:default(0), sort:integer:default(0), class:string:nullable, target:string:nullable, menu:integer,depth:integer:default(0)']);            
 		Artisan::call('migrate');
         // $userTypes = [
         //     ['type'=>'Admin','status'=>1],

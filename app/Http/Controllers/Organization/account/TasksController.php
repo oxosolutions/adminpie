@@ -62,7 +62,7 @@ class TasksController extends Controller
             }
         }else{
             $assignTo['user'][] = "";
-        }
+        }   
         $model = new Tasks;
         if($request->hasFile('browse_attachment')){
             $filename = $request->file('browse_attachment')->getClientOriginalName();

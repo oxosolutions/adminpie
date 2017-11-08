@@ -1,4 +1,90 @@
 <style>
+.aione-nav .aione-nav-toggle {
+  width: 20px;
+  position: relative;
+  clear:both;
+  display: none;
+}
+.aione-nav .aione-nav-toggle.active {
+  display: inline-block;
+}
+.aione-nav .aione-nav-toggle .nav-toggle {
+  display: block;
+  position: relative;
+  text-align: center;
+  width: 20px;
+  height: 20px;
+  margin: 10px 0
+}
+.aione-nav .aione-nav-toggle .nav-toggle:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  top: 2px;
+  bottom: 2px;
+  display: block;
+  border-top: 2px solid #787878;
+  border-bottom: 2px solid #787878;
+}
+.aione-nav .aione-nav-toggle .nav-toggle:after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  bottom: 0;
+  display: block;
+  margin: -1px 0 0 0;
+  border-top: 2px solid #787878;
+}
+.aione-nav .aione-nav-toggle:hover .nav-toggle:before,
+.aione-nav .aione-nav-toggle:hover .nav-toggle:after {
+	border-color: #666666;
+}
+
+.aione-nav.horizontal{
+	border-bottom: 1px solid #e8e8e8;
+	box-shadow: none;
+}
+.aione-nav.horizontal > ul > li:hover > a,
+.aione-nav.horizontal > ul > li > a:hover{
+	background-color: #f2f2f2;
+}
+.aione-nav.horizontal > ul > li > ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 330px;
+    background: #f2f2f2;
+    z-index: 9999;
+    border: 1px solid #e8e8e8;
+    -webkit-box-shadow: 2px 3px 8px rgba(0,0,0,0.15);
+    box-shadow: 2px 3px 8px rgba(0,0,0,0.15);
+}
+.aione-nav.horizontal > ul > li:hover > ul {
+    display: block;
+}
+.aione-nav.horizontal > ul > li > ul > li{
+	display: block;
+	width: 100%;
+	border-bottom: 1px solid #e8e8e8;
+
+}
+.aione-nav.horizontal > ul > li > ul > li > a{
+	display: block;
+	width: 100%;
+	padding: 0 0 0 15px;
+	font-size: 16px;
+	line-height: 36px;
+	text-align: left;
+	-webkit-transition: all 200ms ease-in-out;
+	-o-transition: all 200ms ease-in-out;
+	transition: all 200ms ease-in-out;
+}
+.aione-nav.horizontal > ul > li > ul > li > a:hover{
+	color:#FFFFFF;
+	background-color: #168dc5;
+	padding: 0 0 0 20px;
+}
 
 .field-type-code textarea{
     width: 0;
@@ -28,9 +114,105 @@
 .field-wrapper.full .aione-code-editor {
 	height:auto;
 }
+.aione-code-editor-wrapper.fullscreen{
+	background: #FFFFFF;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+}
+.field-wrapper .aione-code-editor-wrapper.fullscreen .aione-code-editor {
+	height:100%;
+	position: fixed;
+	top: 30px;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 999;
+}
+.field-wrapper .aione-code-editor-wrapper.fullscreen .aione-code-editor .ace_content{
+	height:100% !important;
+	min-height: 800px !important;
+}
+
 #aione_account_tabs > .aione-tabs > .aione-tab{
 	width: auto;
-	display: inline-block
+	display: inline-block;
+}
+
+
+
+.aione-theme .owl-dots .owl-dot span {
+    width: 15px;
+    height: 15px;
+    margin: 0 4px;
+    background: rgba(255,255,255,0.3);
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    border: 1px solid #666666;
+    opacity:1;
+    -moz-transition:all 100ms ease-in-out;
+    -webkit-transition:all 100ms ease-in-out;
+    transition:all 100ms ease-in-out;
+}
+.aione-theme .owl-dots .owl-dot:hover span{
+    background-color: #666666;
+}
+.aione-theme .owl-dots .owl-dot.active span{
+    background:#168dc5;
+    border-color:#168dc5;
+}
+.aione-theme .owl-nav{
+
+}
+.aione-theme .owl-nav .owl-prev,
+.aione-theme .owl-nav .owl-next{
+	position: absolute;
+	top: 50%;
+	margin: -30px 0 0 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	text-transform: uppercase;
+	height: 60px;
+	font-size: 40px;
+	font-weight: 100;
+	line-height: 60px;
+	padding: 0 25px;
+	color: rgba(255,255,255,0.5);
+	background: rgba(0,0,0,0.3);
+	    -moz-transition:all 100ms ease-in-out;
+    -webkit-transition:all 100ms ease-in-out;
+    transition:all 100ms ease-in-out;
+}
+.aione-theme:hover .owl-nav .owl-prev,
+.aione-theme:hover .owl-nav .owl-next,
+.aione-theme .owl-nav .owl-prev:hover,
+.aione-theme .owl-nav .owl-next:hover{
+	color: rgba(255,255,255,1);
+	background: rgba(0,0,0,0.6);
+}
+.aione-theme .owl-nav .owl-prev{
+	left:0;
+}
+.aione-theme .owl-nav .owl-next{
+	right:0;
+}
+
+.owl-carousel-item-imgoverlay {
+    opacity: 1;
+    background-color: transparent;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.owl-carousel .item:hover .owl-carousel-item-imgoverlay {
+    opacity: 1;
+    background-color: transparent;
 }
 </style>
 <!-- load emmet code and snippets compiled for browser -->
@@ -41,14 +223,20 @@
 		/*****************************************************
 		/*  Aione Slider
 		/*****************************************************/
+		try{
+			$(".owl-carousel").owlCarousel({
+			    items:1,
+			    loop:true,
+			    autoplay:true,
+			    autoplayTimeout:2000,
+			    autoplayHoverPause:true,
+			    nav:true,
+			    navText: ["<i class='fa fa-angle-left'></i>","<i class='fa fa-angle-right'></i>"]
+			});
+		}catch(e){
 
-		$(".owl-carousel").owlCarousel({
-		    items:1,
-		    loop:true,
-		    autoplay:true,
-		    autoplayTimeout:2000,
-		    autoplayHoverPause:true
-		});
+		}
+		
 
 		/*****************************************************
 		/*  Aione Collapsible
@@ -180,15 +368,16 @@
 		/*****************************************************
 		/*  Navigation Layout Toggle Switch Header
 		/*****************************************************/
-		$('body').on('click','.nav-toggle',function(e){
+		$('body').on('click','.aione-header .aione-nav-toggle .nav-toggle',function(e){
 			e.preventDefault();
 			$(this).toggleClass('active');
 			$('.aione-main').toggleClass('sidebar-small');
-			var classStatus = ($(this).hasClass('active'))?1:0;
+			var sidebar_status = ($(this).hasClass('active'))?1:0;
+			console.log();
 			$.ajax({
-				type:'GET',
-				url: '{{url('sidebar/status')}}/'+classStatus,
-				data: {},
+				type:'POST',
+				url: '{{url('user-meta-update')}}',
+				data: {layout_sidebar_small:sidebar_status},
 				success: function(result){
 					console.log(result)
 				}
@@ -203,6 +392,8 @@
 			var nav_item = $(this).parent();
 			nav_item.toggleClass('nav-item-selected').siblings().removeClass('nav-item-selected');
 		});
+
+
 		
 		/*****************************************************
 		/*  Navigation fixed on complete scroll
@@ -280,8 +471,11 @@
 		/*****************************************************
 		/*  Aione Form Validations
 		/*****************************************************/
+		try{
+			$.validate();
+		}catch(e){
 
-		$.validate();
+		}
 
 		/*****************************************************
 		/*  Aione Form Selct 2
@@ -366,26 +560,35 @@
 		/*****************************************************
 		/*  Materialize Date Picker
 		/*****************************************************/
-		$('.timepicker').pickatime({
-			default: 'now', // Set default time
-			fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
-			twelvehour: false, // Use AM/PM or 24-hour format
-			donetext: 'OK', // text for done-button
-			cleartext: 'Clear', // text for clear-button
-			canceltext: 'Cancel', // Text for cancel-button
-			autoclose: false, // automatic close timepicker
-			ampmclickable: true, // make AM PM clickable
-			aftershow: function(){} //Function for after opening timepicker  
-		});
+		try{
+			$('.timepicker').pickatime({
+				default: 'now', // Set default time
+				fromnow: 0,       // set default time to * milliseconds from now (using with default = 'now')
+				twelvehour: false, // Use AM/PM or 24-hour format
+				donetext: 'OK', // text for done-button
+				cleartext: 'Clear', // text for clear-button
+				canceltext: 'Cancel', // Text for cancel-button
+				autoclose: false, // automatic close timepicker
+				ampmclickable: true, // make AM PM clickable
+				aftershow: function(){} //Function for after opening timepicker  
+			});
+		}catch(e){
+
+		}
+		
 
 		/*****************************************************
 		/*  Materialize Date Picker
 		/*****************************************************/
+		try{
+			$('.datepicker').pickadate({
+				selectMonths: true, // Creates a dropdown to control month
+				selectYears: 15 // Creates a dropdown of 15 years to control year
+			});
+		}catch(e){
 
-		$('.datepicker').pickadate({
-			selectMonths: true, // Creates a dropdown to control month
-			selectYears: 15 // Creates a dropdown of 15 years to control year
-		});
+		}
+		
 
 		/*****************************************************
 		/*  Code Ediror
@@ -430,57 +633,71 @@
 			});
 		});
 
+		/*****************************************************
+		/*  Editor Full Screen
+		/*****************************************************/
+		
+
+		$('body').on('click','.editor-action-fullscreen',function(e){
+			e.preventDefault();
+			$(this).parent().parent().toggleClass('fullscreen');
+		});
+
 
 		/*****************************************************
 		/*  Color Picker
 		/*****************************************************/
+		try{
+			$(".field-type-color input").spectrum({
+			    // color: "#168dc5",
+			    flat: false,
+			    showInput: true,
+			    showInitial: true,
+			    allowEmpty: true,
+			    showAlpha: true,
+			    disabled: false,
+			    localStorageKey: "save-color",
+			    showPalette: true,
+			    showPaletteOnly: false,
+			    togglePaletteOnly: true,
+			    showSelectionPalette: true,
+			    clickoutFiresChange: true,
+			    cancelText: "Cancel",
+			    chooseText: "Select",
+			    togglePaletteMoreText: "more",
+			    togglePaletteLessText: "less",
+			    containerClassName: "Class1",
+			    replacerClassName: "Class2",
+			    preferredFormat: "Class3",
+			    maxSelectionSize: 5,
+			    preferredFormat: "rgb",
+			    //selectionPalette: ['#168dc5'],
+			    palette: [
+							["#ffebee","#ffcdd2","#ef9a9a","#e57373","#ef5350","#f44336","#e53935","#d32f2f","#c62828","#b71c1c"],
+							["#fce4ec","#f8bbd0","#f48fb1","#f06292","#ec407a","#e91e63","#d81b60","#c2185b","#ad1457","#880e4f"],
+							["#f3e5f5","#e1bee7","#ce93d8","#ba68c8","#ab47bc","#9c27b0","#8e24aa","#7b1fa2","#6a1b9a","#4a148c"],
+							["#ede7f6","#d1c4e9","#b39ddb","#9575cd","#7e57c2","#673ab7","#5e35b1","#512da8","#4527a0","#311b92"],
+							["#e8eaf6","#c5cae9","#9fa8da","#7986cb","#5c6bc0","#3f51b5","#3949ab","#303f9f","#283593","#1a237e"],
+							["#e3f2fd","#bbdefb","#90caf9","#64b5f6","#42a5f5","#2196f3","#1e88e5","#1976d2","#1565c0","#0d47a1"],
+							["#e1f5fe","#b3e5fc","#81d4fa","#4fc3f7","#29b6f6","#03a9f4","#039be5","#0288d1","#0277bd","#01579b"],
+							["#e0f7fa","#b2ebf2","#80deea","#4dd0e1","#26c6da","#00bcd4","#00acc1","#0097a7","#00838f","#006064"],
+							["#e0f2f1","#b2dfdb","#80cbc4","#4db6ac","#26a69a","#009688","#00897b","#00796b","#00695c","#004d40"],
+							["#e8f5e9","#c8e6c9","#a5d6a7","#81c784","#66bb6a","#4caf50","#43a047","#388e3c","#2e7d32","#1b5e20"],
+							["#f1f8e9","#dcedc8","#c5e1a5","#aed581","#9ccc65","#8bc34a","#7cb342","#689f38","#558b2f","#33691e"],
+							["#f9fbe7","#f0f4c3","#e6ee9c","#dce775","#d4e157","#cddc39","#c0ca33","#afb42b","#9e9d24","#827717"],
+							["#fffde7","#fff9c4","#fff59d","#fff176","#ffee58","#ffeb3b","#fdd835","#fbc02d","#f9a825","#f57f17"],
+							["#fff8e1","#ffecb3","#ffe082","#ffd54f","#ffca28","#ffc107","#ffb300","#ffa000","#ff8f00","#ff6f00"],
+							["#fff3e0","#ffe0b2","#ffcc80","#ffb74d","#ffa726","#ff9800","#fb8c00","#f57c00","#ef6c00","#e65100"],
+							["#fbe9e7","#ffccbc","#ffab91","#ff8a65","#ff7043","#ff5722","#f4511e","#e64a19","#d84315","#bf360c"],
+							["#efebe9","#d7ccc8","#bcaaa4","#a1887f","#8d6e63","#795548","#6d4c41","#5d4037","#4e342e","#3e2723"],
+							["#fafafa","#f5f5f5","#eeeeee","#e0e0e0","#bdbdbd","#9e9e9e","#757575","#616161","#424242","#212121"], 
+							["#eceff1","#cfd8dc","#b0bec5","#90a4ae","#78909c","#607d8b","#546e7a","#455a64","#37474f","#263238"], 
+			        ]
+			});
+		}catch(e){
 
-		$(".field-type-color input").spectrum({
-		    // color: "#168dc5",
-		    flat: false,
-		    showInput: true,
-		    showInitial: true,
-		    allowEmpty: true,
-		    showAlpha: true,
-		    disabled: false,
-		    localStorageKey: "save-color",
-		    showPalette: true,
-		    showPaletteOnly: false,
-		    togglePaletteOnly: true,
-		    showSelectionPalette: true,
-		    clickoutFiresChange: true,
-		    cancelText: "Cancel",
-		    chooseText: "Select",
-		    togglePaletteMoreText: "more",
-		    togglePaletteLessText: "less",
-		    containerClassName: "Class1",
-		    replacerClassName: "Class2",
-		    preferredFormat: "Class3",
-		    maxSelectionSize: 5,
-		    preferredFormat: "rgb",
-		    //selectionPalette: ['#168dc5'],
-		    palette: [
-						["#ffebee","#ffcdd2","#ef9a9a","#e57373","#ef5350","#f44336","#e53935","#d32f2f","#c62828","#b71c1c"],
-						["#fce4ec","#f8bbd0","#f48fb1","#f06292","#ec407a","#e91e63","#d81b60","#c2185b","#ad1457","#880e4f"],
-						["#f3e5f5","#e1bee7","#ce93d8","#ba68c8","#ab47bc","#9c27b0","#8e24aa","#7b1fa2","#6a1b9a","#4a148c"],
-						["#ede7f6","#d1c4e9","#b39ddb","#9575cd","#7e57c2","#673ab7","#5e35b1","#512da8","#4527a0","#311b92"],
-						["#e8eaf6","#c5cae9","#9fa8da","#7986cb","#5c6bc0","#3f51b5","#3949ab","#303f9f","#283593","#1a237e"],
-						["#e3f2fd","#bbdefb","#90caf9","#64b5f6","#42a5f5","#2196f3","#1e88e5","#1976d2","#1565c0","#0d47a1"],
-						["#e1f5fe","#b3e5fc","#81d4fa","#4fc3f7","#29b6f6","#03a9f4","#039be5","#0288d1","#0277bd","#01579b"],
-						["#e0f7fa","#b2ebf2","#80deea","#4dd0e1","#26c6da","#00bcd4","#00acc1","#0097a7","#00838f","#006064"],
-						["#e0f2f1","#b2dfdb","#80cbc4","#4db6ac","#26a69a","#009688","#00897b","#00796b","#00695c","#004d40"],
-						["#e8f5e9","#c8e6c9","#a5d6a7","#81c784","#66bb6a","#4caf50","#43a047","#388e3c","#2e7d32","#1b5e20"],
-						["#f1f8e9","#dcedc8","#c5e1a5","#aed581","#9ccc65","#8bc34a","#7cb342","#689f38","#558b2f","#33691e"],
-						["#f9fbe7","#f0f4c3","#e6ee9c","#dce775","#d4e157","#cddc39","#c0ca33","#afb42b","#9e9d24","#827717"],
-						["#fffde7","#fff9c4","#fff59d","#fff176","#ffee58","#ffeb3b","#fdd835","#fbc02d","#f9a825","#f57f17"],
-						["#fff8e1","#ffecb3","#ffe082","#ffd54f","#ffca28","#ffc107","#ffb300","#ffa000","#ff8f00","#ff6f00"],
-						["#fff3e0","#ffe0b2","#ffcc80","#ffb74d","#ffa726","#ff9800","#fb8c00","#f57c00","#ef6c00","#e65100"],
-						["#fbe9e7","#ffccbc","#ffab91","#ff8a65","#ff7043","#ff5722","#f4511e","#e64a19","#d84315","#bf360c"],
-						["#efebe9","#d7ccc8","#bcaaa4","#a1887f","#8d6e63","#795548","#6d4c41","#5d4037","#4e342e","#3e2723"],
-						["#fafafa","#f5f5f5","#eeeeee","#e0e0e0","#bdbdbd","#9e9e9e","#757575","#616161","#424242","#212121"], 
-						["#eceff1","#cfd8dc","#b0bec5","#90a4ae","#78909c","#607d8b","#546e7a","#455a64","#37474f","#263238"], 
-		        ]
-		});
+		}
+		
 
 	});
 </script>

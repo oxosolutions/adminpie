@@ -80,7 +80,8 @@
 				</div>
 				<div class="l6" style="width: 75%;float: left;padding-right:15px ">
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}
-					{!! FormGenerator::GenerateForm('edit_pages_form') !!}
+
+					{!! FormGenerator::GenerateForm('edit_page_form') !!}
 				</div>
 				<div class="l6 page-widgets" style="width: 25%;float: left">
 					<input type="hidden" name="id" value="{{ request()->route()->parameters()['id'] }}">
@@ -94,7 +95,7 @@
 							<button>save</button>
 						</div>
 					</div> --}}
-					<div class="boxed">
+					{{-- <div class="boxed">
 						<div class="header">
 							Status
 							<i class="fa fa-chevron-circle-right"></i>
@@ -102,8 +103,8 @@
 						<div class="content">
 							{!! FormGenerator::GenerateField('select_status') !!}
 						</div>
-					</div>
-					<div class="boxed">
+					</div> --}}
+{{-- 					<div class="boxed">
 						<div class="header">
 							Menu
 							<i class="fa fa-chevron-circle-right"></i>
@@ -112,7 +113,7 @@
 							{!! FormGenerator::GenerateSection('menu_section') !!}
 						</div>
 					</div>
-					<div class="boxed">
+ --}}				{{-- <div class="boxed">
 						<div class="header">
 							Categories
 							<i class="fa fa-chevron-circle-right"></i>
@@ -120,8 +121,8 @@
 						<div class="content">
 							{!! FormGenerator::GenerateField('categories') !!}
 						</div>
-					</div>
-					<div class="boxed">
+					</div> --}}
+					{{-- <div class="boxed">
 						<div class="header">
 							Tags
 							<i class="fa fa-chevron-circle-right"></i>
@@ -137,8 +138,8 @@
 								
 							</div>
 						</div>
-					</div>
-					<div class="boxed">
+					</div> --}}
+					{{-- <div class="boxed">
 						<div class="header">
 							Page Attributes
 							<i class="fa fa-chevron-circle-right"></i>
@@ -146,7 +147,9 @@
 						<div class="content">
 							{!! FormGenerator::GenerateField('template') !!}
 						</div>
-					</div>
+					</div> --}}
+					{!! FormGenerator::GenerateForm('page_options_form') !!}
+					
 				</div>
 			</div>
 			<button type="submit">Save</button>

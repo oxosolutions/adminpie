@@ -1,93 +1,30 @@
-@extends('layouts.survey')
-
-
-
-
+@extends('layouts.front')
 @section('sidebar')
 <ul class="collapsible" data-collapsible="accordion">
-@foreach($survey['section'] as $surveyVal)
-    <li>
-      <div class="collapsible-header">{{$surveyVal['section_name']}}</div>
-      @if(!empty($surveyVal['fields']))
-      	@foreach($surveyVal['fields'] as $fields)
-			@php
-				$slug = str_replace('-', '_', $fields['field_slug']);
-			@endphp
-			@if(!empty($current_data))
-				@if(array_key_exists($slug , array_filter($current_data)))
-      				<div class="collapsible-body  fill_{{$slug}}" style="background-color: rgba(0, 128, 0, 0.2);"  ><span>{{$fields['field_slug']}}</span></div>
-      			@else
-      				 <div class="collapsible-body"><span>{{$fields['field_slug']}}</span></div>
-      			@endif
-			@else
-				 <div class="collapsible-body"><span>{{$fields['field_slug']}}</span></div>	
-      		@endif
+	@foreach($survey['section'] as $surveyVal)
+	    <li>
+	      <div class="collapsible-header">{{$surveyVal['section_name']}}</div>
+	      @if(!empty($surveyVal['fields']))
+	      	@foreach($surveyVal['fields'] as $fields)
+				@php
+					$slug = str_replace('-', '_', $fields['field_slug']);
+				@endphp
+				@if(!empty($current_data))
+					@if(array_key_exists($slug , array_filter($current_data)))
+	      				<div class="collapsible-body  fill_{{$slug}}" style="background-color: rgba(0, 128, 0, 0.2);"  ><span>{{$fields['field_slug']}}</span></div>
+	      			@else
+	      				 <div class="collapsible-body"><span>{{$fields['field_slug']}}</span></div>
+	      			@endif
+				@else
+					 <div class="collapsible-body"><span>{{$fields['field_slug']}}</span></div>	
+	      		@endif
 
-      	@endforeach
-      @endif
-    </li>
-@endforeach
-    <li>
-      <div class="collapsible-header">Second</div>
-      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-    </li>
-    <li>
-      <div class="collapsible-header">Third</div>
-      <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-    </li>
-  </ul>
-
-	{{-- <nav id="aione_nav" class="aione-nav vertical dark">
-		<div class="aione-nav-background"></div>
-	    <ul id="aione_menu" class=" aione-collapsible">
-	    	@foreach($survey['section'] as $surveyVal)
-					<li class="aione-nav-item level0">
-						<a href="#" class="aione-collapsible">
-							<span class="nav-item-text">{{$surveyVal['section_name']}}</span>
-							<span class="nav-item-arrow"> </span>
-
-						</a>
-						@if(!empty($surveyVal['fields']))
-						
-						<ul class="side-bar-submenu">
-							@foreach($surveyVal['fields'] as $fields)
-							@php
-									$slug = str_replace('-', '_', $fields['field_slug']);
-
-							@endphp
-
-								@if(!empty($current_data))
-									@if(array_key_exists($slug , array_filter($current_data)))
-										<li class="aione-nav-item level1" style="background-color: rgba(0, 128, 0, 0.2);" class="fill_{{$slug}}"> <a href="#">{{$fields['field_title']}} {{$slug}}</a></li>
-										<li class="aione-nav-item level1 style="background-color: rgba(0, 128, 0, 0.2);"  class="ans_{{$slug}}"> 
-												Answer: {{$current_data[$slug]}}
-										</li>
-									@else
-										<li  class="fill_{{$fields['field_slug']}} aione-nav-item level1"> {{$fields['field_title']}} {{$fields['field_slug']}}</li>
-										<li class="ans_{{$fields['field_slug']}} aione-nav-item level1"> 
-												Answer: Not filled yet.
-										</li>
-									@endif
-								@else
-									<li  class="fill_{{$fields['field_slug']}} aione-nav-item level1"> {{substr($fields['field_title'], 0,40)}} </li>
-										<li class="ans_{{$fields['field_slug']}} aione-nav-item level1"> 
-												Answer: Not filled yet.
-										</li>
-
-								@endif
-							@endforeach
-							</ul>
-						</li>
-					@endif
-				@endforeach
-	    	            {{-- <li class="aione-nav-item   level0 ">
-	    	            <a href=""> firsttt</a> 
-	    	            </li> 
-	    </ul>
-    </nav> --}}
-
+	      	@endforeach
+	      @endif
+	    </li>
+	@endforeach
+</ul>
 @endsection
-
 @section('content')
 @php
 	$page_title_data = array(
@@ -98,20 +35,7 @@
 			'add_new' => '+ Add Feedback'
 		);
 @endphp
-<style>
-.aione-progress-bg {
-	background: rgba(255,0,0,0.1);
-	min-height: 4px;
-}
-.aione-progress-inside {
-	width: 1%;
-	height: 5px;
-	background: #22adba;
-	background: rgba(0,128,0,0.9);;
-	background-size: 10% 100%, 100% 100%;
-}
 
-</style>
 {{-- @include('common.pageheader',$page_title_data)  --}}
 	@if(Session::has('sucess'))
 		<div class="aione-message success">
@@ -120,12 +44,7 @@
 			</ul>
 		</div>
 	@endif
-{{-- @include('common.pagecontentstart') --}}
-	{{-- @include('common.page_content_primary_start') --}}
-		{{-- @include('organization.survey._tabs') --}}
-		{{-- @if(!@$permission)
-			<div class='aione-message aione-message-error'>Access Denied</div>
-		@else --}}
+
 		@if(isset($survey_setting['survey_timer'])  && ($survey_setting['survey_timer']==true))
 			@if(isset($survey_setting['timer_type']) && ($survey_setting['timer_type']=="survey_expiry_time"))
 				<h3>  {{$survey_setting['survey_time_lefts']}} Survey Expired</h3>
@@ -148,36 +67,7 @@
 		@else
 		<div>
 			@if(!empty($survey))
-			
-				{{-- <div id="aione_sidebar" class="aione-sidebar">
-						<div class="aione-row">
-							@include('components.sidebars.sidebar')
-						
-						</div>.aione-row
-					</div><!-- #aione_sidebar -->
-					<div id="aione_content" class="aione-content">
-						<h1>heloo contents</h1>
-					</div>
- --}}
-
-		{{-- <div id="aione-main" class="aione-main"> 
-		<div class="aione-row">
-			
-			<div id="aione_sidebar" class="aione-sidebar" >
-				<div id="" class="aione-row"> 
-					<nav id="aione_nav" class="aione-nav vertical dark">
-					<div class="aione-nav-background"> </div>
-					<ul id="aione_menu" class="aione_menu">
-						<li class="aione-nav-item level0 has-children ">  first</li>
-						
-					</ul>
-						
-					</nav>
-				</div>
-			</div>
-	</div>
-	</div> --}}
-			{{-- <div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
+			<div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
 			<ul>
 				@foreach($survey['section'] as $surveyVal)
 					<li>{{$surveyVal['section_name']}}</li>
@@ -189,7 +79,6 @@
 								$slug = str_replace('-', '_', $fields['field_slug']);
 
 						@endphp
-
 							@if(!empty($current_data))
 								@if(array_key_exists($slug , array_filter($current_data)))
 									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_{{$slug}}">{{$fields['field_title']}} {{$slug}}</li>
@@ -213,10 +102,9 @@
 					</ul>
 					@endif
 
-					{{-- {{dump(1, $surveyVal)}} 
 				@endforeach
 			</ul>
-			</div> --}}
+			</div> 
 			@endif
 
 		</div>
@@ -232,19 +120,36 @@
 				{!! Form::model($slug,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post'])!!}
 					<input type="hidden" name="form_id" value="{{$form_id}}" >
 					<input type="hidden" name="ip_address" value="{{Request::ip()}}" >
-					@php 
+					<input type="hidden" name="survey_submitted_from" value="web" >
+
+					@php
+
+					 if(Auth::guard('org')->check()){
+						echo "<input type='hidden' name='survey_submitted_by' value='".Auth::guard('org')->user()->id."' >";
+					 }
+
+					// dump(Session::all());
 					if(Session::has('section')){
 						$section_array = Session::get('section');
 						$key = array_keys($section_array);
+						if(count($key)==1){
+							echo '<input type="hidden" name="survey_status" value="completed" >';
+						}else{
+							echo '<input type="hidden" name="survey_status" value="incompleted" >';
+						}
 						$section_id = array_shift($key);
 						$section_slug = $section_array[$section_id];
+
 					}
 					if(Session::has('field')){
 						$fields = Session::get('field');
 						$field_keys = array_keys($fields);
-						$first_field_key = array_shift($field_keys);
-						
-						// dump($fields[$first_field_key]);
+						if(count($field_keys)==1){
+							echo '<input type="hidden" name="survey_status" value="completed" >';
+						}else{
+							echo '<input type="hidden" name="survey_status" value="incompleted" >';
+						}
+ 						$first_field_key = array_shift($field_keys);
 					}
 					@endphp
 					<div style="display: inline-block; width: 900px; float: right; border:1px solid grey;">
@@ -258,7 +163,9 @@
 								<input type="hidden" name="section_id" value="{{$section_id}}" >
 								{!! FormGenerator::GenerateSection($section_slug,[],'','org') !!}
 							@else					
-								{!! FormGenerator::GenerateForm($slug,[],'','org') !!}
+								{!! FormGenerator::GenerateForm($survey_slug,[],'','org') !!}
+								<input type="hidden" name="survey_status" value="completed" >
+
 							@endif
 						</div>
 						<input type="hidden" name="form_slug" value="{{$slug}}" >
@@ -277,25 +184,6 @@ $(document).ready(function(){
 		$(this).addClass(newone);
 	});
 
-		// viewType = $("#viewType").val();
-		// var nameArray = {};
-		// var maxIndex =0;
-		// 	$('.survey-form input , select, textarea').each(function(index){
-		// 		name = $.trim($(this).attr('class'));
-		// 		// console.log(name);
-		// 		type = $.trim($(this).attr('type'));
-		// 		if(name =='_token'|| name =='survey_started_on'|| name =='survey_id'|| name =='code'|| name=='button')
-		// 		{}
-		// 		else{
-		// 				if(name){
-		// 					nameArray[name] = name;
-		// 				}
-		// 			}
-		// 		maxIndex = index;
-		// 	});
-		// 	// total = nameArray.length;
-		// 	// alert(maxIndex);
-		// 	console.log(nameArray);
 			$('.survey-form').on('change','select',function(){
 				slug = $(this).attr('name');
 				$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
@@ -304,13 +192,7 @@ $(document).ready(function(){
 				$(".ans_"+slug).html('Answer:'+ansVal);
 
 			});
-			// $('.survey-form').on('change','select',function(){
-			// 	slug = $(this).attr('name');
-			// 	$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-			// 	ansVal = $(this).val();
-			// 	$(".ans_"+slug).html('Answer:'+ansVal);
 
-			// });
 			$('.survey-form').on('click','input:radio',function(){
 				slug = $(this).attr('name');
 				$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
@@ -334,18 +216,6 @@ $(document).ready(function(){
 					$(".ans_"+newone).css({'background':'rgba(0, 128, 0, 0.2)'});
 			});
 
-			// $('#survey-form :checkbox').change(function() {
-			//     // this will contain a reference to the checkbox   
-			//     if (this.checked) {
-			//     	alert(1213);
-			//     	// val = $(this).val();
-			//     	// alert(val);
-			//         // the checkbox is now checked 
-			//     } else {
-			//         // the checkbox is now no longer checked
-			//     }
-			// });
-
 		$('.survey-form').on('blur','input:text, textarea',function(){
 			
 				types = $(this).attr('type');
@@ -357,82 +227,7 @@ $(document).ready(function(){
 					$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
 					$(".ans_"+slug).html('Answer: '+ansVal);
 				}
-
-
-
-				// $.each(nameArray, function( index, value ) {
-				// 	type = $("."+value).attr('type');
-				// 	if(type =="radio" )
-				// 	{
-				// 		val = $("."+value+":checked").val();
-				// 	}else if(type =="checkbox"){
-				// 		val  = $.trim($("."+value).val());
-				// 		alert('checkbox');
-				// 		// val = $("."+value+":checked").val();
-				// 		// alert(val);
-						
-
-				// 	}else{
-				// 		val  = $.trim($("."+value).val());
-				// 	//console.log(val);
-				// 	}
-				// 	if(val)
-				// 	{
-				// 		console.log(value);
-				// 		// mark = $("#mark_"+value).html('<b style="color:Green;">Filled</b>');
-				// 		mark = $("#mark_"+value).parent().css({'background':'rgba(0, 128, 0, 0.2)'});
-				// 		console.log(mark);
-				// 			countQues++;	
-				// 	}else{
-				// 		$("#mark_"+value).parent().css({'background':'rgba(255, 0, 0, 0.2)'});
-				// 		// $("#mark_"+value).html('<b style="color:red;">Pending</b>');
-				// 	}
-				// });
-				// 	percentage = countQues/maxIndex*100;
-
-				// $("#sum_filled_ques").html(countQues);
-				// $("#progress").val(countQues);
-				// $('.aione-progress-inside').css({'width':percentage+'%'});
-				// $( window ).bind("resize", function(){
-				//     $(".aione-progress-inside").width( 600 );
-				// });
-
 			});
-
-
-	
 });
-
-		</script>
-		{{-- @endif --}}
-
-	{{-- @include('common.page_content_primary_end') --}}
-	{{-- @include('common.page_content_secondry_start') --}}
-		{{-- <script type="text/javascript">
-			$('.hide-field').parents('.field-wrapper').hide();
-			
-			$('.show-suboptions').click(function() {
-			    if( $(this).is(':checked')) {
-			        $(this).parents('.field-wrapper').next().show();
-			    } else {
-			        $(this).parents('.field-wrapper').next().hide();
-			    }
-
-			}); 
-
-			$('.radio-show-hide').change(function(){
-				if($(this).val() == 'role_based'){
-					$('.role_list').parents('.field-wrapper').show();
-					$('.individual_list').parents('.field-wrapper').hide();
-
-				}
-				if($(this).val() == 'individual_based'){
-					$('.individual_list').parents('.field-wrapper').show();
-					$('.role_list').parents('.field-wrapper').hide();
-				}
-				
-			})
-		</script> --}}
-	{{-- @include('common.page_content_secondry_end') --}}
-{{-- @include('common.pagecontentend') --}}
+</script>
 @endsection

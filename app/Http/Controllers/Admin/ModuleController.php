@@ -124,6 +124,16 @@ class ModuleController extends Controller
             return back();
         }
     }
+    public function changeStatusSubModule($id)
+    {
+        $model = GlobalSubModule::find($id);
+        if($model->status == 1){
+            GlobalSubModule::where('id' , $id)->update(['status' => 0]);
+        }else{
+            GlobalSubModule::where('id' , $id)->update(['status' => 1]);
+        }
+        return back();
+    }
     public function sortSubModuleDown($id , $subModule)
     {
         $getData = GlobalSubModule::where(['module_id' => $id , 'id' => $subModule])->first();

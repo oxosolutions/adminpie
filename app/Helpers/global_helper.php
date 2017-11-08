@@ -20,11 +20,42 @@ use App\Model\Admin\GlobalActivityTemplate;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\FormBuilder;
+use App\Model\Organization\forms;
 use App\Model\Organization\Page as Page;
 use App\Model\Admin\Page as GlobalPage;
 use App\Model\Organization\PageMeta as PageMeta;
 use App\Model\Admin\PageMeta as GlobalPageMeta;
 use App\Model\Admin\GlobalOrganization;
+
+use App\Model\Organization\Cms\Slider\Slider;
+use App\Model\Organization\Cms\Slider\SliderMeta;
+
+/**
+ @function role_list
+*	@description  all role list 
+*	@access	public
+*	@since	1.0.0.0
+*	@author	Paljinder Singh(sgssandhu.com)
+ */
+function role_list(){
+	return Role::where('status',1)->pluck('name','id');
+}
+
+/************************************************************
+*	@function get_role
+*	@description use in  survey structure in setting 
+*	@access	public
+*	@since	1.0.0.0
+*	@author	Paljinder Singh(sgssandhu.com)
+*	@return Role value [code]
+************************************************************/
+function get_role($id=null){
+	$role = Role::find($id);
+	if(!empty($role)){
+		return $role['name'];
+	}
+	return null;
+}
 
 /************************************************************
 *	@function field_options
@@ -267,7 +298,9 @@ function upload_path($path = null){
 		//Append provided path
 		$upload_path .= $path;
 	}
-	
+	if(!file_exists($upload_path)){
+		mkdir($upload_path,0777,true);
+	}
 	//Return path of user files directory
 	return $upload_path;
 }
@@ -577,8 +610,12 @@ function get_user($meta = true ,$array = false, $id = null){
 		$user = User::find($id);
 	}
 	if($array){
-		$user->meta = $user->meta->toArray();
-		$user = $user->toArray();
+		if($meta){
+			$user->meta = $user->meta->toArray();
+		}
+		if($user){
+			$user = $user->toArray();
+		}
 	}
 	//Return User Object 
 	return $user;
@@ -714,6 +751,12 @@ function get_organization_meta($key = null, $array = false){
 	$meta = get_meta($model,null,$key,null,$array);
 	return $meta;
 }
+function get_design_settings(){
+	$meta = get_organization_meta('design_settings', true);
+	$design_settings = json_decode($meta);
+	return $design_settings;
+}
+
 
 function update_organization_meta($metaKey, $metaValue){
 	update_organization_metas([$metaKey=>$metaValue]);
@@ -866,7 +909,7 @@ function aione_message($messages = null, $type = '', $align = 'center'){
 ************************************************************/
 function get_posts($options = array(), $global = false){	
 
-	$posts = arrray();
+	$posts = array();
 	
 	//Return posts
 	return $posts;
@@ -994,22 +1037,34 @@ function get_global_post_meta($id = null, $array = false){
 *	@perm slug			[string	optional	default	null]
 *	@return post [array/object]
 ************************************************************/
-function get_slider($slug = null){	
-
-
-
-	if($global){
-		$post = GlobalPage::where(['slug'=>$id])->first();
-	} else {
-		$post = Page::where(['slug'=>$id])->first();
-	}
-
-	$slider = "Hello";
+function get_slider($slug = null){
+	$slidersData = [];	
 	
-
-
-	//Return $slider
-	return $slider;
+	if($slug != null){
+		if(is_int($slug)){
+			$slides = Slider::where(['id' => $slug,'status' => 1])->get();
+		}else{
+			$slides = Slider::where(['slug' => $slug,'status' => 1])->get();
+		}
+	}else{
+		$slides = Slider::where(['status' => 1])->get();
+	}
+		foreach ($slides->toArray() as $key => $value) {
+			foreach ($value as $k => $v) {
+				if($k == 'slider' || $k == 'options' || $k == 'setting'){
+					if($k == 'slider'){
+						$slidersData['slides'] = json_decode($v,true);
+					}elseif($k == 'setting'){
+						$slidersData['settings'] = json_decode($v,true);
+					}else{
+						$slidersData[$k] = json_decode($v,true);
+					}
+				}else{
+					$slidersData[$k] = $v;
+				}
+			}
+		}
+	return $slidersData;
 }
 
 /**
@@ -1035,12 +1090,11 @@ function error($error_content = []){
 *	@return filename [array]
 ************************************************************/
 function get_website_alexa_rank( $url = null ){
-	
+
 	$get_website_alexa_rank_data = array();
 	$get_website_alexa_rank = array();
 	
 	$xml = simplexml_load_file("http://data.alexa.com/data?cli=10&url=".$url);
-
     if(!empty($xml->SD)){
 		
 		$get_website_alexa_rank['status'] = 'success';
@@ -1150,20 +1204,27 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 	} else {
 		$model = "Organization\\FormsMeta";
 	}
-	/*if(Auth::guard('admin')->check() == true){
-		$model = "Admin\\FormsMeta";
-	} else {
-		$model = "Organization\\FormsMeta";
-	}*/
-	
 	
 	$meta = get_meta($model, $fid, $key, 'form_id', $array);
 
 	//Return Meta Object 
 	return $meta;
 }
-
-
+/************************************************************
+*	@function get_survey_meta
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm sid		[integer/string	required	default	void]
+*	@return $meta (Survey Meta)
+************************************************************/
+function get_survey_meta($sid){
+	if(!is_int($sid)){
+		$survey = forms::select(['form_slug', 'id'])->where('embed_token',$sid)->first();
+	}
+	$meta = get_form_meta($survey->id,null,true,false);
+	return $meta;
+}
 
 	/************************************************************
 	*	@function role_id
@@ -1221,7 +1282,7 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
 			if($perPageSetting != '' || $perPageSetting != null){
 				$perPage = $perPageSetting->value;
 			}else{
-				$perPage = 2;
+				$perPage = 10;
 			}
 			return $perPage;
 		}catch(\Exception $e){
@@ -1454,6 +1515,151 @@ function get_form_meta($fid, $key = null, $array = true, $global = true){
     	$list = ['add' => '+','sub' => '-','mul' => '*' ,'divi' => '/' ,'less' => '<','greater' => '>', 'lessEqual' => '<=' , 'greaterEqual' => '>=' , 'equal' => '=='];
     	return $list;
     }
+    /**
+     * parse_slug function
+     *
+     * @return camelCase to camel_case
+     * @author 
+     **/
+    // function parse_slug($input) {
+    //     preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
+    //     $ret = $matches[0];
+    //     foreach ($ret as &$match) {
+    //         $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+    //     }
+    //     return implode('_', $ret);
+    // }
 
-	
+
+    function parse_slug($title, $raw_title = '', $context = 'display' )
+    {
+		$title = strip_tags($title);
+		// Preserve escaped octets.
+		$title = preg_replace('|%([a-fA-F0-9][a-fA-F0-9])|', '---$1---', $title);
+		// Remove percent signs that are not part of an octet.
+		$title = str_replace('%', '', $title);
+		// Restore octets.
+		$title = preg_replace('|---([a-fA-F0-9][a-fA-F0-9])---|', '%$1', $title);
+
+		if (seems_utf8($title)) {
+			if (function_exists('mb_strtolower')) {
+				$title = mb_strtolower($title, 'UTF-8');
+			}
+			$title = utf8_uri_encode($title, 200);
+		}
+
+		$title = strtolower($title);
+
+		if ( 'save' == $context ) {
+			// Convert nbsp, ndash and mdash to hyphens
+			$title = str_replace( array( '%c2%a0', '%e2%80%93', '%e2%80%94' ), '-', $title );
+			// Convert nbsp, ndash and mdash HTML entities to hyphens
+			$title = str_replace( array( '&nbsp;', '&#160;', '&ndash;', '&#8211;', '&mdash;', '&#8212;' ), '-', $title );
+
+			// Strip these characters entirely
+			$title = str_replace( array(
+				// iexcl and iquest
+				'%c2%a1', '%c2%bf',
+				// angle quotes
+				'%c2%ab', '%c2%bb', '%e2%80%b9', '%e2%80%ba',
+				// curly quotes
+				'%e2%80%98', '%e2%80%99', '%e2%80%9c', '%e2%80%9d',
+				'%e2%80%9a', '%e2%80%9b', '%e2%80%9e', '%e2%80%9f',
+				// copy, reg, deg, hellip and trade
+				'%c2%a9', '%c2%ae', '%c2%b0', '%e2%80%a6', '%e2%84%a2',
+				// acute accents
+				'%c2%b4', '%cb%8a', '%cc%81', '%cd%81',
+				// grave accent, macron, caron
+				'%cc%80', '%cc%84', '%cc%8c',
+			), '', $title );
+
+			// Convert times to x
+			$title = str_replace( '%c3%97', 'x', $title );
+		}
+
+		$title = preg_replace('/&.+?;/', '', $title); // kill entities
+		$title = str_replace('.', '-', $title);
+
+		$title = preg_replace('/[^%a-z0-9 _-]/', '', $title);
+		$title = preg_replace('/\s+/', '-', $title);
+		$title = preg_replace('|-+|', '-', $title);
+		$title = trim($title, '-');
+
+		// $title = str_replace('_', '-', $title);
+		// $title = preg_replace('|-+|', '-', $title);
+		// $title = trim($title, '-');
+		
+		return $title;
+	}
+
+	function seems_utf8( $str ) {
+		// mbstring_binary_safe_encoding();
+		$length = strlen($str);
+		// reset_mbstring_encoding();
+		for ($i=0; $i < $length; $i++) {
+			$c = ord($str[$i]);
+			if ($c < 0x80) $n = 0; // 0bbbbbbb
+			elseif (($c & 0xE0) == 0xC0) $n=1; // 110bbbbb
+			elseif (($c & 0xF0) == 0xE0) $n=2; // 1110bbbb
+			elseif (($c & 0xF8) == 0xF0) $n=3; // 11110bbb
+			elseif (($c & 0xFC) == 0xF8) $n=4; // 111110bb
+			elseif (($c & 0xFE) == 0xFC) $n=5; // 1111110b
+			else return false; // Does not match any model
+			for ($j=0; $j<$n; $j++) { // n bytes matching 10bbbbbb follow ?
+				if ((++$i == $length) || ((ord($str[$i]) & 0xC0) != 0x80))
+					return false;
+			}
+		}
+		return true;
+	}
+
+	function utf8_uri_encode( $utf8_string, $length = 0 ) {
+		$unicode = '';
+		$values = array();
+		$num_octets = 1;
+		$unicode_length = 0;
+
+		// mbstring_binary_safe_encoding();
+		$string_length = strlen( $utf8_string );
+		// reset_mbstring_encoding();
+
+		for ($i = 0; $i < $string_length; $i++ ) {
+
+			$value = ord( $utf8_string[ $i ] );
+
+			if ( $value < 128 ) {
+				if ( $length && ( $unicode_length >= $length ) )
+					break;
+				$unicode .= chr($value);
+				$unicode_length++;
+			} else {
+				if ( count( $values ) == 0 ) {
+					if ( $value < 224 ) {
+						$num_octets = 2;
+					} elseif ( $value < 240 ) {
+						$num_octets = 3;
+					} else {
+						$num_octets = 4;
+					}
+				}
+
+				$values[] = $value;
+
+				if ( $length && ( $unicode_length + ($num_octets * 3) ) > $length )
+					break;
+				if ( count( $values ) == $num_octets ) {
+					for ( $j = 0; $j < $num_octets; $j++ ) {
+						$unicode .= '%' . dechex( $values[ $j ] );
+					}
+
+					$unicode_length += $num_octets * 3;
+
+					$values = array();
+					$num_octets = 1;
+				}
+			}
+		}
+
+		return $unicode;
+	}	
 ?>

@@ -41,8 +41,8 @@
 	}
 </style>
 @php
-if(!empty($data)){
-// $data = json_decode(json_encode($data->all()),true);
+
+if(!empty($data) && !isset($data['error'])){
 	$keys = array_keys($data[0]);
 }
 $page_title_data = array(
@@ -63,10 +63,16 @@ $page_title_data = array(
 	            {{ __("survey.survey_results_table_missing") }}
 	</div>
 @else
-<div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
-	<p>Filters</p>
-		{!! Form::open(['route'=>['survey.reports',@$id],'method' => 'post' ]) !!}
-			<div id='parent'>
+{!! Form::open(['route'=>['survey.reports',@$id],'method' => 'post' ]) !!}
+<div class="ar">
+	<div class="ac l50 m100 a100">
+		<div class="aione-border">
+            <div class="">
+                <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
+                    Horizontal Filteration
+                </h5>
+            </div>
+           	<div id="aione_form_section_374" class="aione-form-section non-repeater p-5">
 				<div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
 					<div id="field_label_select_status" class="field-label">
 						<label for="input_select_status">
@@ -78,110 +84,282 @@ $page_title_data = array(
 					</div>
 
 				</div>
+			</div> <!-- .aione-form-section -->
+        </div>
+	</div>
+	<div class="ac l50 m100 a100">
+		<div class="aione-border">
+            <div class="">
+                <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
+                    Vertical Filteration
+                </h5>
+            </div>
+           	<div id="aione_form_section_374" class="aione-form-section non-repeater p-5">
+				<div class="aione-box">
+					<style type="text/css">
+					.repeater-wrapper .repeater-row > i{
+					z-index: 999999
+					}
+					</style>
+					<div class="repeater-group">
+						<div class="repeater-wrapper">
+						<div class="repeater-row ar">
+						<i class="material-icons dp48 repeater-row-delete">close</i>
+						<div id="aione_form_section_527" class="aione-form-section">
+						<div class="aione-row">
 
-				{{-- <div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
-					<div id="field_label_select_status" class="field-label">
-						<label for="input_select_status">
-							<h4 class="field-title" id="select_fiellds">Concat Fields</h4>
-						</label>
+						<div id="aione_form_section_content" class="aione-form-section-content">
+						<div class="aione-row ar">
+						<div id="field_2477" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-column field-wrapper-type-select l33 m33 s100">
+						<div id="field_column" class="field field-type-select">
+
+							{!! Form::select('condition_field[]',$columns,null,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+						</div><!-- field -->
+						</div><!-- field wrapper -->	
+						<div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
+
+
+						<div id="field_operation" class="field field-type-select">
+
+						<select class="input_operation browser-default " id="input_operation" name="operator[]">
+							<option selected="selected" value=""></option>
+							<option value="=">Equal to</option>
+							<option value=">">Greater then</option>
+							<option value="<">Less then</option>
+							<option value=">=">Greater then and equal to</option>
+							<option value="<=">Less then and equal to</option>
+							<option value="like"> match with </option>
+						</select>		
+
+						</div><!-- field -->
+						</div><!-- field wrapper -->	
+						<div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
+
+
+						<div id="field_value" class="field field-type-text">
+
+						<input class="input-value" id="input_value" placeholder="" data-validation="" name="condition_field_value[]" type="text"> 
+
+
+						</div><!-- field -->
+						</div><!-- field wrapper -->	
+
+
+						</div> <!-- .aione-row -->
+						</div> <!-- .aione-form-content -->
+
+						</div> <!-- .aione-row -->
+						</div> <!-- .aione-form-section -->
+						</div>
+						</div>
+
+
+					<button type="submit" class="aione-float-right aione-button add-new-repeater">Add New</button>
+					<div style="clear: both">
+
 					</div>
-					<div id="field_fields" class="field field-type-multi_select">
-						{!! Form::select('concat_fields[]',$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
-						
 
 					</div>
 				</div>
+			</div> <!-- .aione-form-section -->
+        </div>
+	</div>	
+</div>
+<div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
+	
+		<div id='parent'>
+			{{-- <div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
+				<div id="field_label_select_status" class="field-label">
+					<label for="input_select_status">
+						<h4 class="field-title" id="select_fiellds">Select Fields</h4>
+					</label>
+				</div>
+				<div id="field_fields" class="field field-type-multi_select">
+					{!! Form::select('fields[]',@$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
+				</div>
 
-				<div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
-					<div id="field_label_select_status" class="field-label">
-						<label for="input_select_status">
-							<h4 class="field-title" id="select_fiellds">Name to Concat Fields</h4>
-						</label>
-					</div>
-					<div id="field_fields" class="field field-type-multi_select">
-						{!! Form::text('concat_name[]')  !!}
-					</div>
-				</div> --}}
-				{{-- <div > 
-					<div  class="field select field-type-select">
-						<label for=""> Codition</label>
-						{!! Form::select('condition_field[]',$columns,null,['placeholder'=>'select field conditon','class'=>'browser-default select'])  !!}
-						<select name="operator[]" id="" class='browser-default'> 
-							<option value=">"> > </option>
-							<option value="<"> < </option>
-							<option value=">="> >= </option>
-							<option value="<="> <= </option>
-							<option value="="> = </option>
-							<option value="like"> like </option>
-						</select>
-						
-					
-						<label for="">Values</label>
-						<input name="condition_field_value[]" type="text">
-						 
-						 
-					</div>
-				</div> --}}
-				<div id='child'>
-					<div id="aione_form_wrapper_abc" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style-   ">
-						<div class="aione-row">
-							<div id="field_condition_field" class="field-wrapper field-wrapper-condition_field field-wrapper-type-select l4">
-								<div id="field_label_condition_field" class="field-label">
+			</div>
+ --}}
+			{{-- <div class="ac l50 ">
+					<div class="aione-box">
+						<style type="text/css">
+						.repeater-wrapper .repeater-row > i{
+						z-index: 999999
+						}
+						</style>
+						<div class="repeater-group">
+							<div class="repeater-wrapper">
+							<div class="repeater-row ar">
+							<i class="material-icons dp48 repeater-row-delete">close</i>
+							<div id="aione_form_section_527" class="aione-form-section">
+							<div class="aione-row">
 
-									<label for="input_condition_field">
-										<h4 class="field-title" id="Codition">Concat Fields</h4>
-									</label>
+							<div id="aione_form_section_content" class="aione-form-section-content">
+							<div class="aione-row ar">
+							<div id="field_2477" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-column field-wrapper-type-select l33 m33 s100">
+							<div id="field_column" class="field field-type-select">
 
-								</div><!-- field label-->
-											
+								{!! Form::select('condition_field[]',$columns,null,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+							</div><!-- field -->
+							</div><!-- field wrapper -->	
+							<div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
 
-								<div id="field_condition_field" class="field field-type-multi_select">
-									{!! Form::select('concat_fields[]',@$columns,null,['multiple'=>true ,'placeholder'=>'select field conditon','class'=>'browser-default select'])  !!}
-									
-								</div>
+
+							<div id="field_operation" class="field field-type-select">
+
+							<select class="input_operation browser-default " id="input_operation" name="operator[]">
+								<option selected="selected" value=""></option>
+								<option value="=">Equal to</option>
+								<option value=">">Greater then</option>
+								<option value="<">Less then</option>
+								<option value=">=">Greater then and equal to</option>
+								<option value="<=">Less then and equal to</option>
+								<option value="like"> match with </option>
+							</select>		
+
+							</div><!-- field -->
+							</div><!-- field wrapper -->	
+							<div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
+
+
+							<div id="field_value" class="field field-type-text">
+
+							<input class="input-value" id="input_value" placeholder="" data-validation="" name="condition_field_value[]" type="text"> 
+
+
+							</div><!-- field -->
+							</div><!-- field wrapper -->	
+
+
+							</div> <!-- .aione-row -->
+							</div> <!-- .aione-form-content -->
+
+							</div> <!-- .aione-row -->
+							</div> <!-- .aione-form-section -->
 							</div>
-							<div id="field_operator" class="field-wrapper field-wrapper-operator field-wrapper-type-select l3">
-								<div id="field_label_operator" class="field-label">
-									<label for="input_operator">
-										<h4 class="field-title" id="Operator">Name to Concat Fields</h4>
-									</label>
-
-								</div><!-- field label-->
-											
-
-								<div id="field_operator" class="field field-type-select">
-								<input type="text" name="concat_name[]" value="name">
-								
-									{{-- {!! Form::text('concat_name[]',)  !!} --}}
-								</div>
-
 							</div>
+
+
+						<button type="submit" class="aione-float-right aione-button add-new-repeater">Add New</button>
+						<div style="clear: both">
+
+						</div>
+
+						</div>
+					</div>
 							
-							<a  class="remove_condition disappear" onclick="remove_parent(this)"> <i class="fa fa-trash-o"></i></a>
+			</div> --}}
+
+			{{-- <div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
+				<div id="field_label_select_status" class="field-label">
+					<label for="input_select_status">
+						<h4 class="field-title" id="select_fiellds">Concat Fields</h4>
+					</label>
+				</div>
+				<div id="field_fields" class="field field-type-multi_select">
+					{!! Form::select('concat_fields[]',$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
+					
+
+				</div>
+			</div>
+
+			<div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
+				<div id="field_label_select_status" class="field-label">
+					<label for="input_select_status">
+						<h4 class="field-title" id="select_fiellds">Name to Concat Fields</h4>
+					</label>
+				</div>
+				<div id="field_fields" class="field field-type-multi_select">
+					{!! Form::text('concat_name[]')  !!}
+				</div>
+			</div> --}}
+			{{-- <div > 
+				<div  class="field select field-type-select">
+					<label for=""> Codition</label>
+					{!! Form::select('condition_field[]',$columns,null,['placeholder'=>'select field conditon','class'=>'browser-default select'])  !!}
+					<select name="operator[]" id="" class='browser-default'> 
+						<option value=">"> > </option>
+						<option value="<"> < </option>
+						<option value=">="> >= </option>
+						<option value="<="> <= </option>
+						<option value="="> = </option>
+						<option value="like"> like </option>
+					</select>
+					
+				
+					<label for="">Values</label>
+					<input name="condition_field_value[]" type="text">
+					 
+					 
+				</div>
+			</div> --}}
+			{{-- <div id='child'>
+				<div id="aione_form_wrapper_abc" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style-   ">
+					<div class="aione-row">
+						<div id="field_condition_field" class="field-wrapper field-wrapper-condition_field field-wrapper-type-select l4">
+							<div id="field_label_condition_field" class="field-label">
+
+								<label for="input_condition_field">
+									<h4 class="field-title" id="Codition">Concat Fields</h4>
+								</label>
+
+							</div><!-- field label-->
+										
+
+							<div id="field_condition_field" class="field field-type-multi_select">
+								{!! Form::select('concat_fields[]',@$columns,null,['multiple'=>true ,'placeholder'=>'select field conditon','class'=>'browser-default select'])  !!}
+								
+							</div>
+						</div>
+						<div id="field_operator" class="field-wrapper field-wrapper-operator field-wrapper-type-select l3">
+							<div id="field_label_operator" class="field-label">
+								<label for="input_operator">
+									<h4 class="field-title" id="Operator">Name to Concat Fields</h4>
+								</label>
+
+							</div><!-- field label-->
+										
+
+							<div id="field_operator" class="field field-type-select">
+							<input type="text" name="concat_name[]" value="name">
+							
+								{{-- {!! Form::text('concat_name[]',)  !!}
+							</div>
+
 						</div>
 						
+						<a  class="remove_condition disappear" onclick="remove_parent(this)"> <i class="fa fa-trash-o"></i></a>
 					</div>
-				</div>
-				<div id='append'>
 					
 				</div>
 			</div>
-			<div class="aione-row search-options">
-				<button id="more_condition" class="aione-button aione-button-large aione-button-light aione-button-square add-new-button"> + Add Concat</button>
-				{!! Form::submit('Search') !!} 
-			</div>
-			{{-- <div class="aione-row result-options">
-				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button']) !!}
-				<a href="{{route('delete.table',['table'=>$table])}}" > <button class="aione-button aione-button-large aione-button-light aione-button-square add-new-button white-text " style="background-color: #F44336;">Delete all records</button></a>
-			</div> --}}	
+			<div id='append'>
 				
+			</div> --}}
+		</div>
+		<div class="aione-row search-options aione-align-right mv-10">
+			
+			
+			<button type="submit" class="aione-button" name="export"><i class="fa fa-sign-out mr-5"></i>Export Records</button>
+			<button type="submit" class="aione-button" name="Search"><i class="fa fa-search mr-5"></i>Search</button>
+
+		</div>
+		
+			
 	{!! Form::close() !!}
 </div>
+
 
 @if(empty($data))
 		<div class="aione-message warning">
             {{ __('survey.survey_results_table_missing') }}
         </div>
+@elseif(!empty($data['error']))
+		<div class="aione-message warning">
+           {{$data['error']}}
+        </div>
+
+
 @else
 
 	@if($errors->any())
@@ -193,89 +371,30 @@ $page_title_data = array(
 	        </ul>
 	    </div>
 	@endif
-@php
-	$th = $option='';
-	foreach($keys as $key =>$val){
-		$option[$val] = $val;
-		$th .= "<th>$val</th>";
-	}
-@endphp
+
 	<div id="table-structure" class="aione-table scrollx">
 		<table class="compact">
 	        <thead>
 				<tr>
 					@foreach($keys as $key =>$val)
-						@if(!empty($options_val[$val]))
-							@foreach($options_val[$val] as $optKey => $optVal)
-								<th>
-									<span class="aione-tooltip truncate" tooltip-data="{{@$formQuestion[$val]}}">
-										{{$val}}_{{$optKey}}
-									</span>
-								</th>
-							@endforeach
-						@else
-						<th>
-							<span class="aione-tooltip truncate" tooltip-data="{{@$formQuestion[$val]}}">
-								{{@$val}}
-							</span>
-						</th>
-						@endif
+							<th>
+								<span class="aione-tooltip truncate" tooltip-data="">
+								{{ @$val }}
+								</span>
+							</th>
+						
 					@endforeach
 				</tr>
 	        </thead>
 	        <tbody>
-	        {{-- {{dump($data)}} --}}
+	      
 		        @foreach($data as $keys => $vals )
 					<tr>
 						@foreach($vals as $queKey => $queVal)
-						 @if(!empty($options_val[$queKey]))
-						 	@php
-						 		$array_val = json_decode($queVal,true);
-						 	@endphp
-							@foreach($options_val[$queKey] as $optKey => $optVal)
-								<td>
-									<span class="aione-tooltip truncate" tooltip-data="{{$queVal}}">
-										{{-- {{$optKey}} {{$optVal}} {{dump($array_val)}} --}}
-										@if(is_array($array_val))
-								 				@if(in_array($optKey, $array_val))
-								 					yes
-								 					@else
-								 					no
-								 				@endif
-							 			@endif
-
-										
-
-									</span>	
-								</td>
-							@endforeach
-
-						@else
-						<td>
-							<span class="aione-tooltip truncate" tooltip-data="{{$queVal}}">
-								{{$queVal}}
-							</span>	
-						</td>
-						@endif
-							
-							{{-- <td>
+						
 								<span class="aione-tooltip truncate" tooltip-data="{{$queVal}}">
-								 @php 
-									 if(!empty($options_val[$queKey])){
-									 	$flip = array_flip($options_val[$queKey]);
-									 	$array_val = json_decode($queVal,true);
-										if(is_array($array_val)){
-										   	$intersect = array_intersect($flip, $array_val);
-											echo  implode(', ', array_keys($intersect));
-										}
-									}else{
-										echo $queVal;
-									}
-
-								 @endphp
+									<td>{{$queVal}} </td>
 								</span>
-							</td> --}}
-
 	 					@endforeach
 					</tr>
 				@endforeach

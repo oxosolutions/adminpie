@@ -7,18 +7,8 @@
 	}
 	if(@$options['from'] == 'repeater'){
 		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
+		// dump($name);
 	}
 @endphp
-
+{!! Form::hidden($name,null,[]) !!}
 {!!Form::file($name,null,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug])!!}
-				
-	
-<script type="text/javascript">
-$(document).ready(function(){
-	$(document).on('click','.submit-logo',function(e){
-		e.preventDefault();
-		$('button[name='+$(this).attr('data-value')+']').click();
-	})
-})
-	
-</script>

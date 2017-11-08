@@ -42,9 +42,11 @@ class DashboardController extends Controller
 	public function get_allowed_widgets($organization_id = null){
 		$allowed_modules = GlobalOrganization::where('id',$organization_id)->pluck('modules')->toArray();
     	$allowed_modules = json_decode($allowed_modules[0],true);
+    	if($allowed_modules == null){ // in case if there no any module assigned to organization
+    		return false;
+    	}
     	$enabled_modules = GlobalModule::select('id')->where('status',1)->whereIn('id',$allowed_modules)->pluck('id')->toArray();
     	$allowed_widgets = GlobalWidget::where('status',1)->whereIn('module_id',$enabled_modules)->pluck('id')->toArray();
-		
 		return $allowed_widgets;
 	}
 	
@@ -119,19 +121,25 @@ class DashboardController extends Controller
 				
 				$organization_id = get_organization_id();
 				$allowed_widgets = $this->get_allowed_widgets($organization_id);
+				if($allowed_widgets == false){
+					return view('errors.accessdenied');
+				}
 				$roles = get_user_roles();
-				
 
 				if(!in_array('administrator',$roles)){
 						$listWidgets = $allowed_widgets;
+						$widgetPermissions = Permisson::whereIn('permisson_id',$listWidgets)->where(['permisson'=>'on'])->pluck('permisson_id')->toArray();
+						$allowed_widgets = array_intersect($allowed_widgets, array_map('intval',$widgetPermissions));
 						$allowed_widgets = array_intersect($allowed_widgets,array_map('intval',$dashboards[$slug]['widgets']));
-						$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->get();
+	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->orderBy('order','Asc')->get();
+
+	    				$listWidgets = array_intersect($listWidgets, array_map('intval',$widgetPermissions));
 						$listWidgets = array_diff($listWidgets,array_map('intval',$dashboards[$slug]['widgets']));
 		    			$listWidgets = GlobalWidget::whereIn('id',$listWidgets)->pluck('title','id');
 				} else{
 					if(isset($dashboards[$slug]['widgets'])){
 						$listWidgets = [];
-	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->get();
+	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->orderBy('order','Asc')->get();
 	    				$listWidgets = array_diff($widgets->pluck('id')->toArray(),$dashboards[$slug]['widgets']);
 	    				$listWidgets = $widgets->whereIn('id',$listWidgets)->pluck('title','id');
 	    				$widgetsEnables = array_map('intval',array_intersect($dashboards[$slug]['widgets'] , $widgets->pluck('id')->toArray()));
@@ -281,5 +289,17 @@ class DashboardController extends Controller
 	// 	return 'true';
  //    }
  	
-
+    public function widgetSort(Request $request)
+    {
+    	$order = [];
+    	$index = 1;
+    	foreach ($request->order_id as $key => $value) {
+    		$order[$index] = $value;
+    		$index++;
+    	}
+    	foreach ($order as $key => $value) {
+    		$model = GlobalWidget::where('id',$value)->update(['order' => $key]);
+    	}
+    	// return back();
+    }
 }

@@ -22,7 +22,7 @@
 	}
 @endphp
 {!!Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}
-<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" multiple />
+<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px;padding:0;margin: 0;line-height: 0;" multiple />
 	{!! FormGenerator::GenerateForm('survey_generator_fields',[],$model)!!}
 {!!Form::close()!!}
 <div id="add_media" class="modal modal-fixed-footer aione-media-modal" style="overflow-y: hidden;">
@@ -63,7 +63,7 @@
 		<button class="btn blue save-gallery-details" type="submit" name="action">Save
 		</button>
 		{!!  Form::open(array('url' => 'foo/bar', 'class' => 'form_media_upload', 'files' => true, 'class')) !!}
-			<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" multiple />
+			<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px;padding:0;margin: 0;line-height: 0;" multiple />
 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
 			<a class="btn blue " onclick="document.getElementById('upload').click(); return false">Upload media
 		</a>

@@ -23,8 +23,13 @@
 	/* change status of User */
 	Route::get('/changeStatus/{id}',			['as'=>'change.user.status',		'uses'=>'UsersController@changeStatus']);
 
+
+	Route::match(['get','post'], '/user-meta-update',			['as'=>'user.updatemeta',			'uses'=>'UsersController@UserMetaUpdate']);
+
+	Route::post('role_permisson_save',		['as'=>'save.role_permisson', 'uses'=>'UserRoleController@role_permisson_save']);
 	
 	// Route::get('/users/edit/{id}',			['as'=>'edit.user','uses'=>'UsersController@edit']);
 	// Route::post('/user/update',				['as'=>'update.user','uses'=>'UsersController@update']);
 	// Route::get('/sidebar/status/{status}',	['as'=>'sidebar.active.inactive','uses'=>'UsersController@saveSideBarActiveStats']);
+	// 
 ?>

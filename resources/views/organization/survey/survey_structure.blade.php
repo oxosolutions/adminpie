@@ -13,25 +13,35 @@ if(!empty($survey_data)){
     $sections = $survey_data['section'];
     if(!empty($sections)){
 	    $section_slugs = collect($sections)->groupBy('section_slug')->toArray();
+
 		foreach ($section_slugs as $key => $value) {
 			if(count($section_slugs[$key])>1){
-				 $repeated_slug[] = $key;
+				 $repeated_slug[$key] = array_column($value, 'section_name','id');
+
 			}
 		}
+		
 	    $setting = $survey_data['forms_meta'];
 	   	$settings = array_column($setting,'value','key');
 	   	unset($survey_data['section'][6]);
-	  $sections = $survey_data['section'];
+	  	$sections = $survey_data['section'];
 	}
 }
 $index =1;
+$warning = [];
+$total_error_count = 0;
+$total_warning_count = 0;
 @endphp
-
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.survey._tabs')
-    @if(!empty($survey_data))
+@if(!empty($not_valid_id))
+ 			<div class="aione-message warning">
+            	{{ $not_valid_id }}
+        	</div>
+		
+    @elseif(!empty($survey_data))
 		@if(empty($sections))
 			 <div class="aione-message warning">
             	{{ __('survey.survey_section_miss') }}
@@ -60,7 +70,7 @@ $index =1;
 	                    <div class="aione-title">
 	                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 mb-10 bg-grey bg-lighten-4">Warnings</h5>
 	                    </div>
-	                        <div class="aione-align-center p-30 font-size-64 font-weight-600 orange darken-2">{{@$data['count']['completed']}}</div>
+	                        <div class="aione-align-center p-30 font-size-64 font-weight-600 orange darken-2 warning_count">0</div>
 	                </div>
 	            </div>
 	            <div class="ac s100 m50 l25">
@@ -68,7 +78,7 @@ $index =1;
 	                    <div class="aione-title">
 	                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 mb-10 bg-grey bg-lighten-4">Errors</h5>
 	                    </div>
-	                    <div class="aione-align-center p-30 font-size-64 font-weight-600 red darken-2">{{@$data['count']['incomplete']}}</div>
+	                    <div class="aione-align-center p-30 font-size-64 font-weight-600 red darken-2 error_count">0</div>
 	                </div>
 	            </div>
 	        </div>
@@ -80,20 +90,22 @@ $index =1;
 							<h4 class="aione-align-left font-weight-400 m-0 pv-10 ph-15">Survey Structure</h4>
 						</div>
 						<div class="aione-accordion p-10">
+						
 		    				@if(!empty(@$sections))
 			    				@foreach (@$sections as $key => $section)
 			    					<div class="aione-item">
-					                    <div class="aione-item-header font-size-16 font-weight-400">
+					                    <div class="aione-item-header font-size-16 font-weight-400 {{@$section['section_slug']}}">
 					                        {{@$section['section_name']}}
 											<span class="aione-float-right mr-40">{{count(@$section['fields'])}} Questions</span>
 					                    </div>
 					                    <div class="aione-item-content p-0 aione-table">
-											<table class="compact">
+											<table class="compact font-size-14">
 											    <thead>
 											    	<tr>
 													    <th>Questions</th> 
 													    <th>Type</th>
-													    <th>Options</th>
+													    <th style="min-width: 180px">Options</th>
+													    <th>Validations</th>
 												    </tr>
 												</thead>
 									       		
@@ -102,8 +114,12 @@ $index =1;
 										      		@foreach(@$section['fields'] as $fieldKey => $fieldVal)
 										      		@php
 										      			$field_slug[] = $fieldVal['field_slug'];
+										      			$field_title[$fieldVal['field_slug']][]	= 	substr($fieldVal['field_title'], 0, 30);
+										      			$field_id[$fieldVal['field_slug']][]	=   $fieldVal['id'];
+										      			$sec_ids[$fieldVal['field_slug']][] 	=   $section['id'];
+										      			
 										      		@endphp
-										      		<tr>
+										      		<tr class='{{$fieldVal['field_slug']}}'>
 										      			<td>{{@$fieldVal['field_title']}}</td>
 											      		<td>{{@$fieldVal['field_type']}}</td> 
 											      		
@@ -114,28 +130,50 @@ $index =1;
 															$meta = $collection->toArray();
 									            		@endphp
 									            		<td>
-										            		@foreach($meta as $metaKey=> $metaVal)
+										            		
+
+									            		@if(in_array($fieldVal['field_type'], ['radio','select','checkbox']))
+									            			 <span class="bg-cyan white p-4 show-details">{{ @count(json_decode($meta['field_options'])) }} Options</span>
+									            			 
+									            			 <div class="option-details" style="min-width: 150px;max-width: 150px">
+									            			 	@foreach($meta as $metaKey=> $metaVal)
 									            				@if($metaKey == 'field_options' && in_array($fieldVal['field_type'], ['radio','select','checkbox'])  )
 									            				@php
 									            					if($metaVal==null || count(json_decode($metaVal,true)) ==0 ) {
 									            						$opt_miss_error[] =[$fieldVal['field_type'],$fieldVal['field_slug']]; 
+									            						if(!array_key_exists($section['section_slug'], $error)){
+																			 			$error[$section['section_slug']][] = $section['section_name'];
+																			 		}
+																			 		$error[$section['section_slug']]['field'][] =['qno'=>$loop->iteration,  'title'=>$fieldVal['field_title'], 'type'=>$fieldVal['field_type'], 'option'=>'Empty options'];
 									            					}
 									            				@endphp
 									                				@foreach(json_decode($metaVal,true) as $optKey => $optVal)
+									                			
 																		{{$loop->iteration}}
 																			@if(!empty($optVal['key']) && !empty($optVal['value']))
 																		 		{{$optVal['key']}}-{{$optVal['value']}}<br>
 																		 		@else
-																					<span class='entry' style="background-color:#F9E5E6;border: 1px solid #F4B7B9;"> not key -  not val </span>
-																					<script>
-																						$("#{{$section['section_slug']}}").css({'background-color':'#F9E5E6', 'border':'1px solid #F4B7B9'});
-																						$(".{{$fieldVal['field_slug']}}").css({'background-color':'#F9E5E6', 'border':'1px solid #F4B7B9'});
-																					</script>
+																		 		@php
+																			 		if(!array_key_exists($section['section_slug'], $warning)){
+																			 			$warning[$section['section_slug']][] = $section['section_name'];
+																			 		}
+																			 		$warning[$section['section_slug']]['field'][] =['qno'=>$fieldVal['id'],  'title'=>$fieldVal['field_title'], 'type'=>$fieldVal['field_type'], 'option'=>'Empty option exist.'];
+
+																		 		@endphp 
+																					<span class='entry' > not key -  not val </span>
+																					
 																		 		@endif
 									                				@endforeach
 									            				@endif
 									            			@endforeach 
+									            			 </div>
+									            		@else
+			    				
+{{-- 									            		 <span class="bg-cyan white p-4">{{ @count(json_decode($meta['field_options'])) }} Options</span>
+ --}}									            		  <span class="bg-blue-grey white p-4">No Options</span>
+									            		@endif
 								            			</td>	
+								            			<td>require, email, number</td>
 										      		</tr>
 										      		@endforeach		
 							            		@endif
@@ -149,173 +187,316 @@ $index =1;
 					</div>
 	            </div>
 	        </div>
+			{{-- Erorrs --}}
+			<style type="text/css">
+				.option-details{
+					display: none;
+				}
+			</style>
+			<script type="text/javascript">
+				$(document).on('click','.show-details',function(e){
+					e.preventDefault();
+					console.log('hello');
+					$(this).parent().find('.option-details').toggle();
+				})
+			</script>
+			@php
+				// dump($repet_field, $field_slug);
+				$unique = array_unique($field_slug);
+				$repeated_ques_slug = array_diff_assoc($field_slug, $unique);
+
+				// $ids = array_map(function ($ar) {return $ar['field_slug'];}, $repet_field);
+				// dump($ids);
+			@endphp
+			
+			<div class="ar">
+				<div class="ac l65">
+					
+	            	<div class="aione-border border-red mb-15">
+		            	<div class="aione-title aione-border-bottom bg-grey bg-lighten-4">
+							<h4 class="aione-align-left font-weight-400 m-0 pv-10 ph-15">Survey Structure Errors</h4>
+						</div>
+			    		
+			    		@if(@$count_form_slug>1)
+			    				<div class="p-10">
+			    					<div class="aione-border bg-red bg-lighten-4 font-size-16 font-weight-400 p-10">
+				                        Survey slug already in use.
+										@php
+											$total_error_count++;
+										@endphp
+					                 </div>
+			    				</div>
+			    					
+				    		
+			    		@endif
+			    		@if(count($repeated_slug)> 0)
+			    			<div class="aione-accordion p-10">
+				    			<div class="aione-item">
+			    					<div class="aione-item-header font-size-16 font-weight-400">
+					                    Error Sections Slug	
+					                </div>
+					                <div class="aione-item-content p-0">
+					                	<div class="aione-table">
+					                		<table class="compact font-size-14">
+						                		<thead>
+						                			<tr>
+						                				<th>ID</th>
+						                				<th>Section</th>
+						                				<th>Slug</th>
+						                				<th>Action</th>
+						                			</tr>
+						                		</thead>
+						                		<tbody>
+						                			@foreach (@$repeated_slug as $seckey => $secvalue)
+						                			<tr>
+						                				<td>{{implode(', ', array_keys($repeated_slug[$seckey]))}}</td>
+						                				<td class="truncate">
+						                				@foreach($secvalue as $keyz => $valz)
+																<a href="{{route('survey.sections.list',$id)}}?sections={{$keyz}}"><span class="nav-item-text"> {{$valz}} Edit</span></a> , 
+						                				@endforeach
+						                				</td>
+						                				<td class="bg-red bg-lighten-4">{{$seckey}}</td>
+						                				<td><a href="" class="goToSection" id="{{$seckey}}">Go to section</a></td>
+						                			</tr>
+						                			@php
+														$total_error_count++;
+													@endphp
+						                			@endforeach
+						                		</tbody>
+						                	</table>	
+					                	</div>
+					                	
+					                </div>
+					                
+				    			</div>
+			    			</div>
+			    		@endif
+						<div class="aione-accordion p-10">
+
+							@if(!empty(@$repeated_ques_slug))
+			    				<div class="aione-item">
+			    					<div class="aione-item-header font-size-16 font-weight-400">
+					                    Error Questions Slug
+										<span class="aione-float-right mr-40"> </span>
+					                </div>
+					                <div class="aione-item-content p-0">
+					                	<div class="aione-table">
+					                		<table class="compact font-size-14">
+						                		<thead>
+						                			<tr>
+						                				<th>ID</th>
+						                				<th>Question</th>
+						                				<th>Slug</th>
+						                				<th>Action</th>
+						                			</tr>
+						                		</thead>
+						                		<tbody>
+						                	
+						                			@foreach (@$repeated_ques_slug as $quekey => $quevalue)
+						                			<tr>
+						                				<td>{{implode(', ', $field_id[$quevalue])}}</td>
+						                				<td>
+							                				@foreach($field_id[$quevalue] as $fieldKeys => $fieldValues)
+							                				
+							                					<a href="{{route('survey.sections.list',$id)}}?sections={{$sec_ids[$quevalue][$fieldKeys]}}&field={{$fieldValues}}"><span class="nav-item-text"> {{$field_title[$quevalue][$fieldKeys]}} Edit</span></a> , 
+							                				@endforeach
+							                			</td>
+						                				
+						                				<td class="bg-red bg-lighten-4"> {{$quevalue}}</td>
+						                				<td><a href="" class="goToQues" id="{{$quevalue}}" > Go to question</a></td>
+						                			</tr>
+						                			@php
+														$total_error_count++;
+													@endphp
 
 
+						                			@endforeach
+						                		</tbody>
+						                	</table>	
+					                	</div>
+					                	
+					                </div>
+				    				{{-- @foreach (@$repeated_ques_slug as $quekey => $quevalue)
+									   <div class="aione-item-content p-0 aione-table">
+											 {{$quevalue}} 
+											 @php
+												$total_error_count++;
+											@endphp
 
+										</div>
+				    				@endforeach --}}
+								</div>
+				    		@endif
+			    		
 
+		    				@if(!empty(@$error))
+			    				@foreach (@$error as $key => $value)
+			    					<div class="aione-item">
+					                    <div style="background-color: #F44336;" class="aione-item-header font-size-16 font-weight-400">
+					                        {{@$error[$key][0]}}
+											<span class="aione-float-right mr-40"> </span>
+					                    </div>
+					                    <div class="aione-item-content p-0 aione-table">
+											<table class="compact">
+											    <thead>
+											    	<tr>
+											    		<th>Question No</th>
+													    <th>Questions</th> 
+													    <th>Type</th>
+													    <th>Options</th>
+												    </tr>
+												</thead>
+										      	<tbody style="background-color: #F44336;" >
+										      	@foreach(@$value['field'] as $fieldKey => $fieldVal)
+										      	<tr style="background-color: #F44336;" >
+										      		<td>{{$fieldVal['qno']}}</td>
+										      		<td>{{$fieldVal['title']}}</td>
+										      		<td>{{$fieldVal['type']}}</td>
+										      		<td>{{$fieldVal['option']}}</td>
+										      	</tr>
+										      	@php
+													$total_error_count++;
+												@endphp
 
-
-
-
-
-
-
-
-
-    	<div class="aione-form-section-border">
-    		<div class="ar">
-	    		<div class="ac s100 m100 l75 aione-border">
-	    			<div class="aione-title aione-border-bottom m-b-10">
-						<h4 class="aione-align-left">Survey Structure Warnings</h4>
+										      	@endforeach
+										      	</tbody>
+										    </table>
+										</div>
+									</div>
+								@endforeach
+							@else
+								{{-- <div class="aione-message error">
+            						{{ __('survey.survey_no_error') }}
+        						</div> --}}
+							@endif
+						</div>
 					</div>
-	    			<div class="" >
-	    				<div class="aione-row" style="">
-		    				<div class="aione-row aione-collapsible">
-		    				@if(!empty($sections))
-			    				@foreach ($sections as $key => $section)
-			    				{{-- {{dump($section)}} --}}
-				    				<div class="aione-form-section"  >
-					    				<div class="aione-row">
-					    					<div class="aione-form-section-header" id="{{$section['section_slug']}}">
-												<div class="aione-row">
-													<h3 class="aione-form-section-title aione-align-left">
-														{{$section['section_name']}}
-														
-														<span style="float: right;margin-right: 40px">{{count($section['fields'])}} Questions</span>
-														
-													</h3>
-												</div>
-					    					</div>
-					    					<div class="aione-form-section-content aione-table">
+						
+			        <script type="text/javascript">
+			        	$(".error_count").html({{$total_error_count}});
+			        </script>
+				 	<div class="">
+		            	<div class="aione-border">
+			            	<div class="aione-title aione-border-bottom bg-grey bg-lighten-4">
+								<h4 class="aione-align-left font-weight-400 m-0 pv-10 ph-15">Survey Structure Warning</h4>
+							</div>
+							<div class="aione-accordion p-10">
+							
+			    				@if(!empty(@$warning))
+				    				@foreach (@$warning as $key => $value)
+				    					<div class="aione-item">
+						                    <div class="aione-item-header font-size-16 font-weight-400">
+						                        {{@$warning[$key][0]}}
+												<span class="aione-float-right mr-40"> </span>
+						                    </div>
+						                     <div class="aione-item-content p-0 aione-table">
 												<table class="compact">
 												    <thead>
 												    	<tr>
-														    <th >Questions </th> 
-														    <th >Type</th>
-														 
-														    <th >Answer Option</th>
+												    		<th>Question No</th>
+														    <th>Questions</th> 
+														    <th>Type</th>
+														    <th>Options</th>
 													    </tr>
 													</thead>
-										       		
-											      	<tbody >
-											      	@if(!empty($section['fields']))
-											      		@foreach($section['fields'] as $fieldKey => $fieldVal)
-											      		@php
-											      			$field_slug[] = $fieldVal['field_slug'];
-											      		@endphp
-											      		<tr>
-											      			<td class="{{$fieldVal['field_slug']}}" >{{$fieldVal['field_title']}}</td>
-												      		<td class="{{$fieldVal['field_slug']}}"  >{{$fieldVal['field_type']}}</td> 
-												      		
-															@php
-											            		$collection = collect($fieldVal['field_meta'])->mapWithKeys(function($item){
-											                		return [$item['key']=>$item['value']];
-											            		});
-																$meta = $collection->toArray();
-										            		@endphp
-										            		<td >
-											            		@foreach($meta as $metaKey=> $metaVal)
-										            				@if($metaKey == 'field_options' && in_array($fieldVal['field_type'], ['radio','select','checkbox'])  )
-										            				@php
-										            					if($metaVal==null || count(json_decode($metaVal,true)) ==0 ) {
-										            						$opt_miss_error[] =[$fieldVal['field_type'],$fieldVal['field_slug']]; 
-										            					}
-										            				@endphp
-										                				@foreach(json_decode($metaVal,true) as $optKey => $optVal)
-																			{{$loop->iteration}}
-																				@if(!empty($optVal['key']) && !empty($optVal['value']))
-																			 		{{$optVal['key']}}-{{$optVal['value']}}<br>
-																			 		@else
-																						<span class='entry' style="background-color:#F9E5E6;border: 1px solid #F4B7B9;"> not key -  not val </span>
-																						<script>
-																							$("#{{$section['section_slug']}}").css({'background-color':'#F9E5E6', 'border':'1px solid #F4B7B9'});
-																							$(".{{$fieldVal['field_slug']}}").css({'background-color':'#F9E5E6', 'border':'1px solid #F4B7B9'});
-																						</script>
-																			 		@endif
-										                				@endforeach
-										            				@endif
-										            			@endforeach 
-									            			</td>	
-											      		</tr>
-											      		@endforeach		
-								            		@endif
+											      	<tbody  >
+											      	@foreach(@$value['field'] as $fieldKey => $fieldVal)
+											      	<tr >
+											      		<td>{{$fieldVal['qno']}}</td>
+											      		<td>{{$fieldVal['title']}}</td>
+											      		<td>{{$fieldVal['type']}}</td>
+											      		<td>{{$fieldVal['option']}}</td>
+											      	</tr>
+											      	@php
+											      	$total_warning_count++;
+											      	@endphp
 
-										      		</tbody>
-													
-												</table>
-					    					</div>
-					    				</div>
-					    			</div>	
-					    		 @endforeach
-					    	@endif
-			    			</div>	
+											      	@endforeach
+											      	</tbody>
+											     </table>
+											</div>
+										</div>
+									@endforeach
+								@else
+									<div class="aione-message warning">
+	            						{{ __('survey.survey_no_warning') }}
+	        						</div>
+								@endif
+								</div>
+							</div>
+						
+					</div>
+					<script>
+						$(".warning_count").html({{@$total_warning_count}});
+					</script>
+				</div>
+				<div class="ac l35">
 			    		
-	    				</div>
-		    			@if(!empty($sections))
-			    			@php
-			    				$unique = array_unique($field_slug);
-			    				$repeated_ques_slug = array_diff_assoc($field_slug, $unique);
+			    			<div class="aione-border">
+				    			<div class="aione-title">
+			                        <h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4">Survey Settings</h5>
+			                    </div>
+				    			<div class="aione-table p-10">
+				    				@if($setting_questions != null)
+					    				<table class="compact">
+					    					<tbody>
+					    						@foreach($setting_questions as $settingKey => $settingVal)
+					                                @if($settingKey=='_token')
+					                                    @continue;
+					                                @endif
+					                                @if(!empty($settings[$settingKey]))
+					                                    <tr>
+					                                        <td>{{$index++}}. {{$settingVal['field_title']}}</td>
+					                                        @if($settingKey =='individual_list')
+																<td>
+					                                        		@foreach(json_decode($settings[$settingKey],true) as $ukey => $uval) 
+					                                        			@if(!empty($user = get_user(false ,true, $uval)))
+																				{{$user['name']}}, 
+																			@else
+																				User not exist.
+					                                        			@endif
+					                                        		@endforeach
+					                                        	</td>
+					                                        	{{-- <td>{{dump(json_decode($settings[$settingKey],true))}}</td> --}}
+															@elseif($settingKey =='role_list')
+															<td>
+																@foreach($roles = json_decode($settings[$settingKey],true) as $rkey => $rval)
+																		@if(!empty($role_name = get_role($rval)))
+																			{{$role_name}}
+																		@else
+																			Role not exist.
+																		@endif
+																@endforeach
+															</td>
+															@else
+					                                        	@if($settingVal['field_type']=='switch')
+																	@if($settings[$settingKey]==1)
+																		<td>Yes </td>				
+																	@else
+																		<td>No  </td>
+																	@endif
+					                                        	@else
+					                                        		<td>{{$settings[$settingKey]}}</td>
+					                                        	@endif
+					                                        @endif
+					                                    </tr>
+					                                @endif
+					                            @endforeach
+					                            
+					    					</tbody>
+					    				</table>
+					    			@endif
+				    			</div>	
+			    			</div>	
+			    	
+			    		
+				</div>
+			</div>
 
-			    			@endphp
-		    				 <div class="aione-row aione-border theme-2" style="margin-bottom: 10px">
-			                    <div class="card-4">
-			                        <h3>{{@$count_form_slug -1}} {{-- {{$survey_data[0]['form_slug']}} --}}</h3>
-			                        <p>Repeated Form Slug </p>
-			                    </div>
-			                    <div class="card-4">
-			                        <h3>{{(count($repeated_slug)>0)?implode(', ', $repeated_slug):0}}</h3>
-			                        <p>Repeated Section Slug</p>
-			                    </div>
-			                     <div class="card-4">
-			                        <h3> {{count($repeated_ques_slug)}}</h3>
-			                        <p> {{implode(', ', $repeated_ques_slug)}}</p>
-			                        <p>Repeated Question Slug</p>
-			                    </div>
-			                    <div class="card-4">
-			                        <h3> </h3>
-			                        <p>Miss option value</p>
-				                    @if(!empty($opt_miss_error))
-					                    @foreach($opt_miss_error as $key => $val)
-					                    	<p>Field {{$val['type']}} ,  Slug {{$val['slug']}}</p>
-					                    @endforeach
-						    			
-						    		@endif
-			                    </div>
-			                    
-			                </div>
-		               @endif
-	    			</div>
-	    		</div>
-	    		<div class="ac s100 m100 l25 aione-border">
-	    			<div class="">
-	    				<div class="aione-row" style="">
-			    			<h4 class="" style="margin-top: 0;font-weight: 300;margin: 15px">Survey Settings</h4>
-			    			<div class="aione-table">
-			    			{{-- {{dump($setting_questions)}} --}}
-			    				@if($setting_questions != null)
-				    				<table class="compact">
-				    					<tbody>
-				    						@foreach($setting_questions as $settingKey => $settingVal)
-				                                @if($settingKey=='_token')
-				                                    @continue;
-				                                @endif
-				                                @if(!empty($settings[$settingKey]))
-				                                    <tr>
-				                                        <td>{{$index++}}.{{$settingVal}}</td>
-				                                        <td>{{$settings[$settingKey]}}</td>
-				                                    </tr>
-				                                @endif
-				                            @endforeach
-				                            
-				    					</tbody>
-				    				</table>
-				    			@endif
-			    			</div>
-		    			</div>	
-	    			</div>
-	    		</div>
-	    	</div>	
-    	</div>
+			
+	       
+			        
+  
     	@endif
 	  @else
 	     <div class="aione-message warning">
@@ -323,125 +504,43 @@ $index =1;
         </div>
  @endif
 	
-{{-- <table>
-	<tr>
-		<th>Section</th>
-		<th>Question</th>
-		<th>Type</th>
-		<th>Description</th>
-		<th>Required</th>
-		<th>Answer Option</th>
-		<th>Created at</th>
-	</tr>
-	<tbody>
+<script>
+	$(document).on('click','.goToSection', function(e){
+		e.preventDefault();
+		id = $(this).attr('id');
+		$('html, body').animate({
+		    scrollTop: ($('.'+id).offset().top)
+		},500);
+		$("."+id).css('background-color','yellow');
 		
+			setTimeout(function(){
+				$("."+id).css('background-color','white');
+			},6000);
+	});
+
+	$(document).on('click','.goToQues', function(e){
+		e.preventDefault();
+		id = $(this).attr('id');
+		className = $("."+id).closest('div.aione-table').closest('div.aione-item').addClass('active');
+		$("."+id).css('background-color','yellow');
+
+		$('html, body').animate({
+		    scrollTop: ($('.'+id).offset().top)
+		},1500);
+
+		setTimeout(function(){
+				$("."+id).css('background-color','white');
+				className = $("."+id).closest('div.aione-table').closest('div.aione-item').removeClass('active');
+			},10000);
+
+	});
+
+
+
 	
+</script>
 
-@if(!empty($survey_data))
-    @foreach ($sections as $key => $value) 
-        @foreach($value['fields'] as $fieldKey => $fieldVal)
-        <tr>
-      		<td>{{$value['section_name']}}</td>
-			<td>{{$fieldVal['field_title']}}</td>
-			<td>{{$fieldVal['field_type']}}</td>
-			<td>{{$fieldVal['field_description']}}</td>
-			@php 
 
-	            $collection = collect($fieldVal['field_meta'])->mapWithKeys(function($item){
-	                return [$item['key']=>$item['value']];
-	            });
-				$meta = $collection->toArray();
-            @endphp
-            <td>{{@$meta['required']  }}</td>
-			
-			<td>
-            @foreach($meta as $metaKey=> $metaVal)
-            @if($metaKey == 'field_options' && in_array($fieldVal['field_type'], ['radio','select','checkbox'])  )
-                @foreach(json_decode($metaVal,true) as $optKey => $optVal)
-						{{$loop->iteration}} {{$optVal['key']}}-{{$optVal['value']}}<br>
-                @endforeach
-            @endif
-            @endforeach
-           </td>
-            <td>{{$fieldVal['created_at']}}</td>
-		</tr>
-        @endforeach
-
-    @endforeach
-    @else
-    <h3> No Question Available </h3>
-@endif
-
-</tbody>
-</table> --}}
-<style type="text/css">
-    .aione-row > .left-75{
-        width: 70%;
-        float: left;
-        padding-right: 10px
-    }
-    .aione-row > .right-25{
-        width: 30%;
-        float: right;
-    }
-    .aione-row.theme-1 > .card-4{
-        width: 25%;
-        float: left;
-        padding: 30px 0px;
-        text-align: center;
-    }
-    .aione-row > .card-4 > h3, .aione-row > .card-4 > p{
-        padding:0;
-        margin: 0;
-    }
-    .aione-row > .card-4 > p{
-        line-height: 28px;
-        font-size: 16px;
-        text-transform: uppercase;
-        font-weight: 300;
-        color: #676767;
-    }
-    .aione-row > .card-4:nth-child(odd) > h3{
-        color:#DF735E 
-    }
-    .aione-row > .card-4:nth-child(even) > h3{
-        color:#79C3A9 
-    }
-    .aione-border.theme-1{
-        border:1px solid #e8e8e8;
-        border-radius: 4px
-    }
-    .aione-border.theme-1 > .card-4{
-        border-right: 1px solid #e8e8e8;
-    }
-
-     .aione-row.theme-2 > .card-4{
-        width: 24%;
-        margin-right: 10px;
-        float: left;
-        padding: 30px 0px;
-        text-align: center;
-    }
-     .aione-row.theme-2 > .card-4:last-child{
-        margin-right: 0px
-     }
-    .aione-border.theme-2 > .card-4{
-        border: 1px solid #e8e8e8;
-        border-radius: 4px
-    }
-
-     .aione-row.theme-3 > .card-4{
-        width: 50%;
-        float: left;
-        padding: 30px 0px;
-        text-align: center;
-    }
-     
-    .aione-border.theme-3 > .card-4{
-        border: 1px solid #e8e8e8;
-     
-    }
-</style>
 
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

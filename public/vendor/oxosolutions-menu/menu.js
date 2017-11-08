@@ -61,11 +61,13 @@ function updateitem(id = 0) {
 		var label = $("#idlabelmenu_" + id).val()
 		var clases = $("#clases_menu_" + id).val()
 		var url = $("#url_menu_" + id).val()
+		var target = ($("#target_menu_" + id).prop("checked") == true)?$("#target_menu_" + id).val():'';
 		var data = {
 			label : label,
 			clases : clases,
 			url : url,
-			id : id
+			id : id,
+			target: target
 		}
 	}else{
 		var arr_data = [];
@@ -74,11 +76,17 @@ function updateitem(id = 0) {
 			var label = $(this).find(".edit-menu-item-title").val();
 			var clases = $(this).find(".edit-menu-item-classes").val();
 			var url = $(this).find(".edit-menu-item-url").val();
+			if($(this).find(".edit-menu-item-target").is(":checked")){
+				var target = "_blank";
+			}else{
+				var target = null;
+			}
 			arr_data.push({
 				id : id,
 				label : label,
 				class : clases,
-				link : url
+				link : url,
+				target: target
 			});
 		});
 

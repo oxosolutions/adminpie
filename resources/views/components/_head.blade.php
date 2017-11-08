@@ -40,7 +40,7 @@
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/handsontable.full.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/jqueryHandsontable.js"></script>
 	<script src="https://cdn.jsdelivr.net/handsontable/0.31.2/plugins/removeRow/handsontable.removeRow.js"></script>
-	<script src="https://cdn.rawgit.com/nnattawat/flip/master/dist/jquery.flip.min.js"></script>
+
 	<script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
 	<script type="text/javascript" src="{{asset('js/dropzone.js')}}"></script>
 
@@ -79,45 +79,50 @@
     </script>
     <script type="text/javascript">
     	$(function(){
-    		$('#example').DataTable({
-    			processing: true,
-		      	serverSide: true,
-		      	ajax: '{{url('/')}}/hrm/employee/list',
-		      	buttons: [
-		                    {
-		                        extend: 'excel',
-		                        filename: 'Export',
-		                        exportOptions: {
-		                            columns: ':not(.actions)'
-		                        }
-		                    }
-		                ],
-			    columns: [
-		            { data: 'user', name: 'user' },
-		            { data: 'employee_id', name: 'employee_id' },
-		            { data: 'name', name: 'name'},
-		            { data: 'department', name: 'department' },
-		            { data: 'designation', name: 'designation', searchable: true },
-		            { data: 'email', name: 'email', searchable: true },
-		            { data: 'created_at', name: 'created_at', searchable: true },
-		            { data: 'status', name: 'status', orderable: false, searchable: false, "className": 'actions' },
-			    ],
-				"oLanguage": {
-		            "sLengthMenu": "_MENU_ Rows",
-		            "sSearch": ""
-		        },
-		        "aLengthMenu": [
-		            [5, 10, 15, 20, 50, -1],
-		            [5, 10, 15, 20, 50, "All"] // change per page values here
-		        ],
-		        search: {
-				    "caseInsensitive": false
-				},
-				responsive: true,
-				searchHighlight: true,
+    		try{
+    			$('#example').DataTable({
+	    			processing: true,
+			      	serverSide: true,
+			      	ajax: '{{url('/')}}/hrm/employee/list',
+			      	buttons: [
+			                    {
+			                        extend: 'excel',
+			                        filename: 'Export',
+			                        exportOptions: {
+			                            columns: ':not(.actions)'
+			                        }
+			                    }
+			                ],
+				    columns: [
+			            { data: 'user', name: 'user' },
+			            { data: 'employee_id', name: 'employee_id' },
+			            { data: 'name', name: 'name'},
+			            { data: 'department', name: 'department' },
+			            { data: 'designation', name: 'designation', searchable: true },
+			            { data: 'email', name: 'email', searchable: true },
+			            { data: 'created_at', name: 'created_at', searchable: true },
+			            { data: 'status', name: 'status', orderable: false, searchable: false, "className": 'actions' },
+				    ],
+					"oLanguage": {
+			            "sLengthMenu": "_MENU_ Rows",
+			            "sSearch": ""
+			        },
+			        "aLengthMenu": [
+			            [5, 10, 15, 20, 50, -1],
+			            [5, 10, 15, 20, 50, "All"] // change per page values here
+			        ],
+			        search: {
+					    "caseInsensitive": false
+					},
+					responsive: true,
+					searchHighlight: true,
 
-		        "iDisplayLength": 10    // set the initial value
-    		});
+			        "iDisplayLength": 10    // set the initial value
+	    		});
+    		}catch(e){
+
+    		}
+    		
     		$('select[name=example_length]').addClass('browser-default');
     		$('input[type=search]').addClass('browser-default');
     	});

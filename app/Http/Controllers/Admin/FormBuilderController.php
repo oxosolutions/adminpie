@@ -17,10 +17,37 @@ use Auth;
 
 class FormBuilderController extends Controller
 {
-    protected $valid_fields = [
+    public function formTable()
+    {
+        $org_id = Session::get('organization_id');
+        if(Auth::guard('admin')->check()){
+            $formTable = 'global_forms';
+        }else{
+            $formTable = $org_id.'_forms';
+        }
+        return $formTable;
+    }
+
+    public function validateFormUnique($request)
+    {
+        $formTable = $this->formTable();  
+        $valid_fields = [
+                            'form_title' => 'required',
+                            'form_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300|unique:'.$formTable
+                        ];
+        $this->validate($request,$valid_fields);
+
+    }
+    public function validateForm($request)
+    {
+        $formTable = $this->formTable();  
+        $valid_fields = [
                             'form_title' => 'required',
                             'form_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300'
                         ];
+        $this->validate($request,$valid_fields);
+
+    }
     protected $valid_sections = [
                             'section_name' => 'required',
                             'section_slug' => 'required|unique:global_form_sections|regex:/^[a-z0-9-_]+$/|min:4|max:300'
@@ -41,16 +68,19 @@ class FormBuilderController extends Controller
 
     public function createForm(Request $request)
     {
-        // dd($request->type);
+
+        $output = parse_slug($request->form_slug);
+        $request['form_slug'] = $output;
         $created_by = get_user_id();
         $request['created_by'] = $created_by; 
 
         $modelName = $this->assignModel('forms');
-        $this->validate($request, $this->valid_fields);
+        
+        $this->validateFormUnique($request);
         $model = new $modelName;
         $model->fill($request->all());
         $model->save();
-        // return redirect()->route('list.forms');
+
         Session::flash('success','Form created successfully');
         if(Auth::guard('admin')->check()){
             return redirect()->route('list.forms');
@@ -116,12 +146,14 @@ class FormBuilderController extends Controller
             $sectionRoute = 'list.sections';
             $settingsRoute = 'form.settings';
             $cloneRoute = 'form.clone';
+            $customRoute = 'form.custom';
         }else{
             $previewRoute = 'org.form.preview';
             $deleteRoute = 'org.delete.form';
             $sectionRoute = 'org.list.sections';
             $settingsRoute = 'org.form.settings';
             $cloneRoute = 'org.form.clone';
+            $customRoute = 'org.form.custom';
         }
         $datalist =  [
                         'datalist'=>$model,
@@ -130,6 +162,7 @@ class FormBuilderController extends Controller
                                 'view'=>['title'=>'View','route'=>$previewRoute],
                                 'section'=>['title'=>'Edit','route'=>['route'=>$sectionRoute]],
                                 'settings'=>['title'=>'Settings','route'=>$settingsRoute],
+                                'form.custom'=>['title'=>'Customize','route'=>$customRoute],
                                 'clone'=>['title'=>'Clone','route'=>$cloneRoute],
                                 'delete'=>['title'=>'Delete','class'=>'red','route'=>$deleteRoute],
                                 ]
@@ -142,19 +175,36 @@ class FormBuilderController extends Controller
     public function deleteForm($id)
     {
         $modelName = $this->assignModel('forms');
-        $model = $modelName::where('id',$id)->delete();
+        $model = $modelName::find($id);
+        $type = $model->type;
+        $model->delete();
         if(Auth::guard('admin')->check()){
+             Session::flash('success','Form deleted successfully');
             return redirect()->route('list.forms');
         }else{
-            return redirect()->route('org.list.forms');
+            if($type == 'survey'){
+                Session::flash('success','Survey deleted successfully');
+                return redirect()->route('list.survey');
+            }else{
+                Session::flash('success','Form deleted successfully');
+                return redirect()->route('org.list.forms');
+            }
+            
         }
     }
 
     public function updateFormDetails(Request $request)
     {
-        // dd($request->all());
-
+        $output = parse_slug($request->form_slug);
+        $request['form_slug'] = $output;
         $modelName = $this->assignModel('forms');
+        $model = $modelName::where('id',$request->id)->first();
+
+        if($model->form_slug == $request['form_slug']){
+            $this->validateForm($request);
+        }else{
+            $this->validateFormUnique($request);
+        }
         $model = $modelName::where('id',$request->id)->update($request->except('_token','id'));
         return back();
     }
@@ -168,9 +218,37 @@ class FormBuilderController extends Controller
         $this->validate($request,$rules);
     }
 
+    protected function validateSection($request){
+        $org_id = Session::get('organization_id');
+        if(Auth::guard('admin')->check()){
+            $sectionTable = 'global_form_sections';
+        }else{
+            $sectionTable = $org_id.'_form_sections';
+        }
+        $rules = [
+            'section_name' => 'required',
+            'section_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300|unique:'.$sectionTable,
+            'section_type' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+    protected function validateSectionWithoutUnique($request){
+        $rules = [
+            'section_name' => 'required',
+            'section_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300',
+            'section_type' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
     //start section
     public function createSection(Request $request , $id){
-        $this->validateAddModule($request);
+        $output = parse_slug($request->section_slug);
+        $request['section_slug'] = $output;
+
+        $this->validateSection($request);
         
         $modelName = $this->assignModel('section');
         $lastOrder = $modelName::where(['form_id' => $id])->orderBy('order','DESC')->first();
@@ -190,8 +268,10 @@ class FormBuilderController extends Controller
         $modelName = $this->assignModel('SectionMeta');
         $section = new $modelName;
         $section->section_id = $new_sec_id;
-        $section->key = 'modelName';
+        $section->key = 'section_type';
         $section->value = $request->section_type;
+        $section->save();
+
         return back();
     } 
 
@@ -199,8 +279,8 @@ class FormBuilderController extends Controller
         $rules = [
             'section_id' => 'required',
             'section_name' => 'required',
-            'section_slug' => 'required',
-            'section_description' => 'required',
+            'section_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300',
+            // 'section_description' => 'required',
             'section_type' => 'required'
         ];
 
@@ -208,10 +288,17 @@ class FormBuilderController extends Controller
     }
 
     public function updateSection(Request $request, $form_id){
-
-        $this->validateUpdateSection($request);
+        $output = parse_slug($request->section_slug);
+        $request['section_slug'] = $output;
         $sectionId = $request->section_id;
         $modelName = $this->assignModel('section');
+        $checkSlug = $modelName::where(['form_id'=>$form_id,'id'=>$sectionId])->first();
+        if($checkSlug->section_slug == $request['section_slug']){
+            $this->validateSectionWithoutUnique($request);
+        }else{
+            $this->validateSection($request);
+        }
+
         $model = $modelName::firstOrNew(['form_id'=>$form_id,'id'=>$sectionId]);
         $model->form_id = $form_id;
         $model->section_name = $request->section_name;
@@ -237,8 +324,12 @@ class FormBuilderController extends Controller
     }
 
     public function createField(Request $request,$form_id, $section_id){
-        $this->validateCreateField($request);
+        $output = parse_slug($request->field_slug);
+        $request['field_slug'] = $output;
+
         $modelName = $this->assignModel('FormBuilder');
+        // $this->validateUpdateFields($request);
+
         $lastOrder = $modelName::where(['form_id' => $form_id , 'section_id' => $section_id])->orderBy('order','DESC')->first();
         if($lastOrder == NULL){
             $newOrder = 1;
@@ -279,18 +370,21 @@ class FormBuilderController extends Controller
                    ];
         $modelName = $this->assignModel('section');
         $formModel = $this->assignModel('forms');
+        $sectionMeta = $this->assignModel('SectionMeta');
         $form = $formModel::find($form_id);
         $model = $modelName::orderBy('order','ASC')->where('form_id',$form_id)->with(['fields'=>function($query){
             $query->with('fieldMeta')->orderBy('order','ASC');
         },'sectionMeta','form'])->get();
-        // dd($model);
         return view('admin.formbuilder.sections')->with([ 'sections' => $model,'plugins'=> $plugins,'form'=>$form,'permission'=>$permission]);
     }
 
     public function deleteSection($id)
     {
         $modelName = $this->assignModel('section');
-        $model = $modelName::with(['fields'])->where('id',$id)->delete();
+        $model = $modelName::find($id);
+        $model->fields()->delete();
+        $model->delete();
+        Session::flash('success','Section deleted successfully!');
         return back();
     }
 
@@ -367,7 +461,6 @@ class FormBuilderController extends Controller
 //previous code
 
     public function store(Request $request){
-        dd($request->all());
         $modelName = $this->assignModel('FormBuilder');
         $model = new $modelName;   
         $model->fill($request->all());
@@ -415,6 +508,22 @@ class FormBuilderController extends Controller
     }
 
     protected function validateUpdateFields($request){
+        $org_id = Session::get('organization_id');
+        if(Auth::guard('admin')->check()){
+            $fieldTable = 'global_form_fields';
+        }else{
+            $fieldTable = $org_id.'_form_fields';
+        }
+
+        $rules = [
+            'field_type' => 'required',
+            'field_slug' => 'required|regex:/^[a-z0-9-_]+$/|min:4|max:300|unique:'.$fieldTable,
+
+        ];
+        $this->validate($request, $rules);
+    }
+    protected function validateUpdateSlugNotUniqueFields($request){
+
         $rules = [
             'field_type' => 'required',
             'field_slug' => 'required',
@@ -423,6 +532,11 @@ class FormBuilderController extends Controller
     }
 
     public function updateField(Request $request, $form_id, $section_id, $field_id){
+       
+
+        $output = parse_slug($request->field_slug);
+        $request['field_slug'] = $output;
+
         if($request->has('field_options')){
             $new_field_options = [];
             foreach($request['field_options'] as $k => $v){
@@ -451,8 +565,14 @@ class FormBuilderController extends Controller
             $request['field_conditions'] = $new_field_options;
 
         }
-        $this->validateUpdateFields($request);
         $modelName = $this->assignModel('FormBuilder');
+        $checkSlug = $modelName::where(['form_id'=>$form_id,'section_id'=>$section_id,'id'=>$field_id])->first();
+        // dd($checkSlug);
+        // if($checkSlug->field_slug == $request->field_slug){
+        //     $this->validateUpdateSlugNotUniqueFields($request);
+        // }else{
+        //     $this->validateUpdateFields($request);
+        // }
         $model = $modelName::firstOrNew(['form_id'=>$form_id,'section_id'=>$section_id,'id'=>$field_id]);
         $model->field_slug = $request->field_slug;
         $model->field_title = $request->field_title;
@@ -936,4 +1056,22 @@ class FormBuilderController extends Controller
             return back();   
         }
     }
+
+
+    public function sortField(Request $request)
+    {
+        $index = 1;
+        $modelName = $this->assignModel('FormBuilder');
+        foreach ($request->data as $key => $value) {
+            $model = $modelName::where('id',$value)->update(['order' => $index]);
+            $index++;
+        }
+        return back();
+
+    }
+
+
+
+
+
 }

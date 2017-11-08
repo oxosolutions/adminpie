@@ -41,7 +41,7 @@
 				{!! Form::model($model2,['route' => 'update.crediental' , 'method' => 'POST']) !!}
 						<input type="hidden" name="id" value="{{$model[0]->id}}">
 						{!!FormGenerator::GenerateSection('cresec1',['type'=>'inset'])!!}
-						{{-- {!!FormGenerator::GenerateSection('cresec2',['type'=>'inset'],$model2)!!} --}}
+					
 							@foreach($model as $key => $value)
 								@foreach(json_decode($value->data) as $k => $v)
 									<div id="repeat">

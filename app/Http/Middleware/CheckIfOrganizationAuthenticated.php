@@ -28,6 +28,7 @@ class CheckIfOrganizationAuthenticated
         $completeDomain = $request->getHost();
         $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
+
         if($primary_domain == false){
             if($secondary_domain == false){
                 $domain = explode('.', $request->getHost());
@@ -37,6 +38,7 @@ class CheckIfOrganizationAuthenticated
                     return redirect()->route('demo5');
                 }
                 Session::put('organization_id',$model->id);
+
                 $auth = Auth::guard('org');
                 if (!$auth->check()) {
                     if($organization_settings != ''){
@@ -45,6 +47,7 @@ class CheckIfOrganizationAuthenticated
                         return redirect('/login');
                     }
                 }
+
             }else{
                 Session::put('organization_id',$secondary_domain->id);
                 $auth = Auth::guard('org');
@@ -56,7 +59,9 @@ class CheckIfOrganizationAuthenticated
                     }
                 }
             }
+            
         }else{
+
             Session::put('organization_id',$primary_domain->id);
             $auth = Auth::guard('org');
             if (!$auth->check()) {
@@ -67,7 +72,7 @@ class CheckIfOrganizationAuthenticated
                 }
             }
         }
-
+        
         return $next($request);
     }
 

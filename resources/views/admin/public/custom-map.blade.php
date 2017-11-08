@@ -67,26 +67,156 @@ img{
 }
 
 /***************************************
-CUSTOM MAP THEME GREEN
+CUSTOM MAP THEME LIGHT
 ***************************************/
-.aione-wrapper.aione-theme-green{
+.map-theme-light{
 
 }
-.aione-wrapper.aione-theme-green .aione-map-wrapper .land{
+.map-theme-light .land{
 fill: #cdcac5;
 stroke: #ffffff;
 stroke-width: 0.3;
 }
-.aione-wrapper.aione-theme-green .aione-map-wrapper .land:hover{
+.map-theme-light .land:hover{
 fill: #b9b6b2;
 }
-.aione-wrapper.aione-theme-green .aione-map-wrapper .active{
+.map-theme-light .active{
+fill:#666666;
+} 
+.map-theme-light .active:hover{
+fill:#454545;
+}
+/***************************************
+CUSTOM MAP THEME DARK
+***************************************/
+
+.map-theme-dark{
+
+}
+.map-theme-dark .land{
+    fill: #454545;
+    stroke: #282828; 
+    stroke-width: 0.3;
+}
+.map-theme-dark .land:hover{
+    fill: #666666;
+    stroke: #222222;
+}
+.map-theme-dark .active{
+fill:#FFB300;
+} 
+.map-theme-dark .active:hover{
+fill:#ff9800;
+}  
+
+/***************************************
+CUSTOM MAP THEME GREEN
+***************************************/
+.map-theme-green{
+
+}
+.map-theme-green .land{
+fill: #cdcac5;
+stroke: #ffffff;
+stroke-width: 0.3;
+}
+.map-theme-green .land:hover{
+fill: #b9b6b2;
+}
+.map-theme-green .active{
 fill:#6db77c;
 } 
-.aione-wrapper.aione-theme-green .aione-map-wrapper .active:hover{
+.map-theme-green .active:hover{
 fill:#5ca56a;
 } 
 
+
+
+/***************************************
+CUSTOM MAP THEME RED
+***************************************/
+.map-theme-red{
+
+}
+.map-theme-red .land{
+fill: #cdcac5;
+stroke: #ffffff;
+stroke-width: 0.3;
+}
+.map-theme-red .land:hover{
+fill: #b9b6b2;
+}
+.map-theme-red .active{
+fill:#e53935;
+} 
+.map-theme-red .active:hover{
+fill:#ca2c28;
+} 
+
+/***************************************
+CUSTOM MAP THEME ORANGE
+***************************************/
+.map-theme-orange{
+
+}
+.map-theme-orange .land{
+fill: #cdcac5;
+stroke: #ffffff;
+stroke-width: 0.3;
+}
+.map-theme-orange .land:hover{
+fill: #b9b6b2;
+}
+.map-theme-orange .active{
+fill:#ffa726;
+} 
+.map-theme-orange .active:hover{
+fill:#ff9800;
+}
+
+
+/***************************************
+CUSTOM MAP THEME BROWN
+***************************************/
+.map-theme-brown{
+
+}
+.map-theme-brown .land{
+fill: #cdcac5;
+stroke: #ffffff;
+stroke-width: 0.3;
+}
+.map-theme-brown .land:hover{
+fill: #b9b6b2;
+}
+.map-theme-brown .active{
+fill:#8d6e63;
+} 
+.map-theme-brown .active:hover{
+fill:#795548;
+}
+
+
+/***************************************
+CUSTOM MAP THEME BLUE
+***************************************/
+.map-theme-blue{
+
+}
+.map-theme-blue .land{
+fill: #f2f2f2;
+stroke: #282828;
+stroke-width: 0.3;
+}
+.map-theme-blue .land:hover{
+fill: #d2d2d2;
+}
+.map-theme-blue .active{
+fill:#03a9f4;
+} 
+.map-theme-blue .active:hover{
+fill:#0288d1;
+}
 /***************************************
 AIONE TOOLTIP
 ***************************************/
@@ -229,7 +359,7 @@ AIONE LOADER
 	</head>
 	<body>
 	
-		<div id="aione_wrapper" class="aione-wrapper aione-layout-wide aione-visualization aione-theme-{{$theme}}">
+		<div id="aione_wrapper" class="aione-wrapper aione-layout-wide aione-visualization {{$theme}}">
 			<div class="aione-row">
 				<div id="aione_header" class="aione-header">
 					<div class="aione-row">
@@ -324,9 +454,10 @@ AIONE LOADER
 		map_data = map_data.split('+');
 		//console.log(map_data);
 		$.each(map_data, function(key, value){
-			var path = value.split('=');
-			$('.aione-map-wrapper').find('#'+path[0]).addClass('active').attr('data-tooltip',path[1]);
-			
+      if(value != undefined && value != ''){
+        var path = value.split('=');
+        $('.aione-map-wrapper').find('#'+path[0]).addClass('active').attr('data-tooltip',path[1]);
+      }
 		});
 		
 		$('.aione-map-wrapper .active').mouseover(function (e) {

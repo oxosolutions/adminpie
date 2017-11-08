@@ -29,4 +29,4 @@
 </script>
 <script type="text/javascript" src="{{asset('vendor/oxosolutions-menu/scripts.js')}}"></script>
 <script type="text/javascript" src="{{asset('vendor/oxosolutions-menu/scripts2.js')}}"></script>
-<script type="text/javascript" src="{{asset('vendor/oxosolutions-menu/menu.js')}}"></script>
+<script type="text/javascript" src="{{asset('vendor/oxosolutions-menu/menu.js?rand=').rand(1111,9999)}}"></script>

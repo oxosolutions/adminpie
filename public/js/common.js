@@ -120,6 +120,30 @@ $(document).ready(function(){
 		});
 	/* code for visualization page */
 
+
+	/**
+	 * Import Dataset custom js  #########  Starts Here  #########
+	 */
+		if($('#input_add_replace').val() == 'append' || $('#input_add_replace').val() == 'replace'){
+			$('#field_1659').css('display','block');
+		}else{
+			$('#field_1659').css('display','none');
+		}
+
+		$('#input_add_replace').change(function(){
+
+			if($(this).val() == 'append' || $(this).val() == 'replace'){
+				$('#field_1659').slideDown(300);
+			}else{
+				$('#field_1659').slideUp(300);
+			}
+		});
+
+
+	/**
+	 * ########################    End Here    ###################
+	 */
+
 function clock(){
 
 	var today = new Date();

@@ -68,19 +68,19 @@ class ProfileController extends Controller
      */
     public function edit(){
     	$form_slug = null;
-    	$model = Auth::guard('org')->user();
+    	$model = Auth::guard('org')->user()->toArray();
     	$processMeta = UsersMeta::where(['user_id'=>Auth::guard('org')->user()->id])->get();
-    	foreach($processMeta as $key => $value){
-            try{
-                $decodeValue = json_decode($value->value);
-                if(is_array($decodeValue) || $decodeValue == ''){
-                    $model[$value->key] = $decodeValue;
-                }else{
-                    $model[$value->key] = $value->value;
-                }
-            }catch(\Exception $e){
+        foreach($processMeta as $key => $value){
+            // try{
+            //     $decodeValue = json_decode($value->value);
+            //     if(is_array($decodeValue) || $decodeValue == ''){
+            //         $model[$value->key] = $decodeValue;
+            //     }else{
+            //         $model[$value->key] = $value->value;
+            //     }
+            // }catch(\Exception $e){
                 $model[$value->key] = $value->value;
-            }
+            // }
     	}
     	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
@@ -162,8 +162,9 @@ class ProfileController extends Controller
      * @author Rahul 
      */
     public function updateProfile(Request $request, $id){
+
     	$this->validateUpdateProfileFor($request);
-    	$model = GroupUsers::find(Auth::guard('org')->user()->id);
+    	$model = GroupUsers::find($id);
     	$model->name = $request->name;
     	$model->email = $request->email;
     	$model->save();
@@ -176,7 +177,7 @@ class ProfileController extends Controller
             }else{
                 $userMetaModel->value = json_encode($value);
             }
-    		$userMetaModel->user_id = Auth::guard('org')->user()->id;
+    		$userMetaModel->user_id = $id;
     		$userMetaModel->save();
     	}
     	Session::flash('success', 'Successfully updated!!');

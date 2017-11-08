@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\CustomMaps;
 use Auth;
+use Excel;
 use App\Model\Organization\Maps;
 use Session;
 class CustomMapsController extends Controller
@@ -78,7 +79,7 @@ class CustomMapsController extends Controller
            
           }
 
-// dd($viewRoute);        
+      // dd($viewRoute);        
        
 
       	$datalist = [
@@ -197,5 +198,17 @@ class CustomMapsController extends Controller
     {
       return view('admin.custom-maps.add-map');
     }
-    
+    public function processExcelFile(Request $request)
+    {
+        $arrayData = [];
+        foreach (json_decode($request->mapkeys ,true) as $key => $value) {
+            $arrayData[] = [$key,$value];
+        }
+        Excel::create('myFile', function($excel) use($arrayData) {
+            $excel->sheet('mySheet', function($sheet) use($arrayData) {
+                $sheet->fromArray($arrayData);
+            });
+        })->download('csv');
+        
+    }
 }

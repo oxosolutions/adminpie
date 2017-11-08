@@ -17,7 +17,7 @@ $page_title_data = array(
     <div class="row">
         <div class="col l9">
           <input type="hidden" name="old_role_id" value="{{$id}}">
-            <p style="    line-height: 24px;"><strong class="red-text">NOTE:</strong> You are about to Delete the role which is associate with many Users. Please select another role to replace with <STRONG>( {{$roleList[$id]['name']}} )</STRONG>.
+            <p style="line-height: 24px;"><strong class="red-text">NOTE:</strong> You are about to Delete the role which is associate with many Users. Please select another role to replace with <STRONG>( {{$roleList[$id]['name']}} )</STRONG>.
             </p>    
         </div>
         <div class="col l3">

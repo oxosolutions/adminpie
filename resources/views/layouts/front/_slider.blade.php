@@ -1,5 +1,7 @@
 @php
 $post_id = 9;
+$get_slider = get_slider();
+
 $post_meta = get_post_meta($post_id,true);
 if(isset($post_meta['post_slider_slug'])){
 	$post_slider_slug = $post_meta['post_slider_slug'];

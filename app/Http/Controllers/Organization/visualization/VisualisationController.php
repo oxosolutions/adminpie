@@ -61,6 +61,9 @@ class VisualisationController extends Controller
                           'actions' => [
                                           'view' => ['title'=>'View','route'=>'visualization.view','class' => 'edit'],
                                           'edit' => ['title'=>'Edit','route'=>'edit.visualization','class' => 'edit'],
+                                          'setting' => ['title'=>'Settings','route'=>'setting.visualization','class' => 'edit'],
+                                          'collaborate' => ['title'=>'Collaborate ','route'=>'collaborate.visualization','class' => 'edit'],
+                                          'customize' => ['title'=>'Customize ','route'=>'customize.visualization','class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.visualization']
                                        ]
                       ];
@@ -268,7 +271,9 @@ class VisualisationController extends Controller
                 return ['status'=>'error','message'=>'something went wrong!'];
             }*/
         }
-        return back();
+        Session::flash('success','Successfully created!');
+        // return back();
+        return redirect()->route('visualizations');
 	}
 
 	/*
@@ -277,10 +282,14 @@ class VisualisationController extends Controller
 	* return JSON to API
 	*/
 	public function saveCharts(Request $request, $visualization_id){
-		for($chartCount = 0; $chartCount < count($request->available_chart); $chartCount++){
+
+		$available_chart = array_values($request->available_chart);
+		$chartToNotDelete = [];
+		for($chartCount = 0; $chartCount < count($available_chart); $chartCount++){
 			
-			$visualization_chart = $this->createChart($request, $request->available_chart[$chartCount], $chartCount, $visualization_id);
-			$this->createMeta($request, $request->available_chart[$chartCount], $chartCount, $visualization_chart, $visualization_id);
+			$visualization_chart = $this->createChart($request, $available_chart[$chartCount], $chartCount, $visualization_id);
+			$chartToNotDelete[] = $visualization_chart->id;
+			$this->createMeta($request, $available_chart[$chartCount], $chartCount, $visualization_chart, $visualization_id);
 		}
 		if($request->has('filters')){
 			$visualizationMeta = VisualizationMeta::where(['visualization_id'=>$visualization_id,'key'=>'filters'])->first();
@@ -296,7 +305,15 @@ class VisualisationController extends Controller
 			$visualizationMeta->value = json_encode($filters);
 			$visualizationMeta->save();
 		}
+		$this->deleteCharts($chartToNotDelete,$visualization_id);
+		Session::flash('success','Charts saved successfully!');
 		return back();
+	}
+
+	protected function deleteCharts($chartIds,$visualization_id){
+		$model = VisualizationCharts::whereNotIn('id',$chartIds)->where('visualization_id',$visualization_id)->with(['meta'=>function($query){
+			$query->delete();
+		}])->delete();
 	}
 
 	public function saveVisualizationSettings(Request $request, $id){
@@ -427,6 +444,7 @@ class VisualisationController extends Controller
 	public function delete_visualization($visualization_id){
 		
 		Visualization::where('id',$visualization_id)->delete();
+		Session::flash('success','Successfully Deleted!');
 		return back();
 		/*$visual = Visualisation::where('id',$visualization_id)->with([
 			'charts'=>function($query) use ($visualization_id){
@@ -777,13 +795,14 @@ class VisualisationController extends Controller
 				if($request->has('applyFilter')){
 					$dataset_records = $this->apply_filters($request, $dataset_table, $columns);
 				}else{
-					$dataset_records = DB::table($dataset_table)->select($columns)->where(['status'=>1,'parent'=>0])->get()->toArray(); //getting records with selected columns from dataset table
+					$dataset_records = DB::table($dataset_table)->select($columns)->whereIn('status',['status',1])->orWhereIn('parent',['parent',1])->get()->toArray(); //getting records with selected columns from dataset table
 				}
 				$formula = $this->getMetaValue($chart->meta,'formula');
 				if($formula != 'no' && $formula != false){
 					$dataset_records = $this->apply_formula($dataset_records, $formula);
 				}
 				$dataset_records = json_decode(json_encode($dataset_records),true); // generating pure array from colection of stdClass object
+
 				$headers = array_shift($dataset_records);
 				if($chart->chart_type != 'CustomMap'){
 					$lavaschart = Lava::DataTable();
@@ -954,9 +973,13 @@ class VisualisationController extends Controller
 		}
 		return view('organization.visualization.visualization-setting',['model'=>$formModel]);
 	}
-	public function user_visualization()
-	{
-		return view('organization.visualization.users');
+	public function collaborate_visualization($id){
+		$model = Visualization::find($id);
+		if($model->embed_token == null){
+			$model->embed_token = str_random();
+			$model->save();
+		}
+		return view('organization.visualization.collaborate',['model'=>$model]);
 	}
 	public function getDataByAjax($id, $length){
 

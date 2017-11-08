@@ -10,9 +10,10 @@ $page_title_data = array(
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
-@include('organization.visualization._tabs')
+
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
+    @include('organization.visualization._tabs')
       {!! Form::model($model,['route'=>['visualization.settings.save',request()->route()->parameters()['id']] , 'method' => 'post']) !!}
     	 {{-- <div class="card-v2">
             <div class="card-v2-header">

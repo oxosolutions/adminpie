@@ -3,18 +3,16 @@
 
 <!--==============================-->
 
-<div id="aione_sidebar_{{$visualization_id}}" class="aione-box aione-sidebar aione-sidebar-position-{{$meta['filter_position']}}" style="margin-top: 15px;margin-right: 15px">
-	<div class="wrapper-row" >
+<div id="aione_sidebar_{{$visualization_id}}" class="mb-10 aione-sidebar-position-{{$meta['filter_position']}}" >
 
-		<div class="chart-filters" >
+
+		<div class="chart-filters aione-border" >
 			
-			<div class="filter-title" >
-				<center> 
-					<h6 style="margin: 0px;font-size: 18px;font-weight: 600;color: grey">Filters <span><a href="javascript:;"><img src="{{-- {{asset('arrow-down1.png')}} --}}" alt=""></a></span></h6>
-				</center>
+			<div class="font-size-20 bg-grey bg-lighten-4 p-10 " >
+					Filters
 			</div>
 			
-			<div class="survey-chart-filters hideDiv">
+			<div class=" p-10 survey-chart-filters hideDiv">
 				<form method="POST" action="">
 					{!! Form::token() !!}
 					@php
@@ -38,7 +36,7 @@
 									</select>
 								</div>
 							</div>
-							<div class="divider"></div>
+							
 							@php
 								$multidrop++;
 							@endphp
@@ -78,7 +76,11 @@
 					@endforeach
 					<div class="chats-filter-button">
 						<button name="downloadData" type="submit" value="downloadData" class="aione-button" style="">Download Data</button>
-						<input type="submit" name="applyFilter" style="float: right" class="aione-button" value="Apply Filters" />
+						{{-- <input type="submit" name="applyFilter" style="float: right" class="aione-button" value="Apply Filters" /> --}}
+						<button type="submit" name="applyFilter" class="aione-button aione-float-right">Apply Filters</button>
+						<div class="clear">
+							
+						</div>
 					</div>
 					
 				</form>
@@ -86,7 +88,7 @@
 		</div>
 
 
-	</div> <!-- wrapper-row -->
+
 </div> <!-- aione_sidebar -->
 @endif
 @endif

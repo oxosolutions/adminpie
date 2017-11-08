@@ -53,9 +53,9 @@
 		@endif
 
 	
-		@if(@$errors->has(str_replace(' ','_',strtolower($collection->field_title))))
+		@if(@$errors->has(str_replace(' ','_',strtolower($collection->field_slug))))
 			<span class="aione-field-error">
-			{{$errors->first(str_replace(' ','_',strtolower($collection->field_title)))}}
+			{{$errors->first(str_replace(' ','_',strtolower($collection->field_slug)))}}
 			</span>
 		@endif
 	</div><!-- field -->

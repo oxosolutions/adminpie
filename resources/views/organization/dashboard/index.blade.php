@@ -1,20 +1,3 @@
-	{{-- @php
-	$jsonDataArray = json_decode('{"width":{"label":"Width","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"height":{"label":"Height","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"title":{"label":"Title","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart	","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"colors":{"label":"Colors","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"is3D":{"label":"3D Chart","type":"select","options":{"true":"True","false":"False"},"isArray":"false","chartType":["PieChart"]},"pieHole":{"label":"Pie Hole","type":"text","options":[],"isArray":"false","chartType":["PieChart"]},"pieStartAngle":{"label":"Pie Start Angle","type":"text","options":[],"isArray":"false","chartType":["PieChart"]},"reverseCategories":{"label":"Reserve Categories","type":"select","options":{"true":"True","false":"False"},"isArray":"false","chartType":["PieChart"]},"fontSize":{"label":"Font Size","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"fontName":{"label":"Font Name","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"forceIFrame":{"label":"Force iFrame","type":"select","options":{"true":"True","false":"False"},"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"areaOpacity":{"label":"Area Opacity","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"pieSliceBorderColor":{"label":"Pie Slce Border Color","type":"text","options":[],"isArray":"false","chartType":["PieChart"]},"legend":{"label":"Legend","type":"select","options":{"top":"Top","bottom":"Bottom","left":"Left","right":"Right"},"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"curveType":{"label":"Curve Type","type":"select","options":{"none":"None","function":"Smooth"},"isArray":"false","chartType":["LineChart"]},"pointSize":{"label":"Point Size","type":"text","options":[],"isArray":"false","chartType":["LineChart"]},"backgroundColor":{"label":"Background Color","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"isStacked":{"label":"Is Stacked","type":"select","options":{"true":"True","percent":"Percent","relative":"Relative","absolute":"Absolute"},"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","BubbleChart","TableChart"]},"lineWidth":{"label":"Line Width","type":"text","options":[],"isArray":"false","chartType":["LineChart"]},"enableInteractivity":{"label":"Enable Interactivity","type":"select","options":{"true":"True","false":"False"},"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"keepAspectRatio":{"label":"keep Aspect Ratio","type":"select","options":{"true":"True","false":"False"},"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"colorAxis":{"label":"Color Axis","type":"text","options":[],"isArray":"false","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"animation":{"statup":{"label":"Statup","type":"select","options":{"true":"True","false":"False"},"isArray":"false"},"duration":{"label":"Duration","type":"text","options":[],"isArray":"false"},"easing":{"label":"Easing","type":"select","options":{"inAndOut":"inAndOut","in":"In","out":"Out"},"isArray":"false"},"isArray":"true","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"chartArea":{"left":{"label":"Left","type":"text","options":[],"isArray":"false"},"top":{"label":"Top","type":"text","options":[],"isArray":"false"},"bottom":{"label":"Bottom","type":"text","options":[],"isArray":"false"},"height":{"label":"Height","type":"text","options":[],"isArray":"false"},"width":{"label":"Width","type":"text","options":[],"isArray":"false"},"isArray":"true","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"bar":{"groupWidth":{"label":"Group Width","type":"text","options":[],"isArray":"false"},"isArray":"true","chartType":["BarChart"]},"tooltip":{"isHtml":{"label":"Is HTML","type":"select","options":{"true":"True","false":"False"},"isArray":"false"},"showColorCode":{"label":"Show Color Code","type":"select","options":{"true":"True","false":"False"},"isArray":"false"},"isArray":"true","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"hAxis":{"textPosition":{"label":"Text Position","type":"select","options":{"horizontal":"Horizontal","vertical":"Vertical"},"isArray":"false"},"gridlines":{"color":{"label":"Grid Line Color","type":"text","options":[],"isArray":"false"},"isArray":"true"},"isArray":"true","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"bubble":{"opacity":{"label":"Bubble Opacity","type":"text","options":[],"isArray":"false"},"stroke":{"label":"Bubble Stroke color","type":"text","options":[],"isArray":"false"},"isArray":"true","chartType":["BubbleChart"]},"sizeAxis":{"maxSize":{"label":"Size Axis Max Size","type":"text","options":[],"isArray":"false"},"isArray":"true","chartType":["ColumnChart","BarChart","AreaChart","PieChart","LineChart","BubbleChart","TableChart"]},"chartColor":{"colors":{"label":"Select theme color","type":"select","options":["#F8080B","#FE03C7","#0314CF","#189502","#D35200"],"isArray":"false"},"chartType":["CustomMap"],"isArray":"true"},"custom_map_show_tooltip":{"label":"Show Tooltip","type":"select","options":{"yes":"yes","no":"no"},"chartType":["CustomMap"],"isArray":"false"},"custom_map_tooltip_event":{"label":"Tootip Event","type":"select","options":{"hover":"hover","clickk":"click"},"chartType":["CustomMap"],"isArray":"false"},"custom_map_show_popup":{"label":"Show Popup","type":"select","options":{"yes":"yes","no":"no"},"chartType":["CustomMap"],"isArray":"false"},"custom_map_popup_event":{"label":"Popup Event","type":"select","options":{"hover":"hover","click":"click"},"chartType":["CustomMap"],"isArray":"false"},"custom_map_click_callback":{"label":"Click Callback Function","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_classification_method":{"label":"Classification Method","type":"select","options":{"equal_interval":"Equal Interval","quantile":"Quantile","jenks":"Jenks"},"chartType":["CustomMap"],"isArray":"false"},"custom_map_theme":{"label":"Select Custom Map Theme","type":"select","options":{"OrRd":"Orange Red","PuBu":"Purple Blue","BuPu":"Blue Purple","Oranges":"Orange","BuGn":"Blue Green","YlOrBr":"Yellow Orange Brown","YlGn":"Yellow Green","Reds":"Red","RdPu":"Red Purple","Greens":"Green","YlGnBu":"Yellow Green Blue","Purples":"Purple","GnBu":"Green Blue","Greys":"Grey","YlOrRd":"Yellow Orange Red","PuRd":"Purple Red","Blues":"Blue","PuBuGn":"Purple Blue Green","Spectral":"Spectral","RdYlGn":"Red Yellow Green","RdBu":"Red Blue","PiYG":"Pink Yellow Green","PRGn":"Purple Red Green","RdYlBu":"Red Yellow Blue","BrBG":"Brown Green","RdGy":"Red Grey","PuOr":"Purple Orange","Accent":"Accent","Set1":"Set1","Set2":" Set2","Set3":"Set3","Dark2":"Dark2","Paired":"Paired","Pastel1":"Pastel1","Pastel2":"Pastel2","theme-light":"Light Color","theme-dark":"Dark Grey","theme-red":"Red","theme-orange":"Orange","theme-brown":"Brown","theme-green":"Green","theme-blue":"Blue","theme-teal":"Teal","theme-custom":"Custom Colors"},"chartType":["CustomMap"],"isArray":"false"},"custom_map_path_stroke_width":{"label":"Stroke Width of Path","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_path_stroke_color":{"label":"Stroke Color of Path","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_group_stroke_width":{"label":"Stroke Width of Group","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_group_stroke_color":{"label":"Stroke Color of Group","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_path_fill":{"label":"Path Fill Color","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_path_fill_hover":{"label":"Path Fill Color on Hover","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_path_fill_select":{"label":"Path Fill Color on Select","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_group_fill":{"label":"Group Fill Color","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_group_fill_hover":{"label":"Group Fill Color on Hover","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"},"custom_map_group_fill_select":{"label":"Group Fill Color on Select","type":"text","options":[],"chartType":["CustomMap"],"isArray":"false"}}');
-
-		$chartsArray = ['ColumnChart','BarChart','AreaChart','PieChart','LineChart','BubbleChart','TableChart','CustomMap'];
-		$settingsData = [];
-		$jsonData = collect($jsonDataArray);
-		foreach ($chartsArray as $key => $value) {
-			foreach($jsonData as $k => $v){
-	    		if(in_array($value,$v->chartType)){
-	    			$settingsData[$value][$k] = $v;
-	    		}
-			}
-		}
-		dump($settingsData);
-
-	@endphp --}}
-
 @extends('layouts.main')
 @section('content')
 @php
@@ -322,18 +305,17 @@
 		{!!$admin_dashboard_welcome_message!!}
 		
 	</div>
-    <div class="aione-widgets">
+    <div class="aione-widgets" id="sortable-widgets">
     	@foreach($widgets as $widget_key => $widget)
-
     		@php
 				$widget_id = $widget['id'];
 				$widget_key = $widget['slug'];
 				$widget_title = $widget['title'];
+				$widget_order = $widget['order'];
 			@endphp
-
-	    	<div id="aione_widget_{{$widget_key}}" class="aione-widget aione-widget-{{$widget_key}} aione-widget-id-{{$widget_id}}">
-	    		<div class="aione-widget-header">
-	    			<div class="aione-widget-handle"><a class="aione-widget-drag aione-tooltip" title="Sort Widget"><i class="aione-icon material-icons">menu</i></a></div>
+	    	<div id="aione_widget_{{$widget_key}} " class="aione-widget aione-widget-{{$widget_key}} aione-widget-id-{{$widget_id}}">
+	    		<div class="aione-widget-header" >
+	    			<div class="aione-widget-handle" widget-order="{{$widget_id}}"><a class="aione-widget-drag aione-tooltip" title="Sort Widget"><i class="aione-icon material-icons">menu</i></a></div>
 	    			<div class="aione-widget-title">{{$widget_title}}</div>
 	    			<div class="aione-widget-actions">
 	    			<input type="hidden" name="slug" value="{{ request()->route()->parameters()['id'] }}">
@@ -404,7 +386,24 @@
 <script type="text/javascript">
 
 	$(document).ready(function() {
-
+		$( "#sortable" ).sortable();
+		$( "#sortable-widgets" ).sortable({ 
+											handle: '.aione-widget-handle',
+											stop : function(){
+														var order_id = [];
+														$.each($('.aione-widget-handle') , function(k , v){
+															order_id.push($(this).attr('widget-order'));
+														});
+														$.ajax({
+															url : route()+'/widget/sort',
+															type : 'POST',
+															data : {order_id : order_id ,_token : $('input[name=_token]').val() },
+															success : function(res){
+																Materialize.toast('Sorted' , 3000);
+															}
+														});
+													}
+											});
 		/*****************************************************
 		/*  Header Right Menu Toggles
 		/*****************************************************/
@@ -415,7 +414,6 @@
 	});
 
 	$(document).on('click','.edit-dashboard',function(){
-	 	
 	 	var tabSlug = $('.slug-parameter').val();
 	 	$.ajax({
 	      		url : route()+'edit/dashboards',
