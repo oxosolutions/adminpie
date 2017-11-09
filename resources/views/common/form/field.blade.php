@@ -46,16 +46,25 @@
 	
 		@if(View::exists('common.form.fields.'.$field))
 			@include('common.form.fields.'.$field)
+
 		@else 
 			<div class="aione-message error">
 				{{ __('messages.form_field_missing') }}
 			</div>
 		@endif
-
-	
-		@if(@$errors->has(str_replace(' ','_',strtolower($collection->field_slug))))
+		@php
+			if(isset($settings['field_variable']) && $settings['field_variable'] == 'slug'){
+				$name = $collection->field_slug;
+			}else{
+				$name = str_replace(' ','_',strtolower($collection->field_slug));
+			}
+			if(@$options['from'] == 'repeater'){
+				$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
+			}
+		@endphp
+		@if(@$errors->has($name))
 			<span class="aione-field-error">
-			{{$errors->first(str_replace(' ','_',strtolower($collection->field_slug)))}}
+			{{$errors->first($name)}}
 			</span>
 		@endif
 	</div><!-- field -->

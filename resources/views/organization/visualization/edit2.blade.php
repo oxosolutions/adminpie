@@ -17,8 +17,13 @@ $page_title_data = array(
       	{!!Form::model($model,['route'=>['update.visualization' , $model['id']]])!!}
 	        <input type="hidden" name="id" value="{{$model['id']}}">
 		    	{!!FormGenerator::GenerateForm('edit_visualization_form')!!}	 
-	        <input type="submit" value="Save Visualization" style="margin-left: 1%; margin-top: 1%; margin-bottom: 1%;">
+	        {{-- <input type="submit" value="Save Visualization" style="margin-left: 1%; margin-top: 1%; margin-bottom: 1%;"> --}}
 	    {!!Form::close()!!}
+      @php
+        if(session()->has('chartsModel')){
+            $chartsModel = session('chartsModel');
+        }
+      @endphp
         {!!Form::model(@$chartsModel,['route'=>['save.charts',request()->route()->parameters()['id']]])!!}
           <div class="row">
               <div class="col l8 pr-7">
@@ -59,7 +64,7 @@ $page_title_data = array(
                           	</ul>
                       </div>
                       <div class="card-v2-footer">
-                          <a href="#" class="btn blue add-filter">Add more filters</a>
+                          {{-- <a href="#" class="btn blue add-filter">Add more filters</a> --}}
                       </div>
                   </div>
                  

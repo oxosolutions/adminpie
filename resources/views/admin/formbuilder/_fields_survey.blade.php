@@ -16,9 +16,17 @@
 	$required = $fieldMeta->where('key','required')->first();
 	$model['required'] = ($required != null)?$required->value:'';
 	$sectionOptions = $fieldMeta->where('key','field_options')->first();
+	$field_validations = $fieldMeta->where('key','field_validations')->first();
+	$field_conditions = $fieldMeta->where('key','field_conditions')->first();
 	$model['field_options'] = [];
 	if($sectionOptions != null){
 		$model['field_options'] = json_decode($sectionOptions->value,true);
+	}
+	if($field_validations != null){
+		$model['field_validations'] = json_decode($field_validations->value,true);
+	}
+	if($field_conditions != null){
+		$model['field_conditions'] = json_decode($field_conditions->value,true);
 	}
 @endphp
 {!!Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}

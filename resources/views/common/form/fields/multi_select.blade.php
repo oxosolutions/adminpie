@@ -15,6 +15,8 @@
 	}
 @endphp
 
+	<input type="hidden" name="{{ $name }}">
+
 @if($modelRelated != false && $modelRelated != '' && $modelRelated != null)
 				@php
 					try{

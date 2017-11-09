@@ -17,6 +17,7 @@ use App\Model\Organization\VisualizationCharts;
 use App\Model\Organization\VisualizationChartMeta;
 use App\Model\Organization\VisualizationMeta;
 use File;
+use Validator;
 class VisualisationController extends Controller
 {
 	protected $ipAdress;
@@ -249,6 +250,15 @@ class VisualisationController extends Controller
     	return ['status'=>'success','list'=>$model];
     }
 
+    protected function validateVisualizationRequest($request){
+    	$rules = [
+    		'name' => 'required',
+    		'dataset_id' => 'required'
+    	];
+
+    	$this->validate($request,$rules);
+    }
+
     /*
     * Used in Smaart Framework Api index.api.js to create new visualization
     * @param $request (posted request)
@@ -256,6 +266,7 @@ class VisualisationController extends Controller
     */
 	public function createVisualization(Request $request)
 	{		
+		$this->validateVisualizationRequest($request);
         try{
             $model = new Visualization();
             $model->dataset_id = $request->dataset_id;
@@ -264,17 +275,12 @@ class VisualisationController extends Controller
             $model->created_by = Auth::guard('org')->User()->id;
             $model->save();
         }catch(\Exception $e){
-        	//throw $e;
-            /*if($e instanceOf \Illuminate\Database\QueryException){
-                return ['status'=>'error','message'=>'No dataset found!'];
-            }else{
-                return ['status'=>'error','message'=>'something went wrong!'];
-            }*/
         }
         Session::flash('success','Successfully created!');
-        // return back();
         return redirect()->route('visualizations');
 	}
+
+
 
 	/*
 	* Used to update visualization details like chart data and meta
@@ -282,6 +288,24 @@ class VisualisationController extends Controller
 	* return JSON to API
 	*/
 	public function saveCharts(Request $request, $visualization_id){
+		$validator = Validator::make($request->all(),['available_chart'=>'required']);
+		foreach ($request->available_chart as $key => $chart) {
+			if($chart['chart_title'] == null || $chart['chart_title'] == ''){
+				$validator->errors()->add('available_chart['.$key.'][chart_title]','Chart title is required!');
+			}
+			if($chart['chart_type'] == null || $chart['chart_type'] == ''){
+				$validator->errors()->add('available_chart['.$key.'][chart_type]','Chart type is required!');
+			}
+			if($chart['variable_x_axis'] == null || $chart['variable_x_axis'] == ''){
+				$validator->errors()->add('available_chart['.$key.'][variable_x_axis]','Variable x-axis is required!');
+			}
+			if($chart['variable_y_axis'] == null || $chart['variable_y_axis'] == '' || empty($chart['variable_y_axis']) || @$chart['variable_y_axis'][0] == null){
+				$validator->errors()->add('available_chart['.$key.'][variable_y_axis]','Variable y-axis is required!');
+			}
+		}
+		if(!$validator->errors()->isEmpty()){
+			return redirect()->back()->withInput()->withErrors($validator->errors())->with(['chartsModel'=>$request->all()]);
+		}
 
 		$available_chart = array_values($request->available_chart);
 		$chartToNotDelete = [];

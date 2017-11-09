@@ -16,6 +16,7 @@ use App\Model\Organization\UsersRole;
 use App\Model\Admin\GlobalOrganization;
 use Mail;
 use App\Mail\userRegister;
+use App\Model\Organization\OrganizationSetting;
 
 class RegisterController extends Controller
 {
@@ -80,9 +81,7 @@ class RegisterController extends Controller
     }
     
     public function userRegister(Request $request, $status = null )
-    {   
-        
-
+    {           
             
         if($request->isMethod('post')){
 
@@ -128,15 +127,36 @@ class RegisterController extends Controller
                 Session::put('new_user_register_email',$request->email);
                 Session::put('new_user_register_name',$request->name);
 
-                // $org_email = GlobalOrganization::where('id',get_organization_id())->first();
-                // $to_email = $org_email->email;
-                
-                    $administrator = UsersRole::select('id')->where('slug' , 'administrator')->first()->id;
-                    $listAdmin = UserRoleMapping::where('role_id',$administrator)->get()->toArray();
-                    foreach($listAdmin as $k => $v){
-                        $emails = org_user::select('email')->where('id',$v['user_id'])->get()->toArray()[0]['email'];
-                        Mail::to($emails)->send(new userRegister);
+                $check_notification_status = OrganizationSetting::where('key' , 'user_registration_admin_notification_status')->first();
+                if($check_notification_status != null){
+                    if($check_notification_status->value == 1){
+
+                        $roles = json_decode(get_organization_meta('user_registration_admin_notification_roles',true));
+                        $users = json_decode(get_organization_meta('user_registration_admin_notification_users',true));
+                        $usresListId = [];
+                        $user_id = [];
+                        if($users != null){
+                            foreach ($users as $key => $value) {
+                                $usresListId[] = (int)$value;
+                            }
+                        }
+                        if($roles != null){
+                            $listAdmin = UserRoleMapping::select('user_id')->whereIn('role_id',$roles)->get()->toArray();
+                            foreach ($listAdmin as $key => $value) {
+                                $user_id[] = $value['user_id'];
+                            }
+                        }
+
+                        $usersId = array_unique(array_merge($usresListId,$user_id));;
+                        foreach($usersId as $k => $v){
+
+                            $emails = org_user::select('email')->where('id',$v)->get()->toArray()[0]['email'];
+                            Mail::to($emails)->send(new userRegister);
+                        }
+                        
                     }
+                }
+
                     // Mail::to($to_email)->send(new userRegister);
                 Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
                 return back();

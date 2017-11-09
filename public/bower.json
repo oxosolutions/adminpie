@@ -33,6 +33,7 @@
     "owl.carousel": "^2.2.1",
     "ace-builds": "^1.2.9",
     "moment": "^2.19.1",
-    "moment-timezone": "^0.5.14"
+    "moment-timezone": "^0.5.14",
+    "froala-wysiwyg-editor": "^2.7.1"
   }
 }

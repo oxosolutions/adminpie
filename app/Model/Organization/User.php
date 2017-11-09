@@ -48,6 +48,19 @@ class User extends Authenticatable
    {
       return self::pluck('name','id');
    }
+   public function listUsers()
+   {
+    $id = [];
+      $user_id = self::select('user_id')->get();
+      foreach ($user_id->toArray() as $key => $value) {
+          foreach ($value as $k => $v) {
+            $id[] = $v;
+          }
+      } 
+      $employee_id = GroupUsers::whereIn('id',$id)->pluck('name','id');
+      return $employee_id;
+
+   }
     public static function userDropDowns($type=null)
    {
       return self::where(['status'=>1, 'user_type'=> $type])->pluck('name','id');

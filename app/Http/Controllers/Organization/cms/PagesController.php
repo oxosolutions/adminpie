@@ -14,6 +14,7 @@ use Session;
 use App\Model\Admin\GlobalOrganization;
 use Menu as wMenu;
 use App\Model\Organization\OrganizationSetting;
+
 class PagesController extends Controller
 {
     

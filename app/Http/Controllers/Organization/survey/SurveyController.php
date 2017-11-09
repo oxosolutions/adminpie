@@ -66,7 +66,7 @@ class SurveyController extends Controller
                                 'structure' => ['title'=>'Structure','route'=>'structure.survey'],
                                 'data'=>['title'=>'Raw Data','route'=>'results.survey'],
                                 'report'=>['title'=>'Report','route'=>'survey.reports'],
-                                'share'=>['title'=>'Share','route'=>'share.survey'],
+                                'share'=>['title'=>'Collaborate','route'=>'share.survey'],
                                 'customize'=>['title'=>'Customize','route'=>'custom.survey'],
                                 'clone'=>['title'=>'Clone','route'=>$cloneRoute],
                                 'delete'=>['title'=>'Delete','route'=>$deleteRoute,'class'=>'red']
@@ -464,7 +464,20 @@ class SurveyController extends Controller
             return "error";
         }
     }
+
+
+    protected function validateShareTo($request){
+        $rules = [
+
+                'email_user_share' => 'required|email',
+                'user-share-edit-view' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
     public function saveShareTo(Request $request, $id){
+        $this->validateShareTo($request);
         $model = Collaborator::firstOrNew(['type'=>'survey','relation_id'=>$id,'email'=>$request->email_user_share]);
         $model->type = 'survey';
         $model->relation_id = $id;

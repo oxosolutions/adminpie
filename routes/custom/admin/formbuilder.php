@@ -37,4 +37,4 @@
 	Route::get('/form/clone/{id}',										['as'=>'form.clone','uses'=>'FormBuilderController@formClone']);
 
 	Route::get('/field/sort' , 											['as' => 'sort.field' , 'uses' => 'FormBuilderController@sortField'])
-?>	
+?>

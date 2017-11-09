@@ -139,7 +139,7 @@ class SurveyStatsController extends Controller
         $id =intval($id);
         $survey_data = forms::with(['formsMeta','section'=>function($query){
                                 $query->orderBy('order','asc');
-                              } ,
+                              },
                               'section.fields'=>function($query_field){
                                    $query_field->orderBy('order','asc');
                               },
@@ -151,7 +151,7 @@ class SurveyStatsController extends Controller
           $setting_questions = GFB::orderBy('order','asc')->whereIn('form_id',[93,76])->get()->keyBy('field_slug')->toArray(); //pluck('field_title', 'field_slug');
           return view('organization.survey.survey_structure',compact('id','data','survey_data','setting_questions','count_form_slug') );
        }else{
-                $not_valid_id = "This survey id ($id) is not valid.";
+              $not_valid_id = "This survey id ($id) is not valid.";
         return view('organization.survey.survey_structure', compact('not_valid_id'));
        }
     }
@@ -169,6 +169,7 @@ class SurveyStatsController extends Controller
           $table_column = Schema::getColumnListing($table_name);
           $columns = array_combine($table_column,$table_column);
           if($request->isMethod('post')){
+
             // dd($request->all());
             if(isset($request['condition_field']) && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value'])) ){
                     $filter_field['condition_field']        = $request['condition_field'];
@@ -211,24 +212,22 @@ class SurveyStatsController extends Controller
     ];
       return $this->validate($req,['fields'=>'required'], $customMessages );
     }
-    protected function filter_on_suvey_result($request , $table_name , $columns =null){
-        // dd($request->all());
-    
+    protected function filter_on_suvey_result($request , $table_name){
           $condition =null;
           if(isset($request['condition_field'])  && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value'])) ){
-             $where = [];
+                $where = [];
                 foreach ($request['condition_field'] as $key => $value) {
-
                   $condition_field_value = $request['condition_field_value'][$key];
+                if(isset($request['operator'][$key])){
                   $operator = $request['operator'][$key];
                   if($operator=='like'){
                     $final = [$value , $operator,  $condition_field_value.'%'];
-
                   }else{
                        $final = [$value , $operator,  $condition_field_value];
                   }
                   array_push($where, $final);
                 }
+              }
           }
          if(!empty($where)){
             $data = DB::table($table_name)->select($request['fields'])->where($where);//->get();
@@ -244,6 +243,10 @@ class SurveyStatsController extends Controller
     }
 
     public function reports(Request $request, $id){
+      // Temporarily increase Execution time
+      ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+      // Temporarily increase memory limit
+      ini_set('memory_limit','512M');
 
         $table = Session::get('organization_id')."_survey_results_".$id;
         if(!Schema::hasTable($table)){
@@ -251,80 +254,66 @@ class SurveyStatsController extends Controller
           return view('organization.survey.survey_reports',compact('error'));
         }
         $table_column = Schema::getColumnListing($table);
-        $columns = array_combine($table_column,$table_column);
+        $column_fields = $columns = array_combine($table_column,$table_column);
         $options_val = $data=[];
 
-         $field = FormBuilder::with(['section.sectionMeta','fieldMeta'=>function($query){
-          $query->where('key','question_id');
+        $field = FormBuilder::with(['section.sectionMeta','fieldMeta'=>function($query){
+            $query->where('key','question_id');
          }])->where('form_id',$id)->get()->toArray();
-        
 
-         $slug_question_id = collect($field)->mapWithKeys(function($item){
+        $slug_question_id = collect($field)->mapWithKeys(function($item){
             $section_type =null;
             if($item['section']['section_meta'][0]['key']=='section_type'){
                 $section_type = $item['section']['section_meta'][0]['value'];
             }
             return [$item['field_slug']=>[$item['field_type'] , $item['field_meta'][0]['value'], $item['id'], $item], $item['section']['section_slug'] =>$section_type];
-         });
+        });
 
-          $index = 0;
-          $sec_repeater =  section::with(['sectionMeta'=>function($query){
-          },'fields'])->where('form_id',$id)->get();
+        $index = 0;
+        $sec_repeater =  section::with(['sectionMeta'=>function($query){
+        },'fields'])->where('form_id',$id)->get();
 
-          foreach ($sec_repeater as $key => $value) {// dump($key , $value['sectionMeta']);
-             if($value['sectionMeta'][0]['value']=='repeater'){
-                  $repeater_data[$index]['section_slug'] = $value['section_slug'];
-                  foreach ($value['fields'] as $field_key => $field_value) {
-                     $repeater_data[$index]['field_slug'][] =    $field_value['field_slug'];
-                  }
-              $index++;
-             }
-          }
-          $repeater_data = collect($repeater_data)->keyBy('section_slug')->toArray();
-          $repeater_check =  collect($field)->mapWithKeys(function($item){
-            $section_type =null;
-            if($item['section']['section_meta'][0]['key']=='section_type'){
-                $section_type = $item['section']['section_meta'][0]['value'];
-            }
-            return [$item['section']['section_slug'] =>$section_type];
-         })->toArray();
-
+        foreach ($sec_repeater as $key => $value) {// dump($key , $value['sectionMeta']);
+           if($value['sectionMeta'][0]['value']=='repeater'){
+                $repeater_data[$index]['section_slug'] = $value['section_slug'];
+                foreach ($value['fields'] as $field_key => $field_value) {
+                   $repeater_data[$index]['field_slug'][] =    $field_value['field_slug'];
+                }
+            $index++;
+           }
+        }
+        $repeater_data = collect($repeater_data)->keyBy('section_slug')->toArray();
         $columns  = collect($columns)->map(function($items, $key)use($slug_question_id) {
-            if(!empty($slug_question_id[$key])){
-                $items = $items.' ('.$slug_question_id[$key][1].')';
-            }
-            return $items;
-         });
+          if(!empty($slug_question_id[$key])){
+              $items = $items.' ('.$slug_question_id[$key][1].')';
+          }
+          return $items;
+       });
 
-         if($request->isMethod('post')){
-
-            $req = $request->toArray();
+        if($request->isMethod('post')){
+          if(empty($request['fields'])){
+            $request['fields'] = array_keys($column_fields);
+          }
+            $req = $request;//->toArray();
             if(isset($request['condition_field'] )){
               $condition_field = array_filter($request['condition_field']);
             }else{
               $condition_field =null;
             }
-               if( !empty($condition_field)  && !empty($request['fields']) &&  count($condition_field) !=   count(array_intersect($request['fields'], $request['condition_field'])))
-               {
-                $data['error'] = "Conditions field not selected in Fields";
-               }else{
                  $data = $this->filter_on_suvey_result($request, $table);
                  if(!empty($data)){
-                    $data = json_decode($data->get(), true);
+                      $query = $data->paginate(100);
+                      $data = json_decode(json_encode($query->items()),true);
                   }
-                }
-
                 if(!empty($req['fields'])){
                    foreach($req['fields'] as $key => $val){
                     if(!empty($slug_question_id[$val]))
                     {
                       if($slug_question_id[$val][0]=='checkbox' || $slug_question_id[$val][0] =='multi_select'){
-                        // dump(field_options($val, $slug_question_id[$val][2]));
                         $options_val[$val] =  field_options($val, $slug_question_id[$val][2]);
                       }
                     }
                   }
-                  
                 }else{
                   foreach ($slug_question_id as $key => $value) {
                     if(in_array($value[0], ['checkbox' , 'multi_select'])){
@@ -333,9 +322,9 @@ class SurveyStatsController extends Controller
                   }
                 }
 // option value
-               $data = $this->set_repeater_options_data($data, $repeater_data , $options_val );
-             
-                    
+              if(empty($data['error'])){
+                $data = $this->set_repeater_options_data($data, $repeater_data , $options_val );
+              }
                   if(isset($request['export'])){
                     if(empty($data['error'])){
                       $survey_slug  = forms::select('form_slug')->where('id',$id)->first()->form_slug;
@@ -348,7 +337,8 @@ class SurveyStatsController extends Controller
                     }
                 }
          }else{
-            $data = json_decode(DB::table($table)->get(), true);
+          $query = DB::table($table)->paginate(100);
+          $data = json_decode(json_encode($query->items()),true);
             foreach ($slug_question_id as $key => $value) {
                 if(in_array($value[0], ['checkbox' , 'multi_select'])){
                    $options_val[$key] =  field_options($key, $value[2]);
@@ -357,38 +347,51 @@ class SurveyStatsController extends Controller
              $data = $this->set_repeater_options_data($data, $repeater_data , $options_val);
          }
 
-      return view('organization.survey.survey_reports',compact('data','id','columns','table'));
+        $links = $query->links();
+        $firstItem = $query->firstItem();
+        $lastItem = $query->lastItem();
+        $total = $query->total();
 
+        $repeater_keys  = array_keys($repeater_data);
+        $option_keys  = array_keys($options_val);
+        $repeater_options_value = array_merge($repeater_keys ,  $option_keys);
+        dump($repeater_options_value, $columns );
+
+        dump($columns->diffKeys($repeater_options_value));
+      return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem', 'total'));
     }
 
     protected function set_repeater_options_data($data, $repeater_data=Null , $options_val=Null){
+      // error_reporting( E_ALL ); 
+      // ini_set('display_errors', 1);
+      
       foreach ($data as $key => $value) {
-                      foreach ($value as $nextKey => $nextValue) {
-                        if(isset($repeater_data[$nextKey])){
-                            $rep = json_decode($value[$nextKey],true);
-                              foreach ($repeater_data as $rkey => $rvalue) {
-                               foreach ($rvalue['field_slug'] as $kkey => $vvalue) {
-                                unset($data[$key][$nextKey]);
-                                $data[$key][$nextKey.'_'.$vvalue]  = implode(',', array_column($rep, $vvalue));
-                               }
-                              }
-                        }elseif(isset($options_val[$nextKey])){
-                            unset($data[$key][$nextKey]);
-                            $option_data = json_decode($nextValue, true);
-                          foreach($options_val[$nextKey] as $optionKey =>$optionVal){
-                            if(in_array($optionKey, $option_data)){
-                              $data[$key][$nextKey.'_'.$optionKey] ='yes';
-                            }else{
-                               $data[$key][$nextKey.'_'.$optionKey] ='no';
-                            }
-                          }
-                        }else{
-                          $field_val = $data[$key][$nextKey];
-                          unset($data[$key][$nextKey]);
-                           $data[$key][$nextKey] = $field_val;
-                        }
+              foreach ($value as $nextKey => $nextValue) {
+                if(isset($repeater_data[$nextKey])){
+                    $rep = json_decode($value[$nextKey],true);
+                      foreach ($repeater_data as $rkey => $rvalue) {
+                       foreach ($rvalue['field_slug'] as $kkey => $vvalue) {
+                        unset($data[$key][$nextKey]);
+                        $data[$key][$nextKey.'_'.$vvalue]  = implode(',', array_column($rep, $vvalue));
+                       }
                       }
+                }elseif(isset($options_val[$nextKey])){
+                    unset($data[$key][$nextKey]);
+                    $option_data = json_decode($nextValue, true);
+                  foreach($options_val[$nextKey] as $optionKey =>$optionVal){
+                    if(in_array($optionKey, $option_data)){
+                      $data[$key][$nextKey.'_'.$optionKey] ='yes';
+                    }else{
+                       $data[$key][$nextKey.'_'.$optionKey] ='no';
                     }
+                  }
+                }else{
+                  $field_val = $data[$key][$nextKey];
+                  unset($data[$key][$nextKey]);
+                  $data[$key][$nextKey] = $field_val;
+                }
+              }
+            }
       return $data;
     }
    

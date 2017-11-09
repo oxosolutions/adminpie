@@ -924,7 +924,8 @@ class DatasetController extends Controller
         $table_name = str_replace('ocrm_','',$model->dataset_table);
         if(Schema::hasTable($table_name))
         {
-            $name  =  str_replace(" ","-", $model->dataset_name); 
+           
+            $name  =   parse_slug($model->dataset_name).'_'.generate_filename();
             $datas =   DB::table($table_name)->get()->toArray();
             $model =   json_decode(json_encode($datas),true);
             $headers = $model[0];
@@ -1000,7 +1001,17 @@ class DatasetController extends Controller
         return 'Success';
     }
 
+    protected function validateCollaborateRequest($request){
+
+        $rules = [
+            'email' => 'required|email',
+            'share' => 'required'
+        ];
+        $this->validate($request,$rules);
+    }
+    
     public function saveCollaborate(Request $request){
+        $this->validateCollaborateRequest($request);
         $model = Collaborator::where(['email'=>$request->email,'type'=>'dataset'])->first();
         if($model != null){
             Session::flash('error','Email id already exists!');

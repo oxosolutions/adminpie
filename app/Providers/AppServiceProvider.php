@@ -7,6 +7,9 @@ use Shortcode;
 use App\Model\Organization\forms as Form;
 use FormGenerator;
 use Auth;
+use Session;
+use App\Model\Group\GroupUsers;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -86,5 +89,18 @@ class AppServiceProvider extends ServiceProvider
                 return '<strong>attributes missing!</strong>';
             }
         });
+
+        
+        Shortcode::add('userData', function($id = null){
+            $userEmail = [];
+            if($id != null){
+                $userEmail = GroupUsers::where('email',$id)->first()->email;
+                return $userEmail;
+            }else{
+                return $userEmail;
+            }
+        });
+
+
     }
 }

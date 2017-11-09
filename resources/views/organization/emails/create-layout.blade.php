@@ -18,12 +18,8 @@ $page_title_data = array(
 	@else
 		{!! Form::open(['route'=>'save.layout' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 	@endif
-		{!!FormGenerator::GenerateSection('emasec2',['type'=>'inset'])!!}
-		<button type="submit" class="btn blue">Save Layout</button>
+		{!!FormGenerator::GenerateForm('email-layout')!!}
 	{!!Form::close()!!}
-	@if(Session::has('success-update'))
-		<script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>
-	@endif
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 

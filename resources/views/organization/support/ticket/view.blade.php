@@ -20,7 +20,7 @@
 				<div class="aione-border p-10">
 					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Sample Ticket : Issue in purchasing domain</h5>
 					<div class="aione-border-bottom pv-10">
-						
+						<div class="mb-10">Reply to : <span class="font-weight-600">Sample Customer</span></div>
 						<div class="aione-border" contenteditable="true" style="max-height: 160px;min-height: 160px;overflow-y: auto"></div>
 						<div class="aione-border-bottom aione-border-right aione-border-left p-10 mb-10 border-darken-2">
 							<i class="fa fa-paperclip font-size-18"></i>
@@ -138,6 +138,7 @@
 			</div>
 			<div class="ac l30 m70 s100">
 				{!! FormGenerator::GenerateForm('edit_support_ticket_form') !!}
+				<button style="width: 100%">Save</button>
 			</div>
 		</div>
 	@include('common.page_content_primary_end')

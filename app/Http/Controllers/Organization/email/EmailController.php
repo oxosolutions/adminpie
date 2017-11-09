@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\EmailLayout;
 use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\EmailTemplateMeta;
 use Auth;
 use Session;
 use App\Model\Organization\Department;
@@ -248,6 +249,7 @@ class EmailController extends Controller
     }
     public function saveTemplate(Request $request)
     {
+        // dd($request->all());
         $output = parse_slug($request->slug);
         $request['slug'] = $output;
         $table = Session::get('organization_id').'_email_template';
@@ -266,14 +268,52 @@ class EmailController extends Controller
     }
     public function getInfoTemplates($id)
     {
-        $model = EmailTemplate::where('id',$id)->first();
+        $model = EmailTemplate::with(['templateMeta'])->where('id',$id)->first();
+        $templateMeta = $model->templateMeta;
+        
+        foreach ($templateMeta as $key => $value) {
+            if($value->key == 'layout'){
+                $model[$value->key] = EmailLayout::where('id',$value->value)->pluck('name','id');
+            }
+        }
         return view('organization.emails.create-template',compact('model'));
     }
     public function updateTemplates(Request $request)
     {
         $id = $request->id;
-        $request = $request->except('_token','id');
-        $model = EmailTemplate::where('id',$id)->update($request);
+        $update = $request->except('_token','id','layout','attachment');
+        $model = EmailTemplate::where('id',$id)->update($update);
+
+        //email template meta
+            foreach ($request->except('_token','id','name','content','slug','subject') as $key => $value) {
+                if($key == 'attachment'){
+                    foreach ($value as $k => $v) {
+                        $name = $v->getClientOriginalName();
+                        $extention = $v->getClientOriginalExtension();
+
+                        $uploadPath = public_path().'/files/organization_'.get_organization_id().'/emailAttachments';
+                        $uploadFile = $v->move( $uploadPath , $name );
+                        
+                        $meta = new EmailTemplateMeta;
+                        $meta->template_id = $request->id;
+                        $meta->key = $key;
+                        $meta->value = $name;
+                        $meta->type = $extention;
+                        $meta->save();
+                    }
+                }else{
+                    $meta = EmailTemplateMeta::firstOrNew(['template_id'=>$request->id]);
+                    $meta->template_id = $request->id;
+                    $meta->key = $key;
+                    if($value == null){
+                        $meta->value = '';
+                    }else{
+                        $meta->value = $value;
+                    }
+                    $meta->save();
+                }
+            }
+        
         Session::flash('success-update' , 'Updated Successfully');
         return back();
     }

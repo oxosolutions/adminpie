@@ -47,7 +47,7 @@
 		display: block;
 	}
 	.table-wrapper{
-		width: 99%;overflow-x: scroll;overflow-y: scroll;max-height: 500px;margin-bottom: 20px
+		width: 100%;overflow-x: scroll;overflow-y: scroll;max-height: 500px;margin-bottom: 20px
 	}
 /*	td{
 		    white-space: nowrap;
@@ -55,6 +55,21 @@
     max-width: 150px;
     overflow: hidden;
 	}*/
+	.custom-option-menu{
+		    width: 300px;
+    position: absolute;
+    right: 0;
+    top: -60px;
+    border-bottom: none !important;
+	}
+	.aione-nav.horizontal > ul > li > .export:hover{
+		background-color:#0277bd;
+
+	}
+	.aione-nav.horizontal > ul > li > .clone:hover{
+		background-color:#00acc1;
+
+	}
 </style>
 @php
 
@@ -70,15 +85,14 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.dataset._tabs')
-	<nav id="aione_nav" class="aione-nav horizontal light">
+<div style="position: relative;">
+	<nav id="aione_nav" class="aione-nav horizontal light custom-option-menu">
         <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu custom-aione-menu">
-			<li class="aione-nav-item level0 bg-cyan bg-darken-1 "> 
-				<a class="white" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</a>
-			</li>
+			
 		
-			<li class="aione-nav-item level0 bg-teal bg-darken-1 "> 
-				<a class="white" href="http://master.scolm.com/form/fields/100/349">Export</a>
+			<li class="aione-nav-item level0 bg-light-blue bg-darken-3 " style="margin-right: 15px"> 
+				<a class="white ph-50 export" style="width: 140px;color: white;text-align: center" >Export</a>
 			    <ul class="side-bar-submenu">
 			        <li class="aione-nav-item level1 "> 
 						<a onclick="window.location.href='{{route('export.dataset',['id'=>$dataset['id'],'type'=>'xls'])}}'">Export as XLS</a>
@@ -88,7 +102,9 @@
 					</li>
 				</ul>
 			</li>
-
+			<li class="aione-nav-item level0 bg-cyan bg-darken-1 "> 
+				<a class="white clone" style="width: 140px;color: white;text-align: center" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</a>
+			</li>
 		</ul>
 		<div class="aione-nav-toggle">
 			<a href="#" class="nav-toggle "></a>
@@ -112,7 +128,7 @@
 	</div>
 	
 	{{-- <button class="aione-button" onclick="window.location.href='{{route('duplicate.dataset',$dataset['id'])}}'">Find duplicate records</button> --}}
-	<div class="add-dataset" style="margin: 20px 0">
+	{{-- <div class="add-dataset" style="margin: 20px 0">
 		{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
 	
 			{!! FormGenerator::GenerateForm('create_column_dataset') !!}
@@ -122,7 +138,8 @@
 			
 		</div>	
 			
-	</div>
+	</div> --}}
+
 	@if(@request()->route()->parameters['action'] == 'rivisions')
 		@php
 
@@ -143,7 +160,9 @@
 			}
 
 		@endphp
+
 		<div class="aione-table" style="margin-bottom: 20px">
+
 			<table class="compact dataset-table" >
 			 	<thead>
 			 		<tr>
@@ -244,11 +263,12 @@
 			</tbody>
 
 		</table>
-				<button class="AddNewDatasetRowButton hidden" style="float: right;">Update Dataset</button>
+				<button class="AddNewDatasetRowButton hidden " >Update Dataset</button>
 
 	</div>
-	<button class="addRow aione-button" style="float: right;margin-right: 1%">Add Row</button>
+	<button class="addRow aione-button aione-float-right mv-10" >Add Row</button>
 	@if(!empty($tableheaders))
+		<div class="mv-10 line-height-32">Showing 1 to 47 of total 47 records</div>
 		<div style="" class="table-wrapper">
 			<table class="compact dataset-table" >
 				<thead>
@@ -330,13 +350,13 @@
 	.hidden{
 		display: none
 	}
-	.custom-aione-menu{
+	/*.custom-aione-menu{
 		    float: right;
     position: absolute;
     right: 0;
     margin-top: -64px !important;
     margin-right: 20px !important;
-	}
+	}*/
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -407,6 +427,7 @@
 		});		
 	});
 </script>
+</div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')

@@ -21,7 +21,12 @@ class SettingsController extends Controller
     	$model = OrganizationSetting::where(['type'=>'web'])->get();
     	$modelArray = [];
     	foreach($model as $key => $value){
-    		$modelArray[$value->key] = $value->value;
+            $output = json_decode($value->value);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $modelArray[$value->key] = json_decode($value->value);
+            }else{
+                $modelArray[$value->key] = $value->value;
+            }
     	}
     	return view('organization.settings.user',['model'=>$modelArray]);
     }
@@ -33,11 +38,17 @@ class SettingsController extends Controller
      * @author Rahul
      **/
     public function save_user_settings(Request $request){
-
 		foreach($request->except(['_token']) as $key  => $value){
+            if(is_array($value)){
+                $processValue = json_encode($value);
+            }elseif($value == null){
+                $processValue = '';
+            }else{
+                $processValue = $value;
+            }
 			$model = OrganizationSetting::firstOrNew(['key'=>$key]);
 			$model->key = $key;
-			$model->value = $value;
+			$model->value = $processValue;
 			$model->type = 'web';
 			$model->save();
 		}

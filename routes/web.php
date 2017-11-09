@@ -666,7 +666,7 @@
 					Route::post('create/feedback',['as' => 'create.feedback' , 'uses' => 'FeedbackController@create']);
 					Route::get('feedbacks',['as' => 'list.feedback' , 'uses' => 'FeedbackController@listFeedbacks']);
 					Route::get('feedback/create',['as' => 'add.feedback' , 'uses' => 'FeedbackController@createFeedback']);
-					Route::get('edit/feedback/{id}',['as' => 'edit.feedback' , 'uses' => 'FeedbackController@index']);
+					Route::get('edit/feedback/{id}',['as' => 'edit.feedback' , 'uses' => 'FeedbackController@editFeedback']);
 					Route::get('delete/feedback/{id}',['as' => 'delete.feedback' , 'uses' => 'FeedbackController@delete']);
 					Route::post('update/feedback',['as' => 'update.feedback' , 'uses' => 'FeedbackController@update']);
 				});

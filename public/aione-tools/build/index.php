@@ -12,16 +12,6 @@
       <!--Let browser know website is optimized for mobile-->
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	  <style>
-	  body{
-		  background-color:#f2f2f2;
-	  }
-	  .form{
-		  text-align:center;
-		 
-	  }
-	  .display-inline{
-		  display:inline;
-	  }
 	  .shell-output{
 		  color:#FFFFFF;
 		  background-color:#333333;
@@ -42,37 +32,7 @@
 		border: none;
 		border-radius: 0px;
 	}
-	.button-link{
-		background: none;
-		border: none;
-		font-size: 16px;
-		line-height: 20px;
-		font-weight: 400;
-		padding: 0;
-		margin: 0 10px 0 0;
-		display: inline;
-		color: #03A9F4;
-		text-shadow: none;	
-	}
-	.button-link:hover,
-	.button-link:active,
-	.button-link:focus{
-		background: none;
-		border: none;
-		color: #03A9F4;	
-	}
-	.color-red{
-		color:#F44336;
-	}
-	.text{
-		font-size: 16px;
-		line-height: 20px;
-		font-weight: 400;
-		margin: 0 10px 0 0;
-		color: #333333;
-		text-shadow: none;	
-	}
-	  </style>
+	</style>
     </head>
 
     <body>
@@ -87,6 +47,7 @@
 		
 		if($action != 'null'){
 			$output .= "\r\nInitializing ".$action;
+			$output .= "\r\n";
 	
 			if($action == 'gulp'){
 				$command = $_POST['command'];
@@ -153,22 +114,23 @@
 	?>
 
 		<!-- Dashboard Widgets -->
-		<div class="row">
-		
-				
-				<div class="col s12 shell-output">
-					<pre><?php echo $output; ?></pre>
-				</div>
-			
+		<div class="ar">
+			<div class="ac s100 m100 l100 shell-output">
+				<pre><?php echo $output; ?></pre>
+			</div>
+		</div>
+		<!-- Dashboard Widgets -->
 
+		<!-- Dashboard Widgets -->
+		<div class="ar">
 			<!-- Dashboard Widget -->
-			<div class="col s12 m6 l3">
-				<div class="card hoverable">	
-					<div class="card-content">
-						<span class="card-title activator center-align">Find</span>
-						<div class="divider"></div>
-						<p class="p-10 center-align">
-							<form class="form" action=""  method="post">
+			<div class="ac s100 m50 l25 pt-15 pb-15">
+				<div class="aione-widget aione-border">
+					<div class="aione-title">
+						<h4 class="aione-align-center font-weight-100 aione-border-bottom pb-15">Find</h4>
+					</div>
+					<div class="p-15"> 
+						<form class="form" action=""  method="post">
 								<div class="field">
 								<input type="text" placeholder="e.g. Default Dashboard" name="search" />
 								</div>
@@ -192,66 +154,61 @@
 								<input type="hidden" name="action" value="find">
 								<button class="btn waves-effect waves-light" type="submit">Find</button>
 							</form>
-						</p>
 					</div>
-				</div> 
+				</div>
 			</div>
 			<!-- Dashboard Widget -->
-			
 			<!-- Dashboard Widget -->
-			<div class="col s12 m6 l3">
-				<div class="card hoverable">	
-					<div class="card-content">
-						<span class="card-title activator center-align">Gulp Build</span>
-						<div class="divider"></div>
-						<p class="p-10 center-align">
-							<form class="form" action=""  method="post">
-								<select name="command" style="display:block">
-									<option value="" disabled selected>Select Command</option>
-									<option value="test-scss">Test SCSS</option>
-									<option value="makecss">BUILD CSS</option>
-									<option value="makejs">BUILD JS</option>
-									<!--
-									<option value="automakecss">BUILD CSS Automatically On change SCSS Files</option>
-									-->
-									<option value="">Default</option>
-								</select>
-								<br>
-								<input type="hidden" name="action" value="gulp">
-								<button class="btn waves-effect waves-light" type="submit">Execute Commmand</button>
-							</form>
-						</p>
+			<div class="ac s100 m50 l25 pt-15 pb-15">
+				<div class="aione-widget aione-border">
+					<div class="aione-title">
+						<h4 class="aione-align-center font-weight-100 aione-border-bottom pb-15">Gulp Build</h4>
 					</div>
-				</div> 
-			</div>
-			<!-- Dashboard Widget --> 
-
-			<!-- Dashboard Widget -->
-			<div class="col s12 m6 l3">
-				<div class="card hoverable">	
-					<div class="card-content">
-						<span class="card-title activator center-align">Find All</span>
-						<div class="divider"></div>
-						<p class="p-10 center-align">
-							<form class="form" action=""  method="post">
-								<div class="field">
-								<input type="text" placeholder="e.g. Default Dashboard" name="search" />
-								</div>
-								<div class="field">
-								<input type="text" placeholder="/home/oxo/public_html/scolm/app/Http" name="directories[]" value="/home/oxo/public_html/aione/wp-content/themes/aione"/>
-								</div>
-								
-								<br>
-								<input type="hidden" name="action" value="findall">
-								<button class="btn waves-effect waves-light" type="submit">Find All</button>
-							</form>
-						</p>
+					<div class="p-15"> 
+						<form class="form" action=""  method="post">
+							<select name="command" style="display:block">
+								<option value="" disabled selected>Select Command</option>
+								<option value="test-scss">Test SCSS</option>
+								<option value="makecss">BUILD CSS</option>
+								<option value="makejs">BUILD JS</option>
+								<!--
+								<option value="automakecss">BUILD CSS Automatically On change SCSS Files</option>
+								-->
+								<option value="">Default</option>
+							</select>
+							<br>
+							<input type="hidden" name="action" value="gulp">
+							<button class="btn waves-effect waves-light" type="submit">Execute Commmand</button>
+						</form>
 					</div>
-				</div> 
+				</div>
 			</div>
 			<!-- Dashboard Widget -->
-			
-			
+			<!-- Dashboard Widget -->
+			<div class="ac s100 m50 l25 pt-15 pb-15">
+				<div class="aione-widget aione-border">
+					<div class="aione-title">
+						<h4 class="aione-align-center font-weight-100 aione-border-bottom pb-15">Find All</h4>
+					</div>
+					<div class="p-15"> 
+						<form class="form" action=""  method="post">
+							<div class="field">
+							<input type="text" placeholder="e.g. Default Dashboard" name="search" />
+							</div>
+							<div class="field">
+							<input type="text" placeholder="/home/oxo/public_html/scolm/app/Http" name="directories[]" value="/home/oxo/public_html/aione/wp-content/themes/aione"/>
+							</div>
+							
+							<br>
+							<input type="hidden" name="action" value="findall">
+							<button class="btn waves-effect waves-light" type="submit">Find All</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Dashboard Widget -->
+		</div>
+		<!-- Dashboard Widgets -->
 	
 	
       <!--Import jQuery before materialize.js-->

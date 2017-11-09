@@ -12,18 +12,28 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-@if(@$model != null || @$model != "")
-	{!! Form::model($model ,['route'=>'update.template' , 'class'=> 'form-horizontal','method' => 'post']) !!}
-	<input type="hidden" name="id" value="{{request()->route()->parameters()['id']}}">
-@else
-	{!! Form::open(['route'=>'save.template' , 'class'=> 'form-horizontal','method' => 'post']) !!}
-@endif
-		{!!FormGenerator::GenerateForm('email-template')!!}
-		<button type="submit" class="btn blue">Save Template</button>
-	{!!Form::close()!!}
-	@if(Session::has('success-update'))
-		<script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>
+	@if(@$model != null || @$model != "")
+		{!! Form::model($model ,['route'=>'update.template' , 'class'=> 'form-horizontal','method' => 'post','files' => true]) !!}
+		<input type="hidden" name="id" value="{{request()->route()->parameters()['id']}}">
+	@else
+		{!! Form::open(['route'=>'save.template' , 'class'=> 'form-horizontal','method' => 'post','files' => true]) !!}
 	@endif
+		{!!FormGenerator::GenerateForm('email-template')!!}
+		@if(@$model != null)
+			@foreach($model->templateMeta as $k => $v)
+				@if($v->value != '') 
+					@php
+						$exploded = explode('.',$v->value);
+					@endphp
+					@if(@$exploded[1] == 'png' || @$exploded[1] == 'jpg' || @$exploded[1] == 'jpeg')
+						<img src="{{ asset('/files/organization_'.get_organization_id().'/emailAttachments/'.$v->value) }}" width="10%">
+					@endif
+				@endif
+			@endforeach
+		@endif
+		{!! Form::file('attachment[]',['multiple'=>'multiple']) !!}
+		<button type="submit">Save</button>
+	{!!Form::close()!!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 

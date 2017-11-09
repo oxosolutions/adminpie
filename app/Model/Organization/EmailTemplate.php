@@ -3,6 +3,7 @@
 namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Model\Organization\EmailLayout;
 use Session;
 
 class EmailTemplate extends Model
@@ -16,4 +17,13 @@ class EmailTemplate extends Model
 	    }
 	}
     protected $fillable = [ 'name','content','subject','slug','order'];
+    public function listTemplate()
+    {
+        return self::pluck('name','id');
+    }
+    public function templateMeta()
+    {
+        return $this->hasMany('App\Model\Organization\EmailTemplateMeta','template_id','id');
+    }
+    
 }

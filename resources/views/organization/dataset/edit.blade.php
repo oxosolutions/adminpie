@@ -46,14 +46,22 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@include('organization.dataset._tabs')
-		{!! Form::model($dataset,['route'=>['update.dataset.details',$dataset->id]]) !!}
-			{!! FormGenerator::GenerateForm('edit_dataset_form') !!}
-		{!! Form::close() !!}
-	{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
+		<div class="ar  mb-20">
+			<div class="ac l50 m50 s100">
+				{!! Form::model($dataset,['route'=>['update.dataset.details',$dataset->id]]) !!}
+					{!! FormGenerator::GenerateForm('edit_dataset_form') !!}
+				{!! Form::close() !!}		
+			</div>
+			<div class="ac l50 m50 s100">
+				{!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
 		
-		{!! FormGenerator::GenerateForm('create_column_dataset') !!}
+					{!! FormGenerator::GenerateForm('create_column_dataset') !!}
+				
+				{!!Form::close()!!}			
+			</div>
+		</div>
+		
 	
-	{!!Form::close()!!}
 	<div id="example2" style="width: 100%; font-size: 14px;">
 		
 	</div>	

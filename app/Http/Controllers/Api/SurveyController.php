@@ -30,9 +30,22 @@ class SurveyController extends Controller
         Session::put('organization_id',$org_id);
     	Session::put('group_id',$group_id);
       //  $users = User::with('belong_group')->get()->keyBy('belong_group');
-        $users = GroupUsers::has('organization_user')->get();
+        $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
         // dump($group_orgnization_user->toArray());
         // dd($group_orgnization_user->toArray());
+
+        foreach ($users as $key => $value) {
+           // array_push($users, $org_id);
+           $users[$key]['org_id'] = $org_id; 
+           $users[$key]['user_roles'] =  array_column(array_column($users[$key]['organization_user']['user_role_rel'], 'roles'), 'slug');
+
+           unset($users[$key]['organization_user']); 
+
+
+
+        }
+        // dump($users);
+
  
     	$form  =  forms::with(['section'=>function($query){
                                         $query->orderBy('order','asc');
@@ -99,7 +112,23 @@ class SurveyController extends Controller
                                             "question_order"=>$fieldValue["order"], "question_desc"=> $fieldValue["field_description"], "created_at"=>$fieldValue['created_at'], "updated_at"=>$fieldValue['updated_at'], "deleted_at"=>'', "answers"=>[[]], "fields"=>"" ]; 
                                 if(!empty($form_meta['question_id'])){
                                     $form_fields['question_key'] = $form_meta['question_id'];
+                                } 
+                                if(!empty($form_meta['field_validations'])){
+                                    $form_fields['field_validations'] = json_decode($form_meta['field_validations'], true);
+                                }else{
+                                    $form_fields['field_validations'] ="";
+
+                                } 
+                                if(!empty($form_meta['field_conditions'])){
+                                    $form_fields['field_conditions'] = json_decode($form_meta['field_conditions'], true);
+                                }else{
+                                    $form_fields['field_conditions'] ="";
+
                                 }
+
+                                
+
+
                                     $options = json_decode(@$form_meta['field_options'],true);
                                         $form_fields['next_question_key'] ="";
                                 if($fieldValue['field_type']=='select' ||  $fieldValue['field_type']=='multi_select' || $fieldValue['field_type']== 'radio' || $fieldValue['field_type'] == 'checkbox')

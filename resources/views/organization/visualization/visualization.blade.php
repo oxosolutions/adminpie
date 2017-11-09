@@ -1,7 +1,7 @@
 @extends('layouts.front')
 @section('content')
 {{-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> --}}
-<?php
+@php
 
 	$visualization_id = $visualizations['visualization_id'];
 	$visualization_name = $visualizations['visualization_name'];
@@ -17,7 +17,7 @@
 		$sidebar_class = $meta['filter_position']."-sidebar";
 	}
 
-?>
+@endphp
 
 <div id="theme_{{$visualization_theme}}" class="wrapper p-10 theme-{{$visualization_theme}}">
 	<div id="visualization_{{$visualization_id}}" class="main visualization visualization-{{$visualization_id}}">

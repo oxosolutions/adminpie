@@ -366,11 +366,12 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_categories',
                                 '--schema'=>'name:text, description:text:nullable, type:string, parent_id:integer:nullable, status:integer:default(1)'
                             ]);
-    	Artisan::call('make:migration:schema',[
+        Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_category_meta',
                                 '--schema'=>'key:string, value:text, category_id:integer, status:integer:default(1)'
                             ]);
+    	
     
 
 		Artisan::call('make:migration:schema',[
@@ -697,6 +698,11 @@ class OrganizationController extends Controller
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_email_template',
                                 '--schema'=>'name:string, content:text, subject:string, status:integer, order:integer, slug:string'
+                            ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_email_template_meta',
+                                '--schema'=>'key:string, value:text, project_id:integer,type:string, status:integer:default(1)'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,

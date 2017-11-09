@@ -32,7 +32,6 @@
 	Route::post('/dataset/update/details/{id}',			['as'=>'update.dataset.details','uses'=>'DatasetController@updateDetails']);
 	Route::get('/collaborate/delete/{id}',				['as'=>'delete.collaborate','uses'=>'DatasetController@deleteCollaborate']);
 	Route::post('/customcode/save/{id}',				['as'=>'save.custom.code','uses'=>'DatasetController@saveCustomCode']);
-
 	Route::get('/delete/column/{id}/{column}' , 		['as'=>'delete.column','uses'=>'DatasetController@deleteColumn']);
 
 ?>

@@ -76,4 +76,12 @@ class FeedbackController extends Controller
     {
     	return view('organization.support.feedback.create');
     }
+    public function editFeedback($id)
+    {	if(!empty($id) || $id != null || $id != ''){
+				$datafeed = Feedback::where('id',$id)->first();
+			}else{
+				$datafeed = "";
+			}
+    	return view('organization.support.feedback.edit')->with(['data' => $datafeed]);	
+    }
 }

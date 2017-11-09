@@ -6,37 +6,25 @@
 <body>
 
 	<div style="width: 100%">
-		<div style="background-color: #e8e8e8;text-align: center;padding:10px">
-			<h4>Admin Pie</h4>
-		</div>
+		{!! @$emailLayout['header'] !!}
 		<div style="padding:20px 40px">
-			<h5>Hi </h5>
-			{{@$email->name}} recently create a account with Email : <strong>{{@$email->email}} </strong> <br>
-<!-- 			<div style="width: 100%;text-align: center;padding: 18px 0px;">
-				<a href="{{ route('edit.password') }}" style="background-color: #DB4F28;color: white;width: 200px;line-height: 38px;font-size: 18px;border: none">Reset Password</a>	
-			</div>
- -->			
- 			<!-- <p>
-				If you did not request a password reset, please ignore the email or reply to let us know.This password reset is only valid for the next 30 minutes
-			</p> -->
-			<p>
-				Thanks,
-				<br>
-				
-			</p>
-			<p>
-				Note:  PLEASE DO NOT REPLY TO THIS MAIL. THIS IS AN AUTO GENERATED MAIL.
-			</p>
-			<hr>
-			<p>
-				<!-- If you're having trouble clicking the password reset button, copy and paste the URL below into your web browser.<br> -->
-				<!-- <a href="{{ route('edit.password') }}">{{ route('edit.password') }}</a> -->
-			</p>
-
+			@php
+				$content = @$emailTemplate['content'];
+				$tokens = array(
+				    'USER_NAME' => @$userName,
+				    'USER_EMAIL' => @$userEmail,
+				);
+				$pattern = '[[%s]]';
+				$map = array();
+				foreach($tokens as $var => $value){
+				    $map[sprintf($pattern, $var)] = $value;
+				}
+				$content = strtr($content, $map);
+			@endphp
+			{{@$userEmail}} recently create a account with Email : <strong>{{@$userName}} </strong> <br>
+			{!! @$content !!}
 		</div>
-		<div style="background-color: #e8e8e8;text-align: center;padding:10px">
-			 2017, Oxo solutions pvt ltd, All rights reserved
-		</div>
+		{!!  @$emailLayout['footer'] !!}
 	</div>
 </body>
 </html>

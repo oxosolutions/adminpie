@@ -17,4 +17,9 @@ class EmailLayout extends Model
 	    }
 	}
     protected $fillable = [ 'name','header','footer','slug','order'];
+
+    public function ListLayout()
+    {
+    	return self::pluck('name','id');
+    }
 }
