@@ -355,10 +355,14 @@ class SurveyStatsController extends Controller
         $repeater_keys  = array_keys($repeater_data);
         $option_keys  = array_keys($options_val);
         $repeater_options_value = array_merge($repeater_keys ,  $option_keys);
-        dump($repeater_options_value, $columns );
+        if(!empty($repeater_options_value)){
+          $combine = array_combine($repeater_options_value, $repeater_options_value);
+          $condition_fields = $columns->diffKeys($combine);
+        }else{
+          $condition_fields = $columns; 
+        }
 
-        dump($columns->diffKeys($repeater_options_value));
-      return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem', 'total'));
+      return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem', 'total' ,'condition_fields'));
     }
 
     protected function set_repeater_options_data($data, $repeater_data=Null , $options_val=Null){

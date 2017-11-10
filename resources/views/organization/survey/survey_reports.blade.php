@@ -112,8 +112,8 @@ $page_title_data = array(
 						<div class="aione-row ar">
 						<div id="field_2477" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-column field-wrapper-type-select l33 m33 s100">
 						<div id="field_column" class="field field-type-select">
-									{{ dump($columns->diffKeys(array_combine($repeater_options_value , $repeater_options_value))) }}
-							{!! Form::select('condition_field[]',$columns->diffKeys(@$repeater_options_value),null,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+									
+							{!! Form::select('condition_field[]',$condition_fields,null,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
 						</div><!-- field -->
 						</div><!-- field wrapper -->	
 						<div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
