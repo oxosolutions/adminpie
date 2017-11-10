@@ -151,9 +151,9 @@ $page_title_data = array(
 
 						<div id="field_operation" class="field field-type-select">
 
-						{!! Form::select('operators[$filledKey]',$operator_options, $filledVal['operator'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+						{!! Form::select('operator[$filledKey]',$operator_options, $filledVal['operator'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
 
-						<select class="input_operation browser-default " id="input_operation" name="operator[]">
+						{{-- <select class="input_operation browser-default " id="input_operation" name="operator[]">
 							<option selected="selected" value=""></option>
 							<option value="=">Equal to</option>
 							<option value=">">Greater then</option>
@@ -161,7 +161,7 @@ $page_title_data = array(
 							<option value=">=">Greater then and equal to</option>
 							<option value="<=">Less then and equal to</option>
 							<option value="like"> match with </option>
-						</select>		
+						</select>	 --}}	
 
 						</div><!-- field -->
 						</div><!-- field wrapper -->	
@@ -221,6 +221,12 @@ $page_title_data = array(
 
 
 						<div id="field_operation" class="field field-type-select">
+
+	
+						{!! Form::select('operator[]',$operator_options, null ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+
+
+
 
 						<select class="input_operation browser-default " id="input_operation" name="operator[]">
 							<option selected="selected" value=""></option>

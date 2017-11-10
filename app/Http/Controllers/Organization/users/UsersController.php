@@ -17,7 +17,7 @@ use App\Model\Organization\User;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\forms as Forms;
 use App\Model\Organization\FormBuilder;
-
+use App\Mail\userApprove;
 
 class UsersController extends Controller
 {
@@ -358,6 +358,7 @@ class UsersController extends Controller
          **/
           public function updateUserDetails(Request $request, $id)
           {
+            dd($request->all());
             $emailValidate = [
                 'email'      => 'required|email',
             ];

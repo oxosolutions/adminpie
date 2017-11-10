@@ -1,5 +1,6 @@
 /node_modules
 /public/storage
+/public
 /storage/*.key
 /vendor
 /.idea
@@ -11,6 +12,7 @@ Homestead.yaml
 
 # Gulp build
 /public/aione-build-tools
+/public/aione-tools
 
 # User Files
 /public/files

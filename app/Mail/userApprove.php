@@ -6,6 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Model\Group\GroupUsers;
+use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\EmailLayout;
+use Session;
 
 class userApprove extends Mailable
 {
@@ -44,14 +48,14 @@ class userApprove extends Mailable
                 }
             }
         }
-            
+
         $email = Session::get('approveUser');
         $userEmail = GroupUsers::where('email',$email)->first()['email'];
 
         return $this->from('oxosolutionsindia@gmail.com')
                 ->subject($emailTemplate['subject']) 
                 ->view('organization.login.signup-email-template')
-                ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail , 'userName' => $userName]);
+                ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail]);
 
     }
 }
