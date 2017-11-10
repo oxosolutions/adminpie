@@ -151,7 +151,7 @@ $page_title_data = array(
 
 						<div id="field_operation" class="field field-type-select">
 
-						{!! Form::select('condition_field[$filledKey]',$condition_fields, $filledVal['condition_field'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+						{!! Form::select('operators[$filledKey]',$operator_options, $filledVal['operator'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
 
 						<select class="input_operation browser-default " id="input_operation" name="operator[]">
 							<option selected="selected" value=""></option>
