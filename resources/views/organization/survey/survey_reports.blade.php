@@ -41,9 +41,23 @@
 	}
 </style>
 @php
+$operator_options = [ 
+						"="=>'Equal to',
+						 ">"=>'Greater then', 
+						 "<"=>'Less then' , 
+						">="=>'Greater then and equal to',
+						"<="=>'Less then and equal to',
+						"like"=>' match with'
+					];
+dump($operator_options);
+
+
+
+
 
 if(!empty($data) && !isset($data['error'])){
 	$keys = array_keys($data[0]);
+	dump($filter_fields);
 }
 $page_title_data = array(
     'show_page_title' => 'yes',
@@ -81,6 +95,10 @@ $page_title_data = array(
 					</div>
 					<div id="field_fields" class="field field-type-multi_select">
 						{!! Form::select('fields[]',@$columns,null,['placeholder'=>'Select field' ,'multiple'=>true, 'class'=>'browser-default select'])  !!}
+						<div class="field-actions">
+							<a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a> / 
+							<a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a> 
+						</div>
 					</div>
 
 				</div>
@@ -103,6 +121,89 @@ $page_title_data = array(
 					</style>
 					<div class="repeater-group">
 						<div class="repeater-wrapper">
+
+
+
+
+
+
+
+@if(!empty($filter_fields))
+	@foreach($filter_fields as $filledKey => $filledVal)
+		{{ dump($filledVal) }}
+
+
+<div class="repeater-row ar">
+						<i class="material-icons dp48 repeater-row-delete">close</i>
+						<div id="aione_form_section_527" class="aione-form-section">
+						<div class="aione-row">
+
+						<div id="aione_form_section_content" class="aione-form-section-content">
+						<div class="aione-row ar">
+						<div id="field_2477" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-column field-wrapper-type-select l33 m33 s100">
+						<div id="field_column" class="field field-type-select">
+									
+							{!! Form::select('condition_field[$filledKey]',$condition_fields, $filledVal['condition_field'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+						</div><!-- field -->
+						</div><!-- field wrapper -->	
+						<div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
+
+
+						<div id="field_operation" class="field field-type-select">
+
+						{!! Form::select('condition_field[$filledKey]',$condition_fields, $filledVal['condition_field'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+
+						<select class="input_operation browser-default " id="input_operation" name="operator[]">
+							<option selected="selected" value=""></option>
+							<option value="=">Equal to</option>
+							<option value=">">Greater then</option>
+							<option value="<">Less then</option>
+							<option value=">=">Greater then and equal to</option>
+							<option value="<=">Less then and equal to</option>
+							<option value="like"> match with </option>
+						</select>		
+
+						</div><!-- field -->
+						</div><!-- field wrapper -->	
+						<div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
+
+
+						<div id="field_value" class="field field-type-text">
+
+						<input class="input-value" id="input_value" placeholder="" data-validation="" name="condition_field_value[{{$filledKey}}]" type="text" value="{{ $filledVal['condition_field_value'] }}"> 
+
+
+						</div><!-- field -->
+						</div><!-- field wrapper -->	
+
+
+						</div> <!-- .aione-row -->
+						</div> <!-- .aione-form-content -->
+
+						</div> <!-- .aione-row -->
+						</div> <!-- .aione-form-section -->
+						</div>
+
+
+
+
+
+
+	@endforeach
+
+
+
+
+
+
+
+
+
+@else
+
+
+
+
 						<div class="repeater-row ar">
 						<i class="material-icons dp48 repeater-row-delete">close</i>
 						<div id="aione_form_section_527" class="aione-form-section">
@@ -151,6 +252,8 @@ $page_title_data = array(
 						</div> <!-- .aione-row -->
 						</div> <!-- .aione-form-section -->
 						</div>
+
+						@endif
 						</div>
 
 
@@ -373,7 +476,7 @@ $page_title_data = array(
 	@endif
 
 	<div id="table-structure" class="aione-table scrollx">
-	<div class="ac l80" style="line-height: 48px">Showing {{$firstItem}} to {{$lastItem}} of {{$total}} records</div>
+	<div class="ac l80" style="line-height: 48px">Showing {{@$firstItem}} to {{@$lastItem}} of {{@$total}} records</div>
 
 		<table class="compact">
 	        <thead>

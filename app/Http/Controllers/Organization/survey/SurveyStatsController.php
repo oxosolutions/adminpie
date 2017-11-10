@@ -214,21 +214,25 @@ class SurveyStatsController extends Controller
     }
     protected function filter_on_suvey_result($request , $table_name){
           $condition =null;
+          $filled_codition =[]; 
           if(isset($request['condition_field'])  && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value'])) ){
                 $where = [];
                 foreach ($request['condition_field'] as $key => $value) {
-                  $condition_field_value = $request['condition_field_value'][$key];
-                if(isset($request['operator'][$key])){
-                  $operator = $request['operator'][$key];
-                  if($operator=='like'){
-                    $final = [$value , $operator,  $condition_field_value.'%'];
-                  }else{
-                       $final = [$value , $operator,  $condition_field_value];
+                  if(isset($request['operator'][$key]) && isset($request['condition_field_value'][$key]) ){
+                    $condition_field_value = $request['condition_field_value'][$key];
+                    $operator = $request['operator'][$key];
+                      if($operator=='like'){
+                        $final = [$value , $operator,  $condition_field_value.'%'];
+                      }else{
+                           $final = [$value , $operator,  $condition_field_value];
+                      }
+                    array_push($filled_codition, ['condition_field'=> $value , 'operator'=>$operator, 'condition_field_value'=>$condition_field_value]);
+                    array_push($where, $final);
                   }
-                  array_push($where, $final);
-                }
               }
           }
+          dump($filled_codition);
+
          if(!empty($where)){
             $data = DB::table($table_name)->select($request['fields'])->where($where);//->get();
          }else{
@@ -239,7 +243,7 @@ class SurveyStatsController extends Controller
                $data = DB::table($table_name);//->get();
             }
          }
-            return $data;
+            return ['filter_data'=>$data, 'filter_fields'=> $filled_codition];
     }
 
     public function reports(Request $request, $id){
@@ -247,7 +251,7 @@ class SurveyStatsController extends Controller
       ini_set('max_execution_time', 300); //300 seconds = 5 minutes
       // Temporarily increase memory limit
       ini_set('memory_limit','512M');
-
+        $filter_fields = null;
         $table = Session::get('organization_id')."_survey_results_".$id;
         if(!Schema::hasTable($table)){
            $error = "survey_results_table_missing";
@@ -291,19 +295,27 @@ class SurveyStatsController extends Controller
        });
 
         if($request->isMethod('post')){
+
+          // dump($request->all());
           if(empty($request['fields'])){
             $request['fields'] = array_keys($column_fields);
           }
             $req = $request;//->toArray();
-            if(isset($request['condition_field'] )){
-              $condition_field = array_filter($request['condition_field']);
-            }else{
-              $condition_field =null;
-            }
-                 $data = $this->filter_on_suvey_result($request, $table);
-                 if(!empty($data)){
-                      $query = $data->paginate(100);
-                      $data = json_decode(json_encode($query->items()),true);
+            // if(isset($request['condition_field'] )){
+            //   $condition_field = array_filter($request['condition_field']);
+            // }else{
+            //   $condition_field =null;
+            // }
+                 $filter = $this->filter_on_suvey_result($request, $table);
+                 // dd($filter['filter_data']->paginate(100));
+                 $filter_fields = $filter['filter_fields'];
+                 if(!empty($filter['filter_data'])){
+                   if(isset($request['export'])){
+                      $query = $filter['filter_data']->simplePaginate(20000);
+                    }else{
+                      $query = $filter['filter_data']->paginate(100);
+                    }
+                    $data = json_decode(json_encode($query->items()),true);
                   }
                 if(!empty($req['fields'])){
                    foreach($req['fields'] as $key => $val){
@@ -337,7 +349,7 @@ class SurveyStatsController extends Controller
                     }
                 }
          }else{
-          $query = DB::table($table)->paginate(100);
+          $query = DB::table($table)->simplePaginate(100);
           $data = json_decode(json_encode($query->items()),true);
             foreach ($slug_question_id as $key => $value) {
                 if(in_array($value[0], ['checkbox' , 'multi_select'])){
@@ -346,12 +358,10 @@ class SurveyStatsController extends Controller
               }
              $data = $this->set_repeater_options_data($data, $repeater_data , $options_val);
          }
-
         $links = $query->links();
         $firstItem = $query->firstItem();
         $lastItem = $query->lastItem();
-        $total = $query->total();
-
+        // $total = $query->total(); 
         $repeater_keys  = array_keys($repeater_data);
         $option_keys  = array_keys($options_val);
         $repeater_options_value = array_merge($repeater_keys ,  $option_keys);
@@ -362,7 +372,7 @@ class SurveyStatsController extends Controller
           $condition_fields = $columns; 
         }
 
-      return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem', 'total' ,'condition_fields'));
+      return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem' ,'condition_fields', 'filter_fields'));
     }
 
     protected function set_repeater_options_data($data, $repeater_data=Null , $options_val=Null){

@@ -161,12 +161,11 @@ class RegisterController extends Controller
                 Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
                 return back();
           }
-      return view('organization.login.signup');
-
+        $userRegStatus = get_organization_meta('enableuserregisteration');
+        if($userRegStatus != 'no'){
+            return view('organization.login.signup');
+        }else{
+            return view('errors.404');
+        }
     }
-
-
-
-
-
 }

@@ -190,12 +190,21 @@ class LoginController extends Controller
     }
     public function forgotMail(Request $request)
     {
-        $model = User::where('email',$request->email)->first();
+        $model = GroupUsers::where('email',$request->email)->first();
         if(count($model) > 0){
-            User::where('id',$model->id)->update(['remember_token'=>Hash::make(rand(15,1500))]);
-            Session::put('reset_token',User::where('id',$model->id)->first()->remember_token);
+            Session::put('user_id',$model->id);
             $to_email = $request->email;
-            Mail::to($to_email)->send(new forgetPassword);
+
+
+            $check_forgot_status = OrganizationSetting::where('key' , 'enable_forgot_password')->first();
+                if($check_forgot_status != null){
+                    if($check_forgot_status->value == 1){
+                        Mail::to($to_email)->send(new forgetPassword);
+                    }
+                }
+
+
+            // Mail::to($to_email)->send(new forgetPassword);
             return view('success-msgs.email-success');
         }else{
             Session::flash('forgot-error','email not correct');

@@ -98,7 +98,7 @@ class OrganizationController extends Controller
                 return redirect()->to('http://'.$organization->secondary_domains.'/login/'.$tokenString);
 
             }else{
-                return redirect()->to('http://'.$organization->slug.'.scolm.com/login/'.$tokenString);
+                return redirect()->to('http://'.$organization->slug.'.'.env('MAIN_DOMAIN').'/login/'.$tokenString);
             }
         }
     }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Auth;
 use Hash;
 use Session;
+use Mail;
 use App\Model\Group\GroupUsers as org_user;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\UsersRole;
@@ -21,11 +22,11 @@ use App\Model\Organization\FormBuilder;
 class UsersController extends Controller
 {
     /**
-     * undocumented function
-     *
-     * @return create user page
-     * @author sandip
-     **/
+    * undocumented function
+    *
+    * @return create user page
+    * @author sandip
+    **/
     public function createUser(){
 
     	$form_slug = null;
@@ -40,11 +41,11 @@ class UsersController extends Controller
     }
 
     /**
-     * undocumented function
-     *
-     * @return store a new user
-     * @author sandip
-     **/
+    * undocumented function
+    *
+    * @return store a new user
+    * @author sandip
+    **/
         public function store(Request $request)
         {
             $emailValidate = [
@@ -52,8 +53,7 @@ class UsersController extends Controller
             ];
             $this->validate($request , $emailValidate);
 
-          
-          $model = org_user::where(['email'=>$request->email])->first();
+            $model = org_user::where(['email'=>$request->email])->first();
             if(count($model) > 0){
                 Session::flash('error','Email already exist');
                 return back();
@@ -358,7 +358,6 @@ class UsersController extends Controller
          **/
           public function updateUserDetails(Request $request, $id)
           {
-            dd($request->all());
             $emailValidate = [
                 'email'      => 'required|email',
             ];
@@ -464,6 +463,13 @@ class UsersController extends Controller
             $model = User::where('user_id',$id)->first();
                 if($model['status'] == 0){
                     User::where('user_id',$id)->update(['status' => 1]);
+
+                    $user_notification_status = get_organization_meta('user_notification_status');
+                    if(@$user_notification_status == 1){
+                        $emails = org_user::select('email')->where('id',$id)->get()->toArray()[0]['email'];
+                        Session::push('approveUser' , $emails);
+                        Mail::to($emails)->send(new userApprove);
+                    }
                 }else{
                     User::where('user_id',$id)->update(['status' => 0]);
                 }

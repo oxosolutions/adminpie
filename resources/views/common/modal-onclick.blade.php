@@ -23,7 +23,7 @@
 		@endif
 	</div>
 	<div class="modal-footer">
-		<button class="btn blue {{@$data['class']}}" type="submit" name="action">{{@$data['button_title']}}
+		<button class=" {{@$data['class']}}" type="submit" name="action">{{@$data['button_title']}}
 		</button>
 	</div>	
 </div>

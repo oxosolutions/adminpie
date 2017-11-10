@@ -6,7 +6,7 @@
 				Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
 		});
 
-		Route::group(['domain' => 'admin.scolm.com'], function () {
+		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function () {
 			Route::group(['namespace'=>'Admin'], function(){
 				Route::group(['middleware' => 'auth.admin'], function(){
 
@@ -92,7 +92,7 @@
 			});
 		});
 
-	Route::group(['namespace'=>'Group','domain'=>'manage.scolm.com'], function(){
+	Route::group(['namespace'=>'Group','domain'=>'manage.'.env('MAIN_DOMAIN')], function(){
 		Route::group(['middleware' => 'auth.group'], function(){
 			Route::get('/',['as'=>'group.dashboard','uses'=>'DashboardController@index']);
 

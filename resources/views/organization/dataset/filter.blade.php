@@ -33,7 +33,7 @@
 				<div class="aione-border">
 		            <div class="">
 		                <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
-		                    vertical Filteration
+		                    Vertical Filteration
 		                </h5>
 		            </div>
 		            <div class="p-15">

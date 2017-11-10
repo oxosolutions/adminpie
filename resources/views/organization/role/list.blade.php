@@ -9,6 +9,14 @@ $page_title_data = array(
   'add_new' => '+ Add Role'
 ); 
 @endphp
+  @if(@$errors->has())
+    <script type="text/javascript">
+      window.onload = function(){
+        $('#add_new_model').modal('open');
+      }
+    </script>
+  @endif
+  
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')

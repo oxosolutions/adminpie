@@ -60,8 +60,13 @@ class UserRoleController extends Controller{
     public function save(Request $request)
     {
         $org_id = Session::get('organization_id');
+        
+        $output = parse_slug($request->slug);
+        $request['slug'] = $output;
+
         $data =  [
-                    'name' => 'bail|required|unique:'.$org_id.'_users_roles'
+                    'name' => 'bail|required|unique:'.$org_id.'_users_roles',
+                    'slug' => 'required|unique:'.$org_id.'_users_roles'
             ];
 
         $this->validate($request, $data);

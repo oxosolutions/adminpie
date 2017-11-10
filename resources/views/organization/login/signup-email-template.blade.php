@@ -21,7 +21,6 @@
 				}
 				$content = strtr($content, $map);
 			@endphp
-			{{@$userEmail}} recently create a account with Email : <strong>{{@$userName}} </strong> <br>
 			{!! @$content !!}
 		</div>
 		{!!  @$emailLayout['footer'] !!}

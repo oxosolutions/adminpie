@@ -2,7 +2,9 @@
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-
+	@php
+		$userRegStatus = get_organization_meta('enableuserregisteration');
+	@endphp
 	@if(Session::has('login_fails'))
 	<div class="row error">
 		<span><i class="fa fa-ban"></i></span>
@@ -22,10 +24,14 @@
 				Have you forgotten your password? <br>
 				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>
 			</div>
-			<div class="aione-align-center">
-				If you do not have a user account?
-				<a class="aione-login-signup-link display-block bold" href="{{ route('register') }}">Signup Here</a>
-			</div>
+			
+			@if(@$userRegStatus != 'no')
+				<div class="aione-align-center">
+					If you do not have a user account?
+					<a class="aione-login-signup-link display-block bold" href="{{ route('register') }}">Signup Here</a>
+				</div>
+			@endif
+
 			@if(session()->has('csrf_error'))
 				<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
 			@endif
