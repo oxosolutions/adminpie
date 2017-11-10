@@ -13,7 +13,6 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@if(@$model != null || @$model != "")
-		{{dump($model)}}
 		{!! Form::model($model ,['route'=>'update.template' , 'class'=> 'form-horizontal','method' => 'post','files' => true]) !!}
 		<input type="hidden" name="id" value="{{request()->route()->parameters()['id']}}">
 	@else

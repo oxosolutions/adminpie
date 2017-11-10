@@ -702,7 +702,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_email_template_meta',
-                                '--schema'=>'key:string, value:text, project_id:integer,type:string, status:integer:default(1)'
+                                '--schema'=>'key:string, value:text, template_id:integer,type:string, status:integer:default(1)'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,

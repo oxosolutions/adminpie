@@ -231,8 +231,6 @@ class SurveyStatsController extends Controller
                   }
               }
           }
-          dump($filled_codition);
-
          if(!empty($where)){
             $data = DB::table($table_name)->select($request['fields'])->where($where);//->get();
          }else{
@@ -313,7 +311,7 @@ class SurveyStatsController extends Controller
                    if(isset($request['export'])){
                       $query = $filter['filter_data']->simplePaginate(20000);
                     }else{
-                      $query = $filter['filter_data']->paginate(100);
+                      $query = $filter['filter_data']->simplePaginate(100);
                     }
                     $data = json_decode(json_encode($query->items()),true);
                   }
