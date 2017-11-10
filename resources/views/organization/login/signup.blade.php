@@ -28,7 +28,6 @@
 
 					@if($settings->where('key' ,'user_role_default') != '' && !$settings->where('key' ,'user_role_default')->isEmpty())
 						@if( $settings->where('key' ,'user_role_default')->first()->value != null)
-							{{dump("here")}}
 							<input type="hidden" name="role" value="{{$settings->where('key' ,'user_role_default')->first()->value}}">
 						@else
 							<input type="hidden" name="role" value="2">
