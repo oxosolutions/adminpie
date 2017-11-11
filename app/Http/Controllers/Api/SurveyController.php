@@ -28,7 +28,7 @@ class SurveyController extends Controller
         $org_id = $org->first()->id;
         $group_id = $org->first()->group_id;
         Session::put('organization_id',$org_id);
-    	Session::put('group_id',$group_id);
+        Session::put('group_id',$group_id);
       //  $users = User::with('belong_group')->get()->keyBy('belong_group');
         $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
         // dump($group_orgnization_user->toArray());
@@ -47,7 +47,7 @@ class SurveyController extends Controller
         // dump($users);
 
  
-    	$form  =  forms::with(['section'=>function($query){
+        $form  =  forms::with(['section'=>function($query){
                                         $query->orderBy('order','asc');
                                     },
                                 'section.sectionMeta',
@@ -55,8 +55,8 @@ class SurveyController extends Controller
                                         $query->orderBy('order','asc');
                                 },'section.fields.fieldMeta'] )->where('type','survey')->get();
         $smeta  =  forms::with(['section.sectionMeta'] )->where('type','survey')->get();
-    	$data["status"]= "success";
-    	$data["media"]= "";
+        $data["status"]= "success";
+        $data["media"]= "";
         $question = [];
         $surveys =[];
         $groups =[];
@@ -152,7 +152,7 @@ class SurveyController extends Controller
                                         {   $repeater_check = 1;
                                             
                                             $repeater_section =  ['question_text'=>'Fill the repeater', 'question_type'=>'repeater', 'question_key'=>$sectionValue['section_slug'], "question_id"=> $sectionValue['id'], "question_message"=> '', "required"=> '', "pattern"=> '', "otherPattern"=>'', "survey_id"=> $sectionValue['form_id'], "group_id"=> $sectionValue['id'],
-                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>'createddd', "updated_at"=>'updtaeee', "deleted_at"=>'', "answers"=>[[]],'fields'=>[] ,'next_question_key'=>'' ];                                
+                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>'', "answers"=>[[]],'field_conditions'=>[],'field_validations'=>[],'fields'=>[] ,'next_question_key'=>'' ];                                
                                                 array_push($repeater_section['fields'] ,  $form_fields);
                                         }elseif($section_type_value =='repeater'){
                                                 array_push($repeater_section['fields'] ,  $form_fields);  
@@ -178,7 +178,7 @@ class SurveyController extends Controller
                 $mediaArray['android_application_logo'] = $data['settings']['android_application_logo'];
             }
             $data['media'] = $mediaArray;
-        	return $data; 	
+            return $data;   
 }
             public function surveyPerview($form_id)
             {
@@ -299,7 +299,6 @@ class SurveyController extends Controller
             $colums[] =    "`imei` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`unique_id` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`device_detail` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`record_type` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`created_by` int(11) COLLATE utf8_unicode_ci NULL";
             $colums[] =    "`created_at` text COLLATE utf8_unicode_ci  NULL DEFAULT NUll";
             $colums[] =    "`deleted_at` timestamp COLLATE utf8_unicode_ci NULL DEFAULT NULL";

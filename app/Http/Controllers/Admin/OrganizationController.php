@@ -762,4 +762,3 @@ class OrganizationController extends Controller
     }
 
 }
-

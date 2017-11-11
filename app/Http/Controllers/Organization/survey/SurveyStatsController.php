@@ -264,7 +264,7 @@ class SurveyStatsController extends Controller
         $field = FormBuilder::with(['section.sectionMeta','fieldMeta'=>function($query){
             $query->where('key','question_id');
          }])->where('form_id',$id)->get()->toArray();
-        dd($field);
+
         $slug_question_id = collect($field)->mapWithKeys(function($item){
             $section_type =null;
             if($item['section']['section_meta'][0]['key']=='section_type'){
@@ -423,6 +423,7 @@ class SurveyStatsController extends Controller
     }
    
     public function survey_static_result(Request $request ,$id){
+      //survey id -> 1 , 2 , 5
           $table_name = "235_survey_results_$id";
          if(!Schema::hasTable($table_name)){
             $error['table_not_exist'] = "No Data Available";
@@ -438,8 +439,6 @@ class SurveyStatsController extends Controller
                     return view('organization.survey.survey_static_result', compact('error','id') );
                 }
               }
-
-
               if($id==1){
                 try {
                    if($request->isMethod('post')){

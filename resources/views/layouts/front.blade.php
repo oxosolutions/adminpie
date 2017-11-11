@@ -81,14 +81,13 @@ if(request()->route()->uri == "survey/{token}"){
 			@endif
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->
-	
 	@include('components._footerscripts')
 	<script type="text/javascript">
-		{!! @$mete['js_code']!!}
+		{!! @$meta['js_code']!!}
 	</script>
-	<script type="text/javascript">
-		{!! @$design_settings['custom_js']!!}
-	</script>
+	{{-- <script type="text/javascript">
+		{!! @$design_settings['js_code']!!}
+	</script> --}}
 
 </body>
 

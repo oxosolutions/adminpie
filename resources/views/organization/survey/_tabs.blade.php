@@ -29,6 +29,11 @@
       <li class="aione-tab survey-report-tab {{(Request::route()->action['as'] == 'survey.reports')?'nav-item-current':''}}">
         <a href="{{route('survey.reports',$id)}}"><span class="nav-item-text">Report</span></a>
       </li>
+       @if(get_organization_id() =='295' && in_array($id , [1,2,5]) )
+            <li class="aione-tab survey-report-tab {{(Request::route()->action['as'] == 'survey.stats.report')?'nav-item-current':''}}">
+              <a href="{{route('custom.survey.report',$id)}}"><span class="nav-item-text">Custom Report</span></a>
+            </li>
+      @endif
       @if(App\Model\Organization\Collaborator::checkAccess($id,'survey') == null)
         <li class="aione-tab survey-share-tab {{(Request::route()->action['as'] == 'share.survey')?'nav-item-current':''}}">
           <a href="{{route('share.survey',$id)}}"><span class="nav-item-text">Collaborate</span></a>

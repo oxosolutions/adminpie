@@ -358,7 +358,6 @@ class UsersController extends Controller
          **/
           public function updateUserDetails(Request $request, $id)
           {
-            dd($request->all());
             $emailValidate = [
                 'email'      => 'required|email',
             ];
