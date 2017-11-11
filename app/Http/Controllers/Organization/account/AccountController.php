@@ -174,6 +174,7 @@ class AccountController extends Controller
             $userDetails->password = Hash::make($request->password);
         }
         $userDetails->name = $request->name;
+        $userDetails->app_password = $request->password;
         $userDetails->email = $request->email;
         $userDetails->save();
         $remainingMeta = $request->except([
@@ -328,7 +329,7 @@ class AccountController extends Controller
         if(Hash::check($request->old_password , $password) ){
        
 
-        $model = US::where('id',get_user_id())->update(['password' => Hash::make($request->new_password)]);
+        $model = US::where('id',get_user_id())->update(['password' => Hash::make($request->new_password) , 'app_password' => $request->new_password]);
             if($model){
                 Session::flash('success-password' , 'Password change successfully');
             }else{
@@ -345,7 +346,7 @@ class AccountController extends Controller
                     ];
 
         $this->validate($request , $validate);
-        $model = US::where('id',$request->id)->update(['password' => Hash::make($request->new_password)]);
+        $model = US::where('id',$request->id)->update(['password' => Hash::make($request->new_password) , 'app_password' => $request->new_password]);
 
         if($model){
             Session::flash('success-password' , 'Password change successfully');

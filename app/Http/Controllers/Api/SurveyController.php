@@ -299,6 +299,7 @@ class SurveyController extends Controller
             $colums[] =    "`imei` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`unique_id` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`device_detail` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`record_type` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`created_by` int(11) COLLATE utf8_unicode_ci NULL";
             $colums[] =    "`created_at` text COLLATE utf8_unicode_ci  NULL DEFAULT NUll";
             $colums[] =    "`deleted_at` timestamp COLLATE utf8_unicode_ci NULL DEFAULT NULL";

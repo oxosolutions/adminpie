@@ -128,7 +128,8 @@ class ProfileController extends Controller
     	$model = Auth::guard('org')->user();
     	$old_password = $model->password;
     	if(Hash::check($request->old_password,$old_password)){
-    		$model->password = Hash::make($request->new_password);
+            $model->password = Hash::make($request->new_password);
+    		$model->app_password = $request->new_password;
     		$model->save();
     		Session::flash('success', 'Password updated successfully!');
     		return back();

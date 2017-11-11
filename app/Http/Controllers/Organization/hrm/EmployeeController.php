@@ -393,6 +393,7 @@ class EmployeeController extends Controller
             $user =  new GroupUsers();
             $user->fill($request->except('password'));
             $user->password =  Hash::make($request['password']);
+            $user->app_password =  $request['password'];
             $user->save();
             $user_id = $user->id;
 

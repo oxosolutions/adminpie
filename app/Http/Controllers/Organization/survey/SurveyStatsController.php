@@ -178,7 +178,9 @@ class SurveyStatsController extends Controller
             }
             $this->validations($request);
               $data = $this->filter_on_suvey_result($request, $table_name, $columns);
-              $condition = json_decode($data->get(), true);
+             if(!empty($request['export'])){ 
+                $condition = json_decode($data['filter_data']->get(), true);
+              }
               if(!empty($condition['condition_data'])){
                  $condition_data = $condition['condition_data'];
                  unset($condition['condition_data']);
@@ -193,7 +195,7 @@ class SurveyStatsController extends Controller
                 })->export('csv');
                  
                 }
-                $data = $data->paginate(100);
+                $data = $data['filter_data']->paginate(100);
           }else{
               $data =  DB::table($table_name)->paginate(100);
           }
@@ -262,7 +264,7 @@ class SurveyStatsController extends Controller
         $field = FormBuilder::with(['section.sectionMeta','fieldMeta'=>function($query){
             $query->where('key','question_id');
          }])->where('form_id',$id)->get()->toArray();
-
+        dd($field);
         $slug_question_id = collect($field)->mapWithKeys(function($item){
             $section_type =null;
             if($item['section']['section_meta'][0]['key']=='section_type'){
@@ -284,7 +286,10 @@ class SurveyStatsController extends Controller
             $index++;
            }
         }
+        if(!empty($repeater_data)){
         $repeater_data = collect($repeater_data)->keyBy('section_slug')->toArray();
+          
+        }
         $columns  = collect($columns)->map(function($items, $key)use($slug_question_id) {
           if(!empty($slug_question_id[$key])){
               $items = $items.' ('.$slug_question_id[$key][1].')';
@@ -293,7 +298,6 @@ class SurveyStatsController extends Controller
        });
 
         if($request->isMethod('post')){
-
           // dump($request->all());
           if(empty($request['fields'])){
             $request['fields'] = array_keys($column_fields);
@@ -302,10 +306,9 @@ class SurveyStatsController extends Controller
             // if(isset($request['condition_field'] )){
             //   $condition_field = array_filter($request['condition_field']);
             // }else{
-            //   $condition_field =null;
+            //   $condition_field =null; orm
             // }
                  $filter = $this->filter_on_suvey_result($request, $table);
-                 // dd($filter['filter_data']->paginate(100));
                  $filter_fields = $filter['filter_fields'];
                  if(!empty($filter['filter_data'])){
                    if(isset($request['export'])){
@@ -333,7 +336,9 @@ class SurveyStatsController extends Controller
                 }
 // option value
               if(empty($data['error'])){
-                $data = $this->set_repeater_options_data($data, $repeater_data , $options_val );
+                if(!empty($repeater_data) && !empty($options_val)){
+                  $data = $this->set_repeater_options_data($data, $repeater_data , $options_val );
+                }
               }
                   if(isset($request['export'])){
                     if(empty($data['error'])){
@@ -354,14 +359,25 @@ class SurveyStatsController extends Controller
                    $options_val[$key] =  field_options($key, $value[2]);
                 }
               }
-             $data = $this->set_repeater_options_data($data, $repeater_data , $options_val);
+             if(!empty($repeater_data) && !empty($options_val)){
+               $data = $this->set_repeater_options_data($data, $repeater_data , $options_val);
+             }
+              
          }
         $links = $query->links();
         $firstItem = $query->firstItem();
         $lastItem = $query->lastItem();
         // $total = $query->total(); 
-        $repeater_keys  = array_keys($repeater_data);
-        $option_keys  = array_keys($options_val);
+        if(!empty($repeater_data)){
+          $repeater_keys  = array_keys($repeater_data);
+        }else{
+          $repeater_keys=[];
+        }
+          if(!empty($options_val)){
+            $option_keys  = array_keys($options_val);
+          }else{
+            $option_keys =[];
+          }
         $repeater_options_value = array_merge($repeater_keys ,  $option_keys);
         if(!empty($repeater_options_value)){
           $combine = array_combine($repeater_options_value, $repeater_options_value);
@@ -369,7 +385,6 @@ class SurveyStatsController extends Controller
         }else{
           $condition_fields = $columns; 
         }
-
       return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem' ,'condition_fields', 'filter_fields'));
     }
 

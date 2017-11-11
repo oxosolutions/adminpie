@@ -38,6 +38,7 @@
     <body>
 	
 	<?php
+		require_once('includes/Git.php');
 		$output = "";
 		if(isset($_POST['action'])){
 			$action = $_POST['action'];
@@ -106,6 +107,40 @@
 					
 				}
 				$output .= "\r\nCommand executed successfully";
+				
+			} elseif($action == 'git-pull'){
+
+				$output .= "\r\nExecuting ".$action;
+				$output .= "\r\n";
+				$output .= shell_exec('git pull 2>&1');
+				$output .= "\r\nCommand executed successfully";
+				
+			}elseif($action == 'git-push'){
+
+				$repo = Git::open('/home/oxo/public_html/scolm');
+				$repo->add('.');
+				$repo->commit('Update '.date('YmdHis'));
+				$repo->push('origin', 'master');
+				
+
+				$output .= "\r\nExecuting ".$action;
+				$output .= "\r\nCurrent user ";
+				$output .= shell_exec('cd /home/oxo/public_html/scolm 2>$1');
+				$output .= shell_exec('git add -A 2>$1');
+				$output .= "\r\ngit add -A";
+				$output .= shell_exec('git commit -m "Update" 2>&1');
+				$output .= "\r\ngit commit";
+				$output .= shell_exec('git push');
+				$output .= "\r\ngit push";
+
+				/*
+				
+				$output .= shell_exec('
+					'.$action.' '.$command.' 2>&1;
+				');
+				*/
+				
+				$output .= "Command executed successfully";
 				
 			} else {
 				$output .= "\r\nNothing to do!";
@@ -207,6 +242,26 @@
 				</div>
 			</div>
 			<!-- Dashboard Widget -->
+			<!-- Dashboard Widget -->
+			<div class="ac s100 m50 l25 pt-15 pb-15">
+				<div class="aione-widget aione-border">
+					<div class="aione-title">
+						<h4 class="aione-align-center font-weight-100 aione-border-bottom pb-15">Git Push</h4>
+					</div>
+					<div class="p-15"> 
+						<form class="form" action=""  method="post">
+							<input type="hidden" name="action" value="git-pull">
+							<button class="btn waves-effect waves-light" type="submit">Git Pull</button>
+						</form>
+						<form class="form" action=""  method="post">
+							<input type="hidden" name="action" value="git-push">
+							<button class="btn waves-effect waves-light" type="submit">Git Push</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<!-- Dashboard Widget -->
+
 		</div>
 		<!-- Dashboard Widgets -->
 	

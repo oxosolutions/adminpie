@@ -273,9 +273,9 @@ class EmailController extends Controller
         
         foreach ($templateMeta as $key => $value) {
             if($value->key == 'layout'){
-                $model['layout'] = EmailLayout::where('id',$value->value)->pluck('name','id')->toArray();
+                $model['layout'] = EmailLayout::where('id',$value->value)->pluck('id','name')->toArray();
             }
-        }
+        }   
         return view('organization.emails.create-template',compact('model'));
     }
     public function updateTemplates(Request $request)

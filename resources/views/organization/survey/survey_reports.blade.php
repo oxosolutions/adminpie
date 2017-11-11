@@ -467,7 +467,7 @@ $page_title_data = array(
 	</div>
 @endif
 @endif
-{{  $links}}
+{{  @$links}}
 
 <style>
 	.disappear{
