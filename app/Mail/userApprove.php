@@ -51,15 +51,16 @@ class userApprove extends Mailable
 
         $email = Session::get('approveUser');
         $userEmail = GroupUsers::where('email',$email)->first()['email'];
-        
+
         $sendFrom = get_organization_meta('from_email');
+        
             if($sendFrom != null){
                 $from = $sendFrom;
             }else{
                 $from = 'oxosolutionsindia@gmail.com';
             }
 
-            return $this->from($from)
+        return $this->from($from)
                 ->subject($emailTemplate['subject']) 
                 ->view('organization.login.signup-email-template')
                 ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail]);

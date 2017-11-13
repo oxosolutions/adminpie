@@ -64,7 +64,7 @@ class userRegister extends Mailable
                 $from = 'oxosolutionsindia@gmail.com';
             }
 
-            return $this->from($from)
+        return $this->from($from)
                 ->subject($emailTemplate['subject']) 
                 ->view('organization.login.signup-email-template')
                 ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail , 'userName' => $userName]);

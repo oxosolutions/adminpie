@@ -243,6 +243,9 @@ class SurveyController extends Controller
                             $dataKey = $questionId_slug[$dataKey];
                             $dataKey = str_replace('-', '_', $dataKey);
                         }
+
+                        $dataKey = substr($dataKey, 0,62);
+
                         $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
                          if(is_array($dataValue)) {
                             $dataValue = json_encode($dataValue);

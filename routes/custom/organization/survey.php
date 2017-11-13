@@ -18,8 +18,8 @@
 	Route::get('/survey/shareto/delete/{id}',			['as'=>'survey.remove.shareto','uses'=>'survey\SurveyController@deleteShareTo']);
 	Route::match(['get','post'],'/survey/result/{id?}', ['as'=>'results.survey','uses'=>'survey\SurveyStatsController@survey_result']);
 	Route::match(['get','post'],'survey/report/{id}', 	['as'=>'survey.stats.report','uses'=>'survey\SurveyStatsController@survey_static_result']);
+	Route::match(['get','post'],'survey/custom-report/{id}', 	['as'=>'custom.survey.report','uses'=>'survey\StaticSurveyResultController@survey_static_result']);
 	Route::get('/survey/convert/{id}', 					['as'=>'survey.convert','uses'=>'survey\SurveyController@convertToDataset']);
-	Route::match(['get','post'],'survey/custom-report/{id}', ['as'=>'custom.survey.report','uses'=>'survey\StaticSurveyResultController@survey_static_result']);
 
 	//ajax
 	Route::get('/change/survey/status' , ['as' => 'change.share.status' , 'uses' => 'survey\SurveyController@changeShareStatus']);
