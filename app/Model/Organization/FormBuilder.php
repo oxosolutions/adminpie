@@ -18,7 +18,16 @@ class FormBuilder extends Model
                 $this->table = Session::get('organization_id').'_form_fields';
             }
     }
-    
+    public function listColumn()
+    {  
+        if(request()->route()->parameters()['id'] != null){
+            $requestParameter = request()->route()->parameters()['id'];
+        }else{
+            $requestParameter = request()->route()->parameters()['form_id'];
+        }
+        $list = $this->where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->orderBy('order','ASC')->pluck('field_title','id');
+        return $list;
+    }
     public function fields()
     {
     	return $this->belongsTo('App\Model\Organization\section','id','section_id');

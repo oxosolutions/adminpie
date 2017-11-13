@@ -57,7 +57,14 @@ class userRegister extends Mailable
         $userEmail = GroupUsers::where('email',$email)->first()['email'];
         $userName = GroupUsers::where('email',$email)->first()['name'];
 
-        return $this->from('oxosolutionsindia@gmail.com')
+        $sendFrom = get_organization_meta('from_email');
+            if($sendFrom != null){
+                $from = $sendFrom;
+            }else{
+                $from = 'oxosolutionsindia@gmail.com';
+            }
+
+            return $this->from($from)
                 ->subject($emailTemplate['subject']) 
                 ->view('organization.login.signup-email-template')
                 ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail , 'userName' => $userName]);

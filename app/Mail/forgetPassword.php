@@ -64,7 +64,15 @@ class forgetPassword extends Mailable
 
 
             $userName = GroupUsers::where('id',Session::get('user_id'))->first()['name'];
-        return $this->from('oxosolutionsindia@gmail.com')
+            
+            $sendFrom = get_organization_meta('from_email');
+            if($sendFrom != null){
+                $from = $sendFrom;
+            }else{
+                $from = 'oxosolutionsindia@gmail.com';
+            }
+
+            return $this->from($from)
                     ->subject('Reset Password')
                     ->view('organization.login.signup-email-template')
                     ->with(['userName' => $userName , 'emailTemplate' => $emailTemplate , 'emailLayout' => $emailLayout]);

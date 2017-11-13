@@ -390,7 +390,7 @@ class SurveyStatsController extends Controller
 
     protected function set_repeater_options_data($data, $repeater_data=Null , $options_val=Null){
       // error_reporting( E_ALL ); 
-      // ini_set('display_errors', 1);
+      // ini_set('display_errors', 1); scolm
       
       foreach ($data as $key => $value) {
               foreach ($value as $nextKey => $nextValue) {
@@ -405,6 +405,9 @@ class SurveyStatsController extends Controller
                 }elseif(isset($options_val[$nextKey])){
                     unset($data[$key][$nextKey]);
                     $option_data = json_decode($nextValue, true);
+                    if(!is_array($option_data)){
+                        $option_data = [];
+                    }
                   foreach($options_val[$nextKey] as $optionKey =>$optionVal){
                     if(in_array($optionKey, $option_data)){
                       $data[$key][$nextKey.'_'.$optionKey] ='yes';

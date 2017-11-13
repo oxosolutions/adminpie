@@ -36,13 +36,13 @@ class FormBuilder extends Model
     }
     public function listColumn()
     {  
-        dump();
         if(request()->route()->parameters()['id'] != null){
             $requestParameter = request()->route()->parameters()['id'];
         }else{
             $requestParameter = request()->route()->parameters()['form_id'];
         }
-        $list = $this->where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->pluck('field_title','id');
+
+        $list = $this->where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->orderBy('order','ASC')->pluck('field_title','id');
         return $list;
     }
 
