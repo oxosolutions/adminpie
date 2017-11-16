@@ -130,6 +130,11 @@ class LeavesController extends Controller
   
     public function save(Request $request)
     {
+      if($request['from'] > $request['to']){
+
+        Session::flash('error','From Date must be smaller than to date');
+        return back();
+      }
       $valid_fields = [
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
@@ -147,9 +152,9 @@ class LeavesController extends Controller
         return redirect()->route('leaves');
     }
  	protected function date_format($parm)
-    {
-    	 return date('Y-m-d',strtotime($parm));
-    }
+  {
+  	 return date('Y-m-d',strtotime($parm));
+  }
     public function update(Request $request)
     {
         $sh =  LV::find($request->id);
@@ -182,7 +187,7 @@ class LeavesController extends Controller
     }
     public function editLeave(Request $request)
     {
-      $valid_fields = [
+        $valid_fields = [
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
                           'to'               => 'required'

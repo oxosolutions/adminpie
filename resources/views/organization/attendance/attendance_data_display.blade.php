@@ -58,7 +58,7 @@
 					@endif
  			</div>
 			<div style="clear:both;"> </div>
-			{{ dump($user_data) }}
+			
 			@foreach($user_data as $userKey => $value)
 				@php
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){

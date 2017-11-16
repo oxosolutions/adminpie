@@ -22,6 +22,7 @@ use App\Model\Organization\EmailTemplate;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\Document;
 use App\Http\Controllers\Organization\settings\SettingsController;
+use App\Model\Organization\User as EMP;
 
 class AccountController extends Controller
 {
@@ -121,28 +122,33 @@ class AccountController extends Controller
      * profileDetails method alter BY Paljinder singh & comment code which not in use.
      */
     public function profileDetails($id = null){
+
         $user_log = $this->listActivities();
     	if($id == null){
     		 $id = Auth::guard('org')->user()->id;
     	}
-        $userDetails = User::with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
+        $userDetails = EMP::with(['metas','applicant_rel','client_rel','user_role_rel','belong_group'])->find($id);
         $userMeta = get_user_meta($id,null,true);
 
-        $userDetails->password = '';
-        if($userMeta != false){
-            @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
-            @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
-            $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
-            
-            // dd($userDetails);
-            @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
-            @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
-        }
-        if(!$userDetails->metas->isEmpty()){
-            foreach($userDetails->metas as $key => $value){
-                $userDetails->{$value->key} = $value->value;
+        if($userDetails != null){
+            $userDetails->password = '';
+            if($userMeta != false){
+                @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
+                @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
+                $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
+                
+                // dd($userDetails);
+                @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
+                @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
+            }
+            if(!$userDetails->metas->isEmpty()){
+                foreach($userDetails->metas as $key => $value){
+                    $userDetails->{$value->key} = $value->value;
+                }
             }
         }
+        
+        
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }

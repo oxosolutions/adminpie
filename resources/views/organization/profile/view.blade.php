@@ -164,7 +164,7 @@ $page_title_data = array(
 								onchange="document.getElementById('form1').submit()" class="chooser">
 							</div>
 						{!!Form::close()!!}
-							@if($model->user_profile_picture != null || $model->user_profile_picture != "" || !empty($model->user_profile_picture))
+							@if(@$model->user_profile_picture != null || @$model->user_profile_picture != "" || !empty(@$model->user_profile_picture))
 								<a href="{{route('profile.picture.delete',$id)}}">Remove Image</a>	
 							@endif
 						
@@ -248,14 +248,23 @@ $page_title_data = array(
 					<div class="col l9 p-14">
 						<div class="row pb-5" >
 							<div class="col l3"><strong>Name:</strong></div>
-							<div class="col l5">{{@$model->name}}</div>
+							<div class="col l5">{{@$model->belong_group->name}}</div>
 							<div class="col l4 right-align" id="modal-wrapper">
 								<a class="grey-text darken-1 edit-button waves-effect" data-target="modal1"><i class="fa fa-pencil"></i></a>
 								
 								{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
-									
+									@php
+									$shift = App\Model\Organization\Shift::where(['id' => $model->shift])->pluck('id','name');
+
+									$userData = [];
+									$userData ['about_me'] = $model->about_me;
+									$userData ['shift'] = $shift;
+									$userData ['email'] = $model->belong_group->email;
+									$userData ['name'] = $model->belong_group->name;
+
+									@endphp
 								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
-								{!!Form::model($model,['route'=>['update.profile',$model->id],'method'=>'PATCH',])!!}
+								{!!Form::model(@$userData,['route'=>'update.profile','method'=>'post'])!!}
 									<div class="modal-header white-text  blue darken-1" ">
 										<div class="row" style="padding:15px 10px;margin: 0px">
 											<div class="col l7 left-align">
@@ -266,6 +275,7 @@ $page_title_data = array(
 											</div>	
 										</div>
 									</div>
+									<input type="hidden" name="id" value="{{ @$model->id }}">
 									<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
 										<div class="col s12 m2 l12 aione-field-wrapper">
 										{!! FormGenerator::GenerateField('name',['type'=>'inset']) !!}
@@ -299,11 +309,11 @@ $page_title_data = array(
 						
 						<div class="row pt-5" >
 							<div class="col l3"><strong>Email</strong></div>
-							<div class="col l9">{{@$model->email}}</div>
+							<div class="col l9">{{@$model->belong_group->email}}</div>
 						</div>
 						<div class="row pt-5" >
-							<div class="col l3"><strong>About Me</strong></div>
-							<div class="col l9">{{@$model->about_me}}</div>
+							{{-- <div class="col l3"><strong>About Me</strong></div> --}}
+							<div class="col l9">{{@$model->belong_group->about_me}}</div>
 						</div>
 						{{-- @if($isEmployee != null)
 							<div class="row pt-5" >
@@ -318,56 +328,48 @@ $page_title_data = array(
 					</div>
 				</div>
 				{{-- @if($isEmployee || $isAdmin) --}}
-				@if($isEmployee )
-				
-					@foreach(@$model->metas as $k => $Shift)
-						@if($Shift->key == 'shift')
-							<div class="row" style="padding: 0px 12px;">
-								<div class="col l3">
-									Shift
-								</div>
-								<div class="col l3">
-									{{App\Model\Organization\Shift::where('id',$Shift->value)->first()->name}}
-								</div>
-								<div class="col l3">
-									{{App\Model\Organization\Shift::where('id',$Shift->value)->first()->from}} - {{App\Model\Organization\Shift::where('id',$Shift->value)->first()->to}}
-								</div>
-								<div class="col l3 week-days">
-									@foreach(json_decode(App\Model\Organization\Shift::where('id',$Shift->value)->first()->working_days) as $k => $v)
-									
-									<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
-									@endforeach
-								</div>
-								<style type="text/css">
-									.week-days > .active{
-										border-color: #2196f3;
-									}
-									.week-days > .active:hover{
-										background-color:#2196f3;
-										color: white;
-
-									}
-									.week-days > div{
-									    display: inline-block;
-									    width: 24px;
-									    text-align: center;
-									    font-size: 13px;
-									    line-height: 24px;
-									    border: 1px solid #e8e8e8;
-									    border-radius: 50%;
-									    font-weight: 700;
-									    color: #676767;
-									    cursor: pointer;
-									}
-									.week-days > div:last-child{
-										color: red
-									}
-								</style>
+						<div class="row" style="padding: 0px 12px;">
+							<div class="col l3">
+								Shift
 							</div>
-						@endif
-					@endforeach
-				@endif	
-				
+							<div class="col l3">
+								{{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+							</div>
+							<div class="col l3">
+								{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}
+							</div>
+							<div class="col l3 week-days">
+								@foreach(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
+								
+								<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
+								@endforeach
+							</div>
+							<style type="text/css">
+								.week-days > .active{
+									border-color: #2196f3;
+								}
+								.week-days > .active:hover{
+									background-color:#2196f3;
+									color: white;
+
+								}
+								.week-days > div{
+								    display: inline-block;
+								    width: 24px;
+								    text-align: center;
+								    font-size: 13px;
+								    line-height: 24px;
+								    border: 1px solid #e8e8e8;
+								    border-radius: 50%;
+								    font-weight: 700;
+								    color: #676767;
+								    cursor: pointer;
+								}
+								.week-days > div:last-child{
+									color: red
+								}
+							</style>
+						</div>
 			</div>
 			<div class="card mt-14" >
 				
@@ -450,45 +452,46 @@ $page_title_data = array(
 					<div class="col l10 headline-text" >Contact Detail</div>
 					<div class="col l2" id="modal-wrapper">
 						<a href="#modal2" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
-						{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+						{!!Form::model(@$model,['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 						<input type="hidden" name="meta_table" value="usermeta" />
 						@include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'Contact Details','button_title'=>'Save ','section'=>'empsec2']])
 						{!!Form::close()!!}
 					</div>
 					
 				</div>
-				@if(!$model->metas->isEmpty())
-					<div class="row" >
-						@foreach($model->metas as $k => $v)
-							@if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address' || $v->key == 'present_address')
-								<div class="row mb-0" >
-									<div class="col l12 subhead-wrapper" >
-										<span class="subhead">{{ucfirst(str_replace('_',' ',$v->key))}}</span>
+				@if(@$model !=null)
+					@if(!$model->metas->isEmpty())
+						<div class="row" >
+							@foreach($model->metas as $k => $v)
+								@if($v->key == 'contact_no' || $v->key == 'alternative_number' || $v->key == 'permanent_address' || $v->key == 'present_address')
+									<div class="row mb-0" >
+										<div class="col l12 subhead-wrapper" >
+											<span class="subhead">{{ucfirst(str_replace('_',' ',$v->key))}}</span>
+										</div>
+										<div class="col l12 details-wrapper" >
+											{{$v->value}}
+										</div>
 									</div>
-									<div class="col l12 details-wrapper" >
-										{{$v->value}}
-									</div>
-								</div>
-							@endif
-						@endforeach
-					</div>
+								@endif
+							@endforeach
+						</div>
+					@endif
 				@endif
 			</div>
 				@php
-					$roles = array_keys($model->user_role_rel->groupBy('role_id')->toArray());
+					$roles = array_keys(@$model->user_role_rel->groupBy('role_id')->toArray());
 					//if role has permission to this widget
 				@endphp
-				@if($isEmployee || $isAdmin)
+				@if(@$isEmployee || @$isAdmin)
 					<div class="card info-card" >
 
 							<div class="row valign-wrapper mb-0">
 								<div class="col l10 headline-text" >Employee Detail</div>
 								<div class="col l2 " id="modal-wrapper">
-										@if($isAdmin)
+										@if(@$isAdmin)
 											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 										@endif
-										{{-- {{ dd($model) }} --}}
-									{!!Form::model($model->toArray(),['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+									{!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
 									
 									@include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
@@ -503,12 +506,30 @@ $page_title_data = array(
 											<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
 										</div>
 										<div class="col l12 details-wrapper" >
-										@if($field == 'designation')
+
+											@php
+												$fieldData = str_replace(' ', '_', strtolower($field));
+											@endphp
+											@if($fieldData == 'designation')
+												{{@App\Model\Organization\Designation::find($model->designation)->name}}
+											@elseif($fieldData == 'department')
+												{{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+											@elseif($fieldData == 'user_shift')
+												{{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
+											@elseif($fieldData == 'pay_scale')
+												{{@App\Model\Organization\Payscale::find($model->$fieldData)->title}}
+											@else
+												{{ $model->$fieldData }}
+											@endif
+
+
+
+										{{-- @if($field == 'designation')
 											&nbsp;
-												{{@App\Model\Organization\Designation::find($model[strtolower($field)])->name}}
+												{{@App\Model\Organization\Designation::find($model->designation)->name}}
 										@elseif($field == 'department')
 											&nbsp;	
-												{!! Form::close() !!}{{@App\Model\Organization\Department::find($model[strtolower($field)])->name}}
+												{!! Form::close() !!}{{@App\Model\Organization\Department::find($model->strtolower($field))->name}}
 										@elseif($field == 'user_shift')
 											&nbsp;	
 												{!! Form::close() !!}{{@App\Model\Organization\Shift::find($model[strtolower($field)])->name}}
@@ -517,7 +538,7 @@ $page_title_data = array(
 												{!! Form::close() !!}{{@App\Model\Organization\Payscale::find($model[strtolower($field)])->title}}
 										@else
 												&nbsp;&nbsp;{{@$model[strtolower($field)]}}
-										@endif
+										@endif --}}
 										</div>
 									</div>
 								@endforeach

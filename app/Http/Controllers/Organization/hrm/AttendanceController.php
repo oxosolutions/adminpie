@@ -134,7 +134,7 @@ class AttendanceController extends Controller
 			}else{						
 				foreach($all_data as $logkey => $logvalue){				
 					if ($logvalue[0] == "Period :"){
-						dump($logvalue);
+						// dump($logvalue);
 					}
 					if ($logvalue[0] == "No :"){
 						foreach($logvalue as $log_val_key => $log_value){
@@ -168,7 +168,7 @@ class AttendanceController extends Controller
 					$limitDays = 1;
 					$dt  = carbon::parse(date('Y-m-d',strtotime($dates[0])));
 				  	$endLimit = $dt->daysInMonth;
-
+				if(isset($value['attendence'])){
  					foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
 						if($limitDays > $endLimit){
 							break; 
@@ -254,6 +254,7 @@ class AttendanceController extends Controller
 								$attendance->save();
 								$limitDays++;
 							}
+					}
 					}									
 				 }
 		}	

@@ -289,7 +289,7 @@
 						Route::get('/activities/{id?}',['as'=>'account.activities','uses'=>'AccountActivityController@listActivities']);
 						Route::any('/attendance/{id?}',['as'=>'account.attandance','uses'=>'AttendanceController@myattendance']);
 						Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
-
+						Route::patch('/profile/storeMeta/{id}',['as'=>'update.profile.meta','uses'=>'AccountController@storeMeta']);
 
 						Route::get('/document/{id?}',['as'=>'account.document','uses'=>'AccountController@UserDocument']);
 						Route::get('/delete/document/{id}',['as'=>'delete.user.document','uses'=>'AccountController@DelDocument']);
@@ -390,6 +390,8 @@
 
 					// Route::get('/salary/{id?}',['as'=>'hrm.salary','uses'=>'SalaryController@index']);
 					Route::match(['get','post'],'/salary/{id?}',['as'=>'hrm.salary','uses'=>'SalaryController@generate_salary']);
+					Route::match(['get','post'],'generate/salary/{id?}',['as'=>'hrm.generate.salary','uses'=>'SalaryController@generate_salary_slip']);
+					Route::get('generate/salary_view',['as'=>'hrm.generate.salary_view','uses'=>'SalaryController@generate_salary_slip_view']);
 					// (){
 					// 		return view('organization.profile.salary');
 					// 	}]);

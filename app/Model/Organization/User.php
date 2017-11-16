@@ -133,6 +133,24 @@ class User extends Authenticatable
       return $processEmployee;
 
     }
+    //some change from listEmployee() this is not a permanent --sandeep  
+    public function employeeLeaveUsers()
+    {
+      $employee_id = [];
+      $user_id = self::where('user_type' ,'employee')->get();
+
+      foreach ($user_id as $key => $value) {
+        $employee_id[] = GroupUsers::where('id',$value->user_id)->pluck('name','id');
+      }
+      $processEmployee= [];
+      foreach ($employee_id as $key => $value) {
+        foreach ($value->toArray() as $k => $v) {
+          $processEmployee[$k] = $v;
+        }
+      }
+      return $processEmployee;
+
+    }
     public static function getEmployeeList()
     {
       $employee_id = [];

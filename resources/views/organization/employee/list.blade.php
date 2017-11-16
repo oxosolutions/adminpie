@@ -2,9 +2,9 @@
 @section('content')
 	@if(@$errors->has())
 		<script type="text/javascript">
-			$(window).load(function(){
-				$('.modal').modal('open');
-			});
+			window.onload = function(){
+                $('#add_new_model').modal('open');
+            }
 		</script>
 	@endif
 	

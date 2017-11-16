@@ -53,10 +53,6 @@ class UserRoleController extends Controller{
         return view('organization.role.list' , $datalist); 
 
     }
-    // public function create()
-    // {
-    // 	return view('organization.role.create');
-    // }
     public function save(Request $request)
     {
         $org_id = Session::get('organization_id');

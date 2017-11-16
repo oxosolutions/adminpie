@@ -178,7 +178,7 @@ class UsersController extends Controller
      * undocumented function
      *  
      * @return the userdetails
-     * @author sandip
+     * @edited sandip
      **/
     public function userView($id = null)
     {
@@ -188,7 +188,6 @@ class UsersController extends Controller
             $model = org_user::where('id',$id)->first()->toArray();
             $id = $model['id'];
         }
-
         $userDetails = org_user::select(['id','name','email'])->with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
 
@@ -203,7 +202,8 @@ class UsersController extends Controller
         }else{
         	$userDetails['role'] = $role_data->value;
         }
-
+        $newData = [];
+        $newData = org_user::select('name','email','app_password')->where('id',$id)->first()->toArray();
         $additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
 
@@ -234,35 +234,35 @@ class UsersController extends Controller
                 $userDetails = $userDetails; 
             }
 
-        }
-        $newData = [];
-        foreach ($userDetails->toArray() as $key => $value) {
-        	if(!is_array($value)){
-	        	json_decode($value);
-	    		if (json_last_error() === JSON_ERROR_NONE){
-	    			if(is_array( json_decode($value) )){
-                            $array_field = $fields->where('field_title',$key)->first();
-                            if($array_field != null){
-                            	$array_field_slug = $array_field->field_slug;
-	                            $array_field_options = field_options($array_field_slug);
-	                            foreach (json_decode($value) as $ke => $val) {
-	                                if(array_key_exists($val, $array_field_options)){
-	                                    $newData[$key][] = $array_field_options[$val];
-	                                }
-	                            }
+          foreach ($userDetails->toArray() as $key => $value) {
+          	if(!is_array($value)){
+  	        	json_decode($value);
+  	    		if (json_last_error() === JSON_ERROR_NONE){
+  	    			if(is_array( json_decode($value) )){
+                              $array_field = $fields->where('field_title',$key)->first();
+                              if($array_field != null){
+                              	$array_field_slug = $array_field->field_slug;
+  	                            $array_field_options = field_options($array_field_slug);
+  	                            foreach (json_decode($value) as $ke => $val) {
+  	                                if(array_key_exists($val, $array_field_options)){
+  	                                    $newData[$key][] = $array_field_options[$val];
+  	                                }
+  	                            }
 
-                            }
-	    				// $newData[$key] = json_decode($value);
-	    			}else{
-	    				$newData[$key] = $value;
-	    			}
-	    		}else{
-	    			$newData[$key] = $value;
-	    		}
-        	}else{
-        		$newData[$key] = $value;
-        	}
+                              }
+  	    				// $newData[$key] = json_decode($value);
+  	    			}else{
+  	    				$newData[$key] = $value;
+  	    			}
+  	    		}else{
+  	    			$newData[$key] = $value;
+  	    		}
+          	}else{
+          		$newData[$key] = $value;
+          	}
+          }
         }
+
         return view('organization.user.view',['model' => $newData]);
         // return view('organization.user.preview',['model' => $userDetails , 'user_log' => $user_log]);
     }

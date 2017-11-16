@@ -14,15 +14,22 @@
 	{{-- @foreach(@$data->toArray() as $key => $value) --}}
 		@php
 			$id = $data['id'];
-			$model = ['name' => $data->name,'leave_from' => $data->leave_from, 'leave_to' => $data->to , 'leavereason' => $data->reason_of_leave];
+			$model = ['reason_of_leave' => $data->reason_of_leave,'leave_from' => $data->from, 'leave_to' => $data->to , 'employee_id' => $data->employee_id];
 		@endphp
 	{{-- @endforeach --}}
 	<script type="text/javascript">
 		window.onload = function(){
-			$('#modal_edit').modal('open');
+			$('#add_new_model').modal('open');
 		}
 	</script>
 @endif	
+@if($errors->any())
+	<script type="text/javascript">
+		window.onload = function(){
+			$('#add_new_model').modal('open');
+		}
+	</script>
+@endif
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 		@include('common.list.datalist')
@@ -30,17 +37,26 @@
 	@include('common.page_content_secondry_start')
 {!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','section'=>'leavesection']])
+@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','form'=>'add_leave_form']])
 {!!Form::close()!!}
 @if(@$model)
 	{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 	<input type="hidden" name="id" value="{{$id}}">
-	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','section'=>'leavesection']])
+	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','form'=>'add_leave_form']])
 	{!!Form::close()!!}
 @endif	
 	
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+<style type="text/css">
+	
+.picker__day--infocus {
+    padding: 8px 0 !important;
+}
+.picker--focused .picker__day--selected, .picker__day--selected{
+	border-radius: 0%;
+}
+</style>
 <style type="text/css">
 .add-new-wrapper{
 	display:none;

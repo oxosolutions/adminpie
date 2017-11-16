@@ -80,7 +80,8 @@ class LeaveCategoryController extends Controller
           $id = Auth::guard('admin')->user()['id'];
         }
       if($request->isMethod('post')){
-            $this->catRepo->category_meta_save($request);  
+            $this->catRepo->category_meta_save($request); 
+            Session::flash('success','leave category updated successfully'); 
             return back();      
           }
         $select =[];
@@ -91,10 +92,20 @@ class LeaveCategoryController extends Controller
         {
           $include_designation = array_map('intval',json_decode($data['data']['include_designation']));
           $user_data = $this->user_by_designation($include_designation);
+          // dd($user_data);
          $data['user_include'] = $user_data['user_include'];  
          $data['user_exclude'] = $user_data['user_exclude'];  
         }else{
-         $data['userData'] = $data['user_include'] = $data['user_exclude']= User::where('id','!=',$cat_id)->pluck('name','id');
+          $user =  User::with('belong_group')->where('id','!=',$cat_id)->get();//->pluck('name','id');
+          $user_pluck =[];
+          foreach ($user as $userKey => $userValue) {
+            if(!empty($userValue['belong_group'])){
+              $user_pluck[] = [$userValue['id']=>$userValue['belong_group']['name']];  
+            }
+          }
+       
+
+         $data['userData'] = $data['user_include'] = $data['user_exclude']= $user_pluck; //[['12'=>'user']];// User::where('id','!=',$cat_id)->pluck('name','id');
         }
         $data['id'] =$cat_id;
         $data['designationData'] = DES::where('status',1)->pluck('name','id');
@@ -129,12 +140,25 @@ class LeaveCategoryController extends Controller
     }
 
     protected function user_by_designation($designation_id){
-      $user_exclude =  User::with('metas')->whereHas('metas', function($query) use($designation_id) {
+      $exclude =  User::with('belong_group')->with('metas')->whereHas('metas', function($query) use($designation_id) {
           $query->where('key','designation')->whereIn('value',$designation_id);
-          })->where('user_type','employee')->pluck('name','id');
-      $user_include =  User::with('metas')->whereHas('metas', function($query) use($designation_id) {
+          })->where('user_type','employee')->get();
+      $user_include = $user_exclude =[];
+      foreach ($exclude as $userKey => $userValue) {
+            if(!empty($userValue['belong_group'])){
+              $user_exclude[] = [$userValue['id']=>$userValue['belong_group']['name']];  
+            }
+          }      
+
+      $include =  User::with('metas')->whereHas('metas', function($query) use($designation_id) {
           $query->where('key','designation')->whereNotIn('value',$designation_id);
-          })->where('user_type','employee')->pluck('name','id');
+          })->where('user_type','employee')->get();
+
+      foreach ($include as $userKey => $userValue) {
+            if(!empty($userValue['belong_group'])){
+              $user_include[] = [$userValue['id']=>$userValue['belong_group']['name']];  
+            }
+          } 
       return compact('user_exclude','user_include');
     }
 

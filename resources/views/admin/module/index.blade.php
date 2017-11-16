@@ -218,7 +218,7 @@ $page_title_data = array(
                             @else
                                 {!! Form::open(['route' => 'edit.subModule','method' => 'POST'])!!}
                             @endif
-                                    {!! Form::model(@$route,['route' => 'edit.subModule','method' => 'POST'])!!}
+                                    {{-- {!! Form::model(@$route,['route' => 'edit.subModule','method' => 'POST'])!!} --}}
 
                                      <input type="hidden" name="subModule_id" value="{{@request()->route()->parameters()['subModule']}}" placeholder="Enter route name" />
                                         {!! FormGenerator::GenerateSection('permission',[],$permission) !!}

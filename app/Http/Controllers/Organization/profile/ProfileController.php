@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Auth;
 use App\Model\Group\GroupUsers;
 use App\Model\Organization\UsersMeta;
+use App\Model\Organization\User;
 use App\Model\Organization\forms as Forms;
 use App\Model\Organization\FormBuilder as FormBuilder;
 use App\Model\Organization\FieldMeta;
@@ -162,12 +163,13 @@ class ProfileController extends Controller
      * @return [type]           [boolean]
      * @author Rahul 
      */
-    public function updateProfile(Request $request, $id){
+    public function updateProfile(Request $request){
 
+        $user_id = User::select('user_id')->where('id',$request['id'])->first()->user_id;
     	$this->validateUpdateProfileFor($request);
-    	$model = GroupUsers::find($id);
-    	$model->name = $request->name;
-    	$model->email = $request->email;
+    	$model = GroupUsers::firstOrNew(['id' => $user_id]);
+    	$model->name = $request['name'];
+    	$model->email = $request['email'];
     	$model->save();
     	foreach($request->except(['_token','email','name']) as $key => $value){
     		$userMetaModel = UsersMeta::firstOrNew(['key'=>$key]);
@@ -178,11 +180,12 @@ class ProfileController extends Controller
             }else{
                 $userMetaModel->value = json_encode($value);
             }
-    		$userMetaModel->user_id = $id;
+    		$userMetaModel->user_id = $request['id'];
     		$userMetaModel->save();
     	}
     	Session::flash('success', 'Successfully updated!!');
-    	return redirect()->route('profile.edit');
+        return back();
+    	// return redirect()->route('profile.edit');
     }
 
     /**

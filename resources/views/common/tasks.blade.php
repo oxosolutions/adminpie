@@ -16,10 +16,17 @@
     @endif
 
     <style type="text/css">
-        .display-none{
+        .display-none, .progress{
             display: none;
         }
     </style>
+    @if($errors->any())
+        <script type="text/javascript">
+            window.onload = function(){
+                $('.modal').modal('open');
+            }
+        </script>
+    @endif
     <div class="progress">
       <div class="indeterminate"></div>
     </div>

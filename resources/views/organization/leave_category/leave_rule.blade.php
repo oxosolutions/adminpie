@@ -30,7 +30,14 @@ $page_title_data = array(
 'add_new' => '+ Add Role'
 ); 
 @endphp
+@if(Session::has('success'))
+	<div class="aione-message success">
+		<p> {{ Session::get('success') }}</p>
+	</div>
+
+@endif
 @include('common.pageheader',$page_title_data)
+
 <div class="row">
 			<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 

@@ -105,7 +105,7 @@ $page_title_data = array(
 
  <div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
 	
-		{!! Form::open(['route'=>['survey.stats.report',$id],'method'=>'post' ]) !!}
+		{!! Form::open(['route'=>['custom.survey.report',$id],'method'=>'post' ]) !!}
 
 	<div class="aione-row result-options">
 				{{-- From <input type="text" name="from" ><br>
@@ -113,7 +113,7 @@ $page_title_data = array(
 
 				
 				<div style="float: left;width: 400px">{!! FormGenerator::GenerateForm('static_survey_form_to') !!}</div>
-				{!! Form::submit('Submit',['class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button','style'=>'float:left']) !!}
+				{!! Form::submit('Search',['value'=>'Filters' , 'class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button','style'=>'float:left']) !!}
 				{!! Form::submit('Export records as CSV',['name'=>'export','class'=>'aione-button aione-button-large aione-button-light aione-button-square add-new-button','style'=>'float:right']) !!}
 				
 			</div>	

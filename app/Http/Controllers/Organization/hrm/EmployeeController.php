@@ -518,10 +518,10 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-        dd($id);
-        // $model = User::where('id',$id)->delete();
-        // $model_meta = UsersMeta::where('user_id',$id)->delete();
-        // return back();
+        $model = GroupUsers::where('id',$id)->delete();
+        $model_meta = User::where('id',$id)->delete();
+        $model_meta = UsersMeta::where('user_id',$id)->delete();
+        return back();
     }
 
     public function updateEmployeeName(Request $request){

@@ -52,7 +52,15 @@
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 
-
+<style type="text/css">
+	
+.picker__day--infocus {
+    padding: 8px 0 !important;
+}
+.picker--focused .picker__day--selected, .picker__day--selected{
+	border-radius: 0%;
+}
+</style>
 <script type="text/javascript">
 	$(document).ready(function(){
  		

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Schema;
 use Carbon\carbon;
 use Auth;
 use App\Model\Organization\FormBuilder;
+use Excel;
 
 class StaticSurveyResultController extends Controller
 {
@@ -46,6 +47,11 @@ class StaticSurveyResultController extends Controller
                     }else{
                       $data = $data->get();
                     }
+                    if($request->has('export')){
+                      dd($data);
+
+                    }
+
 
                  } catch (\Exception $e) {
                      $error['table_column_not_exist'] = "column not match";
@@ -139,6 +145,7 @@ class StaticSurveyResultController extends Controller
           $query->where('key','field_options');
         }])->where('field_slug','sub_type_of_road')->first()->toArray();
         $option_data = collect(json_decode($sub_type_of_road['field_meta'][0]['value'],true))->pluck('value','key')->toArray();
+
         return view('organization.survey.survey_static_result',compact('data','option_data' ,'last_two_week','id','fatal','grevious','minor'));
       }
     }

@@ -1,13 +1,16 @@
 @extends('layouts.main')
 @section('content')
-	@if(@$errors->has())
+	@if(@$errors->any())
 		<script type="text/javascript">
-			$(window).load(function(){
-				$('.modal').modal('open');
-				$('#modal-edit').modal({
-					dismissible : true
-				});
-			});
+			// $(window).load(function(){
+			// 	$('.modal').modal('open');
+			// 	$('#modal-edit').modal({
+			// 		dismissible : true
+			// 	});
+			// });
+			window.onload = function(){
+				$('#add_new_model').modal('open');
+			}
 		</script>
 	@endif
 @php
@@ -23,8 +26,8 @@
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 	{!! Form::open(['route'=>'store.leaveCat' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-
-		@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Leave Category','button_title'=>'Save Leave','section'=>'leavecatsec1']])
+			
+		@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Leave Category','button_title'=>'Save Leave','form'=>'leave_categories']])
 	{!!Form::close()!!}
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
