@@ -248,9 +248,17 @@ class EmployeeController extends Controller
             });
         })->get();*/
         $model = User::with(['belong_group','metas'])->where(['user_type'=>'employee'])->get();//->toArray();
+
+        // dd($model->toArray());
         foreach($model as $key => $val){
-            $model[$key]->name    =    $val->belong_group->name;
-            $model[$key]->email   =    $val->belong_group->email;
+            if(!empty($val['belong_group'])){
+                $model[$key]->name    =    $val->belong_group->name;
+                $model[$key]->email   =    $val->belong_group->email;
+                
+            }else{
+                 $model[$key]->name    =    "";
+                $model[$key]->email   =    '';//$val->belong_group->email;
+            }
             // unset($model[$key]['belong_group']);
         }
 
@@ -563,7 +571,7 @@ class EmployeeController extends Controller
         /*$model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
             $query->with('metas');
         }])->get();*/
-        $model = User::with(['metas'])->where(['user_type'=>'employee'])->get();
+        $model = User::with(['belong_group', 'metas'])->where(['user_type'=>'employee'])->get();
        $headers = array(
                     'User.name',
                     'User.email',
@@ -582,9 +590,9 @@ class EmployeeController extends Controller
        $employeeDataArray = [];
        foreach ($model as $key => $employe) {
             $singleEmployeeArray = [];
-            $singleEmployeeArray[] = @$employe->name;
-            $singleEmployeeArray[] = @$employe->email;
-            $singleEmployeeArray[] = @$employe->password;
+            $singleEmployeeArray[] = @$employe->belong_group->name;
+            $singleEmployeeArray[] = @$employe->belong_group->email;
+            $singleEmployeeArray[] = @$employe->belong_group->password;
             /*$singleEmployeeArray[] = @$employe->id;
             $singleEmployeeArray[] = @$employe->user_id;
             $singleEmployeeArray[] = @$employe->employee_id;

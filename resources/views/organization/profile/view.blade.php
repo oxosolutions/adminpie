@@ -254,7 +254,9 @@ $page_title_data = array(
 								
 								{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
 									@php
-									$shift = App\Model\Organization\Shift::where(['id' => $model->shift])->pluck('id','name');
+										$meta_data =	array_column(json_decode($model['metas'],true), 'value','key');
+									// dd($model);
+									$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
 
 									$userData = [];
 									$userData ['about_me'] = $model->about_me;
@@ -288,6 +290,7 @@ $page_title_data = array(
 										 </div>
 										 <div class="col s12 m2 l12 aione-field-wrapper">
 											{{-- {!! Form::select('shift',null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!} --}}
+											
 											@if(@request()->route()->parameters()['id'])
 												@if($isEmployee)
 													{!! Form::select('shift',App\Model\Organization\Shift::listshifts(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!}

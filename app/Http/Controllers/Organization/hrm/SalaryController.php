@@ -70,50 +70,69 @@ class SalaryController extends Controller
 		$data = UsersMeta::with(['user','payscale'])->where('key','pay_scale')->get();
 		return view('organization.profile.salary', compact('data'));
 	}
-	public function generate_salary_slip_view(){
-		$date = Carbon::now();
-		$date->subMonth();
-		dump($data['month'] = 	$month 	= $date->month);
-		dump($data['year'] 	=  	$year 	= $date->year);
-		$data['users'] = User::with([	'belong_group', 
-										'metas'=>function($query)use($year, $month)
-												{	
-													$query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale'])->where('key','date_of_joining');//->
-          										}])->whereHas('metas', function ($query)use($year, $month) {
-    													$query->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
-													})->where(['user_type'=>'employee'])->get();
+	public function delete_salary_slip($id){
+		Salary::find($id)->delete();
+		return back();
+	}
+	public function view_salary_slip($id ){
+			$salary = Salary::with(['user_detail.belong_group:id,name,email', 'user_detail:id,user_id'])->where([ 'id'=>$id ])->first();
+			return view('organization.salary.generate_salary_slip',compact('salary'));
+	}
+	public function generate_salary_slip_view(Request $request){
+			$date = Carbon::now();
+			$date->subMonth();
+			$data['month'] = 	$month 	= $date->month;
+			$data['year'] 	=  	$year 	= $date->year;
+			if($request->isMethod('post')){
 
-		// foreach ($user->toArray() as $key => $value) {
-		// 	dump(collect($value['metas'])->where('key','date_of_joining'));
-		// }
-		//dd($user->toArray()); 
-	   return view('organization.salary.generate_salary_slip_view', compact('data'));
+				if($year == $request['year'] && $month <  $request['month']){
+					Session::flash('error', "you can't generate salary slip of future month's.");
+					return back();
+				}
+				$data['year'] 	=  	$year 	 = $request['year'];
+				$data['month'] = 	$month 	=  $request['month'];
+        if($request->has('generate_salary')){
+          dump('generate');
+          $this->generate_salary_slip($year , $month, $request['user_select']);
+        //dd($request->all());
+        }
+ 			}else{
+				$date = Carbon::now();
+				$date->subMonth();
+				$data['month'] = 	$month 	= $date->month;
+				$data['year'] 	=  	$year 	= $date->year;
+			}
+			$data['users'] 	= User::with(['belong_group','salary'=>function($q)use($year, $month){
+											$q->where(['year'=>$year, 'month'=>$month]);	
+										}, 
+									'metas'=>function($query)use($year, $month){
+											$query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
+          							}])->orWhereHas(
+          									'metas', function ($query)use($year, $month) {
+    										$query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
+												}
+									)->where(['user_type'=>'employee'])->get();
+	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
 	}
 
-
-  	public function generate_salary_slip(){
+  	public function generate_salary_slip($year , $month, $user_select){
+      // dd($request->all());
+  			
         $user = User::with(['belong_group', 'metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
-          }])->where(['user_type'=>'employee'])->get();
-        $current_date = Carbon::now();
-        $year = $current_date->year;
-        $current_date->subMonth();
-        $month = $current_date->month;
+          }])->whereIn('id',$user_select)->where(['user_type'=>'employee'])->get();
+        $current_date = Carbon::parse("$year-$month-1");
+        // $current_date->subMonth(); 
         $daysInMonth = $current_date->daysInMonth;
-
-        
         $holiday = Holiday::WhereYear('date_of_holiday', $year)->whereMonth('date_of_holiday',$month)->count();
-
         foreach ($user as $userKey => $userValue) {
           $meta = $userValue['metas']->mapWithKeys(function($item){
             return [$item['key'] => $item['value']];
           });
-          
-
 
           if(isset($meta['employee_id'])){
-
             $data[$userKey]['employee_id'] = $meta['employee_id'];
+            $data[$userKey]['user_id'] = $userValue['id'];
             $data[$userKey]['department'] = $meta['department'];
             $data[$userKey]['designation'] = $meta['designation'];
             $data[$userKey]['shift'] = $meta['user_shift'];
@@ -131,7 +150,12 @@ class SalaryController extends Controller
             $data[$userKey]['holiday'] = $holiday;
             $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
             $data[$userKey]['dedicated_amount'] =  ($working_days - $data[$userKey]['number_of_attendance']) * $per_day;
-            $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+            $data[$userKey]['total_days'] = $daysInMonth;
+            if($data[$userKey]['number_of_attendance'] ==0){
+               $data[$userKey]['salary'] = 0;   
+            }else{
+              $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+            }
           }
 
           if(isset($data[$userKey])){
@@ -139,16 +163,11 @@ class SalaryController extends Controller
             $salarys->fill($data[$userKey]);
             $salarys->save();
           }
-
-
         }
 
-
+return back();
         
           dd($data);
-
-
-
      //  $date = carbon::parse('2017-1-1');
      //  $data['month'] =  $date->month;
      //  $data['days_in_month'] =  $date->daysInMonth;
@@ -194,12 +213,6 @@ class SalaryController extends Controller
 
   }
 	public function generate_salary(Request $request){
-
-    Flight::chunk(200, function ($flights) {
-      foreach ($flights as $flight) {
-          //
-      }
-    });
 
 
     $current_dates = date('Y-m-d');

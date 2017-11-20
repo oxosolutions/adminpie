@@ -256,10 +256,10 @@ class OrganizationController extends Controller
         $userMapping->deleted_at = 0;
         $userMapping->status = 1;
         $userMapping->save();
-        $userRoleMapping = UserRoleMapping::where(['user_id'=>$org_usr->id, 'role_id'=>1]);
+        $userRoleMapping = UserRoleMapping::where(['user_id'=>$userMapping->id, 'role_id'=>1]);
         if(!$userRoleMapping->exists()){
             $userRoleMapping = new UserRoleMapping();
-            $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
+            $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
             $userRoleMapping->save();
         }
 

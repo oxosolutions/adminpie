@@ -35,14 +35,17 @@ class EmployeeLeaveController extends Controller
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
 			$group  = $catMetas->groupBy('key')->toArray();
 /* Find leave category ids which Assign to designation of current user @$designation_categories contian Categories id in array form */
+			$designation_categories = [];
 			if(!empty($group['include_designation'])){
 				$designation_categories = $this->mapping_category_id($designation_id , $group['include_designation']);
 			} 
 /* Find leave category ids which Assign to current user  @$user_categories contian Categories id in array form */
+			$user_categories = [];
 			if(!empty($group['user_include'])){
 				$user_categories = $this->mapping_category_id($user_id , $group['user_include']);
 			} 
 /* Find leave category which Not Assign to current user @$not_assign_categories contian Categories id in array form */
+			$not_assign_categories =[];
 			if(!empty($group['user_exclude'])){
 					$not_assign_categories  = $this->mapping_category_id($user_id , $group['user_exclude']);
 				} 
@@ -69,7 +72,11 @@ class EmployeeLeaveController extends Controller
 			$before = $from->diffInDays($current);
 			$to = Carbon::parse($request->to);
 			$request['from'] 	=	$from->toDateString();
-			$request['to'] 		=   $to->toDateString();			
+			$request['to'] 		=   $to->toDateString();
+			if($request['from'] > $request['to']){
+				$error['from_greater_than_to'] = 'From date must be less than to.';
+			}
+			// dd($request['from'] , $request['to']);			
  /* Check apply leaves dates alredy exist  then notify employee to correct leave dates Accordinly*/
 			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
@@ -211,7 +218,7 @@ class EmployeeLeaveController extends Controller
 						{
 							$takenLeave = collect($total_days[$from->month])->sum();
 							$sumAll = $request['total_days'] + $takenLeave;
-							dd($rule_check['number_of_day']['value']);
+							dump($rule_check['number_of_day']['value']);
 							if($sumAll >$rule_check['number_of_day']['value'])
 							{
 								$error['exceed_number_of_day'] = "You already taken leave  ".$takenLeave."&&  Now your applying leave for ".$request['total_days'].' day'; 

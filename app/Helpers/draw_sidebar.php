@@ -24,8 +24,7 @@ class draw_sidebar{
         $model = Module::where('id',$id)->with(['subModule' => function($query){
             $query->with('moduleRoute');
         }])->first();
-        return $model; 
-       
+        return $model;
     }
     static function replace_route($route)
     {

@@ -9,8 +9,8 @@
 ************************************************************/
 
 
-// use App\Model\Organization\User;
-use App\Model\Group\GroupUsers as User;
+use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;// as User;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Admin\GlobalModuleRoute as route;
@@ -1142,9 +1142,10 @@ function get_website_alexa_rank( $url = null ){
 	 * @return [collection] [user information]
 	 */
 	function user_info(){
-		$id = Auth::guard('org')->user()->id;
-		$user = User::where(['id'=>$id])->select(['name','email','id'])->first();
-		return $user;
+		$id 	= Auth::guard('org')->user();
+		$user 	= User::select('id')->where(['user_id'=>$id->id])->first();
+		$user_merge = collect($id)->merge($user);
+		return $user_merge;
 	}
 /************************************************************
 *	@function getMetaValue

@@ -122,7 +122,13 @@ class AccountController extends Controller
      * profileDetails method alter BY Paljinder singh & comment code which not in use.
      */
     public function profileDetails($id = null){
-
+        
+        if($id == null){
+            $id = 8; 
+            $g_id = Auth::guard('org')->user()->id; 
+            $user=  US::with('organization_user')->where('id', $g_id)->first();
+            $id = $user['organization_user']['id'];
+        }
         $user_log = $this->listActivities();
     	if($id == null){
     		 $id = Auth::guard('org')->user()->id;
@@ -148,7 +154,7 @@ class AccountController extends Controller
             }
         }
         
-        
+        // dd($userDetails , $user_log);
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }

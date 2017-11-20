@@ -77,22 +77,22 @@ class UsersController extends Controller
                     update_user_metas($meta_data, $user_id, true);
                 }
                 if(isset($request['role'])){
-                  if(is_array($request->role)){
-                    foreach($request->role as $key => $role){
+                    if(is_array($request->role)){
+                        foreach($request->role as $key => $role){
+                            $roleMapping = new UserRoleMapping;
+                            $roleMapping->user_id = $user_id;
+                            $roleMapping->role_id = (int) $role;
+                            $roleMapping->status = 1;
+                            $roleMapping->save();
+                        }
+                    }else{
                         $roleMapping = new UserRoleMapping;
                         $roleMapping->user_id = $user_id;
-                        $roleMapping->role_id = (int) $role;
+                        $roleMapping->role_id = (int) $request['role'];
                         $roleMapping->status = 1;
                         $roleMapping->save();
+
                     }
-                  }else{
-                    $roleMapping = new UserRoleMapping;
-                    $roleMapping->user_id = $user_id;
-                    $roleMapping->role_id = (int) $request['role'];
-                    $roleMapping->status = 1;
-                    $roleMapping->save();
-                    
-                  }
                 }
             }
             Session::flash('success' , 'User Created Successfully');

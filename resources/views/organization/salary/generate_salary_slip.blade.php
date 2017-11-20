@@ -1,4 +1,4 @@
-{{ dump($data) }}
+
 @extends('layouts.main')
 @section('content')
 @php
@@ -9,7 +9,7 @@ $page_title_data = array(
   'page_title' => 'Salary',
 ); 
   $id = "";
-  
+  // dump($salary);
   @endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
@@ -26,12 +26,12 @@ $page_title_data = array(
             <tr>
                 <td class="light-blue darken-4 aione-align-center">OXO IT SOLUTIONS PVT. LTD.</td>
                 <td >Begin Date:</td>
-                <td >01/10/2017</td>
+                <td >01/{{ $salary['month'] }}/{{ $salary['year'] }}</td>
             </tr>
             <tr>
                 <td  class="light-blue darken-4 aione-align-center">158 Rani Ka Bagh, Amritsar, 143001.</td>
                 <td >End Date:</td>
-                <td >31/10/2017</td>
+                <td >31/{{ $salary['month'] }}/{{ $salary['year'] }}</td>
             </tr>
             <tr>
                 <td class="light-blue darken-4 aione-align-center">01832401000, 9501010103, 9914149090</td>
@@ -51,17 +51,17 @@ $page_title_data = array(
             <tr>
                 <td class="light-blue darken-4 aione-align-center">Ashish Kumar</td>
                 <td >Employee Name</td>
-                <td >Ashish Kumar</td>
+                <td >{{ $salary['user_detail']['belong_group']['name']}}</td>
             </tr>
             <tr>
                 <td  class="light-blue darken-4 aione-align-center">#14/560, Lane no 2, guru nanak avenue 8566820937</td>
                 <td >Employee ID</td>
-                <td >4095047</td>
+                <td >{{ $salary['employee_id'] }} </td>
             </tr>
             <tr>
-                <td class="light-blue darken-4 aione-align-center">majitha road, Amritsar,143001 ashish9436@gmail.com</td>
+                <td class="light-blue darken-4 aione-align-center">majitha road, Amritsar,143001 {{  $salary['user_detail']['belong_group']['email'] }}</td>
                 <td>Employee Pan</td>
-                <td>AQ133344KL</td>
+                <td>Axxx33344KL</td>
             </tr>
         </tbody>
 
@@ -82,15 +82,15 @@ $page_title_data = array(
             </tr>
             <tr>
                 <td >P / Year</td>
-                <td >96000</td>
+                <td >{{ $salary['salary'] }}</td>
                 <td >Total Days</td>
-                <td >31</td>
+                <td >{{ $salary['total_days'] }}</td>
                 <td >Employee ID</td>
                 <td >4095047</td>
             </tr>
             <tr>
                 <td >P / Month</td>
-                <td >96000</td>
+                <td >{{ $salary['salary'] }}</td>
                 <td >Paid Leave</td>
                 <td >31</td>
                 <td >Income Tax</td>
@@ -98,7 +98,7 @@ $page_title_data = array(
             </tr>
             <tr>
                 <td >P / Day</td>
-                <td >96000</td>
+                <td >{{ $salary['per_day_amount'] }}</td>
                 <td >Total Days</td>
                 <td >31</td>
                 <td >Employee ID</td>

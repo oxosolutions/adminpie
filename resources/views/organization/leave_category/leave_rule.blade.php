@@ -34,17 +34,24 @@ $page_title_data = array(
 	<div class="aione-message success">
 		<p> {{ Session::get('success') }}</p>
 	</div>
-
 @endif
 @include('common.pageheader',$page_title_data)
 
 <div class="row">
 			<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
-
+			@if(isset($data))
+			@php
+			// $data = collect($data);
+			@endphp
+			{{-- {{dump($data)}} --}}
+					 {!! Form::model($data,['route'=>'meta.category' ,	'class'=> 'form-horizontal', 'method' => 'post']) !!}
+				@else
 	 {!! Form::open(['route'=>'meta.category' ,	'class'=> 'form-horizontal', 'method' => 'post']) !!}
+			@endif
+
 	{!! Form::hidden('id',$data['id']) !!}
 
-		<div class="row"  style="padding-bottom: 15px">
+		{{-- <div class="row"  style="padding-bottom: 15px">
 			
 			<div class="col l3" style="line-height: 30px">
 				Name
@@ -202,15 +209,41 @@ $page_title_data = array(
 				</div>
 			</div>
 		</div>	
-		
-	
-		{{-- {!! FormGenerator::GenerateForm('edit_leave_category_form') !!}				 --}}
+		 --}}
 
+{{-- {{ dump($data) }} --}}
+
+
+	
+		{!! FormGenerator::GenerateForm('edit_leave_category_form') !!}	
+		<div class="row"  style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Include Designation
+ 				@if(!empty($data['data']['include_designation']))
+					@php
+						$data['data']['include_designation'] = array_map('intval', json_decode($data['data']['include_designation']));
+					@endphp
+				@endif
+			</div>
+
+
+				
+		<div class="row"  style="padding-bottom: 15px">
+			<div class="col l9">
+				<div class="col l6 pl-7">
+				{{-- <h1> desss</h1> --}}
+					{!! Form::select('include_designation[]',@$data['designationData'],@$data['data_designation'],['multiple' => true, 'id'=>'include_designation','class'=>'browser-default', 'placeholder'=>"Valid For"])!!}
+				</div>
+			</div>
+		</div>	
+	</div>		
+
+{{-- 
 		<div class="row" style="padding-bottom: 15px">
 		{!! Form::submit('submit',['class'=>'btn blue white-text'])!!}
 		</div>
 
-
+ --}}
 	</div>
 	
 	<style type="text/css">

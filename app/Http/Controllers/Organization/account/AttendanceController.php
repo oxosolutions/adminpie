@@ -10,7 +10,7 @@ use App\Model\Organization\Employee;
 
 use Carbon\Carbon;
 use Auth;
-
+use App\Model\Group\GroupUsers as US;
 
 class AttendanceController extends Controller
 {
@@ -18,7 +18,11 @@ class AttendanceController extends Controller
     public function myattendance(Request $request){
        
         $where['year'] = $year = Carbon::now()->year;
-        $empId = get_user_meta(get_user_id(), $key = 'employee_id', $array = false);
+
+        $user=  US::with('organization_user')->where('id', get_user_id())->first();
+            $id = $user['organization_user']['id'];
+        $empId = get_user_meta($id, $key = 'employee_id', $array = false);
+
        if($empId==false){
             $attendance_data = $where =null;
             $error = 'Your not employee user!';

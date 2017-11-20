@@ -22,9 +22,23 @@ class User extends Authenticatable
    protected $softDelete = true;
    protected $dates = ['deleted_at'];
 
+
+  public function salary(){
+    return $this->hasOne('App\Model\Organization\Salary','user_id','id');
+  }
    public function belong_group(){
 
     return $this->belongsTo('App\Model\Group\GroupUsers','user_id', 'id');
+   }
+
+   public static function user_list(){
+        $user =  self::where('user_type', 'employee')->with('belong_group')->get();
+        foreach($user as $key => $value){
+          $list[$value['id']] = $value['belong_group']['name'];
+         // $list[$key]['name'] = $value['belong_group']['id'];
+        }
+      return $list;
+      
    }
    public function user_role_rel(){
       return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','id');

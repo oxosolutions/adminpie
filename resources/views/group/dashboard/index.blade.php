@@ -20,7 +20,7 @@
 				<div class="ac s100 m50 l25 pt-15 pb-15">
 					<div class="aione-widget aione-border bg-grey bg-lighten-5">
 						<div class="aione-title">
-							<h5 class="aione-align-center font-weight-400 aione-border-bottom pb-10 bg-grey bg-lighten-4"><a href="{{route($value['route'])}}" class="blue-grey darken-4">{{ucfirst($key)}}</a></h5>
+							<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4"><a href="{{route($value['route'])}}" class="blue-grey darken-4">{{ucfirst($key)}}</a></h5>
 						</div>
 						<div class="aione-align-center p-30 font-size-64 font-weight-600 blue-grey darken-2"> 
 							{{$value['count']}}
