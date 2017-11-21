@@ -240,7 +240,7 @@ class PagesController extends Controller
 
             $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['title'=>'Title','created_at'=>'Created At','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
+                        'showColumns' => ['title'=>'Title','created_at'=>'Created','status'=>['type'=>'switch','title'=>'Change Status','class' => 'pageStatus']],
                         'actions' => [
                                         'edit'    => ['title'=>'Edit','route'=>$edit,'class'=>'edit'],
                                         'delete'  => ['title'=>'Delete','class'=>'red','route'=>$delete]

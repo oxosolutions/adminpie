@@ -64,7 +64,7 @@ class EmployeeLeaveController extends Controller
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
 		echo $emp_id = get_current_user_meta('employee_id');	
-
+dump($emp_id);
 		if($request->isMethod('post'))
 		{
 			$current = Carbon::now();
@@ -73,9 +73,10 @@ class EmployeeLeaveController extends Controller
 			$to = Carbon::parse($request->to);
 			$request['from'] 	=	$from->toDateString();
 			$request['to'] 		=   $to->toDateString();
-			if($request['from'] > $request['to']){
+			if(strtotime($request['from']) > strtotime($request['to'])){
 				$error['from_greater_than_to'] = 'From date must be less than to.';
 			}
+			// dd(@$error , $request['from'] , $request['to'], strtotime($request['from']) , strtotime($request['to']) );
 			// dd($request['from'] , $request['to']);			
  /* Check apply leaves dates alredy exist  then notify employee to correct leave dates Accordinly*/
 			$data =	EMP_LEV::where(function($query)use($request){
@@ -85,11 +86,11 @@ class EmployeeLeaveController extends Controller
 				$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
 			}
 /* when user leave dates not correct notify to employee correct the leave date & Never from date greater than to date*/
-			if($to->month < $from->month ) {
-				$error['from_greater_than_to'] = 'from date must be less than to date.';
-				Session::flash('error',$error);
-				return redirect()->route('account.leaves');
-			}
+			// if($to->month < $from->month ) {
+			// 	$error['from_greater_than_to'] = 'from date must be less than to date.';
+			// 	Session::flash('error',$error);
+			// 	return redirect()->route('account.leaves');
+			// }
 /*calculate total days of leave */
 			$request['total_days'] = $from->diffInDays($to) + 1;
 /* rules list get from category meta table */
@@ -243,7 +244,10 @@ class EmployeeLeaveController extends Controller
 										 $error['exceed_number_of_day'] = "you exceed leave limit in month ".$from->month;
 									}
 								}
-							$toTakenLeave = collect($total_days[$to->month])->sum();
+								$toTakenLeave = null;
+								if(isset($total_days[$to->month])){
+									$toTakenLeave = collect($total_days[$to->month])->sum();
+								}
 							$totalTo = $to->day + $toTakenLeave;
 
 							if($totalTo > $rule_check['number_of_day']['value']) {
@@ -285,7 +289,6 @@ class EmployeeLeaveController extends Controller
 				}	
 			}
 			if(empty($error)) {
-				
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  
 				$leave->fill($request->all());

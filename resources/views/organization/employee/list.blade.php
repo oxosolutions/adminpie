@@ -39,7 +39,7 @@
                 <th>Departments</th>
                 <th>Designation</th>
                 <th>Email ID</th>
-                <th>Created At</th>
+                <th>Created</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -51,7 +51,7 @@
                 <th>Departments</th>
                 <th>Designation</th>
                 <th>Email ID</th>
-                <th>Created At</th>
+                <th>Created</th>
                 <th>Status</th>
             </tr>
         </tfoot>

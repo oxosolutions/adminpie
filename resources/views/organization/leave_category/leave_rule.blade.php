@@ -29,6 +29,9 @@ $page_title_data = array(
 'page_title' => 'Edit leave category',
 'add_new' => '+ Add Role'
 ); 
+
+dump($data, current_organization_user_id());
+
 @endphp
 @if(Session::has('success'))
 	<div class="aione-message success">
@@ -214,17 +217,52 @@ $page_title_data = array(
 {{-- {{ dump($data) }} --}}
 
 
+
 	
 		{!! FormGenerator::GenerateForm('edit_leave_category_form') !!}	
 		<div class="row"  style="padding-bottom: 15px">
 			<div class="col l3" style="line-height: 30px">
 				Include Designation
- 				@if(!empty($data['data']['include_designation']))
+ 				@if(!empty($data['data_designation']))
+					{{ dump($data['data_designation']) }}
 					@php
-						$data['data']['include_designation'] = array_map('intval', json_decode($data['data']['include_designation']));
+						$data['data_designation']= array_map('intval', json_decode($data['data_designation']));
 					@endphp
 				@endif
 			</div>
+
+			<div id="user_drop_down">	
+			<div class="row"  style="padding-bottom: 15px">
+				<div class="col l3" style="line-height: 30px">
+					Include User
+					@if(!empty($data['data']['user_include']))
+						@php
+							$data['data']['user_include'] = array_map('intval', json_decode($data['data']['user_include']));
+						@endphp
+					@endif
+				</div>
+				<div class="col l9">
+					<div class="col l6 pl-7">
+						{!! Form::select('user_include[]',@$data['user_include'],@$data['data']['user_include'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user include"])!!}
+					</div>
+				</div>
+			</div>	
+			<div class="row"  style="padding-bottom: 15px">
+				<div class="col l3" style="line-height: 30px">
+					Exclude User
+					@if(!empty($data['data']['user_exclude']))
+						@php
+							$data['data']['user_exclude'] = array_map('intval', json_decode($data['data']['user_exclude']));
+						@endphp
+					@endif
+				</div>
+				<div class="col l9">
+					<div class="col l6 pl-7">
+						{!! Form::select('user_exclude[]',@$data['user_exclude'],@$data['data']['user_exclude'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user exclude"])!!}
+					</div>
+				</div>
+			</div>
+		</div>	
 
 
 				
@@ -232,18 +270,19 @@ $page_title_data = array(
 			<div class="col l9">
 				<div class="col l6 pl-7">
 				{{-- <h1> desss</h1> --}}
+						
 					{!! Form::select('include_designation[]',@$data['designationData'],@$data['data_designation'],['multiple' => true, 'id'=>'include_designation','class'=>'browser-default', 'placeholder'=>"Valid For"])!!}
 				</div>
 			</div>
 		</div>	
 	</div>		
 
-{{-- 
+
 		<div class="row" style="padding-bottom: 15px">
 		{!! Form::submit('submit',['class'=>'btn blue white-text'])!!}
 		</div>
 
- --}}
+
 	</div>
 	
 	<style type="text/css">

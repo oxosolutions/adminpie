@@ -42,7 +42,7 @@ class DesignationsController extends Controller
       }
       $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'designations' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.designation']

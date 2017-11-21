@@ -95,7 +95,7 @@ class ProjectController extends Controller
           }
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           // 'edit' => ['title'=>'Edit','route'=>'list.project' , 'class' => 'edit'],
                                           'edit' => ['title'=>'Edit','route'=>'details.project' , 'class' => 'edit'],
@@ -306,7 +306,7 @@ class ProjectController extends Controller
       }
       $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'categories.edit' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.category' ]
@@ -441,7 +441,7 @@ class ProjectController extends Controller
           }
           $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','description' => 'Description','type' => ['title' => 'Type','type' => 'image','imagePath' => 'images/fileIcons/'],'file'=>'file','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','description' => 'Description','type' => ['title' => 'Type','type' => 'image','imagePath' => 'images/fileIcons/'],'file'=>'file','created_at'=>'Created'],
                       // 'columnType' => ['type' => 'image'],
                       'actions' => [
                                       'download' => ['title'=>'Download', 'route'=>'redirect.back' ,'class' => 'download' ,'destinationPath' => 'projectAttachments'],
@@ -553,7 +553,7 @@ class ProjectController extends Controller
           // dump($model);
           $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['website_title' =>'Title','created_at'=>'Created At'],
+                      'showColumns' => ['website_title' =>'Title','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'details.crediental' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.crediental']

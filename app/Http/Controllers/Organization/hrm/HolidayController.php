@@ -75,7 +75,7 @@ class HolidayController extends Controller
         }
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['title'=>'Title','description'=>'Description','date_of_holiday:human_readable'=>'Date of Holiday','created_at'=>'Created At'],
+                        'showColumns' => ['title'=>'Title','description'=>'Description','date_of_holiday:human_readable'=>'Date of Holiday','created_at'=>'Created'],
                         'actions' => [
                                         'edit' => ['title'=>'Edit','route'=>'list.holidays'],
                                         'delete'=>['title'=>'Delete','route'=>'delete.holiday']

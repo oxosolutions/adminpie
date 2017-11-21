@@ -50,7 +50,7 @@ class JobOpeningController extends Controller
 
       $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['title'=>'Title','created_at'=>'Created At'],
+                      'showColumns' => ['title'=>'Title','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'opening.update' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.opening'],

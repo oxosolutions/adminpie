@@ -46,7 +46,7 @@ protected function datalist($request, $type){
 
              $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.crm.category']
@@ -63,7 +63,7 @@ public function service_category_listing(Request $request){
 			$model = $this->datalist($request ,'service');
 			$datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.crm.category']

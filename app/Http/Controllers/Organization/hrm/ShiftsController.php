@@ -46,7 +46,7 @@ class ShiftsController extends Controller
     }
     $datalist =  [
                     'datalist'=>$model,
-                    'showColumns' => ['name'=>'Name','from'=>'From','to'=>'To','working_days'=>['title' => 'Working Days','type' => 'json'],'created_at'=>'Created At'],
+                    'showColumns' => ['name'=>'Name','from'=>'From','to'=>'To','working_days'=>['title' => 'Working Days','type' => 'json'],'created_at'=>'Created'],
                     'actions' => [
                                     'edit' => ['title'=>'Edit','route'=>'shifts'],
                                     'delete'=>['title'=>'Delete','route'=>'delete.shifts']

@@ -30,6 +30,24 @@ use App\Model\Admin\GlobalOrganization;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
+
+/**
+ @function current organization user id
+*	@description  organization user id 
+*	@access	public
+*	@since	1.0.0.0
+*	@author	Paljinder Singh
+ */
+function current_organization_user_id(){
+	$user_id = Auth::guard('org')->user()->id;
+	$user = User::select('id')->where('user_id',$user_id);
+	if($user->exists()){
+		return	$user->first()->id;
+	}
+	return null;
+}
+
+
 /**
  @function role_list
 *	@description  all role list 
@@ -172,7 +190,7 @@ function get_user_id(){
 	if(Auth::guard('admin')->check()){
         $uid = Auth::guard('admin')->user()->id;
     }else{
-        $uid = Auth::guard('org')->user()->id;
+        $uid = current_organization_user_id();
     }
 	
 	
@@ -585,7 +603,7 @@ function get_user_meta($uid, $key = null, $array = false){
 
 function get_current_user_meta($key, $array = false){	
 
-	$meta = get_user_meta(Auth::guard('org')->user()->id, $key, $array);
+	$meta = get_user_meta(current_organization_user_id(), $key, $array);
 	//Return Meta Object 
 	return $meta;
 }
@@ -602,11 +620,11 @@ function get_current_user_meta($key, $array = false){
 
 function get_user($meta = true ,$array = false, $id = null){
 	if($meta){
-		$id = ($id != null)?$id:Auth::guard('org')->user()->id;
+		$id = ($id != null)?$id:current_organization_user_id();
 		$user = User::find($id);
 		$user->meta = get_user_meta($id);
 	}else{
-		$id = ($id != null)?$id:Auth::guard('org')->user()->id;
+		$id = ($id != null)?$id:current_organization_user_id();
 		$user = User::find($id);
 	}
 	if($array){
@@ -646,7 +664,7 @@ function update_user_meta($metaKey, $metaValue, $uid = null, $return = false){
 
 function update_user_metas(Array $meta, $uid = null, $return = false){
 	if($uid == null){
-		$uid = Auth::guard('org')->user()->id;
+		$uid = current_organization_user_id();
 	}
 	$updatedMeta = [];
 	foreach($meta as $metaKey => $metaValue){
@@ -678,7 +696,7 @@ function update_user_metas(Array $meta, $uid = null, $return = false){
 
 function delete_user_metas(Array $meta, $uid = null){
 	if($uid == null){
-		$uid = Auth::guard('org')->user()->id;
+		$uid = current_organization_user_id();
 	}
 	foreach ($meta as $metaKey => $metaValue) {
 		$model = UsersMeta::where(['key'=>$metaValue,'user_id'=>$uid])->delete();
@@ -729,7 +747,7 @@ if(!function_exists('get_user_role')){
 	function get_user_roles($userid = null){
 		$role_slugs = [];
 		if($userid == null){
-			$uid = Auth::guard('org')->user()->id;
+			$uid = current_organization_user_id();
 		}else{
 			$uid = $userid;
 		}
@@ -1236,6 +1254,8 @@ function get_survey_meta($sid){
 	*	@perm array		[	]
 	*	@return array
 	************************************************************/
+
+
 
 	function role_id(){
 

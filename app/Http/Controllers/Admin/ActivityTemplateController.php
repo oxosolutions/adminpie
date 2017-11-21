@@ -25,7 +25,7 @@ class ActivityTemplateController extends Controller
 		$model = $this->dataView($request,'notification');
 		$datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['slug'=>'slug', 'type'=>'type', 'gender'=>'gender', 'language'=>'language', 'created_at'=>'Created At'],
+                      'showColumns' => ['slug'=>'slug', 'type'=>'type', 'gender'=>'gender', 'language'=>'language', 'created_at'=>'Created'],
                       'actions' => [
                                       'edit'    =>  ['title'=>'Edit','route'=>'activity.edit' , 'class' => 'edit'],
                                       'delete'  =>  ['title'=>'Delete','route'=>'activity.delete']
@@ -71,7 +71,7 @@ class ActivityTemplateController extends Controller
 		$model = $this->dataView($request, 'activity');
 		$datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['slug'=>'slug', 'type'=>'type', 'gender'=>'gender', 'language'=>'language', 'created_at'=>'Created At'],
+                      'showColumns' => ['slug'=>'slug', 'type'=>'type', 'gender'=>'gender', 'language'=>'language', 'created_at'=>'Created'],
                       'actions' => [
                                       'edit'    =>  ['title'=>'Edit','route'=>'activity.edit' , 'class' => 'edit'],
                                       'delete'  =>  ['title'=>'Delete','route'=>'activity.delete']

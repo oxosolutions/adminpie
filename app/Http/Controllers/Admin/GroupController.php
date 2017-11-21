@@ -48,7 +48,7 @@ class GroupController extends Controller
         }
         $datalist =  [
                         'datalist'=>$model,
-                        'showColumns' => ['name'=>'Title','description'=>'Description','created_at'=>'Created At'],
+                        'showColumns' => ['name'=>'Title','description'=>'Description','created_at'=>'Created'],
                         'actions' => [
                                         'view' => ['title'=>'View','route'=>'view.group'],
                                         'edit' => ['title'=>'Edit','route'=>'edit.group'],

@@ -47,7 +47,7 @@ class DocumentController extends Controller
           }
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['title'=>'Name','description' => 'Description','created_at'=>'Created At'],
+                          'showColumns' => ['title'=>'Name','description' => 'Description','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.document' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.document'],
@@ -135,7 +135,7 @@ class DocumentController extends Controller
         // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=> 'document.layout' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'document.layout.delete'],
@@ -184,7 +184,7 @@ class DocumentController extends Controller
         // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'edit.document.template' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'templates.delete'],

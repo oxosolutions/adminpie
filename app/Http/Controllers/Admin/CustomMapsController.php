@@ -84,7 +84,7 @@ class CustomMapsController extends Controller
 
       	$datalist = [
                       	'datalist'=>$model,
-                      	'showColumns' => ['title'=>'Title','table_code'=>'ID','code'=>'ISO Code','created_at'=>'Created At'],
+                      	'showColumns' => ['title'=>'Title','table_code'=>'ID','code'=>'ISO Code','created_at'=>'Created'],
                   	];
         if(!Auth::guard('admin')->check()){
             if($type != 'u'){

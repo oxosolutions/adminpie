@@ -63,7 +63,7 @@ class GroupOrganizationController extends Controller
         }
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created'],
                       'actions' => [
                                       'view'    =>  ['title'=>'View','route'=>'view.groupOrganizations'],
                                       'edit'    =>  ['title'=>'Edit','route'=>'edit.groupOrganization' , 'class' => 'edit'],
@@ -343,7 +343,7 @@ class GroupOrganizationController extends Controller
         }
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status','created_at'=>'Created'],
                       'actions' => [
                                       'delete'  =>  ['title'=>'Delete','route'=>'revoke.user'],
                                    ]

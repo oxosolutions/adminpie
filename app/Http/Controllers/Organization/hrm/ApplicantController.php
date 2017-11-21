@@ -93,7 +93,7 @@ class ApplicantController extends Controller
           }
                   $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.applicant']

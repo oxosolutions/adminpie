@@ -52,7 +52,7 @@ class EmailController extends Controller
           }
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.campaign' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.email']
@@ -92,7 +92,7 @@ class EmailController extends Controller
         // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'edit.template' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'edit.template']
@@ -131,7 +131,7 @@ class EmailController extends Controller
         // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created At'],
+                      'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=> 'edit.layout' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'email.layout.delete']

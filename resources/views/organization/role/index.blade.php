@@ -39,7 +39,7 @@
                   <th>Role</th>
                  
                   <th>Description</th>
-                  <th>Created At</th>
+                  <th>Created</th>
                  
                   <th>Action</th>
                 </tr>
@@ -52,7 +52,7 @@
                   <th>Role</th>
                 
                   <th>Description</th>
-                  <th>Created At</th>
+                  <th>Created</th>
                   <th>Action</th>
                 </tr>
                 </tfoot>

@@ -58,7 +58,7 @@ class VisualisationController extends Controller
           // dd($model);
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name', 'dataset.dataset_name' => 'Dataset','description'=>'Description','created_by'=>'Created By','created_at'=>'Created At'],
+                          'showColumns' => ['name'=>'Name', 'dataset.dataset_name' => 'Dataset','description'=>'Description','created_by'=>'Created By','created_at'=>'Created'],
                           'actions' => [
                                           'view' => ['title'=>'View','route'=>'visualization.view','class' => 'edit'],
                                           'edit' => ['title'=>'Edit','route'=>'edit.visualization','class' => 'edit'],

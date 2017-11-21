@@ -72,7 +72,7 @@ class LeavesController extends Controller
         //   }
         //   $datalist =  [
         //                   'datalist'=>$model,
-        //                   'showColumns' => ['employee_id' => 'Employee Id'  , 'reason_of_leave'=>'Reason of Leave','category_name'=>'Category','from'=>'From','to'=>'To','created_at'=>'Created At','status'=>'Status'],
+        //                   'showColumns' => ['employee_id' => 'Employee Id'  , 'reason_of_leave'=>'Reason of Leave','category_name'=>'Category','from'=>'From','to'=>'To','created_at'=>'Created','status'=>'Status'],
         //                   'actions' => [
         //                                   'edit' => ['title'=>'Edit','route'=>'leaves','class' => 'edit'],
         //                                   'delete'=>['title'=>'Delete','route'=>'delete.leave'],
@@ -110,7 +110,7 @@ class LeavesController extends Controller
       //dd($model);
       $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['reason_of_leave'=>'Name','from'=>'From','to'=>'To','created_at'=>'Created At', 'status'=>'Status'],
+                      'showColumns' => ['reason_of_leave'=>'Name','from'=>'From','to'=>'To','created_at'=>'Created', 'status'=>'Status'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'leaves','class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.leave'],

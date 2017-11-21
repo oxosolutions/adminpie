@@ -53,7 +53,7 @@ class SalaryController extends Controller
       // dump($model);
       $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['user_id'=>'Id', 'user.name'=>'Name','payscale.title'=>'Pay Scale' ,'created_at'=>'Created At'],
+                      'showColumns' => ['user_id'=>'Id', 'user.name'=>'Name','payscale.title'=>'Pay Scale' ,'created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'designations' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.designation']
@@ -325,7 +325,7 @@ return back();
 
      $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['employee_id'=>'Id', 'amount'=>'Name' ,'payscale_id'=>'Payscale title','created_at'=>'Created At'],
+                      'showColumns' => ['employee_id'=>'Id', 'amount'=>'Name' ,'payscale_id'=>'Payscale title','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'designations' , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.designation']

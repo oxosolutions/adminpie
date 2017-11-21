@@ -36,7 +36,7 @@ class ContactController extends Controller
           // dd($model);
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['name'=>'Name','email'=>'Email','created_at'=>'Created At'],
+                          'showColumns' => ['name'=>'Name','email'=>'Email','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'contact.edit' , 'class' => 'edit'],
                                           // 'view' => ['title'=>'View','route'=>'view.client' , 'class' => 'view'],

@@ -43,7 +43,7 @@ class CategoryRepository implements CategoryRepositoryContract
           }
           $datalist =  [
                           'datalist'=>$model,
-                          'showColumns' => ['name'=>'Name','description'=>'Description','status'=>'Status','created_at'=>'Created At'],
+                          'showColumns' => ['name'=>'Name','description'=>'Description','status'=>'Status','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'meta.category'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.category']

@@ -69,7 +69,7 @@ class ClientController extends Controller
           // dd($model);
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['name'=>'Name','getUserDataByUser_id.email'=>'Email','created_at'=>'Created At'],
+                          'showColumns' => ['name'=>'Name','getUserDataByUser_id.email'=>'Email','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.client' , 'class' => 'edit'],
                                           'view' => ['title'=>'View','route'=>'view.client' , 'class' => 'view'],

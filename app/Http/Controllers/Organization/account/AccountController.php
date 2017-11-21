@@ -63,7 +63,7 @@ class AccountController extends Controller
           }
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['campaign_name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'View Details','route'=>'account.emails.view' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.email']

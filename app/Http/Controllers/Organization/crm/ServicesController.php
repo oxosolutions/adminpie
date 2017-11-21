@@ -40,7 +40,7 @@ class ServicesController extends Controller
                   $datalist =  [
 
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.service'],
@@ -88,7 +88,7 @@ class ServicesController extends Controller
                     'user_for'=>"Service",
                   'id'=>$id,
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id','price'=>'Price', 'created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id','price'=>'Price', 'created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.price.products']

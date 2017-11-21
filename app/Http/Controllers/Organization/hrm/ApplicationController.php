@@ -40,7 +40,7 @@ class ApplicationController extends Controller
           }
                   $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'created_at'=>'Created At'],
+                          'showColumns' => ['id'=>'id', 'created_at'=>'Created'],
                           'actions' => [
                                           'view' => ['title'=>'View Details','route'=>'view.applicantion' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.applicantion']

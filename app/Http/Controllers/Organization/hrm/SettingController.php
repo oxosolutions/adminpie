@@ -386,7 +386,7 @@ class SettingController extends Controller
 	        //'employ_info.metas.contact_no'=>'Contact No',
 	        $datalist =  [
 	                      'datalist'=>  $model,
-	                      'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.department_name'=>'Department','designations.designation_name'=>'Designation','employ_info.email'=>'Email ID','created_at'=>'Created At','status'=>'Status'],
+	                      'showColumns' => ['employee_id'=>'Employee ID','employ_info.name'=>'Name','department_rel.department_name'=>'Department','designations.designation_name'=>'Designation','employ_info.email'=>'Email ID','created_at'=>'Created','status'=>'Status'],
 	                      'actions' => [
 	                                      'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'=>'employ_info.id'] , 'class' => 'edit'],
 	                                      'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'employ_info.id'] , 'class' => 'delete']
