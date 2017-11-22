@@ -79,6 +79,8 @@ class LeavesController extends Controller
         //                                   'approve_status'=>['title'=>'Approve','class'=>'aione_approved_status','route'=>'approve.leave']
         //                                ]
         //
+        //
+  //new
         $search = $this->saveSearch($request);
     if($search != false && is_array($search)){
         $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
@@ -107,10 +109,10 @@ class LeavesController extends Controller
                $model = LV::paginate($perPage);
           }
       }
-      //dd($model);
+      // dd($model);
       $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['reason_of_leave'=>'Name','from'=>'From','to'=>'To','created_at'=>'Created', 'status'=>'Status'],
+                      'showColumns' => ['employee_id'=>'employee_id','from'=>'From','to'=>'To','created_at'=>'Created', 'status'=>'Status'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'leaves','class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>'delete.leave'],

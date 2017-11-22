@@ -164,7 +164,6 @@ class ProfileController extends Controller
      * @author Rahul 
      */
     public function updateProfile(Request $request){
-
         $user_id = User::select('user_id')->where('id',$request['id'])->first()->user_id;
     	$this->validateUpdateProfileFor($request);
     	$model = GroupUsers::firstOrNew(['id' => $user_id]);

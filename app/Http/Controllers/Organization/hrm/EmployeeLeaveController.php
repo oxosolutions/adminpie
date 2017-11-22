@@ -25,11 +25,13 @@ class EmployeeLeaveController extends Controller
 			return array_filter($map->toArray());
 	}
 	public function leave_listing(){
+		// dd(12232);
 		$leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
 		}else{
 			$user = user_info()->toArray();	
+			
 			$user_id = $user['id'];
 			$designation_id =  get_current_user_meta('designation');
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
@@ -56,6 +58,7 @@ class EmployeeLeaveController extends Controller
 			$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->get();
 			$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
 		}
+
 		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat,'error'=>$error]);
 	}
 
@@ -64,7 +67,7 @@ class EmployeeLeaveController extends Controller
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
 		echo $emp_id = get_current_user_meta('employee_id');	
-dump($emp_id);
+
 		if($request->isMethod('post'))
 		{
 			$current = Carbon::now();
@@ -288,6 +291,7 @@ dump($emp_id);
 					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
 				}	
 			}
+			// dd($request->all());
 			if(empty($error)) {
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  

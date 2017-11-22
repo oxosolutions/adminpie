@@ -58,8 +58,11 @@
 					@endif
  			</div>
 			<div style="clear:both;"> </div>
+
+			{{-- {{ dump($user_data->toArray()) }} --}}
 			
 			@foreach($user_data as $userKey => $value)
+
 				@php
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
@@ -92,13 +95,16 @@
 									continue;
 								}
  						}
+
+
 							echo '<div class="attendance-sheet">';
 								echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].'</div>';
 								echo '<div class="attendanc-sheet content">'.$value['belong_group']['name'].'  </div>';
 							echo '</div>';
-						if(!empty($attendance_data[$user_meta['employee_id']]))
+						if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 						{
  							$attendanceVal = collect($attendance_data[$user_meta['employee_id']])->keyBy('date');
+ 							// dump($user_meta['employee_id'] , $attendanceVal->toArray());
  						}
 							for($d=$number; $d<=$total_days; $d++)
 							{
@@ -107,6 +113,8 @@
 								{
 									echo "<div class='attendance-sheet column sunday'>S</div>";
 								}else
+								{
+								if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 								{
 									@endphp
 										@if(!empty($holiday_data[$d]))
@@ -122,9 +130,13 @@
 										@else
 											<div class="attendance-sheet column ">-</div>
 										@endif
-									@php	
+									@php
+								}else{
+									echo '<div class="attendance-sheet column ">-</div>';
+								}	
 								}
 							}
+
 
 					}
 				@endphp

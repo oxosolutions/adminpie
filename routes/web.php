@@ -301,7 +301,8 @@
 						Route::get('/emails/view/{id}',['as'=>'account.emails.view','uses'=>'AccountController@emailDetails']);
 						
 						Route::get('/chat/{id?}',['as'=>'account.chat','uses'=>function(){
-							return view('organization.profile.chat');
+							echo "chatinggg";
+							// return view('organization.profile.chat');
 						}]);
 						Route::get('/discussion/{id?}',['as'=>'account.discussion','uses'=>function(){
 							return view('organization.profile.discussion');

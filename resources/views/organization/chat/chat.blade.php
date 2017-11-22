@@ -1,3 +1,4 @@
+{{ dd(21231) }}
 @extends('layouts.main')
 @section('content')
 @php

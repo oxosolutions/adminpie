@@ -124,10 +124,11 @@ class AccountController extends Controller
     public function profileDetails($id = null){
         
         if($id == null){
-            $id = 8; 
-            $g_id = Auth::guard('org')->user()->id; 
-            $user=  US::with('organization_user')->where('id', $g_id)->first();
-            $id = $user['organization_user']['id'];
+            // $id = 8; 
+            // $g_id = Auth::guard('org')->user()->id; 
+            // $user=  US::with('organization_user')->where('id', $g_id)->first();
+            // $id = $user['organization_user']['id'];
+             $id = current_organization_user_id();
         }
         $user_log = $this->listActivities();
     	if($id == null){
@@ -203,6 +204,7 @@ class AccountController extends Controller
     }
 
     public function storeMeta(Request $request, $id){
+        
         $request_data = $request->except([
                             '_method','_token','action'
                         ]);
@@ -260,7 +262,7 @@ class AccountController extends Controller
                             Session::flash('error',"Employee Id Already exists");
                             return back();
                         }else{
-                            $metaModel = NEW UM;
+                            $metaModel = UM::firstOrNew(['key'=>$key,'user_id'=>$id]);
                             $metaModel->key = $key;
                             $metaModel->value = $value;
                             $metaModel->user_id = $id;

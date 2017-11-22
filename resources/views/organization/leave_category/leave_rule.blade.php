@@ -30,7 +30,7 @@ $page_title_data = array(
 'add_new' => '+ Add Role'
 ); 
 
-dump($data, current_organization_user_id());
+// dump($data, current_organization_user_id());
 
 @endphp
 @if(Session::has('success'))
@@ -219,17 +219,35 @@ dump($data, current_organization_user_id());
 
 
 	
-		{!! FormGenerator::GenerateForm('edit_leave_category_form') !!}	
+		{!! FormGenerator::GenerateForm('edit_leave_category_form') !!}
+		<div class="row" style="padding-bottom: 15px">
+			<div class="col l3" style="line-height: 30px">
+				Minimum Saction Of Leave 
+				{{@$data['minimum_saction_leave']}}
+			</div>
+			<div class="col l9">
+				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
+			</div>
+		</div>
 		<div class="row"  style="padding-bottom: 15px">
 			<div class="col l3" style="line-height: 30px">
 				Include Designation
  				@if(!empty($data['data_designation']))
-					{{ dump($data['data_designation']) }}
+					
 					@php
 						$data['data_designation']= array_map('intval', json_decode($data['data_designation']));
 					@endphp
 				@endif
 			</div>
+			<div class="row"  style="padding-bottom: 15px">
+			<div class="col l9">
+				<div class="col l6 pl-7">
+				{{-- <h1> desss</h1> --}}
+					{!! Form::select('include_designation[]',@$data['designationData'],@$data['data_designation'],['multiple' => true, 'id'=>'include_designation','class'=>'browser-default', 'placeholder'=>"Valid For"])!!}
+				</div>
+			</div>
+		</div>	
+	</div>		
 
 			<div id="user_drop_down">	
 			<div class="row"  style="padding-bottom: 15px">
@@ -266,16 +284,7 @@ dump($data, current_organization_user_id());
 
 
 				
-		<div class="row"  style="padding-bottom: 15px">
-			<div class="col l9">
-				<div class="col l6 pl-7">
-				{{-- <h1> desss</h1> --}}
-						
-					{!! Form::select('include_designation[]',@$data['designationData'],@$data['data_designation'],['multiple' => true, 'id'=>'include_designation','class'=>'browser-default', 'placeholder'=>"Valid For"])!!}
-				</div>
-			</div>
-		</div>	
-	</div>		
+		
 
 
 		<div class="row" style="padding-bottom: 15px">

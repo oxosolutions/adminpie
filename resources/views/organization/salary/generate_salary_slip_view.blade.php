@@ -81,12 +81,12 @@
         @foreach($data['users'] as $key => $value)
             <tr>
                 <td class="light-blue darken-4 aione-align-center">
-                @if(empty($value['salary']))
-                    <input type="checkbox" name="user_select[]" value="{{ $value->id }}">
-                  @else
-                    <a href="{{route('salary.slip.view',['id'=>$value['salary']['id']]) }}">    View    </a>
-                    <a href="{{route('salary.slip.delete',['id'=>$value['salary']['id']]) }}">  Delete  </a>
-                @endif
+                  @if(empty($value['salary']))
+                      <input type="checkbox" name="user_select[]" value="{{ $value->id }}">
+                    @else
+                      <a href="{{route('salary.slip.view',['id'=>$value['salary']['id']]) }}">    View    </a>
+                      <a href="{{route('salary.slip.delete',['id'=>$value['salary']['id']]) }}">  Delete  </a>
+                  @endif
                 </td>
                 <td >{{ $value['belong_group']['name'] }}</td>
                 <td >01/10/2017</td>

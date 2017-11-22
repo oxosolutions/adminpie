@@ -73,6 +73,7 @@ $page_title_data = array(
 								</div>
 							</div>
 						</div>
+						
 					@foreach($data as $key => $val)
 						<div class="list" id="list">
 							<div class="card-panel shadow white z-depth-1 hoverable project"  >
@@ -81,7 +82,7 @@ $page_title_data = array(
 							            <div class="row valign-wrapper">
 							                <div class="col">
 							                    <div class="blue white-text" style="text-align: center;width: 32px;line-height: 32px;">
-							                       A
+							                       A 
 							                    </div>  
 							                </div>
 							                <input type="hidden" value="" class="id" >
@@ -90,17 +91,17 @@ $page_title_data = array(
 							                    <div style="font-weight: 500;" class="">{{$val->reason_of_leave}}</div>
 							                    <div class="project-description"></div>
 							                    <div class="aione-list-options">
-							                        <a href="" style="padding-right:10px">View</a>
+							                        <a href="" style="padding-right:10px">{{$val->reason_of_leave}} View</a>
 							                    </div>
 							                </div>
 							            </div>
 
 							        </div>
-							         <div class="col s2">
-							            {{$val->total_days}} Days
+							         <div class="col s3 right-align">
+								           	<span class="teal white-text" style="padding: 2px 5px">{{$val->total_days}} Days</span>
 							        </div>
-							        <div class="col s3">
-							            {{$val->from}} to {{$val->to}}
+							       <div class="col s3 right-align">
+								           	<span class="teal white-text" style="padding: 2px 5px">{{$val->from}} to {{$val->to}} </span>
 							        </div>
 							        @if($val->status ==1)
 								        <div class="col s3 right-align">
@@ -126,12 +127,9 @@ $page_title_data = array(
 								<input type="hidden" name="apply_by" value="employee">
 						@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
 						{!!Form::close()!!}
-					
 						
 							<div class="card title-card" >
-								
 									Leave rules for you
-								
 							</div>
 						@foreach($leave_rule as $ruleKey => $ruleVal)
 							<div class="card">

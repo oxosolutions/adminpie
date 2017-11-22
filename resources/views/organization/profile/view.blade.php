@@ -254,15 +254,16 @@ $page_title_data = array(
 								
 								{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
 									@php
-										$meta_data =	array_column(json_decode($model['metas'],true), 'value','key');
-									// dd($model);
-									$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
-
+									$meta_data =	array_column(json_decode($model['metas'],true), 'value','key');
+									$shift = null;
+									if(isset($meta_data['user_shift'])){
+										$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
+									}
 									$userData = [];
-									$userData ['about_me'] = $model->about_me;
-									$userData ['shift'] = $shift;
-									$userData ['email'] = $model->belong_group->email;
-									$userData ['name'] = $model->belong_group->name;
+									$userData['about_me'] = $model->about_me;
+									$userData['shift'] = $shift;
+									$userData['email'] = $model->belong_group->email;
+									$userData['name'] = $model->belong_group->name;
 
 									@endphp
 								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
@@ -335,18 +336,21 @@ $page_title_data = array(
 							<div class="col l3">
 								Shift
 							</div>
-							<div class="col l3">
-								{{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
-							</div>
-							<div class="col l3">
-								{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}
-							</div>
-							<div class="col l3 week-days">
-								@foreach(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
-								
-								<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
-								@endforeach
-							</div>
+							@if(!empty($shift))
+								<div class="col l3">
+									{{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+										{{-- {{ dd($meta_data) }}  --}}
+								</div>
+								<div class="col l3">
+									{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}
+								</div>
+								<div class="col l3 week-days">
+									@foreach(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
+									
+									<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
+									@endforeach
+								</div>
+							@endif
 							<style type="text/css">
 								.week-days > .active{
 									border-color: #2196f3;
