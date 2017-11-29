@@ -62,7 +62,6 @@ class ManageTeamController extends Controller
             if(!empty($id) || $id != null || $id != ''){
                 $data['data'] = Team::where('id',$id)->first();
             }
-
             return view('organization.team.list',$datalist)->with(['data' => $data]);
         /*$plugins = [
                         'js' => ['select2']

@@ -17,10 +17,7 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 
-@if(Session::has('import_new'))
-		{{ dump(Session::get('import_new')) }}
 
-@endif
 {!! Form::open(['route'=>'import.employee.post' , 'class'=> 'form-horizontal','method' => 'post','files'=>true])!!}
 	<div class="row ">
 		{{-- {!!Form::file('import_employee',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Choose File','style'=>'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px'])!!} --}}

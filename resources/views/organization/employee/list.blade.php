@@ -30,6 +30,26 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 {{-- @include('common.list.datalist') --}}
+
+@if(Session::has('import_new'))
+       <ul>
+            <li>Following Employee  Import Success fully</li>
+               @foreach(Session::get('import_new') as $keys => $vals) 
+                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
+               @endforeach
+       </ul>
+@endif
+
+@if(Session::has('alreadyInGroupNotOrg'))
+       <ul>
+            <li>Following User already working with other Organization Now they also associate with us.</li>
+               @foreach(Session::get('alreadyInGroupNotOrg') as $keys => $vals) 
+                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
+               @endforeach
+       </ul>
+@endif
+
+
 	<table id="example" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>

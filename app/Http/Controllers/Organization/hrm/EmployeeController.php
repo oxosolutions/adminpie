@@ -642,8 +642,16 @@ class EmployeeController extends Controller
         
     }
 
+    protected function check_employee_id($employee_id){
+        $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $employee_id]);
+        if($emp_id_check->exists()){
+              return true;  
+        }
+        return true;
+    }
+
     public function importEmployee(Request $request){
-        $update_password = $newRecord = $alreadyInOrg = $alreadyInGroup = [];
+        $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $alreadyInOrg = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
             $organizationId = Session::get('organization_id');
             $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
@@ -653,32 +661,41 @@ class EmployeeController extends Controller
             $data = Excel::load($path.'/'.$filename, function($reader) use (&$sheetCount){ 
                 $sheetCount = $reader->getSheetCount();
             })->get();
+            $import_record_options = $request['import_record_options'];
            foreach ($data->toArray() as $key => $value) {
             if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
+                // $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $value['employee_id']]);
+                if($this->check_employee_id($value['employee_id'])){
+                    $newInsertAlreadyEmployeeId[$value['employee_id']] = $value['email'];
+                    continue;
+                }
                 $alreadyExists = GroupUsers::where(['email'=>$value['email']]);//->first();
+                
+
                 if($alreadyExists->exists()){
+                    $user_id = $alreadyExists->first()->id;
+                    $org_user_check = User::where('user_id', $user_id);
+                    if(!$org_user_check->exists()){
+                        $this->create_org_user($user_id, $value, $import_record_options);
+                        $alreadyInGroupNotOrg[$value['employee_id']] =  $value['email'];
+                    }
                     if($request['import_record_options'] !='new_insert')
                     {
-                        $user_id = $alreadyExists->first()->id;
                         if($request['import_record_options'] =='update_password_new_insert'){
                             $update_password[$user_id] = $value['employee_id'];
                             $alreadyExists->update(["password"=>hash::make($value['password'])]);
                         }
-                        $org_user_check = User::where('user_id', $user_id);
+                        
                         if($org_user_check->exists()){
                             $org_user_check->update(['user_type'=>'employee']);
                             $org_user_id = $org_user_check->first()->id;
-                            $this->add_metas($org_user_id, $value);
+                            $this->add_metas($org_user_id, $value , $import_record_options);
                             array_push($alreadyInOrg , $value['employee_id']);
                         }
-                        else{
-                            $this->create_org_user($user_id, $value);
-                            }
-                        $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $value['employee_id']]);
-                        if($emp_id_check->exists()){
-                        }else{
-                           
-                        }
+                        // else{
+                        //     $this->create_org_user($user_id, $value, $import_record_options);
+                        //     }
+                      
                         array_push($alreadyInGroup, [$value['employee_id']=>$value['email']]);
                     }
                 }
@@ -691,9 +708,9 @@ class EmployeeController extends Controller
                         }
                         $groupUsers->fill($value);
                         $groupUsers->save();
-                        $this->create_org_user($groupUsers->id, $value);
+                        $this->create_org_user($groupUsers->id, $value,  $import_record_options);
                         DB::commit();
-                        $newRecord[$groupUsers->id] = $value['employee_id'];
+                        $newRecord[$value['employee_id']] = $value['email'];
                     }catch(Exception $e){
                             DB::rollBack();
                         }
@@ -711,23 +728,29 @@ class EmployeeController extends Controller
         }
         if($newRecord){
             Session::flash('import_new',$newRecord);
-            dump($newRecord);
+            dump('import new', $newRecord, Session::all() );
         }else{
             echo "No new records";
         }
+
+        if($alreadyInGroupNotOrg){
+            Session::flash('alreadyInGroupNotOrg',$alreadyInGroupNotOrg);
+        }
+        if($newInsertAlreadyEmployeeId){
+            Session::flash('newInsertAlreadyEmployeeId', $newInsertAlreadyEmployeeId);
+        }
     }
         return redirect()->route('list.employee');
-
     }
 
-    protected function create_org_user($group_user_id , $value){
+    protected function create_org_user($group_user_id , $value , $import_record_options){
       
         $user = new User();
         $user->user_id = $group_user_id;
         $user->user_type = 'employee';
         $user->save();
         $uid = $user->id;
-        $this->add_metas($uid , $value);
+        $this->add_metas($uid , $value, $import_record_options);
         // dd('rolesss', $value['role']);
         if(!empty($value['role'])){
             $roles = array_map('trim', explode(', ', $value['role']));
@@ -752,7 +775,7 @@ class EmployeeController extends Controller
         }
     }
 
-    protected function add_metas($user_id , $value){
+    protected function add_metas($user_id , $value , $import_record_options){
         foreach($value as $key => $val){
             if(in_array($key, ['employee_id', 'designation', 'department', 'pay_scale', 'date_of_joining'])){
     //designation            
