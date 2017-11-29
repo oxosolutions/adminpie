@@ -4,6 +4,7 @@
 	Route::get('/page/edit/{id}',	['as'=>'edit.pages' , 'uses'=>'PagesController@edit' ]);
 	Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@listPage' ]);
 	Route::post('/save/page/setting',		['as'=>'save.page.settings' , 'uses'=>'PagesController@savePageSetting' ]);
+    Route::match(['get','post'],'/genearte/html', ['as'=>'generate.html','uses'=>'PagesController@exportHTML']);
 
 	//Pages 
 	Route::get('/pages/setting/{id}',['as'=> 'setting.pages' , 'uses' => 'PagesController@pageSetting']);

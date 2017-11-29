@@ -323,6 +323,26 @@ class PagesController extends Controller
         return "true";
     }
 
+    public function exportHTML(Request $request){
+        if($request->isMethod('post')){
+            $Associate = $this->assignModel('Page');
+            $pages = $Associate::with('pageMeta')->whereIn('id',$request->export_page)->get();
+            $menu = wMenu::wlist(6);
+            $form = [];
+            $organization_id = get_organization_id();
+            foreach($pages as $key => $page){
+                $html = view('organization.pages.viewPage')->with(['pageData' => $page , 'formData' => $form , 'menu' => $menu])->render();
+                if(!file_exists('export/'.get_organization_id())){
+                    mkdir('export/'.$organization_id,0777,true);
+                }
+                file_put_contents('export/'.$organization_id.'/'.$page->slug.'.html', $html);
+            }
+            Session::flash('success','Pages exported successfully!!');
+        }
+        
+        return view('organization.cms.export.form');
+    }
+
     //preview page
     public function viewPage($slug)
     {

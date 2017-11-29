@@ -49,6 +49,26 @@
        </ul>
 @endif
 
+@if(Session::has('newInsertAlreadyEmployeeId'))
+       <ul>
+            <li>Following Record Employee Id already Assign to other employee.</li>
+               @foreach(Session::get('newInsertAlreadyEmployeeId') as $keys => $vals) 
+                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
+               @endforeach
+       </ul>
+@endif
+
+@if(Session::has('emptyRow'))
+       <ul>
+            <li>Following .</li>
+               @foreach(Session::get('emptyRow') as $keys => $vals) 
+                <li style="background-color: Red; ">  {{ $vals }} </li>
+               @endforeach
+       </ul>
+@endif
+
+
+
 
 	<table id="example" class="display" cellspacing="0" width="100%">
         <thead>

@@ -316,8 +316,6 @@ class ProjectController extends Controller
   /*  if(!empty($id) || $id != null || $id != ''){
       $data['data'] = CAT::where('id',$id)->first();
     }*/
-      
-
          return view('organization.categories.list',$datalist);
     }
 

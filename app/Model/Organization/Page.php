@@ -26,14 +26,14 @@ class Page extends Model
    		return $this->belongsTo('App\Model\Organization\Cms\Menu\MenuItem' , 'id' , 'page_id');
    	}
 
-      public function pageMeta()
-      {
-         return $this->hasMany('App\Model\Organization\PageMeta','page_id','id');
-      }
+    public function pageMeta()
+    {
+        return $this->hasMany('App\Model\Organization\PageMeta','page_id','id');
+    }
 
-      public static function pagesList(){
+    public static function pagesList(){
 
-         return Self::pluck('title','id');
-      }
+        return Self::pluck('title','id');
+    }
 
 }

@@ -647,10 +647,11 @@ class EmployeeController extends Controller
         if($emp_id_check->exists()){
               return true;  
         }
-        return true;
+        return false;
     }
 
     public function importEmployee(Request $request){
+        $index = 1;
         $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $alreadyInOrg = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
             $organizationId = Session::get('organization_id');
@@ -663,19 +664,17 @@ class EmployeeController extends Controller
             })->get();
             $import_record_options = $request['import_record_options'];
            foreach ($data->toArray() as $key => $value) {
+            $index++;
             if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
-                // $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $value['employee_id']]);
-                if($this->check_employee_id($value['employee_id'])){
-                    $newInsertAlreadyEmployeeId[$value['employee_id']] = $value['email'];
-                    continue;
-                }
-                $alreadyExists = GroupUsers::where(['email'=>$value['email']]);//->first();
-                
-
+                $alreadyExists = GroupUsers::where(['email'=>$value['email']]); 
                 if($alreadyExists->exists()){
                     $user_id = $alreadyExists->first()->id;
                     $org_user_check = User::where('user_id', $user_id);
                     if(!$org_user_check->exists()){
+                        if( $import_record_options == 'new_insert' && $this->check_employee_id($value['employee_id'] )){
+                            $newInsertAlreadyEmployeeId[$value['employee_id']] = $value['email'];
+                            continue;
+                        }
                         $this->create_org_user($user_id, $value, $import_record_options);
                         $alreadyInGroupNotOrg[$value['employee_id']] =  $value['email'];
                     }
@@ -683,7 +682,7 @@ class EmployeeController extends Controller
                     {
                         if($request['import_record_options'] =='update_password_new_insert'){
                             $update_password[$user_id] = $value['employee_id'];
-                            $alreadyExists->update(["password"=>hash::make($value['password'])]);
+                            $alreadyExists->update(["name"=>$value['name'] , "password"=>hash::make($value['password'])]);
                         }
                         
                         if($org_user_check->exists()){
@@ -692,14 +691,14 @@ class EmployeeController extends Controller
                             $this->add_metas($org_user_id, $value , $import_record_options);
                             array_push($alreadyInOrg , $value['employee_id']);
                         }
-                        // else{
-                        //     $this->create_org_user($user_id, $value, $import_record_options);
-                        //     }
-                      
                         array_push($alreadyInGroup, [$value['employee_id']=>$value['email']]);
                     }
                 }
             else{
+                    if($this->check_employee_id($value['employee_id'])){
+                        $newInsertAlreadyEmployeeId[$value['employee_id']] = $value['email'];
+                        continue;
+                    }
                try{
                     DB::beginTransaction();
                         $groupUsers = new GroupUsers();
@@ -715,22 +714,24 @@ class EmployeeController extends Controller
                             DB::rollBack();
                         }
                 }
+            }else{
+                $emptyRow[$index] = "Row $index  have miss neccesary value.";
             }
             
         }
         if(!empty($alreadyInGroup)){
-        dump('update records ', $alreadyInGroup);
+        // dump('update records ', $alreadyInGroup);
         }
         if($update_password){
-            dump(' update passwords',$update_password);
+            // dump(' update passwords',$update_password);
         }else{
             echo "No update & password update records";
         }
         if($newRecord){
             Session::flash('import_new',$newRecord);
-            dump('import new', $newRecord, Session::all() );
+            // dump('import new', $newRecord, Session::all() );
         }else{
-            echo "No new records";
+         // echo "No new records";
         }
 
         if($alreadyInGroupNotOrg){
@@ -739,6 +740,13 @@ class EmployeeController extends Controller
         if($newInsertAlreadyEmployeeId){
             Session::flash('newInsertAlreadyEmployeeId', $newInsertAlreadyEmployeeId);
         }
+
+        if($emptyRow){
+            Session::flash('emptyRow', $emptyRow);
+        }
+        // if(empty($newRecord) && empty($update_password) && empty( ) && empty() ){
+
+        // } 
     }
         return redirect()->route('list.employee');
     }
@@ -790,7 +798,7 @@ class EmployeeController extends Controller
                         $des->save();
                         $des_id = $des->id;
                     }
-                    $this->add_user_meta($user_id, 'designation' , $des_id);
+                    $this->add_user_meta($user_id, 'designation' , $des_id, $import_record_options);
     /* department */            }elseif($key == 'department'){
                     $dep_check  = DEP::select(['id'])->where(['name'=>$val]);
                                 if($dep_check->exists()){
@@ -802,19 +810,21 @@ class EmployeeController extends Controller
                                     $dep->save();
                                     $dep_id = $dep->id;
                                 }
-                    $this->add_user_meta($user_id, 'department' , $dep_id);
+                    $this->add_user_meta($user_id, 'department' , $dep_id, $import_record_options);
                 }else{
-                    $this->add_user_meta($user_id, $key, $val);
+                    $this->add_user_meta($user_id, $key, $val, $import_record_options);
                 }
             }
         }
     }
 
 
-        protected function add_user_meta($user_id , $key , $value){
+        protected function add_user_meta($user_id , $key , $value, $import_record_options){
             $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
                 if($meta->exists()){
-                    $meta->update(['value'=>$value]);
+                    if($import_record_options !='new_insert'){
+                        $meta->update(['value'=>$value]);
+                    }
                 }else{
                         $userMeta           =   new UsersMeta();
                         $userMeta->user_id  =   $user_id;
