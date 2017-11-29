@@ -19,6 +19,27 @@ use App\Model\Group\GroupUsers;
 
 class SurveyController extends Controller
 {
+
+   public function organization_users(Request $request){
+    if(empty($request['_token']) || $request['_token'] != 'd1a2r3l4i5c6o7x8o9s10o11l12o13u14t15i16o17n18s'){
+            return response()->json(["errors"=>['status'=>'error', "title"=> "Activation code error", 'message'=>"you have n't access."]],401);
+        }
+        $org = GO::where('active_code',$request['activation_code']);
+        if(!$org->exists()){
+            return ['status'=>'error', 'message'=>'active code not exist'];
+        }
+        $org_id = $org->first()->id;
+        $group_id = $org->first()->group_id;
+        Session::put('organization_id',$org_id);
+        Session::put('group_id',$group_id);
+        $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
+        foreach ($users as $key => $value) {
+           $users[$key]['org_id'] = $org_id; 
+           $users[$key]['user_roles'] =  array_column(array_column($users[$key]['organization_user']['user_role_rel'], 'roles'), 'slug');
+           unset($users[$key]['organization_user']);
+        }
+        return response()->json(['status'=>'success', 'users'=>$users],200);
+    }
     public function surveys(Request $request){
         // $org_id = GO::where('active_code',$request['activation_key'])->first()->id; 
          $org = GO::where('active_code',$request['activation_key']);

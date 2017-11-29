@@ -13,9 +13,9 @@
             <directory suffix="Test.php">./tests/Feature</directory>
         </testsuite>
 
-        <testsuite name="Unit Tests">
+        <!-- <testsuite name="Unit Tests">
             <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
+        </testsuite> -->
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

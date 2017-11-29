@@ -104,7 +104,6 @@ class ProjectController extends Controller
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
                       ];
-                  // dd($datalist);
       return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
       /*$categories =  CAT::all();
       $clients = $this->client->get_client();
@@ -323,6 +322,7 @@ class ProjectController extends Controller
     }
 
     public function saveCategory(Request $request){
+    	dd($request->all());
         $rules = [
                 'name' => 'required',
         ];

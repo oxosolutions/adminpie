@@ -266,7 +266,7 @@ class GroupOrganizationController extends Controller
 		        $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
 		        if(!$userRoleMapping->exists()){
 		            $userRoleMapping = new UserRoleMapping();
-		            $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
+		            $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
 		            $userRoleMapping->save();
 		        }
 		        DB::commit();

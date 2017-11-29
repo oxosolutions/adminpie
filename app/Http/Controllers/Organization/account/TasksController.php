@@ -161,14 +161,16 @@ class TasksController extends Controller
     {        
         $data = [];
         if($request->has('priorityStatus')){
-            if($request->project_id != 'null'){
+
+            if($request->project_id != null){
                 $model = Tasks::where(['priority' => $request->priorityStatus,'project_id' => $request->id])->get();
             }else{
-                $id = $this->getIdOfUsers($request);
-                $model = Tasks::where('priority',$request->priorityStatus)->whereIn('id',$id)->get();
+                // $id = $this->getIdOfUsers($request);
+                // $model = Tasks::where('priority',$request->priorityStatus)->whereIn('id',$id)->get();
+                $model = Tasks::where('priority',$request->priorityStatus)->get();
             }
         }elseif($request->has('Employee_filter')){
-            if($request->project_id != 'null'){
+            if($request->project_id != null){
                 $id = $this->getIdOfUsers($request);
                 $model = Tasks::where(['project_id' => $request->id ])->whereIn('id',$id)->get();
             }else{
@@ -179,8 +181,9 @@ class TasksController extends Controller
             if($request->project_id != null){
                 $model = Tasks::where('project_id',$request->project_filter)->get();
             }else{
-                $id = $this->getIdOfUsers($request);
-                $model = Tasks::where(['project_id' => $request->project_filter])->whereIn('id' , $id)->get();
+                // $id = $this->getIdOfUsers($request);
+                // $model = Tasks::where(['project_id' => $request->project_filter])->whereIn('id' , $id)->get();
+                $model = Tasks::where(['project_id' => $request->project_filter])->get();
             }
         }
         return view('common.tasks',['model'=>$model])->render();

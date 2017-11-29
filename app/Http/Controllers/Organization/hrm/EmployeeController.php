@@ -10,6 +10,7 @@ use App\Model\Organization\Department As DEP;
 use App\Model\Organization\Category as CAT;
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\User;
+use App\Model\Organization\UsersRole;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use App\Model\Organization\UsersMeta;
@@ -22,6 +23,11 @@ use App\Model\Organization\OrganizationSetting;
 use Datatables;
 use App\Model\Group\GroupUsers;
 use Hash;
+use DB;
+/**
+ * work by paljinder singh
+ * @Import emplyoyee
+ */
 class EmployeeController extends Controller
 {
     protected $user;
@@ -526,9 +532,18 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-        $model = GroupUsers::where('id',$id)->delete();
-        $model_meta = User::where('id',$id)->delete();
-        $model_meta = UsersMeta::where('user_id',$id)->delete();
+        try{
+            DB::beginTransaction();
+            $user =  User::find($id);
+            $user_id = $user->user_id;
+            $model = GroupUsers::where('id',$user_id)->delete();
+            $model_meta = User::where('id',$id)->delete();
+            $model_meta = UsersMeta::where('user_id',$id)->delete();
+            DB::commit();
+        }catch(Exception $e){
+            DB::rollBack();
+            throw $e;
+        }
         return back();
     }
 
@@ -628,6 +643,7 @@ class EmployeeController extends Controller
     }
 
     public function importEmployee(Request $request){
+        $update_password = $newRecord = $alreadyInOrg = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
             $organizationId = Session::get('organization_id');
             $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
@@ -637,91 +653,220 @@ class EmployeeController extends Controller
             $data = Excel::load($path.'/'.$filename, function($reader) use (&$sheetCount){ 
                 $sheetCount = $reader->getSheetCount();
             })->get();
-            $recordsArray = null;
-            $rowId = 2;
-            $errors = [];
-            foreach($data as $key => $record){
-                foreach($record as $columnHeader => $columnValue){
-                    $explodedHeader = explode('.',$columnHeader);
-                    $recordsArray[$explodedHeader[0]][$explodedHeader[1]] = $columnValue;
-                }
-                $userid = '';
-                foreach($recordsArray as $model => $columns){
-                    switch($model){
-                        case 'user':
-                            $alreadyExists = User::where(['email'=>$columns['email']])->first();
-                            if($alreadyExists == null){
-                                $userModel = new User;
-                                $userModel->fill($columns);
-                                $userModel->status = 1;
-                                $userModel->save();
-                                $userid = $userModel->id;
-                            }else{
-                                $errors[] = ['rowid'=>$rowId,'error'=>'Email id already exists'];
+           foreach ($data->toArray() as $key => $value) {
+            if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
+                $alreadyExists = GroupUsers::where(['email'=>$value['email']]);//->first();
+                if($alreadyExists->exists()){
+                    if($request['import_record_options'] !='new_insert')
+                    {
+                        $user_id = $alreadyExists->first()->id;
+                        if($request['import_record_options'] =='update_password_new_insert'){
+                            $update_password[$user_id] = $value['employee_id'];
+                            $alreadyExists->update(["password"=>hash::make($value['password'])]);
+                        }
+                        $org_user_check = User::where('user_id', $user_id);
+                        if($org_user_check->exists()){
+                            $org_user_check->update(['user_type'=>'employee']);
+                            $org_user_id = $org_user_check->first()->id;
+                            $this->add_metas($org_user_id, $value);
+                            array_push($alreadyInOrg , $value['employee_id']);
+                        }
+                        else{
+                            $this->create_org_user($user_id, $value);
                             }
-                        break;
-
-                        case'employee':
-                            if($userid != '' && $userid != 0){
-                                $model = EMP::firstOrNew(['employee_id'=>$columns['employee_id']]);
-                                $model->user_id = $userid;
-                                $model->employee_id = $columns['employee_id'];
-                                if($columns['designation'] != null && $columns['designation'] != ''){
-                                    $designation = DES::where('name','like','%'.$columns['designation'].'%')->first();
-                                    if($designation != null){
-                                        $model->designation = $designation->id;
-                                    }else{
-                                        $model->designation = $columns['designation'];
-                                    }
-                                }else{
-                                    $model->designation = null;
-                                }
-                                if($columns['department'] != null && $columns['department'] != ''){
-                                    $department = DEP::where('name','like','%'.$columns['department'].'%')->first();
-                                    if($department != null){
-                                        $model->department = $department->id;
-                                    }else{
-                                        $model->department = $columns['department'];
-                                    }
-                                }else{
-                                    $model->department = null;
-                                }
-                                unset($columns['id']);
-                                unset($columns['user_id']);
-                                unset($columns['employee_id']);
-                                unset($columns['designation']);
-                                unset($columns['department']);
-                                $model->fill($columns);
-                                $model->save();
-                            }
-                        break;
-                        case'usersmeta':
-                            if($userid != '' && $userid != 0){
-                                foreach($columns as $key => $keyValue){
-                                    $model = new UsersMeta;
-                                    $model->key = $key;
-                                    $model->value = $keyValue;
-                                    $model->type = 'employee';
-                                    $model->user_id = $userid;
-                                    $model->save();
-                                }
-                            }
-                        break;
+                        $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $value['employee_id']]);
+                        if($emp_id_check->exists()){
+                        }else{
+                           
+                        }
+                        array_push($alreadyInGroup, [$value['employee_id']=>$value['email']]);
                     }
                 }
-                $rowId++;
+            else{
+               try{
+                    DB::beginTransaction();
+                        $groupUsers = new GroupUsers();
+                        if(isset($value['password'])){
+                            $value['password'] = Hash::make($value['password']);
+                        }
+                        $groupUsers->fill($value);
+                        $groupUsers->save();
+                        $this->create_org_user($groupUsers->id, $value);
+                    DB::commit();
+                    $newRecord[$groupUsers->id] = $value['employee_id'];
+                    }catch(Exception $e){
+                            DB::rollBack();
+                        }
+                }
             }
-            Session::flash('errors',$errors);
+            
         }
-        return redirect()->route('import.employee');
+        if(!empty($alreadyInGroup)){
+        dump('update records ', $alreadyInGroup);
+        }
+        if($update_password){
+            dump(' update passwords',$update_password);
+        }else{
+            echo "No update & password update records";
+        }
+        if($newRecord){
+            dump($newRecord);
+        }else{
+            echo "No new records";
+        }
     }
+        return redirect()->route('list.employee');
+
+    }
+
+    protected function create_org_user($group_user_id , $value){
+      
+        $user = new User();
+        $user->user_id = $group_user_id;
+        $user->user_type = 'employee';
+        $user->save();
+        $uid = $user->id;
+        $this->add_metas($uid , $value);
+        // dd('rolesss', $value['role']);
+        if(!empty($value['role'])){
+            $roles = array_map('trim', explode(',', $value['role']));
+            dump($roles);
+            foreach ($roles as $roleKey => $roleValue) {
+                $checkRole = UsersRole::where('name',$roleValue);
+                if($checkRole->exists()){
+                    $role_id =  $checkRole->first()->id;
+                }else{
+                    $userRole = new UsersRole();
+                    $userRole->name = $roleValue;
+                    $userRole->status = 1;
+                    $userRole->slug =  str_slug($roleValue, '-');
+                    $userRole->save();
+                    $role_id = $userRole->id;
+                }
+               $userRoleMapping =  new UserRoleMapping();
+               $userRoleMapping->user_id = $uid;
+               $userRoleMapping->role_id = $role_id;
+               $userRoleMapping->save();
+            }
+        }
+    }
+
+    protected function add_metas($user_id , $value){
+        foreach($value as $key => $val){
+            if(in_array($key, ['employee_id', 'designation', 'department', 'pay_scale', 'date_of_joining'])){
+                $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
+                if($meta->exists()){
+                    $meta->update(['value'=>$val]);
+                }else{
+                    $userMeta = new UsersMeta();
+                    $userMeta->user_id =  $user_id;
+                    $userMeta->key =  $key;
+                    $userMeta->value =  $val;
+                    $userMeta->save();
+                }
+                
+            }
+        }
+    }
+
+
+        protected function add_user_meta($user_id , $key , $value){
+            $userMeta           =   new UsersMeta();
+            $userMeta->user_id  =   $user_id;
+            $userMeta->key      =   $key;
+            $userMeta->value    =   $value;
+            $userMeta->save();
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+            // foreach($data as $key => $record){
+            //     foreach($record as $columnHeader => $columnValue){
+            //         $explodedHeader = explode('.',$columnHeader);
+            //         $recordsArray[$explodedHeader[0]][$explodedHeader[1]] = $columnValue;
+            //     }
+            //     $userid = '';
+            //     foreach($recordsArray as $model => $columns){
+            //         switch($model){
+            //             case 'user':
+            //                 $alreadyExists = User::where(['email'=>$columns['email']])->first();
+            //                 if($alreadyExists == null){
+            //                     $userModel = new User;
+            //                     $userModel->fill($columns);
+            //                     $userModel->status = 1;
+            //                     $userModel->save();
+            //                     $userid = $userModel->id;
+            //                 }else{
+            //                     $errors[] = ['rowid'=>$rowId,'error'=>'Email id already exists'];
+            //                 }
+            //             break;
+
+            //             case'employee':
+            //                 if($userid != '' && $userid != 0){
+            //                     $model = EMP::firstOrNew(['employee_id'=>$columns['employee_id']]);
+            //                     $model->user_id = $userid;
+            //                     $model->employee_id = $columns['employee_id'];
+            //                     if($columns['designation'] != null && $columns['designation'] != ''){
+            //                         $designation = DES::where('name','like','%'.$columns['designation'].'%')->first();
+            //                         if($designation != null){
+            //                             $model->designation = $designation->id;
+            //                         }else{
+            //                             $model->designation = $columns['designation'];
+            //                         }
+            //                     }else{
+            //                         $model->designation = null;
+            //                     }
+            //                     if($columns['department'] != null && $columns['department'] != ''){
+            //                         $department = DEP::where('name','like','%'.$columns['department'].'%')->first();
+            //                         if($department != null){
+            //                             $model->department = $department->id;
+            //                         }else{
+            //                             $model->department = $columns['department'];
+            //                         }
+            //                     }else{
+            //                         $model->department = null;
+            //                     }
+            //                     unset($columns['id']);
+            //                     unset($columns['user_id']);
+            //                     unset($columns['employee_id']);
+            //                     unset($columns['designation']);
+            //                     unset($columns['department']);
+            //                     $model->fill($columns);
+            //                     $model->save();
+            //                 }
+            //             break;
+            //             case'usersmeta':
+            //                 if($userid != '' && $userid != 0){
+            //                     foreach($columns as $key => $keyValue){
+            //                         $model = new UsersMeta;
+            //                         $model->key = $key;
+            //                         $model->value = $keyValue;
+            //                         $model->type = 'employee';
+            //                         $model->user_id = $userid;
+            //                         $model->save();
+            //                     }
+            //                 }
+            //             break;
+            //         }
+            //     }
+            //     $rowId++;
+            // }
+            
+    // }
     
     public function import()
     {
-        // dd(get_meta('Organization\\UsersMeta',2,'contact_no','user_id',true));
+     // dd(get_meta('Organization\\UsersMeta',2,'contact_no','user_id',true));
         // dd(get_user_meta(2,'contact_no',true));
         // dd(get_user(true,true));
-        dd(get_current_user_meta('contact_no',true));
+        // dd(get_current_user_meta('contact_no',true));
         return view('organization.employee.import-employees');
     }
  

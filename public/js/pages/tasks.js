@@ -40,7 +40,7 @@ $(document).ready(function(){
         	}
         });
 
-        //count tasks
+        //count tasksclick
         count();
     }
 
@@ -94,14 +94,18 @@ $(document).ready(function(){
   $(document).on('change','.filter_priority',function(e){
     e.preventDefault();
     e.stopPropagation();
+
       $('.progress').show();
         var priorityStatus = $(this).val();
+
         var token = $('input[name=_token]').val();
+
         if($('input[name=project_id]').val() != undefined){
           var project_id = $('input[name=project_id]').val();
         }else{
           project_id = 'null';
         }
+        console.log(project_id);
         $.ajax({
           url : route()+'/account/tasks/priority/filter',
           type : "POST",
@@ -114,6 +118,8 @@ $(document).ready(function(){
             $( "ul.droptrue" ).sortable({
               connectWith: "ul",
             });
+            count();
+
           }
         });
     });

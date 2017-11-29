@@ -1,13 +1,26 @@
 @if(@$design_settings['header_select_menu'] > 0)
     @php
         $menu = Menu::wlist($design_settings['header_select_menu']);
+        $current_page = Request::url();
     @endphp
+    <style type="text/css">
+        .nav-item-current{
+            background: #ededed;
+        }
+    </style>
     <nav id="aione_nav" class="aione-nav horizontal light">
         <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu">
             @if(@$menu)
                 @foreach($menu as $key => $menu_item)
-                    <li class="aione-nav-item level0 "> 
+                @php
+                    if($current_page == $menu_item['link']){
+                        $nav_item_current = 'nav-item-current';
+                    }else{
+                        $nav_item_current = '';
+                    }
+                @endphp
+                    <li class="aione-nav-item level0 {{ $nav_item_current }}"> 
                         <a href="{{$menu_item['link']}}">{{$menu_item['label']}}</a>
                         @if(!empty($menu_item['child']))
                             <ul class="side-bar-submenu">

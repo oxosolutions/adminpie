@@ -52,11 +52,11 @@ if(request()->route()->uri == "survey/{token}"){
 			@if(@$design_settings['show_header'] == 1)
 				@include('layouts.front._header')
 			@endif
-			@if(@$design_settings['show_page_title'] == 1)
-				@include('layouts.front._pagetitle')
-			@endif
 			@if(@$design_settings['show_slider'] == 1)
 				@include('layouts.front._slider')
+			@endif
+			@if(@$design_settings['show_page_title'] == 1)
+				@include('layouts.front._pagetitle')
 			@endif
 
 
