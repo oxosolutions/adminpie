@@ -2,6 +2,7 @@
     @php
         $menu = Menu::wlist($design_settings['header_select_menu']);
         $current_page = Request::url();
+        dump($current_page);
     @endphp
     <style type="text/css">
         .nav-item-current{
@@ -14,10 +15,20 @@
             @if(@$menu)
                 @foreach($menu as $key => $menu_item)
                 @php
-                    if($current_page == $menu_item['link']){
-                        $nav_item_current = 'nav-item-current';
+                    if(substr($menu_item['link'], -1) == '/'){
+                        $new_menu_item = substr($menu_item['link'] , 0, -1);
+
+                        if($current_page == $new_menu_item){
+                            $nav_item_current = 'nav-item-current';
+                        }else{  
+                            $nav_item_current = '';
+                        }
                     }else{
-                        $nav_item_current = '';
+                        if($current_page == $menu_item['link']){
+                            $nav_item_current = 'nav-item-current';
+                        }else{
+                            $nav_item_current = '';
+                        }
                     }
                 @endphp
                     <li class="aione-nav-item level0 {{ $nav_item_current }}"> 
@@ -25,6 +36,7 @@
                         @if(!empty($menu_item['child']))
                             <ul class="side-bar-submenu">
                                 @foreach($menu_item['child'] as $submenu_key => $submenu_item)
+                                {{dump($submenu_item)}}
                                     <li class="aione-nav-item level1 "> 
                                         <a href="{{$submenu_item['link']}}">{{$submenu_item['label']}}</a>
                                     </li>

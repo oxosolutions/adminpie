@@ -692,8 +692,8 @@ class EmployeeController extends Controller
                         $groupUsers->fill($value);
                         $groupUsers->save();
                         $this->create_org_user($groupUsers->id, $value);
-                    DB::commit();
-                    $newRecord[$groupUsers->id] = $value['employee_id'];
+                        DB::commit();
+                        $newRecord[$groupUsers->id] = $value['employee_id'];
                     }catch(Exception $e){
                             DB::rollBack();
                         }
@@ -710,6 +710,7 @@ class EmployeeController extends Controller
             echo "No update & password update records";
         }
         if($newRecord){
+            Session::flash('import_new',$newRecord);
             dump($newRecord);
         }else{
             echo "No new records";
@@ -729,7 +730,7 @@ class EmployeeController extends Controller
         $this->add_metas($uid , $value);
         // dd('rolesss', $value['role']);
         if(!empty($value['role'])){
-            $roles = array_map('trim', explode(',', $value['role']));
+            $roles = array_map('trim', explode(', ', $value['role']));
             dump($roles);
             foreach ($roles as $roleKey => $roleValue) {
                 $checkRole = UsersRole::where('name',$roleValue);
@@ -754,28 +755,50 @@ class EmployeeController extends Controller
     protected function add_metas($user_id , $value){
         foreach($value as $key => $val){
             if(in_array($key, ['employee_id', 'designation', 'department', 'pay_scale', 'date_of_joining'])){
-                $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
-                if($meta->exists()){
-                    $meta->update(['value'=>$val]);
+    //designation            
+                if($key =='designation'){
+                    $des_check  = DES::select(['id'])->where(['name'=>$val]);
+                    if($des_check->exists()){
+                        $des_id = $des_check->first()->id;
+                    }else{
+                        $des = new DES();
+                        $des->name = $value['designation'];
+                        $des->status = 1;
+                        $des->save();
+                        $des_id = $des->id;
+                    }
+                    $this->add_user_meta($user_id, 'designation' , $des_id);
+    /* department */            }elseif($key == 'department'){
+                    $dep_check  = DEP::select(['id'])->where(['name'=>$val]);
+                                if($dep_check->exists()){
+                                    $dep_id = $dep_check->first()->id;
+                                }else{
+                                    $dep = new DEP();
+                                    $dep->name = $val;
+                                    $dep->status = 1;
+                                    $dep->save();
+                                    $dep_id = $dep->id;
+                                }
+                    $this->add_user_meta($user_id, 'department' , $dep_id);
                 }else{
-                    $userMeta = new UsersMeta();
-                    $userMeta->user_id =  $user_id;
-                    $userMeta->key =  $key;
-                    $userMeta->value =  $val;
-                    $userMeta->save();
+                    $this->add_user_meta($user_id, $key, $val);
                 }
-                
             }
         }
     }
 
 
         protected function add_user_meta($user_id , $key , $value){
-            $userMeta           =   new UsersMeta();
-            $userMeta->user_id  =   $user_id;
-            $userMeta->key      =   $key;
-            $userMeta->value    =   $value;
-            $userMeta->save();
+            $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
+                if($meta->exists()){
+                    $meta->update(['value'=>$value]);
+                }else{
+                        $userMeta           =   new UsersMeta();
+                        $userMeta->user_id  =   $user_id;
+                        $userMeta->key      =   $key;
+                        $userMeta->value    =   $value;
+                        $userMeta->save();
+                    }
             return true;
         }
 
