@@ -37,6 +37,9 @@
 					
 					Route::get('/drawSidebar',['as' => 'draw.sidebar' , 'uses' => 'ModuleController@drawSidebar']);
 
+                    //Products routes
+                    include_once 'custom/admin/products.php';
+
 
 					//admin users
 					Route::group(['prefix'=>'users'],function(){

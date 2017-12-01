@@ -35,7 +35,7 @@
        <ul>
             <li>Following Employee  Import Success fully</li>
                @foreach(Session::get('import_new') as $keys => $vals) 
-                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
+                <li style="color: green; " > Employee : id {{ $keys  }} ,  email {{ $vals }} new employee created. </li>
                @endforeach
        </ul>
 @endif
@@ -62,10 +62,20 @@
        <ul>
             <li>Following .</li>
                @foreach(Session::get('emptyRow') as $keys => $vals) 
-                <li style="background-color: Red; ">  {{ $vals }} </li>
+                <li style="color: Red; ">  {{ $vals }} </li>
                @endforeach
        </ul>
 @endif
+
+@if(Session::has('updateRecord'))
+       <ul>
+            <li>Following .</li>
+               @foreach(Session::get('updateRecord') as $keys => $vals) 
+                <li style="color: yellow; ">  {{ $vals }} update successfully.</li>
+               @endforeach
+       </ul>
+@endif
+
 
 
 

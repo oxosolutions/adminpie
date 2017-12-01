@@ -586,59 +586,125 @@ class EmployeeController extends Controller
         /*$model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
             $query->with('metas');
         }])->get();*/
-        $model = User::with(['belong_group', 'metas'])->where(['user_type'=>'employee'])->get();
-       $headers = array(
-                    'User.name',
-                    'User.email',
-                    'User.password',
-                    /*'Employee.id',
-                    'Employee.user_id',
-                    'Employee.employee_id',
-                    'Employee.designation',
-                    'Employee.department',
-                    'Employee.marital_status',
-                    'Employee.experience',
-                    'Employee.blood_group',
-                    'Employee.joining_date',
-                    'Employee.disability_percentage'*/
-        );
-       $employeeDataArray = [];
-       foreach ($model as $key => $employe) {
-            $singleEmployeeArray = [];
-            $singleEmployeeArray[] = @$employe->belong_group->name;
-            $singleEmployeeArray[] = @$employe->belong_group->email;
-            $singleEmployeeArray[] = @$employe->belong_group->password;
-            /*$singleEmployeeArray[] = @$employe->id;
-            $singleEmployeeArray[] = @$employe->user_id;
-            $singleEmployeeArray[] = @$employe->employee_id;
-            $singleEmployeeArray[] = @$employe->designation_rel->name;
-            $singleEmployeeArray[] = @$employe->department_rel->name;
-            $singleEmployeeArray[] = @$employe->marital_status;
-            $singleEmployeeArray[] = @$employe->experience;
-            $singleEmployeeArray[] = @$employe->blood_group;
-            $singleEmployeeArray[] = @$employe->joining_date;
-            $singleEmployeeArray[] = @$employe->disability_percentage;*/
-            foreach($employe->metas as $k => $meta){
-                if(!in_array('UsersMeta.'.$meta->key, $headers)){
-                    $headers[] = 'UsersMeta.'.$meta->key;
-                }
-                $singleEmployeeArray[] = $meta->value;
-            }
-            $employeeDataArray[] = $singleEmployeeArray;
-       }
 
-       $data[] = $headers;
-       foreach ($employeeDataArray as $key => $value) {
-            $data[] = $value;
-       }
+        $meta_key = ['designation', 'department', 'date_of_joining', 'pay_scale', 'user_shift', 'employee_id'];
+        $model = User::with(['belong_group', 'metas'=>function($q)use($meta_key){
+            $q->whereIn('key', $meta_key);
+        }])->where(['user_type'=>'employee'])->get();
+$arrays = $model->toArray();
+        foreach ($arrays as $key => $value) {
+            $data[$key]['name'] =   $value['belong_group']['name'];
+            $data[$key]['email'] =   $value['belong_group']['email'];
+            $data[$key]['password'] =   $value['belong_group']['password'];
+           $metas =  array_column($value['metas'], 'value','key');
+           if(!empty($metas)){
+            foreach($meta_key as $meta_keys){
+                if(isset($metas[$meta_keys])){
+                    if($meta_keys=='designation'){
+                        dump(DES::findOrFail($metas[$meta_keys])->name);
+                        // $data[$key][$meta_keys] = DES::find($metas[$meta_keys])->name;
+
+                    }else{
+                        $data[$key][$meta_keys] = $metas[$meta_keys];
+                    }
+                }else{
+                    $data[$key][$meta_keys] = "";
+                }
+            }
+            // foreach ($metas as $nextkey => $nextvalue) {
+
+            //     $data[$key][$nextkey] = $nextvalue;
+            // }
+           }
+           
+            // array_push($data[$key] , );
+        }
+
+        // dd($data);
+
+       //  $map = $model->mapWithKeys(function($item){
+       //      $ary = json_decode($item, true);
+       //      $meta = $ary['metas'];
+       //      unset($ary['metas']);
+
+       //      $final = array_column($meta, 'value','key');
+       //      $final['name'] = $item['belong_group']['name'];
+       //      $final['email'] = $item['belong_group']['email'];
+       //      $final['password'] = $item['belong_group']['password'];
+       //      return [ $item['id']=>$final];
+       //  });
+       //  $data = $map->toArray();
+        
+       //  // array_push($meta_key, 'name','email','password');
+       //  
+       // $key = array_keys($data[0]);
+
        Excel::create('Employees-List-'.date('Y-m-d H i s'), function($excel) use($data) {
             $excel->sheet('Employees List', function($sheet) use($data) {
                 $sheet->fromArray($data,null,'A1',false,false);
+                $sheet->row(1, array_keys($data[0]));
                 $sheet->row(1, function($row){
                     $row->setFontWeight('bold');
                 });
             });
        })->export('xls');
+
+        // $sheet->row(1, function($row){
+        //             $row->setFontWeight('bold');
+        //         });
+        // dump($map->toArray());
+
+        // $data = $model->toArray();
+
+        // array_map($data, function())  
+
+
+        // dump($model->toArray());
+       // $headers = array(
+       //              'User.name',
+       //              'User.email',
+       //              'User.password',
+       //              /*'Employee.id',
+       //              'Employee.user_id',
+       //              'Employee.employee_id',
+       //              'Employee.designation',
+       //              'Employee.department',
+       //              'Employee.marital_status',
+       //              'Employee.experience',
+       //              'Employee.blood_group',
+       //              'Employee.joining_date',
+       //              'Employee.disability_percentage'*/
+       //  );
+       // $employeeDataArray = [];
+       // foreach ($model as $key => $employe) {
+       //      $singleEmployeeArray = [];
+       //      $singleEmployeeArray[] = @$employe->belong_group->name;
+       //      $singleEmployeeArray[] = @$employe->belong_group->email;
+       //      $singleEmployeeArray[] = @$employe->belong_group->password;
+       //      $singleEmployeeArray[] = @$employe->id;
+       //      $singleEmployeeArray[] = @$employe->user_id;
+       //      $singleEmployeeArray[] = @$employe->employee_id;
+       //      $singleEmployeeArray[] = @$employe->designation_rel->name;
+       //      $singleEmployeeArray[] = @$employe->department_rel->name;
+       //      $singleEmployeeArray[] = @$employe->marital_status;
+       //      $singleEmployeeArray[] = @$employe->experience;
+       //      $singleEmployeeArray[] = @$employe->blood_group;
+       //      $singleEmployeeArray[] = @$employe->joining_date;
+       //      $singleEmployeeArray[] = @$employe->disability_percentage;
+       //      foreach($employe->metas as $k => $meta){
+       //          if(!in_array('UsersMeta.'.$meta->key, $headers)){
+       //              $headers[] = 'UsersMeta.'.$meta->key;
+       //          }
+       //          $singleEmployeeArray[] = $meta->value;
+       //      }
+       //      $employeeDataArray[] = $singleEmployeeArray;
+       // }
+       //      dump($employeeDataArray);
+
+       // $data[] = $headers;
+       // foreach ($employeeDataArray as $key => $value) {
+       //      $data[] = $value;
+       // }
         
     }
 
@@ -652,7 +718,7 @@ class EmployeeController extends Controller
 
     public function importEmployee(Request $request){
         $index = 1;
-        $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $alreadyInOrg = $alreadyInGroup = [];
+        $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $updateRecord = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
             $organizationId = Session::get('organization_id');
             $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
@@ -681,15 +747,14 @@ class EmployeeController extends Controller
                     if($request['import_record_options'] !='new_insert')
                     {
                         if($request['import_record_options'] =='update_password_new_insert'){
-                            $update_password[$user_id] = $value['employee_id'];
                             $alreadyExists->update(["name"=>$value['name'] , "password"=>hash::make($value['password'])]);
                         }
-                        
                         if($org_user_check->exists()){
                             $org_user_check->update(['user_type'=>'employee']);
                             $org_user_id = $org_user_check->first()->id;
                             $this->add_metas($org_user_id, $value , $import_record_options);
-                            array_push($alreadyInOrg , $value['employee_id']);
+                            $updateRecord[$value['employee_id']] = $value['email'];
+                            // array_push($alreadyInOrg , $value['employee_id']);
                         }
                         array_push($alreadyInGroup, [$value['employee_id']=>$value['email']]);
                     }
@@ -719,19 +784,11 @@ class EmployeeController extends Controller
             }
             
         }
-        if(!empty($alreadyInGroup)){
-        // dump('update records ', $alreadyInGroup);
-        }
-        if($update_password){
-            // dump(' update passwords',$update_password);
-        }else{
-            echo "No update & password update records";
-        }
         if($newRecord){
             Session::flash('import_new',$newRecord);
-            // dump('import new', $newRecord, Session::all() );
-        }else{
-         // echo "No new records";
+        }
+        if($updateRecord){
+            Session::flash('updateRecord',$updateRecord);
         }
 
         if($alreadyInGroupNotOrg){
@@ -744,10 +801,9 @@ class EmployeeController extends Controller
         if($emptyRow){
             Session::flash('emptyRow', $emptyRow);
         }
-        // if(empty($newRecord) && empty($update_password) && empty( ) && empty() ){
-
-        // } 
+        
     }
+
         return redirect()->route('list.employee');
     }
 
@@ -759,10 +815,14 @@ class EmployeeController extends Controller
         $user->save();
         $uid = $user->id;
         $this->add_metas($uid , $value, $import_record_options);
-        // dd('rolesss', $value['role']);
         if(!empty($value['role'])){
-            $roles = array_map('trim', explode(', ', $value['role']));
-            dump($roles);
+             $this->add_roles($uid , $value['role'] ,  $import_record_options);
+        }
+    }
+
+    protected function add_roles($user_id , $roles, $import_record_options){
+        $roles = array_map('trim', explode(',', $roles));
+        $current = date('Y-m-d');
             foreach ($roles as $roleKey => $roleValue) {
                 $checkRole = UsersRole::where('name',$roleValue);
                 if($checkRole->exists()){
@@ -775,17 +835,29 @@ class EmployeeController extends Controller
                     $userRole->save();
                     $role_id = $userRole->id;
                 }
-               $userRoleMapping =  new UserRoleMapping();
-               $userRoleMapping->user_id = $uid;
-               $userRoleMapping->role_id = $role_id;
-               $userRoleMapping->save();
+                // UserRoleMapping::where('user_id',$user_id)->delete();
+                 if($import_record_options == 'new_insert'){
+                   $userRoleMapping =  new UserRoleMapping();
+                   $userRoleMapping->user_id = $user_id;
+                   $userRoleMapping->role_id = $role_id;
+                   $userRoleMapping->save();
+                }else{
+                    $insert_roles[] = ['user_id'=>$user_id , 'role_id'=>$role_id, 'created_at' => $current , 'updated_at'=>$current];
+                }
             }
+        if($import_record_options != 'new_insert'){
+            $new_data_role = array_column($insert_roles,'role_id');
+            UserRoleMapping::where('user_id', $user_id)->whereNotIn('role_id', $new_data_role)->delete();
+            $existed_role_id = UserRoleMapping::where('user_id', $user_id)->pluck('role_id')->all();
+            $notIn  =  collect($insert_roles)->whereNotIn('role_id' ,$existed_role_id)->toArray();           
+            UserRoleMapping::insert($notIn);
         }
     }
 
     protected function add_metas($user_id , $value , $import_record_options){
         foreach($value as $key => $val){
-            if(in_array($key, ['employee_id', 'designation', 'department', 'pay_scale', 'date_of_joining'])){
+
+            if(in_array($key, ['employee_id', 'designation', 'department', 'pay_scale', 'date_of_joining' , 'user_shift'])){
     //designation            
                 if($key =='designation'){
                     $des_check  = DES::select(['id'])->where(['name'=>$val]);
@@ -814,6 +886,10 @@ class EmployeeController extends Controller
                 }else{
                     $this->add_user_meta($user_id, $key, $val, $import_record_options);
                 }
+            }elseif($key=='role'){
+                $this->add_roles($user_id, $val ,  $import_record_options);
+
+
             }
         }
     }

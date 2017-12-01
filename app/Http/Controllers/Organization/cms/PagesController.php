@@ -331,11 +331,11 @@ class PagesController extends Controller
             $form = [];
             $organization_id = get_organization_id();
             foreach($pages as $key => $page){
-                $html = view('organization.pages.viewPage')->with(['pageData' => $page , 'formData' => $form , 'menu' => $menu])->render();
+                $html = view('organization.pages.viewPage')->with(['pageData' => $page , 'formData' => $form , 'menu' => $menu,'render'=>true])->render();
                 if(!file_exists('export/'.get_organization_id())){
                     mkdir('export/'.$organization_id,0777,true);
                 }
-                file_put_contents('export/'.$organization_id.'/'.$page->slug.'.html', $html);
+                file_put_contents('export/'.$organization_id.'/'.$page->slug.'.html', str_replace($request->root().'/page/', '', $html));
             }
             Session::flash('success','Pages exported successfully!!');
         }

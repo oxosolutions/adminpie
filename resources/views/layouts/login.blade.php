@@ -5,6 +5,8 @@
 		$login_style = @$settings->where('key' , 'login_style')->first();
 		$Site_title = @$settings->where('key' , 'title')->first();
 		$bg_image = @$settings->where('key' , 'bg_image')->first();
+		
+		$login_footer_content = @$settings->where('key' , 'login_footer_content')->first();
 	}
 @endphp
 
@@ -46,6 +48,11 @@
 									@yield('content')
 								</div> 
 							</div> 
+							<div class="login-footer" >
+								<div class="aione-row" >
+									{!! @$login_footer_content->value !!}
+								</div> 
+							</div>
 						</div><!-- .aione-row -->
 					</div><!-- #aione_content -->
 					<div class="clear"></div><!-- .clear -->

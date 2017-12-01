@@ -112,6 +112,16 @@
                 </ul>
             </li>
             
+            <li class="aione-nav-item level0 {{in_array(Request::path(),array('/'))?'active-state':''}}">
+                <a href="{{route('admin.dashboard')}}">
+                    <span class="nav-item-icon side-bar-icon fa fa-tachometer center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Products
+                    </span>
+                </a>
+            </li>
+
             <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('widgets','widget/create'))?'active-state':''}}">
                 <a href="javascript:;">
                     <span class="nav-item-icon side-bar-icon fa fa-th-large darken-1 center-align side-bar-icon-bg white-text">

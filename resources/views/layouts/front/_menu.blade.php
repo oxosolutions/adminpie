@@ -6,9 +6,9 @@
         $nav_item_current_child = '';
     @endphp
     <style type="text/css">
-        .nav-item-current{
+       /* .nav-item-current{
             background: #ededed !important;
-        }
+        }*/
         .nav-item-current-child{
             background: #ededed !important;
         }

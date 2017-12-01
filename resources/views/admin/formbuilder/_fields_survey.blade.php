@@ -2,37 +2,23 @@
 	$section = $sections->where('id',request()->input('sections'))->first();
 	$field = $section->fields->where('id',request()->input('field'))->first();
 	$fieldMeta = $field->fieldMeta;
-	$model = [];
-	$model['field_title'] = $field->field_title;
-	$model['field_type'] = $field->field_type;
-	$model['field_description'] = $field->field_description;
-	$model['field_order'] = $field->field_order;
-	$model['field_slug'] = $field->field_slug;
+	$model = $field->toArray();
 	foreach($fieldMeta as $key => $value){
-        $model[$value->key] = @$value->value;
-   }
-	$validation = $fieldMeta->where('key','validation')->first();
-	$model['validation'] = ($validation != null )?$validation->value:'';
-	$required = $fieldMeta->where('key','required')->first();
-	$model['required'] = ($required != null)?$required->value:'';
-	$sectionOptions = $fieldMeta->where('key','field_options')->first();
-	$field_validations = $fieldMeta->where('key','field_validations')->first();
-	$field_conditions = $fieldMeta->where('key','field_conditions')->first();
-	$model['field_options'] = [];
-	if($sectionOptions != null){
-		$model['field_options'] = json_decode($sectionOptions->value,true);
-	}
-	if($field_validations != null){
-		$model['field_validations'] = json_decode($field_validations->value,true);
-	}
-	if($field_conditions != null){
-		$model['field_conditions'] = json_decode($field_conditions->value,true);
-	}
+        if(in_array($value->key,['field_options','field_conditions','field_validations'])){
+            $model[$value->key] = json_decode($value->value,true);
+        }else{
+            $model[$value->key] = @$value->value;
+        }
+    }
 @endphp
+
 {!!Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]])!!}
-<input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px;padding:0;margin: 0;line-height: 0;" multiple />
+    <input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px;padding:0;margin: 0;line-height: 0;" multiple />
 	{!! FormGenerator::GenerateForm('survey_generator_fields',[],$model)!!}
 {!!Form::close()!!}
+
+
+
 <div id="add_media" class="modal modal-fixed-footer aione-media-modal" style="overflow-y: hidden;">
 	<div class="modal-header">
 		<h5>Add Media</h5>	
@@ -204,9 +190,8 @@ window.Laravel = <?php echo json_encode([
 		    var form_data = new FormData();                  
 		    form_data.append('file', file_data);
 		    form_data.append("_token", Laravel.csrfToken );
-		    console.log(form_data);                             
 		    $.ajax({
-	                url: route()+'cms/media/create', 
+	                url: route()+'/cms/media/create', 
 	                dataType: 'text',
 	                cache: false,
 	                headers: {'X-CSRF-TOKEN': Laravel.csrfToken },
@@ -249,11 +234,6 @@ window.Laravel = <?php echo json_encode([
 				type : 'post',
 				data : { id : id , _token : $('input[name=_token]').val()},
 				success : function(res){
-					// $.each(res,function(key,value){
-					// 	if(key == $('input').attr('name')){
-					// 		$('input').val(value);
-					// 	}
-					// });
 					$('.gallery-form').find('input[name=title]').val(res.original_name);
 					$('.gallery-form').find('input[name=slug]').val(res.slug);
 					$('.gallery-form').find('input[name=alt_text]').val(res.alt_text);
