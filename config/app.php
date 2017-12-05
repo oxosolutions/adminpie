@@ -172,6 +172,9 @@ return [
         Spatie\Fractal\FractalServiceProvider::class,
         OxoSolutions\Menu\MenuServiceProvider::class,
         Gornymedia\Shortcodes\ShortcodesServiceProvider::class,
+        Netinternet\Logicboxes\LogicboxesServiceProvider::class,
+        OxoSolutions\DomainManagement\DomainManagementProvider::class,
+
         
 
         /*
@@ -253,6 +256,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Menu' => OxoSolutions\Menu\Facades\Menu::class,
         'Shortcode' => Gornymedia\Shortcodes\Facades\Shortcode::class,
+        'Logicboxes' => Netinternet\Logicboxes\Facades\Logicboxes::class,
     ],
 
 ];

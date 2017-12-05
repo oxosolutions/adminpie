@@ -130,6 +130,30 @@ fill:#6db77c;
 fill:#5ca56a;
 } 
 
+/***************************************
+CUSTOM MAP THEME GREEN
+***************************************/
+.aione-wrapper.aione-theme-ggreen .aione-map-wrapper .group {
+    fill: #cdcac5; 
+}
+.aione-wrapper.aione-theme-ggreen .aione-map-wrapper .group .land{
+    fill: inherit;
+    stroke: #ffffff;
+    stroke-width: 0.3; 
+}
+.aione-wrapper.aione-theme-ggreen .aione-map-wrapper .group:hover{
+    fill: #b9b6b2;
+}
+.aione-wrapper.aione-theme-ggreen .aione-map-wrapper .group:hover .land{
+    fill: inherit;
+}
+.aione-wrapper.aione-theme-ggreen .aione-map-wrapper .active{
+    fill:#6db77c;
+} 
+.aione-wrapper.aione-theme-ggreen .aione-map-wrapper .active:hover{
+    fill:#5ca56a;
+}
+
 
 
 /***************************************
@@ -456,7 +480,7 @@ AIONE LOADER
 		$.each(map_data, function(key, value){
       if(value != undefined && value != ''){
         var path = value.split('=');
-        $('.aione-map-wrapper').find('#'+path[0]).addClass('active').attr('data-tooltip',path[1]);
+        $('.aione-map-wrapper').find('#'+path[0]).addClass('active').attr('data-tooltip',path[1]).attr('fill',path[2]);
       }
 		});
 		

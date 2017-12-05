@@ -587,11 +587,15 @@ class EmployeeController extends Controller
             $query->with('metas');
         }])->get();*/
 
-        $meta_key = ['designation', 'department', 'date_of_joining', 'pay_scale', 'user_shift', 'employee_id'];
-        $model = User::with(['belong_group', 'metas'=>function($q)use($meta_key){
-            $q->whereIn('key', $meta_key);
+            // .roles:id,name', 'belong_group:id,name,email,password',
+        $meta_key = ['employee_id', 'designation', 'department', 'user_shift', 'pay_scale', 'date_of_joining' ];
+        $model = User::select(['id','user_id'])->with(['belong_group', 'user_role_rel'=>function($query){
+            $query->select('id','user_id','role_id')->with('roles:id,name');
+            },
+             'metas'=>function($q)use($meta_key){
+            $q->select(['user_id','key', 'value'])->whereIn('key', $meta_key);
         }])->where(['user_type'=>'employee'])->get();
-$arrays = $model->toArray();
+        $arrays = $model->toArray();
         foreach ($arrays as $key => $value) {
             $data[$key]['name'] =   $value['belong_group']['name'];
             $data[$key]['email'] =   $value['belong_group']['email'];
@@ -601,10 +605,22 @@ $arrays = $model->toArray();
             foreach($meta_key as $meta_keys){
                 if(isset($metas[$meta_keys])){
                     if($meta_keys=='designation'){
-                        dump(DES::findOrFail($metas[$meta_keys])->name);
-                        // $data[$key][$meta_keys] = DES::find($metas[$meta_keys])->name;
-
-                    }else{
+                        $des =     DES::where('id', $metas[$meta_keys]);
+                        if($des->exists()){
+                            $data[$key][$meta_keys] = $des->first()->name;
+                        }else{
+                            $data[$key][$meta_keys] = "";
+                        }
+                    }elseif($meta_keys=='department')
+                    {
+                        $dep = DEP::where('id',$metas[$meta_keys]);
+                        if($dep->exists()){
+                            $data[$key][$meta_keys] = $dep->first()->name;
+                        }else{
+                            $data[$key][$meta_keys] ="";
+                        }
+                    }
+                    else{
                         $data[$key][$meta_keys] = $metas[$meta_keys];
                     }
                 }else{
@@ -616,11 +632,16 @@ $arrays = $model->toArray();
             //     $data[$key][$nextkey] = $nextvalue;
             // }
            }
+            if(!empty($value['user_role_rel']) ){
+                $data[$key]['role']= implode(',',array_column(array_column($value['user_role_rel'], 'roles'),'name'));
+            }else{
+               $data[$key]['role'] = ""; 
+            }
            
             // array_push($data[$key] , );
         }
 
-        // dd($data);
+         // dd($data);
 
        //  $map = $model->mapWithKeys(function($item){
        //      $ary = json_decode($item, true);
@@ -647,7 +668,7 @@ $arrays = $model->toArray();
                     $row->setFontWeight('bold');
                 });
             });
-       })->export('xls');
+       })->export('csv');
 
         // $sheet->row(1, function($row){
         //             $row->setFontWeight('bold');
@@ -718,7 +739,7 @@ $arrays = $model->toArray();
 
     public function importEmployee(Request $request){
         $index = 1;
-        $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $updateRecord = $alreadyInGroup = [];
+       $emptyRow = $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $updateRecord = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
             $organizationId = Session::get('organization_id');
             $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
@@ -734,7 +755,8 @@ $arrays = $model->toArray();
             if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
                 $alreadyExists = GroupUsers::where(['email'=>$value['email']]); 
                 if($alreadyExists->exists()){
-                    $user_id = $alreadyExists->first()->id;
+                    $users_data = $alreadyExists->first();
+                    $user_id = $users_data->id;
                     $org_user_check = User::where('user_id', $user_id);
                     if(!$org_user_check->exists()){
                         if( $import_record_options == 'new_insert' && $this->check_employee_id($value['employee_id'] )){
@@ -746,8 +768,11 @@ $arrays = $model->toArray();
                     }
                     if($request['import_record_options'] !='new_insert')
                     {
+                        $alreadyExists->update(["name"=>$value['name']]);
                         if($request['import_record_options'] =='update_password_new_insert'){
-                            $alreadyExists->update(["name"=>$value['name'] , "password"=>hash::make($value['password'])]);
+                            if($users_data->password != $value['password']){
+                                $alreadyExists->update( ["password"=>hash::make($value['password'])]);
+                            }
                         }
                         if($org_user_check->exists()){
                             $org_user_check->update(['user_type'=>'employee']);
@@ -803,7 +828,6 @@ $arrays = $model->toArray();
         }
         
     }
-
         return redirect()->route('list.employee');
     }
 
@@ -856,40 +880,37 @@ $arrays = $model->toArray();
 
     protected function add_metas($user_id , $value , $import_record_options){
         foreach($value as $key => $val){
-
             if(in_array($key, ['employee_id', 'designation', 'department', 'pay_scale', 'date_of_joining' , 'user_shift'])){
     //designation            
-                if($key =='designation'){
+                if($key =='designation' && !empty($val)){
                     $des_check  = DES::select(['id'])->where(['name'=>$val]);
                     if($des_check->exists()){
                         $des_id = $des_check->first()->id;
                     }else{
                         $des = new DES();
-                        $des->name = $value['designation'];
+                        $des->name = $val;
                         $des->status = 1;
                         $des->save();
                         $des_id = $des->id;
                     }
                     $this->add_user_meta($user_id, 'designation' , $des_id, $import_record_options);
-    /* department */            }elseif($key == 'department'){
+/* department */}elseif($key == 'department' && !empty($val)){
                     $dep_check  = DEP::select(['id'])->where(['name'=>$val]);
-                                if($dep_check->exists()){
-                                    $dep_id = $dep_check->first()->id;
-                                }else{
-                                    $dep = new DEP();
-                                    $dep->name = $val;
-                                    $dep->status = 1;
-                                    $dep->save();
-                                    $dep_id = $dep->id;
-                                }
+                    if($dep_check->exists()){
+                        $dep_id = $dep_check->first()->id;
+                    }else{
+                        $dep = new DEP();
+                        $dep->name = $val;
+                        $dep->status = 1;
+                        $dep->save();
+                        $dep_id = $dep->id;
+                    }
                     $this->add_user_meta($user_id, 'department' , $dep_id, $import_record_options);
                 }else{
                     $this->add_user_meta($user_id, $key, $val, $import_record_options);
                 }
             }elseif($key=='role'){
                 $this->add_roles($user_id, $val ,  $import_record_options);
-
-
             }
         }
     }

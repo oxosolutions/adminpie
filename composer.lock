@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e7dd1380fe02b58c823d19600a4b978",
+    "content-hash": "6cfc19e186e0b6e8d3a3f77a490c547f",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1493,6 +1493,81 @@
             "time": "2017-01-16T07:55:07+00:00"
         },
         {
+            "name": "netinternet/logicboxes",
+            "version": "0.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/netinternet/logicboxes-api.git",
+                "reference": "f442163ed9b72d814bb8fc8fe9284c32ef40f824"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/netinternet/logicboxes-api/zipball/f442163ed9b72d814bb8fc8fe9284c32ef40f824",
+                "reference": "f442163ed9b72d814bb8fc8fe9284c32ef40f824",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^5.0,<5.6",
+                "illuminate/filesystem": "^5.0,<5.6",
+                "illuminate/support": "^5.0,<5.6",
+                "php": ">=5.4.0",
+                "symfony/class-loader": "^2.3|^3.0"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "~1.4",
+                "guzzlehttp/guzzle": "~6.0",
+                "illuminate/config": "^5.0,<5.6",
+                "illuminate/view": "^5.0,<5.6",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Netinternet\\Logicboxes\\LogicboxesServiceProvider"
+                    ],
+                    "aliases": {
+                        "Logicboxes": "Netinternet\\Logicboxes\\Facades\\Logicboxes"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Netinternet\\Logicboxes\\": "src",
+                    "Netinternet\\Logicboxes\\Test\\": "tests/"
+                },
+                "files": [
+                    "src/Helpers/functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Hakan ERSU",
+                    "email": "hakanersu@gmail.com"
+                },
+                {
+                    "name": "Baris ESEN",
+                    "email": "barisesennn@gmail.com"
+                }
+            ],
+            "description": "Laravel logicboxes package",
+            "keywords": [
+                "domain",
+                "laravel",
+                "logicboxes",
+                "registrar"
+            ],
+            "time": "2017-11-28T08:38:38+00:00"
+        },
+        {
             "name": "nikic/php-parser",
             "version": "v3.1.1",
             "source": {
@@ -2193,6 +2268,62 @@
                 "mailer"
             ],
             "time": "2017-05-01T15:54:03+00:00"
+        },
+        {
+            "name": "symfony/class-loader",
+            "version": "v3.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/class-loader.git",
+                "reference": "e8d36a7b5568d232f5c3f8ef92665836b9f1e038"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/class-loader/zipball/e8d36a7b5568d232f5c3f8ef92665836b9f1e038",
+                "reference": "e8d36a7b5568d232f5c3f8ef92665836b9f1e038",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.5.9|>=7.0.8"
+            },
+            "require-dev": {
+                "symfony/finder": "~2.8|~3.0|~4.0",
+                "symfony/polyfill-apcu": "~1.1"
+            },
+            "suggest": {
+                "symfony/polyfill-apcu": "For using ApcClassLoader on HHVM"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\ClassLoader\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony ClassLoader Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-11-05T16:10:10+00:00"
         },
         {
             "name": "symfony/console",

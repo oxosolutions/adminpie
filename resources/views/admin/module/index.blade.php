@@ -35,7 +35,7 @@ $page_title_data = array(
                 @if(@$moduleData != null)
                  	{!! Form::model($moduleData,['route' => 'edit.module' , 'method' => 'post'])!!}
                 @else
-                    {!! Form::open(['route' => 'edit.module' , 'method' => 'post'])!!}
+                    {!! Form::open(['route' => 'save.module' , 'method' => 'post'])!!}
                 @endif
                 @if(@$moduleData != null)
 	                    <div id="" class="aione-tabs-wrapper">

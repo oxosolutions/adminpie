@@ -82,10 +82,13 @@ $page_title_data = array(
                                         <tr>
                                             <td>
                                                 @if(!empty($user_val->user_id))
-                                                    @if(get_user(false, true, $user_val->user_id))
-                                                        {{get_user(false, true, $user_val->user_id)['name']}}
+                                                    @php
+                                                       $user_detail = get_user_detail(false, true, $user_val->user_id);
+                                                    @endphp
+                                                    @if(isset($user_detail['name']))
+                                                        {{$user_detail['name']}} ({{ $user_detail['email'] }})
                                                     @else
-                                                    {{$user_val->user_id}}
+                                                        {{$user_val->user_id}}
                                                     @endif
                                                 @else
                                                 unknown 
@@ -179,8 +182,11 @@ $page_title_data = array(
                                 <tr>
                                      <td>
                                         @if(!empty($user_submit_val->user_id))
-                                            @if(get_user(false, true, $user_submit_val->user_id))
-                                                {{get_user(false, true, $user_submit_val->user_id)['name']}}
+                                            @php
+                                               $user_detail = get_user_detail(false, true, $user_submit_val->user_id);
+                                            @endphp
+                                            @if(isset($user_detail['name']))
+                                                {{$user_detail['name']}} ({{$user_detail['email']}})
                                             @else
                                             {{$user_submit_val->user_id}}
                                             @endif

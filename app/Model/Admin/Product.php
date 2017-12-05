@@ -9,8 +9,9 @@ class Product extends Model
 {
     use ProductRelations;
 
-    protected $table = 'ocrm_products';
-
-    protected $fillable = [''];
+    public function __construct(){
+        $this->table = $this->assignTable();
+        $this->fillable = $this->putFillable();
+    }
     
 }

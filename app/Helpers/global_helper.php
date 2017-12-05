@@ -30,6 +30,48 @@ use App\Model\Admin\GlobalOrganization;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
+/************************************************************
+*	@function get_current_user
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm key		[string	optional	default	null]
+*	@perm array		[true/false	optional	default	false]
+*	@return filename [mixed][object/integer/string]
+************************************************************/
+
+function get_user_detail($meta = true ,$array = false, $org_user_id = null){
+	if($meta){
+		$id = ($id != null)?$org_user_id:current_organization_user_id();
+		$user = User::with('belong_group')->where('id', $org_user_id);
+		$user->meta = get_user_meta($org_user_id);
+	}else{
+		$org_user_id = ($org_user_id != null)?$org_user_id:current_organization_user_id();
+		$user = User::with('belong_group')->where('id', $org_user_id);
+			if($user->exists()){
+				$user = $user->first();
+				if(!empty($user->belong_group)){
+					$user = $user->belong_group;
+				}else{
+					$user = null;
+				}
+			}else{
+				$user = null;
+			}
+	}
+	if($array){
+		if($meta){
+			$user->meta = $user->meta->toArray();
+		}
+		if($user){
+			$user = $user->toArray();
+		}
+	}
+	//Return User Object 
+	return $user;
+}
+/************************************************************
+*****************************************/
 
 /**
  @function current organization user id

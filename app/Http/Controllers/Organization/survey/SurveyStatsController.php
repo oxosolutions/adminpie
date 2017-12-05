@@ -392,6 +392,7 @@ class SurveyStatsController extends Controller
         }
       return view('organization.survey.survey_reports',compact('data','id','columns','table' ,'repeater_options_value' , 'links' ,'firstItem', 'lastItem' ,'condition_fields', 'filter_fields'));
     }
+  }
 
     protected function set_repeater_options_data($data, $repeater_data=Null , $options_val=Null){
      

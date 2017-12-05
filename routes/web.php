@@ -58,6 +58,9 @@
 					
 					//settings
 					include_once 'custom/admin/settings.php';
+
+                    //Orders
+                    include_once 'custom/admin/order.php';
 					
 					//pages
 					Route::get('create/page',	['as'=> 'create.pages' , 'uses' => 'PagesController@create']);
@@ -151,6 +154,10 @@
 
 
 			Route::group(['middleware' => ['auth.org','org.status']], function(){
+
+
+                include_once "custom/organization/domains.php";
+
 
 				//Roles Routes
 				

@@ -19,10 +19,11 @@ use App\Model\Group\GroupUsers;
 
 class SurveyController extends Controller
 {
-
-   public function organization_users(Request $request){
+  public function organization_users(Request $request){
     if(empty($request['_token']) || $request['_token'] != 'd1a2r3l4i5c6o7x8o9s10o11l12o13u14t15i16o17n18s'){
+
             return response()->json(["errors"=>['status'=>'error', "title"=> "Activation code error", 'message'=>"you have n't access."]],401);
+   
         }
         $org = GO::where('active_code',$request['activation_code']);
         if(!$org->exists()){
@@ -151,7 +152,7 @@ class SurveyController extends Controller
 
 
                                     $options = json_decode(@$form_meta['field_options'],true);
-                                        $form_fields['next_question_key'] ="";
+                                $form_fields['next_question_key'] ="";
                                 if($fieldValue['field_type']=='select' ||  $fieldValue['field_type']=='multi_select' || $fieldValue['field_type']== 'radio' || $fieldValue['field_type'] == 'checkbox')
                                 {   $option = null;
                                     if(!empty($options)){
@@ -173,7 +174,7 @@ class SurveyController extends Controller
                                         {   $repeater_check = 1;
                                             
                                             $repeater_section =  ['question_text'=>'Fill the repeater', 'question_type'=>'repeater', 'question_key'=>$sectionValue['section_slug'], "question_id"=> $sectionValue['id'], "question_message"=> '', "required"=> '', "pattern"=> '', "otherPattern"=>'', "survey_id"=> $sectionValue['form_id'], "group_id"=> $sectionValue['id'],
-                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>'', "answers"=>[[]],'field_conditions'=>[],'field_validations'=>[],'fields'=>[] ,'next_question_key'=>'' ];                                
+                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>'', "answers"=>[[]],'fields'=>[],'field_conditions'=>[],'field_validations'=>[],'next_question_key'=>'' ];                                
                                                 array_push($repeater_section['fields'] ,  $form_fields);
                                         }elseif($section_type_value =='repeater'){
                                                 array_push($repeater_section['fields'] ,  $form_fields);  
@@ -210,6 +211,7 @@ class SurveyController extends Controller
     public function save_app_survey_filled_data(Request $request){
         // dd($request->all());
         //dump($request['activation_code']);
+        $app_version =   $request['app_version'];
          $organization = GO::where('active_code',$request['activation_code']);
          if($organization->exists()){
             $org_id = $organization->first()->id;
@@ -227,12 +229,24 @@ class SurveyController extends Controller
         unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'] );
         $survey_data = json_decode($request['survey_data'],true);  
         $records = 0;
-        foreach ($survey_data as $key => $value) {
+        $fix_field = ['record_type', 'survey_sync_status', 'incomplete_name', 'survey_status', 'completed_groups', 'last_group_id', 'last_field_id', 'created_at', 'created_by', 'device_detail', 'unique_id', 'imei', 'mac_address', 'survey_submitted_from', 'survey_submitted_by', 'survey_completed_on', 'survey_started_on', 'ip_address'];
+       
+     foreach ($survey_data as $key => $value) {
             unset($colums, $values, $keys);
-            $return = $this->create_alter_insert_survey_table($org_id, $form_id , $value);
-            if($return){
-                    $records++;
-                }
+           $value = array_filter($value);
+           if(!$value){
+           }else{
+            // dump($value);
+            $value['app_version'] = $app_version;
+            $collect_data =  collect($value)->except('record_type', 'survey_sync_status', 'incomplete_name', 'survey_status', 'completed_groups', 'last_group_id', 'last_field_id', 'created_at', 'created_by', 'device_detail', 'unique_id', 'imei', 'mac_address', 'survey_submitted_from', 'survey_submitted_by', 'survey_completed_on', 'survey_started_on', 'ip_address');
+            if(array_filter($collect_data->toArray())){
+                $return = $this->create_alter_insert_survey_table($org_id, $form_id , $value);
+                if($return){
+                        $records++;
+                    }
+            }
+                // $return = [];
+           }
         }
         return ['sucess'=>"$records Import successfully!"];
     }
@@ -257,7 +271,8 @@ class SurveyController extends Controller
             $formMeta->value = $table_name;
             $formMeta->save();
         }
-            $prefix_field = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status','survey_submitted_by','survey_submitted_from','mac_address','imei','device_detail','created_by', 'created_at', 'deleted_at'];
+        $prefix_field = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status','survey_submitted_by','survey_submitted_from','mac_address','imei','device_detail','created_by', 'created_at', 'deleted_at'];
+        // $pr_field = ['record_type', 'survey_sync_status', 'incomplete_name', 'last_group_id', 'last_field_id', 'completed_groups', 'unique_id'];
         foreach ($data as $dataKey => $dataValue){
                     if($dataKey !="id" && !in_array($dataKey, $prefix_field)){
                         if(!empty($questionId_slug[$dataKey])) {
@@ -304,12 +319,24 @@ class SurveyController extends Controller
             $newTableName = str_replace('ocrm_', '', $table_name);
          if(Schema::hasTable($newTableName)){
             $keys = array_unique($keys);
+            $keys = array_map('strtolower', $keys);
             $table_column = Schema::getColumnListing($newTableName);
             $columnsdata  = collect($keys);
-            $new_columns   = $columnsdata->diff($table_column)->toArray();
+            $table_column_lower_case = array_map('strtolower', $table_column);
+
+            $new_columns   = $columnsdata->diff($table_column_lower_case)->toArray();
+          // dump($new_columns);
+
+          //  $new_columns = array_unique($new_columns);
+            // dump($new_columns);
             if(!empty($new_columns)){
                 foreach ($new_columns as $key => $value) {
-                    DB::select("ALTER TABLE `{$table_name}` ADD `{$value}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");
+
+
+                    if(!in_array($value, $table_column)){
+                     DB::select("ALTER TABLE `{$table_name}` ADD `{$value}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");
+                    // echo $value."<br>"; 
+                    }
                 }
             }
       }else{ 
@@ -321,7 +348,10 @@ class SurveyController extends Controller
             $colums[] =    "`survey_submitted_from` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`mac_address` varchar(255) COLLATE utf8_unicode_ci  NULL DEFAULT  NULL";
             $colums[] =    "`imei` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`unique_id` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            // if(!in_array('unique_id', $colums)){
+                
+            // $colums[] =    "`unique_id` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            // }
             $colums[] =    "`device_detail` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             $colums[] =    "`created_by` int(11) COLLATE utf8_unicode_ci NULL";
             $colums[] =    "`created_at` text COLLATE utf8_unicode_ci  NULL DEFAULT NUll";
@@ -331,11 +361,13 @@ class SurveyController extends Controller
         }
        
             if(!empty($values['unique_id'])){
-                if(!DB::table($newTableName)->where('unique_id',$values['unique_id'])->exists()){
-                   DB::table($newTableName)->insert($values);
-                   return true;
+                $check_unique_id = DB::table($newTableName)->where('unique_id',$values['unique_id']);
+                if($check_unique_id->exists()){
+                    $check_unique_id->update($values);
+                    return true;
                 }else{
-                    return false; 
+                   DB::table($newTableName)->insert($values);
+                    return true; 
                 }
             }else{
                 $values = array_merge($values, ['created_at'=> date('Y-m-d')]);

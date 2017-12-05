@@ -65,6 +65,9 @@ foreach($columns as $column){
 		@if(Request::get('page'))
 			<input type="hidden" name="page" value="1">
 		@endif
+        @if(Request::get('select_organization'))
+            <input type="hidden" name="select_organization" value="{{ Request::get('select_organization') }}">
+        @endif
 		
 		<div id="aione_datalist_header" class="aione-datalist-header">
 			<div class="aione-row">

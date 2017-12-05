@@ -104,6 +104,7 @@ class ProjectController extends Controller
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
                       ];
+                      
       return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
       /*$categories =  CAT::all();
       $clients = $this->client->get_client();
@@ -140,6 +141,7 @@ class ProjectController extends Controller
 
     public function edit($id)
     {
+
     	try{
     		 $edit = Project::findOrFail($id);
     		 return view('organization.project.edit',['model'=>$edit]);
@@ -449,7 +451,6 @@ class ProjectController extends Controller
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                   ];
-                  // dd($datalist);
       return view('organization.project.Attachemnts',$datalist)->with(['categories' => CAT::all() ]);
     }
     

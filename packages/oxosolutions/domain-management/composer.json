@@ -1,0 +1,16 @@
+{
+    "name": "oxosolutions/domian-management",
+    "description": "Package for manage the domain system with logicbox",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rahul Sharma",
+            "email": "rahulsharma841990@outloo.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "netinternet/logicboxes": "^0.0.3"
+    }
+}

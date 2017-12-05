@@ -112,12 +112,41 @@
                 </ul>
             </li>
             
-            <li class="aione-nav-item level0 {{in_array(Request::path(),array('/'))?'active-state':''}}">
-                <a href="{{route('admin.dashboard')}}">
+            <li class="aione-nav-item level0  has-children  {{in_array(Request::path(),array('products','product/create'))?'active-state':''}}">
+                <a href="javascript:;">
                     <span class="nav-item-icon side-bar-icon fa fa-tachometer center-align side-bar-icon-bg white-text">
                     </span>
                     <span class="side-bar-text">
                         Products
+                    </span>
+                </a>
+                <ul class="side-bar-submenu " >
+                   <li class="aione-nav-item level1 {{Request::is('products')?'active-state':''}}">
+                        <a href="{{Route('products.list')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-list darken-1 center-align side-bar-icon-bg" >
+                        </span>
+                        <span class="side-bar-text">
+                            Products
+                        </span>
+                        </a>
+                    </li>
+                    <li class="aione-nav-item level1 {{Request::is('product/create')?'active-state':''}}">
+                        <a href="{{Route('create.product')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Add Product
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="aione-nav-item level0  has-children  {{in_array(Request::path(),array('orders','product/create'))?'active-state':''}}">
+                <a href="{{route('list.admin.orders')}}">
+                    <span class="nav-item-icon side-bar-icon fa fa-shopping-cart center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Orders
                     </span>
                 </a>
             </li>
