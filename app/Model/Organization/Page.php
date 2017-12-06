@@ -4,9 +4,9 @@ namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Model\Organization\PageMeta;
-
+use Config;
 use Session;
-
+use File;
 class Page extends Model
 {
 	public static $breadCrumbColumn = 'id';
@@ -17,6 +17,10 @@ class Page extends Model
    			$this->table = Session::get('organization_id').'_pages';
    		}
    	}
+
+    public function comments(){
+      return $this->morphMany('App\Model\Organization\Comment', 'commentable')->orderBy('id','DESC');
+    }
 
    	protected $fillable = ['title','sub_title', 'slug','description', 'content', 'tags', 'categories', 'post_type', 'attachments', 'version', 'revision', 'created_by', 'post_status', 'status','type'];
 
@@ -34,6 +38,18 @@ class Page extends Model
     public static function pagesList(){
 
         return Self::pluck('title','id');
+    }
+
+    public static function getThemeFiles(){
+        $path = Config::get('view.paths')[0].'/layouts/themes';
+        $directory = File::directories($path);
+        $themesArray = [];
+        foreach($directory as $k => $dir){
+            $splitedArray = explode('/',$dir);
+            $themeName = $splitedArray[count($splitedArray)-1];
+            $themesArray[$themeName] = $themeName;
+        }
+        return $themesArray;
     }
 
 }

@@ -4,6 +4,7 @@
 		//Public route
 		Route::group(['middleware'=>'web'], function(){
 				Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
+				Route::post('comment/save',	['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
 		});
 
 		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function () {

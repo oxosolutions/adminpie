@@ -104,14 +104,7 @@ class ProjectController extends Controller
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
                       ];
-                      
       return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
-      /*$categories =  CAT::all();
-      $clients = $this->client->get_client();
-      $plugins = [
-              'js' => ['custom'=>['list']]
-      ];
-      return view('organization.project.list',['clients'=>@$clients,'categories'=>@$categories, 'tags' => @$tag_final_data,'plugins'=>$plugins]);*/
     }
 
     /*
@@ -315,9 +308,6 @@ class ProjectController extends Controller
                       'js'  => ['custom'=>['project-categories']],
                       
                   ];
-  /*  if(!empty($id) || $id != null || $id != ''){
-      $data['data'] = CAT::where('id',$id)->first();
-    }*/
          return view('organization.categories.list',$datalist);
     }
 

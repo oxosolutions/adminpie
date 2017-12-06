@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization\cms;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Page;
+use App\Model\Organization\Comment;
 use App\Model\Organization\PageMeta;
 use App\Model\Organization\Posts;
 use App\Model\Organization\forms;
@@ -24,6 +25,16 @@ class PagesController extends Controller
         }else{
             return 'App\\Model\\Organization\\'.$model;
         }
+    }
+
+    public function save_comment(Request $request){
+        $page = Page::find($request->post_id);
+            $comment = new Comment();
+            $comment->comment = $request->comment;
+            $comment->user_id = Auth::guard('org')->user()->id;
+        $page->comments()->save($comment);
+
+       return back();
     }
 
     public function create()
