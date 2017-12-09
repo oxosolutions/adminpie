@@ -20,7 +20,7 @@ if(!isset($slides)){
 }
 @endphp
 <div id="aione_slider" class="aione-slider">
-	<div class="aione-row">
+	<div class="wrapper">
 
 		<div id="aione_slider_{{rand(111111,999999)}}" class="aione-slider-wrapper owl-carousel " {{@slider_attributes}}>
 			@foreach(@$slides as $key => $slide)

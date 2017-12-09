@@ -48,7 +48,7 @@ class PayscaleController extends Controller
 	                      'datalist'=>  $model,
 	                      'showColumns' => ['title'=>'Name','created_at'=>'Created'],
 	                      'actions' => [
-	                                      'edit' => ['title'=>'Edit','route'=>'edit.payscale' , 'class' => 'edit'],
+	                                      'edit' => ['title'=>'Edit','route'=>'list.payscale' , 'class' => 'edit'],
 	                                      'delete'=>['title'=>'Delete','route'=>'delete.payscale']
 	                                   ],
 	                      'js'  =>  ['custom'=>['list-designation']],

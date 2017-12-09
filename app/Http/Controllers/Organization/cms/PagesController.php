@@ -8,17 +8,17 @@ use App\Model\Organization\Page;
 use App\Model\Organization\Comment;
 use App\Model\Organization\PageMeta;
 use App\Model\Organization\Posts;
+use App\Model\Organization\LikeDislike;
 use App\Model\Organization\forms;
 use App\Model\Organization\Cms\Menu\Menu;
 use Auth;
 use Session;
 use App\Model\Admin\GlobalOrganization;
 use Menu as wMenu;
-use App\Model\Organization\OrganizationSetting;
+use App\Model\Organization\OrganizationSetting; 
 
 class PagesController extends Controller
 {
-    
     protected function assignModel($model){
         if(Auth::guard('admin')->check()){
             return 'App\\Model\\Admin\\'.$model;
@@ -27,16 +27,7 @@ class PagesController extends Controller
         }
     }
 
-    public function save_comment(Request $request){
-        $page = Page::find($request->post_id);
-            $comment = new Comment();
-            $comment->comment = $request->comment;
-            $comment->user_id = Auth::guard('org')->user()->id;
-        $page->comments()->save($comment);
-
-       return back();
-    }
-
+   
     public function create()
     {
     	return view('organization.pages.create_page');
@@ -127,6 +118,7 @@ class PagesController extends Controller
     }
     public function update(Request $request)
     {
+        unset($request['mode']);
         $data = [];
         if(Auth::guard('admin')->check() == true){
             $table = 'global_pages';
@@ -355,12 +347,102 @@ class PagesController extends Controller
     }
 
     //preview page
+    //
+    public function save_comment(Request $request){
+        if(!empty($request['comment'])){
+            $comment = new Comment();
+            $comment->page_id  = $request['page_id'];
+            $comment->coment  = $request['comment'];
+            $comment->type  = 'page';
+            $comment->user_id  = current_organization_user_id();
+                if(isset($request['reply_id'])){
+                    $comment->reply_id = $request['reply_id'];
+                }
+            $comment->save();
+        }
+       return back();
+    }
+
+
+    protected function reply($reply){
+        if(!empty($reply->toArray())){
+            foreach ($reply as $key => $value) {
+               dump($value->coment);
+               $this->reply($value->reply);
+            }
+        }
+    }
+    public function  update_comment(Request $request){
+        // return $request->all();
+        Comment::where('id',$request['comment_id'])->update(['coment'=>$request['comment_text']]);
+        return $request->all();
+
+    }
+    public function likedislike($type, $comment_id, $expression){
+        dd($expression);
+         $status=0;
+        if($type=='like'){
+            $status=1;
+        }
+        $user_id = Auth::guard('org')->user()->id;
+        $check = LikeDislike::where(['user_id'=>$user_id, 'comment_id'=>$comment_id]);
+         if(!$check->exists()){
+             $like = new LikeDislike();
+             $like->comment_id =  $comment_id;
+             $like->status = $status;
+             $like->user_id =  $user_id;
+             $like->save();
+         }else{
+            $get_status = $check->first()->status;
+            if($get_status ==1 && $type=='dislike'){
+                $check->update(['status'=>3]);
+            }elseif($get_status==0 && $type=='like'){
+                $check->update(['status'=>3]);
+            }else{
+                $check->update(['status'=>$status]);
+            }
+        }
+         return back();
+    }
+    // public function edit($id){
+    //         dummp($id);
+    // }
+    
+    public function deleteComment($id){
+
+        dump($id);
+        Comment::where(['id'=>$id])->delete();
+
+        dump(current_organization_user_id());
+        return back();
+
+    }
+    public function demoviewPage($slug)
+    {
+        $this->authOrganization();
+        $Associate = $this->assignModel('Page');
+        $pageData = $Associate::where('slug',$slug)->with(['pageMeta','coments'])->first();
+       //  dump($pageData->coments);
+        // foreach ($pageData->coments as $key => $value) {
+        //              dump($value->coment);
+        //             $this->reply($value->reply);
+        //     }
+
+        $coment = Comment::where(['page_id'=>$pageData->id, 'type'=>'page'])->whereNull('reply_id')->orderBy('id','Desc')->get();
+        $form = [];
+        if($pageData == null){
+            return view('errors.404');
+        }
+        $menu = wMenu::wlist(6);
+        return view('organization.pages.demoviewPage')->with(['coment'=>$coment ,  'pageData' => $pageData , 'formData' => $form , 'menu' => $menu])->compileShortcodes();
+    }
     public function viewPage($slug)
     {
         $this->authOrganization();
 
         $Associate = $this->assignModel('Page');
-        $pageData = $Associate::where('slug',$slug)->with('pageMeta')->first();
+        $pageData = $Associate::where('slug',$slug)->with(['pageMeta'])->first();
+        
         $form = [];
         if($pageData == null){
             return view('errors.404');
@@ -404,6 +486,7 @@ class PagesController extends Controller
             $model->type = 'web';
             $model->save();
             Session::flash('success','Settings saved successfully!');
+            return back();
         }
         $data = [];
         $model = OrganizationSetting::where(['key'=>'design_settings','type'=>'web'])->first();

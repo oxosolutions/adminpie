@@ -19,7 +19,10 @@ class Page extends Model
    	}
 
     public function comments(){
-      return $this->morphMany('App\Model\Organization\Comment', 'commentable')->orderBy('id','DESC');
+      return $this->morphMany('App\Model\Organization\Comment', 'commentable');//->orderBy('id','DESC');
+    }
+    public function coments(){
+      return $this->hasMany('App\Model\Organization\Comment', 'page_id','id')->whereNull('reply_id');//->whereNotNull('reply_id');//->orderBy('id','DESC');
     }
 
    	protected $fillable = ['title','sub_title', 'slug','description', 'content', 'tags', 'categories', 'post_type', 'attachments', 'version', 'revision', 'created_by', 'post_status', 'status','type'];

@@ -5,18 +5,7 @@
         $nav_item_current_parent = '';
         $nav_item_current_child = '';
     @endphp
-    <style type="text/css">
-       /* .nav-item-current{
-            background: #ededed !important;
-        }*/
-        .nav-item-current-child{
-            background: #ededed !important;
-        }
-        .nav-item-current-parent{
-            background: #ededed !important;
-        }
-    </style>
-    <nav id="aione_nav" class="aione-nav horizontal light">
+    <nav id="aione_nav" class="aione-nav vertical light">
         <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu">
             @if(@$menu)

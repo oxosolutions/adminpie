@@ -85,6 +85,9 @@ class LoginController extends Controller
                     return back();
                 }
 
+        }else{
+            Session::flash('error' , 'wrong user credientals.');
+            return back();
         }
 
 

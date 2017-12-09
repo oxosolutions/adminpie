@@ -5,7 +5,7 @@
         $nav_item_current_parent = '';
         $nav_item_current_child = '';
     @endphp
-    <nav id="aione_nav" class="aione-nav vertical light">
+    <nav id="aione_nav" class="aione-nav vertical light ">
         <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu">
             @if(@$menu)

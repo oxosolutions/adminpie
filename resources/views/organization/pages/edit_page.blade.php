@@ -19,6 +19,12 @@
 			border:1px solid #e8e8e8;
 			margin-bottom: 15px;
 		}
+		.hidden{
+			display: none;
+		}
+		#field_1141{
+			top:50px;
+		}
 		.page-widgets > .boxed > .header{
 			background-color: #e8e8e8;
 			padding:10px;
@@ -94,6 +100,8 @@
 				<div class="l6" style="width: 75%;float: left;padding-right:15px ">
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}
 					{!! FormGenerator::GenerateForm('edit_page_form') !!}
+					<div class="visual hidden">VISUAL AREA HERE</div>
+
 				</div>
 				@php
 					$uri = explode('/',request()->route()->uri);
@@ -119,6 +127,15 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			// $('.html_preview').hide();
+			$('input[name=mode]').change(function(){
+				if($(this).val() == 'visual'){
+					$('.field-wrapper-type-code').hide();
+					$('.visual').removeClass('hidden');
+				}else{
+					$('.field-wrapper-type-code').show();
+					$('.visual').addClass('hidden');
+				}
+			});
 		});
 	</script>
 @endsection()

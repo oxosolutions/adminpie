@@ -12,4 +12,6 @@
 	@if(@$design_settings['header_show_menu'] == 1)
 		@include('layouts.front._menu')
 	@endif
-</div><!-- #aione-header -->
+</div><!-- .aione-header -->
+
+	

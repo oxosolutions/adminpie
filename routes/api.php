@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Http\Request;
 
 /*
@@ -19,3 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/survey_api',['uses'=>'Api\SurveyController@surveys']);
 Route::post('/survey_filled_data',['uses'=>'Api\SurveyController@save_app_survey_filled_data']);
 Route::post('organization/users' , ['uses'=>"Api\SurveyController@organization_users"]);
+
+//api for complaint box Android App
+Route::post('/send_complaint' , [ 'uses' =>'Api\FeedbackController@complaintAppResponce'] );

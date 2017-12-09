@@ -89,12 +89,12 @@ class OrganizationController extends Controller
             $organization->auth_login_token = $tokenString;
             $organization->save();
             Session::put('organization_id','');
+
             if($organization->primary_domain != null && $organization->primary_domain != ''){
                 
                 return redirect()->to('http://'.$organization->primary_domain.'/login/'.$tokenString);
 
             }elseif($organization->secondary_domains != null && $organization->secondary_domains != ''){
-
                 return redirect()->to('http://'.$organization->secondary_domains.'/login/'.$tokenString);
 
             }else{

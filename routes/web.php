@@ -1,12 +1,17 @@
-<?php
+	<?php
 
 	/****************************************** All Routes For Admin *************************************************/
 		//Public route
 		Route::group(['middleware'=>'web'], function(){
 				Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
+				Route::get('demo/{slug}',	['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
 				Route::post('comment/save',	['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
-		});
+				Route::post('comment/update', ['as'=>'update.comment' , 'uses'=>'Organization\cms\PagesController@update_comment' ]);
+				Route::get('like/{type}/{c_id}/{expression?}',	['as'=>'like.comment' , 'uses'=>'Organization\cms\PagesController@likedislike' ]);
+				Route::get('comment/del/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
+				Route::get('comment/edit/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
 
+		});
 		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function () {
 			Route::group(['namespace'=>'Admin'], function(){
 				Route::group(['middleware' => 'auth.admin'], function(){

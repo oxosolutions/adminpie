@@ -532,35 +532,37 @@ class FormBuilderController extends Controller
     }
 
     public function updateField(Request $request, $form_id, $section_id, $field_id){
-       
-
         $output = parse_slug($request->field_slug);
         $request['field_slug'] = $output;
 
         if($request->has('field_options')){
             $new_field_options = [];
+            $index = 0;
             foreach($request['field_options'] as $k => $v){
                 if(is_array($v)){
                     foreach ($v as $key => $value) {
                         if($value != null){
-                            $new_field_options[$k][$key] = $value;
+                            $new_field_options[$index][$key] = $value;
                         }
                     }
                 }
+                $index++;
             }
             $request['field_options'] = $new_field_options;
-
         }
         if($request->has('field_conditions')){
             $new_field_options = [];
+            $index = 0;
+
             foreach($request['field_conditions'] as $k => $v){
                 if(is_array($v)){
                     foreach ($v as $key => $value) {
                         if($value != null){
-                            $new_field_options[$k][$key] = $value;
+                            $new_field_options[$index][$key] = $value;
                         }
                     }
                 }
+                $index++;
             }
             $request['field_conditions'] = $new_field_options;
 
@@ -593,7 +595,7 @@ class FormBuilderController extends Controller
             }
             $model->value = ($value == null)?'':$value;
             $model->save();
-        }
+        }   
 
         return back();
     }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization\support;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Feedback;
+use App\Model\Organization\appFeedback;
 
 class FeedbackController extends Controller
 {

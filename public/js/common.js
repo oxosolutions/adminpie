@@ -322,8 +322,8 @@ $(document).on('click','.aione-widget-delete',function(){
 });
 
 
-
-
+//sortable
+$('#sortable-options').sortable();
 
 
 

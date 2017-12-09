@@ -12,7 +12,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	{!! Form::model($model) !!}
+	{!! Form::model($model ) !!}
 		{!! FormGenerator::GenerateForm('design_settings',[],$model) !!}
 	{!! Form::close() !!}
 @include('common.page_content_primary_end')

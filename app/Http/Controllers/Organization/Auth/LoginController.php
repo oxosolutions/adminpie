@@ -52,20 +52,20 @@ class LoginController extends Controller
     public function showLoginForm(Request $request, $id = null){
         if($id != null){
             $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
-            // dd($organizationToken);
             if($organizationToken != null){
                 Session::put('group_id',$organizationToken->group_id);
+
                 $organizationToken->auth_login_token = '';
                 $organizationToken->save();
-                    // dump($organizationToken->group_id);
+
                 try{
-                    $model = GroupUsers::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
+                    $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
                         $query->where('role_id',1);
                     })->first();
-                     // dd($model);
-                        Auth::guard('org')->loginUsingId($model->id);
-                    $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
-                        Session::put('user_role',$putRole->role_id);
+                    
+                    Auth::guard('org')->loginUsingId($model->user_id);
+                    $putRole = UserRoleMapping::where(['user_id'=>$model->id])->first();
+                    Session::put('user_role',$putRole->role_id);
                     return redirect()->route('org.dashboard');
                 }catch(\Exception $e){
                     throw $e;

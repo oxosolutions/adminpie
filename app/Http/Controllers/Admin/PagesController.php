@@ -82,6 +82,7 @@ class PagesController extends Controller
      * @author Rahul
      */
     public function edit($id){
+      
         $page = Page::where('id',$id)->with(['pageMeta'])->first();
         foreach ($page->pageMeta as $key => $value) {
             $page[$value['key']] = $value['value'];

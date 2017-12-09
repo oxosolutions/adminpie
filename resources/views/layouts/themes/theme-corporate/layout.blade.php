@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
 @php
-
-$is_page = $is_post = $is_survey = $is_visualization = 0; 
-
-if(request()->route()->uri == "page/{slug}"){
-	$is_page = 1;
-}
-if(request()->route()->uri == "survey/{token}"){
-	$is_survey = 1;
-}
-
+	$is_page = 0;
+	if(request()->route()->uri == "page/{slug}"){
+		$is_page = 1;
+	}
 
 	$design_settings = get_design_settings();
 	$design_settings = json_decode(json_encode($design_settings),true);
@@ -29,66 +21,53 @@ if(request()->route()->uri == "survey/{token}"){
 			}
 		}
 	}
-	if(request()->route()->uri == "survey/{token}"){
-		$token = request()->route()->parameters()['token'];
-		$survey_meta = get_survey_meta($token);
-
-		if(@$survey_meta != null && @$survey_meta != ''){
-			foreach($survey_meta as $key => $value){
-				if(@$design_settings != null && @$design_settings != ''){
-					if($value != '' && $value != null){
-						$design_settings[$key] = $value;
-					}
-				}
-			}
-		}
-	}
 @endphp
-@include('layouts.themes.theme-corporate.includes._head')
-
+<!DOCTYPE html>
+<html lang="en">
+@include('layouts.themes.theme-docs.includes._head')
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
-		<div class="aione-row">
+	<div id="aione_wrapper" class="aione-wrapper layout-header-top aione-layout-wide aione-theme-docs">
+		<div class="wrapper">
+			
 			@if(@$design_settings['show_header'] == 1)
-				@include('layouts.themes.theme-corporate.includes._header')
+				@include('layouts.themes.theme-docs.includes._header')
 			@endif
-			@if(@$design_settings['show_slider'] == 1)
-				@include('layouts.themes.theme-corporate.includes._slider')
-			@endif
-			@if(@$design_settings['show_page_title'] == 1)
-				@include('layouts.themes.theme-corporate.includes._pagetitle')
-			@endif
+			<div id="aione_main" class="aione-main fullwidth">
+				<div class="wrapper">
+					@if(@$design_settings['show_slider'] == 1)
+						@include('layouts.themes.theme-docs.includes._slider')
+					@endif
+					@if(@$design_settings['show_page_title'] == 1)
+						@include('layouts.themes.theme-docs.includes._pagetitle')
+					@endif
+					<div id="aione_content" class="aione-content">
+						<div class="wrapper">
+							<div id="aione_page_content" class="aione-page-content">
+								<div class="wrapper">
 
+									@yield('content')
+              						<div class="clear"></div><!-- .clear -->
 
-			<div id="aione_main" class="aione-main ">
-				<div class="aione-row">
-					<div id="aione_content" class="aione-content" >
-						<div class="aione-row">
-					        @yield('content')
-              				<div class="clear"></div><!-- .clear -->
-						</div><!-- .aione-row -->
-					</div><!-- #aione_content -->
-					<div class="clear"></div><!-- .clear -->
-				</div><!-- .aione-row -->
-			</div><!-- #aione_main -->
+								</div>
+							</div>
+						</div><!-- .wrapper -->
+					</div><!-- .aione-content -->
+					@if(@$design_settings['show_footer_widgets'] == 1)
+						@include('layouts.themes.theme-docs.includes._footer')
+					@endif
+					@if(@$design_settings['show_copyright'] == 1)
+						@include('layouts.themes.theme-docs.includes._copyright')
+					@endif
+				</div><!-- .wrapper -->
+			</div><!-- .aione-main -->
 
-
-			@if(@$design_settings['show_footer_widgets'] == 1)
-				@include('layouts.themes.theme-corporate.includes._footer')
-			@endif
-			@if(@$design_settings['show_copyright'] == 1)
-				@include('layouts.themes.theme-corporate.includes._copyright')
-			@endif
-		</div><!-- .aione-row -->
-	</div><!-- #aione_wrapper -->
-	@include('components._footerscripts')
+		</div><!-- .wrapper -->
+	</div><!-- .aione-wrapper -->
 	<script type="text/javascript">
 		{!! @$meta['js_code']!!}
 	</script>
-	{{-- <script type="text/javascript">
+	<script type="text/javascript">
 		{!! @$design_settings['js_code']!!}
-	</script> --}}
-
+	</script>
 </body>
-
 </html>
