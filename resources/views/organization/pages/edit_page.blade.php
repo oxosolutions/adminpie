@@ -100,7 +100,369 @@
 				<div class="l6" style="width: 75%;float: left;padding-right:15px ">
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}
 					{!! FormGenerator::GenerateForm('edit_page_form') !!}
-					<div class="visual hidden">VISUAL AREA HERE</div>
+					<div class="visual hidden">
+						<div class="aione-wrapper">
+							<div class="aione-header bg-white aione-border-bottom">
+								<div class="ar">
+									<div class="ac s80 m80 l80 p-5">
+										<img src="http://aioneframework.com/assets/images/aione-framework-logo-small.png" height="30">
+									</div>
+									<div class="ac s20 m20 l20 aione-align-right p-5">
+										<button id="builder_switch" class="ph-20 pv-3">Edit</button>
+									</div>
+								</div>
+							</div>
+							<div class="aione-main">
+								<div class="ar">
+									<div class="ac s100 m100 l100 pv-30 ph-40 ">
+										<div class="aione-builder-wrapper mode-preview">
+											<div id="aione_builder" class="aione-builder preview aione-border">
+												<section class="p-50" id="aione_section">					
+												</section>
+												
+												<!-- <section class="p-50">					
+													<div class="ar">
+													</div>
+												</section>
+												<section class="p-50"  id="aione_section">					
+													<div class="ar" >
+														<div class="ac s100 m50 l50"> </div>
+													</div>
+												</section>
+												<section class="p-50"  id="aione_section">					
+													<div class="ar">
+														<div class="ac s100 m50 l50"> </div>
+														<div class="ac s100 m50 l50"> </div>
+													</div>
+												</section> -->
+												<section class="p-50"  id="aione_section">
+													<div class="aione-section-handle"></div>
+
+													<div class="ar bg-red bg-lighten-4">
+														<div class="ac s100 m75 l75">
+															<div class="aione-col-handle"></div>
+
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Web Design</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+															<div class="ar aione-border m-10 p-5">
+
+																<div class="ac s100 m50 l25 p-10 bg-red">123</div>
+																<div class="ac s100 m50 l25 p-10 bg-green">234</div>
+																<div class="ac s100 m50 l25 p-10 bg-blue">345</div>
+															</div>
+
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Logo Design</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Android Application</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Web Application</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="ar bg-blue-grey bg-lighten-4">
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Domain Name</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Web Hosting</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">ERP Solutions</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">ANALYSIS</h4> 
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+													</div>
+												</section>
+												<section class="p-50">
+													<div class="aione-section-handle"></div>
+													<div class="ar bg-red bg-lighten-4">
+														<div class="ac s100 m50 l25">
+															<div class="aione-col-handle"></div>
+
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Web Design</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Logo Design</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Android Application</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Web Application</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+													</div>
+
+													<div class="ar bg-blue-grey bg-lighten-4" id="aione_columns2">
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Domain Name</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">Web Hosting</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">ERP Solutions</h4>
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+
+														<div class="ac s100 m50 l25">
+															<div class="aione-wrapper aione-border mb-20">
+																<div class="aione-title aione-align-center aione-border-bottom">
+																	<h4 class="">ANALYSIS</h4> 
+																</div>
+																<div class="description p-10">
+																	Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, vero? <br><br>Officiis ratione, nesciunt vel corrupti adipisci. Voluptates expedita sequi dolores.
+																</div>
+															</div>
+														</div>
+													</div>
+												</section>
+												<!-- <section class="p-50">
+													<div class="aione-section-handle"></div>
+													<a href="#" class="aione-add-row-button">Add Row</a>
+
+												</section>
+												<section class="p-50">
+													<div class="aione-section-handle"></div>
+													<div class="ar">
+														<a href="#" class="aione-add-column-button">Add Column</a>
+														
+													</div>
+													<a href="#" class="aione-add-row-button">Add Row</a>
+												</section> -->
+													
+												<section class="p-50">
+
+													<div class="ar">
+														<div class="aione-options">
+															<div class="aione-option-bar">
+																<div class="aione-option-left-bar">
+																	<span>
+																		<a href="#" class="aione-section-handle"">
+																			<i class="fa fa-bars"></i> 
+																		</a>
+																	</span>
+																</div>
+																<div class="aione-option-right-bar">
+																	<span>
+																		<a href="#" class="incress-width">
+																			<i class="fa fa-plus"></i>
+																		</a>
+																	</span>
+																	<span>
+																		<a href="#" class="decress-width">
+																			<i class="fa fa-minus"></i>
+																		</a>
+																	</span>
+																	<span>
+																		<a href="#" class="clone">
+																			<i class="fa fa-clone"></i>
+																		</a>
+																	</span>
+																	<span>
+																		<a href="#">
+																			<i class="fa fa-cogs"></i>
+																		</a>
+																	</span>
+																	<span>
+																		<a href="#" class="delete-column">
+																			<i class="fa fa-times"></i>
+																		</a>
+																	</span>
+																</div>
+															</div>
+														</div>
+														<div class="ac s100 m50 l100"> ghjghgjhg </div>
+														<a href="#" class="aione-add-column-button">Add Column</a>
+													</div>
+													<a href="#" class="aione-add-row-button">Add Row</a>
+												</section>
+												
+											</div>
+											<div class="aione-builder-elements aione-border" id="aione-builder-elements">
+												<h3 class="aione_collapse_element">Layout <a href="#"><i class="fa fa-minus fa-plus"></i></a></h3>
+												<div>
+													<label>Section</label>
+													<div id="aione_elements_section">
+														<section></section>
+														<section id="aione_section_about" class="aione-section-about">	
+															<div class="wrapper">
+																<div class="ar">
+																	<div class="ac s100 m50 s25">
+																	
+																	</div>
+																</div>
+															</div>			
+														</section>
+													</div>
+													<label>Row</label>
+													<div id="aione_elements_row">
+														<div class="ar"></div>
+													</div>
+													<label>Column</label>
+													<div id="aione_elements_columns">
+														<div class="ac s100 m100 l100"> </div>
+													</div>
+													
+												</div>
+											</div>
+
+											<div class="aione-builder-elements aione-border" id="aione-builder-elements">
+												<h3 class="aione_collapse_element">Element <a href="#"><i class="fa fa-minus fa-plus"></i></a></h3>
+												
+												<div id="aione_elements">
+													<div class="aione-title" id="aione_element"><h1> Heading 1 </h1></div>
+													<div class="aione-title" id="aione_h2"><h2> Heading 2 </h2></div>
+													<div class="aione-title" id="aione_h3"><h3> Heading 3 </h3></div>
+													<div class="aione-title" id="aione_h4"><h4> Heading 4 </h4></div>
+													<div class="aione-title" id="aione_h5"><h5> Heading 5 </h5></div>
+													<div class="aione-title" id="aione_h6"><h6> Heading 6 </h6></div>
+												</div>
+											</div>
+											<div class="clear"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="bg-blue-grey bg-darken-4 p-50">
+								<div class="aione-align-center">
+									&copy;2017 OXO Solutions. All rights reserved.
+								</div>
+							</div>
+						</div>	
+					</div>
 
 				</div>
 				@php
