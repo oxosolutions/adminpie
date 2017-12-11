@@ -9,7 +9,9 @@ use App\Model\Organization\Holiday;
 use App\Model\Organization\EmployeeLeave as Leave;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Attendance;
+use App\Model\Organization\AttendanceFile;
 use App\Model\Organization\User;
+
 
 use Carbon\Carbon;
 use DB;
@@ -261,10 +263,13 @@ class AttendanceController extends Controller
 		});
 	if(!Session::has('error')){
 		Session::flash('success','File upload successfully!');
+		$attendanceFile = new AttendanceFile();
+		$attendanceFile->title = $request->title;
+		$attendanceFile->name =  $file_name;
+		$attendanceFile->save(); 
 	}else{
 		return redirect()->route('list.attendance');
 	}
-
 		return redirect()->route('import.form.attendance');
 		}
 	}

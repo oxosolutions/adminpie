@@ -108,18 +108,20 @@ class SalaryController extends Controller
 				$data['month'] = 	$month 	= $date->month;
 				$data['year'] 	=  	$year 	= $date->year;
 			}
-			$data['users'] 	= User::with(['belong_group','salary'=>function($q)use($year, $month){
-											$q->where(['year'=>$year, 'month'=>$month]);	
-										}, 
-									'metas'=>function($query)use($year, $month){
-											$query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
-          							}])->orWhereHas(
-          									'metas', function ($query)use($year, $month) {
-    										$query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
-												}
-									)->where(['user_type'=>'employee'])->get();
+     
+      $data['users']  = User::with(['belong_group',
+        // 'salary'=>function($q)use($year, $month){
+        //               $q->where(['year'=>$year, 'month'=>$month]);  
+        //             }, 
+                  'metas'=>function($query)use($year, $month){
+                    $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
+                        }])->orWhereHas(
+                            'metas', function ($query)use($year, $month) {
+                        $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
+                        }
+                  )->where(['user_type'=>'employee'])->get();
 
-                        // dump($data);
+                      // dd($data);
 	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
 	}
 

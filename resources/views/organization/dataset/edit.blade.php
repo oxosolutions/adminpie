@@ -179,9 +179,9 @@
                 $.ajax({
                     type:'GET',
                     url: route()+'/dataset/columns',
-                    data: {dataset: $(this).val()},
+                    data: {dataset:$(this).val()},
                     success: function(result){
-                        console.log(result);
+                        $('#field_3094 select').html(result);
                     }
                 });
             });

@@ -20,7 +20,6 @@ class DatasetController extends Controller
 {
 
 	protected function validateUser($id){
-        // dd($id);
 		$user_id = Auth::guard('org')->user()->id;
 
 		$model = Dataset::find($id);
@@ -1072,7 +1071,14 @@ class DatasetController extends Controller
      * By Rahul
      */
     Public function getDatasetColumns(Request $request){
-        dd('Here');
-        dd($request->all());
+        $table = str_replace('ocrm_','',$request->dataset);
+        $data = DB::table($table)->first();
+        $columns = '<option>Select Column</option>';
+        foreach($data as $key => $column){
+            if(!in_array($key,['id','status','parent'])){
+                $columns .= '<option value="'.$key.'">'.$column.'</option>';
+            }
+        }
+        return $columns;
     }
 }
