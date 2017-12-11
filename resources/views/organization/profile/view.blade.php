@@ -127,8 +127,6 @@ $page_title_data = array(
 		@if(Session::has('success-password'))
 			{{-- <script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script> --}}
 			<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div>
-			
-			
 		@endif
 		<div class="row">
 		<div class="col l9 pr-7">
@@ -254,17 +252,16 @@ $page_title_data = array(
 								
 								{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
 									@php
-									$meta_data =	array_column(json_decode($model['metas'],true), 'value','key');
-									$shift = null;
-									if(isset($meta_data['user_shift'])){
-										$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
-									}
-									$userData = [];
-									$userData['about_me'] = $model->about_me;
-									$userData['shift'] = $shift;
-									$userData['email'] = $model->belong_group->email;
-									$userData['name'] = $model->belong_group->name;
-
+										$meta_data =	array_column(json_decode($model['metas'],true), 'value','key');
+										$shift = null;
+										if(isset($meta_data['user_shift'])){
+											$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
+										}
+										$userData = [];
+										$userData['about_me'] = $model->about_me;
+										$userData['shift'] = $shift;
+										$userData['email'] = $model->belong_group->email;
+										$userData['name'] = $model->belong_group->name;
 									@endphp
 								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
 								{!!Form::model(@$userData,['route'=>'update.profile','method'=>'post'])!!}

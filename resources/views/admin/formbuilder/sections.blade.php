@@ -412,7 +412,7 @@ $page_title_data = array(
             font-weight: 500;
             color: #999;
         }
-         .access-denied{
+        .access-denied{
             font-size: 40px;
             font-weight: 200;
         }

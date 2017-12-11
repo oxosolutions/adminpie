@@ -37,12 +37,20 @@
 		
 		<br>
 			
+		@php
+			$user_status = $value->like->where('user_id',current_organization_user_id())->first()->status;
+		@endphp
 		<a class="like" like="{{$value->id}}" href="{{route('like.comment',['type'=>'like','c_id'=>$value->id])}}"><div class="all-hide" id="expression-{{$value->id}}">
-				 <button href="{{route('like.comment',['type'=>'like', 'c_id'=>$value->id , 'expression'=>1])}}"><img src="{{asset('comment/thumb.jpg')}}"></button> 
+				 <button {{route('like.comment',['type'=>'like', 'c_id'=>$value->id , 'expression'=>1])}}"><img src="{{asset('comment/thumb.jpg')}}"></button> 
 				<img src="{{asset('comment/heart.jpg')}}">
-			</div> like
-		</a> 
-		<span>{{$value->like->where('status',1)->count()}}</span> 
+			</div> @if($user_status==1)
+								<img src="{{asset('comment/thumb.jpg')}}">
+							@elseif($user_status==4)
+								<img src="{{asset('comment/heart.jpg')}}">
+						@endif like 
+		</a>
+
+		<span>{{$value->like->where('status',1)->count()}} {{ dump($value->like->where('user_id',current_organization_user_id())->first()->status) }}</span> 
 		<a href="{{route('like.comment',['type'=>'dislike','c_id'=>$value->id])}}">dislike</a> <span>{{$value->like->where('status',0)->count()}}
 		 <a id="{{$value->id}}" class="reply" >reply </a>
 		 <a id="{{$value->id}}" class="edit-comment {{$value->id}}" >edit</a>

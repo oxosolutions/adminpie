@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Organization\cms;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Organization\Page;
+// use App\Model\Organization\Page;
 use App\Model\Organization\Comment;
 use App\Model\Organization\PageMeta;
 use App\Model\Organization\Posts;
@@ -378,9 +378,9 @@ class PagesController extends Controller
         return $request->all();
 
     }
-    public function likedislike($type, $comment_id, $expression){
-        dd($expression);
-         $status=0;
+    public function likedislike($type, $comment_id, $expression=null){
+        // dd($expression);
+        $status=0;
         if($type=='like'){
             $status=1;
         }
