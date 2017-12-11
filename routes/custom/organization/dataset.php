@@ -34,4 +34,7 @@
 	Route::post('/customcode/save/{id}',				['as'=>'save.custom.code','uses'=>'DatasetController@saveCustomCode']);
 	Route::get('/delete/column/{id}/{column}' , 		['as'=>'delete.column','uses'=>'DatasetController@deleteColumn']);
 
+    // Ajax Route for get selected dataset columns
+    Route::get('/dataset/columns/test' , ['as'=>'dataset.columns', 'uses'=>'DatasetController@getDatasetColumns']);
+
 ?>

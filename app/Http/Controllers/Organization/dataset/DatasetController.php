@@ -20,6 +20,7 @@ class DatasetController extends Controller
 {
 
 	protected function validateUser($id){
+        // dd($id);
 		$user_id = Auth::guard('org')->user()->id;
 
 		$model = Dataset::find($id);
@@ -611,6 +612,7 @@ class DatasetController extends Controller
     }
 
     public function createColumn(Request $request, $id){
+        dd($request->all());
         $this->validateRequiredColumns($request);
         $datasetTable = Dataset::find($id)->dataset_table;
         $columnName = 'column_'.rand(111,999);
@@ -1063,5 +1065,14 @@ class DatasetController extends Controller
         $dataset_table = $dataset->dataset_table;
         DB::select('ALTER TABLE '.$dataset_table.' DROP COLUMN '.$columnKey);
         return back();
+    }
+
+    /**
+     * Get Selected Dataset columns
+     * By Rahul
+     */
+    Public function getDatasetColumns(Request $request){
+        dd('Here');
+        dd($request->all());
     }
 }

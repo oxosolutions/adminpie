@@ -143,6 +143,7 @@
 	    		}
 	    	});
 	    });
+        // $('#field_3091')
 	  });
 	  $('.handson-table-button > li > a').click(function(e){
 	  	e.preventDefault();
@@ -153,6 +154,40 @@
 	    //$('#modal1').modal('open');
 
 </script>
+
+
+{{-- Code For Create Dataset Column By Rahul --}}
+    <style type="text/css">
+        #field_3091,#field_3092, #field_3093, #field_3094, #field_3095,#field_3096{
+            display: none;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#field_3090 input').click(function(){
+                if($(this).val() == 'static_value'){
+                    $('#field_3091').show();
+                    $('#field_3092, #field_3093, #field_3094, #field_3095, #field_3096').hide();
+                }else if($(this).val() == 'value_with_refrence'){
+                    $('#field_3091').hide();
+                    $('#field_3092, #field_3093, #field_3094, #field_3095, #field_3096').show();
+                }
+            });
+
+            // dataset/columns
+            $('#field_3093 select').change(function(){
+                $.ajax({
+                    type:'GET',
+                    url: route()+'/dataset/columns',
+                    data: {dataset: $(this).val()},
+                    success: function(result){
+                        console.log(result);
+                    }
+                });
+            });
+        });
+    </script>
+
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')

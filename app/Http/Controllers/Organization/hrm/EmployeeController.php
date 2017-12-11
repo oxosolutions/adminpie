@@ -24,6 +24,8 @@ use Datatables;
 use App\Model\Group\GroupUsers;
 use Hash;
 use DB;
+use App\Model\Organization\Shift;
+use App\Model\Organization\Payscale;
 /**
  * work by paljinder singh
  * @Import emplyoyee
@@ -906,6 +908,29 @@ class EmployeeController extends Controller
                         $dep_id = $dep->id;
                     }
                     $this->add_user_meta($user_id, 'department' , $dep_id, $import_record_options);
+                }elseif($key=='user_shift'){
+                    $shiftcheck = Shift::where('name', $val);
+                    if($shiftcheck->exists()){
+                        $shift_id = $shiftcheck->first()->id;
+                    }else{
+                        $shifts = new Shift();
+                        $shifts->name = $val;
+                        $shifts->status = 1;
+                        $shifts->save();
+                        $shift_id = $shifts->id;
+                    }
+                    $this->add_user_meta($user_id, $key, $shift_id, $import_record_options);
+                }elseif($key =="pay_scale"){
+                   $payscale = Payscale::where('title',$val);
+                   if($payscale->exists()){
+                        $payscale_id = $payscale->first()->id;
+                   }else{
+                        $new_payscale =  new Payscale();
+                        $new_payscale->title = $val;
+                        $new_payscale->save();
+                        $payscale_id = $new_payscale->id;
+                   }
+                    $this->add_user_meta($user_id, $key, $payscale_id, $import_record_options);
                 }else{
                     $this->add_user_meta($user_id, $key, $val, $import_record_options);
                 }
