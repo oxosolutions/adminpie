@@ -12,6 +12,8 @@
     $id = "";
    $user_count    = count($data['users']);
    $salary_count  = count(array_filter( array_column($data['users']->toArray(), 'salary')));
+
+   
 @endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
