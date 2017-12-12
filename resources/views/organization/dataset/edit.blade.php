@@ -169,8 +169,11 @@
                     $('#field_3091').show();
                     $('#field_3092, #field_3093, #field_3094, #field_3095, #field_3096').hide();
                 }else if($(this).val() == 'value_with_refrence'){
-                    $('#field_3091').hide();
-                    $('#field_3092, #field_3093, #field_3094, #field_3095, #field_3096').show();
+                    $('#field_3091, #field_3096').hide();
+                    $('#field_3092, #field_3093, #field_3094, #field_3095').show();
+                }else if($(this).val() == 'formula'){
+                    $('#field_3096').show();
+                    $('#field_3092, #field_3093, #field_3094, #field_3095').hide();
                 }
             });
 

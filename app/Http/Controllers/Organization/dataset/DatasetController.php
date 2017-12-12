@@ -610,6 +610,12 @@ class DatasetController extends Controller
         }
     }
 
+    /**
+     * Create Dataset Column function
+     * @param  Request $request having posted data
+     * @param  [type]  $id      integer type
+     * @return [type]           will return back to same page
+     */
     public function createColumn(Request $request, $id){
         dd($request->all());
         $this->validateRequiredColumns($request);
@@ -622,7 +628,27 @@ class DatasetController extends Controller
         }else{
             DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$request->column_name,'status'=>'Status','parent'=>'Parent']);
         }
+
+        Session::flash('success','Column created successfully!');
         return back();
+    }
+
+
+    /**
+     * To put the static value in newsly created column
+     * @param  [string] $table  haveing table name
+     * @param  [string] $column having column name 
+     * @param  [string/integer] $value  having the value which one have to fill
+     * @return [boolean]        will return boolean
+     */
+    protected function putStaticValueinColumn($table, $column, $value){
+        $table = str_replace('ocrm_','',$table);
+        $dbModel = DB::table($table);
+        if($dbModel->count() > 1){
+
+        }else{
+            
+        }
     }
 
     protected function validateRequiredColumns($request){
