@@ -2,17 +2,18 @@
 	$model = "App\Model\Organization\User";
 	$item_count = $model::all()->count();
 	$items = $model::orderBy('id','DESC')->limit(5)->get();
+	$route = 'list.user';
 @endphp
 @include('organization.widgets.includes.widget-start')
     @include('organization.widgets.includes.widget-front-start')
-        <div class="aione-widget-title">{{ucfirst($widget_title)}}</div>
+        {{-- <div class="aione-widget-title">{{ucfirst($widget_title)}}</div> --}}
 		<div class="aione-widget-content-wrapper">
 			<span class="aione-hero-text aione-counter">{{$item_count}}</span>
 		</div>
 		<div class="aione-widget-footer"></div>
     @include('organization.widgets.includes.widget-front-end')
     @include('organization.widgets.includes.widget-back-start')
-    	<div class="aione-widget-title">{{ucfirst($widget_title)}}</div>
+    	{{-- <div class="aione-widget-title">{{ucfirst($widget_title)}}</div> --}}
     	<div class="aione-widget-content-wrapper">
             <ul class="aione-recent-items">
 				@if(!$items->isEmpty())

@@ -291,6 +291,7 @@ class DashboardController extends Controller
  	
     public function widgetSort(Request $request)
     {
+    	print_r($request->all());
     	$order = [];
     	$index = 1;
     	foreach ($request->order_id as $key => $value) {

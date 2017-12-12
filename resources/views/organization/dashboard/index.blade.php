@@ -37,12 +37,15 @@
 		height: 1px;
 		clear: both; 
 	}
-	.aione-widgets .aione-widget .aione-widget-background{
+	/*.aione-widgets .aione-widget .aione-widget-background{
 		position: absolute;
 		top:0;
 		right: 0;
 		bottom: 0;
 		left: 0;
+	}*/
+	.aione-widget-handle{
+		left: 5px;
 	}
 	.aione-widgets .aione-widget .aione-overlay:before{
 		content:"";
@@ -158,15 +161,6 @@
 	.aione-widgets .aione-widget .aione-widget-header .aione-widget-actions .fixed-action-btn.horizontal ul li {
 	    margin:0;
 	}
-	/*
-	.aione-widgets .aione-widget .aione-widget-content {
-	    position: absolute;
-	    top: 0;
-	    right: 0;
-	    bottom: 0;
-	    left: 0;
-	}
-	*/
 	.aione-widgets .aione-widget .aione-widget-footer{
 		display:none;
 	}
@@ -191,9 +185,6 @@
 	    overflow: hidden;
 	    border-bottom: 1px solid #e8e8e8;
 	}
-	.aione-widget-content-wrapper{
-		padding: 12px;
-	}
 	#aione_widget_add_new .field{
 		margin-bottom: 0;
 	}
@@ -217,12 +208,16 @@
 
 	.aione-flip {
 		width: 100%;
-	    height: 160px;
+	    height: 100px;
 	    position: relative;
 	    margin: 0;
 	    -webkit-perspective: 800;
 	    -moz-perspective: 800;
 	    perspective: 800;
+	}
+	.aione-widget-content-wrapper{
+		font-size: 15px;
+		text-align: left
 	}
 	.aione-flip.flipped .aione-card {
 	    -webkit-transform: rotatey(-180deg);
@@ -287,6 +282,12 @@
 	.aione-shadow{
 		box-shadow: 1px 1px 8px rgba(0,0,0,0.15);
 	}
+	/*.widgetSort{
+		position: absolute;
+    top: 10px;
+    left: 10px;
+    color: black;
+	}*/
 </style>
 
 @include('common.pageheader',$page_title_data)
@@ -305,6 +306,7 @@
 		{!!$admin_dashboard_welcome_message!!}
 		
 	</div>
+	{{-- {{dd($widgets)}} --}}
     <div class="aione-widgets" id="sortable-widgets">
     	@foreach($widgets as $widget_key => $widget)
     		@php
@@ -312,57 +314,33 @@
 				$widget_key = $widget['slug'];
 				$widget_title = $widget['title'];
 				$widget_order = $widget['order'];
-			@endphp
-	    	<div id="aione_widget_{{$widget_key}} " class="aione-widget aione-widget-{{$widget_key}} aione-widget-id-{{$widget_id}}">
-	    		<div class="aione-widget-header" >
-	    			<div class="aione-widget-handle" widget-order="{{$widget_id}}"><a class="aione-widget-drag aione-tooltip" title="Sort Widget"><i class="aione-icon material-icons">menu</i></a></div>
-	    			<div class="aione-widget-title">{{$widget_title}}</div>
-	    			<div class="aione-widget-actions">
-	    			<input type="hidden" name="slug" value="{{ request()->route()->parameters()['id'] }}">
-	    			<input type="hidden" name="widget_id" value="{{ $widget_id	 }}">
-	    			<input type="hidden" name="_token" id="token" value="{{ csrf_token() }}">
-	    				<div class="fixed-action-btn horizontal click-to-toggle">
-							<a class="btn-floating aione-actions-handle">
-								<i class="aione-icon material-icons">more_horiz</i>
-							</a>
-							<ul> 
-								<li><a class="btn-floating red aione-widget-delete aione-tooltip aione-delete-confirmation" href="#" title="Delete Widget"><i class="aione-icon material-icons">close</i></a></li>
-								<!--
-								<li><a class="btn-floating yellow darken-1 aione-widget-collapse  aione-tooltip"  title="Minimize Widget"><i class="aione-icon material-icons">launch</i></a></li>
-								<li><a class="btn-floating blue"  title="XYZ Widget"><i class="aione-icon material-icons  aione-tooltip">attach_file</i></a></li>
-								-->
-							</ul>
-						</div>
-	    			</div>
-	    		</div>
-	    		@if(View::exists('organization.widgets.'.$widget_key))
-    				@include('organization.widgets.'.$widget_key)
-    			@else 
-    				<div class="aione-widget-error">
-    					{{ __('messages.widget_view_misssing') }}
-    				</div>
-    			@endif
-	    	</div> <!-- .aione-widget -->
 
+				$key = $widget['slug'];
+				$value = "hello";
+				$slug = $widget['slug'];
+				// $value = $value['count'];
+				// $route = $value['route'];
+			@endphp
+				@include('organization.widgets.commonWidget')
     	@endforeach
 
     	@if(!empty($listWidgets))
-    	<div id="aione_widget_add_new" class="aione-widget aione-widget-add-new">
-    		<div class="aione-widget-content aione-shadow">
-				<div class="aione-widget-title">Add New Widget</div>
-	    		<div class="aione-widget-content-wrapper">
-	    		{{Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])}}
-	    			{!! csrf_field() !!}
-	    			<input type="hidden" name="slug" value="{{@Request()->route()->parameters()['id']}}" class="slug-parameter">
-	    			<div class="field select field-type-select">
-						{!! Form::select('widget[]',@$listWidgets,null,["class"=>"no-margin-bottom aione-field browser-default" , 'placeholder'=> 'Select Widget','field_placeholder'])!!}
-						<span class="error-red"></span>
+	    	<div id="aione_widget_add_new" class="aione-widget aione-widget-add-new">
+	    		<div class="aione-widget-content">
+					<div class="aione-widget-title">Add New Widget</div>
+		    		<div class="aione-widget-content-wrapper">
+		    		{{Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])}}
+		    			{!! csrf_field() !!}
+		    			<input type="hidden" name="slug" value="{{@Request()->route()->parameters()['id']}}" class="slug-parameter">
+		    			<div class="field select field-type-select">
+							{!! Form::select('widget[]',@$listWidgets,null,["class"=>"no-margin-bottom aione-field browser-default" , 'placeholder'=> 'Select Widget','field_placeholder'])!!}
+							<span class="error-red"></span>
+						</div>
+						<button class="aione-button" type="submit" name="action">Add</button>
+					{{Form::close()}}
 					</div>
-					<button class="aione-button" type="submit" name="action">Add</button>
-				{{Form::close()}}
 				</div>
-			</div>
-    	</div> <!-- .aione-widget -->
+	    	</div> <!-- .aione-widget -->
     	@endif
 
     </div> <!-- .aione-widgets -->
@@ -388,22 +366,23 @@
 	$(document).ready(function() {
 		$( "#sortable" ).sortable();
 		$( "#sortable-widgets" ).sortable({ 
-											handle: '.aione-widget-handle',
-											stop : function(){
-														var order_id = [];
-														$.each($('.aione-widget-handle') , function(k , v){
-															order_id.push($(this).attr('widget-order'));
-														});
-														$.ajax({
-															url : route()+'/widget/sort',
-															type : 'POST',
-															data : {order_id : order_id ,_token : $('input[name=_token]').val() },
-															success : function(res){
-																Materialize.toast('Sorted' , 3000);
-															}
-														});
-													}
-											});
+			handle: '.aione-widget-handle',
+			stop : function(){
+						var order_id = [];
+						$.each($('.aione-widget-handle') , function(k , v){
+							console.log($(this).attr('widget-order'));
+							order_id.push($(this).attr('widget-order'));
+						});
+						$.ajax({
+							url : route()+'/widget/sort',
+							type : 'POST',
+							data : {order_id : order_id ,_token : $('input[name=_token]').val() },
+							success : function(res){
+								Materialize.toast('Sorted' , 3000);
+							}
+						});
+					}
+			});
 		/*****************************************************
 		/*  Header Right Menu Toggles
 		/*****************************************************/
@@ -442,17 +421,17 @@
 							 }
 	 	
 	 	$.ajax({
-	      		url : route()+'update/dashboards',
-	      		type : "POST",
-	      		data : {
-	      			data : updated_data,
-	      			_token : $("#token").val()
-	      		},
-	      		success : function (res) {
-	    			// window.location.href=route()+"dashboard";
-	      			
-	      		}
-	      	});
+      		url : route()+'update/dashboards',
+      		type : "POST",
+      		data : {
+      			data : updated_data,
+      			_token : $("#token").val()
+      		},
+      		success : function (res) {
+    			// window.location.href=route()+"dashboard";
+      			
+      		}
+      	});
 	 });
 </script> 
 

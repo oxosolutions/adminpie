@@ -18,7 +18,9 @@
 {{-- 	<link rel="stylesheet" type="text/css" href="http://aioneframework.com/aioneframework/assets/css/aione.min.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600,700,800,900">
 	<link rel="stylesheet" type="text/css" href="http://manage.aioneframework.com/builder/main.css">
- --}}	{{-- <script type="text/javascript" src="http://aioneframework.com/aioneframework/assets/js/vendor.js"></script> --}}
+	<script type="text/javascript" src="http://aioneframework.com/aioneframework/assets/js/vendor.js"></script>
+ --}}	
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 	
 	<style type="text/css">
 		.page-widgets > .boxed{
@@ -107,7 +109,7 @@
 					{{-- <textarea rows="14" class="html_preview"></textarea> --}}
 					{!! FormGenerator::GenerateForm('edit_page_form') !!}
 					<div class="visual hidden">
-						<div class="aione-wrapper">
+						{{-- <div class="aione-wrapper">
 							<div class="aione-header bg-white aione-border-bottom">
 								<div class="ar">
 									<div class="ac s80 m80 l80 p-5">
@@ -467,7 +469,8 @@
 									&copy;2017 OXO Solutions. All rights reserved.
 								</div>
 							</div>
-						</div>	
+						</div>	 --}}
+						<h3>Working on visual builder</h3>
 					</div>
 
 				</div>
@@ -506,8 +509,11 @@
 			});
 		});
 	</script>
-	<script type="text/javascript">
+	{{-- <script type="text/javascript">
 		$(document).ready(function() {
+			$('#aione_builder').sortable();
+			$('#aione_builder section').sortable();
+			$('#aione_builder .ar').sortable();
 						//local storage
 
 			$('#builder_switch').click();
@@ -743,6 +749,6 @@
 		$(document).on('click','.delete-column',function(){
 			$(this).parents('.aione-option-bar').parent().remove();
 		});
-	</script>
-	<script type="text/javascript" src="http://manage.aioneframework.com/builder/script.js"></script>
+	</script> --}}
+	{{-- <script type="text/javascript" src="http://manage.aioneframework.com/builder/script.js"></script> --}}
 @endsection()

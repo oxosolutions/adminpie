@@ -9,29 +9,34 @@ $page_title_data = array(
 	'add_new' => ''
 ); 
 @endphp
+<style type="text/css">
+	.aione-widget{
+		float: left;
+	    width: 23%;
+	    min-height: 160px;
+	    padding: 0;
+	    margin: 0 2% 2% 0;
+	    position: relative;
+	    color: #666666;
+	}
+</style>
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
 	<div class="aione-dashboard">
 		<!-- Dashboard Widgets -->
 		<div class="ar">
-			@foreach($model as $key => $value)
-				<!-- Dashboard Widget -->
-				<div class="ac s100 m50 l25 pt-15 pb-15">
-					<div class="aione-widget aione-border bg-grey bg-lighten-5">
-						<div class="aione-title">
-							<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4"><a href="{{route($value['route'])}}" class="blue-grey darken-4">{{ucfirst($key)}}</a></h5>
-						</div>
-						<div class="aione-align-center p-30 font-size-64 font-weight-600 blue-grey darken-2"> 
-							{{$value['count']}}
-						</div>
-						<div class="aione-align-center p-5 aione-border-top bg-grey bg-lighten-4"> 
-							<a href="{{route($value['route'])}}" class="display-block white bg-blue-grey bg-darken-4 p-10">All {{$key}}</a>
-						</div>
-					</div>
-				</div>
-				<!-- Dashboard Widget -->
-			@endforeach
+				@foreach($model as $key => $value)
+				@php
+					$count = $value['count'];
+					$route = $value['route'];
+					// $list = $value['list'];
+				@endphp
+					<!-- Dashboard Widget -->
+
+					@include('organization.widgets.commonWidget')
+					<!-- Dashboard Widget -->
+				@endforeach
 		</div>
 	</div>
 	@include('common.page_content_primary_end')

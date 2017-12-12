@@ -617,20 +617,42 @@ class DatasetController extends Controller
      * @return [type]           will return back to same page
      */
     public function createColumn(Request $request, $id){
-        dd($request->all());
         $this->validateRequiredColumns($request);
         $datasetTable = Dataset::find($id)->dataset_table;
         $columnName = 'column_'.rand(111,999);
+        $compareDataset = $request->select_dataset;
+        $compareFrom_datasetTable = $request->select_column;
+        $compareWith_compareDataset = $request->dataset_column;
+        $fillValueWith_compareDataset = $request->replace_with;
         DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
         $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+        $columnHeader= $request->column_name;
         if($ifRecordsExist != null){
-            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$request->column_name]);
+            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$columnHeader]);
         }else{
-            DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$request->column_name,'status'=>'Status','parent'=>'Parent']);
+            DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$columnHeader,'status'=>'Status','parent'=>'Parent']);
         }
-
+        if($request->column_action == 'static_value'){
+            $this->putStaticValueinColumn($datasetTable, $columnName, $request->static_value);
+        }
+        if($request->column_action == 'value_with_refrence'){
+            $this->putvalueByRefference($datasetTable, $compareDataset, $compareFrom_datasetTable, $compareWith_compareDataset, $fillValueWith_compareDataset, $columnName);
+        }
+        if($request->column_action == 'formula'){
+            $this->putValueWithFormula($datasetTable, $columnName, $request->formula);
+        }
         Session::flash('success','Column created successfully!');
         return back();
+    }
+
+    protected function putValueWithFormula($datasetTable, $newColumn, $formula){
+        $dbModel = DB::table(str_replace('ocrm_','',$datasetTable));
+        $dbModel->update([$newColumn=>$formula]);
+        $createExcel = Excel::create('Filename', function($excel) use ($dbModel,$newColumn,$formula) {
+            $excel->sheet('Data Sheet', function($sheet) use ($dbModel, $newColumn, $formula){
+                
+            }); 
+        });
     }
 
 
@@ -645,10 +667,34 @@ class DatasetController extends Controller
         $table = str_replace('ocrm_','',$table);
         $dbModel = DB::table($table);
         if($dbModel->count() > 1){
-
+            $dbModel->update([$column=>$value]);
         }else{
-            
+            $dbModel->insert([$column=>$value]);
         }
+        return true;
+    }
+
+    /**
+     * To put value in dataset table with reffernce of 
+     * another dataset column
+     *
+     * @param [string] $currentDataset
+     * @param [string] $compareDataset
+     * @param [string] $selectedColumn
+     * @param [string] $compareWithColumn
+     * @param [string] $fillWithColumn
+     * @param [string] $newColumnName
+     * @return boolean
+     */
+    protected function putvalueByRefference($currentDataset, $compareDataset, $selectedColumn, $compareWithColumn, $fillWithColumn, $newColumnName){
+        $currentDatasetCount = DB::table(str_replace('ocrm_','',$currentDataset));
+        $compareDatasetCount = DB::table(str_replace('ocrm_','',$compareDataset));
+        if($currentDatasetCount->count() > 1 && $compareDatasetCount->count() > 1){
+            $updateQuery = DB::update("UPDATE ".$currentDataset." AS first_table LEFT JOIN ".$compareDataset." AS sec_table 
+                                        ON sec_table.".$compareWithColumn." = first_table.".$selectedColumn." 
+                                        SET first_table.".$newColumnName." = sec_table.".$fillWithColumn." where first_table.id != 1");
+        }
+        return true;
     }
 
     protected function validateRequiredColumns($request){

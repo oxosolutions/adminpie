@@ -12,7 +12,7 @@
 		<div class="aione-widget-footer"></div>
     @include('organization.widgets.includes.widget-front-end')
     @include('organization.widgets.includes.widget-back-start')
-    	<div class="aione-widget-title">{{ucfirst($widget_title)}}</div>
+    	{{-- <div class="aione-widget-title">{{ucfirst($widget_title)}}</div> --}}
     	<div class="aione-widget-content-wrapper">
             <ul class="aione-recent-items">
 				@if(!$items->isEmpty())

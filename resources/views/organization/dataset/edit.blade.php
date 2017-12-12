@@ -185,6 +185,7 @@
                     data: {dataset:$(this).val()},
                     success: function(result){
                         $('#field_3094 select').html(result);
+                        $('#field_3095 select').html(result);
                     }
                 });
             });

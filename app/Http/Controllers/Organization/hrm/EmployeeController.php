@@ -621,6 +621,22 @@ class EmployeeController extends Controller
                         }else{
                             $data[$key][$meta_keys] ="";
                         }
+                    }elseif($meta_keys=='user_shift'){
+                        $data[$key][$meta_keys] = "";
+                        if(!empty($metas[$meta_keys])){
+                           $shift_data = Shift::where('id',$metas[$meta_keys]);
+                           if($shift_data->exists()){
+                            $data[$key][$meta_keys] = $shift_data->first()->name;
+                           }
+                        }
+                    }elseif($meta_keys =='pay_scale'){
+                           $data[$key][$meta_keys] = ""; 
+                        if(!empty($metas[$meta_keys])){
+                           $payscale_data = Payscale::where('id',$metas[$meta_keys]);
+                           if($payscale_data->exists()){
+                            $data[$key][$meta_keys] = $payscale_data->first()->title;
+                           }
+                        }
                     }
                     else{
                         $data[$key][$meta_keys] = $metas[$meta_keys];

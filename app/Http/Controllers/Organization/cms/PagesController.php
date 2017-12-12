@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Organization\cms;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-// use App\Model\Organization\Page;
+use App\Model\Organization\Page;
 use App\Model\Organization\Comment;
 use App\Model\Organization\PageMeta;
 use App\Model\Organization\Posts;

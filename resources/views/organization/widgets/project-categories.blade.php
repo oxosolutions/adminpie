@@ -8,14 +8,14 @@
 	<div class="aione-flip">
 	    <div class="aione-card"> 
 	        <div class="aione-card-face front">  
-	            <div class="aione-widget-title">{{ucfirst($widget_title)}}</div>
+	            {{-- <div class="aione-widget-title">{{ucfirst($widget_title)}}</div> --}}
 				<div class="aione-widget-content-wrapper">
 					<span class="aione-hero-text aione-counter">{{$item_count}}</span>
 				</div>
 				<div class="aione-widget-footer"></div>
 	        </div> 
 	        <div class="aione-card-face back"> 
-	        	<div class="aione-widget-title">{{ucfirst($widget_title)}}</div>
+	        	{{-- <div class="aione-widget-title">{{ucfirst($widget_title)}}</div> --}}
 	        	<div class="aione-widget-content-wrapper">
 		            <ul class="aione-recent-items">
 						@if(!$items->isEmpty())

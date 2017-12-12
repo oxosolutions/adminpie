@@ -2,20 +2,21 @@
 	$model = "App\Model\Organization\Designation";
 	$item_count = $model::all()->count();
 	$items = $model::orderBy('id','DESC')->limit(5)->get();
+	$route = 'designations';
 @endphp
 <div class="aione-widget-content">
 	<div class="aione-widget-background aione-shadow"></div>
 	<div class="aione-flip">
 	    <div class="aione-card"> 
 	        <div class="aione-card-face front">  
-	            <div class="aione-widget-title">{{$widget_title}}</div>
+	            {{-- <div class="aione-widget-title">{{$widget_title}}</div> --}}
 				<div class="aione-widget-content-wrapper">
 					<span class="aione-hero-text aione-counter">{{$item_count}}</span>
 				</div>
 				<div class="aione-widget-footer"></div>
 	        </div> 
 	        <div class="aione-card-face back"> 
-	        	<div class="aione-widget-title">{{$widget_title}}</div>
+	        	{{-- <div class="aione-widget-title">{{$widget_title}}</div> --}}
 	        	<div class="aione-widget-content-wrapper">
 		            <ul class="aione-recent-items">
 						@if(!$items->isEmpty())

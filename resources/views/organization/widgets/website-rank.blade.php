@@ -1,5 +1,5 @@
 <div class="aione-widget-content">
-	<div class="aione-widget-title">{{$widget_title}}</div>
+	{{-- <div class="aione-widget-title">{{$widget_title}}</div> --}}
 	<div class="aione-widget-content-wrapper">
 		<div class="field text field-type-text">
 			<input id="widget_website_rank_input" placeholder="example.com" data-validation="required" name="widget_website_rank_url" type="text" autocomplete="off">
