@@ -11,7 +11,7 @@
 @endphp
 <style type="text/css">
 	.aione-widget-handle , .action-dashboard-buttons{
-		display: none;
+		/*display: none;*/
 	}
 	.aione-widgets{
 		position: relative;
@@ -199,9 +199,10 @@
 	.dashboard-actions.fixed-action-btn.horizontal{
 	    right: 10px;
 	    bottom: auto;
-	    top: 47px;
+	    top: 64px;
 	    padding: 0;
 	    margin: 0;
+	    position: absolute;
 	}
 	.dashboard-actions.fixed-action-btn.horizontal ul{
 	    right: 44px;
