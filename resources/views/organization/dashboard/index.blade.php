@@ -11,7 +11,7 @@
 @endphp
 <style type="text/css">
 	.aione-widget-handle , .action-dashboard-buttons{
-		/*display: none;*/
+		display: none;
 	}
 	.aione-widgets{
 		position: relative;

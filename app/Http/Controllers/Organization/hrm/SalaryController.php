@@ -164,34 +164,41 @@ class SalaryController extends Controller
               $month = '0'.$month;
             }
              $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
+             if(empty($payScale)){
+               $payScale_error[] = $meta['employee_id'];
+             }
 
-             dd($payScale);
+
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
               if($attendance_data->count()>0){
-                $data[$userKey]['employee_id'] = $meta['employee_id'];
-                $data[$userKey]['user_id'] = $userValue['id'];
-                $data[$userKey]['department'] = $meta['department'];
-                $data[$userKey]['designation'] = $meta['designation'];
-                $data[$userKey]['shift'] = $meta['user_shift'];
-                $data[$userKey]['id'] = $userValue['id'];
-                // $payScale =  Payscale::where('id',$meta['pay_scale'])->first();
-                $data[$userKey]['total_salary'] = $total_salary = $payScale['total_salary']; 
-                $data[$userKey]['per_day_amount'] = $per_day =  number_format($total_salary/30, 2,'.', '');
-                // $attendance_data->where('attendance_status','present')->count();
-                $data[$userKey]['payscale'] = json_encode( $payScale );
-                $data[$userKey]['year'] = $year;
-                $data[$userKey]['month'] = $month;
-                $data[$userKey]['absent'] = $attendance_data->where('attendance_status','absent')->count();
-                $data[$userKey]['number_of_attendance'] = $attendance_data->where('attendance_status','present')->count();
-                $data[$userKey]['sundays'] = $sunday = $attendance_data->where('day','Sunday')->count();
-                $data[$userKey]['holiday'] = $holiday;
-                $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
-                $data[$userKey]['dedicated_amount'] =  ($working_days - $data[$userKey]['number_of_attendance']) * $per_day;
-                $data[$userKey]['total_days'] = $daysInMonth;
-                if($data[$userKey]['number_of_attendance'] ==0){
-                   $data[$userKey]['salary'] = 0;   
+                if(empty($payScale)){
+                     $payScale_error[] = $meta['employee_id'];
                 }else{
-                  $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+                    $data[$userKey]['employee_id'] = $meta['employee_id'];
+                    $data[$userKey]['user_id'] = $userValue['id'];
+                    $data[$userKey]['department'] = $meta['department'];
+                    $data[$userKey]['designation'] = $meta['designation'];
+                    $data[$userKey]['shift'] = $meta['user_shift'];
+                    $data[$userKey]['id'] = $userValue['id'];
+                    // $payScale =  Payscale::where('id',$meta['pay_scale'])->first();
+                    $data[$userKey]['total_salary'] = $total_salary = $payScale['total_salary']; 
+                    $data[$userKey]['per_day_amount'] = $per_day =  number_format($total_salary/30, 2,'.', '');
+                    // $attendance_data->where('attendance_status','present')->count();
+                    $data[$userKey]['payscale'] = json_encode( $payScale );
+                    $data[$userKey]['year'] = $year;
+                    $data[$userKey]['month'] = $month;
+                    $data[$userKey]['absent'] = $attendance_data->where('attendance_status','absent')->count();
+                    $data[$userKey]['number_of_attendance'] = $attendance_data->where('attendance_status','present')->count();
+                    $data[$userKey]['sundays'] = $sunday = $attendance_data->where('day','Sunday')->count();
+                    $data[$userKey]['holiday'] = $holiday;
+                    $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
+                    $data[$userKey]['dedicated_amount'] =  ($working_days - $data[$userKey]['number_of_attendance']) * $per_day;
+                    $data[$userKey]['total_days'] = $daysInMonth;
+                    if($data[$userKey]['number_of_attendance'] ==0){
+                       $data[$userKey]['salary'] = 0;   
+                    }else{
+                      $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+                    }
                 }
               }else{
                   $error[] = $meta['employee_id'];
@@ -207,6 +214,11 @@ class SalaryController extends Controller
         }
 
                   // dd($data, @$error);
+        if(!empty($payScale_error)){
+          $payScale_error = array_unique($payScale_error);
+          $payScale_error =  implode(', ', $payScale_error );
+          Session::flash('error_payscale', " employee id ".$payScale_error." Pay scale values not define to generate salary.");
+        }
 
         if(!empty($error)){
           $employee =  implode(', ', $error );

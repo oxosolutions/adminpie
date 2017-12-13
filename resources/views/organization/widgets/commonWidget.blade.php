@@ -1,18 +1,17 @@
 <style type="text/css">
 	.action-dashboard-buttons{
-		transform: rotate(90deg);
-		right: -9px;
-		bottom: 84%;
+		transform: rotate(0deg);
+	    right: 6px;
+	    bottom: 80%;
 	}
-	/*.aione-actions-handle{
-		background-color: transparent;
-		box-shadow: none;
-		height: 30px;
-		width: 30px;
-		margin-left:  2px;
-		padding: 0px;
+	.action-dashboard-buttons i{
+		transform: rotate(90deg);
+	}
+	.aione-actions-handle , .aione-delete-confirmation{
+		    width: 38px;
+    height: 36px;
 
-	}*/
+	}
 	.aione-actions-handle > .material-icons{
 		color: #263238;
 	}

@@ -684,16 +684,16 @@ $page_title_data = array(
         $(document).on('click','.move',function(){
             $('input[name=sectionId]').val($(this).attr('section-id'));
         });
-        // $(document).on('click','.arrow-downward',function(){
-        //     var field_id = $(this).parents('.collection-item').attr('field-id');
-        //     $.ajax({
-        //         url : route()+'/field/sort',
-        //         type : 'post',
-        //         data : {field_id : field_id , _token : $('input[name=_token]').val()},
-        //         success : function(res){
+        $(document).on('click','.arrow-downward',function(){
+            var field_id = $(this).parents('.collection-item').attr('field-id');
+            $.ajax({
+                url : route()+'/field/sort',
+                type : 'post',
+                data : {field_id : field_id , _token : $('input[name=_token]').val()},
+                success : function(res){
 
-        //         }
-        //     });
-        // });
+                }
+            });
+        });
     </script>
 @endsection

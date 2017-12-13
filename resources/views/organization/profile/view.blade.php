@@ -437,9 +437,16 @@ $page_title_data = array(
 						});
 					</script>
 				@endif
-					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>	
-					{!! Form::open(['route' => 'change.password' , 'method' => 'post']) !!}
-					@include('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
+					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>
+					@if(@$errors->new_password || @$errors->confirm_password)	
+						<script type="text/javascript">
+							window.onload = function(){
+								$('#modal9').modal('open');
+							}
+						</script>
+					@endif
+						{!! Form::open(['route' => 'change.password' , 'method' => 'post']) !!}
+						@include('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
 					@php
 						if(Auth::guard('admin')->check()){
 				            $id = Auth::guard('admin')->user()->id;

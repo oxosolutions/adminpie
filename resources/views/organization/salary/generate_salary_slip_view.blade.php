@@ -18,6 +18,11 @@
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+@if(Session::has('error_payscale'))
+<div class="aione-message error"> 
+  {{Session::get('error_payscale')}}
+</div>
+@endif
 <div>
 {!! Form::open(['route'=>'hrm.generate.salary_view']) !!}
 <section class="aione-border mb-20">
