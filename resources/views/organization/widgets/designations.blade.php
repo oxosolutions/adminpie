@@ -37,6 +37,8 @@
 	        </div> 
 	    </div> 
 	</div>
+	@include('organization.widgets.aioneWidgetButton')
+	
 </div>
 
 

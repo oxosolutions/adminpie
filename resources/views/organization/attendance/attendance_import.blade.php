@@ -38,7 +38,10 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
 <div class="row">
 	{!! Form::open(['route'=>'upload.attendance', "files"=>true , 'class'=> 'form-horizontal','method' => 'post'])!!}
-	<div class="row" style="padding:10px 0px">
+	<div class="row no-margin-bottom">
+			{!! FormGenerator::GenerateForm('import_attendance_form') !!}
+		</div>
+	{{-- <div class="row" style="padding:10px 0px">
 		<div class="col l12 aione-field-wrapper">
 			{!!Form::text('title',null,['class' => 'aione-field','id'=>'attendence-title','placeholder'=>'Enter title'])!!}
 		</div>
@@ -49,7 +52,7 @@ $page_title_data = array(
 	<div  class="row">
 		<button class="btn blue" type="submit" name="action" style="margin-top: 10px;">Upload Attendance
 		</button>
-	</div>
+	</div> --}}
 	{!!Form::close()!!}
 </div>
 @include('common.page_content_primary_end')

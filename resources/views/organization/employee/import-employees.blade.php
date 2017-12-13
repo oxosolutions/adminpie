@@ -11,11 +11,100 @@
 
 	
 ); 
+
+$body_text="";
 @endphp
 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+
+@if(Session::has('import_new'))
+               	@php
+                 foreach(Session::get('import_new') as $keys => $vals) {
+                	$body_text .="<tr> <td>Employee Added</td> <td>".$keys."</td> <td>".$vals."</td> <td>Employee Added Successfully</td> </tr>";
+ 					}
+               @endphp
+@endif
+
+@if(Session::has('alreadyInGroupNotOrg'))
+				@php
+                 foreach(Session::get('alreadyInGroupNotOrg') as $keys => $vals) {
+                	$body_text .="<tr> <td>Employee Updated</td> <td>".$keys."</td> <td>".$vals."</td> <td> User associated with this organization</td> </tr>";
+ 					}
+               @endphp
+      {{--  <ul>
+            <li>Following User already working with other Organization Now they also associate with us.</li>
+               @foreach(Session::get('alreadyInGroupNotOrg') as $keys => $vals) 
+                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
+               @endforeach
+       </ul> --}}
+@endif
+
+@if(Session::has('newInsertAlreadyEmployeeId'))
+				@php
+                 foreach(Session::get('newInsertAlreadyEmployeeId') as $keys => $vals) {
+                	$body_text .="<tr> <td>Error Occurred </td> <td>".$keys."</td> <td>".$vals."</td> <td>Duplicate Employee ID </td> </tr>";
+ 					}
+               @endphp
+       {{-- <ul>
+            <li>Following Record Employee Id already Assign to other employee.</li>
+               @foreach(Session::get('newInsertAlreadyEmployeeId') as $keys => $vals) 
+                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
+               @endforeach
+       </ul> --}}
+@endif
+
+@if(Session::has('emptyRow'))
+				@php
+                 foreach(Session::get('emptyRow') as $keys => $vals) {
+                	$body_text .="<tr> <td>Error Occurred </td><td> </td> <td></td> <td>".$vals."Missing required values </td> </tr>";
+ 					}
+               @endphp
+       {{-- <ul>
+            <li>Following .</li>
+               @foreach(Session::get('emptyRow') as $keys => $vals) 
+                <li style="color: Red; ">  {{ $vals }} </li>
+               @endforeach
+       </ul> --}}
+@endif
+
+@if(Session::has('updateRecord'))
+				@php
+                 foreach(Session::get('updateRecord') as $keys => $vals) {
+                	$body_text .="<tr> <td>Update Employee </td> <td>".$keys."</td> <td>".$vals."</td> <td>Update Employee Successfully </td> </tr>";
+ 					}
+               @endphp
+       {{-- <ul>
+            <li>Following .</li>
+               @foreach(Session::get('updateRecord') as $keys => $vals) 
+                <li style="color: yellow; ">  {{ $vals }} update successfully.</li>
+               @endforeach
+       </ul> --}}
+@endif
+@if(Session::has('import_new') || Session::has('alreadyInGroupNotOrg') || Session::has('emptyRow') || Session::has('updateRecord'))
+<div class="aione-table aione-border mt-20 mb-20">
+       <h4 class="light-blue darken-4 p-10 bg-grey bg-lighten-4 m-0">Employees Import Report</h4>
+<table class="compact">
+              <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Employee Id</th>
+                    <th>E-mail</th>
+                    <th>Massage</th>
+                </tr>
+              </thead>
+               <tbody>
+               	{!! $body_text !!}
+               </tbody>
+           </table>
+     </div>
+@endif
+
+
+
+
+
 
 
 {!! Form::open(['route'=>'import.employee.post' , 'class'=> 'form-horizontal','method' => 'post','files'=>true])!!}

@@ -41,6 +41,12 @@
 
 <div id="add_new_wrapper" class="add-new-wrapper light-blue darken-2 p-20 ml-10 mr-10 mb-20">
 	{!! Form::open(['class'=> 'form-horizontal','method' => 'post'])!!}
+
+	
+			<h1>IMPPOrt attenmdane</h1>
+		<div class="row no-margin-bottom">
+			{!! FormGenerator::GenerateForm('import_attendance_form') !!}
+		</div>
 		<div class="row no-margin-bottom">
 			<div class="col s12 m2 l3 aione-field-wrapper">
 				<input name="name" class="no-margin-bottom aione-field" type="text" placeholder="Attendence Title" />

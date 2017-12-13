@@ -2,6 +2,7 @@
 	$model = "App\Model\Organization\Visualization";
 	$item_count = $model::all()->count();
 	$items = $model::orderBy('id','DESC')->limit(3)->get();
+	$route = "visualizations";
 @endphp
 
 @include('organization.widgets.includes.widget-start')
@@ -31,4 +32,6 @@
 		</div>
 		<div class="aione-widget-footer"></div>
      @include('organization.widgets.includes.widget-back-end')
+	@include('organization.widgets.aioneWidgetButton')
+
 @include('organization.widgets.includes.widget-end')

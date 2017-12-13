@@ -289,6 +289,9 @@
     left: 10px;
     color: black;
 	}*/
+	svg{
+		top: 60% !important;
+	}
 </style>
 
 @include('common.pageheader',$page_title_data)

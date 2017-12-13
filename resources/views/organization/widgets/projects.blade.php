@@ -2,6 +2,7 @@
 	$model = "App\Model\Organization\Project";
 	$item_count = $model::all()->count();
 	$items = $model::orderBy('id','DESC')->limit(5)->get();
+	$route = 'list.project';
 @endphp
 <div class="aione-widget-content">
 	<div class="aione-widget-background aione-shadow"></div>
@@ -36,6 +37,8 @@
 	        </div> 
 	    </div> 
 	</div>
+	@include('organization.widgets.aioneWidgetButton')
+
 </div>
 
 

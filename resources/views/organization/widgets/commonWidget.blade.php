@@ -16,7 +16,10 @@
     	color: white;
 	}
 	.aione-widget-content-section{
-		min-height: 130px
+		min-height: 163px;
+		padding-bottom: 0px;
+		padding-left: 0px;
+		padding-right: 0px;
 	}
 	.action-dashboard-buttons ul{
 		right: 45px
@@ -26,7 +29,14 @@
 	}
 	.action-dashboard-buttons li i{
 		background-color: #263238;
-
+	}
+	.aione-widget-handle{
+		position: absolute;
+    	left: 10px;
+    	cursor: pointer;
+	}
+	.aione-widget-handle , .action-dashboard-buttons{
+		display: none;
 	}
 </style>
 <div class="aione-widget aione-border bg-grey bg-lighten-5" >
@@ -69,12 +79,16 @@
 
 
 	</div>
-	<div class="aione-align-center p-5 aione-border-top bg-grey bg-lighten-4"> 
 		@if(Auth::guard('admin')->check())
-			<a href="{{route($route)}}" class="display-block white bg-blue-grey bg-darken-4 p-10">All {{ucfirst(str_replace('_', ' ', $key))}}</a>
-		@else
-				{{ @$route }}
-			<a href="" class="display-block white bg-blue-grey bg-darken-4 p-10">All {{ucfirst(str_replace('_', ' ', $key))}}</a>
+			<div class="aione-align-center p-5 aione-border-top bg-grey bg-lighten-4"> 
+				<a href="{{route($route)}}" class="display-block white bg-blue-grey bg-darken-4 p-10">All {{ucfirst(str_replace('_', ' ', $key))}}</a>
+			</div>
 		@endif
-	</div>
 </div>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.aione-widget').hover(function(){
+			$(this).find('.aione-widget-handle , .action-dashboard-buttons').toggle();
+		});
+	})
+</script>

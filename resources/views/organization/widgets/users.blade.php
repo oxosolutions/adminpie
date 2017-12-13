@@ -31,4 +31,6 @@
 		</div>
 		<div class="aione-widget-footer"></div>
      @include('organization.widgets.includes.widget-back-end')
+	@include('organization.widgets.aioneWidgetButton')
+     
 @include('organization.widgets.includes.widget-end')

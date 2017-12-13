@@ -2,6 +2,7 @@
 	$model = "App\Model\Organization\Dataset";
 	$item_count = $model::all()->count();
 	$items = $model::orderBy('id','DESC')->limit(3)->get();
+	$route = 'list.dataset';
 @endphp
 @include('organization.widgets.includes.widget-start')
     @include('organization.widgets.includes.widget-front-start')
@@ -30,4 +31,6 @@
 		</div>
 		<div class="aione-widget-footer"></div>
      @include('organization.widgets.includes.widget-back-end')
+	@include('organization.widgets.aioneWidgetButton')
+
 @include('organization.widgets.includes.widget-end')

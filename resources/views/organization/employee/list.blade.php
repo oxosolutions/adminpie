@@ -30,14 +30,38 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 {{-- @include('common.list.datalist') --}}
-fghfghgfh
+
 @if(Session::has('import_new'))
-       <ul>
+    <div class="aione-table aione-border mt-20 mb-20">
+       <h4 class="light-blue darken-4 p-10 bg-grey bg-lighten-4 m-0">Employees Import Report</h4>
+           <table class="compact">
+              <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Employee Id</th>
+                    <th>E-mail</th>
+                    <th>Massage</th>
+                </tr>
+              </thead>
+               <tbody>
+                 @foreach(Session::get('import_new') as $keys => $vals) 
+                <tr>
+                  <td>New Employee</td>
+                  <td>{{ $keys }}</td>
+                  <td>{{ $vals }}</td>
+                  <td>Upload Successfully</td>
+                </tr>
+               @endforeach
+                
+              </tbody>
+            </table>  
+</div>
+       {{-- <ul>
             <li>Following Employee  Import Success fully</li>
                @foreach(Session::get('import_new') as $keys => $vals) 
                 <li style="color: green; " > Employee : id {{ $keys  }} ,  email {{ $vals }} new employee created. </li>
                @endforeach
-       </ul>
+       </ul> --}}
 @endif
 
 @if(Session::has('alreadyInGroupNotOrg'))

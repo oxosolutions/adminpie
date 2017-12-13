@@ -2,6 +2,7 @@
 	$model = "App\\Model\\Organization\\forms";
 	$item_count = $model::all()->count();
 	$items = $model::orderBy('id','DESC')->where('type','survey')->limit(3)->get();
+	$route = "list.survey";
 @endphp
 
 @include('organization.widgets.includes.widget-start')
@@ -31,4 +32,5 @@
 		</div>
 		<div class="aione-widget-footer"></div>
      @include('organization.widgets.includes.widget-back-end')
+	@include('organization.widgets.aioneWidgetButton')
 @include('organization.widgets.includes.widget-end')

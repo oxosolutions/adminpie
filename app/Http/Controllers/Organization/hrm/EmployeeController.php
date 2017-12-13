@@ -826,7 +826,7 @@ class EmployeeController extends Controller
                         }
                 }
             }else{
-                $emptyRow[$index] = "Row $index  have miss neccesary value.";
+                $emptyRow[$index] = "Row $index ";
             }
             
         }
@@ -849,7 +849,7 @@ class EmployeeController extends Controller
         }
         
     }
-        return redirect()->route('list.employee');
+         return redirect()->route('import.employee');
     }
 
     protected function create_org_user($group_user_id , $value , $import_record_options){
@@ -1067,10 +1067,6 @@ class EmployeeController extends Controller
     
     public function import()
     {
-     // dd(get_meta('Organization\\UsersMeta',2,'contact_no','user_id',true));
-        // dd(get_user_meta(2,'contact_no',true));
-        // dd(get_user(true,true));
-        // dd(get_current_user_meta('contact_no',true));
         return view('organization.employee.import-employees');
     }
  
