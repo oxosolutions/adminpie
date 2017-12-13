@@ -209,7 +209,7 @@ class EmployeeController extends Controller
                       'showColumns' => ['employee_id'=>'Employee ID','name'=>'Name','department'=>'Department','designation'=>'Designation','email'=>'Email ID','created_at'=>'Created','status'=>'Status'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'] , 'class' => 'edit'],
-                                      'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'id'] , 'class' => 'delete']
+                                      'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'id'] , 'class' => 'delete confirm-delete']
                                    ],
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]

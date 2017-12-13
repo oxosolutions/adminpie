@@ -10,6 +10,68 @@
 	); 
 @endphp
 <style type="text/css">
+	.action-dashboard-buttons{
+		transform: rotate(0deg);
+	    right: 6px;
+	    bottom: 80%;
+	}
+	.action-dashboard-buttons i{
+		transform: rotate(90deg);
+	}
+	.aione-actions-handle , .aione-delete-confirmation{
+		    width: 38px;
+    height: 36px;
+
+	}
+	.aione-actions-handle > .material-icons{
+		color: #263238;
+	}
+	.aione-actions-handle > .material-icons , .aione-actions-handle > .material-icons:hover{
+		background: #263238;
+    	color: white;
+	}
+
+	.aione-widget-content-section{
+		min-height: 148px;
+		padding-bottom: 0px;
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+	.action-dashboard-buttons ul{
+		right: 45px
+	}
+	.action-dashboard-buttons ul li{
+		margin : 0px !important;
+	}
+	.action-dashboard-buttons li i{
+		background-color: #263238;
+	}
+	.aione-widget-handle{
+		position: absolute;
+    	left: 10px;
+    	cursor: pointer;
+	}
+	
+	.aione-hero-text{
+		color: #263238
+	}
+	.aione-counter{
+	    margin-top:0px !important;
+	}
+	.aione-widget-content-wrapper .field-type-text{
+		padding: 6px
+	}
+
+	#widget_website_rank_button{
+		padding: 15px;
+	    background: #263238;
+	    color: white;
+	    margin:10px;
+	    position: absolute;
+	    width: 92%;
+	    text-align: center;
+	    bottom: 1px;
+	}
 	.aione-widget-handle , .action-dashboard-buttons{
 		display: none;
 	}
@@ -26,13 +88,6 @@
 	    position: relative;
 	    color: #666666;
 	}
-	/*
-	.aione-widgets .aione-widget:before{
-		content: "";
-		display: block;
-		padding-top: 100%; 	
-	}
-	*/
 	.aione-widgets:after {
 		content:"";
 		display: block;
@@ -40,13 +95,6 @@
 		height: 1px;
 		clear: both; 
 	}
-	/*.aione-widgets .aione-widget .aione-widget-background{
-		position: absolute;
-		top:0;
-		right: 0;
-		bottom: 0;
-		left: 0;
-	}*/
 	.aione-widget-handle{
 		left: 5px;
 	}
@@ -199,7 +247,7 @@
 	.dashboard-actions.fixed-action-btn.horizontal{
 	    right: 10px;
 	    bottom: auto;
-	    top: 64px;
+	    top: 7px;
 	    padding: 0;
 	    margin: 0;
 	    position: absolute;
@@ -264,7 +312,8 @@
 	    font-size: 80px;
 	    font-weight: 400;
 	    line-height: 1.3;
-	    color: #168dc5;
+	    color: #263238;
+	    font-size: 64px;
 	}
 
 	.aione-recent-items{
@@ -308,15 +357,11 @@
 <div class="aione-dashboard">
 	
 	<div class="aione-dashboard-welcome-message">
-		
 		@php
 			$admin_dashboard_welcome_message = App\Model\Organization\OrganizationSetting::getSettings('admin_dashboard_welcome_message');
 		@endphp
-
 		{!!$admin_dashboard_welcome_message!!}
-		
 	</div>
-	{{-- {{dd($widgets)}} --}}
     <div class="aione-widgets" id="sortable-widgets">
     	@foreach($widgets as $widget_key => $widget)
     		@php
