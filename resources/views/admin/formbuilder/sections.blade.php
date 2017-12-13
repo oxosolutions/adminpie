@@ -283,9 +283,8 @@ $page_title_data = array(
                                                 <i class="fa fa-clone"></i>
                                             </a>
 
-                                            
-                                            @if(Auth::guard('admin')->check())
-                                                
+                                          
+                                            @if(Auth::guard('admin')->check())                                                
                                                 @php
                                                     $down = 'field.down.sort';
                                                     $up = 'field.up.sort';
@@ -297,14 +296,17 @@ $page_title_data = array(
                                                 @endphp
                                             @endif
                                             
-                                            <a href="{{ route($up,$field->id) }}" class="arrow-upward">
-                                                <i class=" material-icons dp48 green">arrow_upward</i>    
-                                            </a>
-                                            
-                                            <a href="{{ route($down,$field->id) }}" class="arrow-downward">
-                                                <i class=" material-icons dp48 orange">arrow_downward</i>    
-                                            </a>
-                                             <a href="javascript:;" class="move field_move" field_id="{{ $field->id }}" data-target="sections-list">
+                                            @if($field->id != 1)
+                                                <a href="{{ route($up,$field->id) }}" class="arrow-upward">
+                                                    <i class=" material-icons dp48 green">arrow_upward</i>    
+                                                </a>
+                                            @endif
+
+                                                <a href="{{ route($down,$field->id) }}" class="arrow-downward">
+                                                    <i class=" material-icons dp48 orange">arrow_downward</i>    
+                                                </a>
+
+                                            <a href="javascript:;" class="move field_move" field_id="{{ $field->id }}" data-target="sections-list">
                                                 <i class=" material-icons dp48 blue">forward</i>    
                                             </a>
                                         </div>

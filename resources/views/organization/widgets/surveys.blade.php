@@ -6,7 +6,7 @@
 
 @include('organization.widgets.includes.widget-start')
     @include('organization.widgets.includes.widget-front-start')
-        <div class="aione-widget-title" >{{ucfirst($widget_title)}}</div>
+        {{-- <div class="aione-widget-title" >{{ucfirst($widget_title)}}</div> --}}
 		<div class="aione-widget-content-wrapper">
 			<span class="aione-hero-text aione-counter">{{$item_count}}</span>
 		</div>

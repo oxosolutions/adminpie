@@ -19,36 +19,13 @@
 
 
 {!! Form::open(['route'=>'import.employee.post' , 'class'=> 'form-horizontal','method' => 'post','files'=>true])!!}
-	<div class="row ">
-		{{-- {!!Form::file('import_employee',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Choose File','style'=>'border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px'])!!} --}}
 
-		 <div class="file-field input-field">
-			<div class="">
-			<span>Choose file to import</span>
-				{{-- <input type="file"> --}}
-				{!!Form::file('import_employee',null)!!}
-			</div>
-			<div class="file-path-wrapper">
-				{!!Form::text('import_employee',null,['class'=>'file-path validate'])!!}
-			</div>
-			<div class="file-path-wrapper">
-				{!!Form::radio('import_record_options', 'new_insert')!!}
-				<label for=""> only Insert New Records</label> 
-			</div>
-			<div class="file-path-wrapper">
-				{!!Form::radio('import_record_options', 'update_new_insert')!!}
-				<label for=""> Update and Insert New Records</label> 
-			</div>
-			<div class="file-path-wrapper">
-				{!!Form::radio('import_record_options', 'update_password_new_insert')!!}
-				<label for=""> Update Records , Passwords and Insert New Records</label> 
-			</div>
-	    </div>
-	</div>
+		<div class="row no-margin-bottom">
+			{!! FormGenerator::GenerateForm('import_employees_form') !!}
+		</div>
 	@if(Session::get('errors'))
 		{{dump(Session::get('errors'))}}
 	@endif
-	<button type="submit" class="btn blue">Import</button>
 {!!Form::close()!!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
