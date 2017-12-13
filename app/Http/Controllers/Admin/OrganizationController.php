@@ -391,12 +391,17 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_collaborators',
                                 '--schema'=>'type:string, relation_id:integer, email:string, userid:string, access:string, status:string'
                             ]);
-		//Shifts
-		Artisan::call('make:migration:schema',[
-								'--model'=>false,
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_attendance_files',
+                                '--schema'=>'name:string, title:string:nullable, status:integer:default(1)'
+                            ]); 
+        //Shifts
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
                                 'name'=>'create_'.$org_id.'_shifts',
-                                '--schema'=>'name:string, from:string, to:string, status:integer:default(1), working_days:string'
-                            ]);	
+                                '--schema'=>'name:string, from:string, to:string, working_days:string:default("[]"), status:integer:default(1)'
+                            ]); 
 		//Pages 
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,

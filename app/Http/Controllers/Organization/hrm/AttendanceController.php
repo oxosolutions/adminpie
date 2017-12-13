@@ -11,8 +11,6 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\Attendance;
 use App\Model\Organization\AttendanceFile;
 use App\Model\Organization\User;
-
-
 use Carbon\Carbon;
 use DB;
 use EmployeeHelper;
@@ -25,7 +23,6 @@ class AttendanceController extends Controller
  	protected $current_date_data;
  	public function __construct()
  	{
-
  		$current_date_time = Carbon::now('Asia/Calcutta');
  		$this->current_date_data  = ['date'=>$current_date_time->day, 'month'=> '0'.$current_date_time->month , 'year'=>$current_date_time->year, 'day'=> $current_date_time->format('l') , 'month_week_no'=>$current_date_time->weekOfMonth];
  	}
@@ -33,7 +30,6 @@ class AttendanceController extends Controller
 	{
 		return view('common.Designattendances');
 	}
-	
 	public function check_in_out(Request $request)
 	{
 		$u_id = Auth::guard('org')->user()->id;
@@ -92,22 +88,27 @@ class AttendanceController extends Controller
 
 	public function attendance_import(Request $request)
 	{
-			$file = $request->file('attendance_file');
-			$validator = Validator::make(
-				    [
-				        'file'      => $file,
-				        'extension' => strtolower($file->getClientOriginalExtension()),
-				    ],
-				    [
-				        'file'          => 'required',
-				        'extension'      => 'required|in:csv',
-				    ]
-				);
+		$file = $request->file('attendance_file');
 
-			if ($validator->fails()) {
-            	return back();
-        	}
+		$this->validate($request, [
+        'attendance_file' => 'required',
+      
+    	]);
+    	
+		$validator = Validator::make(
+			    [
+			        'file'      => $file,
+			         'extension' => strtolower($file->getClientOriginalExtension()),
+			    ],
+			    [
+			        'file'          => 'required',
+			        'extension'      => 'required|in:csv',
+			    ]
+			);
 
+		if ($validator->fails()) {
+        	return back();
+    	}
 		if($request->file('attendance_file'))
 		{	
 			$orgID = Session::get('organization_id');

@@ -254,7 +254,9 @@ $page_title_data = array(
                             </div>
                             @php
                                 $fields = $sections->where('id',Request::input('sections'))->first()->fields;
+                                $firstField = $fields->toArray()[0]['id'];
                             @endphp
+
                             @if($fields->count() > 0)
                                 @foreach($sections->where('id',Request::input('sections'))->first()->fields as $k => $field)
                                     <li class="collection-item field_id" field_id="{{$field->id}}">
@@ -295,13 +297,11 @@ $page_title_data = array(
                                                     $up = 'org.field.up.sort';
                                                 @endphp
                                             @endif
-                                            
-                                            @if($field->id != 1)
-                                                <a href="{{ route($up,$field->id) }}" class="arrow-upward">
-                                                    <i class=" material-icons dp48 green">arrow_upward</i>    
-                                                </a>
-                                            @endif
-
+                                                @if($field->id != $firstField)
+                                                    <a href="{{ route($up,$field->id) }}" class="arrow-upward">
+                                                        <i class=" material-icons dp48 green">arrow_upward</i>    
+                                                    </a>
+                                                @endif
                                                 <a href="{{ route($down,$field->id) }}" class="arrow-downward">
                                                     <i class=" material-icons dp48 orange">arrow_downward</i>    
                                                 </a>

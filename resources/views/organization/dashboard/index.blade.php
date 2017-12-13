@@ -10,6 +10,9 @@
 	); 
 @endphp
 <style type="text/css">
+	.aione-widget-handle , .action-dashboard-buttons{
+		display: none;
+	}
 	.aione-widgets{
 		position: relative;
 		display: block;
@@ -283,12 +286,14 @@
 	.aione-shadow{
 		box-shadow: 1px 1px 8px rgba(0,0,0,0.15);
 	}
-	/*.widgetSort{
-		position: absolute;
-    top: 10px;
-    left: 10px;
-    color: black;
-	}*/
+	.add-new-widget{
+		width: 100%;
+	    background: #263238;
+	    color: white;
+	    padding: 8px;
+	    margin: 0px;
+	    width: 92%;
+	}
 	svg{
 		top: 60% !important;
 	}
@@ -329,22 +334,34 @@
     	@endforeach
 
     	@if(!empty($listWidgets))
-	    	<div id="aione_widget_add_new" class="aione-widget aione-widget-add-new">
-	    		<div class="aione-widget-content">
-					<div class="aione-widget-title">Add New Widget</div>
-		    		<div class="aione-widget-content-wrapper">
-		    		{{Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])}}
-		    			{!! csrf_field() !!}
-		    			<input type="hidden" name="slug" value="{{@Request()->route()->parameters()['id']}}" class="slug-parameter">
-		    			<div class="field select field-type-select">
-							{!! Form::select('widget[]',@$listWidgets,null,["class"=>"no-margin-bottom aione-field browser-default" , 'placeholder'=> 'Select Widget','field_placeholder'])!!}
-							<span class="error-red"></span>
+    	<div class="aione-widget aione-border bg-grey bg-lighten-5">
+			<div class="aione-title">
+				<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4">
+					<a href="javascript:;" class="blue-grey darken-4">Add New Widget</a>
+				</h5>
+			</div>
+			<div class="aione-align-center font-size-64 font-weight-600 blue-grey darken-2 aione-widget-content-section"> 
+				<div class="aione-widget-content">
+					{{Form::open(['method' => 'post' , 'route' => 'update.dashboard.widget' ])}}
+						<div class="aione-widget-content-wrapper">
+							<div class="field text field-type-text">
+					    			{!! csrf_field() !!}
+					    			<input type="hidden" name="slug" value="{{@Request()->route()->parameters()['id']}}" class="slug-parameter">
+					    			<div class="field select field-type-select">
+										{!! Form::select('widget[]',@$listWidgets,null,["class"=>"no-margin-bottom aione-field browser-default" , 'placeholder'=> 'Select Widget','field_placeholder'])!!}
+										<span class="error-red"></span>
+									</div>
+							</div>
 						</div>
-						<button class="aione-button" type="submit" name="action">Add</button>
+						<button class="aione-button add-new-widget" type="submit" name="action">Add</button>
 					{{Form::close()}}
-					</div>
 				</div>
-	    	</div> <!-- .aione-widget -->
+			</div>
+		</div>
+
+
+
+
     	@endif
 
     </div> <!-- .aione-widgets -->

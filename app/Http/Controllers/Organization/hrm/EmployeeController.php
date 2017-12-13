@@ -534,17 +534,22 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
+        // dd($id);
         try{
             DB::beginTransaction();
             $user =  User::find($id);
+            if(empty($user)){
+                 return back();
+            }
             $user_id = $user->user_id;
-            $model = GroupUsers::where('id',$user_id)->delete();
             $model_meta = User::where('id',$id)->delete();
             $model_meta = UsersMeta::where('user_id',$id)->delete();
+            
             DB::commit();
         }catch(Exception $e){
             DB::rollBack();
-            throw $e;
+            
+            // throw $e;
         }
         return back();
     }

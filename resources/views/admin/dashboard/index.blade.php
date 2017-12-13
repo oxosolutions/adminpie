@@ -19,6 +19,14 @@ $page_title_data = array(
 	    position: relative;
 	    color: #666666;
 	}
+	.test .aione-widget{
+		min-width: 123px;
+	}
+	.test .aione-widget-content-section{
+		padding-top: 10%;
+		min-height: 121px;
+		font-size: 80px
+	}
 </style>
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
@@ -36,7 +44,9 @@ $page_title_data = array(
 				@endphp
 					<!-- Dashboard Widget -->
 					<span class="sortable-divs" widget-order="{{$key}}"></span>
-						@include('organization.widgets.commonWidget')
+						<div class="test">
+							@include('organization.widgets.commonWidget')
+						</div>
 					<!-- Dashboard Widget -->
 				@endforeach
 			</div>

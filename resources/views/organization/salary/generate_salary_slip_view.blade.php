@@ -20,7 +20,54 @@
 @include('common.page_content_primary_start')
 <div>
 {!! Form::open(['route'=>'hrm.generate.salary_view']) !!}
-<div class="ac l50 m100 a100">
+<section class="aione-border mb-20">
+  <div class="ar">
+    <div class="ac s100 m100 l100 p-0">
+      <div class="">
+        <h5 class="pl-20 font-weight-400 m-0 pv-15  ">
+                  Month and Year to Generate Salary Slips
+            </h5>
+      </div>
+  </div>
+</div>
+<div class="ar mt-10">
+  <div class="ac s100 m100 l33">
+    <div id="aione_form_section_374" class="aione-form-section non-repeater p-5">
+              <div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
+              <div id="field_label_select_status" class="field-label">
+               {{--  <label for="input_select_status">
+                  <h4 class="field-title" id="select_fiellds">Select Year</h4>
+                </label> --}}
+              </div>
+              <div id="field_fields" class="field w100 field-type-select">
+                {!! Form::selectRange('year' , 2013,2017 , $data['year'], ['placeholder'=>'Select year' , 'class'=>'browser-default select']) !!}
+              </div>
+            </div>
+          </div> 
+  </div>
+  <div class="ac s100 m100 l33">
+     <div id="aione_form_section_374" class="aione-form-section non-repeater p-5">
+        <div id="field_fields" class="field-wrapper field-wrapper-fields field-wrapper-type-select ">
+        <div id="field_label_select_status" class="field-label">
+          {{-- <label for="input_select_status">
+            <h4 class="field-title" id="select_fiellds">Select Month</h4>
+          </label> --}}
+        </div>
+        <div id="field_fields" class="field field-type-select">
+            {!! Form::selectMonth('month', $data['month'], ['placeholder'=>'Select year' , 'class'=>'browser-default select']);!!}               
+        </div>
+      </div>
+    </div> 
+  </div>
+  <div class="ac s100 m100 l33">
+    <div class="aione-row search-options aione-align-left mt-3">
+      <button type="submit" class="aione-button p-6 bg-light-blue bg-darken-4 white" name="Search" style="width: 100%;">Submit</button>
+    </div>
+  </div>
+</div>
+  </section>
+
+{{-- <div class="ac l50 m100 a100">
     <div class="aione-border">
             <div class="">
                 <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
@@ -55,7 +102,7 @@
     <div class="aione-row search-options aione-align-left mv-10">
       <button type="submit" class="aione-button" name="Search"><i class="fa fa-search mr-5"></i>Filter</button>
     </div>
-  </div>
+  </div> --}}
 {{-- {!! Form::submit('filter') !!} --}}
 
 </div>
@@ -95,22 +142,26 @@
             </tr>
         @endforeach
          @if($user_count != $salary_count)
-             <div class="aione-row search-options aione-align-left mv-10">
-              <button type="submit" class="aione-button" name="generate_salary" value="Generate Salary 1"><i class="fa fa-search mr-5"></i>Generate Salary</button>
-            </div>
+         <div class="ar aione-border mb-10">
+           <div class="ac s100 m100 l60">
+             <h5 class="mt-21">Enter your Name</h5>
+           </div>
+            <div class="ac s100 m100 l40">
+               <div class="aione-row search-options aione-align-right mv-10">
+                <button type="submit" class="aione-button p-6 bg-light-blue bg-darken-4 white" name="generate_salary" value="Generate Salary 1">Generate Salary slip</button>
+              </div>
+           </div>
+         </div>
+            {{--  <div class="aione-row search-options aione-align-left mv-10">
+              <button type="submit" class="aione-button" name="generate_salary" value="Generate Salary 1">Generate Salary slip</button>
+            </div> --}}
           
           @endif
         </tbody>
     </table>
     {!! Form::close()  !!}
 @endif
-
-
-@include('common.pageheader',$page_title_data) 
-@include('common.pagecontentstart')
-@include('common.page_content_primary_start')
-
-<script>
+ <script>
 	$(document).ready(function(){
 
 		$('#selectAll').click(function(e){
@@ -118,9 +169,6 @@
     		$('td input:checkbox',table).prop('checked',this.checked);
 		});
 
-		// $("#select_all").click(function(e){
-		// 	$(this).closet()
-		// });
 
 	});
 

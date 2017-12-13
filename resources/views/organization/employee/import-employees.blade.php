@@ -22,7 +22,7 @@ $body_text="";
 @if(Session::has('import_new'))
                	@php
                  foreach(Session::get('import_new') as $keys => $vals) {
-                	$body_text .="<tr> <td>Employee Added</td> <td>".$keys."</td> <td>".$vals."</td> <td>Employee Added Successfully</td> </tr>";
+                	$body_text .="<tr> <td>Employee Added</td> <td>".$keys."</td> <td>".$vals."</td> <td>Record added successfully	</td> </tr>";
  					}
                @endphp
 @endif
@@ -72,7 +72,7 @@ $body_text="";
 @if(Session::has('updateRecord'))
 				@php
                  foreach(Session::get('updateRecord') as $keys => $vals) {
-                	$body_text .="<tr> <td>Update Employee </td> <td>".$keys."</td> <td>".$vals."</td> <td>Update Employee Successfully </td> </tr>";
+                	$body_text .="<tr> <td>Employee updated</td> <td>".$keys."</td> <td>".$vals."</td> <td>Record updated successfully</td> </tr>";
  					}
                @endphp
        {{-- <ul>
@@ -91,7 +91,7 @@ $body_text="";
                     <th>Action</th>
                     <th>Employee Id</th>
                     <th>E-mail</th>
-                    <th>Massage</th>
+                    <th>Message</th>
                 </tr>
               </thead>
                <tbody>

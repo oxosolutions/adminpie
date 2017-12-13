@@ -75,17 +75,23 @@ class SalaryController extends Controller
 		return back();
 	}
 	public function view_salary_slip($id ){
-			$salary = Salary::with(['user_detail.belong_group:id,name,email', 'user_detail:id,user_id'])->where([ 'id'=>$id ])->first();
+			$salary = Salary::with(['user_detail.belong_group:id,name,email', 'user_detail:id,user_id'])->where([ 'id'=>$id ]);
+      if($salary->exists()){
+        $salary = $salary->first();
+      }else{
+        Session::flash('error','Not Valid ID.');
+      }
 			return view('organization.salary.generate_salary_slip',compact('salary'));
 	}
 	public function generate_salary_slip_view(Request $request){
     // dd(1234);
+
 			$date = Carbon::now();
 			$date->subMonth();
 			$data['month'] = 	$month 	= $date->month;
 			$data['year'] 	=  	$year 	= $date->year;
 			if($request->isMethod('post')){
-
+         $this->validate($request,['year'=>'required', 'month'=>'required']);
 				if($year == $request['year'] && $month <  $request['month']){
 					Session::flash('error', "you can't generate salary slip of future month's.");
 					return back();
@@ -157,6 +163,9 @@ class SalaryController extends Controller
             if(strlen($month) ==1){
               $month = '0'.$month;
             }
+             $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
+
+             dd($payScale);
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
               if($attendance_data->count()>0){
                 $data[$userKey]['employee_id'] = $meta['employee_id'];
@@ -165,7 +174,7 @@ class SalaryController extends Controller
                 $data[$userKey]['designation'] = $meta['designation'];
                 $data[$userKey]['shift'] = $meta['user_shift'];
                 $data[$userKey]['id'] = $userValue['id'];
-                $payScale =  Payscale::where('id',$meta['pay_scale'])->first();
+                // $payScale =  Payscale::where('id',$meta['pay_scale'])->first();
                 $data[$userKey]['total_salary'] = $total_salary = $payScale['total_salary']; 
                 $data[$userKey]['per_day_amount'] = $per_day =  number_format($total_salary/30, 2,'.', '');
                 // $attendance_data->where('attendance_status','present')->count();

@@ -4,19 +4,25 @@
 		right: -9px;
 		bottom: 84%;
 	}
-	.aione-actions-handle{
+	/*.aione-actions-handle{
 		background-color: transparent;
 		box-shadow: none;
-	}
+		height: 30px;
+		width: 30px;
+		margin-left:  2px;
+		padding: 0px;
+
+	}*/
 	.aione-actions-handle > .material-icons{
 		color: #263238;
 	}
-	.aione-actions-handle > .material-icons:hover{
+	.aione-actions-handle > .material-icons , .aione-actions-handle > .material-icons:hover{
 		background: #263238;
     	color: white;
 	}
+
 	.aione-widget-content-section{
-		min-height: 163px;
+		min-height: 148px;
 		padding-bottom: 0px;
 		padding-left: 0px;
 		padding-right: 0px;
@@ -35,8 +41,26 @@
     	left: 10px;
     	cursor: pointer;
 	}
-	.aione-widget-handle , .action-dashboard-buttons{
-		display: none;
+	
+	.aione-hero-text{
+		color: #263238
+	}
+	.aione-counter{
+	    margin-top:0px !important;
+	}
+	.aione-widget-content-wrapper .field-type-text{
+		padding: 6px
+	}
+
+	#widget_website_rank_button{
+		padding: 15px;
+	    background: #263238;
+	    color: white;
+	    margin:10px;
+	    position: absolute;
+	    width: 92%;
+	    text-align: center;
+	    bottom: 1px;
 	}
 </style>
 <div class="aione-widget aione-border bg-grey bg-lighten-5" >
@@ -45,7 +69,7 @@
 		<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4" >
 
 			@if(Auth::guard('org')->check())
-				<i class="fa fa-arrows aione-widget-handle" widget-order="{{@$widget_id}}"></i>
+				<i class="fa fa-bars aione-widget-handle" widget-order="{{@$widget_id}}"></i>
 			@endif
 			<a href="javascript:;" class="blue-grey darken-4">{{ucfirst(str_replace('_', ' ', $key))}}</a>
 				@if(Auth::guard('org')->check())
@@ -64,7 +88,7 @@
 				@endif
 		</h5>
 	</div>
-	<div class="aione-align-center p-15 font-size-64 font-weight-600 blue-grey darken-2 aione-widget-content-section"> 
+	<div class="aione-align-center font-size-64 font-weight-600 blue-grey darken-2 aione-widget-content-section"> 
 		@if(@$count)
 			{{ @$count }}
 		@elseif(@$slug)
@@ -87,8 +111,15 @@
 </div>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('.aione-widget').hover(function(){
-			$(this).find('.aione-widget-handle , .action-dashboard-buttons').toggle();
+		$('.aione-widget').mouseenter(function(){
+			$(this).find('.aione-widget-handle , .action-dashboard-buttons').css({
+				'display' :'block'
+			});
+		});
+		$('.aione-widget').mouseleave(function(){
+			$(this).find('.aione-widget-handle , .action-dashboard-buttons').css({
+				'display' :'none'
+			});
 		});
 	})
 </script>
