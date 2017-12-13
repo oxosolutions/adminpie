@@ -1,3 +1,17 @@
+<style type="text/css">
+	.action-dashboard-buttons{
+		transform: rotate(90deg);
+		right: -9px;
+		bottom: 84%;
+	}
+	.aione-actions-handle{
+		background-color: transparent;
+		box-shadow: none;
+	}
+	.aione-actions-handle > .material-icons{
+		color: #263238;
+	}
+</style>
 <div class="aione-widget aione-border bg-grey bg-lighten-5" >
 	<div class="aione-title">
 
@@ -7,6 +21,20 @@
 				<i class="fa fa-arrows aione-widget-handle" widget-order="{{@$widget_id}}"></i>
 			@endif
 			<a href="javascript:;" class="blue-grey darken-4">{{ucfirst(str_replace('_', ' ', $key))}}</a>
+				@if(Auth::guard('org')->check())
+					<div class="fixed-action-btn horizontal click-to-toggle action-dashboard-buttons" style="position: absolute;">
+						<a class="btn-floating aione-actions-handle">
+							<i class="aione-icon material-icons">more_horiz</i>
+						</a>
+						<ul> 
+							<li><a class="btn-floating red aione-widget-delete aione-tooltip aione-delete-confirmation" href="#" title="Delete Widget"><i class="aione-icon material-icons">close</i></a></li>
+							<!--
+							<li><a class="btn-floating yellow darken-1 aione-widget-collapse  aione-tooltip"  title="Minimize Widget"><i class="aione-icon material-icons">launch</i></a></li>
+							<li><a class="btn-floating blue"  title="XYZ Widget"><i class="aione-icon material-icons  aione-tooltip">attach_file</i></a></li>
+							-->
+						</ul>
+					</div>
+				@endif
 		</h5>
 	</div>
 	<div class="aione-align-center p-15 font-size-64 font-weight-600 blue-grey darken-2"> 

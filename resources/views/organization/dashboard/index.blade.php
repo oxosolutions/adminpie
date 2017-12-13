@@ -122,6 +122,7 @@
 	.aione-widgets .aione-widget:hover .aione-widget-header .aione-widget-actions{
 		opacity: 1;
 	}
+	
 	.aione-widgets .aione-widget .aione-widget-header .aione-widget-actions .fixed-action-btn{
 		position: relative;
 	    right: auto;

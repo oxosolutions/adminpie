@@ -522,11 +522,11 @@ class OrganizationController extends Controller
                                 'name'=>'create_'.$org_id.'_pay_scale',
                                 '--schema'=>'title:string:nullable, description:string:nullable, currency:string:nullable, pay_cycle:string:nullable, pay_scale:decimal(10,2):nullable, basic_pay:decimal(10,2):nullable, grade_pay:decimal(10,2):nullable, ta:decimal(10,2):nullable, da:decimal(10,2):nullable, sa:decimal(10,2):nullable, hra:decimal(10,2):nullable, epf_addiction:decimal(10,2):nullable, epf_deducation:decimal(10,2):nullable, sa_details:string:nullable, total_salary:decimal(10,2):nullable, gross_salary:decimal(10,2):nullable'
                             ]);
+
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_salaries',
-                                '--schema'=>'employee_id:string, payscale_id:integer, year:string, month:string, week:string:nullable, amount:decimal(10,2), no_of_leave:string, payscale:string, lock:integer, monthly_weekly:string, status:integer:default(1)'
-                            ]);
+                                '--schema'=>'employee_id:string, user_id:integer, payscale_id:integer, designation:string:nullable, department:string:nullable, payscale:string:nullable, shift:string:nullable, year:string, month:string, week:string:nullable, salary:decimal(10,2):nullable, no_of_leave:string:nullable, monthly_weekly:string:nullable, number_of_attendance:integer:nullable, hours:string:nullable, over_time:string:nullable, short_hours:string:nullable, per_day_amount:decimal(10,2):nullable, total_days:integer:nullable, lock:integer, status:integer:default(1)']);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_project_categories',

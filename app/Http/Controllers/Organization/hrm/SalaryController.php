@@ -79,6 +79,7 @@ class SalaryController extends Controller
 			return view('organization.salary.generate_salary_slip',compact('salary'));
 	}
 	public function generate_salary_slip_view(Request $request){
+    // dd(1234);
 			$date = Carbon::now();
 			$date->subMonth();
 			$data['month'] = 	$month 	= $date->month;
@@ -110,9 +111,9 @@ class SalaryController extends Controller
 			}
      
       $data['users']  = User::with(['belong_group',
-        // 'salary'=>function($q)use($year, $month){
-        //               $q->where(['year'=>$year, 'month'=>$month]);  
-        //             }, 
+        'salary'=>function($q)use($year, $month){
+                      $q->where(['year'=>$year, 'month'=>$month]);  
+                    }, 
                   'metas'=>function($query)use($year, $month){
                     $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
                         }])->orWhereHas(
@@ -121,7 +122,19 @@ class SalaryController extends Controller
                         }
                   )->where(['user_type'=>'employee'])->get();
 
-                      // dd($data);
+              // $data['users']  = User::with(['belong_group',
+              //         'salary'=>function($q)use($year, $month){
+              //                       $q->where(['year'=>$year, 'month'=>$month]);  
+              //                     }, 
+              //                   'metas'=>function($query)use($year, $month){
+              //                     $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
+              //                         }])->orWhereHas(
+              //                             'metas', function ($query)use($year, $month) {
+              //                         $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
+              //                         }
+              //                   )->where(['user_type'=>'employee'])->get();
+
+                       // dd($data);
 	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
 	}
 
@@ -131,6 +144,7 @@ class SalaryController extends Controller
         $user = User::with(['belong_group', 'metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
           }])->whereIn('id',$user_select)->where(['user_type'=>'employee'])->get();
+        // dd($user);
         $current_date = Carbon::parse("$year-$month-1");
         // $current_date->subMonth(); 
         $daysInMonth = $current_date->daysInMonth;
@@ -139,14 +153,12 @@ class SalaryController extends Controller
           $meta = $userValue['metas']->mapWithKeys(function($item){
             return [$item['key'] => $item['value']];
           });
-
           if(isset($meta['employee_id'])){
             if(strlen($month) ==1){
               $month = '0'.$month;
             }
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
               if($attendance_data->count()>0){
-
                 $data[$userKey]['employee_id'] = $meta['employee_id'];
                 $data[$userKey]['user_id'] = $userValue['id'];
                 $data[$userKey]['department'] = $meta['department'];
@@ -176,12 +188,13 @@ class SalaryController extends Controller
                   $error[] = $meta['employee_id'];
               }
           }
-          // if(isset($data[$userKey])){
-          //   $salarys = new Salary();
-          //   $salarys->fill($data[$userKey]);
-          //   $salarys->save();
-          //   // dd($data);
-          // }
+          // dd($data);
+          if(isset($data[$userKey])){
+            $salarys = new Salary();
+            $salarys->fill($data[$userKey]);
+            $salarys->save();
+            // dd($data);
+          }
         }
 
                   // dd($data, @$error);

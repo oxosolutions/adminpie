@@ -610,6 +610,30 @@ class DatasetController extends Controller
         }
     }
 
+    
+    /**
+     * Replace columns headers with name form
+     * formula
+     *
+     * @return array
+     */
+    protected function replaceColumnHeadersTokey(Array $columnsArray, $formula){
+        $columnsDetected = [];
+        $excelHeaderMap = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
+        $index = 0;
+        foreach($columnsArray as $column => $header){
+            if(!in_array($column,['status','parent'])){
+                $formula = str_replace($header,$excelHeaderMap[$index].'$',$formula,$count);
+                if($count > 0){
+                    $columnsDetected[] = $column;
+                    $index++;
+                }
+
+            }
+        }
+        return ['formula'=>$formula,'detected'=>$columnsDetected];
+    }
+
     /**
      * Create Dataset Column function
      * @param  Request $request having posted data
@@ -617,6 +641,7 @@ class DatasetController extends Controller
      * @return [type]           will return back to same page
      */
     public function createColumn(Request $request, $id){
+
         $this->validateRequiredColumns($request);
         $datasetTable = Dataset::find($id)->dataset_table;
         $columnName = 'column_'.rand(111,999);
@@ -624,35 +649,67 @@ class DatasetController extends Controller
         $compareFrom_datasetTable = $request->select_column;
         $compareWith_compareDataset = $request->dataset_column;
         $fillValueWith_compareDataset = $request->replace_with;
-        DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
-        $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->first();
-        $columnHeader= $request->column_name;
-        if($ifRecordsExist != null){
-            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$columnHeader]);
-        }else{
-            DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$columnHeader,'status'=>'Status','parent'=>'Parent']);
+        DB::beginTransaction();
+        try{
+            DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
+            $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+            $columnHeader= $request->column_name;
+            if($ifRecordsExist != null){
+                DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$columnHeader]);
+            }else{
+                DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$columnHeader,'status'=>'Status','parent'=>'Parent']);
+            }
+            if($request->column_action == 'static_value'){
+                $this->putStaticValueinColumn($datasetTable, $columnName, $request->static_value);
+            }
+            if($request->column_action == 'value_with_refrence'){
+                $this->putvalueByRefference($datasetTable, $compareDataset, $compareFrom_datasetTable, $compareWith_compareDataset, $fillValueWith_compareDataset, $columnName);
+            }
+            if($request->column_action == 'formula'){
+                $this->putValueWithFormula($datasetTable, $columnName, $request->formula);
+            }
+            Session::flash('success','Column created successfully!');
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollBack();
+            throw $e;
         }
-        if($request->column_action == 'static_value'){
-            $this->putStaticValueinColumn($datasetTable, $columnName, $request->static_value);
-        }
-        if($request->column_action == 'value_with_refrence'){
-            $this->putvalueByRefference($datasetTable, $compareDataset, $compareFrom_datasetTable, $compareWith_compareDataset, $fillValueWith_compareDataset, $columnName);
-        }
-        if($request->column_action == 'formula'){
-            $this->putValueWithFormula($datasetTable, $columnName, $request->formula);
-        }
-        Session::flash('success','Column created successfully!');
         return back();
     }
 
+    /**
+     * To execute excel formula and update
+     * records
+     *
+     * @param [string] $datasetTable
+     * @param [string] $newColumn
+     * @param [string] $formula
+     * @return boolean
+     */
     protected function putValueWithFormula($datasetTable, $newColumn, $formula){
+        $excelHeaderMap = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
         $dbModel = DB::table(str_replace('ocrm_','',$datasetTable));
-        $dbModel->update([$newColumn=>$formula]);
-        $createExcel = Excel::create('Filename', function($excel) use ($dbModel,$newColumn,$formula) {
-            $excel->sheet('Data Sheet', function($sheet) use ($dbModel, $newColumn, $formula){
-                
+        $getHeaders = clone $dbModel;
+        $columnsArray = (array)$getHeaders->first();
+        $formulaAndColumnsDetected = $this->replaceColumnHeadersTokey($columnsArray,$formula);
+        $dbModel->where('id','!=',1)->update([$newColumn=>$formulaAndColumnsDetected['formula']]);
+        $createExcel = Excel::create('Filename', function($excel) use ($newColumn,$formulaAndColumnsDetected, $datasetTable, $excelHeaderMap) {
+            $excel->sheet('Data Sheet', function($sheet) use ($newColumn, $formulaAndColumnsDetected, $datasetTable, $excelHeaderMap){
+                array_push($formulaAndColumnsDetected['detected'],'id');
+                array_push($formulaAndColumnsDetected['detected'],$newColumn);
+                $datasetData = DB::table(str_replace('ocrm_','',$datasetTable))->select($formulaAndColumnsDetected['detected'])->where('id','!=',1)->get();
+                foreach($datasetData as $key => $record){
+                    $rowData = array_values((array)$record);
+                    $operationColumnIndex = count($rowData)-1;
+                    $rowData[$operationColumnIndex] = '='.str_replace('$',$key+1,$rowData[$operationColumnIndex]);
+                    unset($rowData['id']);
+                    $sheet->row($key+1,$rowData);
+                    $calcValue = $sheet->getCell($excelHeaderMap[$operationColumnIndex].($key+1))->getCalculatedValue();
+                    DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$record->id)->update([$newColumn=>$calcValue]);
+                }
             }); 
         });
+        return true;
     }
 
 

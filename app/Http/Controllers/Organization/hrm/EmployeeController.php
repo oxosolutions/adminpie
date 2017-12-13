@@ -585,11 +585,13 @@ class EmployeeController extends Controller
 
     public function export(){
 
+       $user = User::select(['id','user_id'])->where('user_type','employee')->get();
+       // dd($user->toArray());
+
         /*$model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
             $query->with('metas');
         }])->get();*/
-
-            // .roles:id,name', 'belong_group:id,name,email,password',
+        // .roles:id,name', 'belong_group:id,name,email,password',
         $meta_key = ['employee_id', 'designation', 'department', 'user_shift', 'pay_scale', 'date_of_joining' ];
         $model = User::select(['id','user_id'])->with(['belong_group', 'user_role_rel'=>function($query){
             $query->select('id','user_id','role_id')->with('roles:id,name');
@@ -598,6 +600,7 @@ class EmployeeController extends Controller
             $q->select(['user_id','key', 'value'])->whereIn('key', $meta_key);
         }])->where(['user_type'=>'employee'])->get();
         $arrays = $model->toArray();
+        // dd($arrays[0]);
         foreach ($arrays as $key => $value) {
             $data[$key]['name'] =   $value['belong_group']['name'];
             $data[$key]['email'] =   $value['belong_group']['email'];
@@ -680,7 +683,7 @@ class EmployeeController extends Controller
 
        Excel::create('Employees-List-'.date('Y-m-d H i s'), function($excel) use($data) {
             $excel->sheet('Employees List', function($sheet) use($data) {
-                $sheet->fromArray($data,null,'A1',false,false);
+                $sheet->fromArray($data);
                 $sheet->row(1, array_keys($data[0]));
                 $sheet->row(1, function($row){
                     $row->setFontWeight('bold');
@@ -925,28 +928,32 @@ class EmployeeController extends Controller
                     }
                     $this->add_user_meta($user_id, 'department' , $dep_id, $import_record_options);
                 }elseif($key=='user_shift'){
-                    $shiftcheck = Shift::where('name', $val);
-                    if($shiftcheck->exists()){
-                        $shift_id = $shiftcheck->first()->id;
-                    }else{
-                        $shifts = new Shift();
-                        $shifts->name = $val;
-                        $shifts->status = 1;
-                        $shifts->save();
-                        $shift_id = $shifts->id;
-                    }
+                    if(!empty($val)){
+                        $shiftcheck = Shift::where('name', $val);
+                        if($shiftcheck->exists()){
+                            $shift_id = $shiftcheck->first()->id;
+                        }else{
+                            $shifts = new Shift();
+                            $shifts->name = $val;
+                            $shifts->status = 1;
+                            $shifts->save();
+                            $shift_id = $shifts->id;
+                        }
                     $this->add_user_meta($user_id, $key, $shift_id, $import_record_options);
+                    }
                 }elseif($key =="pay_scale"){
-                   $payscale = Payscale::where('title',$val);
-                   if($payscale->exists()){
-                        $payscale_id = $payscale->first()->id;
-                   }else{
-                        $new_payscale =  new Payscale();
-                        $new_payscale->title = $val;
-                        $new_payscale->save();
-                        $payscale_id = $new_payscale->id;
-                   }
-                    $this->add_user_meta($user_id, $key, $payscale_id, $import_record_options);
+                    if(!empty($val)){
+                       $payscale = Payscale::where('title',$val);
+                       if($payscale->exists()){
+                            $payscale_id = $payscale->first()->id;
+                       }else{
+                            $new_payscale =  new Payscale();
+                            $new_payscale->title = $val;
+                            $new_payscale->save();
+                            $payscale_id = $new_payscale->id;
+                       }
+                        $this->add_user_meta($user_id, $key, $payscale_id, $import_record_options);
+                    }
                 }else{
                     $this->add_user_meta($user_id, $key, $val, $import_record_options);
                 }
@@ -959,6 +966,9 @@ class EmployeeController extends Controller
 
         protected function add_user_meta($user_id , $key , $value, $import_record_options){
             $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
+            if($key=="date_of_joining"){
+                $value = date('Y-m-d',strtotime($value));
+            }
                 if($meta->exists()){
                     if($import_record_options !='new_insert'){
                         $meta->update(['value'=>$value]);

@@ -263,10 +263,10 @@ class AttendanceController extends Controller
 		});
 	if(!Session::has('error')){
 		Session::flash('success','File upload successfully!');
-		$attendanceFile = new AttendanceFile();
-		$attendanceFile->title = $request->title;
-		$attendanceFile->name =  $file_name;
-		$attendanceFile->save(); 
+		// $attendanceFile = new AttendanceFile();
+		// $attendanceFile->title = $request->title;
+		// $attendanceFile->name =  $file_name;
+		// $attendanceFile->save(); 
 	}else{
 		return redirect()->route('list.attendance');
 	}

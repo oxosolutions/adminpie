@@ -43,6 +43,7 @@ class DashboardController extends Controller
     //     dd($model);
     //     return $model;
     // } 
+
     private function getDashboardData()
     {
         $model = [
@@ -88,8 +89,6 @@ class DashboardController extends Controller
                                         ]
                    
                    
-                   
-                   
                 ];
                 return $model;
     } 
@@ -99,4 +98,17 @@ class DashboardController extends Controller
         $model = $this->getDashboardData();
     	return view('admin.dashboard.index')->with('model',$model);
     }
+    // public function widgetSort(Request $request)
+    // {
+    //     $newProcessWidgets = [];
+    //     http_response_code(500);
+    //     $index = 1;
+
+    //         $widgets = $this->getDashboardData();
+    //         foreach ($request['order_id'] as $key => $value) {
+    //             if(array_key_exists($value, $widgets)){
+    //                 $newProcessWidgets[] = $widgets[$value];
+    //             }
+    //         }
+    // }
 }

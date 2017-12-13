@@ -26,6 +26,8 @@ $page_title_data = array(
 	<div class="aione-dashboard">
 		<!-- Dashboard Widgets -->
 		<div class="ar">
+
+			<div class="aione-widgets " id="sortable-widgets">
 				@foreach($model as $key => $value)
 				@php
 					$count = $value['count'];
@@ -33,10 +35,11 @@ $page_title_data = array(
 					// $list = $value['list'];
 				@endphp
 					<!-- Dashboard Widget -->
-
-					@include('organization.widgets.commonWidget')
+					<span class="sortable-divs" widget-order="{{$key}}"></span>
+						@include('organization.widgets.commonWidget')
 					<!-- Dashboard Widget -->
 				@endforeach
+			</div>
 		</div>
 	</div>
 	@include('common.page_content_primary_end')
@@ -44,4 +47,26 @@ $page_title_data = array(
 
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+{{-- <script type="text/javascript">
+	$(document).ready(function(){
+		$( "#sortable-widgets" ).sortable({ 
+			handle: '.aione-widget-handle',
+			stop : function(){
+					var order_id = [];
+					$.each($('.aione-widget-handle') , function(k , v){
+						order_id.push($(this).attr('widget-title'));
+					});
+					console.log($(this).attr('widget-title'));
+					$.ajax({
+						url : route()+'/widget/sort/admin',
+						type : 'get',
+						data : {order_id : order_id ,_token : $('input[name=_token]').val() },
+						success : function(res){
+							Materialize.toast('Sorted' , 3000);
+						}
+					});
+				}
+		});
+	});
+</script> --}}
 @endsection

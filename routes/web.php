@@ -16,7 +16,8 @@
 			Route::group(['namespace'=>'Admin'], function(){
 				Route::group(['middleware' => 'auth.admin'], function(){
 
-					Route::get('/',	['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
+					Route::get('widget/sort/admin',	['as'=>'admin.widget.sort','uses'=>'DashboardController@widgetSort']);
+					Route::get('/',				['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
 
 					//Activity 
 					Route::get('activities', ['as'=>'activities' , 'uses'=>'ActivityTemplateController@index']);
