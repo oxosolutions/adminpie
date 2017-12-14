@@ -818,16 +818,21 @@ class DatasetController extends Controller
         }
         $dataset = Dataset::find($id);
         $datasetTable = Dataset::find($id)->dataset_table;
-        $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
-        if($request->isMethod('post')){
-            $defined = $request->except(['_token']);
-            $dataset->defined_columns = json_encode($defined);
-            $dataset->save();
-            DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$headers->id)->update($request->header);
+        try{
             $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
-            Session::flash('success','Successfully defined!');
+            if($request->isMethod('post')){
+                $defined = $request->except(['_token']);
+                $dataset->defined_columns = json_encode($defined);
+                $dataset->save();
+                DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$headers->id)->update($request->header);
+                $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+                Session::flash('success','Successfully defined!');
+            }
+            $columns = collect($headers)->except(['id','status','parent']);
+        }catch(\Exception $e){
+            $columns = [];
+            $dataset = [];
         }
-        $columns = collect($headers)->except(['id','status','parent']);
         return view('organization.dataset.define',['columns'=>$columns,'dataset'=>$dataset]);
     }
     public function filterDataset(Request $request, $id){
@@ -923,34 +928,43 @@ class DatasetController extends Controller
         }
         $errorInfo = [];
         $datasetTable = Dataset::find($id)->dataset_table;
-        $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
-        $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',$headers->id)->where('status' , 1)->paginate(50);
-        $recordsArray = [];
-        $row = 1;
-        if($definedColumns != ''){
-            foreach($records as $key => $record){
-                $col = 1;
-                $columnsArray = [];
-                $record = collect($record)->except(['id','status','parent'])->toArray();
+        try{
+            $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+            $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',$headers->id)->where('status' , 1)->paginate(50);
+            $recordsArray = [];
+            $row = 1;
+            if($definedColumns != ''){
+                foreach($records as $key => $record){
+                    $col = 1;
+                    $columnsArray = [];
+                    $record = collect($record)->except(['id','status','parent'])->toArray();
 
-                foreach ($record as $colKey => $columnValue) {
-                    if(array_key_exists($colKey, $definedColumns)){
-                        $testData = preg_match($definedColumns[$colKey], $columnValue);
-                        if($testData){
-                            $columnsArray[$colKey] = $columnValue;
-                        }else{
-                            $errorInfo[] = ['row'=>$row,'col'=>$colKey];
-                            $columnsArray[$colKey] = '<span class="dataset-validate-error">'.$columnValue.'</span>';
+                    foreach ($record as $colKey => $columnValue) {
+                        if(array_key_exists($colKey, $definedColumns)){
+                            $testData = preg_match($definedColumns[$colKey], $columnValue);
+                            if($testData){
+                                $columnsArray[$colKey] = $columnValue;
+                            }else{
+                                $errorInfo[] = ['row'=>$row,'col'=>$colKey];
+                                $columnsArray[$colKey] = '<span class="dataset-validate-error">'.$columnValue.'</span>';
+                            }
+                            $col++;
                         }
-                        $col++;
                     }
+                    $recordsArray[] = $columnsArray;
+                    $row++;
                 }
-                $recordsArray[] = $columnsArray;
-                $row++;
             }
+            
+            $errors = collect($errorInfo)->groupBy('row')->toArray();
+        }catch(\Exception $e){
+            $headers = [];
+            $recordsArray = [];
+            $errors = [];
+            $records = [];
+            $dataset = [];
         }
         
-        $errors = collect($errorInfo)->groupBy('row')->toArray();
         return view('organization.dataset.validate',['headers'=>$headers,'records'=>$recordsArray,'errors'=>$errors,'paginate'=>$records,'dataset'=>$dataset]);
     }
      public function visualizeDataset($dataset_id){

@@ -20,7 +20,7 @@
 @if(Session::has('error_payscale'))
   @php
     foreach(Session::get('error_payscale') as $keys => $vals) {
-    $body_text .="<tr> <td>Pay-Scale Error </td><td>".$vals."</td> <td>Payscale not define to generate salary</td> </tr>";
+    $body_text .="<tr> <td>Pay-scale Error </td><td>".$vals."</td> <td>Pay-scale is not defined</td> </tr>";
     }
   @endphp
 
@@ -28,11 +28,18 @@
 @if(Session::has('error_attendance'))
   @php
     foreach(Session::get('error_attendance') as $keys => $vals) {
-    $body_text .="<tr> <td>Attendance Error </td><td>".$vals."</td> <td>have not attendance record.</td> </tr>";
+    $body_text .="<tr> <td>Attendance Error</td><td>".$vals."</td> <td>Attendance does not exist.</td> </tr>";
     }
   @endphp
-
 @endif
+@if(Session::has('salary_successfully_generate'))
+  @php
+    foreach(Session::get('salary_successfully_generate') as $keys => $vals) {
+    $body_text .="<tr> <td>Success</td><td>".$vals."</td> <td>Salary slip generated successfully.</td> </tr>";
+    }
+  @endphp
+@endif
+
 
 @if(Session::has('error_payscale') || Session::has('error_attendance') )
   <div class="aione-table aione-border mt-20 mb-20">

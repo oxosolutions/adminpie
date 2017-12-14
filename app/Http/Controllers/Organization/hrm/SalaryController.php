@@ -213,8 +213,12 @@ class SalaryController extends Controller
             $salarys->save();
             // dd($data);
           }
+          $success[] = $meta['employee_id'];
         }
-         // dd($data, @$error);
+
+        if(!empty($success)){
+         Session::flash('salary_successfully_generate',$success);
+        }
         if(!empty($payScale_error)){
           $payScale_error = array_unique($payScale_error);
           // $payScale_error =  implode(', ', $payScale_error );

@@ -66,7 +66,7 @@ class DocumentController extends Controller
                   'designations'  => $data['designations'] = Designation::pluck('name','id'),
                   'shifts'        => $data['shifts'] = Shift::pluck('name','id'),
                   'roles'         => $data['roles'] = UsersRole::pluck('name','id'),
-                  'users'         => $data['users'] = User::pluck('name','id')
+                  // 'users'         => $data['users'] = User::pluck('title','id')
                 ];
       return view('organization.documents.createDocument',compact('params'));
     }
