@@ -808,6 +808,7 @@ class DatasetController extends Controller
         	return redirect()->route('list.dataset');
         }
         $dataset = Dataset::find($id);
+        // dd($dataset);
         $dataset->dataset_description = $dataset->description;
         return view('organization.dataset.edit',['dataset'=>$dataset]);
     }

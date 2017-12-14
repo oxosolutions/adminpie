@@ -25,11 +25,15 @@ class Dataset extends Model
     	return self::orderBy('id')->pluck('dataset_name','dataset_table');
     }
 
-    public static function getDatasetTableData($datasetId){
+    public static function getDatasetTableData($datasetId){        
         $datasetDetails = self::find($datasetId);
         $datasetDataTable = $datasetDetails->dataset_table;
     	$datasetName = $datasetDetails->dataset_name;
-        $tabaleHeader = DB::table(str_replace('ocrm_','',$datasetDataTable))->first();
+        try{
+            $tabaleHeader = DB::table(str_replace('ocrm_','',$datasetDataTable))->first();
+        }catch(\Exception $e){
+            return false;
+        }
         $firstRecordId = 1;
         if($tabaleHeader != null){
             $firstRecordId = $tabaleHeader->id;

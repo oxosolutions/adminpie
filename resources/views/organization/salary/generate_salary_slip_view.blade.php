@@ -12,25 +12,53 @@
     $id = "";
    $user_count    = count($data['users']);
    $salary_count  = count(array_filter( array_column($data['users']->toArray(), 'salary')));
-
-   
-@endphp 
+   $body_text = "";
+@endphp
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @if(Session::has('error_payscale'))
-<div class="aione-message error"> 
-  {{Session::get('error_payscale')}}
-</div>
+  @php
+    foreach(Session::get('error_payscale') as $keys => $vals) {
+    $body_text .="<tr> <td>Pay-Scale Error </td><td>".$vals."</td> <td>Payscale not define to generate salary</td> </tr>";
+    }
+  @endphp
+
 @endif
+@if(Session::has('error_attendance'))
+  @php
+    foreach(Session::get('error_attendance') as $keys => $vals) {
+    $body_text .="<tr> <td>Attendance Error </td><td>".$vals."</td> <td>have not attendance record.</td> </tr>";
+    }
+  @endphp
+
+@endif
+
+@if(Session::has('error_payscale') || Session::has('error_attendance') )
+  <div class="aione-table aione-border mt-20 mb-20">
+       <h4 class="light-blue darken-4 p-10 bg-grey bg-lighten-4 m-0">Salary  Error</h4>
+    <table class="compact">
+      <thead>
+        <tr>
+            <th>Action</th>
+            <th>Employee Id</th>
+            <th>Message</th>
+        </tr>
+      </thead>
+       <tbody>
+        {!! $body_text !!}
+       </tbody>
+    </table>
+</div>
+@endif 
 <div>
 {!! Form::open(['route'=>'hrm.generate.salary_view']) !!}
 <section class="aione-border mb-20">
   <div class="ar">
     <div class="ac s100 m100 l100 p-0">
       <div class="">
-        <h5 class="pl-20 font-weight-400 m-0 pv-15  ">
-                  Month and Year to Generate Salary Slips
+        <h5 class="pl-20 font-weight-400 m-0 pv-15">
+                  Select
             </h5>
       </div>
   </div>
@@ -66,7 +94,7 @@
   </div>
   <div class="ac s100 m100 l33">
     <div class="aione-row search-options aione-align-left mt-3">
-      <button type="submit" class="aione-button p-6 bg-light-blue bg-darken-4 white" name="Search" style="width: 100%;">Submit</button>
+      <button type="submit" class=" p-10 " name="Search" style="width: 100%;">Submit</button>
     </div>
   </div>
 </div>
@@ -121,13 +149,13 @@
    <table>
         <thead>
             <tr>
-                <th class="bg-light-blue bg-darken-4 white aione-align-center">
+                <th class="bg-grey bg-lighten-3 white aione-align-center">
                 @if($user_count != $salary_count)
                   <input type="checkbox"  id="selectAll">
                 @endif
 
                 </th>
-                <th colspan="2" class="bg-light-blue bg-darken-4 white aione-align-center"> Name</th>
+                <th colspan="2" class="bg-grey bg-lighten-3 aione-align-center"> Name</th>
             </tr>
         </thead>
         <tbody>
@@ -149,11 +177,11 @@
          @if($user_count != $salary_count)
          <div class="ar aione-border mb-10">
            <div class="ac s100 m100 l60">
-             <h5 class="mt-21">Enter your Name</h5>
+             <h5 class="mt-21">Select the employee to generate salary slips</h5>
            </div>
             <div class="ac s100 m100 l40">
                <div class="aione-row search-options aione-align-right mv-10">
-                <button type="submit" class="aione-button p-6 bg-light-blue bg-darken-4 white" name="generate_salary" value="Generate Salary 1">Generate Salary slip</button>
+                <button type="submit" class="p-10 " name="generate_salary" value="Generate Salary 1" style="width: 70%;">Generate Salary slips</button>
               </div>
            </div>
          </div>

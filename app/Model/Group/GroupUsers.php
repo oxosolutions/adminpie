@@ -11,6 +11,10 @@ class GroupUsers extends Authenticatable
 {
     protected $fillable = ['name','email','api_token','role_id','password','remember_token','app_password','status'];
 
+    protected $attributes = [
+        'status' => 1
+    ];
+
     public function __construct(){
     	if(Auth::guard('group')->check()){
     		$this->table = 'group_'.Auth::guard('group')->user()->group_id.'_users';

@@ -102,7 +102,7 @@ class RegisterController extends Controller
                     $user->fill($request->only('name','email'));
                     $user->password = Hash::make($request->password);
                     $user->app_password = $request->password;
-                    $user->status = $status;
+                    $user->status = 1;//$status;
                     $user->deleted_at = 0;
                     $user->save();
                     $user_id = $user->id;

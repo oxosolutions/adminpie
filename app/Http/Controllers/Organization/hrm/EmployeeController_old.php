@@ -24,7 +24,7 @@ use Datatables;
 use App\Model\Group\GroupUsers;
 use Hash;
 use DB;
-class EmployeeController extends Controller
+class EmployeeController_old extends Controller
 {
     protected $user;
     public function __construct(UserRepositoryContract $user)

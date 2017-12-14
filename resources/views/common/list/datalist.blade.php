@@ -60,7 +60,7 @@ foreach($columns as $column){
 @endphp
 <div id="aione_datalist" class="aione-datalist">
 	<div class="aione-row">
-	
+	   @if(!$datalist->isEmpty())
 		<form action="" method="GET" name="form1">
 		@if(Request::get('page'))
 			<input type="hidden" name="page" value="1">
@@ -144,228 +144,232 @@ foreach($columns as $column){
 				</div>
 			</form>
 	
-	
-	<ul id="list" class="aione-datalist-items" >
-		<li class="aione-datalist-item aione-datalist-header-item" >
-			@foreach($showColumns as $k => $column)
-				@if($loop->index == 0)
-					<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
-					<span class="column-order" column-key="{{$k}}" style="cursor: pointer;">
-						@if(is_array($column))
-							{{$column['title']}}
-						@else
-							{{$column}}
-						@endif
-					<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k )?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px"></i></span></div>
-				@else
-					@php
-						$explodedKey = explode('.',$k);
-						if(count($explodedKey)>=2){
-							$k = $explodedKey[count($explodedKey)-1];
-						}
-					@endphp
-					<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
-						<span class="column-order " column-key="{{$k}}" >
-							@if(is_array($column))
-								{{$column['title']}}
-							@else
+    	<ul id="list" class="aione-datalist-items" >
+    		<li class="aione-datalist-item aione-datalist-header-item" >
+    			@foreach($showColumns as $k => $column)
+    				@if($loop->index == 0)
+    					<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
+    					<span class="column-order" column-key="{{$k}}" style="cursor: pointer;">
+    						@if(is_array($column))
+    							{{$column['title']}}
+    						@else
+    							{{$column}}
+    						@endif
+    					<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k )?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px"></i></span></div>
+    				@else
+    					@php
+    						$explodedKey = explode('.',$k);
+    						if(count($explodedKey)>=2){
+    							$k = $explodedKey[count($explodedKey)-1];
+    						}
+    					@endphp
+    					<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
+    						<span class="column-order " column-key="{{$k}}" >
+    							@if(is_array($column))
+    								{{$column['title']}}
+    							@else
 
-								{{$column}}
-							@endif
-							
-								<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k)?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px; cursor: pointer;"></i>
-							
-						</span>
-					</div>
-				@endif
-			@endforeach
-			<div class="clear"></div> <!-- .clear -->
-		</li> 	<!-- .aione-datalist-header-item -->
+    								{{$column}}
+    							@endif
+    							
+    								<i class="fa fa-sort{{(Request::get('order') != '' && Request::get('orderby') == $k)?'-'.Request::get('order'):''}}" aria-hidden="true" style="margin-left: 10px; cursor: pointer;"></i>
+    							
+    						</span>
+    					</div>
+    				@endif
+    			@endforeach
+    			<div class="clear"></div> <!-- .clear -->
+    		</li> 	<!-- .aione-datalist-header-item -->
 
-		@foreach($datalist as $dataset)
-			<li class="aione-datalist-item" >
-				<div class="aione-datalist-item-wrapper">
-					@foreach($showColumns as $k => $column)
-						@if($loop->index == 0)
-							<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
-								<div class="ar">
-									<div class="ac s10">
-										<div class="bg-orange bg-accent-2 white">
-											{{ucfirst(($dataset->{$k} != '')?$dataset->{$k}[0]:'0')}}
-										</div>	
-									</div>
-									<div class="ac s90">
-										<div> {!! (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
-										@if(isset($actions))
-											<div class="options" style=" display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">
-												@foreach($actions as $action_key => $action_value)
-													@if($action_key == 'download')
-														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
-													@elseif($action_key == 'delete')
-														@php
-															if(is_array($action_value['route'])){
-																$explodedRoute = explode('.',$action_value['route']['id']);
-																$route = $action_value['route']['route'];
-																$routeId = $dataset[$explodedRoute[0]]['id'];
+    		@foreach($datalist as $dataset)
+    			<li class="aione-datalist-item" >
+    				<div class="aione-datalist-item-wrapper">
+    					@foreach($showColumns as $k => $column)
+    						@if($loop->index == 0)
+    							<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
+    								<div class="ar">
+    									<div class="ac s10">
+    										<div class="bg-orange bg-accent-2 white">
+    											{{ucfirst(($dataset->{$k} != '')?$dataset->{$k}[0]:'0')}}
+    										</div>	
+    									</div>
+    									<div class="ac s90">
+    										<div> {!! (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
+    										@if(isset($actions))
+    											<div class="options" style=" display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">
+    												@foreach($actions as $action_key => $action_value)
+    													@if($action_key == 'download')
+    														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
+    													@elseif($action_key == 'delete')
+    														@php
+    															if(is_array($action_value['route'])){
+    																$explodedRoute = explode('.',$action_value['route']['id']);
+    																$route = $action_value['route']['route'];
+    																$routeId = $dataset[$explodedRoute[0]]['id'];
 
-															}else{
-																$route = $action_value['route'];
-																$routeId = $dataset->id;
-															}
-														@endphp
-														{{-- <a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a> --}}
-														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red action-{{$action_key}}">{{$action_value['title']}}</a>
-													@elseif($action_key == 'model')
-														<a href="#" data-target="{{$action_value['data-target']}}" class="{{$action_value['class']}}" id="{{$dataset->id}}" style="padding-right:10px">{{$action_value['title']}}</a>
-													@elseif($action_key == 'status_option')
-														@if($dataset->status == 0)
-															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Activate</a>
-														@else
-															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Deactivate</a>
-														@endif
-													@elseif($action_key == 'check_status')
-														@if($dataset->status == 2)
-															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
-														@elseif($dataset->status == 0)
+    															}else{
+    																$route = $action_value['route'];
+    																$routeId = $dataset->id;
+    															}
+    														@endphp
+    														{{-- <a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}}">{{$action_value['title']}}</a> --}}
+    														<a href="javascript:;" data-value="{{route($route,$routeId)}}" style="padding-right:10px" id="delete" class="{{@$action_value['class']}} delete-datalist-item red action-{{$action_key}}">{{$action_value['title']}}</a>
+    													@elseif($action_key == 'model')
+    														<a href="#" data-target="{{$action_value['data-target']}}" class="{{$action_value['class']}}" id="{{$dataset->id}}" style="padding-right:10px">{{$action_value['title']}}</a>
+    													@elseif($action_key == 'status_option')
+    														@if($dataset->status == 0)
+    															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Activate</a>
+    														@else
+    															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Deactivate</a>
+    														@endif
+    													@elseif($action_key == 'check_status')
+    														@if($dataset->status == 2)
+    															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
+    														@elseif($dataset->status == 0)
 
-															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
-															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
-														@elseif($dataset->status == 1)
-															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
-														@endif
-													@else
-														@php
+    															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Approve</a>
+    															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
+    														@elseif($dataset->status == 1)
+    															<a href="{{route($action_value['route'],$dataset->id)}}" class="{{$action_value['class']}}" style="padding-right:10px">Reject</a>
+    														@endif
+    													@else
+    														@php
 
-															if(is_array($action_value['route'])){
-																if(!isset($action_value['route']['id'])){
-																	$route = $action_value['route']['route'];
-																	$routeId = $dataset['id'];
-																}else{
-																	$explodedRoute = explode('.',$action_value['route']['id']);
-																	$route = $action_value['route']['route'];
-																	$routeId = $dataset[$explodedRoute[0]]['id'];
-																}
-															}else{
-																$route = $action_value['route'];
-																$routeId = $dataset->id;
-															}
-															@endphp
-															<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
-													@endif
-												@endforeach
+    															if(is_array($action_value['route'])){
+    																if(!isset($action_value['route']['id'])){
+    																	$route = $action_value['route']['route'];
+    																	$routeId = $dataset['id'];
+    																}else{
+    																	$explodedRoute = explode('.',$action_value['route']['id']);
+    																	$route = $action_value['route']['route'];
+    																	$routeId = $dataset[$explodedRoute[0]]['id'];
+    																}
+    															}else{
+    																$route = $action_value['route'];
+    																$routeId = $dataset->id;
+    															}
+    															@endphp
+    															<a href="{{route($route,$routeId)}}" style="padding-right:10px" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
+    													@endif
+    												@endforeach
 
-											</div>
-										@endif
+    											</div>
+    										@endif
 
-									</div>
-								</div>
+    									</div>
+    								</div>
 
-							</div>
+    							</div>
 
-						@else
-							<div  class="{{$column_classes}} {{$class_list[$loop->index]}}">
-								@php
-									$relations = explode('.',$k);
-									$getRelations = $dataset;
-									$multipleValues = [];
-									$multipleValuesForLoop = [];
-								@endphp
-									@if(count($relations)>1)
-										@foreach($relations as $relKey => $relation)
-											@php
-												try{
-													@$getRelations = $getRelations[$relation];
-													/*if($getRelations instanceof Illuminate\Database\Eloquent\Collection){
-														$multipleValuesForLoop[$relation] = $getRelations;
-														continue;
-													}else{
-														foreach($multipleValuesForLoop as $relation => $multiVal){
-															dump($multiVal);
-															//$multipleValues[] = $multiVal->{$relation};
-														}
-													}*/
-												}catch(\Exception $e){
-													try{
-														$getRelations = FormGenerator::GetMetaValue($getRelations, $relation);
-													}catch(\Exception $e){
-														$getRelations = 'Unable to get value';
-													}
-												}
-											@endphp
-										@endforeach
-										@if(($getRelations == null || $getRelations == "") && empty($multipleValues))
-											<div>&nbsp;</div>
-										@elseif($getRelations === FALSE)
-											<div>&nbsp;</div>
-										{{-- @elseif(!empty($multipleValues))
-											<span class="truncate"> {{implode(',',$multipleValues)}}</span> --}}
-										@else
-											<span class="truncate"> {{$getRelations}}</span>
-										@endif
+    						@else
+    							<div  class="{{$column_classes}} {{$class_list[$loop->index]}}">
+    								@php
+    									$relations = explode('.',$k);
+    									$getRelations = $dataset;
+    									$multipleValues = [];
+    									$multipleValuesForLoop = [];
+    								@endphp
+    									@if(count($relations)>1)
+    										@foreach($relations as $relKey => $relation)
+    											@php
+    												try{
+    													@$getRelations = $getRelations[$relation];
+    													/*if($getRelations instanceof Illuminate\Database\Eloquent\Collection){
+    														$multipleValuesForLoop[$relation] = $getRelations;
+    														continue;
+    													}else{
+    														foreach($multipleValuesForLoop as $relation => $multiVal){
+    															dump($multiVal);
+    															//$multipleValues[] = $multiVal->{$relation};
+    														}
+    													}*/
+    												}catch(\Exception $e){
+    													try{
+    														$getRelations = FormGenerator::GetMetaValue($getRelations, $relation);
+    													}catch(\Exception $e){
+    														$getRelations = 'Unable to get value';
+    													}
+    												}
+    											@endphp
+    										@endforeach
+    										@if(($getRelations == null || $getRelations == "") && empty($multipleValues))
+    											<div>&nbsp;</div>
+    										@elseif($getRelations === FALSE)
+    											<div>&nbsp;</div>
+    										{{-- @elseif(!empty($multipleValues))
+    											<span class="truncate"> {{implode(',',$multipleValues)}}</span> --}}
+    										@else
+    											<span class="truncate"> {{$getRelations}}</span>
+    										@endif
 
-									@elseif($k == 'created_at' || $k == 'updated_at')
-											{{ $dataset->{$k}->diffForHumans() }}
-									@else
-										@php
-											$options = explode(':',$k);
-											$colType = [];
-											if(@$options[1] != null){
-												if($options[1] == 'human_readable'){
-													echo Carbon\Carbon::parse($dataset->{$options[0]})->format('d M');
-												}
-											}elseif(is_array($column)){
-												$columnType = $column['type'];
-												if($columnType == 'image'){
-													echo '<img src="'.asset($column['imagePath'].''.$dataset->{$k}).'" style="width:30px" >';
-												}elseif($columnType == 'switch'){
-													echo '<div class="switch"><label>';
-													if($dataset->status == '0'){
-														echo '<input type="checkbox" class="'.$column['class'].'">';
-													}
-													else{
-														echo '<input type="checkbox" class="'.$column['class'].'" checked="checked">';
-													}
-													echo '<span class="lever"></span></label><input type="hidden" name="id" value="'.$dataset->id.'"></div>';
-												}
-												if($columnType == 'json'){
-													$days = [];
-													foreach (json_decode($dataset->{$k}) as $key => $value) {
-														$days[] = ucfirst(substr($value, 0 , 2));
-													}
-													echo implode(',',$days);
-												}
-											}elseif($k == 'status'){
-												if($dataset->{$k} == 1){
-													$sts = 'active';
-												}elseif($dataset->{$k} == 2){
-													$sts = 'pending';
-												}else{
-													$sts = '';
-												}
-												echo '<span class="aione-status '.$sts.'"></span>';
-											}elseif($k == 'link'){
-												if($dataset->target == 'next_page'){
-													$target = 'blank';
-												}else{
-													$target = '';
-												}
-												echo '<a href="'.$dataset->{$k}.'" target="'.$target.'">'.$dataset->{$k} .'</a>';												
-											}else{
-												echo $dataset->{$k};
-											}
-										@endphp
-									@endif
+    									@elseif($k == 'created_at' || $k == 'updated_at')
+    											{{ $dataset->{$k}->diffForHumans() }}
+    									@else
+    										@php
+    											$options = explode(':',$k);
+    											$colType = [];
+    											if(@$options[1] != null){
+    												if($options[1] == 'human_readable'){
+    													echo Carbon\Carbon::parse($dataset->{$options[0]})->format('d M');
+    												}
+    											}elseif(is_array($column)){
+    												$columnType = $column['type'];
+    												if($columnType == 'image'){
+    													echo '<img src="'.asset($column['imagePath'].''.$dataset->{$k}).'" style="width:30px" >';
+    												}elseif($columnType == 'switch'){
+    													echo '<div class="switch"><label>';
+    													if($dataset->status == '0'){
+    														echo '<input type="checkbox" class="'.$column['class'].'">';
+    													}
+    													else{
+    														echo '<input type="checkbox" class="'.$column['class'].'" checked="checked">';
+    													}
+    													echo '<span class="lever"></span></label><input type="hidden" name="id" value="'.$dataset->id.'"></div>';
+    												}
+    												if($columnType == 'json'){
+    													$days = [];
+    													foreach (json_decode($dataset->{$k}) as $key => $value) {
+    														$days[] = ucfirst(substr($value, 0 , 2));
+    													}
+    													echo implode(',',$days);
+    												}
+    											}elseif($k == 'status'){
+    												if($dataset->{$k} == 1){
+    													$sts = 'active';
+    												}elseif($dataset->{$k} == 2){
+    													$sts = 'pending';
+    												}else{
+    													$sts = '';
+    												}
+    												echo '<span class="aione-status '.$sts.'"></span>';
+    											}elseif($k == 'link'){
+    												if($dataset->target == 'next_page'){
+    													$target = 'blank';
+    												}else{
+    													$target = '';
+    												}
+    												echo '<a href="'.$dataset->{$k}.'" target="'.$target.'">'.$dataset->{$k} .'</a>';												
+    											}else{
+    												echo $dataset->{$k};
+    											}
+    										@endphp
+    									@endif
 
-							</div>	
-						@endif
+    							</div>	
+    						@endif
 
-					@endforeach
-					<div class="clear"></div> <!-- .clear -->
-				</div>	<!-- .aione-datalist-item-wrapper -->
-			</li>	<!-- .aione-datalist-item -->
-		@endforeach
+    					@endforeach
+    					<div class="clear"></div> <!-- .clear -->
+    				</div>	<!-- .aione-datalist-item-wrapper -->
+    			</li>	<!-- .aione-datalist-item -->
+    		@endforeach
 
-	</ul> 	<!-- .aione-datalist-items -->
+    	</ul> 	<!-- .aione-datalist-items -->
+    @else
+        <div class="aione-message warning">
+            <i class="fa fa-info-circle" style="font-size: 20px;"></i> No data available!
+        </div>
+    @endif
 
 			</div> <!-- .aione-row -->
 		</div> <!-- #aione_datalist_content -->

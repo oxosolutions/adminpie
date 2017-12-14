@@ -410,6 +410,7 @@ class EmployeeController extends Controller
             $user->fill($request->except('password'));
             $user->password =  Hash::make($request['password']);
             $user->app_password =  $request['password'];
+            $user->status = 1;
             $user->save();
             $user_id = $user->id;
 

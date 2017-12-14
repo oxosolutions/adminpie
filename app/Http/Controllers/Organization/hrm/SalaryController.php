@@ -150,7 +150,6 @@ class SalaryController extends Controller
         $user = User::with(['belong_group', 'metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
           }])->whereIn('id',$user_select)->where(['user_type'=>'employee'])->get();
-        // dd($user);
         $current_date = Carbon::parse("$year-$month-1");
         // $current_date->subMonth(); 
         $daysInMonth = $current_date->daysInMonth;
@@ -163,11 +162,14 @@ class SalaryController extends Controller
             if(strlen($month) ==1){
               $month = '0'.$month;
             }
-             $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
-             if(empty($payScale)){
-               $payScale_error[] = $meta['employee_id'];
-             }
-
+            if(empty($meta['pay_scale'])){
+            	$payScale_error[] = $meta['employee_id'];
+            }else{
+	             $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
+	             if(empty($payScale)){
+	               $payScale_error[] = $meta['employee_id'];
+	             }
+         	}
 
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
               if($attendance_data->count()>0){
@@ -212,17 +214,16 @@ class SalaryController extends Controller
             // dd($data);
           }
         }
-
-                  // dd($data, @$error);
+         // dd($data, @$error);
         if(!empty($payScale_error)){
           $payScale_error = array_unique($payScale_error);
-          $payScale_error =  implode(', ', $payScale_error );
-          Session::flash('error_payscale', " employee id ".$payScale_error." Pay scale values not define to generate salary.");
+          // $payScale_error =  implode(', ', $payScale_error );
+          Session::flash('error_payscale', $payScale_error);
         }
 
         if(!empty($error)){
-          $employee =  implode(', ', $error );
-          Session::flash('error', " employee id ".$employee." have not attendance record");
+          // $employee =  implode(', ', $error );
+          Session::flash('error_attendance', $error);
         }
 
 return back();

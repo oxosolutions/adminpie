@@ -33,12 +33,7 @@ $body_text="";
                 	$body_text .="<tr> <td>Employee Updated</td> <td>".$keys."</td> <td>".$vals."</td> <td> User associated with this organization</td> </tr>";
  					}
                @endphp
-      {{--  <ul>
-            <li>Following User already working with other Organization Now they also associate with us.</li>
-               @foreach(Session::get('alreadyInGroupNotOrg') as $keys => $vals) 
-                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
-               @endforeach
-       </ul> --}}
+      
 @endif
 
 @if(Session::has('newInsertAlreadyEmployeeId'))
@@ -47,12 +42,7 @@ $body_text="";
                 	$body_text .="<tr> <td>Error Occurred </td> <td>".$keys."</td> <td>".$vals."</td> <td>Duplicate Employee ID </td> </tr>";
  					}
                @endphp
-       {{-- <ul>
-            <li>Following Record Employee Id already Assign to other employee.</li>
-               @foreach(Session::get('newInsertAlreadyEmployeeId') as $keys => $vals) 
-                <li> Employee : id {{ $keys  }} ,  email {{ $vals }} </li>
-               @endforeach
-       </ul> --}}
+       
 @endif
 
 @if(Session::has('emptyRow'))
@@ -61,12 +51,7 @@ $body_text="";
                 	$body_text .="<tr> <td>Error Occurred </td><td> </td> <td></td> <td>".$vals."Missing required values </td> </tr>";
  					}
                @endphp
-       {{-- <ul>
-            <li>Following .</li>
-               @foreach(Session::get('emptyRow') as $keys => $vals) 
-                <li style="color: Red; ">  {{ $vals }} </li>
-               @endforeach
-       </ul> --}}
+       
 @endif
 
 @if(Session::has('updateRecord'))
@@ -75,12 +60,7 @@ $body_text="";
                 	$body_text .="<tr> <td>Employee updated</td> <td>".$keys."</td> <td>".$vals."</td> <td>Record updated successfully</td> </tr>";
  					}
                @endphp
-       {{-- <ul>
-            <li>Following .</li>
-               @foreach(Session::get('updateRecord') as $keys => $vals) 
-                <li style="color: yellow; ">  {{ $vals }} update successfully.</li>
-               @endforeach
-       </ul> --}}
+       
 @endif
 @if(Session::has('import_new') || Session::has('alreadyInGroupNotOrg') || Session::has('emptyRow') || Session::has('updateRecord'))
 <div class="aione-table aione-border mt-20 mb-20">
