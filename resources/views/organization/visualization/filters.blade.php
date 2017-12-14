@@ -51,6 +51,9 @@
 	.multiple-select-dropdown{
 		width: 323px;
 	}
+	.aione-topbar-header{
+		height: 108px;
+	}
 </style>
 <div id="aione_sidebar_{{$visualization_id}}" class="mb-10 aione-sidebar-position-{{$meta['filter_position']}} aione-visual-filter" >
 
@@ -126,7 +129,7 @@
 					<div class="chats-filter-button">
 						<button name="downloadData" type="submit" value="downloadData" class="aione-button" style="">Download Data</button>
 						{{-- <input type="submit" name="applyFilter" style="float: right" class="aione-button" value="Apply Filters" /> --}}
-						<button type="submit" name="applyFilter" class="aione-button aione-float-right">Apply Filters</button>
+						<button type="submit" name="applyFilter" class="aione-button aione-float-right" value="Apply Filters">Apply Filters</button>
 						<div class="clear">
 							
 						</div>

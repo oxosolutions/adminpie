@@ -210,23 +210,24 @@ class SettingController extends Controller
     			}
     		}
     		if($key == 'logo' && !empty($value)){
+                if($request->hasFile('logo')){
+                    $path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/images';
 
-    			$path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/images';
+                    $filename = date('Ymdhis');
+                    $fileExt = '.'.$request->file('logo')->getClientOriginalExtension();
+                    $uploadFile = $request->file('logo')->move($path, $filename.$fileExt);
 
-    			$filename = date('Ymdhis');
-    			$fileExt = '.'.$request->file('logo')->getClientOriginalExtension();
-                $uploadFile = $request->file('logo')->move($path, $filename.$fileExt);
-
-                $img = Image::make($path.'/'.$filename.$fileExt);
-				$img->resize(300, 300);
-				$resize_300x300 = $filename.'_300x300'.$fileExt;
-				$img->save($path.'/'.$resize_300x300);
+                    $img = Image::make($path.'/'.$filename.$fileExt);
+                    $img->resize(300, 300);
+                    $resize_300x300 = $filename.'_300x300'.$fileExt;
+                    $img->save($path.'/'.$resize_300x300);
 
 
-                $model = OrganizationSetting::firstOrNew(['key'=>$key]);
-	    		$model->key = $key;
-	    		$model->value = $path.'/'.$filename.$fileExt;
-	    		$model->save();
+                    $model = OrganizationSetting::firstOrNew(['key'=>$key]);
+                    $model->key = $key;
+                    $model->value = $path.'/'.$filename.$fileExt;
+                    $model->save();
+                }
     		}elseif($key == 'bg_image' && !empty($value)){
     			$path = env('USER_FILES_PATH').'_'.$organizationId.'/assets/bg_image';
 

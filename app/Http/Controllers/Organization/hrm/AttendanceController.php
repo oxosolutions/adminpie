@@ -138,8 +138,7 @@ class AttendanceController extends Controller
 			}else{						
 				foreach($all_data as $logkey => $logvalue){				
 					if ($logvalue[0] == "Period :"){
-						dd('looooggg', $logvalue);
-						
+
 					}
 					if ($logvalue[0] == "No :"){
 						foreach($logvalue as $log_val_key => $log_value){
@@ -263,7 +262,7 @@ class AttendanceController extends Controller
 					}									
 				 }
 		}	
-		dd($date_data);	
+		
 		});
 
 
@@ -279,6 +278,12 @@ class AttendanceController extends Controller
 		return redirect()->route('import.form.attendance');
 		}
 	}
+
+public function attendance_file(){
+	$files = AttendanceFile::all();
+	// dd($files);
+	return view('organization.attendance.attendance_file',['data'=>$files]);
+}
 
 	protected function filter($request)
 	{

@@ -173,6 +173,7 @@
                   @if(empty($value['salary']))
                       <input type="checkbox" name="user_select[]" value="{{ $value->id }}">
                     @else
+                    <a href="{{route('salary.slip.download',['id'=>$value['salary']['id']]) }}"> download pdf</a>
                       <a href="{{route('salary.slip.view',['id'=>$value['salary']['id']]) }}">    View    </a>
                       <a href="{{route('salary.slip.delete',['id'=>$value['salary']['id']]) }}">  Delete  </a>
                   @endif

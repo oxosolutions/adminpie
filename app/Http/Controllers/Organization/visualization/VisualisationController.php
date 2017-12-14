@@ -830,7 +830,7 @@ class VisualisationController extends Controller
 				}
 				$columns = array_unique($columns);
 			}
-            dd($columns);
+
 			try{
 				/*
 				*	if request has any filter

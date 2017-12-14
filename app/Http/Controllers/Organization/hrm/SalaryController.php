@@ -88,11 +88,13 @@ class SalaryController extends Controller
 		$salary = Salary::with(['user_detail.belong_group:id,name,email', 'user_detail:id,user_id'])->where([ 'id'=>$id ]);
       if($salary->exists()){
         $salary = $salary->first();
+        $file_name =  'pay-slip-'.$salary->employee_id.'-'.$salary->year.'-'.$salary->month;
+        // dd($file_name);
       }else{
         Session::flash('error','Not Valid ID.');
       }
       $pdf = PDF::loadView('organization.salary.pdf',compact('salary'));
-            return $pdf->download('test.pdf');
+            return $pdf->download($file_name.'.pdf');
 			  // return view('organization.salary.pdf',compact('salary'));
 
 	}

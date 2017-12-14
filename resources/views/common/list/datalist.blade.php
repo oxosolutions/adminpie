@@ -60,7 +60,6 @@ foreach($columns as $column){
 @endphp
 <div id="aione_datalist" class="aione-datalist">
 	<div class="aione-row">
-	   @if(!$datalist->isEmpty())
 		<form action="" method="GET" name="form1">
 		@if(Request::get('page'))
 			<input type="hidden" name="page" value="1">
@@ -143,7 +142,7 @@ foreach($columns as $column){
 					</div>
 				</div>
 			</form>
-	
+	   @if(!$datalist->isEmpty())
     	<ul id="list" class="aione-datalist-items" >
     		<li class="aione-datalist-item aione-datalist-header-item" >
     			@foreach($showColumns as $k => $column)
