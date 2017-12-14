@@ -6,7 +6,7 @@
 			@endif
 
 			@if(@$document->DocumentTemplate['content'] != null)
-				{!! $document->DocumentTemplate['content'] !!}
+				helooooooooooooooooooooooooo{!! $document->DocumentTemplate['content'] !!}
 			@endif
 
 			@if(@$document->DocumentLayout['footer'] != null)

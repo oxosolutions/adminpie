@@ -73,7 +73,6 @@ class VisualisationController extends Controller
 	}
 
 	public function store(Request $request){
-
 		$this->modelValidate($request);
 		DB::beginTransaction();
 		try{
@@ -82,6 +81,8 @@ class VisualisationController extends Controller
 			$model->fill($request->except(['_token']));
 			$model->created_by = Auth::user()->id;
 			$model->save();
+            $metaModel = new VisualizationMeta;
+            
 			DB::commit();
 			Session::flash('success','Successfully created!');
 			return redirect()->route('visualisation.list');
@@ -274,6 +275,23 @@ class VisualisationController extends Controller
             $model->description = $request->description;
             $model->created_by = Auth::guard('org')->User()->id;
             $model->save();
+            $metaArray = [
+                'enable_header' => '1',
+                'enable_copyright' => '0',
+                'enable_chart_title' => '1',
+                'enable_filters' => '1',
+                'filter_position' => 'right',
+                'show_topbar' => '1',
+                'show_loading_animation' => '0',
+                'show_footer' => '0'
+            ];
+            foreach($metaArray as $key => $value){
+                $metaModel = new VisualizationMeta;
+                $metaModel->visualization_id = $model->id;
+                $metaModel->key = $key;
+                $metaModel->value = $value;
+                $metaModel->save();
+            }
         }catch(\Exception $e){
         }
         Session::flash('success','Successfully created!');
@@ -534,7 +552,6 @@ class VisualisationController extends Controller
 	}
 
 	public function getFIlters($table, $columns, $columnNames){
-        
         $data = [];
         $columnsWithType = $columns;
         $columns = (array)$columns;
@@ -543,14 +560,17 @@ class VisualisationController extends Controller
         	return [];
         }
         $resultArray = [];
-        $model = DB::table($table)->select($columns)->where('id','!=',1)->get()->toArray();
+        $model = DB::table($table)->select($columns)->get()->toArray();
+        if(!empty($model)){
+            unset($model[0]);
+        }
+        // dd($model[0]);
         $tmpAry = [];
         $max =0;
         foreach($model as $k => $v){
             
             $tmpAry[] = (array)$v;
         }
-        
         $index = 0;
         foreach($columns as $key => $value){           
             $filter = [];
@@ -568,11 +588,9 @@ class VisualisationController extends Controller
                 $filter['column_data'] = array_unique(array_column($tmpAry, $value));
                 $filter['column_type'] = $columnsWithType['filter_'.$index]['type'];
             }
-            
             $index++;
             $data[$value] = $filter;
         }
-     
         return $data;
     }
 
@@ -638,7 +656,7 @@ class VisualisationController extends Controller
     	}
 
     	// Finaly it will generate query: "select * from `126_data_table_1495705270` where `column_3` in (?) and `column_4` in (?, ?) or `id` = ?"
-    	//dd($db->toSql());
+    	// dd($db->toSql());
     	return $db->select($columns)->whereIn('status',['status',1])->whereIn('parent',['parent',0])->get()->toArray(); // return final query result in the form or array
     	
     }
@@ -812,6 +830,7 @@ class VisualisationController extends Controller
 				}
 				$columns = array_unique($columns);
 			}
+            dd($columns);
 			try{
 				/*
 				*	if request has any filter
@@ -899,7 +918,7 @@ class VisualisationController extends Controller
 		/*
 		* Prepare filters for front view
 		 */
-		$datasetColumns = (array)DB::table($dataset_table)->where('id',1)->first();
+		$datasetColumns = (array)DB::table($dataset_table)->first();
 		$filter_columns = $this->getMetaValue($visualization->meta,'filters');
 		$filters = [];
 		if(!empty(json_decode($filter_columns,true))){
@@ -917,7 +936,6 @@ class VisualisationController extends Controller
 				}
 			}
 		}
-		// dd($drawer_array);
 		//Finaly load view
 		return view('organization.visualization.visualization',
 								[

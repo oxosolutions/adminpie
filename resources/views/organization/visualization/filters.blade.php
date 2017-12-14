@@ -2,14 +2,63 @@
 @if(isset($meta['enable_filters']) && $meta['enable_filters'] == 1)
 
 <!--==============================-->
-
-<div id="aione_sidebar_{{$visualization_id}}" class="mb-10 aione-sidebar-position-{{$meta['filter_position']}}" >
+<style type="text/css">
+	.aione-visual-filter{
+		width: 30%;
+		float: right
+	}
+	.aione-content-main{
+		width: 69%
+	}
+	.aione-section-title{
+		background: #efefef;
+	    padding: 6px;
+	    font-size: 20px;
+	    text-align: center
+	}
+	.aione-section-title ul{
+		display: inline-block;
+		width: 100%
+	}
+	.aione-section-title ul li{
+		float: left;
+		width: 33%;
+	}
+	.modal-content ul{
+		display: inline-block;
+		width: 100%;
+		padding:10px;
+	}
+	.modal-content ul li{
+		float: left;
+		width: 33%
+	}
+	.modal-content header{
+		text-align: center;
+	}
+	.modal-content footer{
+		text-align: right;
+	}
+	.aione-theme-arcane .aione-topbar{
+		padding:0px;
+	}
+	.aione-topbar-item{
+		top:2px;
+	}
+	.aione-filter-label{
+		float: left
+	}
+	.multiple-select-dropdown{
+		width: 323px;
+	}
+</style>
+<div id="aione_sidebar_{{$visualization_id}}" class="mb-10 aione-sidebar-position-{{$meta['filter_position']}} aione-visual-filter" >
 
 
 		<div class="chart-filters aione-border" >
 			
 			<div class="font-size-20 bg-grey bg-lighten-4 p-10 " >
-					Filters
+				Filters
 			</div>
 			
 			<div class=" p-10 survey-chart-filters hideDiv">
@@ -24,8 +73,8 @@
 						@if($value['column_type'] == 'mdropdown')
 							<div class="row">
 								<div class="">
-									<label>{{ucfirst($value['column_name'])}}</label>
-									<select name='mdropdown[{{$multidrop}}][{{$key}}][]' class="aione-multi-select" multiple>
+									<label class="aione-filter-label">{{ucfirst($value['column_name'])}}</label>
+									<select name='mdropdown[{{$multidrop}}][{{$key}}][]' multiple style="width: 90%" >
 										@foreach($value['column_data'] as $option)
 											<option value="{{$option}}"
 											@if(isset($value['selected_value']) && in_array($option, $value['selected_value']))

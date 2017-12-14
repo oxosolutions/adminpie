@@ -47,9 +47,8 @@
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-
+    @include('organization.dataset._tabs')
     @if($ArrayData != false)
-        @include('organization.dataset._tabs')
         <div class="ar  mb-20">
             <div class="ac l50 m50 s100">
                 {!! Form::model($dataset,['route'=>['update.dataset.details',$dataset->id]]) !!}

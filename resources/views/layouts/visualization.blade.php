@@ -10,7 +10,6 @@
 		@include('components._head')
 		<script type="text/javascript">
 			function route(){
-
 				return '{{url('/')}}';
 			}
 		</script>

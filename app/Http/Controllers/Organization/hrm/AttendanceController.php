@@ -138,7 +138,8 @@ class AttendanceController extends Controller
 			}else{						
 				foreach($all_data as $logkey => $logvalue){				
 					if ($logvalue[0] == "Period :"){
-						// dump($logvalue);
+						dd('looooggg', $logvalue);
+						
 					}
 					if ($logvalue[0] == "No :"){
 						foreach($logvalue as $log_val_key => $log_value){
@@ -179,6 +180,7 @@ class AttendanceController extends Controller
 						}
 						$pus_in_out =null;
 						$dates =	$attendanceDate;
+						$date_data[] = $attendanceDate;
 						$dates++;
 						$full_date = $dates.'-'.$month_year;
 						$day = date('l', strtotime($full_date));
@@ -220,8 +222,7 @@ class AttendanceController extends Controller
 									}else{ 
 										$due_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
 									}
-							}	
-								
+							}
 	    					$diff = (strtotime($out_time) - strtotime($in_time));
 	    					$total = $diff/60;
 							if(is_null($in_time) &&  is_null($out_time)){
@@ -262,7 +263,10 @@ class AttendanceController extends Controller
 					}									
 				 }
 		}	
+		dd($date_data);	
 		});
+
+
 	if(!Session::has('error')){
 		Session::flash('success','File upload successfully!');
 		$attendanceFile = new AttendanceFile();

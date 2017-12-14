@@ -10,10 +10,6 @@
 
 				<div class="card-panel shadow white z-depth-1 hoverable project">
 					<div class="row valign-wrapper no-margin-bottom">
-						{{-- <div class="col l12">
-							<h5>chart name</h5>
-						</div> --}}
-						{{-- <div class="divider"></div> --}}
 						<div class="col l12">
 							<img src="https://plot.ly/~RhettAllain/574.png">
 						</div>

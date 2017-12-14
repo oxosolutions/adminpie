@@ -411,6 +411,7 @@
 					Route::match(['get','post'],'generate/salary',['as'=>'hrm.generate.salary','uses'=>'SalaryController@generate_salary_slip']);
 					Route::match(['get','post'],'generate/salary_view',['as'=>'hrm.generate.salary_view','uses'=>'SalaryController@generate_salary_slip_view']);
 					Route::get('salary_slip/{id}',['as'=>'salary.slip.view','uses'=>'SalaryController@view_salary_slip']);
+					Route::get('download_salary_slip/{id}',['as'=>'salary.slip.download','uses'=>'SalaryController@salary_download_pdf']);
 					Route::get('salary_slip/delete/{id}',['as'=>'salary.slip.delete','uses'=>'SalaryController@delete_salary_slip']);
 					// (){
 					// 		return view('organization.profile.salary');

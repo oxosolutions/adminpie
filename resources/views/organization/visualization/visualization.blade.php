@@ -104,7 +104,20 @@
 												<div class="aione-section-handle"></div>
 												@endif
 
-												<div class="aione-section-title">{{$chart_title}}</div>
+												<div class="aione-section-title">
+													<ul>
+														<li>
+															<input type="checkbox" id="modal" style="float: left" />
+														</li>
+														<li>
+															{{$chart_title}}
+														</li>
+														<li>
+															<label for="modal">
+																<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;float:right;color: #757575"></i>
+															</label>
+														</li>
+													</ul></div>
 												
 												
 											</div>
@@ -117,26 +130,39 @@
 												@endif
 											</div>
 											
-											<label for="modal">
-												<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;margin-top: 8px;color: #757575"></i>
-											</label>
-											<input type="checkbox" id="modal" />
+											
 											<label for="modal" class="modal-bg" id="{{$chart['chart_id']}}"></label>
 											<div class="modal-content " id="{{$chart['chart_id']}}_setings">
-												<label for="modal" class="close p-10">
-													<i class="fa fa-close hide_modal" aria-hidden="true"></i>
-												</label>
-												<header class="font-size-20 font-weight-300 p-10">
-													Chart Settings
-												</header>
+												<ul>
+													<li>
+														<label for="modal" class="close p-10">
+															<i class="fa fa-close hide_modal" aria-hidden="true"></i>
+														</label>
+													</li>
+													<li>
+														<header class="font-size-20 font-weight-300 p-10">
+															Chart Settings
+														</header>
+													</li>
+													<li>
+														<footer class="p-10">
+															<a href="" target="_parent" class="button success">Accept</a>
+															<label for="modal" class="button danger">Decline</label>
+														</footer>
+
+													</li>
+												</ul>
+											</div>
+
+
+
+												
 												<article class="content">
 														
 												</article>
-												<footer class="p-10">
-													<a href="" target="_parent" class="button success">Accept</a>
-													<label for="modal" class="button danger">Decline</label>
-												</footer>
-											</div>
+												
+
+
 
 											<div class="clear"></div>
 										</div>
@@ -452,8 +478,8 @@
 	}
 	.aione-chart-ListChart .aione-section-header .aione-section-title{
 		color: #FFFFFF;
-	}
 
+	}
 	::-webkit-scrollbar {
 	    width: 8px;
 	}

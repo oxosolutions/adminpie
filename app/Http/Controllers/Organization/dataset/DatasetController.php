@@ -559,21 +559,29 @@ class DatasetController extends Controller
         $history = [];
         $dataset = Dataset::find($id);
         $datasetTable = Dataset::find($id)->dataset_table;
-        $tableHeader = DB::table(str_replace('ocrm_', '', $datasetTable))->first();
-        $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',$tableHeader->id)->where('status' , 1)->paginate(100);
-        if($action != null){
-            if($action == 'view' || $action == 'edit'){
-                if($record_id != null){
-                    $viewRecord = array_values($records->where('id',$record_id)->toArray());
+        try{
+            $tableHeader = DB::table(str_replace('ocrm_', '', $datasetTable))->first();
+            $records = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id','!=',$tableHeader->id)->where('status' , 1)->paginate(100);
+            if($action != null){
+                if($action == 'view' || $action == 'edit'){
+                    if($record_id != null){
+                        $viewRecord = array_values($records->where('id',$record_id)->toArray());
+                    }
+                }
+                if($action == 'rivisions'){
+                    if($record_id != null){
+                        $history = $this->ViewHistoryRecord($id, $record_id);
+                    }
                 }
             }
-            if($action == 'rivisions'){
-                if($record_id != null){
-                    $history = $this->ViewHistoryRecord($id, $record_id);
-                }
-            }
+        }catch(\Exception $e){
+            $tableHeader = [];
+            $dataset = [];
+            $records = [];
+            $viewRecord = [];
+            $history = [];
         }
-        // dd($records);
+        
         return view('organization.dataset.view',['tableheaders'=>$tableHeader , 'dataset' => $dataset,'records'=>$records,'viewrecords'=>$viewRecord,'history'=>$history]);
     }
 

@@ -19,8 +19,8 @@
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+    @include('organization.dataset._tabs')
     @if(!empty($dataset))
-        @include('organization.dataset._tabs')
         {{Session::get('success')}}
         @php
             @$model = json_decode($dataset->defined_columns);

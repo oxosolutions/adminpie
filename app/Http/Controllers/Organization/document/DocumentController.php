@@ -14,6 +14,7 @@ use App\Model\Organization\Shift;
 use App\Model\Organization\UsersRole;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\User;
+use App\Model\Group\GroupUsers as org_user;
 use App\Model\Organization\UsersMeta;
 use PDF;
 
@@ -66,7 +67,7 @@ class DocumentController extends Controller
                   'designations'  => $data['designations'] = Designation::pluck('name','id'),
                   'shifts'        => $data['shifts'] = Shift::pluck('name','id'),
                   'roles'         => $data['roles'] = UsersRole::pluck('name','id'),
-                  // 'users'         => $data['users'] = User::pluck('title','id')
+                  'users'         => $data['users'] = org_user::pluck('title','id')
                 ];
       return view('organization.documents.createDocument',compact('params'));
     }
@@ -243,7 +244,7 @@ class DocumentController extends Controller
                   'designations'  => $data['designations'] = Designation::pluck('name','id'),
                   'shifts'        => $data['shifts'] = Shift::pluck('name','id'),
                   'roles'         => $data['roles'] = UsersRole::pluck('name','id'),
-                  'users'         => $data['users'] = User::pluck('name','id')
+                  'users'         => $data['users'] = org_user::pluck('name','id')
                 ];
       return view('organization.documents.createDocument',compact(['document','params']));
     }
