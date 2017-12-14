@@ -275,7 +275,8 @@ class AttendanceController extends Controller
 	}else{
 		return redirect()->route('list.attendance');
 	}
-		return redirect()->route('import.form.attendance');
+		// return redirect()->route('import.form.attendance');
+		return redirect()->route('attendance.files');
 		}
 	}
 
