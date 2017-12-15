@@ -254,7 +254,7 @@ $page_title_data = array(
                             </div>
                             @php
                                 $fields = $sections->where('id',Request::input('sections'))->first()->fields;
-                                $firstField = $fields->toArray()[0]['id'];
+                                $firstField = @$fields->toArray()[0]['id'];
                             @endphp
 
                             @if($fields->count() > 0)

@@ -13,11 +13,8 @@ use Session;
 use App\Model\Organization\Attendance;
 use App\Model\Organization\Holiday;
 use App\Model\Organization\Leave;
-
 use Carbon\carbon;
 use PDF;
-
-
 class SalaryController extends Controller
 {
 
@@ -187,10 +184,12 @@ class SalaryController extends Controller
          	}
 
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
+
               if($attendance_data->count()>0){
                 if(empty($payScale)){
                      $payScale_error[] = $meta['employee_id'];
                 }else{
+                    $loss_of_pay_days = $attendance_data->where('attendance_status','LP')->count();
                     $data[$userKey]['employee_id'] = $meta['employee_id'];
                     $data[$userKey]['user_id'] = $userValue['id'];
                     $data[$userKey]['department'] = $meta['department'];
@@ -209,7 +208,7 @@ class SalaryController extends Controller
                     $data[$userKey]['sundays'] = $sunday = $attendance_data->where('day','Sunday')->count();
                     $data[$userKey]['holiday'] = $holiday;
                     $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
-                    $data[$userKey]['dedicated_amount'] =  ($working_days - $data[$userKey]['number_of_attendance']) * $per_day;
+                    $data[$userKey]['dedicated_amount'] = $loss_of_pay_days *  $per_day; //($working_days - $data[$userKey]['number_of_attendance']) * $per_day;
                     $data[$userKey]['total_days'] = $daysInMonth;
                     if($data[$userKey]['number_of_attendance'] ==0){
                        $data[$userKey]['salary'] = 0;   

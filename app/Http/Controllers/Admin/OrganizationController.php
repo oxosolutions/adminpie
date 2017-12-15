@@ -223,48 +223,61 @@ class OrganizationController extends Controller
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
         }
-        $org = new ORG();
-        $org->fill($request->all());
-        $org->save();
-        $org_id = $org->id;
-        $active_code =  $org_id * 576;
-        ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
-        Session::put('organization_id',$org->id);
-        $checkMaster = GlobalSetting::where('key','primary_organization');
-        if($checkMaster->exists()){
-            $primary_orgnaization = $checkMaster->first();
-            $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
-            //($return=='table_exist')? $org_usr =  User::find(1):null;
-        }
+
+try{
+      DB::transaction(function ()use($request, $checkUserExist) {
+            $org = new ORG();
+            $org->fill($request->all());
+            $org->save();
+            $org_id = $org->id;
+            $active_code =  $org_id * 576;
+            ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
+            Session::put('organization_id',$org->id);
+            $checkMaster = GlobalSetting::where('key','primary_organization');
+            
+            if($checkMaster->exists()){
+                $primary_orgnaization = $checkMaster->first();
+                 if(!empty($primary_orgnaization->value)){
+                    $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
+                    }else{
+                       $return = 'table_not_exist';
+                    }
+                //($return=='table_exist')? $org_usr =  User::find(1):null;
+            }
+            if(!$checkMaster->exists() || $return=='table_not_exist'){
+                $this->create_db_through_migration($org_id);
+            }
+            if($checkUserExist == null){
+            	$org_usr = new GroupUsers();
+    	        $org_usr->fill($request->all());
+    	        $org_usr->status = 1;
+    	        $org_usr->password = Hash::make($request->password);
+    	        $org_usr->app_password = $request->password;
+    	        $org_usr->save(); 
+            }else{
+            	$org_usr = new stdClass;
+            	$org_usr->id = $checkUserExist->id;
+            }
+            $userMapping = new User;
+            $userMapping->user_id = $org_usr->id;
+            $userMapping->deleted_at = 0;
+            $userMapping->status = 1;
+            $userMapping->save();
+            $userRoleMapping = UserRoleMapping::where(['user_id'=>$userMapping->id, 'role_id'=>1]);
+            if(!$userRoleMapping->exists()){
+                $userRoleMapping = new UserRoleMapping();
+                $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
+                $userRoleMapping->save();
+            }
+            
+         });
+    } catch (Exception $e) {
         
-        if(!$checkMaster->exists() || $return=='table_not_exist'){
-            $this->create_db_through_migration($org_id);
-        }
-        if($checkUserExist == null){
-        	$org_usr = new GroupUsers();
-	        $org_usr->fill($request->all());
-	        $org_usr->status = 1;
-	        $org_usr->password = Hash::make($request->password);
-	        $org_usr->app_password = $request->password;
-	        $org_usr->save(); 
-        }else{
-        	$org_usr = new stdClass;
-        	$org_usr->id = $checkUserExist->id;
-        }
-        $userMapping = new User;
-        $userMapping->user_id = $org_usr->id;
-        $userMapping->deleted_at = 0;
-        $userMapping->status = 1;
-        $userMapping->save();
-        $userRoleMapping = UserRoleMapping::where(['user_id'=>$userMapping->id, 'role_id'=>1]);
-        if(!$userRoleMapping->exists()){
-            $userRoleMapping = new UserRoleMapping();
-            $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
-            $userRoleMapping->save();
-        }
+    }
 
         Session::flash('success', 'Organization create successfully');
         return $org_id.' has beenn created';
+
     }
 
     public function cloneOrganization($id)

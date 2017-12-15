@@ -18,7 +18,7 @@ use App\Model\Organization\Employee;
 use App\Model\Organization\Client;
 use App\Model\Admin\GlobalOrganization;
 
-class UsersController extends Controller
+class dublicateUsersController extends Controller
 {
     protected $userRepo;
     public function __construct(UserRepositoryContract $userRepo)

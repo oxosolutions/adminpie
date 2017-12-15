@@ -102,19 +102,14 @@ class SurveyController extends Controller
     public function surveySettings($survey_id){
         $permission = $this->collaboratorAccesses($survey_id,'settings');
         $model = FormsMeta::where(['form_id'=>$survey_id]);
-        if(!$model->exists()){
-               $message =  __('survey.survey_results_table_missing');
-                return view('organization.survey.survey_settings'   ,['error'=>$message ]);
-        }else{
-            $modelData = [];
-            foreach($model->get() as $key => $value){
-                $modelData[$value->key] = $value->value;
-            }
-        $form = forms::find($survey_id);
-
-        return view('organization.survey.survey_settings',['model'=>$modelData,'permission'=>$permission,'form' => $form]);
+        $modelData = [];
+        foreach($model->get() as $key => $value){
+            $modelData[$value->key] = $value->value;
         }
+        $form = forms::find($survey_id);
+        return view('organization.survey.survey_settings',['model'=>$modelData,'permission'=>$permission,'form' => $form]);
     }
+
     public function display_survey()
     {
         return view('organization.survey.display_survey');

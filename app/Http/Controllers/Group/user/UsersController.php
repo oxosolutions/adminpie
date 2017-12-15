@@ -63,8 +63,7 @@ class UsersController extends Controller
                                           'changePass'  =>  ['title'=>'Change Password','route' => 'pass.group.user'],
                                           'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.group.status']
                                        ]
-                      ];
-        
+                      ];        
         return view('group.user.list',$datalist);
     }
 
@@ -75,22 +74,26 @@ class UsersController extends Controller
      * @author Sandip,Rahul
      **/
     public function view($id){
-   		$model = GroupUsers::find($id);
-   		$organizations = GlobalOrganization::where(['group_id'=>Auth::guard('group')->user()->group_id])->get();
-   		$prefix = DB::getTablePrefix();
-   		$organizationsList = [];
-   		$index = 0;
-   		foreach($organizations as $key => $organization){
-   			$user = DB::table($organization->id."_users")->where(['user_id'=>$id])->get();
-   			$roles = $organization->id.'_users_roles';
-   			$mappingTable = $organization->id."_user_role_mappings";
-   			$userRoles = DB::table($mappingTable)->leftjoin($roles,$roles.'.id','=',$mappingTable.'.role_id','LEFT')->where(['user_id'=>$id])->get()->toArray();
-   			if(!$user->isEmpty()){
-   				$organizationsList[$index]['name'] = $organization->name;
-   				$organizationsList[$index]['roles'] = $userRoles;
-   				$index++;
-   			}
-   		}
+        $model = GroupUsers::find($id);
+        $organizations = GlobalOrganization::where(['group_id'=>Auth::guard('group')->user()->group_id])->get();
+        $prefix = DB::getTablePrefix();
+        $organizationsList = [];
+        $index = 0;
+        foreach($organizations as $key => $organization){
+            try{
+                $user = DB::table($organization->id."_users")->where(['user_id'=>$id])->get();
+                $roles = $organization->id.'_users_roles';
+                $mappingTable = $organization->id."_user_role_mappings";
+                $userRoles = DB::table($mappingTable)->leftjoin($roles,$roles.'.id','=',$mappingTable.'.role_id','LEFT')->where(['user_id'=>$id])->get()->toArray();
+                if(!$user->isEmpty()){
+                    $organizationsList[$index]['name'] = $organization->name;
+                    $organizationsList[$index]['roles'] = $userRoles;
+                    $index++;
+                }
+            }catch(\Exception $e){
+                continue;
+            }
+        }
    		return view('group.user.view',['model'=>$model,'organizationsList'=>$organizationsList]);
    	}
 

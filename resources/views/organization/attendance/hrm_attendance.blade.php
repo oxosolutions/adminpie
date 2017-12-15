@@ -268,7 +268,7 @@
 				<td>{{@$designation}}</td>
 				<td>{{@$department}}</td>
 			@if($lock_status)
-				<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave'],@$attendance_status	,['class' => '']) !!}</td>
+				<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave','LP'=>'Loss of pay'],@$attendance_status	,['class' => '']) !!}</td>
 				@if($punch_in_out)
 						<td>
 						@foreach($punch_in_out as $key =>$val)
