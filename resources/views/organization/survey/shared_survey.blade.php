@@ -139,7 +139,6 @@
 						}
 						$section_id = array_shift($key);
 						$section_slug = $section_array[$section_id];
-
 					}
 					if(Session::has('field')){
 						$fields = Session::get('field');

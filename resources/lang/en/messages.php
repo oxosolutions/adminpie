@@ -24,5 +24,5 @@ return [
 "survey_unauth_role"                => "Your user role do not have permissions access the survey.",
 "survey_auth_required"              => "You have to login to access the survey.",
 "survey_status"                     => "Survey is disabled.",
-
+"data_not_found"                    => "There no data available."
 ];

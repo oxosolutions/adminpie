@@ -3,6 +3,9 @@
 	/****************************************** All Routes For Admin *************************************************/
 		//Public route
 		Route::group(['middleware'=>'web'], function(){
+			
+
+
 				Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
 				Route::get('demo/{slug}',	['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
 				Route::post('comment/save',	['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
@@ -161,7 +164,9 @@
 
 
 			Route::group(['middleware' => ['auth.org','org.status']], function(){
-
+				Route::get('404',['as' => 'demo5','uses' => function(){
+					return View::make('common.404');
+				}]);
 
                 include_once "custom/organization/domains.php";
 
@@ -717,9 +722,7 @@
 					include_once 'custom/organization/forms.php';
     //});
 
-Route::get('404',['as' => 'demo5','uses' => function(){
-	return View::make('common.404');
-}]);
+
 Route::get('access_denied',['as' => 'access.denied','uses' => function(){
 	return View::make('errors.accessdenied');
 }]);

@@ -84,8 +84,14 @@ class PagesController extends Controller
     public function edit($id){
       
         $page = Page::where('id',$id)->with(['pageMeta'])->first();
-        foreach ($page->pageMeta as $key => $value) {
-            $page[$value['key']] = $value['value'];
+        if(!empty($page)){
+          foreach ($page->pageMeta as $key => $value) {
+              $page[$value['key']] = $value['value'];
+          }
+        }else{
+          $page =[];
+          $error =  __('messages.data_not_found');
+          Session::flash('error',$error);
         }
         return view('admin.pages.edit_page',['page'=>$page]);
     }

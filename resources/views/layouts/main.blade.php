@@ -17,7 +17,6 @@
 		}
 		$user_role_classes = implode(" ",$user_role_classes);
 
-
 	@endphp
 	<style type="text/css">
 		{!!@$custom_css!!}

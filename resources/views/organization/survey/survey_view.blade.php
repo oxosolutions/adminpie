@@ -24,11 +24,11 @@
 		@elseif(!@$permission)
 			<div class='aione-message aione-message-error'>Access Denied</div>
 		@else
-			{!! Form::model($slug,['route' => 'view.filled.survey', 'class'=> 'form-horizontal','method' => 'post'])!!}
+			{{-- {!! Form::model($slug,['route' => 'view.filled.survey', 'class'=> 'form-horizontal','method' => 'post'])!!} --}}
 				{!! FormGenerator::GenerateForm($slug,[],'','org') !!}
 				<input type="hidden" name="form_id" value="{{$form_id}}" >
 				<input type="hidden" name="form_slug" value="{{$slug}}" >
-			{!! Form::close() !!}
+			{{-- {!! Form::close() !!} --}}
 		@endif
 
 	@include('common.page_content_primary_end')

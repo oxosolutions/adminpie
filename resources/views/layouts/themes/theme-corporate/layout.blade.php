@@ -26,7 +26,7 @@
 <html lang="en">
 @include('layouts.themes.theme-docs.includes._head')
 <body>
-	<div id="aione_wrapper" class="aione-wrapper layout-header-top aione-layout-wide aione-theme-docs">
+	<div id="aione_wrapper" class="aione-wrapper layout-header-top aione-layout-wide aione-theme-corporate">
 		<div class="wrapper">
 			
 			@if(@$design_settings['show_header'] == 1)

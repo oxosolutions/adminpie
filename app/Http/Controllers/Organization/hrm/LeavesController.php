@@ -230,49 +230,86 @@ class LeavesController extends Controller
 
     public function reject_leave($id){
       $model = LV::find($id);
-        $from = strtotime($model->from);
-        $to = strtotime($model->to);
-        $from_year_mo = date('Y-m', $from);
-        $to_year_mo = date('Y-m', $to);
-        $from_year   = date('Y',$from);
-        $from_month  = date('m',$from);
-        $from_date  =  date('d', $from);
-        $to_date    = date('d', $to);
-        $to_year = date('Y',$to);
-        $to_month = date('m',$to);
-          LV::where('id',$id)->update(['status'=> 3]);
-           if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
-                if($from_year_mo == $to_year_mo){
-                  if(strlen($from_month)==1){
-                    $from_month = '0'.$from_month;
-                  }
-                  $this->leave_insertion($from_date, $to_date, $from_year_mo, $model->employee_id,'reject');
-                }elseif($from_year_mo != $to_year_mo){
-                    if($from_year == $to_year){
-                          if($from_month != $to_month){
-                            $carbon_from = Carbon::parse($model->from);
-                            $carbon_from->daysInMonth;
-                            $this->leave_insertion($from_date, $carbon_from->daysInMonth, $from_year_mo, $model->employee_id, 'reject');
-                            $this->leave_insertion(1, $to_date, $to_year_mo, $model->employee_id,'reject');
-                        }
-                      }             
-               }
-            }
-        return back();
+      if(!empty($model)){
+        LV::where('id',$id)->update(['status'=> 3]);
+        Session::flash('success','Successfully reject');
+      }else{
+         Session::flash('error','There is no data');
+      }
+      return back();
     }
+
+    //     $from = strtotime($model->from);
+    //     $to = strtotime($model->to);
+    //     $from_year_mo = date('Y-m', $from);
+    //     $to_year_mo = date('Y-m', $to);
+    //     $from_year   = date('Y',$from);
+    //     $from_month  = date('m',$from);
+    //     $from_date  =  date('d', $from);
+    //     $to_date    = date('d', $to);
+    //     $to_year = date('Y',$to);
+    //     $to_month = date('m',$to);
+    //        if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
+    //             if($from_year_mo == $to_year_mo){
+    //               if(strlen($from_month)==1){
+    //                 $from_month = '0'.$from_month;
+    //               }
+    //               $this->leave_insertion($from_date, $to_date, $from_year_mo, $model->employee_id,'reject');
+    //             }elseif($from_year_mo != $to_year_mo){
+    //                 if($from_year == $to_year){
+    //                       if($from_month != $to_month){
+    //                         $carbon_from = Carbon::parse($model->from);
+    //                         $carbon_from->daysInMonth;
+    //                         $this->leave_insertion($from_date, $carbon_from->daysInMonth, $from_year_mo, $model->employee_id, 'reject');
+    //                         $this->leave_insertion(1, $to_date, $to_year_mo, $model->employee_id,'reject');
+    //                     }
+    //                   }             
+    //            }
+    //         }
+    //     return back();
+    // }
     public function approve_leave($id)
     { 
         $model = LV::find($id);
-        $from = strtotime($model->from);
-        $to = strtotime($model->to);
-        $from_year_mo = date('Y-m', $from);
-        $to_year_mo = date('Y-m', $to);
-        $from_year   = date('Y',$from);
-        $from_month  = date('m',$from);
-        $from_date  =  date('d', $from);
-        $to_date    = date('d', $to);
-        $to_year = date('Y',$to);
-        $to_month = date('m',$to);
+
+        if(!empty($model)){
+          LV::where('id',$id)->update(['status'=> 1]);
+          Session::flash('success','Successfully approved');
+          return back();
+        }else{
+          Session::flash('error','There is no data.');
+          return back();
+        }
+
+
+
+
+
+
+        dd($model);
+        // $from = strtotime($model->from);
+        // $to = strtotime($model->to);
+        // $from_year_mo = date('Y-m', $from);
+        // $to_year_mo = date('Y-m', $to);
+        // $from_year   = date('Y',$from);
+        // $from_month  = date('m',$from);
+        // $from_date  =  date('d', $from);
+        // $to_date    = date('d', $to);
+        // $to_year = date('Y',$to);
+        // $to_month = date('m',$to);
+
+
+
+
+
+
+
+
+
+
+
+
+
         // if($model->status == 1){
         //   LV::where('id',$id)->update(['status'=> 0]);
         //    if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
@@ -294,25 +331,26 @@ class LeavesController extends Controller
         //     }
         // }else
         // 
-          LV::where('id',$id)->update(['status'=> 1]);
-          if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
-                if($from_year_mo == $to_year_mo){
-                  if(strlen($from_month)==1){
-                    $from_month = '0'.$from_month;
-                  }
-                  $this->leave_insertion($from_date, $to_date, $from_year_mo, $model->employee_id,'approve');
-                }elseif($from_year_mo != $to_year_mo){
-                    if($from_year == $to_year){
-                          if($from_month != $to_month){
-                            $carbon_from = Carbon::parse($model->from);
-                            $carbon_from->daysInMonth;
-                            $this->leave_insertion($from_date, $carbon_from->daysInMonth, $from_year_mo, $model->employee_id, 'approve');
-                            $this->leave_insertion(1, $to_date, $to_year_mo, $model->employee_id,'approve');
-                        }
-                      }             
-               }
-            }
-        return back();
+
+        //   LV::where('id',$id)->update(['status'=> 1]);
+        //   if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
+        //         if($from_year_mo == $to_year_mo){
+        //           if(strlen($from_month)==1){
+        //             $from_month = '0'.$from_month;
+        //           }
+        //           $this->leave_insertion($from_date, $to_date, $from_year_mo, $model->employee_id,'approve');
+        //         }elseif($from_year_mo != $to_year_mo){
+        //             if($from_year == $to_year){
+        //                   if($from_month != $to_month){
+        //                     $carbon_from = Carbon::parse($model->from);
+        //                     $carbon_from->daysInMonth;
+        //                     $this->leave_insertion($from_date, $carbon_from->daysInMonth, $from_year_mo, $model->employee_id, 'approve');
+        //                     $this->leave_insertion(1, $to_date, $to_year_mo, $model->employee_id,'approve');
+        //                 }
+        //               }             
+        //        }
+        //     }
+        // return back();
     }
 
     protected function saveSearch($request){

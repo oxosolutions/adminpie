@@ -12,7 +12,7 @@
         <a href="{{route('survey.sections.list',$id)}}"><span class="nav-item-text">Edit</span></a>
       </li>
       <li class="aione-tab survey-view-tab {{(Request::route()->action['as'] == 'survey.perview')?'nav-item-current':''}}">
-        <a href="{{ route('survey.perview',$id) }}"><span class="nav-item-text">View</span></a>
+        <a href="{{ route('survey.perview',$id) }}"><span class="nav-item-text">Preview</span></a>
       </li>
       <li class="aione-tab survey-settings-tab {{(Request::route()->action['as'] == 'survey.settings')?'nav-item-current':''}}">
         <a href="{{route('survey.settings',$id)}}"><span class="nav-item-text">Settings</span></a>
@@ -35,7 +35,7 @@
             </li>
       @endif
       @if(App\Model\Organization\Collaborator::checkAccess($id,'survey') == null)
-        <li class="aione-tab survey-share-tab {{(Request::route()->action['as'] == 'share.survey')?'nav-item-current':''}}">
+        <li class="aione-tab survey-share-tab {{(Request::route()->action['as'] == 'share.survey')?'nav-item-current':''}}" style="display: none;">
           <a href="{{route('share.survey',$id)}}"><span class="nav-item-text">Collaborate</span></a>
         </li>
       @endif

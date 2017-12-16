@@ -23,6 +23,10 @@ class DatasetController extends Controller
 		$user_id = Auth::guard('org')->user()->id;
 
 		$model = Dataset::find($id);
+        if($model == null){
+            Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset id does not exist!');
+            return false;
+        }
 		if($model->user_id != $user_id){
 			return false;
 		}else{
@@ -552,6 +556,7 @@ class DatasetController extends Controller
         }
     }
     public function viewDataset(Request $request, $id, $action, $record_id = null){
+
     	if(!$this->validateUser($id)){
         	return redirect()->route('list.dataset');
         }
@@ -565,7 +570,13 @@ class DatasetController extends Controller
             if($action != null){
                 if($action == 'view' || $action == 'edit'){
                     if($record_id != null){
-                        $viewRecord = array_values($records->where('id',$record_id)->toArray());
+                        $viewrecords = DB::table(str_replace('ocrm_', '', $datasetTable))->where('id',$record_id)->where('status' , 1)->first();
+                        if($viewrecords != null){
+                            $viewRecord = $viewrecords;
+                        }else{
+                            Session::flash('warning' , '<i class="fa fa-exclamation-triangle"></i> Record Does not exist!');
+                            return redirect()->route('view.dataset',$id);
+                        }
                     }
                 }
                 if($action == 'rivisions'){
@@ -581,7 +592,6 @@ class DatasetController extends Controller
             $viewRecord = [];
             $history = [];
         }
-        
         return view('organization.dataset.view',['tableheaders'=>$tableHeader , 'dataset' => $dataset,'records'=>$records,'viewrecords'=>$viewRecord,'history'=>$history]);
     }
 
@@ -601,6 +611,7 @@ class DatasetController extends Controller
             DB::table(str_replace('ocrm_','',$datasetTable))->insert($recordArray);
     }
     public function updateRecords(Request $request, $id){
+        http_response_code(500);
         $dataset = Dataset::find($id);
         $datasetHeaders = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->first();
         unset($datasetHeaders['status']);
@@ -609,8 +620,16 @@ class DatasetController extends Controller
             // dump(array_keys($datasetHeaders));
             // dump($record);
             $recordArray = array_combine(array_keys($datasetHeaders), $record);
-            $isRecordExists = DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->first();
+            $isRecordExists = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->first();
+            $lastInserted = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->orderby('id','desc')->first();
+            $lastInsertedId = $lastInserted['id'];
+            
             if($isRecordExists != null){
+                $id = $isRecordExists['id'];
+                unset($isRecordExists['id']);
+                $isRecordExists['id'] = $lastInsertedId+1 ;
+
+                DB::table(str_replace('ocrm_','',$dataset->dataset_table))->insert($isRecordExists);
                 DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->update($recordArray);
             }else{
                 DB::table(str_replace('ocrm_','',$dataset->dataset_table))->insert($recordArray);
@@ -873,12 +892,18 @@ class DatasetController extends Controller
     }
 
     public function createSubset(Request $request, $id){
+        $rules = [
+            'name' => 'required'
+        ];
+        $this->validate($request,$rules);
+
     	if(!$this->validateUser($id)){
         	return redirect()->route('list.dataset');
         }
         $dataset = Dataset::find($id);
         $where = [];
         $datasetTable = Dataset::find($id)->dataset_table;
+
         $filterDara = unserialize($request->filter_data);
         if(empty($filterDara)){
             Session::flash('error','Please apply filter after select columns!');
@@ -886,6 +911,7 @@ class DatasetController extends Controller
         }
         $headers = DB::table(str_replace('ocrm_','',$datasetTable))->select($filterDara['select_column'])->where('id',1)->first();
         $tableName = DB::getTablePrefix().get_organization_id().'_data_table_'.time();
+
         $newTableColumns = [];
         $newTableColumns[] = "`id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID'";
         foreach($filterDara['select_column'] as $key => $val){
@@ -894,7 +920,9 @@ class DatasetController extends Controller
         $newTableColumns[] = "`status` BOOLEAN NOT NULL DEFAULT TRUE";
         $newTableColumns[] = "`parent` INT NOT NULL DEFAULT '0'";
         foreach($filterDara['horizontal_filtration'] as $key => $filter){
-            $where[] = $filter['column'].' '.$filter['operation'].' "'.$filter['value'].'"';
+            if($filter['column'] != null && $filter['operation'] != null && $filter['value'] != null){
+                $where[] = $filter['column'].' '.$filter['operation'].' "'.$filter['value'].'"';
+            }
         }
         
         DB::beginTransaction();
@@ -902,9 +930,13 @@ class DatasetController extends Controller
             DB::select('CREATE TABLE '.$tableName.' ('.implode(',',$newTableColumns).')');
             $insertData = collect($headers)->toArray();
             DB::table(str_replace('ocrm_','',$tableName))->insert($insertData);
-            DB::select('INSERT INTO '.$tableName.' ('.implode(',',$filterDara['select_column']).', status, parent) SELECT '.implode(',',$filterDara['select_column']).', status, parent FROM '.$datasetTable.' WHERE status = 1 AND ('.implode(' AND ',$where).')');
+            if(!empty($where)){
+                DB::select('INSERT INTO '.$tableName.' ('.implode(',',$filterDara['select_column']).', status, parent) SELECT '.implode(',',$filterDara['select_column']).', status, parent FROM '.$datasetTable.' WHERE status = 1 AND ('.implode(' AND ',$where).')');
+            }else{
+                DB::select('INSERT INTO '.$tableName.' ('.implode(',',$filterDara['select_column']).', status, parent) SELECT '.implode(',',$filterDara['select_column']).', status, parent FROM '.$datasetTable.' WHERE status = 1');
+            }
             $model = new Dataset;
-            $model->dataset_table = 'ocrm_'.$tableName;
+            $model->dataset_table = $tableName;
             $model->dataset_name = $request->name;
             $model->dataset_file = '';
             $model->dataset_file_name = '';
@@ -914,6 +946,7 @@ class DatasetController extends Controller
             Session::flash('success','Subset created successfully!!');
             DB::commit();
         }catch(\Exception $e){
+            throw $e;
             DB::rollback();
         }
         /*$tableName = DB::getTablePrefix().get_organization_id().'_data_table_'.time();
@@ -1079,7 +1112,8 @@ class DatasetController extends Controller
         {
            
             $name  =   parse_slug($model->dataset_name).'_'.generate_filename();
-            $datas =   DB::table($table_name)->get()->toArray();
+            $datas =   DB::table($table_name)->where('status' , 1)->where('parent' ,  0)->get()->toArray();
+            // $datas =   DB::table($table_name)->where('status' , 1)->get()->toArray();
             $model =   json_decode(json_encode($datas),true);
             $headers = $model[0];
 
@@ -1110,6 +1144,7 @@ class DatasetController extends Controller
         $orgID = get_organization_id();
         $prefix = DB::getTablePrefix();
         $newTableName = $prefix.$orgID.'_data_table_'.time();
+
         $removeOXO = str_replace('oxo_', '', $model->dataset_table);
         DB::select('CREATE TABLE '.$newTableName.' as SELECT * FROM `ocrm_'.$tableName.'`');
         DB::select('ALTER TABLE '.$newTableName.' MODIFY `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY');

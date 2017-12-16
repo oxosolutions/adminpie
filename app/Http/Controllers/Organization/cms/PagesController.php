@@ -111,9 +111,14 @@ class PagesController extends Controller
     {
         $Associate = $this->assignModel('Page');
         $page = $Associate::where('id',$id)->with(['pageMeta'])->first();
+        if(!empty($page)){
             foreach ($page->pageMeta as $key => $value) {
                 $page[$value['key']] = $value['value'];
             }
+        }else{
+            // $page = [];
+           Session::flash('error',__('messages.data_not_found'));
+        }
         return view('organization.pages.edit_page',['page'=>$page]);
     }
     public function update(Request $request)

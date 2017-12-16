@@ -289,30 +289,32 @@ class UsersController extends Controller
 	                $form_slug = $additionalForm->form_slug;
 	            }
 	        }
-            $model = org_user::with(['user_role_rel','metas'])->find($id);
-
-			foreach($model->metas as $k => $v){
-                $model[$v->key] = $v->value;
-			}
-          	$newData = [];
-	        foreach ($model->toArray() as $key => $value) {
-	        	if(!is_array($value)){
-		        	json_decode($value);
-		    		if (json_last_error() === JSON_ERROR_NONE){
-		    			if(is_array( json_decode($value) )){
-		    				$newData[$key] = json_decode($value);
-		    			}else{
-		    				$newData[$key] = $value;
-		    			}
-		    		}else{
-		    			$newData[$key] = $value;
-		    		}
-	        	}else{
-	        		$newData[$key] = $value;
-	        	}
-
-	        }
-
+          $model = org_user::with(['user_role_rel','metas'])->find($id);
+          if(!empty($model)){
+      			foreach($model->metas as $k => $v){
+                      $model[$v->key] = $v->value;
+      			}
+                $newData = [];
+      	        foreach ($model->toArray() as $key => $value) {
+      	        	if(!is_array($value)){
+      		        	json_decode($value);
+      		    		if (json_last_error() === JSON_ERROR_NONE){
+      		    			if(is_array( json_decode($value) )){
+      		    				$newData[$key] = json_decode($value);
+      		    			}else{
+      		    				$newData[$key] = $value;
+      		    			}
+      		    		}else{
+      		    			$newData[$key] = $value;
+      		    		}
+      	        	}else{
+      	        		$newData[$key] = $value;
+      	        	}
+      	        }
+          }else{
+            $newData =[];
+            Session::flash('error',__('messages.data_not_found'));
+          }
           return view('organization.user.edit',['model' => $newData,'form_slug'=>$form_slug]);
       }
 

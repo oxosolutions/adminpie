@@ -74,7 +74,7 @@
 					@endphp
 					@foreach($filters as $key => $value)
 						@if($value['column_type'] == 'mdropdown')
-							<div class="row">
+							{{-- <div class="row">
 								<div class="">
 									<label class="aione-filter-label">{{ucfirst($value['column_name'])}}</label>
 									<select name='mdropdown[{{$multidrop}}][{{$key}}][]' multiple style="width: 90%" >
@@ -87,7 +87,61 @@
 										@endforeach
 									</select>
 								</div>
+							</div> --}}
+							<div id="aione_form_wrapper_296" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style-   ">
+							    <div class="aione-row">
+							        <div id="aione_form_content" class="aione-form-content">
+							            <div class="aione-row aione-">
+							                <div id="aione_form_section_617" class="aione-form-section non-repeater">
+							                    <div class="aione-row">
+							                        <div id="aione_form_section_content" class="aione-form-section-content">
+							                            <div class="aione-row ar">
+							                                <div id="field_3132" data-conditions="0" data-field-type="multi_select" class="field-wrapper ac field-wrapper-ajksdasjdhajksd field-wrapper-type-multi_select ">
+							                                    <div id="field_label_ajksdasjdhajksd" class="field-label">
+							                                        <label for="input_ajksdasjdhajksd">
+							                                            <h4 class="field-title" id="{{ucfirst($value['column_name'])}}">
+							                                                {{ucfirst($value['column_name'])}}
+							                                            </h4>
+							                                        </label>
+							                                    </div>
+							                                    <!-- field label-->
+							                                    <div id="field_ajksdasjdhajksd" class="field field-type-multi_select">
+							                                        <input type="hidden" name="ajksdasjdhajksd">
+							                                        <select class="ajksdasjdhajksd browser-default  select2-hidden-accessible" id="input_ajksdasjdhajksd" multiple="" name='mdropdown[{{$multidrop}}][{{$key}}][]' tabindex="-1" aria-hidden="true">
+							                                        	@foreach($value['column_data'] as $option)
+																			<option value="{{$option}}"
+																			@if(isset($value['selected_value']) && in_array($option, $value['selected_value']))
+																				selected="selected"
+																			@endif
+																			>{{$option}}</option>
+																		@endforeach
+							                                        </select>
+							                                        <div class="field-actions">
+							                                            <a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a>
+							                                            / 
+							                                            <a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a>
+							                                        </div>
+							                                    </div>
+							                                    <!-- field -->
+							                                </div>
+							                                <!-- field wrapper -->
+							                            </div>
+							                            <!-- .aione-row -->
+							                        </div>
+							                        <!-- .aione-form-content -->
+							                    </div>
+							                    <!-- .aione-row -->
+							                </div>
+							                <!-- .aione-form-section -->
+							            </div>
+							            <!-- .aione-row -->
+							        </div>
+							        <!-- .aione-form-content -->
+							        <textarea class="form_conditions" id="form_296" style="display: none;">{"3132":{"field_slug":"ajksdasjdhajksd","field_id":3132,"field_title":"askdhjasjkd","field_conditions":[]}}</textarea>
+							    </div>
+							    <!-- .aione-row -->
 							</div>
+
 							
 							@php
 								$multidrop++;

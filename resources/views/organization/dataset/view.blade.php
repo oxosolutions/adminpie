@@ -192,7 +192,7 @@
             </div>
 
         @endif
-
+    
         @if(@request()->route()->parameters['action'] == 'view')
             <div class="aione-table" style="margin-bottom: 20px">
                 <table class="compact">
@@ -207,7 +207,7 @@
                             @if(!in_array($k,['id','status','parent']))
                                 <tr>
                                     <td width="400px">{{$rows}}</td>
-                                    <td>{{ $viewrecords[0]->{$k} }}</td>
+                                    <td>{{ $viewrecords->{$k} }}</td>
                                 </tr>
                             @endif
                         @endforeach
@@ -236,13 +236,13 @@
                                     <td>
                                         <div id="field_{{$k}}" class="field-wrapper field-wrapper-{{$k}} field-wrapper-type-text ">
                                             <div id="field_{{$k}}" class="field field-type-text" style="padding: 0">
-                                                <input type="text" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
+                                                <input type="text" value="{{ $viewrecords->{$k} }}" name="{{$k}}" />
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
                             @else
-                                <input type="hidden" value="{{ $viewrecords[0]->{$k} }}" name="{{$k}}" />
+                                <input type="hidden" value="{{ $viewrecords->{$k} }}" name="{{$k}}" />
                             @endif
                         @endforeach
 
@@ -253,7 +253,7 @@
         @endif
         <div>
             <table class="compact">
-                <thead>
+                <thead class="hidden header-row">
                     <tr>
                         <td>Key</td>
                         <td>Value</td>
@@ -269,7 +269,7 @@
         </div>
         <button class="addRow aione-button aione-float-right mv-10" >Add Row</button>
         @if(!empty($tableheaders))
-            <div class="mv-10 line-height-32">Showing 1 to 47 of total 47 records</div>
+            <div class="mv-10 line-height-32">Showing {{ $records->firstItem() }} to {{ $records->lastItem() }} of total {{ $records->total() }} records</div>
             <div style="" class="table-wrapper">
                 <table class="compact dataset-table" >
                     <thead>
@@ -387,7 +387,8 @@
 			$(th).each(function(key , value){
 				$('.addNewDatasetRow').append('<tr><td width="400px" class="label">'+value+'</td><td><input type="text" class="add-new-value" /></td></tr>');
 				$('.addRow').hide();
-				$('.AddNewDatasetRowButton').show();
+                $('.AddNewDatasetRowButton').show();
+				$('.header-row').show();
 			});
 		});
 

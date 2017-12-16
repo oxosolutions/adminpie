@@ -116,20 +116,26 @@ class VisualisationController extends Controller
 	public function edit($id){
 		$charts = VisualizationCharts::with(['meta'])->where('visualization_id',$id)->get();
 		$model = Visualization::with(['dataset','meta'])->find($id);
-		if($model->dataset == null){
-			return error(['message'=>'No dataset found','link'=>'visualizations']);
+		if($model != null){
+			if($model->dataset == null){
+				return error(['message'=>'No dataset found','link'=>'visualizations']);
+			}
+			$dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
+			$dataset = (array)$dataset[0];
+			unset($dataset['id']);
+			$columns = $dataset;
+			$maps = CustomMaps::get();
+			$filters = $this->getMetaValue($model->meta,'filters');
+			if($filters == false){
+				$filters = [];
+			}
+			$chartsModel = $this->re_arrangeMeta($charts, $model);
+			return view('organization.visualization.edit2',['columns'=>$columns,'chartsModel'=>$chartsModel, 'filters'=>$filters,'model'=>$model]);
+
+		}else{
+            Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Visualization id does not exist!');
+			return redirect()->route('visualizations');
 		}
-		$dataset = DB::select('SELECT * FROM ocrm_'.str_replace('ocrm_','',$model->dataset->dataset_table).' LIMIT 1');
-		$dataset = (array)$dataset[0];
-		unset($dataset['id']);
-		$columns = $dataset;
-		$maps = CustomMaps::get();
-		$filters = $this->getMetaValue($model->meta,'filters');
-		if($filters == false){
-			$filters = [];
-		}
-		$chartsModel = $this->re_arrangeMeta($charts, $model);
-		return view('organization.visualization.edit2',['columns'=>$columns,'chartsModel'=>$chartsModel, 'filters'=>$filters,'model'=>$model]);
 	}
 
 
@@ -790,162 +796,176 @@ class VisualisationController extends Controller
 				$query->with('meta');
 
 		},'meta'])->find($request->id); //getting dataset, visualization charts and meta from eloquent relations
+		if($visualization != null){
 
-		if($visualization->charts->isEmpty()){ //if there is not chart exist in generated visualization
+			if($visualization->charts->isEmpty()){ //if there is not chart exist in generated visualization
 
-			$this->put_in_errors_list('No charts found!', true);
-		}
-
-		if(empty($visualization->dataset)){
-
-			$this->put_in_errors_list('No dataset found', true);
-		}
-		$dataset_table = str_replace('ocrm_', '', $visualization->dataset->dataset_table); //getting dataset table name from visualization query
-		$drawer_array = [];
-		$chartTitles = [];
-		$javascript = [];
-		$visualization_settings = [];
-		$drawer_array['visualization_name'] = $visualization->name;
-		$drawer_array['visualization_id'] = $visualization->id;
-		$drawer_array['visualization_meta'] = $this->get_meta_in_correct_format($visualization->meta);
-		$drawer_array['visualizations'] = [];
-		foreach ($visualization->charts as $key => $chart) {
-			$columns = [];
-			$columns[] = $chart->primary_column;
-			foreach(json_decode($chart->secondary_column) as $column){
-				$columns[] = $column;
+				$this->put_in_errors_list('No charts found!', true);
 			}
-			if($chart->chart_type == 'CustomMap'){
 
-				$viewData_meta = $this->getMetaValue($chart->meta,'viewdata');
-				$customData_meta = json_decode($this->getMetaValue($chart->meta,'customdata'));
+			if(empty($visualization->dataset)){
 
-				if($viewData_meta != false){
-					$columns[] = $viewData_meta;
+				$this->put_in_errors_list('No dataset found', true);
+			}
+			$dataset_table = str_replace('ocrm_', '', $visualization->dataset->dataset_table); //getting dataset table name from visualization query
+			$drawer_array = [];
+			$chartTitles = [];
+			$javascript = [];
+			$visualization_settings = [];
+			$drawer_array['visualization_name'] = $visualization->name;
+			$drawer_array['visualization_id'] = $visualization->id;
+			$drawer_array['visualization_meta'] = $this->get_meta_in_correct_format($visualization->meta);
+			$drawer_array['visualizations'] = [];
+			foreach ($visualization->charts as $key => $chart) {
+				$columns = [];
+				$columns[] = $chart->primary_column;
+				foreach(json_decode($chart->secondary_column) as $column){
+					$columns[] = $column;
 				}
-				if(!empty($customData_meta)){
-					foreach ($customData_meta as $customColumn) {
-						$columns[] = $customColumn;
+				if($chart->chart_type == 'CustomMap'){
+
+					$viewData_meta = $this->getMetaValue($chart->meta,'viewdata');
+					$customData_meta = json_decode($this->getMetaValue($chart->meta,'customdata'));
+
+					if($viewData_meta != false){
+						$columns[] = $viewData_meta;
 					}
+					if(!empty($customData_meta)){
+						foreach ($customData_meta as $customColumn) {
+							$columns[] = $customColumn;
+						}
+					}
+					$columns = array_unique($columns);
 				}
-				$columns = array_unique($columns);
-			}
 
-			try{
-				/*
-				*	if request has any filter
-				*/
-				if($request->has('applyFilter')){
-					$dataset_records = $this->apply_filters($request, $dataset_table, $columns);
-				}else{
-					$dataset_records = DB::table($dataset_table)->select($columns)->whereIn('status',['status',1])->orWhereIn('parent',['parent',1])->get()->toArray(); //getting records with selected columns from dataset table
-				}
-				$formula = $this->getMetaValue($chart->meta,'formula');
-				if($formula != 'no' && $formula != false){
-					$dataset_records = $this->apply_formula($dataset_records, $formula);
-				}
-				$dataset_records = json_decode(json_encode($dataset_records),true); // generating pure array from colection of stdClass object
+				try{
+					/*
+					*	if request has any filter
+					*/
+					if($request->has('applyFilter')){
+						$dataset_records = $this->apply_filters($request, $dataset_table, $columns);
+					}else{
+						$dataset_records = DB::table($dataset_table)->select($columns)->whereIn('status',['status',1])->orWhereIn('parent',['parent',0])->get()->toArray(); //getting records with selected columns from dataset table
+					}
+					$formula = $this->getMetaValue($chart->meta,'formula');
+					if($formula != 'no' && $formula != false){
+						$dataset_records = $this->apply_formula($dataset_records, $formula);
+					}
+					$dataset_records = json_decode(json_encode($dataset_records),true); // generating pure array from colection of stdClass object
 
-				$headers = array_shift($dataset_records);
-				if($chart->chart_type != 'CustomMap'){
-					$lavaschart = Lava::DataTable();
-					$index = 0;
-					foreach ($headers as $header) { // to add headers into lavacharts datatable
-						if($index == 0){
-							$lavaschart->addStringColumn($header); //for string header
-						}else{
-							if($chart->chart_type == 'TableChart'){
+					$headers = array_shift($dataset_records);
+					if($chart->chart_type != 'CustomMap'){
+						$lavaschart = Lava::DataTable();
+						$index = 0;
+						foreach ($headers as $header) { // to add headers into lavacharts datatable
+							if($index == 0){
 								$lavaschart->addStringColumn($header); //for string header
 							}else{
-								$lavaschart->addNumberColumn($header); //for all numeric headers
+								if($chart->chart_type == 'TableChart'){
+									$lavaschart->addStringColumn($header); //for string header
+								}else{
+									$lavaschart->addNumberColumn($header); //for all numeric headers
+								}
+							}
+							$index++;
+						}
+					}
+
+					$records_array = [];
+					foreach($dataset_records as $record){ // convert associative array into indexd array
+						$records_array[] = array_values($record);
+					}
+					if(!empty($records_array)){ // if after filter or without filter there is no data in records list
+						if(!in_array($chart->chart_type, ['CustomMap','ListChart'])){
+							$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
+							$visualization_settings = $this->getMetaValue($chart->meta,'chart_settings');
+
+							if(!empty($visualization_settings) && $visualization_settings != false){
+								$visualization_settings = $this->string_number_to_numeric(json_decode($visualization_settings,true));
+							}else{
+								$visualization_settings = [];
+							}
+							lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
+						}elseif($chart->chart_type == 'CustomMap'){
+							$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
+							$mapSettings = $this->getMetaValue($chart->meta,'chart_settings');
+							
+							$drawer_array['visualizations']['chart_'.$key]['chart_settings'] = $mapSettings;
+							$header_with_column = $headers;
+							$headers = array_values($headers);
+							$customMapDate = $this->create_map_array($dataset_records, $headers, $chart, $header_with_column);
+							$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers, 'arranged_data'=>$customMapDate];
+						}elseif($chart->chart_type == 'ListChart'){
+							$list_array = [];
+							foreach($records_array as $ky => $inner_array){
+								$list_array[] = array_combine($headers, $inner_array);
+							}
+							$drawer_array['visualizations']['chart_'.$key]['list'] = $list_array;
+						}
+						/*
+						* Prepare data for draw visualization
+						* on front
+						*/
+						$chartTitles['chart_'.$key] = $chart->chart_title; //collect all chart titles in single array
+						$drawer_array['visualizations']['chart_'.$key]['chart_type'] = $chart->chart_type;
+						$drawer_array['visualizations']['chart_'.$key]['chart_id'] = $chart->id;
+						$drawer_array['visualizations']['chart_'.$key]['title'] = $chart->chart_title;
+						$drawer_array['visualizations']['chart_'.$key]['enableDisable'] = $this->getMetaValue($chart->meta,'enableDisable');
+					}else{
+						$drawer_array['visualizations']['chart_'.$key]['error'] = 'No records found with selected filters';
+						//$this->put_in_errors_list('No records found with selected filters');
+					}
+
+				}catch(\Exception $e){
+					$drawer_array['visualizations']['chart_'.$key]['error'] = $e->getMessage();
+					//$this->put_in_errors_list($e->getMessage());
+					throw $e;
+				}
+			}
+			/*
+			* Prepare filters for front view
+			 */
+			$datasetColumns = (array)DB::table($dataset_table)->first();
+			$filter_columns = $this->getMetaValue($visualization->meta,'filters');
+			$filters = [];
+			if(!empty(json_decode($filter_columns,true))){
+				$filters = $this->getFIlters($dataset_table, json_decode($filter_columns, true),$datasetColumns);
+			}
+			
+			// adding selected values of filters in filters array
+			$selectedFilters = $request->except(['_token','applyFilter']);
+			foreach ($selectedFilters as $type => $array) {
+				if(is_array($array)){
+					foreach($array as $indexedkey => $columnNames){
+						foreach($columnNames as $colKey => $colArray){
+							if($filters[$colKey]['column_type'] == $type){
+								$filters[$colKey]['selected_value'] = $colArray;
 							}
 						}
-						$index++;
-					}
-				}
-
-				$records_array = [];
-				foreach($dataset_records as $record){ // convert associative array into indexd array
-					$records_array[] = array_values($record);
-				}
-				if(!empty($records_array)){ // if after filter or without filter there is no data in records list
-					if(!in_array($chart->chart_type, ['CustomMap','ListChart'])){
-						$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
-						$visualization_settings = $this->getMetaValue($chart->meta,'chart_settings');
-
-						if(!empty($visualization_settings) && $visualization_settings != false){
-							$visualization_settings = $this->string_number_to_numeric(json_decode($visualization_settings,true));
-						}else{
-							$visualization_settings = [];
-						}
-						lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
-					}elseif($chart->chart_type == 'CustomMap'){
-						$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
-						$mapSettings = $this->getMetaValue($chart->meta,'chart_settings');
-						
-						$drawer_array['visualizations']['chart_'.$key]['chart_settings'] = $mapSettings;
-						$header_with_column = $headers;
-						$headers = array_values($headers);
-						$customMapDate = $this->create_map_array($dataset_records, $headers, $chart, $header_with_column);
-						$javascript['chart_'.$key] = ['type'=>$chart->chart_type,'id'=>'chart_'.$key,'data'=>$records_array,'headers'=>$headers, 'arranged_data'=>$customMapDate];
-					}elseif($chart->chart_type == 'ListChart'){
-						$list_array = [];
-						foreach($records_array as $ky => $inner_array){
-							$list_array[] = array_combine($headers, $inner_array);
-						}
-						$drawer_array['visualizations']['chart_'.$key]['list'] = $list_array;
-					}
-					/*
-					* Prepare data for draw visualization
-					* on front
-					*/
-					$chartTitles['chart_'.$key] = $chart->chart_title; //collect all chart titles in single array
-					$drawer_array['visualizations']['chart_'.$key]['chart_type'] = $chart->chart_type;
-					$drawer_array['visualizations']['chart_'.$key]['chart_id'] = $chart->id;
-					$drawer_array['visualizations']['chart_'.$key]['title'] = $chart->chart_title;
-					$drawer_array['visualizations']['chart_'.$key]['enableDisable'] = $this->getMetaValue($chart->meta,'enableDisable');
-				}else{
-					$drawer_array['visualizations']['chart_'.$key]['error'] = 'No records found with selected filters';
-					//$this->put_in_errors_list('No records found with selected filters');
-				}
-
-			}catch(\Exception $e){
-				$drawer_array['visualizations']['chart_'.$key]['error'] = $e->getMessage();
-				//$this->put_in_errors_list($e->getMessage());
-				throw $e;
-			}
-		}
-		/*
-		* Prepare filters for front view
-		 */
-		$datasetColumns = (array)DB::table($dataset_table)->first();
-		$filter_columns = $this->getMetaValue($visualization->meta,'filters');
-		$filters = [];
-		if(!empty(json_decode($filter_columns,true))){
-			$filters = $this->getFIlters($dataset_table, json_decode($filter_columns, true),$datasetColumns);
-		}
-		
-		// adding selected values of filters in filters array
-		$selectedFilters = $request->except(['_token','applyFilter']);
-		foreach ($selectedFilters as $type => $array) {
-			foreach($array as $indexedkey => $columnNames){
-				foreach($columnNames as $colKey => $colArray){
-					if($filters[$colKey]['column_type'] == $type){
-						$filters[$colKey]['selected_value'] = $colArray;
 					}
 				}
 			}
+            if($request->has('downloadData')){
+                array_unshift($dataset_records, $headers);
+                Excel::create('visualization_records',function($excel) use ($dataset_records){
+                    $excel->sheet('data', function($sheet) use ($dataset_records){
+                        $sheet->fromArray($dataset_records,null,'A1', true);
+                    });
+                })->download('xlsx');
+            }
+			//Finaly load view
+			return view('organization.visualization.visualization',
+									[
+										'filters'=>$filters, // contain all filters
+										'titles'=>$chartTitles, // contains all titles 
+										'visualizations'=>$drawer_array, // data for draw all charts from lava charts
+										'javascript'=>$javascript, //data for custom map popup details
+										'custom_map_data'=>[] //data for pop click event
+									]
+						);
+		}else{
+			return redirect()->route('visualizations');
 		}
-		//Finaly load view
-		return view('organization.visualization.visualization',
-								[
-									'filters'=>$filters, // contain all filters
-									'titles'=>$chartTitles, // contains all titles 
-									'visualizations'=>$drawer_array, // data for draw all charts from lava charts
-									'javascript'=>$javascript, //data for custom map popup details
-									'custom_map_data'=>[] //data for pop click event
-								]
-					);
 	}
 
 	public function create_map_array($records, $headers, $chart, $header_with_column){

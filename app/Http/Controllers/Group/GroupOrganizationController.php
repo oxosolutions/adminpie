@@ -187,7 +187,7 @@ class GroupOrganizationController extends Controller
 
     protected function create_organization_database($existed_id , $new_id)
     {
-        $organizations = DB::select(" SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='oxo_adminpi' and TABLE_NAME like 'ocrm_".$existed_id."%' ");
+        $organizations = DB::select(" SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='oxo_scolm' and TABLE_NAME like 'ocrm_".$existed_id."%' ");
         if(!empty($organizations)){
             foreach (json_decode(json_encode($organizations),true)  as $orgKey => $orgValue) {
                 $existed = $orgValue['TABLE_NAME'];

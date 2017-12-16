@@ -39,10 +39,16 @@ class DatasetOperationController extends Controller
     		$second_datasets = $request["second_datasets"];
     		$org_id = Session::get('organization_id');
     		$first_table = $this->check_table_existence($first_datasets);
-    		if(!$first_table){ return back(); }
+    		if(!$first_table){
+                Session::flash('error','First table not found!'); 
+                return back(); 
+            }
     		$first = json_decode(json_encode( DB::table($first_table)->first()),true);
     		$sec_table = $this->check_table_existence($second_datasets);
-    		if(!$first_table){return back(); }
+    		if(!$sec_table){
+                Session::flash('error','Second table not found!');
+                return back(); 
+            }
     		$sec =json_decode(json_encode( DB::table($sec_table)->first()),true);
  			$first_column  = array_filter(array_values($first));
     		unset($first_column[0]);
@@ -61,30 +67,37 @@ class DatasetOperationController extends Controller
     			$colums[]= "`$names` text COLLATE utf8_unicode_ci DEFAULT NULL";
     			$insert_val[$names] = $value;
     		}
-    		 $table_name = DB::getTablePrefix().$org_id.'_data_table_'.time();
-	    		$dataset = new Dataset();
-	    		$dataset->dataset_name = $request["new_dataset_name"];
-	    		$dataset->dataset_table =  $table_name;
-	    		$dataset->user_id = Auth::guard('org')->user()->id;
-	            $dataset->uploaded_by = Auth::guard('org')->user()->name;
-	            $dataset->save();
-	            $data_set_id = $dataset->id;
-		       	DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-                DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
-                DB::select("ALTER TABLE `{$table_name}` ADD `status` VARCHAR(100)  NULL  COMMENT 'status' ");
-    			DB::select("ALTER TABLE `{$table_name}` ADD `parent` VARCHAR(100)  NULL  COMMENT 'parent ID' ");
-    			$table = str_replace('ocrm_','', $table_name);
-                $insert_val['status'] = 'status';
-                $insert_val['parent'] = 'parent';
-    			DB::table($table)->insert($insert_val);
+            DB::beginTransaction();
+    		$table_name = DB::getTablePrefix().$org_id.'_data_table_'.time();
+    		$dataset = new Dataset();
+    		$dataset->dataset_name = $request["new_dataset_name"];
+    		$dataset->dataset_table =  $table_name;
+    		$dataset->user_id = Auth::guard('org')->user()->id;
+            $dataset->uploaded_by = Auth::guard('org')->user()->name;
+            $dataset->save();
+            $data_set_id = $dataset->id;
+	       	DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+            DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+            DB::select("ALTER TABLE `{$table_name}` ADD `status` VARCHAR(100)  NULL  COMMENT 'status' ");
+			DB::select("ALTER TABLE `{$table_name}` ADD `parent` VARCHAR(100)  NULL  COMMENT 'parent ID' ");
+			$table = str_replace('ocrm_','', $table_name);
+            $insert_val['status'] = 'status';
+            $insert_val['parent'] = 'parent';
+			DB::table($table)->insert($insert_val);
 //first dataset insert 
-    			$this->merge_data_into_table($first_table, $insert_val, $table_name );
+			$status = $this->merge_data_into_table($first_table, $insert_val, $table_name );
+            if($status == false){
+                DB::rollback();
+                Session::flash('error','Columns not matched with current dataset');
+                return view('organization.dataset.merge',array('merge_datasets'=>[],'new_dataset_name'=>'', 'data_set_id'=>$data_set_id));
+            }
 // second dataset insert
-    			$this->merge_data_into_table($sec_table, $insert_val, $table_name);
-    			Session::flash('success','Dataset merge successfully  ');
-    			$merge_datasets =  DB::table(str_replace('ocrm_', '', $table_name))->get();
-    			$new_dataset_name = $request["new_dataset_name"];
-    			return view('organization.dataset.merge',compact('merge_datasets','new_dataset_name', 'data_set_id'));
+			$this->merge_data_into_table($sec_table, $insert_val, $table_name);
+			Session::flash('success','Dataset merge successfully  ');
+			$merge_datasets =  DB::table(str_replace('ocrm_', '', $table_name))->get();
+			$new_dataset_name = $request["new_dataset_name"];
+            DB::commit();
+			return view('organization.dataset.merge',compact('merge_datasets','new_dataset_name', 'data_set_id'));
 
     	}
         return view('organization.dataset.merge',compact('dataSets'));
@@ -95,8 +108,12 @@ class DatasetOperationController extends Controller
 		$tablefst_row =  json_decode(json_encode($data_fst),true);
 		$first_intersect = array_intersect($insert_val, $tablefst_row);
 		$fst_intersect = array_intersect($tablefst_row, array_values($first_intersect));
-		DB::select("REPLACE INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
-		return true;
+        try{
+            DB::select("REPLACE INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
+            return true;
+        }catch(\Exception $e){
+            return false;
+        }
     }
     protected function check_table_existence($first_datasets){
 		$first_table = str_replace('ocrm_','', $first_datasets);

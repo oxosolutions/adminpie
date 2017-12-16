@@ -60,8 +60,18 @@
 		</div>
 	<div class="ar aione-float-right" style="margin: 14px 0px">
 		<button class="aione-button" data-target="create-modal">Create Subset</button>
+			@if(!empty($errors->all()))
+				@if(@$errors->name)
+					<script type="text/javascript">
+						window.onload = function(){
+							$('#create-modal').modal('open');
+						}
+					</script>
+				@endif
+			@endif
 		<button class="aione-button">Apply Filters</button>
-		<button class="aione-button" onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button>
+		<a class="aione-button" href="{{route('filter.dataset',request()->id) }}" >Reset Form</a>
+		{{-- <button class="aione-button" onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button> --}}
 	</div>
 	{!!Form::close()!!}
 	{{-- <div class="ac l50 right-align" style="float: right;"><button onclick="window.location='{{route('filter.dataset',request()->id)}}'">Reset Form</button></div> --}}

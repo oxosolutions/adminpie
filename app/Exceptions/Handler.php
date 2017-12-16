@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
         // dump($exception->getFile());
         // dump($request);
         //if(env('APP_DEBUG')){
-           return parent::render($request, $exception);
+           // return parent::render($request, $exception);
         //}else{
             
             if($exception instanceof \Illuminate\Validation\ValidationException || $exception instanceof MethodNotAllowedHttpException){

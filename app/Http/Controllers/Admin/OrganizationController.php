@@ -182,11 +182,11 @@ class OrganizationController extends Controller
         if(!empty($organizations)){
             foreach (json_decode(json_encode($organizations),true)  as $orgKey => $orgValue) {
                 $existed = $orgValue['TABLE_NAME'];
-                if($existed != "ocrm_".$existed_id."_users"){
+                //if($existed != "ocrm_".$existed_id."_users"){
                   $new = str_replace($existed_id, $new_id, $existed);
                   DB::select("CREATE TABLE ".$new." LIKE ".$existed);
                   DB::select("INSERT ".$new." SELECT * FROM ".$existed);
-                }
+                //}
             } 
             return 'table_exist';
         }else{
@@ -269,16 +269,13 @@ try{
                 $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
                 $userRoleMapping->save();
             }
-            
-         });
-    } catch (Exception $e) {
-        
-    }
-
         Session::flash('success', 'Organization create successfully');
-        return $org_id.' has beenn created';
-
+         });
+        // return $org_id.' has beenn created';
+    }catch (Exception $e) {
+        Session::flash('error', 'Something goes wrong try again');
     }
+ }
 
     public function cloneOrganization($id)
     {

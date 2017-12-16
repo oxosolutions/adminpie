@@ -68,11 +68,16 @@
 		
 	</div> --}}
 	@php
+	if(empty($page)){
+		$title ="no data found";
+	}else{
+		$title = $page->title;
+	}
 	$page_title_data = array(
 	    'show_page_title' => 'yes',
 	    'show_add_new_button' => 'no',
 	    'show_navigation' => 'yes',
-	    'page_title' => 'Edit Page <span>'.$page->title.'</span>',
+	    'page_title' => 'Edit Page <span>'.$title.'</span>',
 	    'add_new' => '+ Add Media'
 	); 
 	@endphp
@@ -87,6 +92,8 @@
 	@include('common.pageheader',$page_title_data) 
 	@include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
+	
+	@if(!Session::has('error'))
 		@include('organization.pages._tabs')
 		{!! Form::model($page,['route' => $route , 'method' => 'post']) !!}
 			<div class="aione-row" style="position: relative;">
@@ -94,7 +101,6 @@
 					{{-- <div style="display: inline-block;width: 172px;">
 						{!! FormGenerator::GenerateField('select_status') !!}	
 					</div> --}}
-
 					@php
 						if(Auth::guard('admin')->check()){
 							$route = 'view.pages';
@@ -484,6 +490,7 @@
 			</div>
 			{{-- <button type="submit">Save</button> --}}
 		{!! Form::close() !!}
+@endif
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 		<script type="text/javascript">

@@ -62,6 +62,7 @@ public function get_user_meta(){
 
    public static function getUserMeta($metaKey){
 		$model = self::where(['user_id'=>Auth::guard('org')->user()->id,'key'=>$metaKey])->first();
+    // dd($model);
 		return @$model->value;
    }
 

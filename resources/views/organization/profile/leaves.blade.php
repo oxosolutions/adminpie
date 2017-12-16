@@ -8,12 +8,13 @@ $page_title_data = array(
 	'page_title' => 'Leaves',
 	'add_new' => '+ Apply leave'
 ); 
+
+	if(!empty($error)){
+		unset($page_title_data['add_new']);
+	}	
 @endphp
 @include('common.pageheader',$page_title_data)
-
-
-
-	@if (Session::has('sucessful'))
+ 	@if (Session::has('sucessful'))
 			<div class="alert alert-info" style="color:green;">
 				<h1> {{Session::get('sucessful')}} </h1>
 			</div>
@@ -125,7 +126,9 @@ $page_title_data = array(
 						
 						{!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 								<input type="hidden" name="apply_by" value="employee">
-						@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
+
+							@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
+						
 						{!!Form::close()!!}
 						
 							<div class="card title-card" >

@@ -25,7 +25,7 @@ class EmployeeLeaveController extends Controller
 			return array_filter($map->toArray());
 	}
 	public function leave_listing(){
-		// dd(12232);
+		
 		$leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
@@ -54,9 +54,13 @@ class EmployeeLeaveController extends Controller
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
 			$leave_rule = cat::where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
+			if(!empty($leave_rule->toArray())){
 			$emp_id = get_current_user_meta('employee_id');
 			$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->get();
 			$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
+			}else{
+				$error = "Not assign with any category";
+			}
 		}
 
 		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat,'error'=>$error]);

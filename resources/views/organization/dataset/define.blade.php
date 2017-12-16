@@ -55,7 +55,8 @@
                                         '/^[0-9]+(\.[0-9]{1,5})?$/'     =>  'Integer',
                                         '/^\d*[02468]$/'                =>  'Even Number',
                                         '/^\d*[13579]$/'                =>  'Odd Number',
-                                        '/^\d{10}$/'                    =>  'Mobile Number(10 Digit Only)'
+                                        '/^\d{10}$/'                    =>  'Mobile Number(10 Digit Only)',
+                                        'area_code'                    =>  'Area Code'
                                         ],null,['class'=>'browser-default'])!!}
                                 </td>
                                 <td><a href="{{ route('delete.column',[request()->route()->id ,$key]) }}"><i class="fa fa-trash" style="color: red"></i></a></td>
