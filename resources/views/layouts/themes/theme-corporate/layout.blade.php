@@ -30,7 +30,7 @@
 		<div class="wrapper">
 			
 			@if(@$design_settings['show_header'] == 1)
-				@include('layouts.themes.theme-docs.includes._header')
+				@include('layouts.themes.theme-corporate.includes._header')
 			@endif
 			<div id="aione_main" class="aione-main fullwidth">
 				<div class="wrapper">
@@ -53,7 +53,7 @@
 						</div><!-- .wrapper -->
 					</div><!-- .aione-content -->
 					@if(@$design_settings['show_footer_widgets'] == 1)
-						@include('layouts.themes.theme-docs.includes._footer')
+						@include('layouts.themes.theme-corporate.includes._footer')
 					@endif
 					@if(@$design_settings['show_copyright'] == 1)
 						@include('layouts.themes.theme-docs.includes._copyright')
