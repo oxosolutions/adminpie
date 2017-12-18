@@ -5,9 +5,9 @@
         $nav_item_current_parent = '';
         $nav_item_current_child = '';
     @endphp
-    <nav id="aione_nav" class="aione-nav vertical light">
-        <div class="aione-nav-background"></div>
-        <ul id="aione_menu" class="aione-menu">
+    <nav id="aione_nav" class="aione-nav horizontal {{@$design_settings['menu_animation']}}">
+      
+        <ul id="aione_menu" class="aione-menu aione-float-right">
             @if(@$menu)
                 @foreach($menu as $key => $menu_item)
                 @php
@@ -51,13 +51,17 @@
                     }
                 @endphp
                     <li class="aione-nav-item level0 {{ $nav_item_current }} {{$nav_item_current_parent}}"> 
-                        <a href="{{$menu_item['link']}}">{{$menu_item['label']}}</a>
+                        <a href="{{$menu_item['link']}}"><span class="nav-item-text" data-hover="{{$menu_item['label']}}">{{$menu_item['label']}}</span></a>
                         @if(!empty($menu_item['child']))
                             <ul class="side-bar-submenu">
                                 @foreach($menu_item['child'] as $submenu_key => $submenu_item)
                                     
                                     <li class="aione-nav-item level1 {{$nav_item_current_child}}"> 
-                                        <a href="{{$submenu_item['link']}}">{{$submenu_item['label']}}</a>
+                                        <a href="{{$submenu_item['link']}}">
+                                            
+                                            {{$submenu_item['label']}}
+
+                                        </a>
                                     </li>
                                 @endforeach 
                             </ul>

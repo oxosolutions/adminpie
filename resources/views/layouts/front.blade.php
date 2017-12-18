@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 @php
-
+$current_id = request()->route()->parameters()['id'];
+$settings = App\Model\Organization\VisualizationMeta::where('visualization_id',$current_id)->get()->toArray();
+if($settings != null){
+	$visual_settings = [];
+	foreach ($settings as $key => $value) {
+		$visual_settings[$value['key']] = $value['value'];
+	}
+}
+dump($visual_settings);
 $is_page = $is_post = $is_survey = $is_visualization = 0; 
 
 if(request()->route()->uri == "page/{slug}"){
@@ -50,7 +58,9 @@ if(request()->route()->uri == "survey/{token}"){
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
 		<div class="aione-row">
 			@if(@$design_settings['show_header'] == 1)
-				@include('layouts.front._header')
+				@if(@$visual_settings['enable_header']  == 1)
+					@include('layouts.front._header')
+				@endif
 			@endif
 			@if(@$design_settings['show_slider'] == 1)
 				@include('layouts.front._slider')
@@ -74,10 +84,14 @@ if(request()->route()->uri == "survey/{token}"){
 
 
 			@if(@$design_settings['show_footer_widgets'] == 1)
-				@include('layouts.front._footer')
+				@if(@$visual_settings['show_footer'] == 1)
+					@include('layouts.front._footer')
+				@endif
 			@endif
 			@if(@$design_settings['show_copyright'] == 1)
-				@include('layouts.front._copyright')
+				@if(@$visual_settings['enable_copyright'])
+					@include('layouts.front._copyright')
+				@endif
 			@endif
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->

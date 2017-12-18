@@ -1,4 +1,4 @@
-<div class="row-wrapper">
+{{-- <div class="row-wrapper">
 	<div class="ar grey">
 		@if( @$design_settings['header_show_logo'] == 1)
 			<div id="aione_header_logo" class="aione-header-item">
@@ -19,4 +19,5 @@
 			{!! @$design_settings['header_banner_content'] !!}
 		@endif
 	</div>
-</div><!-- .row-wrapper -->
+</div><!-- .row-wrapper --> --}}
+<a href="http://aioneframework.com" target="_blank"><img src="http://aioneframework.com/resources/logo/aione-framework-logo-small.png" class="aione-float-left" style="height:40px;"></a>

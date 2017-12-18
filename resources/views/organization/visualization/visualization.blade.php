@@ -114,7 +114,7 @@
 														</li>
 														<li>
 															<label for="modal">
-																<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;float:right;color: #757575"></i>
+																<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="chart_{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;float:right;color: #757575"></i>
 															</label>
 														</li>
 													</ul></div>
@@ -132,7 +132,7 @@
 											
 											
 											<label for="modal" class="modal-bg" id="{{$chart['chart_id']}}"></label>
-											<div class="modal-content " id="{{$chart['chart_id']}}_setings">
+											<div class="modal-content " id="chart_{{$chart['chart_id']}}_setings">
 												<ul>
 													<li>
 														<label for="modal" class="close p-10">

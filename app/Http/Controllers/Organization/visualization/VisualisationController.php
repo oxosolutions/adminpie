@@ -788,7 +788,6 @@ class VisualisationController extends Controller
     }
 
 	public function embedVisualization(Request $request){
-
 		$visualization = Visualization::with([
 
 		'dataset','charts'=>function($query){

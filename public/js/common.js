@@ -56,7 +56,8 @@ $(document).ready(function(){
 				url: route()+'/chartsettings',
 				data: {charttype: chartType, chartid: chartId, visualid: visual_id},
 				success: function(result){
-					$('#'+chartId+'_setings').find('.content').html(result);
+                    console.log('#'+chartId+'_setings');
+					$('#chart_'+chartId+'_setings').html(result);
 				}
 			});
 			var data_target = $(this).attr('data-target');
@@ -64,12 +65,21 @@ $(document).ready(function(){
 				'visibility': 'visible',
 				'background-color': 'black',
 				'opacity': '0.7',
-				'transition': 'background-color 250ms linear'
+				'transition': 'background-color 250ms linear',
+                'position': 'fixed',
+                'width':'100%',
+                'height':'1000px',
+                'top': '0',
+                'left': '0',
+                'z-index':'999'
 			});
 			$('#'+data_target).css({
 				'transform':'scale(1)',
 				'visibility':'visible',
-				'transition': 'transform 250ms ease'
+				'transition': 'transform 250ms ease',
+                'position': 'absolute',
+                'z-index':'1000',
+                
 			}).show();
 			$('.modal-bg').css({
 				'transform':'scale(1)',

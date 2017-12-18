@@ -56,7 +56,7 @@
 						@include('layouts.themes.theme-corporate.includes._footer')
 					@endif
 					@if(@$design_settings['show_copyright'] == 1)
-						@include('layouts.themes.theme-docs.includes._copyright')
+						@include('layouts.themes.theme-corporate.includes._copyright')
 					@endif
 				</div><!-- .wrapper -->
 			</div><!-- .aione-main -->
@@ -69,5 +69,18 @@
 	<script type="text/javascript">
 		{!! @$design_settings['js_code']!!}
 	</script>
+	<style type="text/css">
+		.aione-footer.dark{
+			background-color: #23282d;
+		}
+		.aione-footer {
+		    margin: 0;
+		    border-top: none;
+		}
+		.aione-copyright{
+			border-top:none;
+		}
+	</style>
+
 </body>
 </html>
