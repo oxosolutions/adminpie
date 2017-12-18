@@ -8,6 +8,8 @@
 	</div><!-- .aione-row -->
 </div><!-- .aione-copyright -->
  --}}
+ {{dump(@$design_settings['copyright_theme'])}}
+ {{dump(@$design_settings['footer_theme'])}}
 <div id="aione_copyright" class="aione-copyright dark">
 	<div class="wrapper aione-align-center font-weight-400 line-height-30">
 		@if(!empty(@$design_settings['copyright_content']))

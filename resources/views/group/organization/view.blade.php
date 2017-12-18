@@ -75,14 +75,16 @@ $page_title_data = array(
 			</thead>
 			<tbody>
 				@foreach($users as $key => $user)
-					<tr>
-						<th>{{ @$user->belong_group->name }}</th>
-						<th>{{ @$user->belong_group->email }}</th>
-						<th>
-							<a href="{{ url('user/view/'.@$user->belong_group->id) }}">View</a> | 
-							<a href="{{ url('user/edit/'.@$user->belong_group->id) }}">Edit</a>
-						</th>
-					</tr>
+					@if($user->belong_group)
+						<tr>
+							<th>{{ @$user->belong_group->name }}</th>
+							<th>{{ @$user->belong_group->email }}</th>
+							<th>
+								<a href="{{ url('user/view/'.@$user->belong_group->id) }}">View</a> | 
+								<a href="{{ url('user/edit/'.@$user->belong_group->id) }}">Edit</a>
+							</th>
+						</tr>	
+					@endif
 				@endforeach
 			</tbody>
 		</table>
