@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 @php
-$current_id = request()->route()->parameters()['id'];
-$settings = App\Model\Organization\VisualizationMeta::where('visualization_id',$current_id)->get()->toArray();
-if($settings != null){
-	$visual_settings = [];
-	foreach ($settings as $key => $value) {
-		$visual_settings[$value['key']] = $value['value'];
-	}
-}
-dump($visual_settings);
+
 $is_page = $is_post = $is_survey = $is_visualization = 0; 
 
 if(request()->route()->uri == "page/{slug}"){
@@ -17,6 +9,20 @@ if(request()->route()->uri == "page/{slug}"){
 }
 if(request()->route()->uri == "survey/{token}"){
 	$is_survey = 1;
+}
+if(request()->route()->uri == "visualization/view/{id}"){
+	$is_visualization = 1;
+}
+if($is_visualization){
+	$current_id = request()->route()->parameters()['id'];
+	$settings = App\Model\Organization\VisualizationMeta::where('visualization_id',$current_id)->get()->toArray();
+	if($settings != null){
+		$visual_settings = [];
+		foreach ($settings as $key => $value) {
+			$visual_settings[$value['key']] = $value['value'];
+		}
+	}
+	//dump($visual_settings);
 }
 
 

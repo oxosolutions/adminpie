@@ -1,8 +1,18 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-
-	<title> AdminPie</title>
+    
+    @if(Auth::guard('group')->check())
+        @php
+            $groupData = App\Model\Admin\GlobalGroup::where('id',Auth::guard('group')->user()->group_id)->first();
+        @endphp
+        <title>{{ $groupData->name }}</title>
+    @elseif(Auth::guard('org')->check())
+        @php
+            $site_title = App\Model\Organization\OrganizationSetting::getSettings('title');
+        @endphp
+        <title>{{ $site_title }}</title>
+    @endif
 
 	
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">

@@ -8,9 +8,10 @@
 		<div class="site-logo" >
 		</div>
 		<div class="site-title" >
-			Login
+			{!! env('GROUP_LOGIN_TITLE') !!}
 		</div>
 		<div class="site-tagline" >
+			{!! env('GROUP_LOGIN_DESCRIPTION') !!}
 		</div>
 	@if(Session::has('login_fails'))
 		<div class="aione-message error">
@@ -24,18 +25,31 @@
 	@endif
 	{!!Form::close()!!}
 
-	{{-- @include('components._footer') --}}
+	<div id="aione_footer" class="aione-footer">
+		<div class="aione-row">
+			{!! env('GROUP_LOGIN_COPYRIGHT') !!}
+		</div><!-- .aione-row -->
+	</div>
 
 	</div>
 	</div> 
 </div>
 <style type="text/css">
 	.login-background{
-    background-image: url(assets/images/bg-pattern.png),linear-gradient(to bottom,#168dc5,#096996);
-	background-size: auto,auto;
-    background-repeat: repeat,no-repeat;
-    background-attachment: fixed,scroll;
+	    background-image: url(assets/images/bg-pattern.png),linear-gradient(to bottom,#168dc5,#096996);
+		background-size: auto,auto;
+	    background-repeat: repeat,no-repeat;
+	    background-attachment: fixed,scroll;
 	}
+	.login-wrapper .site-title {
+    	font-size: 26px;
+    }
+    .login-wrapper .site-title span{
+    	color:#0f79ab;
+    }
+    .login-wrapper .site-tagline{
+    	font-size: 18px;
+    }
 </style>
 @include('common.page_content_primary_end')
 @endsection

@@ -38,9 +38,9 @@ $sidebar_small = 1;
 					<div class="aione-widget-header">
 						<h3 class="aione-widget-title">
 							Welcome 
-							{{-- @if(Auth::guard('group')->check())
+							@if(Auth::guard('group')->check())
 								{{@Auth::guard('group')->user()->name}}
-							@endif --}}
+							@endif
 						</h3>
 					</div> <!-- .aione-widget-header -->
 					<div class="aione-widget-content">

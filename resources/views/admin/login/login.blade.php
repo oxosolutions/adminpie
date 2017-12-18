@@ -8,9 +8,10 @@
 		<div class="site-logo" >
 		</div>
 		<div class="site-title" >
-			Admin<span>Pie</span>
+			{!! env('ADMIN_LOGIN_TITLE') !!}
 		</div>
 		<div class="site-tagline" >
+			{!! env('ADMIN_LOGIN_DESCRIPTION') !!}
 		</div>
 	@if(Session::has('login_fails'))
 	<div class="row error">
@@ -25,7 +26,11 @@
 	@endif
 	{!!Form::close()!!}
 
-	{{-- @include('components._footer') --}}
+	<div id="aione_footer" class="aione-footer">
+		<div class="aione-row">
+			{!! env('ADMIN_LOGIN_COPYRIGHT') !!}
+		</div><!-- .aione-row -->
+	</div>
 
 	</div>
 	</div> 

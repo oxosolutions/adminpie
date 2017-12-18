@@ -20,6 +20,8 @@ $page_title_data = array(
 	'add_new' => '+ Add Organization',
 	); 
 @endphp
+
+
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -74,11 +76,11 @@ $page_title_data = array(
 			<tbody>
 				@foreach($users as $key => $user)
 					<tr>
-						<th>{{ $user->belong_group->name }}</th>
-						<th>{{ $user->belong_group->email }}</th>
+						<th>{{ @$user->belong_group->name }}</th>
+						<th>{{ @$user->belong_group->email }}</th>
 						<th>
-							<a href="{{ url('user/view/'.$user->belong_group->id) }}">View</a> | 
-							<a href="{{ url('user/edit/'.$user->belong_group->id) }}">Edit</a>
+							<a href="{{ url('user/view/'.@$user->belong_group->id) }}">View</a> | 
+							<a href="{{ url('user/edit/'.@$user->belong_group->id) }}">Edit</a>
 						</th>
 					</tr>
 				@endforeach
