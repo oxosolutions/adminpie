@@ -96,151 +96,139 @@
 								?>
 
 								@if($chart_enabled == 1)
-									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}}">
-										@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
-										<div class="aione-section-header aione-topbar-header">
-											<div class="aione-section-header-title">
-												@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
-												<div class="aione-section-handle"></div>
-												@endif
-
-												<div class="aione-section-title">
-													<ul>
-														<li>
-															<input type="checkbox" id="modal" style="float: left" />
-														</li>
-														<li>
-															{{$chart_title}}
-														</li>
-														<li>
-															<label for="modal">
-																<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="chart_{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;float:right;color: #757575"></i>
-															</label>
-														</li>
-													</ul></div>
-												
-												
-											</div>
-											<div class="aione-section-header-actions">
-												@if(isset($meta['collapsible_chart_widgets']) && $meta['collapsible_chart_widgets'] == 1)
-												<span class="aione-section-header-action aione-widget-toggle aione-widget-collapse"></span>
-												@endif
-												@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
-												<span class="aione-section-header-action aione-widget-toggle aione-widget-close"></span>
-												@endif
-											</div>
-											
-											
-											<label for="modal" class="modal-bg" id="{{$chart['chart_id']}}"></label>
-											<div class="modal-content " id="chart_{{$chart['chart_id']}}_setings">
-												<ul>
-													<li>
-														<label for="modal" class="close p-10">
-															<i class="fa fa-close hide_modal" aria-hidden="true"></i>
-														</label>
-													</li>
-													<li>
-														<header class="font-size-20 font-weight-300 p-10">
-															Chart Settings
-														</header>
-													</li>
-													<li>
-														<footer class="p-10">
-															<a href="" target="_parent" class="button success">Accept</a>
-															<label for="modal" class="button danger">Decline</label>
-														</footer>
-
-													</li>
-												</ul>
-											</div>
-
-
-
-												
-												<article class="content">
-														
-												</article>
-												
-
-
-
-											<div class="clear"></div>
-										</div>
-										@endif
+									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
+										<div class="aione-item">
 										
-										<div id="" class="aione-chart-content" 
-										data-theme="{{@$chart_settings['chart_settings']['custom_map_theme']}}"  
-										data-classification-method="{{@$chart_settings['chart_settings']['custom_map_classification_method']}}"
-										data-show-tooltip="{{@$chart_settings['chart_settings']['custom_map_show_tooltip']}}"
-										data-tooltip-event="{{@$chart_settings['chart_settings']['custom_map_tooltip_event']}}"
-										data-show-popup="{{@$chart_settings['chart_settings']['custom_map_show_popup']}}"
-										data-popup-event="{{@$chart_settings['chart_settings']['custom_map_popup_event']}}"
-										data-click-callback="{{@$chart_settings['chart_settings']['custom_map_click_callback']}}"
-										>	
+											@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
+											<div class="aione-section-header  aione-item-header">
+												<div class="">
+													@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
+													<div class="aione-section-handle"></div>
+													@endif
 
-											@if($chart_type == 'CustomMap')
-											
-												<div class="chart_loader">
-													<div class="loading-animation"><div class="loading-bar"><div class="blue-bar"></div></div></div>
-												</div> 
-
-												<div id="{{$chart_id}}" class="map-wrapper">
-												{!! $charts[$chart_key]['map'] !!}
+													
+														
+																{{$chart_title}}
+														
+														
 												</div>
-												<div id="map_legend_{{$chart_id}}" class="map-legend-wrapper">				
-												</div>
-												<div id="map_data_{{$chart_id}}" class="map-data-wrapper">
-													<div id="map_data_header_{{$chart_id}}" class="map-data-header">
-														<span class="map-data-title"></span>
-														<span class="map-data-close">+</span>
-													</div>
-													<div id="map_data_content_{{$chart_id}}" class="map-data-content">
-													</div>
-												</div>
-												<div class="view_data" style="display: none;">
-													{{json_encode($javascript[$chart_key]['arranged_data']['view_data'])}}
-												</div> 
-												<div class="tooltip_data" style="display: none;">
-													{{json_encode($javascript[$chart_key]['arranged_data']['tooltip_data'])}}
-												</div>
-												<div class="popup_data" style="display: none;">
-													{{json_encode($javascript[$chart_key]['arranged_data']['popup_data'])}}
+												<div class="aione-section-header-actions">
+													@if(isset($meta['collapsible_chart_widgets']) && $meta['collapsible_chart_widgets'] == 1)
+													<span class="aione-section-header-action aione-widget-toggle aione-widget-collapse"></span>
+													@endif
+													@if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1)
+													<span class="aione-section-header-action aione-widget-toggle aione-widget-close"></span>
+													@endif
 												</div>
 												
-											@elseif($chart_type == 'ListChart')
-												<div id="{{$chart_id}}" >
-													{{-- @foreach($chart['list'] as $key => $values)
-														@foreach($values as $k => $val)
-															<b>{{ucwords(str_replace('_',' ',$k))}}</b> : {{$val}} <br/>
-														@endforeach
-														<hr/>
-													@endforeach --}}
-													@php
-														$index=0;
-													@endphp
-													@foreach($chart['list'] as $key => $values)
-														<div class="data-row data-row-{{$index}}">
-															@php
-																$indexField=0;
-															@endphp
-														@foreach($values as $k => $val)
-															<div class="aione-field field-{{$indexField}}"><span class="label">{{ucwords(str_replace('_',' ',$k))}}</span> : <span class="value">{{$val}}</span> </div>
-															@php
-																$indexField++;
-															@endphp
-														@endforeach
-														</div>
-														@php
-															$index++;
-														@endphp
-														
-													@endforeach
-												</div>
-											@else
-												<div id="{{$chart_id}}" class="chart-wrapperr"></div>
-												{!! lava::render($chart_type,$chart_key,$chart_id) !!}
+												
+												
+
+
+
+													
+													<article class="content">
+															
+													</article>
+													
+
+
+
+												<div class="clear"></div>
+											</div>
 											@endif
-										</div>
+											
+											<div id="" class="aione-chart-content aione-item-content" 
+											data-theme="{{@$chart_settings['chart_settings']['custom_map_theme']}}"  
+											data-classification-method="{{@$chart_settings['chart_settings']['custom_map_classification_method']}}"
+											data-show-tooltip="{{@$chart_settings['chart_settings']['custom_map_show_tooltip']}}"
+											data-tooltip-event="{{@$chart_settings['chart_settings']['custom_map_tooltip_event']}}"
+											data-show-popup="{{@$chart_settings['chart_settings']['custom_map_show_popup']}}"
+											data-popup-event="{{@$chart_settings['chart_settings']['custom_map_popup_event']}}"
+											data-click-callback="{{@$chart_settings['chart_settings']['custom_map_click_callback']}}"
+											>	
+												<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="chart_{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;float:right;color: #757575"></i>
+												<div class="model-bg">
+													<div class="model">
+														<div class="header">
+															heading<i class="fa fa-close"></i>
+														</div>
+														<div class="content">
+															content
+														</div>
+														<div class="actions">
+															actions button
+														</div>
+													</div>
+												</div>
+
+												
+
+												@if($chart_type == 'CustomMap')
+												
+													<div class="chart_loader">
+														<div class="loading-animation"><div class="loading-bar"><div class="blue-bar"></div></div></div>
+													</div> 
+
+													<div id="{{$chart_id}}" class="map-wrapper">
+													{!! $charts[$chart_key]['map'] !!}
+													</div>
+													<div id="map_legend_{{$chart_id}}" class="map-legend-wrapper">				
+													</div>
+													<div id="map_data_{{$chart_id}}" class="map-data-wrapper">
+														<div id="map_data_header_{{$chart_id}}" class="map-data-header">
+															<span class="map-data-title"></span>
+															<span class="map-data-close">+</span>
+														</div>
+														<div id="map_data_content_{{$chart_id}}" class="map-data-content">
+														</div>
+													</div>
+													<div class="view_data" style="display: none;">
+														{{json_encode($javascript[$chart_key]['arranged_data']['view_data'])}}
+													</div> 
+													<div class="tooltip_data" style="display: none;">
+														{{json_encode($javascript[$chart_key]['arranged_data']['tooltip_data'])}}
+													</div>
+													<div class="popup_data" style="display: none;">
+														{{json_encode($javascript[$chart_key]['arranged_data']['popup_data'])}}
+													</div>
+													
+												@elseif($chart_type == 'ListChart')
+													<div id="{{$chart_id}}" >
+														{{-- @foreach($chart['list'] as $key => $values)
+															@foreach($values as $k => $val)
+																<b>{{ucwords(str_replace('_',' ',$k))}}</b> : {{$val}} <br/>
+															@endforeach
+															<hr/>
+														@endforeach --}}
+														@php
+															$index=0;
+														@endphp
+														@foreach($chart['list'] as $key => $values)
+															<div class="data-row data-row-{{$index}}">
+																@php
+																	$indexField=0;
+																@endphp
+															@foreach($values as $k => $val)
+																<div class="aione-field field-{{$indexField}}"><span class="label">{{ucwords(str_replace('_',' ',$k))}}</span> : <span class="value">{{$val}}</span> </div>
+																@php
+																	$indexField++;
+																@endphp
+															@endforeach
+															</div>
+															@php
+																$index++;
+															@endphp
+															
+														@endforeach
+													</div>
+												@else
+													<div id="{{$chart_id}}" class="chart-wrapperr"></div>
+													{!! lava::render($chart_type,$chart_key,$chart_id) !!}
+												@endif
+											</div>
+
+										</div>	
 									</div>
 								@endif
 							@endif
@@ -493,11 +481,33 @@
 	::-webkit-scrollbar-thumb:window-inactive {
 		background: #888888; 
 	}
+
 	</style>
 	
 		
 @endif
 <style type="text/css">
+.aione-item .aione-item-header{
+		height: 56px
+	}
+	.model-bg{
+		background-color: rgba(0,0,0,0.4);
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0px;
+		z-index: 9
+	}
+	.model-bg > .model{
+		position: absolute;
+		top: 25%;
+		right: 25%;
+		bottom: 25%;
+		left: 25%;
+		background-color: white
+	}
+
 		/*label {
 			cursor: pointer;
 		}

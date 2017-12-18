@@ -60,7 +60,7 @@ $(document).ready(function(){
 					$('#chart_'+chartId+'_setings').html(result);
 				}
 			});
-			var data_target = $(this).attr('data-target');
+			/*var data_target = $(this).attr('data-target');
 			$('.modal-bg:first').css({
 				'visibility': 'visible',
 				'background-color': 'black',
@@ -85,7 +85,7 @@ $(document).ready(function(){
 				'transform':'scale(1)',
 				'visibility':'visible',
 				'transition': 'transform 250ms ease'
-			}).show();
+			}).show();*/
 		});
 
 		$('body').on('click','.hide_modal', function(){
