@@ -5,10 +5,11 @@
 <style type="text/css">
 	.aione-visual-filter{
 		width: 30%;
-		float: right
+		
 	}
 	.aione-content-main{
-		width: 69%
+		width: 69%;
+		float: left
 	}
 	.aione-section-title{
 		background: #efefef;
@@ -53,6 +54,12 @@
 	}
 	.aione-topbar-header{
 		height: 108px;
+	}
+	.aione-sidebar-position-left{
+		float: left;
+	}
+	.aione-sidebar-position-right{
+		float: right;
 	}
 </style>
 <div id="aione_sidebar_{{$visualization_id}}" class="mb-10 aione-sidebar-position-{{$meta['filter_position']}} aione-visual-filter" >

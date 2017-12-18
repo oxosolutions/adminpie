@@ -51,7 +51,7 @@ $page_title_data = array(
                 </tr>
             </tbody>
         </table>
-        <h5>Group having this organization</h5>
+       {{--  <h5>Group having this organization</h5>
         <table>
             <thead>
                 <tr>
@@ -70,7 +70,7 @@ $page_title_data = array(
                    <td>2</td>
                </tr>
             </tbody>
-        </table>
+        </table> --}}
     </div>
   @include('common.page_content_primary_end')
   @include('common.page_content_secondry_start')

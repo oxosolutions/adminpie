@@ -51,6 +51,7 @@ $(document).ready(function(){
 			var chartType = $(this).data('chart_type');
 			var chartId = $(this).data('chartid');
 			var visual_id = $(this).data('visualizationid');
+            console.log(chartType,chartId,visual_id);
 			$.ajax({
 				type:'GET',
 				url: route()+'/chartsettings',

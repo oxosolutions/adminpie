@@ -1129,5 +1129,10 @@ class VisualisationController extends Controller
     	$jsonData = collect(json_decode($jsonData));
     	return view('organization.visualization.chart-settings',['jsonData'=>$jsonData,'chart_type'=>$request->charttype,'request'=>$request,'model'=>$model]);
     }
+    //sandeep
+    public function sortChart(Request $request)
+    {
+    	// VisualizationCharts::
+    }
 
 }

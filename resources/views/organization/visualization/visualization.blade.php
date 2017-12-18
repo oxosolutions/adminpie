@@ -16,6 +16,7 @@
 	if( isset($meta['filter_position']) && ($meta['filter_position'] == 'left' || $meta['filter_position'] == 'right') ){
 		$sidebar_class = $meta['filter_position']."-sidebar";
 	}
+	$collapsibleStatus = $meta['collapsible_chart_widgets'];
 
 @endphp
 
@@ -96,7 +97,7 @@
 								?>
 
 								@if($chart_enabled == 1)
-									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
+									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
 										<div class="aione-item">
 										
 											@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
@@ -146,18 +147,20 @@
 											data-show-popup="{{@$chart_settings['chart_settings']['custom_map_show_popup']}}"
 											data-popup-event="{{@$chart_settings['chart_settings']['custom_map_popup_event']}}"
 											data-click-callback="{{@$chart_settings['chart_settings']['custom_map_click_callback']}}"
-											>	
-												<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="chart_{{$chart['chart_id']}}_setings" style="float: right;font-size: 24px;float:right;color: #757575"></i>
-												<div class="model-bg">
-													<div class="model">
-														<div class="header">
-															heading<i class="fa fa-close"></i>
+											>	<div class="aione-align-right">
+													<i class="fa fa-cog chart_settings" data-chart_type="{{$chart['chart_type']}}" data-chartid="{{$chart['chart_id']}}" data-visualizationid="{{request()->route('id')}}" data-target="chart_{{$chart['chart_id']}}_setings" style="font-size: 24px;color: #757575"></i>
+												</div>
+													
+												<div class="model-bg" >
+													<div class="model aione-border">
+														<div class="header bg-grey bg-lighten-3 aione-border-bottom p-10">
+															Chart Settings<i class="fa fa-close aione-float-right"></i>
 														</div>
-														<div class="content">
+														<div class="content" id="chart_{{$chart['chart_id']}}_setings">
 															content
 														</div>
-														<div class="actions">
-															actions button
+														<div class="actions p-10 aione-border-top">
+															<button type="submit">Save</button>
 														</div>
 													</div>
 												</div>
@@ -260,6 +263,12 @@
 <script src="{{asset('/js/visualization.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
+		$('.chart_settings').click(function(){
+			$('.model-bg').show();
+		})
+		$('.model-bg .fa-close').click(function(){
+			$('.model-bg').hide();
+		})
 		/*var chartsLength = $('.aione-chart-CustomMap').length;
 		var countIndex = 0;
 		function loadChart(countIndex){
@@ -418,11 +427,26 @@
 				
             });
 			
-			 
 	});
 </script>
+	@if($collapsibleStatus)
+		<script type="text/javascript">  
+				$(document).ready(function(){
+					$('.aione-charts').sortable();
+					var data = '';
+					$.ajax({
+						url : route().'/visualization/chart_sort',
+						type : 'POST',
+						data : $data,
+						success : function(){
 
-
+						}
+					})
+				});
+			@php
+			@endphp
+		</script>
+	@endif
 @if(isset($meta['custom_js_code']) && $meta['custom_js_code'] != '')
 	<script type="text/javascript">  
 		<?php echo @$meta['custom_js_code']; ?>
@@ -487,7 +511,7 @@
 		
 @endif
 <style type="text/css">
-.aione-item .aione-item-header{
+	.aione-item .aione-item-header{
 		height: 56px
 	}
 	.model-bg{
@@ -497,15 +521,23 @@
 		right: 0;
 		bottom: 0;
 		left: 0px;
-		z-index: 9
+		z-index: 99999;
+		display: none
 	}
 	.model-bg > .model{
 		position: absolute;
-		top: 25%;
+		margin-top: 50px;
 		right: 25%;
-		bottom: 25%;
+		
 		left: 25%;
 		background-color: white
+	}
+	
+	.model-bg > .model > .content{
+		min-height: 500px;
+		max-height: 500px;
+		overflow: scroll;
+
 	}
 
 		/*label {

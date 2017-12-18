@@ -8,6 +8,7 @@ use App\Model\Admin\GlobalOrganization as ORG;
 use App\Model\Organization\UsersRole as Role;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Admin\GlobalGroup as Group;
+use App\Model\Organization\UsersMeta;
 use App\Model\Group\GroupUserMapping;
 use App\Model\Organization\UsersType;
 use App\Http\Controllers\Controller;
@@ -392,6 +393,7 @@ class GroupOrganizationController extends Controller
         $user = User::where('user_id',$user_id);
         $userId = $user->first()->id;
         $user->delete();
+        $userMeta = UsersMeta::where('user_id',$user_id)->delete();
         $role = UserRoleMapping::where('user_id',$user_id)->delete();
         Session::flash('success','Successfully deleted!');
         return back();

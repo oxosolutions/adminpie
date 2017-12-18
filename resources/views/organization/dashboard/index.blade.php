@@ -10,6 +10,7 @@
 	); 
 @endphp
 <style type="text/css">
+	
 	.action-dashboard-buttons{
 		transform: rotate(0deg);
 	    right: 6px;
@@ -18,17 +19,30 @@
 	.action-dashboard-buttons i{
 		transform: rotate(90deg);
 	}
-	.aione-actions-handle , .aione-delete-confirmation{
-		    width: 38px;
-    height: 36px;
+	.dashboard-actions.fixed-action-btn.horizontal .aione-delete-confirmation{
+		    width: 40px;
+    height: 40px;
 
 	}
+	.aione-title .aione-actions-handle{
+		background-color: #f5f5f5;
+		height: 36px;
+		width: 36px;
+		
+	}
 	.aione-actions-handle > .material-icons{
-		color: #263238;
+		color: #9e9e9e;
+	}
+	.btn-floating:hover{
+		box-shadow: none
+	}
+	.btn-floating{
+		box-shadow: none	
 	}
 	.aione-actions-handle > .material-icons , .aione-actions-handle > .material-icons:hover{
-		background: #263238;
-    	color: white;
+		background: #f5f5f5;
+    	color: grey;
+    	border:none;
 	}
 
 	.aione-widget-content-section{
@@ -251,6 +265,10 @@
 	    padding: 0;
 	    margin: 0;
 	    position: absolute;
+	}
+	.dashboard-actions.fixed-action-btn.horizontal > a,
+	.dashboard-actions.fixed-action-btn.horizontal li > a{
+		background-color: #273338;
 	}
 	.dashboard-actions.fixed-action-btn.horizontal ul{
 	    right: 44px;

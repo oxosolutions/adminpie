@@ -5,13 +5,13 @@
 		<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4" >
 
 			@if(Auth::guard('org')->check())
-				<i class="fa fa-bars aione-widget-handle" widget-order="{{@$widget_id}}"></i>
+				<i class="fa fa-bars aione-widget-handle grey" widget-order="{{@$widget_id}}"></i>
 			@endif
 			<a href="javascript:;" class="blue-grey darken-4">{{ucfirst(str_replace('_', ' ', $key))}}</a>
 				@if(Auth::guard('org')->check())
 					<div class="fixed-action-btn horizontal click-to-toggle action-dashboard-buttons" style="position: absolute;">
 						<a class="btn-floating aione-actions-handle">
-							<i class="aione-icon material-icons">more_horiz</i>
+							<i class="aione-icon material-icons ">more_horiz</i>
 						</a>
 						<ul style="right: 45px"> 
 							<li><a class="btn-floating red aione-widget-delete aione-tooltip aione-delete-confirmation" href="#" title="Delete Widget"><i class="aione-icon material-icons">close</i></a></li>
