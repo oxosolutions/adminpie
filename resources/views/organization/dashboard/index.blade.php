@@ -24,11 +24,16 @@
     height: 40px;
 
 	}
-	.aione-title .aione-actions-handle{
+	.aione-title .aione-actions-handle,
+	.aione-title .btn-floating{
 		background-color: #f5f5f5;
 		height: 36px;
 		width: 36px;
-		
+
+	}
+	.aione-title .aione-actions-handle > i,
+	.aione-title .btn-floating > i{
+		line-height: 36px
 	}
 	.aione-actions-handle > .material-icons{
 		color: #9e9e9e;

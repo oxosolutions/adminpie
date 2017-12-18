@@ -97,7 +97,7 @@
 								?>
 
 								@if($chart_enabled == 1)
-									<div id="chart_wrapper_{{$chart_id}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
+									<div id="chart_wrapper_{{$chart_id}}" chart-name="{{$chart_title}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
 										<div class="aione-item">
 										
 											@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
@@ -431,18 +431,24 @@
 </script>
 	@if($collapsibleStatus)
 		<script type="text/javascript">  
-				$(document).ready(function(){
-					$('.aione-charts').sortable();
-					var data = '';
-					$.ajax({
-						url : route().'/visualization/chart_sort',
-						type : 'POST',
-						data : $data,
-						success : function(){
+			$(document).ready(function(){
+				$('.aione-charts').sortable({
+					stop: function(){
+						$('.aione-chart').each(function(k , v){
+							console.log(k.attr('chart-name'));
+						});
+						// $.ajax({
+						// 	url : route()+'/visualization/chart_sort',
+						// 	type : 'POST',
+						// 	data : {data : ''},
+						// 	success : function(){
 
-						}
-					})
+						// 	}
+						// });
+					}
 				});
+				
+			});
 			@php
 			@endphp
 		</script>

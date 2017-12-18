@@ -23,7 +23,7 @@
 	}
 @endphp
 <!DOCTYPE html>
-<html lang="en">3463
+<html lang="en">
 @include('layouts.themes.theme-docs.includes._head')
 <body>
 	<div id="aione_wrapper" class="aione-wrapper layout-header-left aione-layout-wide aione-theme-docs">

@@ -393,7 +393,7 @@ class GroupOrganizationController extends Controller
         $user = User::where('user_id',$user_id);
         $userId = $user->first()->id;
         $user->delete();
-        $userMeta = UsersMeta::where('user_id',$user_id)->delete();
+        // $userMeta = UsersMeta::where('user_id',$user_id)->delete();
         $role = UserRoleMapping::where('user_id',$user_id)->delete();
         Session::flash('success','Successfully deleted!');
         return back();

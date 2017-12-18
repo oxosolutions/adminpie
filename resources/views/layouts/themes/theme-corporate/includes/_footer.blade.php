@@ -11,7 +11,7 @@
 @endphp
 @if($count > 0)
 <div id="aione_footer" class="aione-footer dark">
-	{{-- <div class="wrapper">
+	<div class="wrapper">
 		<div class="ar">
 			@foreach (@$design_settings['footer_widgets'] as $widget_key => $widget)
 				@if(1)
@@ -26,8 +26,8 @@
 				@endif				
 			@endforeach
 		</div>
-	</div><!-- .row-wrapper --> --}}
-	<div class="wrapper aione-align-left font-weight-100">
+	</div><!-- .row-wrapper -->
+	{{-- <div class="wrapper aione-align-left font-weight-100">
 	<div class="ar pv-30 pl-5p pr-5p">
 		<div class="ac l25 m50 s100">
 			<h4 class="mt-10  white">About</h4>
@@ -157,7 +157,7 @@
 				</ul>
 			</nav>
 		</div>
-	</div>
+	</div> --}}
 </div>
 </div><!-- .aione-footer -->
 @endif
