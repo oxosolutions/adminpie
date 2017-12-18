@@ -2,7 +2,6 @@
 @section('content')
 {{-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> --}}
 @php
-
 	$visualization_id = $visualizations['visualization_id'];
 	$visualization_name = $visualizations['visualization_name'];
 
@@ -17,6 +16,7 @@
 		$sidebar_class = $meta['filter_position']."-sidebar";
 	}
 	$collapsibleStatus = $meta['collapsible_chart_widgets'];
+	$sortableWidgets = @$meta['sortable_chart_widgets'];
 
 @endphp
 
@@ -68,8 +68,8 @@
 
 						<!--==============================-->
 						<!--==============================-->
-
 						@foreach($charts as $chart_key => $chart)
+
 							
 							@if(isset($chart['error']))
 								@include('organization.visualization.errors',['errors'=>[$chart['error']]])
@@ -97,7 +97,7 @@
 								?>
 
 								@if($chart_enabled == 1)
-									<div id="chart_wrapper_{{$chart_id}}" chart-name="{{$chart_title}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
+									<div id="chart_wrapper_{{$chart_id}}" chart-id="{{$chart['chart_id']}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
 										<div class="aione-item">
 										
 											@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
@@ -106,12 +106,7 @@
 													@if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1)
 													<div class="aione-section-handle"></div>
 													@endif
-
-													
-														
 																{{$chart_title}}
-														
-														
 												</div>
 												<div class="aione-section-header-actions">
 													@if(isset($meta['collapsible_chart_widgets']) && $meta['collapsible_chart_widgets'] == 1)
@@ -429,22 +424,26 @@
 			
 	});
 </script>
-	@if($collapsibleStatus)
+	@if(@$sortableWidgets == 1)
 		<script type="text/javascript">  
 			$(document).ready(function(){
 				$('.aione-charts').sortable({
 					stop: function(){
+							var data = [];
 						$('.aione-chart').each(function(k , v){
-							console.log(k.attr('chart-name'));
+							data.push($(this).attr('chart-id'));
 						});
-						// $.ajax({
-						// 	url : route()+'/visualization/chart_sort',
-						// 	type : 'POST',
-						// 	data : {data : ''},
-						// 	success : function(){
 
-						// 	}
-						// });
+						$.ajax({
+							url : route()+'/visualization/chart_sort',
+							type : 'POST',
+							data : {data : data,_token : $('input[name=_token]').val()},
+							success : function(res){
+								if(res == 'true'){
+									Materialize.toast("Sorted Successfully");
+								}
+							}
+						});
 					}
 				});
 				

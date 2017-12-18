@@ -792,7 +792,7 @@ class VisualisationController extends Controller
 
 		'dataset','charts'=>function($query){
 
-				$query->with('meta');
+				$query->orderby('order','ASC')->with('meta');
 
 		},'meta'])->find($request->id); //getting dataset, visualization charts and meta from eloquent relations
 		if($visualization != null){
@@ -1132,7 +1132,16 @@ class VisualisationController extends Controller
     //sandeep
     public function sortChart(Request $request)
     {
-    	// VisualizationCharts::
+    	http_response_code(500);
+    	$data = [];
+    	foreach($request['data'] as $k => $v){
+    		$data[$k+1] = $v;
+    	}
+
+    	foreach($data as $k => $v){
+    		VisualizationCharts::where('id', $v)->update(['order' => $k]);
+    	}
+    	return 'true';
     }
 
 }

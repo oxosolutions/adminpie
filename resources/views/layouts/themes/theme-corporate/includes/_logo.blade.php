@@ -1,8 +1,10 @@
-{{-- <div class="row-wrapper">
+<div class="row-wrapper">
 	<div class="ar grey">
 		@if( @$design_settings['header_show_logo'] == 1)
 			<div id="aione_header_logo" class="aione-header-item">
-				<img src="/{!! @get_organization_meta('logo') !!}"> 
+				<a href="http://aioneframework.com" target="_blank">
+					<img src="/{!! @get_organization_meta('logo') !!}" class="aione-float-left" style="height:40px;">
+				{{-- <a href="http://aioneframework.com" target="_blank"><img src="http://aioneframework.com/resources/logo/aione-framework-logo-small.png" class="aione-float-left" style="height:40px;"></a>  --}}
 			</div><!-- .aione-topbar-item -->
 		@endif
 		@if( @$design_settings['header_show_site_title'] == 1 || @$design_settings['header_show_site_description'] == 1)
@@ -19,5 +21,5 @@
 			{!! @$design_settings['header_banner_content'] !!}
 		@endif
 	</div>
-</div><!-- .row-wrapper --> --}}
-<a href="http://aioneframework.com" target="_blank"><img src="http://aioneframework.com/resources/logo/aione-framework-logo-small.png" class="aione-float-left" style="height:40px;"></a>
+</div><!-- .row-wrapper -->
+{{-- <a href="http://aioneframework.com" target="_blank"><img src="http://aioneframework.com/resources/logo/aione-framework-logo-small.png" class="aione-float-left" style="height:40px;"></a> --}}

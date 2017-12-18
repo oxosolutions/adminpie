@@ -242,7 +242,11 @@ class GroupOrganizationController extends Controller
 		        $checkMaster = GlobalSetting::where('key','primary_organization');
 		        if($checkMaster->exists()){
 		            $primary_orgnaization = $checkMaster->first();
-		            $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
+                    if($primary_orgnaization->value != '' && $primary_orgnaization->value != null){
+                        $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
+                    }else{
+                        $return ='table_not_exist';
+                    }
 		        }
 		        
 		        if(!$checkMaster->exists() || $return=='table_not_exist'){
