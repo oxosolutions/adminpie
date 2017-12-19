@@ -1,6 +1,4 @@
 /node_modules
-/public/storage
-/public
 /storage/*.key
 /vendor
 /.idea
@@ -11,10 +9,8 @@ Homestead.yaml
 /bak
 
 # Gulp build
-/public/aione-build-tools
 /public/aione-tools
 
-# User Files
 /public/files
  
 # Build and Release Folders
@@ -32,9 +28,4 @@ bin-release/
 *.air
 *.ipa
 *.apk
-
-
-
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+*.exe
