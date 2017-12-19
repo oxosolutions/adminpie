@@ -1132,7 +1132,7 @@ class VisualisationController extends Controller
     //sandeep
     public function sortChart(Request $request)
     {
-    	http_response_code(500);
+    	http_response_code(500); 
     	$data = [];
     	foreach($request['data'] as $k => $v){
     		$data[$k+1] = $v;

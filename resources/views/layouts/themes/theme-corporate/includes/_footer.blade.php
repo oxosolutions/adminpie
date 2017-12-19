@@ -10,7 +10,7 @@
 	// dump($column_class);
 @endphp
 @if($count > 0)
-<div id="aione_footer" class="aione-footer dark">
+<div id="aione_footer" class="aione-footer {{@$design_settings['footer_theme']}}">
 	
 	<div class="wrapper aione-align-left font-weight-100">
 		<div class="ar pv-30 pl-5p pr-5p">
