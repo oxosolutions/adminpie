@@ -58,14 +58,15 @@ $(document).ready(function(){
 			var chartType = $(this).data('chart_type');
 			var chartId = $(this).data('chartid');
 			var visual_id = $(this).data('visualizationid');
-            console.log(chartType,chartId,visual_id);
 			$.ajax({
 				type:'GET',
 				url: route()+'/chartsettings',
 				data: {charttype: chartType, chartid: chartId, visualid: visual_id},
 				success: function(result){
+                    console.log(result);
                     console.log('#'+chartId+'_setings');
 					$('#chart_'+chartId+'_setings').html(result);
+                    $(this).find('.model-bg').show();
 				}
 			});
 			/*var data_target = $(this).attr('data-target');

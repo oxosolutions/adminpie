@@ -1113,18 +1113,21 @@ class DatasetController extends Controller
         {
            
             $name  =   parse_slug($model->dataset_name).'_'.generate_filename();
-            $datas =   DB::table($table_name)->whereIn('status' , [1,'status'])->whereIn('parent' ,[0,'parent'])->get()->toArray();
+            $datas =   DB::table($table_name)->where('status' , 1)->where('parent' ,  0)->get()->toArray();
             // $datas =   DB::table($table_name)->where('status' , 1)->get()->toArray();
             $model =   json_decode(json_encode($datas),true);
-            $headers = $model[0];
-            dd($model);
+            $headers = (array)DB::table($table_name)->first();
+            if(!empty($headers)){
+                unset($headers['status']);
+                unset($headers['parent']);
+                unset($headers['id']);
+            }
             foreach ($model as $key =>  $value) {
-
+                  unset($value['status']);
+                  unset($value['parent']);
+                  unset($value['id']);
                   $model[$key] = array_combine($headers, $value);
                   
-                  unset($model[$key][1]);
-                  unset($model[$key][0]);
-                  unset($model[0]);
               }
             Excel::create($name, function($excel) use($model) {
                 $excel->sheet('Sheetname', function($sheet) use($model) {

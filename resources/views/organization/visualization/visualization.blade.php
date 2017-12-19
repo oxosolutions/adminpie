@@ -152,7 +152,7 @@
 															Chart Settings<i class="fa fa-close aione-float-right"></i>
 														</div>
 														<div class="content" id="chart_{{$chart['chart_id']}}_setings">
-															content
+															Loading...
 														</div>
 														{{-- <div class="actions p-10 aione-border-top">
 															<button type="submit">Save</button>
@@ -258,12 +258,12 @@
 <script src="{{asset('/js/visualization.js')}}" type="text/javascript"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('.chart_settings').click(function(){
-			$('.model-bg').show();
-		})
-		$('.model-bg .fa-close').click(function(){
-			$('.model-bg').hide();
-		})
+		// $('.chart_settings').click(function(){
+		// 	$('.model-bg').show();
+		// })
+		// $('.model-bg .fa-close').click(function(){
+		// 	$('.model-bg').hide();
+		// })
 		/*var chartsLength = $('.aione-chart-CustomMap').length;
 		var countIndex = 0;
 		function loadChart(countIndex){

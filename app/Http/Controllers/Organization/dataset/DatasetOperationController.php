@@ -40,7 +40,7 @@ class DatasetOperationController extends Controller
     		$org_id = Session::get('organization_id');
     		$first_table = $this->check_table_existence($first_datasets);
     		if(!$first_table){
-                
+
                 Session::flash('error','First table not found!'); 
                 return back(); 
             }
@@ -68,7 +68,7 @@ class DatasetOperationController extends Controller
     			$colums[]= "`$names` text COLLATE utf8_unicode_ci DEFAULT NULL";
     			$insert_val[$names] = $value;
     		}
-            // DB::beginTransaction();
+            DB::beginTransaction();
     		$table_name = DB::getTablePrefix().$org_id.'_data_table_'.time();
     		$dataset = new Dataset();
     		$dataset->dataset_name = $request["new_dataset_name"];
@@ -88,7 +88,7 @@ class DatasetOperationController extends Controller
 //first dataset insert 
 			$status = $this->merge_data_into_table($first_table, $insert_val, $table_name );
             if($status == false){
-                // DB::rollback();
+                DB::rollback();
                 Session::flash('error','Columns not matched with current dataset');
                 return view('organization.dataset.merge',array('merge_datasets'=>[],'new_dataset_name'=>'', 'data_set_id'=>$data_set_id));
             }
@@ -97,7 +97,7 @@ class DatasetOperationController extends Controller
 			Session::flash('success','Dataset merge successfully  ');
 			$merge_datasets =  DB::table(str_replace('ocrm_', '', $table_name))->get();
 			$new_dataset_name = $request["new_dataset_name"];
-            // DB::commit();
+            DB::commit();
 			return view('organization.dataset.merge',compact('merge_datasets','new_dataset_name', 'data_set_id'));
     	}
         return view('organization.dataset.merge',compact('dataSets'));
@@ -108,8 +108,11 @@ class DatasetOperationController extends Controller
 		$tablefst_row =  json_decode(json_encode($data_fst),true);
 		$first_intersect = array_intersect($insert_val, $tablefst_row);
 		$fst_intersect = array_intersect($tablefst_row, array_values($first_intersect));
-        try{
-            DB::select("REPLACE INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
+        try{ 
+               // DB::table($table_name)->insert($insert_val);
+            
+            // DB::select("REPLACE INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
+                DB::select("insert INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
             return true;
         }catch(\Exception $e){
             return false;
