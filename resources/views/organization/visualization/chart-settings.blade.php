@@ -3,7 +3,7 @@
 {!!Form::hidden('visual_id',$request->visualid)!!}
 <div class="form">
 	<div class="aione-accordion">
-		<div class="aione-item">
+		<div class="aione-item active">
 			<div class="aione-item-header">
 				General
 				{{-- <div class="arrow arrow-down"></div> --}}
@@ -166,22 +166,32 @@
 		width: 100%;
 		height: auto;
 	}
+	.aione-accordion .aione-item.active .aione-item-header,
+.aione-collapsible .aione-item.active .aione-item-header {
+  background-color: #f2f2f2
+}
 </style>
 <script type="text/javascript" src="{{asset('js/jquery-2.2.3.min.js')}}"></script>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$('.aione-collapsible .aione-item-header').click(function(e){
-		e.preventDefault();
-		$(this).parent().toggleClass('active'); 
-	})
-
-	/*****************************************************
-	/*  Aione Collapsible
-	/*****************************************************/
-	$('.aione-accordion .aione-item-header').click(function(e){
-		e.preventDefault();
-		$(this).parent().toggleClass('active').siblings().removeClass('active'); 
-	})
+		$('.settings-collapsable-header').click(function(){
+			var elem = $(this).parent('.settings-collapsable');
+			if(elem.find('.arrow').hasClass('arrow-down')){
+				elem.find('.arrow').removeClass('arrow-down');
+				elem.find('.arrow').addClass('arrow-up');
+				elem.addClass('active');
+			}else{
+				elem.find('.arrow').removeClass('arrow-up');
+				elem.find('.arrow').addClass('arrow-down');
+				elem.removeClass('active');
+			}
+			$('.collapsable-content').each(function(index){
+				/*if(!$this.is(':nth-child('+index+')')){
+					$('.collapsable-content').slideUp(300);
+				}*/
+			});
+			elem.find('.collapsable-content:first').slideToggle(300);
+		});
 	});
 </script>
 {{-- <div id="field_1808" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-name field-wrapper-type-text ">

@@ -43,9 +43,11 @@ class Dataset extends Model
         if($tabaleHeader != null){
             foreach($tabaleHeader as $key => $row){
                 if($key == 'id'){
-                    $headers[] = ucwords(str_replace('_',' ',$key));
+                    $headers[] = str_replace('_',' ',$key);
+                    // $headers[] = ucwords(str_replace('_',' ',$key));
                 }else{
-                    $headers[] = ucwords(str_replace('_',' ',$row));
+                    $headers[] = str_replace('_',' ',$row);
+                    // $headers[] = ucwords(str_replace('_',' ',$row));
                 }
             }
         }
