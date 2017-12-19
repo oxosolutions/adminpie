@@ -136,7 +136,6 @@
                                                                 @foreach(@$userData as $k => $userVal) 
                                                                     <div class="users_list">
                                                                          <i class="fa fa-circle-o blue-text" aria-hidden="true"></i>
-                                                                         {{-- {{dd($userVal)}} --}}
                                                                          <a href="{{ route('info.user',[$userVal->id]) }}">{{$userVal->name}}</a>
                                                                          
                                                                     </div>
@@ -229,7 +228,6 @@
                                                                 @foreach(@$userData as $k => $userVal) 
                                                                     <div class="users_list">
                                                                          <i class="fa fa-circle-o blue-text" aria-hidden="true"></i>
-                                                                         {{-- {{dd($userVal)}} --}}
                                                                          <a href="{{ route('info.user',[$userVal->id]) }}">{{$userVal->name}}</a>
                                                                          
                                                                     </div>
@@ -322,7 +320,6 @@
                                                                 @foreach(@$userData as $k => $userVal) 
                                                                     <div class="users_list">
                                                                          <i class="fa fa-circle-o blue-text" aria-hidden="true"></i>
-                                                                         {{-- {{dd($userVal)}} --}}
                                                                          <a href="{{ route('info.user',[$userVal->id]) }}">{{$userVal->name}}</a>
                                                                          
                                                                     </div>

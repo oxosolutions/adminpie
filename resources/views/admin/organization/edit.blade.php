@@ -16,9 +16,11 @@ $page_title_data = array(
         @php
             $model = 'App\\Model\\Admin\\GlobalModule';
             $array = json_decode($org_data['modules']);
+            if($array != null){
                 $selected = $model::whereIn('id',$array)->pluck('id');
-    		unset($org_data['modules']);
-    		$org_data['modules'] = $selected;
+                unset($org_data['modules']);
+                $org_data['modules'] = $selected;
+            }
         @endphp
 	{!!Form::model($org_data, ['route' => ['edit.organization', $org_data->id]])!!}
         {{-- @include('admin.organization._form')      --}}

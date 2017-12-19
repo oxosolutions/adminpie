@@ -18,7 +18,6 @@
 				'color' => $model->color,
 				'icon' => $model->icon
 			];
-			// dd($data);
 	@endphp
 
 	@include('common.pageheader',$page_title_data)

@@ -95,7 +95,6 @@ class PagesController extends Controller
             $edit = 'edit.pages';
             $delete = 'delete.page';
             
-            // dd($view);
             $datalist =  [
                         'datalist'=>$model,
                         'showColumns' => ['title'=>'Title','slug'=>'Slug','created_at'=>'Created','status'=>['type'=>'switch','title'=>'Status','class' => 'pageStatus']],
@@ -384,7 +383,6 @@ class PagesController extends Controller
 
     }
     public function likedislike($type, $comment_id, $expression=null){
-        // dd($expression);
         $status=0;
         if($type=='like'){
             $status=1;
@@ -631,6 +629,5 @@ class PagesController extends Controller
     }
     public function updatePage(Request $request)
     {
-        dd($request->all());
     }
 }

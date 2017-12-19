@@ -22,7 +22,6 @@ class LeavesController extends Controller
         $this->user = $user;
     }
 	 public function index(Request $request , $id = null){
-  //  dd(EMP::employees());
         // $search = $this->saveSearch($request);
         // if($search != false && is_array($search)){
         //     $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
@@ -109,7 +108,6 @@ class LeavesController extends Controller
                $model = LV::paginate($perPage);
           }
       }
-      // dd($model);
       $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['employee_id'=>'employee_id','from'=>'From','to'=>'To','created_at'=>'Created', 'status'=>'Status'],
@@ -281,12 +279,6 @@ class LeavesController extends Controller
           return back();
         }
 
-
-
-
-
-
-        dd($model);
         // $from = strtotime($model->from);
         // $to = strtotime($model->to);
         // $from_year_mo = date('Y-m', $from);

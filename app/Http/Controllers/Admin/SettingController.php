@@ -92,9 +92,7 @@ class SettingController extends Controller
 	}
 	public function removeLogo($id)
 	{
-		dd($id);
 		$model = GlobalSetting::all();
-		dd($model);
 	}
 }
 	

@@ -36,8 +36,6 @@ class SurveyHelper{
 					$que->orderBy('quest_order');                            
 				}]);
 			}])->find($sid);
-			// dd($survey_data);
-			foreach ($survey_data->group as $gkey => $gvalue) {
 				foreach ($gvalue->question as $qkey => $qvalue) {
 					$decode = json_decode($qvalue->answer);
 					$q_id =	$decode->question_id;
@@ -46,20 +44,16 @@ class SurveyHelper{
 					$quesType[$q_id] = 	$decode->question_type;
 
 				}
-			}
-			// dd($quesId);
+	}
 			$quesId['device_detail'] = 'device_detail';
 			$quesType['device_detail'] = 'device_detail';
 			$quesText['device_detail'] = 'Device Information';
-			//dump($quesId);
 			$newData[0] = $quesText;
 			if($filters == true){
 				$newData[0]['created_at'] = 'created_at';
 				$newData[0]['created_by'] = 'created_by';
 				$newData[0]['survey_submitted_from'] = 'survey_submitted_from';
 			}
-			// Surrvey::findORfail($sid);
-			$table = Surrvey::select('survey_table')->where('id',$sid)->first()->survey_table;
 			if($table == null || $table == ''){
 				return [];
 			}
@@ -71,8 +65,6 @@ class SurveyHelper{
 			}
 			foreach ($data as $key => $value) {
 				$key++;
-				//dump($value->device_detail);
-				//unset($value->device_detail);
 				foreach ($quesId as $qqkey => $qqvalue) {
 					if(@$value->$qqvalue)
 					{
@@ -82,8 +74,6 @@ class SurveyHelper{
 							$newData[$key][$qqvalue] = $value->$qqvalue;
 							$jsonData = null;
 						}
-
-
 					}
 					if($filters == true){
 						$newData[$key]['id'] = $value->id;
@@ -138,17 +128,13 @@ class SurveyHelper{
 			}
 			
 			return ['data'=>$newData, 'table'=>$table];
-		
 	}
 
 	Public function isJson($string) {
 		 json_decode($string);
 		 return (json_last_error() == JSON_ERROR_NONE);
 	}
-
-	
-
-public static function create_survey_table($survey_id , $org_id)
+	public static function create_survey_table($survey_id , $org_id)
 	{
 		$table = $org_id.'_survey_data_'.$survey_id;
 		$ques_data = SQ::select(['answer'])->where('survey_id',$survey_id)->get();
@@ -224,7 +210,7 @@ public static function create_survey_table($survey_id , $org_id)
 				$img = $obj->get_media_value($strValue);
 				$string_data[$strkey] = "<img class='survey-media media-type-image' src='".$img['media']."'>";
 				$media[$img['key']] = $img['media'];
-				//unset($string_data[$strkey]);
+				
 			}
 			elseif(starts_with($strValue,"[audio_"))
 			{

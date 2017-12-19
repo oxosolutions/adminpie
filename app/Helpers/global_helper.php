@@ -583,7 +583,6 @@ function get_meta($model, $uid = null, $key = null, $column = null, $array = fal
 			$meta = $model::get();
 		}
 	}
-	//dd($meta);
 	$correctedMeta = [];
 	if(!$meta->isEmpty()){
 		foreach($meta as $mkey => $metaValues){
@@ -1541,20 +1540,6 @@ function get_survey_meta($sid){
 			return $activity->first()->template;
 		}
 	}
-
-	// if(role_id()==2){
-		// 	return True;	
-		// 	}else{
-		// 			// $routeData = route::where('route',$url)->first();
-		// 			// dd($routeData);
-
-
-		// 			// $route = Permisson::where(['role_id'=>4, 'permisson_type'=>'route'])->whereNotNull('permisson')->select(['permisson_id'])->get();
-		// 			//  dump($route);
-	 //    //           if($route->exists()){
-	 //    //            $routes[]= $route->first()->route;
-	 //              }
-		//     }	
 
 	//get current forms list by org or admin
 	function listForms(){

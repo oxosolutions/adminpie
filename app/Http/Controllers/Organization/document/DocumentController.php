@@ -133,7 +133,6 @@ class DocumentController extends Controller
                 $model = DocumentLayout::paginate($perPage);
             }
         }
-        // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
@@ -182,7 +181,6 @@ class DocumentController extends Controller
                 $model = DocumentTemplate::paginate($perPage);
             }
         }
-        // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
@@ -309,7 +307,6 @@ class DocumentController extends Controller
           }
         }
       }   
-      // dd($user_id);
       return $user_id;
     }
     public function documentDownload($id)

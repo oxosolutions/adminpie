@@ -336,7 +336,6 @@ $page_title_data = array(
 							@if(!empty($shift))
 								<div class="col l3">
 									 {{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
-										{{-- {{ dd($meta_data) }}  --}}
 								</div>
 								<div class="col l3">
 									{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}

@@ -15,8 +15,6 @@ $page_title_data = array(
 @endphp
 @php
 	$mapModel = 'App\\Model\\Organization\\UsersRole';
-	// dd($model->toArray());
-	// ->pluck('role_id')
 	if(array_key_exists('role', $model)){
 		if(!is_array($model['role'])){
 			$role[] = $mapModel::where('id',$model['role'])->first()->name;

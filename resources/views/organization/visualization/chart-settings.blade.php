@@ -1,6 +1,4 @@
-{{-- {{dd($jsonData)}} --}}
-{{-- {{dump($chart_type)}} --}}
-{!!Form::model($model,['route'=>'save.chart.settings'])!!}
+ {!!Form::model($model,['route'=>'save.chart.settings'])!!}
 {!!Form::hidden('chart_id',$request->chartid)!!}
 {!!Form::hidden('visual_id',$request->visualid)!!}
 <div class="form">
@@ -53,7 +51,7 @@
 		@endif
 	@endforeach
 </div>
-{{-- <input type="submit" name="submit" value="Save Settings" /> --}}
+<input type="submit" name="submit" value="Save Settings" />
 {!!Form::close()!!}
 <style type="text/css">
 	.settings-collapsable{

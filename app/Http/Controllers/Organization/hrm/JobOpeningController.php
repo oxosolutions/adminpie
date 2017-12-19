@@ -84,7 +84,6 @@ class JobOpeningController extends Controller
     }
     public function applied_application($id){
       $opening = JobOpening::with('applications.applicant.applicant_meta')->where('id',$id)->get();
-      dd($opening);
 
     }
     /**
@@ -100,7 +99,6 @@ class JobOpeningController extends Controller
     		$job->save();
         $request['opening_id'] = $job->id;
         unset($request['_token'],  $request['title'] ,$request['department'], $request['designation'],$request['skills'] ,$request['job_type'] ,$request['location'], $request['number_of_post']);
-        // dd($request->all());
         foreach ($request->all() as $key => $value) {
          $jobMeta = new JobOpeningMeta();
          $jobMeta->opening_id =  $job->id;
@@ -159,7 +157,6 @@ class JobOpeningController extends Controller
 
 
       if($request->isMethod('post')){
-       // dd($request->all());
 
         $model->fill($request->all());
         $model->save();

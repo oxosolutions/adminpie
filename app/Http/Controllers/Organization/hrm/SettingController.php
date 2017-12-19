@@ -66,12 +66,9 @@ class SettingController extends Controller
     }
     public function update(Request $request)
     {
-		//dd($request);	
 		PermissonRole::where('role_id',$request->rid)->delete();
-
 		if($request->permisson_id)
 		{
-
 				foreach ($request->permisson_id as $key => $value) {
 						$permissonId[] = $key;
 					$pr =	new PermissonRole($request->except(['_token','read']));
@@ -191,7 +188,6 @@ class SettingController extends Controller
     }
 
     public function saveOrganizationSettings(Request $request){
-    	// dd($request->all());
     	$organizationId = Session::get('organization_id');
     	if($request->has('employee_role')){
     		update_organization_metas($request->all());

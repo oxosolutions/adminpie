@@ -77,7 +77,6 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.dataset._tabs')
-	{{dd($dataset)}}
 	{{-- <div>
 		<ul class="handson-table-button">
 			<li>

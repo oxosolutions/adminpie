@@ -217,11 +217,9 @@ class DashboardController extends Controller
     	$old_array = json_decode($model['dashboards'],true);
     	$new_sort = $request['data'];
     	$newArray = [];
-    	dd($old_array);
     	foreach($new_sort as $key => $value){
     		$newArray[$value] = $old_array[$value];
     	}
-    	dd($newArray);
 		$sorted = array_intersect_key(array_flip( $old_array), $request['data']);
     }
 	 
@@ -260,7 +258,6 @@ class DashboardController extends Controller
 		$id = get_user_id();
 		$dashboards = get_user_meta($id, 'dashboards');
 		$decoded_data = json_decode($dashboards , true);
-		// dd($decoded_data);
 		$requestData  = $request->all();
 
 		$decoded_data[$request->old_slug] = [

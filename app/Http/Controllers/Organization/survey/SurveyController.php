@@ -300,7 +300,6 @@ class SurveyController extends Controller
                 if(Session::has('form_id')){
                     $this->forget_session_survey('section');
                 }
-                // dd(Session::get('form_fiel_id'));
                 if(Session::has('form_fiel_id')){
                     if(Session::get('form_fiel_id')!=$form_id){
                         $this->forget_session_survey('question');

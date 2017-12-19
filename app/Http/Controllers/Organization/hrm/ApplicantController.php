@@ -137,7 +137,6 @@ class ApplicantController extends Controller
         $appCheckFirst = User::where(['id'=>$id]);
         if($appCheckFirst->exists()){
 
-          dd( $appCheckFirst);
            $data =  $appCheckFirst->get()->keyBy('key');
            $collection = collect($data->toArray());
             $keyed = $collection->mapWithKeys(function ($item) {

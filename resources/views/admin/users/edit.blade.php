@@ -20,7 +20,6 @@
 			$role = $roleModel::where('id',$plugins["model"]->role_id)->pluck('id','role_name');
 			$plugins['model']->role_id = $role;
 		@endphp
-		{{-- {{dd($plugins['model'])}} --}}
 		{!! Form::model($plugins['model'],['route' => ['admin.user.edit' , $plugins["model"]->id ] , 'type' =>'post']) !!}
 
 			{!! FormGenerator::GenerateForm('admin_edit_user_form') !!}

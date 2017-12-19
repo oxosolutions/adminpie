@@ -62,7 +62,6 @@ class SalaryController extends Controller
     // if(!empty($id) || $id != null || $id != ''){
     //   $data['data'] = DES::where('id',$id)->first();
     // }
-                  // dd($datalist);
       return view('organization.designation.list_designation',$datalist)->with(['data' => $data]);
 
 		$data = UsersMeta::with(['user','payscale'])->where('key','pay_scale')->get();
@@ -86,7 +85,6 @@ class SalaryController extends Controller
       if($salary->exists()){
         $salary = $salary->first();
         $file_name =  'pay-slip-'.$salary->employee_id.'-'.$salary->year.'-'.$salary->month;
-        // dd($file_name);
       }else{
         Session::flash('error','Not Valid ID.');
       }
@@ -96,8 +94,6 @@ class SalaryController extends Controller
 
 	}
 	public function generate_salary_slip_view(Request $request){
-    // dd(1234);
-
 			$date = Carbon::now();
 			$date->subMonth();
 			$data['month'] = 	$month 	= $date->month;
@@ -119,7 +115,6 @@ class SalaryController extends Controller
           }else{
             Session::flash('error','Employee must be select to generate salary slip.');
           }
-          //dd($request->all());
         }
  			}else{
 				$date = Carbon::now();
@@ -152,12 +147,10 @@ class SalaryController extends Controller
               //                         }
               //                   )->where(['user_type'=>'employee'])->get();
 
-                       // dd($data);
 	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
 	}
 
   	public function generate_salary_slip($year , $month, $user_select){
-      // dd($request->all());
   			
         $user = User::with(['belong_group', 'metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
@@ -220,7 +213,6 @@ class SalaryController extends Controller
                   $error[] = $meta['employee_id'];
               }
           }
-          // dd($data);
           if(isset($data[$userKey])){
             $salarys = new Salary();
             $salarys->fill($data[$userKey]);
@@ -245,7 +237,6 @@ class SalaryController extends Controller
 
 return back();
         
-          dd($data);
      //  $date = carbon::parse('2017-1-1');
      //  $data['month'] =  $date->month;
      //  $data['days_in_month'] =  $date->daysInMonth;
@@ -287,7 +278,6 @@ return back();
       //  $data['salary'] = $data['total_salary'] - $data['dedicated_amount'];
       //   return view('organization.salary.generate_salary_slip',['data'=>$data]);
 
-    // dd($data);
 
   }
 	public function generate_salary(Request $request){
@@ -398,7 +388,6 @@ return back();
 			}
     }
 		$salary_data =	$model =	Salary::where([ 'year'=>$request['year'], 'month'=>$request['month']])->paginate($perPage);
-			 // dd($request->all();
 		}
 
      $datalist =  [

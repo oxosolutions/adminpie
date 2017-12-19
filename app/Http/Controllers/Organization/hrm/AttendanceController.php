@@ -282,7 +282,6 @@ class AttendanceController extends Controller
 
 public function attendance_file(){
 	$files = AttendanceFile::all();
-	// dd($files);
 	return view('organization.attendance.attendance_file',['data'=>$files]);
 }
 

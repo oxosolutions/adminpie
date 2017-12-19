@@ -18,8 +18,6 @@ class OrganizationSetting extends Model
 
 
    public static function getSettings($key){
-      // dd(Self::all());
-      // dd(get_organization_id());
    		try{
    			return self::where('key',$key)->first()->value;
    		}catch(\exception $e){

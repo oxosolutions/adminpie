@@ -7,7 +7,7 @@
 			@if(Auth::guard('org')->check())
 				<i class="fa fa-bars aione-widget-handle grey" widget-order="{{@$widget_id}}"></i>
 			@endif
-			<a href="javascript:;" class="blue-grey darken-4">{{ucfirst(str_replace('_', ' ', $key))}}</a>
+			<a href="javascript:;" class="blue-grey darken-4 font-size-18">{{ucfirst(str_replace('_', ' ', $key))}}</a>
 				@if(Auth::guard('org')->check())
 					<div class="fixed-action-btn horizontal click-to-toggle action-dashboard-buttons" style="position: absolute;">
 						<a class="btn-floating aione-actions-handle">
@@ -24,9 +24,12 @@
 				@endif
 		</h5>
 	</div>
-	<div class="aione-align-center font-size-64 font-weight-600 blue-grey darken-2 aione-widget-content-section"> 
+	<div class="aione-align-center font-size-64 font-weight-400 blue-grey darken-2 aione-widget-content-section"> 
 		@if(@$count)
-			{{ @$count }}
+			<div class="font-size-64 line-height-84">
+				{{ @$count }}	
+			</div>
+			
 		@elseif(@$slug)
 			@if(View::exists('organization.widgets.'.$slug))
 				@include('organization.widgets.'.$slug)

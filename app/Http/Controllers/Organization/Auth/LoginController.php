@@ -109,7 +109,6 @@ class LoginController extends Controller
         if($model == null){
             return redirect()->route('demo5');
             //return view('organization.demo.demo5');
-            //dd('Not Valid Organization');
         }
         Session::put('organization_id',$model->id);
         return view('organization.login.login');*/
@@ -128,7 +127,6 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
-        // dd($request->all());
         $model = GroupUsers::where('email',$request->email)->first();
         if(count(@$model) > 0){
             if($model->status == 0){

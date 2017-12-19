@@ -27,10 +27,8 @@ class CheckRole
     {  
      
       $current_route =  $request->route();
-      //dd($current_route->uri);
       $uri =str_replace('/{id}','',$current_route->uri);
       $current_uri = str_replace('/{id?}','',$uri);
-     // dd($current_uri);
       if(!in_array(1, role_id())){
         $permisson = Permisson::whereIn('role_id',role_id())->whereNotNull('permisson')->get();
 

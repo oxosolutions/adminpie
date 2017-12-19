@@ -40,7 +40,6 @@ class DashboardController extends Controller
     //         } 
             
     //     }
-    //     dd($model);
     //     return $model;
     // } 
 

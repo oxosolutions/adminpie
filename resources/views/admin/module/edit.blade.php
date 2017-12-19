@@ -28,7 +28,6 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
-    {{-- {{dd($module)}} --}}
    @if(@$module)
                 {!! Form::model($module,['route' => 'save.style.subModule' , 'method' => 'post'])!!} 
             @else

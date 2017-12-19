@@ -106,7 +106,6 @@ class UsersController extends Controller
      **/
     public function index(Request $request)
     {
-        //dd(org_user::has('organization_user')->get());
     	$datalist = [];
         if($request->has('items')){
             $perPage = $request->items;
@@ -145,8 +144,6 @@ class UsersController extends Controller
           // foreach ($model as $key => $value) {
             
           // }
-          // dd();
-          // dd(UsersRole::where('id',$model[0]->user_role_rel[0]->role_id)->get());
 
 			/* by sandeep */
 	            foreach($model as $k => &$v){

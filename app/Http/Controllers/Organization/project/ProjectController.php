@@ -312,7 +312,6 @@ class ProjectController extends Controller
     }
 
     public function saveCategory(Request $request){
-    	dd($request->all());
         $rules = [
                 'name' => 'required',
         ];
@@ -475,7 +474,7 @@ class ProjectController extends Controller
         $model->save();
         return back();
       }else{
-        dd('file format not valid');
+        Session::flash('error','file format not valid');
       }
     } 
     public function deleteAttachment($id)
@@ -487,7 +486,6 @@ class ProjectController extends Controller
     //credientals
     public function saveCredientals(Request $request)
     {
-      // dd($request->all());
 
       $data = [] ;
       $data2 = [] ;
@@ -497,7 +495,6 @@ class ProjectController extends Controller
           $data[$k] = $val;
         }
       }
-      // dd($data);
       $userDataArray = [];
       for($index = 0; $index < count($data['title']); $index++){
         $tempArray = [];
@@ -550,7 +547,6 @@ class ProjectController extends Controller
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                   ];
-                  // dd($datalist);
 
       return view('organization.project.credentials',$datalist)->with(['categories' => CAT::all() ]);
     }
@@ -575,7 +571,6 @@ class ProjectController extends Controller
           $data[$k] = $val;
         }
       }
-      // dd($data);
       $userDataArray = [];
       for($index = 0; $index < count($data['title']); $index++){
         $tempArray = [];
@@ -585,7 +580,6 @@ class ProjectController extends Controller
         $userDataArray[] = $tempArray;
       }
       $request['data'] = json_encode($userDataArray);
-      // dd($request->all());
       $model = ProjectCredentials::where('id',$request->id)->update($request->except('submit','_token','action','email','password','title'));
       // $model = new ProjectCredentials;
       // $model->fill($request->except('_token','action','email','password','title'));

@@ -79,7 +79,6 @@ class CustomMapsController extends Controller
            
           }
 
-      // dd($viewRoute);        
        
 
       	$datalist = [

@@ -89,7 +89,6 @@ class EmailController extends Controller
                 $model = EmailTemplate::paginate($perPage);
             }
         }
-        // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
@@ -128,7 +127,6 @@ class EmailController extends Controller
                 $model = EmailLayout::paginate($perPage);
             }
         }
-        // dd($model);
         $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
@@ -249,7 +247,6 @@ class EmailController extends Controller
     }
     public function saveTemplate(Request $request)
     {
-        // dd($request->all());
         $output = parse_slug($request->slug);
         $request['slug'] = $output;
         $table = Session::get('organization_id').'_email_template';

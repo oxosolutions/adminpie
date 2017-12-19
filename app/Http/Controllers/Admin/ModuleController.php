@@ -345,7 +345,6 @@ class ModuleController extends Controller
     }
     public function saveStyle(Request $request)
     {
-        // dd($request->all());
         $model = GlobalSubModule::where('id',$request->sub_modules_id)->update($request->except('_token','sub_modules_id'));
         return back();
     }

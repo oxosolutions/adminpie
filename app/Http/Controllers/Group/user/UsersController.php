@@ -51,7 +51,6 @@ class UsersController extends Controller
                    $model = GroupUsers::paginate($perPage);
               }
           }
-          // dd($model);
           $datalist =  [
                           'datalist'=>$model,
                           'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status'],
@@ -202,7 +201,6 @@ class UsersController extends Controller
 
           public function changePassword(Request $request)
           {
-            // dd(GroupUsers::where('id',$request->user_id)->first());
             $validate = [
                             'new_password'      => 'required|min:6',
                             'confirm_password'  => 'required|same:new_password|min:6'

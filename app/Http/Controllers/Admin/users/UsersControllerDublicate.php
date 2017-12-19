@@ -77,7 +77,6 @@ class UsersController extends Controller
         return back();
     }
     public function createUser(Request $request){
-        // dd($request->all());
         $data = new admin_user;
         $data->fill($request->except('_token')); 
         $data->password = Hash::make($request->password);

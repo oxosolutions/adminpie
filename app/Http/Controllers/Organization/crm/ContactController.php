@@ -33,7 +33,6 @@ class ContactController extends Controller
                    $model = Contact::paginate($perPage);
               }
           }
-          // dd($model);
           $datalist =  [
                           'datalist'=>  $model,
                           'showColumns' => ['name'=>'Name','email'=>'Email','created_at'=>'Created'],

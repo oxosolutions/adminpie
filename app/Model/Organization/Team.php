@@ -23,7 +23,6 @@ class Team extends Model
    		return self::orderBy('id','asc')->pluck('title','id');
    }
    public static function getTeamById($data=null){
-   // dd($data);
       $model = self::where('id',$data)->get();
       return $model;
    }

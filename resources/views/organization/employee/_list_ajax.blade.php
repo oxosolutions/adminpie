@@ -1,6 +1,4 @@
-{{-- {{dd($data)}} --}}
-
-@if(!empty($data))
+ @if(!empty($data))
 	@foreach($data as $key => $val)
 	<div class="row hover-me" style="padding:14px;">
 		<div class="row valign-wrapper">

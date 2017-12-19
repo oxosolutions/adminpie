@@ -67,7 +67,6 @@ class TodoController extends Controller
 	}
 	
 	public function delete(Request $request){
-		// dd($request->id);
 		$id = $request->id;
 		TD::where('id',$id)->delete();
 	}

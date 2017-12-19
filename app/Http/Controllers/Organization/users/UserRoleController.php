@@ -141,7 +141,7 @@ class UserRoleController extends Controller{
                 return redirect('access_denied');
             }
         }else{
-            dd('not a id');
+            Session::flash('error','not a id');
         }
         
         $orgModule = ORG::organization_module();
@@ -188,7 +188,6 @@ class UserRoleController extends Controller{
     }
     // public function widget_permission_save(Request $request){
 
-    //     dd($request->all());
     //     foreach ($request['widget'] as $key => $value) {
     //        $check =  WidgetPermisson::where(['widget_id'=>$value['widget_id'], 'role_id'=>$value['role_id']]);
     //        if($check->count()>0)

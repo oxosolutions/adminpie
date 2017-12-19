@@ -606,6 +606,7 @@ class DatasetController extends Controller
         unset($datasetHeaders['id']);
         unset($datasetHeaders['status']);
         unset($datasetHeaders['parent']);
+
             $recordArray = array_combine(array_keys($datasetHeaders), $request->data);
             $recordArray['status'] = 1;
             DB::table(str_replace('ocrm_','',$datasetTable))->insert($recordArray);
@@ -648,6 +649,7 @@ class DatasetController extends Controller
         $columnsDetected = [];
         $excelHeaderMap = array("A","B","C","D","E","F","G","H","I","J","k","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
         $index = 0;
+        unset($columnsArray['id']);
         foreach($columnsArray as $column => $header){
             if(!in_array($column,['status','parent'])){
                 $formula = str_replace($header,$excelHeaderMap[$index].'$',$formula,$count);
@@ -835,7 +837,6 @@ class DatasetController extends Controller
         	return redirect()->route('list.dataset');
         }
         $dataset = Dataset::find($id);
-        // dd($dataset);
         $dataset->dataset_description = $dataset->description;
         return view('organization.dataset.edit',['dataset'=>$dataset]);
     }
@@ -868,7 +869,6 @@ class DatasetController extends Controller
         }
         $records = collect([]);
         $headers = [];
-        // dd($request->all());
         $dataset = Dataset::find($id);
         if($request->has('select_column')){
             
@@ -982,6 +982,7 @@ class DatasetController extends Controller
 
                     foreach ($record as $colKey => $columnValue) {
                         if(array_key_exists($colKey, $definedColumns)){
+                        
                             $testData = preg_match($definedColumns[$colKey], $columnValue);
                             if($testData){
                                 $columnsArray[$colKey] = $columnValue;
@@ -996,11 +997,11 @@ class DatasetController extends Controller
                     $row++;
                 }
             }
-            
             $errors = collect($errorInfo)->groupBy('row')->toArray();
         }catch(\Exception $e){
+            throw $e;
             $headers = [];
-            $recordsArray = [];
+            $recordsArray = 'error';
             $errors = [];
             $records = [];
             $dataset = [];
@@ -1167,7 +1168,6 @@ class DatasetController extends Controller
     }
 
     public function updateDetails(Request $request, $id){
-        // dd($request->all());
         $model = Dataset::find($id);
         $model->dataset_name = $request->dataset_name;
         $model->description = $request->dataset_description;

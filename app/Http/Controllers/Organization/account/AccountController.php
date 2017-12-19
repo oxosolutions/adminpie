@@ -96,7 +96,6 @@ class AccountController extends Controller
             @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
             $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
             
-            // dd($userDetails);
             @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
             @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
         }
@@ -143,7 +142,6 @@ class AccountController extends Controller
                 @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
                 $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
                 
-                // dd($userDetails);
                 @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
                 @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
             }
@@ -154,7 +152,6 @@ class AccountController extends Controller
             }
         }
         
-        // dd($userDetails , $user_log);
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }
@@ -418,6 +415,5 @@ class AccountController extends Controller
     }
     public function saveDiscussion(Request $request)
     {
-       dd($request);
     }
 }

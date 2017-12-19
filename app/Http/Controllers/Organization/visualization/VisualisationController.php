@@ -55,7 +55,6 @@ class VisualisationController extends Controller
                    $model = Visualization::with(['dataset'])->orderBy('id','DESC')->paginate($perPage);
               }
           }
-          // dd($model);
           $datalist =  [
                           'datalist'=>$model,
                           'showColumns' => ['name'=>'Name', 'dataset.dataset_name' => 'Dataset','description'=>'Description','created_by'=>'Created By','created_at'=>'Created'],
@@ -278,7 +277,7 @@ class VisualisationController extends Controller
             $model = new Visualization();
             $model->dataset_id = $request->dataset_id;
             $model->name = $request->name;
-            $model->description = $request->description;
+            $model->description = ($request->description != null && $request->description != '')?$request->description:'no description';
             $model->created_by = Auth::guard('org')->User()->id;
             $model->save();
             $metaArray = [
@@ -570,7 +569,6 @@ class VisualisationController extends Controller
         if(!empty($model)){
             unset($model[0]);
         }
-        // dd($model[0]);
         $tmpAry = [];
         $max =0;
         foreach($model as $k => $v){
@@ -662,7 +660,6 @@ class VisualisationController extends Controller
     	}
 
     	// Finaly it will generate query: "select * from `126_data_table_1495705270` where `column_3` in (?) and `column_4` in (?, ?) or `id` = ?"
-    	// dd($db->toSql());
     	return $db->select($columns)->whereIn('status',['status',1])->whereIn('parent',['parent',0])->get()->toArray(); // return final query result in the form or array
     	
     }
@@ -740,7 +737,6 @@ class VisualisationController extends Controller
 
     protected function string_number_to_numeric($array_data){
     	$array_data = $array_data['chart_settings'];
-    	//dd($array_data);
     	unset($array_data['forceIFrame']);
     	unset($array_data['areaOpacity']);
     	unset($array_data['enableInteractivity']);
@@ -751,7 +747,7 @@ class VisualisationController extends Controller
     		
     		$settings_array = [];
     		foreach($array_data as $key => $value){
-    			if(is_array($value)){
+    			if(is_array($value) && !empty($value)){
     				foreach($value as $k => $v){
     					if(is_numeric($v)){
 		    				$settings_array[$key][$k] = (int)$v;
@@ -759,7 +755,7 @@ class VisualisationController extends Controller
 		    				$settings_array[$key][$k] = $v;
 		    			}
     				}
-    			}else{
+    			}elseif($value != null){
     				if(is_numeric($value)){
 	    				$settings_array[$key] = (int)$value;
 	    			}else{
@@ -781,7 +777,6 @@ class VisualisationController extends Controller
     			}
     		}
     		return $settings_array;
-    		// dd($settings_array);
     	}else{
     		return [];
     	}
@@ -988,7 +983,6 @@ class VisualisationController extends Controller
 					$viewData_array[$key][str_replace(' ', '_', $k)] = $value[$column_key];
 				}
 				foreach ($tooltipData as $ck => $column_key) {
-					// dd($value);
 					$tooltipData_array[$key][str_replace(' ', '_', $k)][$header_with_column[$column_key]] = $value[$column_key];
 				}
 				
@@ -1022,7 +1016,8 @@ class VisualisationController extends Controller
 		dump('Popup Data Array');
 		dump($popupData_array);
 		dump('Final Data Array');
-		dd($recordsArray);*/
+		
+		*/
 		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_data'=>$popupData_array];
 	}
 	public function setting_visualization($id)

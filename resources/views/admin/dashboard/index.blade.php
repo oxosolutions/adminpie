@@ -27,6 +27,10 @@ $page_title_data = array(
 		min-height: 121px;
 		font-size: 80px
 	}
+	.test .aione-widget-content-section{
+		padding-top: 0px;
+		min-height: 0px;
+	}
 </style>
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')

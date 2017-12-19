@@ -43,7 +43,6 @@ class EmployeeController extends Controller
     {
         //
         //  $lists = GroupUsers::with('organization_user')->has('organization_user')->get();
-        // dd($lists->toArray());
 
         $search = $this->saveSearch($request);
         if($search != false && is_array($search)){
@@ -223,7 +222,6 @@ class EmployeeController extends Controller
       if(!empty($id) || $id != null || $id != ''){
         $data['data'] = EMP::where('id',$id)->first();
       }
-       // dd($model);
         return view('organization.employee.list',$datalist)->with(['data' => $data]);
     }
 
@@ -257,7 +255,6 @@ class EmployeeController extends Controller
         })->get();*/
         $model = User::with(['belong_group','metas'])->where(['user_type'=>'employee'])->get();//->toArray();
 
-        // dd($model->toArray());
         foreach($model as $key => $val){
             if(!empty($val['belong_group'])){
                 $model[$key]->name    =    $val->belong_group->name;
@@ -445,7 +442,6 @@ class EmployeeController extends Controller
 
 
         // Hash::make($data['password']);
-        dd($request->all());
 
         // $request['role_id'] =  setting_val_by_key('employee_role');
         // $user_id = $this->user->create($request->all(), $employee_id, 'employee');
@@ -535,7 +531,6 @@ class EmployeeController extends Controller
     }
     public function delete($id)
     {
-        // dd($id);
         try{
             DB::beginTransaction();
             $user =  User::find($id);
@@ -592,7 +587,6 @@ class EmployeeController extends Controller
     public function export(){
 
        $user = User::select(['id','user_id'])->where('user_type','employee')->get();
-       // dd($user->toArray());
 
         /*$model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
             $query->with('metas');
@@ -606,7 +600,6 @@ class EmployeeController extends Controller
             $q->select(['user_id','key', 'value'])->whereIn('key', $meta_key);
         }])->where(['user_type'=>'employee'])->get();
         $arrays = $model->toArray();
-        // dd($arrays[0]);
         foreach ($arrays as $key => $value) {
             $data[$key]['name'] =   $value['belong_group']['name'];
             $data[$key]['email'] =   $value['belong_group']['email'];
@@ -668,7 +661,6 @@ class EmployeeController extends Controller
             // array_push($data[$key] , );
         }
 
-         // dd($data);
 
        //  $map = $model->mapWithKeys(function($item){
        //      $ary = json_decode($item, true);

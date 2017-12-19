@@ -44,7 +44,6 @@ input{
 }
 </style>
 <!-- main-content-->
-{{-- {{dd($model)}} --}}
 @php
 $page_title_data = array(
     'show_page_title' => 'yes',

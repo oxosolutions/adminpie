@@ -11,7 +11,6 @@
 @endphp
 @include('common.pageheader',$page_title_data) 
 @php
-// dd($model);
 	$data = [];
 	$index = 0;
 	$model2 = [];

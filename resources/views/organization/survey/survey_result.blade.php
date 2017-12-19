@@ -4,7 +4,6 @@
 if(!empty($data)){
     $keys = collect($data->first())->keys();
  // $data = json_decode(json_encode($data->all()),true);
-	// dd($data);
 // $keys = array_keys($data[0]);
 }
 $page_title_data = array(

@@ -10,6 +10,5 @@ class MediaController extends Controller
 {
     public function uploadMedia(Request $request)
     {
-    	dd($request->all());
     }
 }

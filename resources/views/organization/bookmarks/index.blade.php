@@ -76,7 +76,6 @@
 	
 
 	{{-- @include('common.list.datalist') --}}
-	{{-- dd($model) --}}
 
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')

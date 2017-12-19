@@ -83,8 +83,6 @@ class EmployeeLeaveController extends Controller
 			if(strtotime($request['from']) > strtotime($request['to'])){
 				$error['from_greater_than_to'] = 'From date must be less than to.';
 			}
-			// dd(@$error , $request['from'] , $request['to'], strtotime($request['from']) , strtotime($request['to']) );
-			// dd($request['from'] , $request['to']);			
  /* Check apply leaves dates alredy exist  then notify employee to correct leave dates Accordinly*/
 			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
@@ -295,7 +293,6 @@ class EmployeeLeaveController extends Controller
 					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
 				}	
 			}
-			// dd($request->all());
 			if(empty($error)) {
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  

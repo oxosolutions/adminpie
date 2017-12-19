@@ -61,7 +61,6 @@ class MediaController extends Controller
     }
     public function getGalleryItem(Request $request)
     {
-      dd($request->all());
       $Associate = $this->assignModel('Media');
 
       $model = $Associate::where('id',$request->id)->first();

@@ -48,7 +48,6 @@ class StaticSurveyResultController extends Controller
                       $data = $data->get();
                     }
                     if($request->has('export')){
-                      dd($data);
 
                     }
 

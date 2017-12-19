@@ -67,13 +67,11 @@ class TodoController extends Controller
 	}
 	
 	public function delete(Request $request){
-		// dd($request->id);
 		$id = $request->id;
 		TD::where('id',$id)->delete();
 	}
 	public function filterData(Request $request)
 	{
-		dd($request->all());
 		$data[] = '';
 		if(array_key_exists('categories', $request->value)){
 			if(array_key_exists('priority', $request->value)){
@@ -87,7 +85,6 @@ class TodoController extends Controller
 					}
 					$model = TD::where(['status'=> $cat, 'user_id' => Auth::guard('org')->user()->id])->get();
 				}else{
-					dd("not null");
 					if($request->value['categories'] == "all"){
 						$this->list();
 					}if($request->value['categories'] == "completed"){

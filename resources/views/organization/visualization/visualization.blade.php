@@ -15,7 +15,7 @@
 	if( isset($meta['filter_position']) && ($meta['filter_position'] == 'left' || $meta['filter_position'] == 'right') ){
 		$sidebar_class = $meta['filter_position']."-sidebar";
 	}
-	$collapsibleStatus = $meta['collapsible_chart_widgets'];
+	$collapsibleStatus = @$meta['collapsible_chart_widgets'];
 	$sortableWidgets = @$meta['sortable_chart_widgets'];
 
 @endphp
@@ -98,7 +98,7 @@
 
 								@if($chart_enabled == 1)
 									<div id="chart_wrapper_{{$chart_id}}" chart-id="{{$chart['chart_id']}}" class="aione-chart aione-chart-{{$chart_type}} chart-theme-{{@$chart_settings['custom_map_theme']}} chart-width-{{$chart_width}} {{@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''}}">
-										<div class="aione-item">
+										<div class="aione-item active">
 										
 											@if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1)
 											<div class="aione-section-header  aione-item-header">
@@ -154,9 +154,9 @@
 														<div class="content" id="chart_{{$chart['chart_id']}}_setings">
 															content
 														</div>
-														<div class="actions p-10 aione-border-top">
+														{{-- <div class="actions p-10 aione-border-top">
 															<button type="submit">Save</button>
-														</div>
+														</div> --}}
 													</div>
 												</div>
 

@@ -89,7 +89,6 @@ class FormGenerator{
 			$HTMLField = self::GetHTMLField($collection, $FieldsCollection, $Options, $dataModel,$status);
 			return $HTMLField;
 		}else{
-			dd('No field found');
 		}
 	}
 
@@ -115,7 +114,6 @@ class FormGenerator{
 		}
 
 		if($SectionCollection == null){
-			dd('No section found');
 		}
 		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
 		if($sectionType == 'repeater'){

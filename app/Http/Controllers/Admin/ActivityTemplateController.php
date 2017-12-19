@@ -13,7 +13,6 @@ class ActivityTemplateController extends Controller
  		if($request->isMethod('post')){
  				$this->save_activity_template($request);
  				if(!empty($error)){
-	    		 	dd($error);
 	    		 }
     		 	return redirect()->route('activities');
     	}
@@ -133,7 +132,6 @@ class ActivityTemplateController extends Controller
     	if($request->isMethod('post')){
  				$this->save_activity_template($request);
  				if(!empty($error)){
-	    		 	dd($error);
 	    		 }
     		 	return redirect()->route('activities');
     	}
@@ -149,7 +147,6 @@ class ActivityTemplateController extends Controller
 
     	if($request->isMethod('post'))
     	{
-    		//dd($request->all());
     		foreach ($request->template as $key => $value) {
     			dump($value);
     			GlobalActivityTemplate::where('id',$key)->update(['template'=>$value['template']]);

@@ -4,7 +4,7 @@ use App\Model\Organization\User;
 use App\Model\Organization\UsersMeta;
 use Hash;
 use App\Model\Organization\UserRoleMapping;
-
+use Session;
 class UserRepository implements UserRepositoryContract
 {
 	
@@ -27,7 +27,7 @@ class UserRepository implements UserRepositoryContract
 			return $user->id;
 		}else{
 				return false;
-				dd('Not yet set, from repository of user create system');
+				Session::flash('error','Not yet set, from repository of user create system');
 				/*$array = json_decode($check->first()->user_type);
 				$pusharray = array_push($array,$type);
 				$query = user::where('email',$data['email'])->update(['user_type' => json_encode($array)]);

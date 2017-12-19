@@ -64,7 +64,6 @@ class CategoryRepository implements CategoryRepositoryContract
     $checkKey = ['role_include'=>'role_include' ,'roles_exclude'=>'roles_exclude' , 'include_designation'=>'include_designation', 'exclude_designation'=>'exclude_designation', 'user_include'=>'user_include',  'user_exclude'=>'user_exclude','carry_farward'=>'carry_farward','carry_farward_cashout'=>'carry_farward_cashout'];
     $cat_id = $request['id'];
      // CM::where(['category_id'=>$cat_id])->delete();
-     //  dd();
 		$cat = Category::find($cat_id);
 		$cat->fill($request->all());
 		$cat->save();

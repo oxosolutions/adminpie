@@ -19,7 +19,7 @@
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 		
-		{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
+			{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
 			<div class="aione-align-center" style="margin: 10px 0 20px 0">
 				Have you forgotten your password? <br>
 				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>

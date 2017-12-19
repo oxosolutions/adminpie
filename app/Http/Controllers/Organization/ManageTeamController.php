@@ -15,7 +15,6 @@ class ManageTeamController extends Controller
     }
     Public function listTeam(Request $request , $id = null) 
     {
-      //dd(123);
       // if($id != null){
       //   $data = Team::where('id',$id)->get();
       // }
@@ -121,7 +120,6 @@ class ManageTeamController extends Controller
     }
     public function save_info(Request $request)
     {
-        // dd($request->all());
     	Team::where('id',$request->team_id)->update(['member_ids'=>json_encode($request->id)]);
         return response()->json(['status'=>'success','message'=>'Successfully updated!']);
     	// return redirect()->route('list.team');

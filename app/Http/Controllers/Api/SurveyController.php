@@ -54,7 +54,6 @@ class SurveyController extends Controller
       //  $users = User::with('belong_group')->get()->keyBy('belong_group');
         $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
         // dump($group_orgnization_user->toArray());
-        // dd($group_orgnization_user->toArray());
 
         foreach ($users as $key => $value) {
            // array_push($users, $org_id);
@@ -205,11 +204,9 @@ class SurveyController extends Controller
             public function surveyPerview($form_id)
             {
 
-                dd($form_id);
             }
 
     public function save_app_survey_filled_data(Request $request){
-        // dd($request->all());
         //dump($request['activation_code']);
         $app_version =   $request['app_version'];
          $organization = GO::where('active_code',$request['activation_code']);

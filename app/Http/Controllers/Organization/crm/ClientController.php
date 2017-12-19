@@ -10,6 +10,7 @@ use App\Repositories\User\UserRepositoryContract;
 use App\Repositories\Client\ClientRepositoryContract;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use Hash;
+use Session;
 
 
 class ClientController extends Controller
@@ -30,7 +31,7 @@ class ClientController extends Controller
         $request->request->add(['status'=>1]);
         $user_id = $this->user->create($request->all(), 'customer',3);
         if($user_id == false){
-            dd('Client already exist with this email id');
+          Sessioin::flash('error','Client already exist with this email id');
         }
 
         //created into client rst data
@@ -66,7 +67,6 @@ class ClientController extends Controller
                    $model = Client::with(['getUserDataByUser_id'])->paginate($perPage);
               }
           }
-          // dd($model);
           $datalist =  [
                           'datalist'=>  $model,
                           'showColumns' => ['name'=>'Name','getUserDataByUser_id.email'=>'Email','created_at'=>'Created'],

@@ -170,7 +170,6 @@ class SurveyStatsController extends Controller
           $columns = array_combine($table_column,$table_column);
           if($request->isMethod('post')){
 
-            // dd($request->all());
             if(isset($request['condition_field']) && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value'])) ){
                     $filter_field['condition_field']        = $request['condition_field'];
                     $filter_field['condition_field_value']  = $request['condition_field_value'];
@@ -449,7 +448,6 @@ class SurveyStatsController extends Controller
 
 
           $data = DB::table($table_name)->select([ DB::raw("CONCAT(accident_site_state,' ',accident_site_district, ' ',accident_site_taluk, ' ',accident_site_village ) as address"),   'accident_date', 'accident_time', 'no_of_fatalities' ,'no_of_persons_grievously_injured','no_of_persons_with_minor_injuries','type_of_collision' ,'type_of_vehicle_involved','road_features'])->get();
-          // dd($data);
           $data = json_decode(json_encode($data->all()),true);
          
           if($request->isMethod('post') && $request['export'] ){
@@ -480,7 +478,6 @@ class SurveyStatsController extends Controller
 
 
           $data = DB::table($table_name)->select([DB::raw("CONCAT(accident_site_state,' ', accident_site_district,' ', accident_site_taluk,' ', accident_site_village ) as address"), 'accident_date', 'accident_time', 'accident_type', 'feature_of_road', 'vehicle_type', 'type_of_injury' ])->get();
-          // dd($data);
           $data = json_decode(json_encode($data->all()),true);
          
           if($request->isMethod('post') && $request['export'] ){

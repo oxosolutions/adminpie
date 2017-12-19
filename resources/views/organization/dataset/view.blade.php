@@ -379,17 +379,24 @@
 		// });
 		$(document).on('click' , '.addRow' ,function(){
 			var th = [];
+            var column = [];
 			var countTh = $('.dataset-table').find('th').length;
 			$.each($('.dataset-table').find('th'),function(value){
 			th.push($(this).html());
 			});
 			th = th.slice(1);
-			$(th).each(function(key , value){
-				$('.addNewDatasetRow').append('<tr><td width="400px" class="label">'+value+'</td><td><input type="text" class="add-new-value" /></td></tr>');
-				$('.addRow').hide();
+            $(th).each(function(key , value){
+                column.push(value.trim());
+            });
+			$(column).each(function(key , value){
+
+                if(value != 'Revision_1' && value != 'Action'){
+                        $('.addNewDatasetRow').append('<tr><td width="400px" class="label">'+value+'</td><td><input type="text" class="add-new-value" /></td></tr>');
+                    }
+            });
+                $('.addRow').hide();
                 $('.AddNewDatasetRowButton').show();
-				$('.header-row').show();
-			});
+                $('.header-row').show();
 		});
 
 		$(document).on('click','.AddNewDatasetRowButton',function(){

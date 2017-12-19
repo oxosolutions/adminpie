@@ -37,7 +37,6 @@ class EmployeeController_old extends Controller
     {
         //
         //  $lists = GroupUsers::with('organization_user')->has('organization_user')->get();
-        // dd($lists->toArray());
 
         $search = $this->saveSearch($request);
         if($search != false && is_array($search)){
@@ -217,7 +216,6 @@ class EmployeeController_old extends Controller
       if(!empty($id) || $id != null || $id != ''){
         $data['data'] = EMP::where('id',$id)->first();
       }
-       // dd($model);
         return view('organization.employee.list',$datalist)->with(['data' => $data]);
     }
 
@@ -251,7 +249,6 @@ class EmployeeController_old extends Controller
         })->get();*/
         $model = User::with(['belong_group','metas'])->where(['user_type'=>'employee'])->get();//->toArray();
 
-        // dd($model->toArray());
         foreach($model as $key => $val){
             if(!empty($val['belong_group'])){
                 $model[$key]->name    =    $val->belong_group->name;
@@ -438,7 +435,6 @@ class EmployeeController_old extends Controller
 
 
         // Hash::make($data['password']);
-        dd($request->all());
 
         // $request['role_id'] =  setting_val_by_key('employee_role');
         // $user_id = $this->user->create($request->all(), $employee_id, 'employee');
@@ -651,7 +647,6 @@ class EmployeeController_old extends Controller
             
            foreach ($data->toArray() as $key => $value) {
             if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
-                // dd(gettype($value['employee_id']));
                // UsersRole
 
                try{
@@ -860,10 +855,6 @@ class EmployeeController_old extends Controller
     
     public function import()
     {
-     // dd(get_meta('Organization\\UsersMeta',2,'contact_no','user_id',true));
-        // dd(get_user_meta(2,'contact_no',true));
-        // dd(get_user(true,true));
-        // dd(get_current_user_meta('contact_no',true));
         return view('organization.employee.import-employees');
     }
  

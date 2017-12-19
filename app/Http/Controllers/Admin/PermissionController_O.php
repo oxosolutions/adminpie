@@ -9,7 +9,7 @@ use App\PermissonRole as PR;
 use DB;
 use Session;
 
-class PermissionController extends Controller
+class PermissionController_o extends Controller
 {
     //
 	public function index()
@@ -40,9 +40,7 @@ class PermissionController extends Controller
     			
     		// 	dump($value->permissons);
     		// }
-    		//dd($roles->permisson);
       // $data = 'App\Permisson'::allRoute(2);
-      // dd($data->routeMapping);
       // echo "<pre>";
       //   foreach ($data as  $value) {
       //     # code...
@@ -56,8 +54,6 @@ class PermissionController extends Controller
 		// 		# code...
 		// 		dump($value->routeMapping);
 		// 	}
-		// dd($data);
-    		//dd($data);
 
 			return view('permisson.create');
     }
@@ -111,7 +107,6 @@ class PermissionController extends Controller
 			// 	# code...
 			// 	$route[$value->id]['route'] =  $value->route;
 			// }
-			// dd($route);
 			return view('permisson.edit',['model'=>$permisson]);
 
     }
@@ -136,7 +131,6 @@ class PermissionController extends Controller
 		 		// }
     	
     	
-    	// dd($request);
 			$permisson = Permisson::findOrFail($id);
 			$this->modelValidation($request);
 			DB::beginTransaction();
@@ -171,7 +165,6 @@ class PermissionController extends Controller
 		 		}
 
 		 	// 		die;
-			// dd($request);
 
 				 DB::commit();
 				Session::flash('success',"Updated Permisson Successful Created!");

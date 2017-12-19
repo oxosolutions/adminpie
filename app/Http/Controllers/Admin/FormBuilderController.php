@@ -415,7 +415,6 @@ class FormBuilderController extends Controller
                 $slug_data[] = $array->field_slug;
             }
         $result_slug = count($slug_data) === count(array_flip($slug_data));
-        // dd($slug_data);
         if($result_slug == false){
             $existSlug = "dublicate slug recognized , please verify and rename the slug";
         }else{
@@ -495,7 +494,6 @@ class FormBuilderController extends Controller
     public function formsList(){
         $modelName = $this->assignModel('FormBuilder');
         $model = $modelName::get();
-        dd($model);
         return view('admin.formbuilder.list',['model'=>$model]);
     }
     public function deleteField(Request $request){
@@ -569,7 +567,6 @@ class FormBuilderController extends Controller
         }
         $modelName = $this->assignModel('FormBuilder');
         $checkSlug = $modelName::where(['form_id'=>$form_id,'section_id'=>$section_id,'id'=>$field_id])->first();
-        // dd($checkSlug);
         // if($checkSlug->field_slug == $request->field_slug){
         //     $this->validateUpdateSlugNotUniqueFields($request);
         // }else{
@@ -623,9 +620,7 @@ class FormBuilderController extends Controller
     }
 
     public function storeSettings(Request $request, $id){
-        // dd($request->all());
         $modelName = $this->assignModel('FormsMeta');
-        // dd($modelName);
         foreach($request->except(['_token']) as $key => $value){
             $model = $modelName::firstOrNew(['key'=>$key,'form_id'=>$id]);
             $model->key = $key;
@@ -873,7 +868,6 @@ class FormBuilderController extends Controller
                     // $fieldData = $fielsModel::with(['fieldMeta'=>function($query) use($id , $sec_id){
                     //     $query->where(['form_id'=>$id , 'section_id' => $sec_id]);
                     // }])->where(['section_id'=>$sec_id , 'form_id' => $id])->get()->toArray();
-                    // dd($fieldData);
                     foreach($value['fields'] as $k => $v){
                         unset($v['id']);
                         $v['section_id'] = $new_section_id;
@@ -955,7 +949,6 @@ class FormBuilderController extends Controller
     public function sectionMove(Request $request)
     {
         // dump($request->all());
-        // dd($id);
         $modelName = $this->assignModel('section');
 
         if($request->has('want_to')){

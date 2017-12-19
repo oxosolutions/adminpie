@@ -46,7 +46,6 @@ class LeaveCategoryController extends Controller
       */
     public function save(Request $request)
     {
-       // dd($request->all());
       // $request['name'] = $request['addleavecat'];
       $tbl = Session::get('organization_id');
       $valid_fields = [
@@ -76,7 +75,6 @@ class LeaveCategoryController extends Controller
      {  
 
      // $data =  User::user_list();
-     // dd($data);
         if(Auth::guard('org')->check()){
           $id = Auth::guard('org')->user()['id'];
         }else{
@@ -97,7 +95,6 @@ class LeaveCategoryController extends Controller
         {
           $include_designation = array_map('intval',json_decode($data['data']['include_designation']));
           $user_data = $this->user_by_designation($include_designation);
-          // dd($user_data);
          $include['user_include'] = $data['user_include'] = $user_data['user_include'];  
          $exclude['user_exclude'] = $data['user_exclude'] = $user_data['user_exclude']; 
         

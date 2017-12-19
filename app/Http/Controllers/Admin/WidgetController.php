@@ -93,8 +93,6 @@ class WidgetController extends Controller
             // foreach ($id as $key => $value) {
             //     $model = GW::where('id' , $value)->update(['orderBy' => $key+1]);
             // }
-            // // dd($model);
-            // dd($request->all());
             // $getId  = GW::select('id')->get();
             // $id = [];
             // foreach ($getId as $key => $value) {

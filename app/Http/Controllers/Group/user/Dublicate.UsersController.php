@@ -49,7 +49,6 @@ class dublicateUsersController extends Controller
                    $model = GroupUsers::paginate($perPage);
               }
           }
-          // dd($model);
           $datalist =  [
                           'datalist'=>$model,
                           'showColumns' => ['name'=>'Name','email'=>'Email','status' => 'Status'],
