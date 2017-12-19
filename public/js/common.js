@@ -54,10 +54,14 @@ $(document).ready(function(){
                 $('#chart_wrapper_'+$(this).attr('data-hide')).hide();
             }
         });
+        $('.model-bg .fa-close').click(function(){
+             $('.model-bg').hide()
+        });
 		$('.chart_settings').click(function(){
 			var chartType = $(this).data('chart_type');
 			var chartId = $(this).data('chartid');
 			var visual_id = $(this).data('visualizationid');
+            var elem = $(this);
 			$.ajax({
 				type:'GET',
 				url: route()+'/chartsettings',
@@ -66,7 +70,7 @@ $(document).ready(function(){
                     console.log(result);
                     console.log('#'+chartId+'_setings');
 					$('#chart_'+chartId+'_setings').html(result);
-                    $(this).find('.model-bg').show();
+                    elem.parents('.aione-chart').find('.model-bg').show();
 				}
 			});
 			/*var data_target = $(this).attr('data-target');
