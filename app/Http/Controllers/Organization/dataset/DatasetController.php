@@ -21,7 +21,6 @@ class DatasetController extends Controller
 
 	protected function validateUser($id){
 		$user_id = Auth::guard('org')->user()->id;
-
 		$model = Dataset::find($id);
         if($model == null){
             Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset id does not exist!');
