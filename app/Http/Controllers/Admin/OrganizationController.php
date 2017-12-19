@@ -625,7 +625,7 @@ try{
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_visualization_charts',
-                                '--schema'=>'visualization_id:integer, chart_title:text, primary_column:string, secondary_column:text, chart_type:string, status:string'
+                                '--schema'=>'visualization_id:integer, chart_title:text, primary_column:string, secondary_column:text, chart_type:string, status:string, order:integer'
                             ]);
 
         Artisan::call('make:migration:schema',[

@@ -47,6 +47,13 @@ $(document).ready(function(){
 
 
 	/* code for visualization page */	
+        $('.show-hide-charts').click(function(){
+            if($(this).is(':checked')){
+                $('#chart_wrapper_'+$(this).attr('data-hide')).show();
+            }else{
+                $('#chart_wrapper_'+$(this).attr('data-hide')).hide();
+            }
+        });
 		$('.chart_settings').click(function(){
 			var chartType = $(this).data('chart_type');
 			var chartId = $(this).data('chartid');

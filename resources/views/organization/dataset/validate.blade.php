@@ -26,6 +26,11 @@
 		    background-color: rgba(255, 0, 0, 0.2);
 		    margin-bottom: 14px
 	}
+    .aione-message{
+        padding:5px;
+        font-size: 15px;
+        text-align: left;
+    }
 </style>
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
@@ -84,7 +89,7 @@
                     No records found for validate!
                 </div>
             @else
-                <table class="compact">
+                <table class="compact mb-12">
                     <thead>
                         <tr>
                             <th>Row Id</th>
@@ -104,6 +109,7 @@
                                 @endforeach
                             </tr>
                         @endforeach
+
                     </tbody>
                 </table>
             @endif

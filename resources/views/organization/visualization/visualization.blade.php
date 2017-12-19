@@ -33,7 +33,7 @@
 					@foreach($titles as $chart_id => $title)
 						<div class="widget-toggle">
 					      <input type="checkbox" class=" show-hide-charts" id="{{$chart_id}}_checkbox" data-hide="{{$chart_id}}" checked="checked" value="{{$chart_id}}"/>
-					      <label for="{{$chart_id}}_checkbox">{ucwords(1title)}</label>
+					      <label for="{{$chart_id}}_checkbox">{{ucwords($title)}}</label>
 					    </div>
 				    @endforeach
 				</div>

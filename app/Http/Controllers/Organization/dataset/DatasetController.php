@@ -683,11 +683,7 @@ class DatasetController extends Controller
             DB::select('ALTER TABLE '.$datasetTable.' ADD COLUMN `'.$columnName.'` TEXT AFTER `'.$request->after_column.'`');
             $ifRecordsExist = DB::table(str_replace('ocrm_','',$datasetTable))->first();
             $columnHeader= $request->column_name;
-            if($ifRecordsExist != null){
-                DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$columnHeader]);
-            }else{
-                DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$columnHeader,'status'=>'Status','parent'=>'Parent']);
-            }
+            
             if($request->column_action == 'static_value'){
                 $this->putStaticValueinColumn($datasetTable, $columnName, $request->static_value);
             }
@@ -696,6 +692,11 @@ class DatasetController extends Controller
             }
             if($request->column_action == 'formula'){
                 $this->putValueWithFormula($datasetTable, $columnName, $request->formula);
+            }
+            if($ifRecordsExist != null){
+                DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$columnHeader]);
+            }else{
+                DB::table(str_replace('ocrm_','',$datasetTable))->insert([$columnName=>$columnHeader,'status'=>'Status','parent'=>'Parent']);
             }
             Session::flash('success','Column created successfully!');
             DB::commit();
@@ -982,7 +983,7 @@ class DatasetController extends Controller
 
                     foreach ($record as $colKey => $columnValue) {
                         if(array_key_exists($colKey, $definedColumns)){
-                        
+
                             $testData = preg_match($definedColumns[$colKey], $columnValue);
                             if($testData){
                                 $columnsArray[$colKey] = $columnValue;
