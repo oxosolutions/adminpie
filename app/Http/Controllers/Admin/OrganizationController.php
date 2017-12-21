@@ -464,7 +464,7 @@ try{
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_support_tickets',
-                                '--schema'=>'user_id:integer , title:string, description:text, type:string:nullable, assign_to:string:nullable, end:dateTime:nullable, priority:string:default("low"), status:integer:default(0)'
+                                '--schema'=>'user_id:integer , subject:string, description:text, classification:string:nullable, attachment:text:nullable, assign_to:string:nullable, end:dateTime:nullable, priority:string:default("low"), status:integer:default(0)'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,

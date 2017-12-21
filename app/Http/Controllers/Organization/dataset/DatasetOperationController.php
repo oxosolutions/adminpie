@@ -50,7 +50,9 @@ class DatasetOperationController extends Controller
                 Session::flash('error','Second table not found!');
                 return back(); 
             }
-            DB::table($sec_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
+
+            /***** Paljinder Sir Code ****/
+            /*DB::table($sec_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
     		$sec =json_decode(json_encode( DB::table($sec_table)->first()),true);
  			$first_column  = array_filter(array_values($first));
     		unset($first_column[0]);
@@ -59,7 +61,22 @@ class DatasetOperationController extends Controller
     		$unique = $collapsed->unique();
     		$unique->shift();
     		$raw_colums = $unique->toArray();
-    		$index =1;
+    		$index =1;*/
+
+
+
+            /***** Amrit mam Code ****/
+            DB::table($sec_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
+            $sec =json_decode(json_encode( DB::table($sec_table)->first()),true); 
+            $first_column  = array_filter(array_values($first)); 
+            unset($first_column[0]);
+            $second_column  = array_filter(array_values($sec));  
+            unset($second_column[0]);
+            $columns = array_merge($first_column, array_diff($second_column, $first_column)); 
+            $collection = collect($columns);  
+            $raw_colums = $collection->toArray(); 
+            $index =1;
+            /***** Amrit mam Code  END****/
     		
     		foreach ($raw_colums as $key => $value) {
                 if($value=='status' || $value=='parent' ){

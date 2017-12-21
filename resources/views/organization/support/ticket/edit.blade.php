@@ -5,16 +5,16 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Add Ticket',
-	'add_new' => 'All Ticket',
-	'route' => 'add.ticket'
+	'page_title' => 'Edit Ticket',
+	'add_new' => 'List Tickets',
+	'route' => 'active.tickets'
 );
 @endphp 
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-    {!! Form::open(['route'=>'save.ticket','method'=>'POST','files'=>true]) !!}
-	   {!! FormGenerator::GenerateForm('add_ticket_form') !!}
+    {!! Form::model($model,['route'=>['update.ticket','id'=>$model->id],'method'=>'POST','files'=>true]) !!}
+	   {!! FormGenerator::GenerateForm('edit_ticket_form') !!}
     {!! Form::close() !!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

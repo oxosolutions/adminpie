@@ -36,7 +36,6 @@ class LeaveCategoryController extends Controller
      * @return [html array] [category list _+ list data]
      */
     public function index(Request $request){
-      dump('it is nopt');
         $data =  $this->catRepo->list_category("leave", $request);
       	return view('organization.leave_category.list_category',$data );
      }
@@ -47,11 +46,10 @@ class LeaveCategoryController extends Controller
       */
     public function save(Request $request)
     {
-      // $request['name'] = $request['addleavecat'];
+      //$request['name'] = $request['addleavecat'];
       $tbl = Session::get('organization_id');
       $valid_fields = [
-                          'name'          => 'required|unique:'.$tbl.'_categories',
-                          
+                          'name'          => 'required|unique:'.$tbl.'_categories'
                       ];
       $this->validate($request , $valid_fields);
         $request->request->add(['type' => 'leave']);
@@ -73,8 +71,7 @@ class LeaveCategoryController extends Controller
       * @return [type]           [description]
       */
     public function categoryMeta(Request $request , $cat_id=null)
-     {  
-
+     {
      // $data =  User::user_list();
         if(Auth::guard('org')->check()){
           $id = Auth::guard('org')->user()['id'];
@@ -84,7 +81,9 @@ class LeaveCategoryController extends Controller
       if($request->isMethod('post')){
             $this->catRepo->category_meta_save($request); 
             Session::flash('success','leave category updated successfully'); 
-            return back();      
+
+             return redirect()->route('leave.categories');
+            // return back();      
           }
         $select =[];
         $data['cat'] = $this->catRepo->category_data_by_id($cat_id)->toArray();
@@ -126,7 +125,6 @@ class LeaveCategoryController extends Controller
      }
 
     public function delete($id){
-        dd($id);
         CAT::where('id',$id)->delete();
         return back();
     }

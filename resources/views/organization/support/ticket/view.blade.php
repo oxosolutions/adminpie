@@ -20,6 +20,21 @@
 				<div class="aione-border p-10">
 					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Sample Ticket : Issue in purchasing domain</h5>
 					<div class="aione-border-bottom pv-10">
+						Hello<br><br>
+						This is the explained content of a perticular ticket.<br><br>
+						With Regards<br>
+						Ashish Kumar
+					</div>
+					<div class="aione-border-bottom pv-10">
+						<div class="aione-border border-orange display-inline-block border-size-4" style="max-height:100px;max-width: 100px ;overflow: hidden">
+							<img src="https://cdn.pixabay.com/photo/2017/09/02/15/10/greece-2707528__340.jpg" >
+						</div>
+						<div class="aione-border border-orange display-inline-block border-size-4" style="max-height:100px;max-width: 100px ;overflow: hidden">
+							<img src="https://cdn.pixabay.com/photo/2017/09/02/15/10/greece-2707528__340.jpg" >
+						</div>
+					</div>
+					<div class="aione-border-bottom pv-10">
+						Attachments:-
 						<div class="mb-10">Reply to : <span class="font-weight-600">Sample Customer</span></div>
 						<div class="aione-border" contenteditable="true" style="max-height: 160px;min-height: 160px;overflow-y: auto"></div>
 						<div class="aione-border-bottom aione-border-right aione-border-left p-10 mb-10 border-darken-2">
@@ -114,7 +129,6 @@
 							<div class="ac l85 p-10 line-height-20 font-weight-400">
 								When visitors enter your domain name into a Web browser, the browser request uses your domain name to find the domain name's associated IP address and, therefore, the website. People use domain names instead of IP addresses because it is easier to remember a name rather than a series of numbers.
 							</div>
-							
 						</div>
 						
 						<div class=" ar aione-border mb-20">
@@ -139,6 +153,27 @@
 			<div class="ac l30 m70 s100">
 				{!! FormGenerator::GenerateForm('edit_support_ticket_form') !!}
 				<button style="width: 100%">Save</button>
+				<div class="aione-border p-10">
+					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Details</h5>
+					<div class=" pv-10 line-height-24">
+						Created By: Ashish<br>
+						Created date: 12-12-2017<br>
+						Due Date: 12-18-2034<br>
+						Status: Finished<br>
+
+					</div>
+				</div>
+				<div class="aione-border p-10">
+					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Actions</h5>
+					<div class="pv-10 line-height-24">
+						Change Status: 
+						<select>
+							<option>Open</option>
+							<option>Resolved</option>
+							
+						</select>
+					</div>
+				</div>
 			</div>
 		</div>
 	@include('common.page_content_primary_end')

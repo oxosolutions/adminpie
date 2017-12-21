@@ -201,12 +201,20 @@ class SalaryController extends Controller
                     $data[$userKey]['sundays'] = $sunday = $attendance_data->where('day','Sunday')->count();
                     $data[$userKey]['holiday'] = $holiday;
                     $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
-                    $data[$userKey]['dedicated_amount'] = $loss_of_pay_days *  $per_day; //($working_days - $data[$userKey]['number_of_attendance']) * $per_day;
+                    if($loss_of_pay_days>0){
+                      $data[$userKey]['dedicated_amount'] = $loss_of_pay_days *  $per_day; 
+                    }else{
+                      $data[$userKey]['dedicated_amount'] =0;
+                    }
                     $data[$userKey]['total_days'] = $daysInMonth;
                     if($data[$userKey]['number_of_attendance'] ==0){
                        $data[$userKey]['salary'] = 0;   
                     }else{
-                      $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+                       if($loss_of_pay_days>0){
+                          $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+                        }else{
+                              $data[$userKey]['salary'] = $data[$userKey]['total_salary'];
+                        }
                     }
                 }
               }else{

@@ -52,11 +52,13 @@ class EmployeeLeaveController extends Controller
 				} 
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
-			$leave_rule = cat::where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
+			$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
+			// dump($leave_rule);
 			if(!empty($leave_rule->toArray())){
 			$emp_id = get_current_user_meta('employee_id');
 			$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->get();
 			$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
+			// dump($leave_count_by_cat);
 			}else{
 				$error = "Not assign with any category";
 			}
@@ -72,14 +74,13 @@ class EmployeeLeaveController extends Controller
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
                           'to'               => 'required',
-                          'leave_category_id'=> 'required',
-                          'employee_id'=> 'required',
+                          'leave_category_id'=> 'required'
                       ];
-		$this->validate($request, $valid_fields);
+		 $this->validate($request, $valid_fields);
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
 		echo $emp_id = get_current_user_meta('employee_id');	
-		dd(123);
+		
 		if($request->isMethod('post'))
 		{ 
 			$current = Carbon::now();
@@ -95,19 +96,16 @@ class EmployeeLeaveController extends Controller
 			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
 			})->where('employee_id',$emp_id);
-
-			dd($data->exists());
+			
 			if($data->exists()){
-
 				$leave = $data->first();
-				dd($leave);
 				if($leave->status ==1){
 					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
  				}elseif($leave->status ==3){
 					$error['already_taken_leave_between_from_and_to_date'] = 'Already Reject leave between from and to date choose another  dates.';
 
  				}elseif($leave->status ==0){
-					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply Not approved leave between from and to date choose another  dates.';
+					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply not approved leave between from and to date choose another  dates.';
 
  				}
 			}
@@ -315,7 +313,6 @@ class EmployeeLeaveController extends Controller
 				}	
 			}
 
-			dd($error);
 			if(empty($error)) {
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  

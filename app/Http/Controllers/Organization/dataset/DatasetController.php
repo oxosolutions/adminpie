@@ -432,7 +432,8 @@ class DatasetController extends Controller
             $tableName = $prefix.$organization_id."_data_table_".$datasetId;
             $model = new MySQLWrapper();
             $model->wrapper->createTableFromCSV($filePath,$tableName,',','"', '\\', 0, array(), 'generate','\r\n');
-            DB::update('UPDATE '.$tableName.' SET status = 1, parent = 0');
+            DB::update('UPDATE '.$tableName.' SET status = 1, parent = 0 WHERE id != 1');
+            DB::update('UPDATE '.$tableName.' SET status = "status", parent = "parent" WHERE id = 1');
             DB::commit();
             return $tableName;
         }catch(\Exception $e){

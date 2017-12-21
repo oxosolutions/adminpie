@@ -14,7 +14,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	@include('organization.support.ticket._tabs')
-{{-- @include('common.list.datalist') --}}
+@include('common.list.datalist')
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 

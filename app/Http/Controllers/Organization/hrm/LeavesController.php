@@ -138,32 +138,42 @@ class LeavesController extends Controller
   
     public function save(Request $request)
     {
-      if($request['from'] > $request['to']){
 
+      // dd($request->all());
+      if($request['from'] > $request['to']){
         Session::flash('error','From Date must be smaller than to date');
         return back();
       }
         $employee_id = $request['employee_id'];
+
+        
+
         unset($request['employee_id']);
         $data = GroupUsers::find($employee_id);
         $user = $data->organization_user->metas->where('key','employee_id')->toArray();
         // dd($user[0]['value']);
-        $request['employee_id']  = $user[0]['value'];
-      $valid_fields = [
+        $emp_id = $request['employee_id']  = $user[0]['value'];
+        $valid_fields = [
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
                           'to'               => 'required'
                       ];
       $this->validate($request , $valid_fields);
-         
-        $sh = new LV();
-       	$request['from']= $this->date_format($request['from']);
-       	$request['to']= $this->date_format($request['to']);
 
-        $sh->fill($request->all());
-        $sh->status = 1; 
-        $sh->apply_by ='hr';
-        $sh->save();
+      $data = LV::where(function($query)use($request){
+        $query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
+      })->where('employee_id',$emp_id);
+        if($data->exists()){
+          Session::flash('error','Already taken leave between dates');
+        }else{
+          $sh = new LV();
+         	$request['from']= $this->date_format($request['from']);
+         	$request['to']= $this->date_format($request['to']);
+          $sh->fill($request->all());
+          $sh->status = 1; 
+          $sh->apply_by ='hr';
+          $sh->save();
+        }
         return redirect()->route('leaves');
     }
  	protected function date_format($parm)

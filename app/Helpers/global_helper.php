@@ -1202,7 +1202,7 @@ function get_website_alexa_rank( $url = null ){
 	 */
 	function user_info(){
 		$id 	= Auth::guard('org')->user();
-		$user 	= User::select('user_id')->where(['user_id'=>$id->id])->first();
+		$user 	= User::select('id')->where(['user_id'=>$id->id])->first();
 		$user_merge = collect($id)->merge($user);
 		return $user_merge;
 	}
@@ -1301,13 +1301,11 @@ function get_survey_meta($sid){
 	function role_id(){
 
 		$userData = user_info();
-		$userInfo = User::with(['user_role_map'])->where('user_id',$userData['id'])->first();
-        dd($userInfo);
-       	 $collection =  $userInfo['user_role_map'];
+		 $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
+       	 $collection =  $userInfo['user_role_rel'];
          $keyed = $collection->mapWithKeys(function ($item) {
              return [$item['role_id'] => $item['role_id']];
           });
-         dd($keyed);
 		return array_values($keyed->all());		
 	}
 	/************************************************************
