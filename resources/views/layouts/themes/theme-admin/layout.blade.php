@@ -49,6 +49,7 @@ if(request()->route()->uri == "survey/{token}"){
 <body>
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
 		<div class="aione-row">
+            {{-- {{ dump($design_settings['show_header']) }} --}}
 			@if(@$design_settings['show_header'] == 1)
 				@include('layouts.themes.theme-admin.includes._header')
 			@endif

@@ -14,7 +14,6 @@ use Session;
 
 class EmployeeLeaveController extends Controller
 {
-
 	protected function mapping_category_id($id , $data){
 			$collection = collect($data);
 			$map  = $collection->map(function($item , $key)use($id){
@@ -68,12 +67,21 @@ class EmployeeLeaveController extends Controller
 
 	Public function store(Request $request, $id=null)
 	{ 
+		//dd($request->all());
+		$valid_fields = [
+                          'reason_of_leave'  => 'required',
+                          'from'             => 'required',
+                          'to'               => 'required',
+                          'leave_category_id'=> 'required',
+                          'employee_id'=> 'required',
+                      ];
+		$this->validate($request, $valid_fields);
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
 		echo $emp_id = get_current_user_meta('employee_id');	
-
+		dd(123);
 		if($request->isMethod('post'))
-		{
+		{ 
 			$current = Carbon::now();
 			$from = Carbon::parse($request->from);
 			$before = $from->diffInDays($current);
@@ -87,8 +95,21 @@ class EmployeeLeaveController extends Controller
 			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
 			})->where('employee_id',$emp_id);
+
+			dd($data->exists());
 			if($data->exists()){
-				$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
+
+				$leave = $data->first();
+				dd($leave);
+				if($leave->status ==1){
+					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
+ 				}elseif($leave->status ==3){
+					$error['already_taken_leave_between_from_and_to_date'] = 'Already Reject leave between from and to date choose another  dates.';
+
+ 				}elseif($leave->status ==0){
+					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply Not approved leave between from and to date choose another  dates.';
+
+ 				}
 			}
 /* when user leave dates not correct notify to employee correct the leave date & Never from date greater than to date*/
 			// if($to->month < $from->month ) {
@@ -293,6 +314,8 @@ class EmployeeLeaveController extends Controller
 					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
 				}	
 			}
+
+			dd($error);
 			if(empty($error)) {
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  

@@ -36,16 +36,16 @@ class SupportsController extends Controller
      }
      public function activeTickets()
      {
-            
-            $datalist =  [
-                          'datalist' => [],
-                          'showColumns' => ['Ticket ID'=>'Ticket ID','subject'=>'Subject','priority'=>'Priority','last_reply'=>'Last Reply','status'=>'Status','assign_to'=>'Assign To','auther'=>'Auther'],
-                          'actions' => [
-                                          'edit'    => ['title'=>'Edit','route'=>'edit.feedback','class'=>'edit'],
-                                          'delete'  => ['title'=>'Delete','route'=>'delete.feedback']
-                                       ]
-                      ];
-        return view('organization.support.ticket.list',$datalist);         
+            // dd('Here');
+            // $datalist =  [
+            //               'datalist' => [],
+            //               'showColumns' => ['Ticket ID'=>'Ticket ID','subject'=>'Subject','priority'=>'Priority','last_reply'=>'Last Reply','status'=>'Status','assign_to'=>'Assign To','auther'=>'Auther'],
+            //               'actions' => [
+            //                               'edit'    => ['title'=>'Edit','route'=>'edit.feedback','class'=>'edit'],
+            //                               'delete'  => ['title'=>'Delete','route'=>'delete.feedback']
+            //                            ]
+            //           ];
+        return view('organization.support.ticket.list');         
     }
      public function completedTickets() 
      {  

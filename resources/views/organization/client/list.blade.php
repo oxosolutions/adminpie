@@ -6,7 +6,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Customers',
-	'add_new' => '+ Add Customer'
+	'add_new' => '+ Add Customer',
+    'route'  => 'create.client'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)

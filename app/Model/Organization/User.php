@@ -44,6 +44,10 @@ class User extends Authenticatable
       return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','id');
    }
 
+   public function user_role_map(){
+        return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','user_id');
+   }
+
    public function applicant_rel(){
     return $this->hasOne('App\Model\Organization\Applicant','user_id','id');
    }

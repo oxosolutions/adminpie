@@ -25,7 +25,13 @@ $page_title_data = array(
 		{{e($value)}} </h3></div>
 		@endforeach
 	@endif
-
+	{{-- @if($errors->any())
+	    <script type="text/javascript">
+	      window.onload = function(){
+	        $('#add_new_model').modal('open');
+	      }
+	    </script>
+	 @endif --}}
 	<div class="row">
 		@include('organization.profile._tabs')
 		@if(!empty($error))
@@ -108,7 +114,7 @@ $page_title_data = array(
 								        <div class="col s3 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Approved</span>
 								        </div>
-								    @elseif($val->status ==2)
+								    @elseif($val->status ==3)
 											 <div class="col s3 right-align">
 								           	<span class="teal white-text" style="padding: 2px 5px">Un-Approved</span>
 								        </div>

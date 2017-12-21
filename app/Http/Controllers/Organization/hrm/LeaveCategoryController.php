@@ -36,6 +36,7 @@ class LeaveCategoryController extends Controller
      * @return [html array] [category list _+ list data]
      */
     public function index(Request $request){
+      dump('it is nopt');
         $data =  $this->catRepo->list_category("leave", $request);
       	return view('organization.leave_category.list_category',$data );
      }
@@ -125,6 +126,7 @@ class LeaveCategoryController extends Controller
      }
 
     public function delete($id){
+        dd($id);
         CAT::where('id',$id)->delete();
         return back();
     }

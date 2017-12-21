@@ -15,7 +15,6 @@ class draw_sidebar{
         $model = Module::whereIn('id',$orgModule)->where('status',1)->with(['subModule'=>function($query){
                 $query->where('status',1)->with('moduleRoute');
             }])->orderBy('orderBy','asc')->get();
-
         return $model;
     }
     static function getSubModule($module){
@@ -37,7 +36,6 @@ class draw_sidebar{
     }
 
     static function checkPermisson(){
-        
          $current_role_id =1;
         if(Auth::guard('org')->check()){
             
@@ -52,7 +50,7 @@ class draw_sidebar{
                     foreach ($mainModule as $key => $value) {
                             $data['module'][$value['id']]['permisson'] ='on';
                             if(!empty($value['route'])){
-                            $data['url'][] = self::replace_route($value['route']);
+                                $data['url'][] = self::replace_route($value['route']);
                             }
                             foreach ($value['subModule'] as $subKey => $subValue) {
                                $data['submodule'][$subValue['id']]['permisson'] ='on';

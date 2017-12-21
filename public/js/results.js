@@ -120,7 +120,7 @@ $(document).ready(function(){
         });
         setTimeout(function(){
             var queryString = '';
-            var colors = ['009688','0097a7','e53935','f9a825'];
+            var colors = ['8bc34a','0097a7','e53935','f9a825'];
             var index = 0;
             var labels = wrapper['yda']['ng'];
             var labelInd = 1;
@@ -137,6 +137,7 @@ $(document).ready(function(){
                 queryString+= '=%23'+colors[index]+'+';
                 index++;
             });
+            queryString+= 'IN-DL-CENTRAL=No Data=%23FFFFFF';
             console.log('http://slum.fhts.ac.in/public/custom-maps/GM-632389430593/map-theme-ggreen/'+queryString);
             $('#delhi_map').attr('src','http://slum.fhts.ac.in/public/custom-maps/GM-632389430593/map-theme-ggreen/'+queryString);
             console.log(wrapper);

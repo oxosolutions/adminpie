@@ -11,6 +11,10 @@ use App\Repositories\Client\ClientRepositoryContract;
 use App\Model\Organization\OrganizationSetting as org_setting;
 use Hash;
 use Session;
+use App\Model\Group\GroupUsers;
+use App\Model\Organization\UsersRole;
+use App\Model\Organization\UserRoleMapping;
+use App\Model\Organization\UsersMeta;
 
 
 class ClientController extends Controller
@@ -25,23 +29,83 @@ class ClientController extends Controller
     public function create(){
     	return view('organization.client.create');
     }
+
+    /**
+     * [validateClientRequest client posted data]
+     * @param  [type] $request having request data
+     * @return [type]          object
+     * @author Rahul
+     */
+    protected function validateClientRequest($request){
+        $rules = [
+            'client_name' => 'required',
+            'company_name' => 'required',
+            'email' => 'required',
+            'password' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
+
+    /**
+     * save client data
+     * @param  Request $request [object of posted data]
+     * @return [type]           Object
+     * @author Rahul
+     */
     public function save(Request $request){
-        //entry in user table with user_type 3
-        $request['role_id'] = org_setting::where('key','client_role')->first()->value;
-        $request->request->add(['status'=>1]);
-        $user_id = $this->user->create($request->all(), 'customer',3);
-        if($user_id == false){
-          Sessioin::flash('error','Client already exist with this email id');
+        $this->validateClientRequest($request);
+        $groupUsers = GroupUsers::where(['email'=>$request->email])->first();
+        if($groupUsers == null){
+            $groupUsers = new GroupUsers;
+            $groupUsers->name = $request->client_name;
+            $groupUsers->email = $request->email;
+            $groupUsers->password = Hash::make($request->password);
+            $groupUsers->status = 1;
+            $groupUsers->app_password = $request->password;
+            $groupUsers->save();
+        }
+        $userModel = new User;
+        $userModel->user_id = $groupUsers->id;
+        $userModel->user_type = 'client';
+        $userModel->status = 1;
+        $userModel->save();
+
+        $role_id = UsersRole::where(['slug'=>'client'])->first();
+        if($role_id == null){
+            $roleDetails = [
+                'name' => 'Client',
+                'description' => 'Client',
+                'slug'  =>  'client'
+            ];
+            $role_id = createDefaultRoles($roleDetails);
+        }else{
+            $role_id = $role_id->id;
         }
 
-        //created into client rst data
-            // $data = new Client;
-            // $data->fill($request->except('_token','action','email')); 
-            // $data->user_id = $user_id;
-            // $data->save();        
-            return redirect()->route('list.client');
+        $userRoleMapping = new UserRoleMapping;
+        $userRoleMapping->user_id = $groupUsers->id;
+        $userRoleMapping->role_id = $role_id;
+        $userRoleMapping->status = 1;
+        $userRoleMapping->save();
+
+        $dataForMeta = $request->except(['client_name','email','password','_token']);
+
+        foreach($dataForMeta as $key => $meta){
+            $userMetaModel = UsersMeta::firstOrNew(['user_id'=>$groupUsers->id,'key'=>$key]);
+            $userMetaModel->user_id = $groupUsers->id;
+            $userMetaModel->key = $key;
+            $userMetaModel->value = $meta;
+            $userMetaModel->save();
+        }
+
+        Session::flash('success','Customer created successfully!');
+        return redirect()->route('list.client');
         
     }
+
+
     public function listClients(Request $request){
         $datalist= [];
         $data= [];
@@ -56,20 +120,29 @@ class ClientController extends Controller
           $sortedBy = @$request->sort_by;
           if($request->has('search')){
               if($sortedBy != ''){
-                  $model = Client::with(['getUserDataByUser_id'])->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = GroupUsers::with(['organization_user'])->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->whereHas('organization_user',function($query){
+                        $query->where(['user_type'=>'client']);
+                    })->paginate($perPage);
               }else{
-                  $model = Client::with(['getUserDataByUser_id'])->where('name','like','%'.$request->search.'%')->paginate($perPage);
+
+                  $model = GroupUsers::with(['organization_user'])->where('name','like','%'.$request->search.'%')->whereHas('organization_user',function($query){
+                        $query->where(['user_type'=>'client']);
+                    })->paginate($perPage);
               }
           }else{
               if($sortedBy != ''){
-                  $model = Client::with(['getUserDataByUser_id'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                  $model = GroupUsers::with(['organization_user'])->orderBy($sortedBy,$request->desc_asc)->whereHas('organization_user',function($query){
+                        $query->where(['user_type'=>'client']);
+                    })->paginate($perPage);
               }else{
-                   $model = Client::with(['getUserDataByUser_id'])->paginate($perPage);
+                    $model = GroupUsers::with(['organization_user'])->whereHas('organization_user',function($query){
+                        $query->where(['user_type'=>'client']);
+                    })->paginate($perPage);
               }
           }
           $datalist =  [
                           'datalist'=>  $model,
-                          'showColumns' => ['name'=>'Name','getUserDataByUser_id.email'=>'Email','created_at'=>'Created'],
+                          'showColumns' => ['name'=>'Name','email'=>'Email','created_at'=>'Created'],
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.client' , 'class' => 'edit'],
                                           'view' => ['title'=>'View','route'=>'view.client' , 'class' => 'view'],
@@ -78,44 +151,94 @@ class ClientController extends Controller
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
                       ];
-          $data['data'] = Client::all();
+          // $data['data'] = Client::all();
        
         return view('organization.client.list',$datalist)->with(['data' => $data]);
-
-
-
-    	 // $all = Client::all();
-      //   return view('organization.client.list',['all_data'=>$all]);
     }
+
+
+    /**
+     * Edit client information
+     * @param  [type] $id [having group user id]
+     * @return [type]     [integer]
+     * @author Rahul
+     */
     public function edit($id){
-    	$edit = Client::where('id',$id)->with('getUserDataByUser_id')->first();
-        $edit->email  = $edit->getUserDataByUser_id->email;
-
-    	return view('organization.client.edit',['model'=>$edit]); 	
+        $model = GroupUsers::with(['organization_user','metas'=>function($query) use ($id){
+            $query->where(['user_id'=>$id]);
+        }])->whereHas('organization_user', function($query){
+            $query->where(['user_type'=>'client']);
+        })->where('id',$id)->first();
+        $model->client_name = $model->name;
+        if($model != null){
+            foreach($model->metas as $key => $meta){
+                $model[$meta->key] = $meta->value;
+            }
+        }
+    	return view('organization.client.edit',['model'=>$model]); 	
     }
+
+
     public function view($id)
     {
-    	$data = Client::findOrFail($id);
+    	$data = GroupUsers::find($id);
         return view('organization.client.view')->with('detail',$data);
     }
+
+    protected function validateUpdateClientRequest($request){
+
+        $rules = [
+            'client_name' => 'required',
+            'company_name' => 'required',
+            'email' => 'required|email'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
+    /**
+     * update client information
+     * @param  [integer]  $id      [grou user id]
+     * @param  Request $request [having all posted data in the form of request object]
+     * @return [type]           redirect back to clients list page
+     * @author Rahul 
+     */
     public function update($id, Request $request){
+        $this->validateUpdateClientRequest($request);
+    	$groupUsers = GroupUsers::find($id);
+        if($groupUsers == null){
+            $groupUsers->name = $request->client_name;
+            //$groupUsers->email = $request->email;
+            if($request->has('password') && $request->password != ''){
+                $groupUsers->password = Hash::make($request->password);
+                $groupUsers->app_password = $request->password;
+            }
+            $groupUsers->status = 1;
+            $groupUsers->save();
+        }
+        
+        // ###  In case update client there is nothing to update in users table
 
+        // ## no need to check the role and no need to change the role
 
-    	$update = Client::findOrFail($id);
-    	$update->fill($request->except('email'));
-    	$update->save();
+        $dataForMeta = $request->except(['client_name','email','password','_token']);
 
-        //updae email and password and name
-        $update = User::findOrFail($request->user_id);
-        $update->fill($request->except('company_name','address','country','state','city','additional_info','user_id'));
-        $update->save();
-
+        foreach($dataForMeta as $key => $meta){
+            $userMetaModel = UsersMeta::firstOrNew(['user_id'=>$groupUsers->id,'key'=>$key]);
+            $userMetaModel->user_id = $groupUsers->id;
+            $userMetaModel->key = $key;
+            $userMetaModel->value = $meta;
+            $userMetaModel->save();
+        }
+        Session::flash('success','Client details updated successfully!!');
     	return redirect()->route('list.client');
     }
+
+
     public function delete($id)
     {
-    	$data = Client::findOrFail($id);
-    	$data->delete();
+    	$data = User::where(['user_id'=>$id])->delete();
+        Session::flash('success','Client deleted successfully!!');
     	return redirect()->route('list.client');
     }
 }

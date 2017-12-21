@@ -13,7 +13,8 @@ use App\Model\Organization\UsersMeta;
 use App\Model\Organization\Attendance;
 use Auth;
 use Session;
-//use App\Model\Organization\Employee;
+use App\Model\Group\GroupUsers;
+use App\Model\Organization\User;
 class LeavesController extends Controller
 {
     protected $user;
@@ -122,6 +123,13 @@ class LeavesController extends Controller
                   ];
           if(!empty($id) || $id != null || $id != ''){
             $data = LV::where('id',$id)->first();
+            $meta =  UsersMeta::select('user_id')->where(['key'=>'employee_id', 'value'=>$data->employee_id])->first();
+           if(!empty($meta)){
+            $user_id = User::find($meta->user_id)->user_id;
+            $data = $data->toArray();
+            $data['employee_id'] = $user_id;
+           }
+
           }else{
             $data = "";
           }      
@@ -135,16 +143,23 @@ class LeavesController extends Controller
         Session::flash('error','From Date must be smaller than to date');
         return back();
       }
+        $employee_id = $request['employee_id'];
+        unset($request['employee_id']);
+        $data = GroupUsers::find($employee_id);
+        $user = $data->organization_user->metas->where('key','employee_id')->toArray();
+        // dd($user[0]['value']);
+        $request['employee_id']  = $user[0]['value'];
       $valid_fields = [
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
                           'to'               => 'required'
                       ];
       $this->validate($request , $valid_fields);
-
+         
         $sh = new LV();
        	$request['from']= $this->date_format($request['from']);
        	$request['to']= $this->date_format($request['to']);
+
         $sh->fill($request->all());
         $sh->status = 1; 
         $sh->apply_by ='hr';
@@ -193,11 +208,14 @@ class LeavesController extends Controller
                           'to'               => 'required'
                       ];
       $this->validate($request , $valid_fields);
-
-      $updateArray = $request->except('id','_token','from','to','action');
+        $employee_id = $request['employee_id'];
+        unset($request['employee_id']);
+        $data = GroupUsers::find($employee_id);
+        $user = $data->organization_user->metas->where('key','employee_id')->toArray();
+      $updateArray = $request->except('id','_token','from','to','action','employee_id');
       $updateArray['from']= $this->date_format($request['from']);
       $updateArray['to']= $this->date_format($request['to']);
-
+      $updateArray['employee_id'] = $user[0]['value'];
       $model = LV::where('id',$request->id)->update($updateArray);
       return redirect()->route('leaves');
     }

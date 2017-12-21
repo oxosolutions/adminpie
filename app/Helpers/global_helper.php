@@ -1202,7 +1202,7 @@ function get_website_alexa_rank( $url = null ){
 	 */
 	function user_info(){
 		$id 	= Auth::guard('org')->user();
-		$user 	= User::select('id')->where(['user_id'=>$id->id])->first();
+		$user 	= User::select('user_id')->where(['user_id'=>$id->id])->first();
 		$user_merge = collect($id)->merge($user);
 		return $user_merge;
 	}
@@ -1301,11 +1301,13 @@ function get_survey_meta($sid){
 	function role_id(){
 
 		$userData = user_info();
-		 $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
-       	 $collection =  $userInfo['user_role_rel'];
+		$userInfo = User::with(['user_role_map'])->where('user_id',$userData['id'])->first();
+        dd($userInfo);
+       	 $collection =  $userInfo['user_role_map'];
          $keyed = $collection->mapWithKeys(function ($item) {
              return [$item['role_id'] => $item['role_id']];
           });
+         dd($keyed);
 		return array_values($keyed->all());		
 	}
 	/************************************************************
@@ -1382,6 +1384,26 @@ function get_survey_meta($sid){
 		
 		}
 	}
+
+    /**
+     * [createDefaultRoles will create new default roles if there is no any slug for specific role]
+     * @param  [type] $details [having all the role related data]
+     * @return [type]          [array]
+     * @author Rahul
+     */
+    function createDefaultRoles(Array $roleDetails){
+        $roleModel = 'App\Model\Organization\UsersRole';
+        $roleModel = new $roleModel;
+        $roleModel->name = $roleDetails['name'];
+        $roleModel->description = $roleDetails['description'];
+        $roleModel->slug = $roleDetails['slug'];
+        $roleModel->status = 1;
+        $roleModel->save();
+
+        return $roleModel->id;
+    }
+
+
 	/************************************************************
 	*	@function save_activity
 	*	@access	public
@@ -1534,7 +1556,7 @@ function get_survey_meta($sid){
 	*	@return template
 	************************************************************/
 
-	function activity_log($slug, $slug){
+	function activity_log($slug){
 		$activity = GlobalActivityTemplate::where(['type'=>'self', 'slug'=>$slug ,'language'=>$language]);
 		if($activity->exists()){
 			return $activity->first()->template;

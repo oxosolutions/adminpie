@@ -372,13 +372,14 @@ class DatasetController extends Controller
         unset($newTableColumns['parent']);
         $newTableColumns = preg_replace('/\s/', "", $newTableColumns );
         $oldTableColumns = preg_replace('/\s/', "", $oldTableColumns );
-        if($oldTableColumns != $newTableColumns){
+        if(array_values($oldTableColumns) != array_values($newTableColumns)){
             DB::statement("DROP TABLE ".$tableName);
             Session::flash('error','Columns of new file not mached with old dataset!');
             return $model->id; // having dataset id
         }else{
             $newTableColumns = implode(',',array_keys($newTableColumns));
-            DB::select('INSERT INTO `'.$model->dataset_table.'` ('.$newTableColumns.') SELECT '.$newTableColumns.' FROM '.$tableName.' WHERE id != 1;');
+            $oldTableColumns = implode(',',array_keys($oldTableColumns));
+            DB::select('INSERT INTO `'.$model->dataset_table.'` ('.$oldTableColumns.') SELECT '.$newTableColumns.' FROM '.$tableName.' WHERE id != 1;');
             DB::statement("DROP TABLE ".$tableName);
             return $model->id;
         }

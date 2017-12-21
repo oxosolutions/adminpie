@@ -84,19 +84,17 @@
 								<button type="submit"> Delete </button>
 								{!! Form::close() !!}
 
-									<div class="switch">
+									{{-- <div class="switch"> --}}
 									    <label>
-											
 												@if($val->approved_status == '0')
 													<span style="color:red;"> Pending for approve ...</span>
-												@else
-													<span style="color:green;">Approved</span>
+													@elseif($val->approved_status == '1')
+														<span style="color:green;">Approved</span>
+													@elseif($val->approved_status == '3')
+														<span style="color:pink;">Reject</span>
 												@endif
-											
-									      
-									      
 									    </label>
-									  </div>
+									  {{-- </div> --}}
 								</div>
 							</div>
 						</div>

@@ -151,7 +151,6 @@
 	function attendance_filter(date, week, mo, yr)
 	{
 		console.log(date, week, mo, yr);
-		
 		var postData = {};
 		postData['date'] = date;
 		postData['week'] = week;

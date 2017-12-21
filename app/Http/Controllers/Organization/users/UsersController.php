@@ -131,7 +131,7 @@ class UsersController extends Controller
               }
           }else{
               if($sortedBy != '' && $sortedBy != 'role'){
-              		/*$model = User::where('deleted_at',0)->where('user_id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['groupUser'])->paginate($perPage);*/
+              		
                   	$model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['user_role_rel'=>function($query){
                       $query->with('roles');
                   },'userType','organization_user'])->has('organization_user')->paginate($perPage);
@@ -141,9 +141,7 @@ class UsersController extends Controller
                   },'userType','organization_user'])->has('organization_user')->paginate($perPage);
               }
           }
-          // foreach ($model as $key => $value) {
-            
-          // }
+          // dd($model);
 
 			/* by sandeep */
 	            foreach($model as $k => &$v){
@@ -168,6 +166,7 @@ class UsersController extends Controller
                                         'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.status']
                                        ]
                       ];
+
         return view('organization.user.list',$datalist);
 
     }

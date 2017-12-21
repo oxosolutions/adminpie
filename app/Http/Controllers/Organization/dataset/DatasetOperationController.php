@@ -40,16 +40,17 @@ class DatasetOperationController extends Controller
     		$org_id = Session::get('organization_id');
     		$first_table = $this->check_table_existence($first_datasets);
     		if(!$first_table){
-
                 Session::flash('error','First table not found!'); 
                 return back(); 
             }
-    		$first = json_decode(json_encode( DB::table($first_table)->first()),true);
+            DB::table($first_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
+            $first = json_decode(json_encode( DB::table($first_table)->first()),true);
     		$sec_table = $this->check_table_existence($second_datasets);
     		if(!$sec_table){
                 Session::flash('error','Second table not found!');
                 return back(); 
             }
+            DB::table($sec_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
     		$sec =json_decode(json_encode( DB::table($sec_table)->first()),true);
  			$first_column  = array_filter(array_values($first));
     		unset($first_column[0]);
@@ -105,12 +106,11 @@ class DatasetOperationController extends Controller
 
     protected function merge_data_into_table($first_table , $insert_val ,$table_name  ){
 		$data_fst = DB::table($first_table)->first();
+        DB::table($first_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
 		$tablefst_row =  json_decode(json_encode($data_fst),true);
 		$first_intersect = array_intersect($insert_val, $tablefst_row);
 		$fst_intersect = array_intersect($tablefst_row, array_values($first_intersect));
         try{ 
-               // DB::table($table_name)->insert($insert_val);
-            
             // DB::select("REPLACE INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
                 DB::select("insert INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
             return true;

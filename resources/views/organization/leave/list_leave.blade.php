@@ -11,17 +11,18 @@
 @endphp
 @include('common.pageheader',$page_title_data) 
 @if($data)
-	{{-- @foreach(@$data->toArray() as $key => $value) --}}
+{{-- {{dd($data['employee_id'])}}
+ --}}	{{-- @foreach(@$data->toArray() as $key => $value) --}}
 		@php
 			$id = $data['id'];
-			$model = ['reason_of_leave' => $data->reason_of_leave,'leave_from' => $data->from, 'leave_to' => $data->to , 'employee_id' => $data->employee_id];
+			$model = ['leave_category_id'=>$data['leave_category_id'],'reason_of_leave' => $data['reason_of_leave'],'from' => $data['from'], 'to' => $data['to'] , 'employee_id' => $data['employee_id']];
 		@endphp
 	{{-- @endforeach --}}
-	<script type="text/javascript">
+	{{-- <script type="text/javascript">
 		window.onload = function(){
 			$('#add_new_model').modal('open');
 		}
-	</script>
+	</script> --}}
 @endif	
 @if($errors->any())
 	<script type="text/javascript">
@@ -32,6 +33,14 @@
 @endif
 @include('common.pagecontentstart')
 	@include('common.page_content_primary_start')
+	@if(@$model)
+	{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+	<input type="hidden" name="id" value="{{$id}}">
+	{!!FormGenerator::GenerateForm('add_leave_form',['type'=>'inset'],'','admin')!!}
+	{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','form'=>'add_leave_form','model'=>$model]]) --}}
+	{!! Form::submit() !!}
+	{!!Form::close()!!}
+@endif	
 		@include('common.list.datalist')
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
@@ -39,12 +48,7 @@
 
 @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','form'=>'add_leave_form']])
 {!!Form::close()!!}
-@if(@$model)
-	{!! Form::model($model ,['route'=>'edit.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-	<input type="hidden" name="id" value="{{$id}}">
-	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Leave','button_title'=>'update Leave','form'=>'add_leave_form']])
-	{!!Form::close()!!}
-@endif	
+
 	
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
