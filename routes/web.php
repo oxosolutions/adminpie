@@ -13,6 +13,7 @@
 				Route::get('like/{type}/{c_id}/{expression?}',	['as'=>'like.comment' , 'uses'=>'Organization\cms\PagesController@likedislike' ]);
 				Route::get('comment/del/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
 				Route::get('comment/edit/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
+                Route::post('formdata/save',    ['as'=>'save.form.data','uses'=>'Admin\FormBuilderController@saveGeneratedForm']);
 
 		});
 		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function () {

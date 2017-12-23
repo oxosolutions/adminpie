@@ -328,13 +328,7 @@ class LeavesController extends Controller
           //$model->from = "2017-12-14";
           $from =  $this->set_dates($model->from);
           $to =  $this->set_dates($model->to);
-         
-          // dump($fromYear = date('Y',strtotime($model->from)));
-          // dump($fromMonth = date('m',strtotime($model->from)));
-          // dump($fromDate = date('d',strtotime($model->from)));
-          // dump($toYear = date('Y',strtotime($model->to)));
-          // dump($toMonth = date('m',strtotime($model->to)));
-          // dump($toDate = date('d',strtotime($model->to)));
+          
           $emp_id = $model->employee_id;
           $status = 'approve';
           if($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] == $to['date']){
@@ -349,28 +343,28 @@ class LeavesController extends Controller
               }
           }elseif ($from['year'] == $to['year'] && $from['month'] != $to['month']) {
              extract($from);
-            for ($i=$from['date']; $i <= $from['day_in_month']; $i++) { 
-
-
+            for ($i=$from['date']; $i <= $from['day_in_month']; $i++) {
                 $date_details =  $this->set_dates("$year-$month-".$i);
-                dump($date_details);
                 $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
               }
-
-              for ($i=1; $i <= $to['date']; $i++) { 
-                // dump('to'.$to['year'].'-'.$to['month'].'-'.$i);
+            for ($i=1; $i <= $to['date']; $i++) { 
                $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
-
                 $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
               }
-                // echo "months different";
               
-          }elseif ($fromYear != $toYear) {
-           echo "yaer different";
+          }elseif ($from['year'] != $to['year']) {
+             extract($from);
+            for ($i=$from['date']; $i <= $from['day_in_month']; $i++) {
+                $date_details =  $this->set_dates("$year-$month-".$i);
+                $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+              }
+               for ($i=1; $i <= $to['date']; $i++) { 
+               $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
+                $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+              }
+          
           }
-          
-          // if($model->from == $model->to)
-          
+                    
           LV::where('id',$id)->update(['status'=> 1]);
           Session::flash('success','Successfully approved');
           return back();

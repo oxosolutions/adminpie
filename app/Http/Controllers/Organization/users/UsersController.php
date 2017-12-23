@@ -177,7 +177,7 @@ class UsersController extends Controller
      * undocumented function
      *  
      * @return the userdetails
-     * @edited sandip
+     * @edited sandip,rahul
      **/
     public function userView($id = null)
     {
@@ -187,9 +187,8 @@ class UsersController extends Controller
             $model = org_user::where('id',$id)->first()->toArray();
             $id = $model['id'];
         }
-        $userDetails = org_user::select(['id','name','email'])->with(['metas','applicant_rel','client_rel','user_role_rel'])->find($id);
+        $userDetails = org_user::select(['id','name','email'])->with(['metas','applicant_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
-
         $role_data = $userDetails->metas->where('key','role')->first();
         if($role_data == ''){
         	foreach($userDetails->user_role_rel as $k => $v){
@@ -232,7 +231,6 @@ class UsersController extends Controller
             }else{
                 $userDetails = $userDetails; 
             }
-
           foreach ($userDetails->toArray() as $key => $value) {
           	if(!is_array($value)){
   	        	json_decode($value);

@@ -4,6 +4,7 @@
 	// $isEmployee = App\Model\Organization\Employee::where('user_id' , $model->id)->first();
 	$isEmployee = is_employee(@request()->route()->parameters()['id']);
 	$isAdmin = is_admin();
+	// dump($isAdmin);
 @endphp
 <style type="text/css">
 	.edit-button{
@@ -246,7 +247,7 @@ $page_title_data = array(
 					<div class="col l9 p-14">
 						<div class="row pb-5" >
 							<div class="col l3"><strong>Name:</strong></div>
-							<div class="col l5">{{@$model->belong_group->name}}</div>
+							<div class="col l5">{{@$model->name}}</div>
 							<div class="col l4 right-align" id="modal-wrapper">
 								<a class="grey-text darken-1 edit-button waves-effect" data-target="modal1"><i class="fa fa-pencil"></i></a>
 								
@@ -260,8 +261,8 @@ $page_title_data = array(
 										$userData = [];
 										$userData['about_me'] = $model->about_me;
 										$userData['shift'] = $shift;
-										$userData['email'] = $model->belong_group->email;
-										$userData['name'] = $model->belong_group->name;
+										$userData['email'] = $model->email;
+										$userData['name'] = $model->name;
 									@endphp
 								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
 								{!!Form::model(@$userData,['route'=>'update.profile','method'=>'post'])!!}
@@ -310,11 +311,11 @@ $page_title_data = array(
 						
 						<div class="row pt-5" >
 							<div class="col l3"><strong>Email</strong></div>
-							<div class="col l9">{{@$model->belong_group->email}}</div>
+							<div class="col l9">{{@$model->email}}</div>
 						</div>
 						<div class="row pt-5" >
 							{{-- <div class="col l3"><strong>About Me</strong></div> --}}
-							<div class="col l9">{{@$model->belong_group->about_me}}</div>
+							<div class="col l9">{{@$mod->about_me}}</div>
 						</div>
 						{{-- @if($isEmployee != null)
 							<div class="row pt-5" >
@@ -503,8 +504,9 @@ $page_title_data = array(
 							<div class="row valign-wrapper mb-0">
 								<div class="col l10 headline-text" >Employee Detail</div>
 								<div class="col l2 " id="modal-wrapper">
+									{{dump($isAdmin)}} {{current_organization_user_id()}} {{dump(is_admin())}}
 										@if(@$isAdmin)
-											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
+											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect">up <i class="fa fa-pencil"></i></a>
 										@endif
 									{!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
@@ -526,9 +528,9 @@ $page_title_data = array(
 												$fieldData = str_replace(' ', '_', strtolower($field));
 											@endphp
 											@if($fieldData == 'designation')
-												{{@App\Model\Organization\Designation::find($model->designation)->name}}
+												dd{{@App\Model\Organization\Designation::find($model->designation)->name}}
 											@elseif($fieldData == 'department')
-												{{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+												dep{{@App\Model\Organization\Department::find($model->$fieldData)->name}}
 											@elseif($fieldData == 'user_shift')
 												{{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
 											@elseif($fieldData == 'pay_scale')

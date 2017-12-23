@@ -232,7 +232,7 @@ function get_user_id(){
 	if(Auth::guard('admin')->check()){
         $uid = Auth::guard('admin')->user()->id;
     }else{
-        $uid = current_organization_user_id();
+        $uid = Auth::guard('org')->user()->id;
     }
 	
 	
@@ -414,6 +414,21 @@ function get_file_size($name = null){
 	
 	//Return Size
 	return $size;
+}
+
+
+/************************************************************
+*   @function form
+*   @description Returns form with form action
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+*   @perm name      [string required    default null]
+*   @return size [string]
+************************************************************/
+function form($form_slug){
+
+    return view('common.form_data',['slug'=>$form_slug]);
 }
 
 
@@ -1301,8 +1316,8 @@ function get_survey_meta($sid){
 	function role_id(){
 
 		$userData = user_info();
-		 $userInfo = User::with('user_role_rel')->where('id',$userData['id'])->first();
-       	 $collection =  $userInfo['user_role_rel'];
+		 $userInfo = User::with('user_role_map')->where('id',$userData['id'])->first();
+       	 $collection =  $userInfo['user_role_map'];
          $keyed = $collection->mapWithKeys(function ($item) {
              return [$item['role_id'] => $item['role_id']];
           });

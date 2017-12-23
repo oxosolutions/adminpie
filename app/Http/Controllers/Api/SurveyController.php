@@ -25,6 +25,7 @@ class SurveyController extends Controller
             return response()->json(["errors"=>['status'=>'error', "title"=> "Activation code error", 'message'=>"you have n't access."]],401);
    
         }
+
         $org = GO::where('active_code',$request['activation_code']);
         if(!$org->exists()){
             return ['status'=>'error', 'message'=>'active code not exist'];
@@ -53,12 +54,14 @@ class SurveyController extends Controller
         Session::put('group_id',$group_id);
       //  $users = User::with('belong_group')->get()->keyBy('belong_group');
         $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
+     // group user according //   $users = GroupUsers::with('user_role_rel.roles')->has('organization_user')->get()->toArray();
         // dump($group_orgnization_user->toArray());
 
         foreach ($users as $key => $value) {
            // array_push($users, $org_id);
            $users[$key]['org_id'] = $org_id; 
            $users[$key]['user_roles'] =  array_column(array_column($users[$key]['organization_user']['user_role_rel'], 'roles'), 'slug');
+// group user according // $users[$key]['user_roles'] =  array_column(array_column($value['user_role_rel'], 'roles'), 'slug');
 
            unset($users[$key]['organization_user']); 
 

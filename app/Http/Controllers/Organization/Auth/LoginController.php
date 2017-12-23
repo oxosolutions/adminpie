@@ -59,12 +59,11 @@ class LoginController extends Controller
                 $organizationToken->save();
 
                 try{
-                    $model = User::with(['user_role_rel'])->whereHas('user_role_rel', function($query){
+                    $model = User::with(['user_role_map'])->whereHas('user_role_map', function($query){
                         $query->where('role_id',1);
                     })->first();
-                    
                     Auth::guard('org')->loginUsingId($model->user_id);
-                    $putRole = UserRoleMapping::where(['user_id'=>$model->id])->first();
+                    $putRole = UserRoleMapping::where(['user_id'=>$model->user_id])->first();
                     Session::put('user_role',$putRole->role_id);
                     return redirect()->route('org.dashboard');
                 }catch(\Exception $e){

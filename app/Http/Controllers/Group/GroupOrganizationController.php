@@ -116,7 +116,7 @@ class GroupOrganizationController extends Controller
             $data =   DB::select("select CONCAT('DROP TABLE `',t.table_schema,'`.`',t.table_name,'`;') AS dropTable
                       FROM information_schema.tables t
                       WHERE t.table_schema = '".env('DB_DATABASE', 'forge')."'
-                      AND t.table_name LIKE 'ocrm_".$id."%' 
+                      AND t.table_name LIKE 'ocrm_".$id."%'
                       ORDER BY t.table_name");
             foreach ($data as $key => $value) {
                  DB::select($value->dropTable);
@@ -268,10 +268,10 @@ class GroupOrganizationController extends Controller
 		        $userMapping->user_id = $org_usr->id;
 		        $userMapping->deleted_at = 0;
 		        $userMapping->save();
-		        $userRoleMapping = UserRoleMapping::where(['user_id'=>1, 'role_id'=>1]);
+		        $userRoleMapping = UserRoleMapping::where(['user_id'=>$org_usr->id, 'role_id'=>1]);
 		        if(!$userRoleMapping->exists()){
 		            $userRoleMapping = new UserRoleMapping();
-		            $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
+		            $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
 		            $userRoleMapping->save();
 		        }
 		        DB::commit();

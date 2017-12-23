@@ -1065,8 +1065,15 @@ class FormBuilderController extends Controller
 
     }
 
-
-
+    /**
+     * That method will create table of specific form and save its data
+     * into the table
+     * @param  Request $request [form request or posted data]
+     * @return [type]           [description]
+     */
+    public function saveGeneratedForm(Request $request){
+        dd($request->all());
+    }
 
 
 }

@@ -77,7 +77,6 @@ class SurveyController extends Controller
                     /*
                         don't delete this (by Rahul)
                      'delete'=>['title'=>'Delete','route'=>$deleteRoute],'section'=>['title'=>'Sections','route'=>['route'=>$sectionRoute]],'settings'=>['title'=>'Settings','route'=>$settingsRoute],'survey_settings'=>['title'=>'Survey Settings','route'=>'survey.settings']*/
-
         return view('admin.formbuilder.list',$datalist);
     }
     public function createSurvey()

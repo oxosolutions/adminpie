@@ -183,6 +183,14 @@ class User extends Authenticatable
         }
       }
       return $processEmployee;
-
     }
-  }
+
+
+    public static function getEmployesList(){ //used in form id: 281
+        $users = self::with(['belong_group'])->where('user_type','employee')->get();
+        foreach($users as $key => $user){
+            $employeesList[$user->belong_group->id] = $user->belong_group->name;
+        }
+        return $employeesList;
+    }
+}

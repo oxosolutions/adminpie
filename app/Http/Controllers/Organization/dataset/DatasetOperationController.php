@@ -61,31 +61,49 @@ class DatasetOperationController extends Controller
     		$unique = $collapsed->unique();
     		$unique->shift();
     		$raw_colums = $unique->toArray();
-    		$index =1;*/
+    		$index =1;
 
-
-
-            /***** Amrit mam Code ****/
-            DB::table($sec_table)->where('id',1)->update(['status'=>'status', 'parent'=>'parent']);
-            $sec =json_decode(json_encode( DB::table($sec_table)->first()),true); 
-            $first_column  = array_filter(array_values($first)); 
-            unset($first_column[0]);
-            $second_column  = array_filter(array_values($sec));  
-            unset($second_column[0]);
-            $columns = array_merge($first_column, array_diff($second_column, $first_column)); 
-            $collection = collect($columns);  
-            $raw_colums = $collection->toArray(); 
-            $index =1;
-            /***** Amrit mam Code  END****/
-    		
-    		foreach ($raw_colums as $key => $value) {
+            foreach ($raw_colums as $key => $value) {
                 if($value=='status' || $value=='parent' ){
                     continue;
                 }
-    			$names = "column_".$index++;
-    			$colums[]= "`$names` text COLLATE utf8_unicode_ci DEFAULT NULL";
-    			$insert_val[$names] = $value;
-    		}
+                $names = "column_".$index++;
+                $colums[]= "`$names` text COLLATE utf8_unicode_ci DEFAULT NULL";
+                $insert_val[$names] = $value;
+            }*/
+
+            /***** Amrit mam Code ****/
+            $sec =json_decode(json_encode( DB::table($sec_table)->first()),true); 
+            $exclude = array("status"=>"status", "parent"=>"parent");
+            $first_column_with_key  = array_filter($first);
+            $second_column_with_key  = array_filter($sec); 
+
+            $first_after_exc = array_diff_key($first_column_with_key, $exclude);
+            $sec_after_exc = array_diff_key($second_column_with_key, $exclude);
+
+            $first_column  = array_filter(array_values($first_after_exc)); 
+            unset($first_column[0]);
+            $second_column  = array_filter(array_values($sec_after_exc));  
+            unset($second_column[0]);
+            $columns = array_merge($first_column, array_diff($second_column, $first_column)); 
+           
+            $collection = collect($columns);  
+            $raw_colums = $collection->toArray(); 
+            $index =1;
+
+            if($raw_colums){
+                foreach ($raw_colums as $key => $value) {
+                    $names = "column_".$index++;
+                    $colums[]= "`$names` text COLLATE utf8_unicode_ci DEFAULT NULL";
+                    $insert_val[$names] = $value;
+                }
+            } else {
+                Session::flash('error','No Column exists in tables');
+                return view('organization.dataset.merge');
+            }
+            /***** Amrit mam Code  END****/
+    		
+    		
             DB::beginTransaction();
     		$table_name = DB::getTablePrefix().$org_id.'_data_table_'.time();
     		$dataset = new Dataset();

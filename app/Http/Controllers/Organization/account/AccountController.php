@@ -121,6 +121,7 @@ class AccountController extends Controller
      * profileDetails method alter BY Paljinder singh & comment code which not in use.
      */
     public function profileDetails($id = null){
+
         if($id == null){
             // $id = 8; 
             // $g_id = Auth::guard('org')->user()->id; 
@@ -132,8 +133,9 @@ class AccountController extends Controller
     	if($id == null){
     		 $id = Auth::guard('org')->user()->id;
     	}
-        $userDetails = EMP::with(['metas','applicant_rel','client_rel','user_role_rel','belong_group'])->find($id);
+        $userDetails = User::with(['applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
+        // dd($userMeta);
 
         if($userDetails != null){
             $userDetails->password = '';
@@ -145,13 +147,13 @@ class AccountController extends Controller
                 @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
                 @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
             }
-            if(!$userDetails->metas->isEmpty()){
-                foreach($userDetails->metas as $key => $value){
-                    $userDetails->{$value->key} = $value->value;
-                }
-            }
+            // if(!$userDetails->metas->isEmpty()){
+            //     foreach($userDetails->metas as $key => $value){
+            //         $userDetails->{$value->key} = $value->value;
+            //     }
+            // }
         }
-        
+        // dd($userDetails);
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }

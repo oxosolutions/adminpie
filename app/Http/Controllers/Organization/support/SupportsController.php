@@ -36,6 +36,12 @@ class SupportsController extends Controller
         return view('organization.support.faq');      
         
      }
+
+     /**
+      * List of all active tickets
+      * @param  Request $request [having all posted data]
+      * @return [type]           [object]
+      */
      public function activeTickets(Request $request)
      {
         $datalist= [];
@@ -139,12 +145,7 @@ class SupportsController extends Controller
 
     public function edit($id){
         $model = SupportTicket::find($id);
-        $employeesList = [];
-        $users = User::with(['belong_group'])->where('user_type','employee')->get();
-        foreach($users as $key => $user){
-            $employeesList[$user->belong_group->id] = $user->belong_group->name;
-        }
-        return view('organization.support.ticket.edit',['model'=>$model,'employees'=>$employeesList]);
+        return view('organization.support.ticket.edit',['model'=>$model]);
     }
 
     /**

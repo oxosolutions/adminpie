@@ -131,10 +131,8 @@ class OrganizationController extends Controller
 	}
 
 	public function create(){
-       // $modules = GlobalModule::pluck('name','id');
 		return view('admin.organization.create');
 	}
-
 
     public function edit(Request $request, $id){
             
@@ -211,7 +209,6 @@ class OrganizationController extends Controller
       }else{
         $validateFields = $this->valid_fields;
       }
-
     	$checkUserExist = GroupUsers::where('email',$request->email)->first();
     	if($checkUserExist != null){
     		unset($validateFields['email']);
@@ -219,11 +216,9 @@ class OrganizationController extends Controller
     		unset($validateFields['confirm_password']);
     	}
         $this->validate($request, $validateFields);
-        
         if(!empty($request['modules'])) {
            $request['modules'] = json_encode($request['modules']);
         }
-
 try{
       DB::transaction(function ()use($request, $checkUserExist) {
             $org = new ORG();
@@ -242,7 +237,6 @@ try{
                     }else{
                        $return = 'table_not_exist';
                     }
-                //($return=='table_exist')? $org_usr =  User::find(1):null;
             }
             if(!$checkMaster->exists() || $return=='table_not_exist'){
                 $this->create_db_through_migration($org_id);
@@ -263,10 +257,10 @@ try{
             $userMapping->deleted_at = 0;
             $userMapping->status = 1;
             $userMapping->save();
-            $userRoleMapping = UserRoleMapping::where(['user_id'=>$userMapping->id, 'role_id'=>1]);
+            $userRoleMapping = UserRoleMapping::where(['user_id'=>$org_usr->id, 'role_id'=>1]);
             if(!$userRoleMapping->exists()){
                 $userRoleMapping = new UserRoleMapping();
-                $userRoleMapping->fill(['user_id'=>$userMapping->id , 'role_id'=>1]);
+                $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
                 $userRoleMapping->save();
             }
         Session::flash('success', 'Organization create successfully');
