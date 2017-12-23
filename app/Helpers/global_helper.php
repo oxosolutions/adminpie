@@ -428,6 +428,7 @@ function get_file_size($name = null){
 ************************************************************/
 function form($form_slug){
 
+    
     return view('common.form_data',['slug'=>$form_slug]);
 }
 
