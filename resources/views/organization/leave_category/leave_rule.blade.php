@@ -253,30 +253,24 @@ $page_title_data = array(
 			<div class="row"  style="padding-bottom: 15px">
 				<div class="col l3" style="line-height: 30px">
 					Include User
-					@if(!empty($data['data']['user_include']))
-						@php
-							$data['data']['user_include'] = array_map('intval', json_decode($data['data']['user_include']));
-						@endphp
-					@endif
+					
 				</div>
 				<div class="col l9">
 					<div class="col l6 pl-7">
-						{!! Form::select('user_include[]',@$data['user_include'],@$data['data']['user_include'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user include"])!!}
+
+						{!! Form::select('user_include[]',@$data['user_include'],@$select['user_include'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user include"])!!}
+						
 					</div>
 				</div>
 			</div>	
 			<div class="row"  style="padding-bottom: 15px">
 				<div class="col l3" style="line-height: 30px">
 					Exclude User
-					@if(!empty($data['data']['user_exclude']))
-						@php
-							$data['data']['user_exclude'] = array_map('intval', json_decode($data['data']['user_exclude']));
-						@endphp
-					@endif
+					
 				</div>
 				<div class="col l9">
 					<div class="col l6 pl-7">
-						{!! Form::select('user_exclude[]',@$data['user_exclude'],@$data['data']['user_exclude'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user exclude"])!!}
+						{!! Form::select('user_exclude[]',@$data['user_exclude'],@$select['user_exclude'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user exclude"])!!}
 					</div>
 				</div>
 			</div>

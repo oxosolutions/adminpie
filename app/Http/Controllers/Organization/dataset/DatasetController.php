@@ -631,6 +631,11 @@ class DatasetController extends Controller
                 unset($isRecordExists['id']);
                 $isRecordExists['id'] = $lastInsertedId+1 ;
 
+                /*********Code by : Amrit ***********/
+                $isRecordExists['status'] = 0;
+                $isRecordExists['parent'] = $recordArray['id'];
+                /*********Code by : Amrit  END***********/
+
                 DB::table(str_replace('ocrm_','',$dataset->dataset_table))->insert($isRecordExists);
                 DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->update($recordArray);
             }else{

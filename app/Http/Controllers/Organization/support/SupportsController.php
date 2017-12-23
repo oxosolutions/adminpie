@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization\support;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\SupportTicket;
+use App\Model\Organization\User;
 use Auth;
 use Session;
 class SupportsController extends Controller
@@ -117,10 +118,14 @@ class SupportsController extends Controller
         $model->description = $request->description;
         $model->priority = $request->priority;
         $filePath = upload_path('support_ticket_attachments');
+        $uploadedAttachmentsName = [];
         if($request->hasFile('related_image')){
-            $filename = $request->file('related_image')->getClientOriginalName();
-            $request->file('related_image')->move($filePath, $filename);
-            $model->attachment = $filename;
+            foreach($request->file('related_image') as $key => $attachment){
+                $filename = $attachment->getClientOriginalName();
+                $uploadedAttachmentsName[] = $filename;
+                $attachment->move($filePath, $filename);
+            }
+            $model->attachment = json_encode($uploadedAttachmentsName);
         }
         $model->status = 1;
 
@@ -134,7 +139,12 @@ class SupportsController extends Controller
 
     public function edit($id){
         $model = SupportTicket::find($id);
-        return view('organization.support.ticket.edit',['model'=>$model]);
+        $employeesList = [];
+        $users = User::with(['belong_group'])->where('user_type','employee')->get();
+        foreach($users as $key => $user){
+            $employeesList[$user->belong_group->id] = $user->belong_group->name;
+        }
+        return view('organization.support.ticket.edit',['model'=>$model,'employees'=>$employeesList]);
     }
 
     /**

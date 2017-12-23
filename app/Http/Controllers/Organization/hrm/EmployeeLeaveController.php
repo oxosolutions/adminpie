@@ -31,7 +31,7 @@ class EmployeeLeaveController extends Controller
 		}else{
 			$user = user_info()->toArray();	
 			
-			$user_id = $user['id'];
+			echo $user_id = $user['id'];
 			$designation_id =  get_current_user_meta('designation');
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
 			$group  = $catMetas->groupBy('key')->toArray();
@@ -49,11 +49,12 @@ class EmployeeLeaveController extends Controller
 			$not_assign_categories =[];
 			if(!empty($group['user_exclude'])){
 					$not_assign_categories  = $this->mapping_category_id($user_id , $group['user_exclude']);
+					
 				} 
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
+
 			$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
-			// dump($leave_rule);
 			if(!empty($leave_rule->toArray())){
 			$emp_id = get_current_user_meta('employee_id');
 			$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->get();
@@ -137,7 +138,8 @@ class EmployeeLeaveController extends Controller
 						}
 					}elseif(!empty($rule_check['user_exclude']['value'])){
 							$user_exclude = array_map('intval',json_decode($rule_check['user_exclude']['value'],true));
-							if(in_array($user['id'], $exclude_designation)) {
+							// dump($user_exclude);
+							if(in_array($user['id'], $user_exclude)) {
 								$error['user_exclude'] = "Exclude User"; 
 							}
 					}

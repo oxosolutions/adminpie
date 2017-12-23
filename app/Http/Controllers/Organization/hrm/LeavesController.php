@@ -294,11 +294,83 @@ class LeavesController extends Controller
     //         }
     //     return back();
     // }
+
+
+    protected function leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status){
+              $start_to_date = str_replace_first('0', '', $date);
+                if(strlen($month)==1){
+                  $month = '0'.$month;
+                }
+                $attendance_check = Attendance::where(['date'=>$date, 'month'=>$month, 'year'=>$year, 'employee_id'=>$emp_id]);
+                if($attendance_check->exists()){
+                  if($status=='approve'){
+                    $attendance_check->update(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month, 'day' =>$day, 'attendance_status'=>'leave','employee_id'=>$emp_id]); 
+                  }elseif($status=='reject'){
+                    $attendance_check->delete();
+                  }
+                }elseif($status=='approve'){
+                   $attendance = new Attendance();
+                   $attendance->fill(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month_week_no, 'day' =>$day, 'attendance_status'=>'leave', 'employee_id'=>$emp_id]);
+                    $attendance->save();
+                  }
+    }
+
+    protected function set_dates($dates){
+      $set =  Carbon::parse($dates);
+      return ['year'=>$set->year, 'month'=>$set->month, 'date'=>$set->day, 'day'=>$set->format('l'), 'month_week_no'=>$set->weekOfMonth, 'day_in_month'=>$set->daysInMonth];
+    }
+
     public function approve_leave($id)
     { 
         $model = LV::find($id);
-
         if(!empty($model)){
+          //$model->to = "2017-12-15";
+          //$model->from = "2017-12-14";
+          $from =  $this->set_dates($model->from);
+          $to =  $this->set_dates($model->to);
+         
+          // dump($fromYear = date('Y',strtotime($model->from)));
+          // dump($fromMonth = date('m',strtotime($model->from)));
+          // dump($fromDate = date('d',strtotime($model->from)));
+          // dump($toYear = date('Y',strtotime($model->to)));
+          // dump($toMonth = date('m',strtotime($model->to)));
+          // dump($toDate = date('d',strtotime($model->to)));
+          $emp_id = $model->employee_id;
+          $status = 'approve';
+          if($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] == $to['date']){
+              extract($from);
+            $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status);
+          }elseif($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] != $to['date']){
+              echo "more day leave in same month";
+              extract($from);
+              for ($i=$from['date']; $i <= $to['date']; $i++) { 
+               $date_details =  $this->set_dates("$year-$month-".$i);
+               $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+              }
+          }elseif ($from['year'] == $to['year'] && $from['month'] != $to['month']) {
+             extract($from);
+            for ($i=$from['date']; $i <= $from['day_in_month']; $i++) { 
+
+
+                $date_details =  $this->set_dates("$year-$month-".$i);
+                dump($date_details);
+                $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+              }
+
+              for ($i=1; $i <= $to['date']; $i++) { 
+                // dump('to'.$to['year'].'-'.$to['month'].'-'.$i);
+               $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
+
+                $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+              }
+                // echo "months different";
+              
+          }elseif ($fromYear != $toYear) {
+           echo "yaer different";
+          }
+          
+          // if($model->from == $model->to)
+          
           LV::where('id',$id)->update(['status'=> 1]);
           Session::flash('success','Successfully approved');
           return back();
