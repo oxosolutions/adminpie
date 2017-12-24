@@ -48,7 +48,28 @@ class AppServiceProvider extends ServiceProvider
             return "<strong>".$content."</strong>";
         });
 
-        Shortcode::add('form', function($atts, $content, $name){
+        /*Shortcode::add('form', function($atts, $content, $name){
+            if(array_has($atts,'id')){
+                $model = Form::find($atts['id']);
+                if($model != null){
+                    $form_slug = $model->form_slug;
+                    $from = (Auth::guard('admin')->check())?'admin':'org';
+                    return FormGenerator::GenerateForm($form_slug,[],null,$from);
+                }else{
+                    //error
+                    return '<strong>No Form Found</strong>';
+                }
+            }elseif(array_has($atts,'slug')){
+                $slug = $atts['slug'];
+                $from = (Auth::guard('admin')->check())?'admin':'org';
+                return FormGenerator::GenerateForm($slug,[],null,$from);
+            }else{
+                //error
+                return '<strong>attributes missing!</strong>';
+            }
+        });*/
+
+        Shortcode::add('form', function($atts,$content,$name){
             if(array_has($atts,'id')){
                 $model = Form::find($atts['id']);
                 if($model != null){

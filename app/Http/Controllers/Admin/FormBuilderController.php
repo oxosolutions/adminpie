@@ -12,8 +12,10 @@ use App\Model\Admin\section as sec;
 use App\Model\Admin\SectionMeta as SM;
 use App\Model\Admin\FieldMeta as FM;
 use App\Model\Organization\Collaborator;
+use App\Model\Organization\FormData;
 use Session;
 use Auth;
+use Schema;
 
 class FormBuilderController extends Controller
 {
@@ -1070,9 +1072,41 @@ class FormBuilderController extends Controller
      * into the table
      * @param  Request $request [form request or posted data]
      * @return [type]           [description]
+     * @author Rahul
      */
     public function saveGeneratedForm(Request $request){
-        dd($request->all());
+        $organization_id = get_organization_id();
+        $form_id = $request->form_id;
+        if(!Schema::hasTable($organization_id.'_form_data_'.$form_id)){
+            $this->createFormDataTable($organization_id, $form_id, $request);
+            dd('Created');
+        }
+        Session::put('form_id',$form_id); //set form id for session model
+        $model = new FormData;
+        foreach($request->except(['_token']) as $key => $value){
+            $model[$key] = $value;
+        }
+        $model->save();
+        Session::flash('success','Form Saved successfully!');
+        return back();
+    }
+
+    /**
+     * Will create table according form data 
+     * @param  [type] $organization_id [ having current organization data]
+     * @param  [type] $form_id         [having request form id]
+     * @param  [type] $request         [having all posted data from form]
+     * @return [type]                  [return boolean]
+     * @author Rahul
+     */
+    protected function createFormDataTable($organization_id, $form_id, $request){
+        Schema::create($organization_id.'_form_data_'.$form_id, function($table) use ($request){
+            $table->increments('id');
+            foreach($request->except(['_token']) as $key => $field){
+                $table->string($key)->nullable();
+            }
+            $table->timestamps();
+        });
     }
 
 

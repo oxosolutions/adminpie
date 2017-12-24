@@ -164,9 +164,14 @@ class ProfileController extends Controller
      * @author Rahul 
      */
     public function updateProfile(Request $request){
-        $user_id = User::select('user_id')->where('id',$request['id'])->first()->user_id;
+        // $user_id = User::select('user_id')->where('id',$request['id'])->first()->user_id;
     	$this->validateUpdateProfileFor($request);
-    	$model = GroupUsers::firstOrNew(['id' => $user_id]);
+       $checkEmail =  GroupUsers::where('email',$request['email']);
+       if($checkEmail->exists()){
+        Session::flash('error','Which email you have choose already associate with other user.');
+         return back();
+       }
+    	$model = GroupUsers::firstOrNew(['id' => $request['id']]);
     	$model->name = $request['name'];
     	$model->email = $request['email'];
     	$model->save();

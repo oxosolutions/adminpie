@@ -21,6 +21,7 @@ use App\Model\Organization\UsersMeta;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\FormBuilder;
 use App\Model\Organization\forms;
+use App\Model\Admin\forms as AdminForms;
 use App\Model\Organization\Page as Page;
 use App\Model\Admin\Page as GlobalPage;
 use App\Model\Organization\PageMeta as PageMeta;
@@ -81,12 +82,12 @@ function get_user_detail($meta = true ,$array = false, $org_user_id = null){
 *	@author	Paljinder Singh
  */
 function current_organization_user_id(){
-	$user_id = Auth::guard('org')->user()->id;
+	/*$user_id = Auth::guard('org')->user()->id;
 	$user = User::select('id')->where('user_id',$user_id);
 	if($user->exists()){
 		return	$user->first()->id;
-	}
-	return null;
+	}*/
+	return get_user_id();
 }
 
 
@@ -426,10 +427,14 @@ function get_file_size($name = null){
 *   @perm name      [string required    default null]
 *   @return size [string]
 ************************************************************/
-function form($form_slug){
+function form($form_slug, $form_from = 'admin', $default_model_data = null){
 
-    
-    return view('common.form_data',['slug'=>$form_slug]);
+    if($form_from == 'admin'){
+        $model = AdminForms::where('form_slug',$form_slug)->first();        
+    }else{
+        $model = forms::where('form_slug',$form_slug)->first();
+    }
+    return view('common.form_data',['slug'=>$form_slug,'model'=>$model,'default_model'=>$default_model_data,'form_from'=>$form_from]);
 }
 
 

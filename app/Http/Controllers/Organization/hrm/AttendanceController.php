@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\Attendance;
 use App\Model\Organization\AttendanceFile;
 use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
 use Carbon\Carbon;
 use DB;
 use EmployeeHelper;
@@ -355,8 +356,11 @@ public function attendance_file(){
 			$holiday_date = str_replace('0','',date('d', strtotime($data['date_of_holiday'])));
 			return [$holiday_date=> $data['title']];
 		});
-		
-		$user_data = User::with(['metas_for_attendance','belong_group'])->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
+		$user_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
+
+		// dd($group);
+
+		// $user_data = User::with(['metas_for_attendance','belong_group'])->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
 		// dump($user_data);
 		$attendance  =Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 		 $leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;

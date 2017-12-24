@@ -135,17 +135,19 @@ class AccountController extends Controller
     	}
         $userDetails = User::with(['applicant_rel','client_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
-        // dd($userMeta);
+         
 
         if($userDetails != null){
             $userDetails->password = '';
             if($userMeta != false){
                 @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
                 @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
-                $userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
+                @$userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
+                @$userDetails->user_shift = (array_key_exists('user_shift',$userMeta))?$userMeta['user_shift']:'';
+                @$userDetails->pay_scale = (array_key_exists('pay_scale',$userMeta))?$userMeta['pay_scale']:'';
                 
                 @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
-                @$userDetails->date_of_joining = (array_key_exists('joining_date',$userMeta))?Carbon::parse($userMeta['joining_date'])->format('Y-m-d'):'';
+                @$userDetails->date_of_joining = (array_key_exists('date_of_joining',$userMeta))?Carbon::parse($userMeta['date_of_joining'])->format('Y-m-d'):'';
             }
             // if(!$userDetails->metas->isEmpty()){
             //     foreach($userDetails->metas as $key => $value){
@@ -153,7 +155,7 @@ class AccountController extends Controller
             //     }
             // }
         }
-        // dd($userDetails);
+        
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }

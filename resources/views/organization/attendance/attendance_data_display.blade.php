@@ -104,10 +104,10 @@
 									echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].' </div>';
 								}
 								
-								if(strlen($value['belong_group']['name']) > 12){
-									echo '<div class="attendanc-sheet content">'.substr($value['belong_group']['name'], 0,12).'.. </div>';
+								if(strlen($value['name']) > 12){
+									echo '<div class="attendanc-sheet content">'.substr($value['name'], 0,12).'.. </div>';
 								}else{
-									echo '<div class="attendanc-sheet content">'.$value['belong_group']['name'].' </div>';
+									echo '<div class="attendanc-sheet content">'.$value['name'].' </div>';
 								}
 							echo '</div>';
 						if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))

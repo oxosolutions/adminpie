@@ -13,9 +13,9 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
-        {{-- {!! Form::open(['route'=>'save.client', 'class'=> 'form-horizontal','method' => 'post'])!!} --}}
-            {!! form('create_client_form') !!}
-        {{-- {!!Form::close()!!} --}}
+        {!! Form::open(['route'=>'save.client', 'class'=> 'form-horizontal','method' => 'post'])!!}
+            {!! FormGenerator::GenerateForm('create_client_form') !!}
+        {!!Form::close()!!}
     @include('common.page_content_primary_end')
     @include('common.page_content_secondry_start')
     {{-- <div class="row">

@@ -4,7 +4,6 @@
 	// $isEmployee = App\Model\Organization\Employee::where('user_id' , $model->id)->first();
 	$isEmployee = is_employee(@request()->route()->parameters()['id']);
 	$isAdmin = is_admin();
-	// dump($isAdmin);
 @endphp
 <style type="text/css">
 	.edit-button{
@@ -428,7 +427,7 @@ $page_title_data = array(
 			</div>
 		</div>
 		<div class="col l3 pl-7">
-			<div class="card mt-14 " >
+			{{-- <div class="card mt-14 " >
 				<div class="row center-align mb-0 pv-10" >
 				@if(@$errors->get('new_password') || @$errors->get('confirm_password'))
 					<script type="text/javascript">
@@ -437,7 +436,7 @@ $page_title_data = array(
 						});
 					</script>
 				@endif
-					<a href="#modal9" class="btn blue " id="add_new">Change Password</a>
+					<a href="#modal9" class="btn blue " id="add_new">Change Password1</a>
 					@if(!empty($errors->all()))
 						@if(@$errors->new_password  || @$errors->confirm_password )	
 							<script type="text/javascript">
@@ -462,7 +461,7 @@ $page_title_data = array(
 					{!! Form::close() !!}
 				</div>
 				
-			</div>
+			</div> --}}
 			<div class="card info-card" >
 				<div class="row valign-wrapper mb-0">
 					<div class="col l10 headline-text" >Contact Detail</div>
@@ -504,9 +503,8 @@ $page_title_data = array(
 							<div class="row valign-wrapper mb-0">
 								<div class="col l10 headline-text" >Employee Detail</div>
 								<div class="col l2 " id="modal-wrapper">
-									{{dump($isAdmin)}} {{current_organization_user_id()}} {{dump(is_admin())}}
 										@if(@$isAdmin)
-											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect">up <i class="fa fa-pencil"></i></a>
+											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"> <i class="fa fa-pencil"></i></a>
 										@endif
 									{!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
@@ -528,9 +526,9 @@ $page_title_data = array(
 												$fieldData = str_replace(' ', '_', strtolower($field));
 											@endphp
 											@if($fieldData == 'designation')
-												dd{{@App\Model\Organization\Designation::find($model->designation)->name}}
+												{{@App\Model\Organization\Designation::find($model->designation)->name}}
 											@elseif($fieldData == 'department')
-												dep{{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+												{{@App\Model\Organization\Department::find($model->$fieldData)->name}}
 											@elseif($fieldData == 'user_shift')
 												{{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
 											@elseif($fieldData == 'pay_scale')
