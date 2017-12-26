@@ -134,7 +134,7 @@ class AccountController extends Controller
     		 $id = Auth::guard('org')->user()->id;
     	}
         $userDetails = User::with(['applicant_rel','client_rel','user_role_rel'])->find($id);
-        dd($userDetails);
+       
         $userMeta = get_user_meta($id,null,true);
          
 

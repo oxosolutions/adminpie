@@ -207,4 +207,12 @@ class SupportsController extends Controller
         dd($request->all());
     }
 
+    /**
+     * Post comment and attachment on ticket
+     * @return [type] [description]
+     */
+    public function postComment(Request $request){
+        dd($request->all());
+    }
+
 }

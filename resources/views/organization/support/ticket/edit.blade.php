@@ -44,9 +44,11 @@
 						<div class="mb-10">Reply to : <span class="font-weight-600">Sample Customer</span></div>
 						<div class="aione-border" contenteditable="true" style="max-height: 160px;min-height: 160px;overflow-y: auto"></div>
 						<div class="aione-border-bottom aione-border-right aione-border-left p-10 mb-10 border-darken-2">
-							<i class="fa fa-paperclip font-size-18"></i>
+                            <div class="mb-10">Attachments</div>
+                            <input type="file" name="attachment" multiple="multiple">
+							{{-- <i class="fa fa-paperclip font-size-18"></i> --}}
 						</div>
-						<button class="aione-float-right">Post Comment</button>
+						<button class="aione-float-right" type="submit">Post Comment</button>
 						<div class="clear"></div>
 					</div>
 					<div class="pv-15">

@@ -313,10 +313,15 @@ try{
                                 'name'=>'create_'.$org_id.'_user_role_mappings',
                                 '--schema'=>'user_id:integer, role_id:integer, status:integer:default(1)'
                             ]);
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_user_role_mappings',
+                                '--schema'=>'user_id:integer, role_id:integer, status:integer:default(1)'
+                            ]);
           Artisan::call('make:migration:schema',[
                                 '--model'=>false,
-                                'name'=>'create_'.$org_id.'_log_systems',
-                                '--schema'=>'user_id:integer:nullable, type:string:nullable, route_name:string:nullable, text:text:nullable, ip_address:string:nullable'
+                                'name'=>'create_'.$org_id.'_support_comments',
+                                '--schema'=>'user_id:integer, comment:text:nullable, attachments:text:nullable, ticket_id:integet, status:integer:default(1)'
                             ]);
        
 		Artisan::call('make:migration:schema',[
