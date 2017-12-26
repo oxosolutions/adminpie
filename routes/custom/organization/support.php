@@ -8,4 +8,6 @@
     Route::post('ticket/update/{id}',['as'=>'update.ticket','uses'=>'SupportsController@update']);
 	Route::get('ticket/{id}',		['as'=>'view.ticket','uses'=>'SupportsController@viewTicket']);
     Route::post('ticket/save',      ['as'=>'save.ticket','uses'=>'SupportsController@save'] );
+
+    Route::post('assign/ticket/{ticket_id}',['as'=>'assign.ticket','uses'=>'SupportsController@assignTicket']);
 ?>

@@ -25,17 +25,19 @@
                         @php
                             $attachments = json_decode($model->attachment);
                         @endphp
-                        @foreach($attachments as $key => $attachment)
-                            @php
-                                $extension = File::extension($attachment);
-                            @endphp
-    						<div class="aione-border border-orange display-inline-block border-size-4" style="max-height:100px;max-width: 100px ;overflow: hidden">
-                                @if(in_array($extension,['jpg','jpeg','png']))
-                                    <img src="{{ asset(upload_path('support_ticket_attachments')) }}/{{ $attachment }}" />
-                                @endif
-                                <a href="{{ asset(upload_path('support_ticket_attachments')) }}/{{ $attachment }}">Download Attachment {{ $loop->index+1 }}</a>
-    						</div>
-                        @endforeach
+                        @if($attachments != null)
+                            @foreach($attachments as $key => $attachment)
+                                @php
+                                    $extension = File::extension($attachment);
+                                @endphp
+        						<div class="aione-border border-orange display-inline-block border-size-4" style="max-height:100px;max-width: 100px ;overflow: hidden">
+                                    @if(in_array($extension,['jpg','jpeg','png']))
+                                        <img src="{{ asset(upload_path('support_ticket_attachments')) }}/{{ $attachment }}" />
+                                    @endif
+                                    <a href="{{ asset(upload_path('support_ticket_attachments')) }}/{{ $attachment }}">Download Attachment {{ $loop->index+1 }}</a>
+        						</div>
+                            @endforeach
+                        @endif
 					</div>
 					<div class="aione-border-bottom pv-10">
 						Attachments:-
@@ -154,9 +156,13 @@
 					</div>
 				</div>	
 			</div>
-			<div class="ac l30 m70 s100">
-				{!! FormGenerator::GenerateForm('edit_support_ticket_form') !!}
-				<button style="width: 100%">Save</button>
+			<div class="ac l30 m70 s100">                
+                {!! Form::open(['route'=>['assign.ticket',request()->id]]) !!}
+                    @if(is_admin())
+        				{!! FormGenerator::GenerateForm('edit_support_ticket_form') !!}
+        				<button style="width: 100%">Save</button>
+                    @endif
+                {!! Form::close() !!}
 				<div class="aione-border p-10">
 					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Details</h5>
 					<div class=" pv-10 line-height-24">
@@ -167,17 +173,14 @@
 
 					</div>
 				</div>
-				<div class="aione-border p-10">
-					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Actions</h5>
-					<div class="pv-10 line-height-24">
-						Change Status: 
-						<select>
-							<option>Open</option>
-							<option>Resolved</option>
-							
-						</select>
-					</div>
-				</div>
+                @if(is_admin() || is_employee())
+    				<div class="aione-border p-10">
+    					<h5 class="aione-border-bottom pb-10 light-blue darken-3">Actions</h5>
+    					<div class="pv-10 line-height-24">
+    						{!! FormGenerator::GenerateForm('change_status_form') !!}
+    					</div>
+    				</div>
+                @endif
 			</div>
 		</div>
 	@include('common.page_content_primary_end')

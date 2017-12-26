@@ -57,16 +57,32 @@ class SupportsController extends Controller
         $sortedBy = @$request->sort_by;
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = SupportTicket::with(['user'])->where('subject','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                if(is_admin()){
+                    $model = SupportTicket::with(['user'])->where('subject','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);    
+                }else{
+                    $model = SupportTicket::where('user_id',get_user_id())->with(['user'])->where('subject','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                }
+                
             }else{
-
-                $model = SupportTicket::with(['user'])->where('subject','like','%'.$request->search.'%')->paginate($perPage);
+                if(is_admin()){
+                    $model = SupportTicket::with(['user'])->where('subject','like','%'.$request->search.'%')->paginate($perPage);
+                }else{
+                    $model = SupportTicket::where('user_id',get_user_id())->with(['user'])->where('subject','like','%'.$request->search.'%')->paginate($perPage);
+                }
             }
         }else{
             if($sortedBy != ''){
-                $model = SupportTicket::with(['user'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                if(is_admin()){
+                    $model = SupportTicket::with(['user'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                }else{
+                    $model = SupportTicket::where('user_id',get_user_id())->with(['user'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                }
             }else{
-                $model = SupportTicket::with(['user'])->paginate($perPage);
+                if(is_admin()){
+                    $model = SupportTicket::with(['user'])->paginate($perPage);
+                }else{
+                    $model = SupportTicket::where('user_id',get_user_id())->with(['user'])->paginate($perPage);
+                }
             }
         }
         $datalist =  [
@@ -185,6 +201,10 @@ class SupportsController extends Controller
     public function viewTicket(){
         return view('organization.support.ticket.view');
          
+    }
+
+    public function assignTicket(Request $request){
+        dd($request->all());
     }
 
 }

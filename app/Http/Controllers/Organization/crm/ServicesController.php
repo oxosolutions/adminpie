@@ -13,8 +13,9 @@ class ServicesController extends Controller
 {
 	public function index(Request $request)
     {
-         $datalist= [];
+        $datalist= [];
         $data= [];
+        $perPage = 10;
           if($request->has('per_page')){
                 $perPage = $request->per_page;
                 if($perPage == 'all'){

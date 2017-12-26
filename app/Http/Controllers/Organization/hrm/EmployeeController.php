@@ -258,7 +258,6 @@ class EmployeeController extends Controller
         $model = User::with(['belong_group.metas'])->where(['user_type'=>'employee'])->get();//->toArray();
         foreach($model as $key => $val){
             if(!empty($val['belong_group'])){
-
                 $model[$key]->id    =    $val->belong_group->id;
                 $model[$key]->name    =    $val->belong_group->name;
                 $model[$key]->email   =    $val->belong_group->email;
@@ -279,12 +278,10 @@ class EmployeeController extends Controller
                         }else{
                              $dep_name = '';
                         }
-                       
                         $model[$key]->department =  $dep_name;
                     } else{
                      $model[$key]->department = "";   
                     }
-
                     if(isset($meta_data['designation'])){
                          if($meta_data['designation'] != null){
                                 $designation = DES::find($meta_data['designation']);
@@ -630,9 +627,13 @@ class EmployeeController extends Controller
     }
 
     public function export(){
-
-       $user = User::select(['id','user_id'])->where('user_type','employee')->get();
-
+       $user = User::select(['id','user_id'])->where('user_type','employee');//->get();
+       if($user->exists()){
+            $user = $user->get();
+       }else{
+            Session::flash('error','Not have the employee data.');
+            return back();
+       }
         /*$model = EMP::with(['designation_rel','department_rel','employ_info'=>function($query){
             $query->with('metas');
         }])->get();*/
@@ -835,13 +836,13 @@ class EmployeeController extends Controller
                         $alreadyExists->update(["name"=>$value['name']]);
                         if($request['import_record_options'] =='update_password_new_insert'){
                             if($users_data->password != $value['password']){
-                                $alreadyExists->update( ["password"=>hash::make($value['password'])]);
+                                $alreadyExists->update(["password"=>hash::make($value['password'])]);
                             }
                         }
                         if($org_user_check->exists()){
                             $org_user_check->update(['user_type'=>'employee']);
                             $org_user_id = $org_user_check->first()->id;
-                            $this->add_metas($org_user_id, $value , $import_record_options);
+                            $this->add_metas($user_id, $value , $import_record_options);
                             $updateRecord[$value['employee_id']] = $value['email'];
                             // array_push($alreadyInOrg , $value['employee_id']);
                         }
@@ -886,22 +887,19 @@ class EmployeeController extends Controller
         if($newInsertAlreadyEmployeeId){
             Session::flash('newInsertAlreadyEmployeeId', $newInsertAlreadyEmployeeId);
         }
-
         if($emptyRow){
             Session::flash('emptyRow', $emptyRow);
         }
-        
     }
          return redirect()->route('import.employee');
     }
 
     protected function create_org_user($group_user_id , $value , $import_record_options){
-      
         $user = new User();
         $user->user_id = $group_user_id;
         $user->user_type = 'employee';
         $user->save();
-        $uid = $user->id;
+        $uid = $group_user_id;
         $this->add_metas($uid , $value, $import_record_options);
         if(!empty($value['role'])){
              $this->add_roles($uid , $value['role'] ,  $import_record_options);

@@ -1079,7 +1079,6 @@ class FormBuilderController extends Controller
         $form_id = $request->form_id;
         if(!Schema::hasTable($organization_id.'_form_data_'.$form_id)){
             $this->createFormDataTable($organization_id, $form_id, $request);
-            dd('Created');
         }
         Session::put('form_id',$form_id); //set form id for session model
         $model = new FormData;

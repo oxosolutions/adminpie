@@ -75,7 +75,8 @@ class AppServiceProvider extends ServiceProvider
                 if($model != null){
                     $form_slug = $model->form_slug;
                     $from = (Auth::guard('admin')->check())?'admin':'org';
-                    return FormGenerator::GenerateForm($form_slug,[],null,$from);
+                    return form($form_slug,$from);
+                    //return FormGenerator::GenerateForm($form_slug,[],null,$from);
                 }else{
                     //error
                     return '<strong>No Form Found</strong>';
@@ -83,7 +84,8 @@ class AppServiceProvider extends ServiceProvider
             }elseif(array_has($atts,'slug')){
                 $slug = $atts['slug'];
                 $from = (Auth::guard('admin')->check())?'admin':'org';
-                return FormGenerator::GenerateForm($slug,[],null,$from);
+                // return FormGenerator::GenerateForm($slug,[],null,$from);
+                return form($form_slug,$from);
             }else{
                 //error
                 return '<strong>attributes missing!</strong>';
