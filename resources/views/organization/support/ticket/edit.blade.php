@@ -46,7 +46,7 @@
 						<div class="aione-border-bottom aione-border-right aione-border-left p-10 mb-10 border-darken-2">
 							<i class="fa fa-paperclip font-size-18"></i>
 						</div>
-						<button class="aione-float-right">Send</button>
+						<button class="aione-float-right">Post Comment</button>
 						<div class="clear"></div>
 					</div>
 					<div class="pv-15">

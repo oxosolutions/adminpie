@@ -38,7 +38,8 @@ use App\Model\Organization\Cms\Slider\SliderMeta;
 *	@author	SGS Sandhu(sgssandhu.com)
 *	@perm key		[string	optional	default	null]
 *	@perm array		[true/false	optional	default	false]
-*	@return filename [mixed][object/integer/string]
+*	@return filename [mixed][object/integer/string] 
+	26-12-17 paljinder singh make change according  to group user id.
 ************************************************************/
 
 function get_user_detail($meta = true ,$array = false, $org_user_id = null){
@@ -48,14 +49,14 @@ function get_user_detail($meta = true ,$array = false, $org_user_id = null){
 		$user->meta = get_user_meta($org_user_id);
 	}else{
 		$org_user_id = ($org_user_id != null)?$org_user_id:current_organization_user_id();
-		$user = User::with('belong_group')->where('id', $org_user_id);
+		$user = GroupUsers::where('id', $org_user_id);
 			if($user->exists()){
 				$user = $user->first();
-				if(!empty($user->belong_group)){
-					$user = $user->belong_group;
-				}else{
-					$user = null;
-				}
+				// if(!empty($user->belong_group)){
+				// 	$user = $user->belong_group;
+				// }else{
+				// 	$user = null;
+				// }
 			}else{
 				$user = null;
 			}
