@@ -16,6 +16,11 @@
       <li class="aione-tab  {{(Request::route()->action['as'] == 'setting.user')?'nav-item-current':''}}">
         <a href="{{route('setting.user')}}"><span class="nav-item-text">User</span></a>
       </li>
+
+      <li class="aione-tab  {{(Request::route()->action['as'] == 'support.settings')?'nav-item-current':''}}">
+        <a href="{{route('support.settings')}}"><span class="nav-item-text">Support</span></a>
+      </li>
+
       {{-- 
       <li class="aione-tab   {{(Request::route()->action['as'] == 'setting.role')?'nav-item-current':''}}">
         <a href="{{route('setting.role')}}"><span class="nav-item-text">Roles</span></a>

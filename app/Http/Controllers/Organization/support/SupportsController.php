@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\SupportTicket;
 use App\Model\Organization\User;
 use Auth;
+use App\Model\Organization\SupportComments;
+use App\Model\Organization\SupportTicketMeta;
 use Session;
 class SupportsController extends Controller
 {
@@ -151,8 +153,11 @@ class SupportsController extends Controller
         }
         $model->status = 1;
 
-
-        $model->user_id = Auth::guard('org')->user()->id;
+        if($request->has('behalf_of')){
+            $model->user_id  = $request->behalf_of;
+        }else{
+            $model->user_id = Auth::guard('org')->user()->id;
+        }
         $model->save();
         Session::flash('success','Ticket created successfully!');
         return redirect()->route('active.tickets');
@@ -161,7 +166,10 @@ class SupportsController extends Controller
 
     public function edit($id){
         $model = SupportTicket::find($id);
-        return view('organization.support.ticket.edit',['model'=>$model]);
+        $comments = SupportComments::with(['user_role_map'=>function($query){
+            $query->with('roles');
+        }])->where('ticket_id',$id)->get();
+        return view('organization.support.ticket.edit',['model'=>$model,'comments'=>$comments]);
     }
 
     /**
@@ -204,15 +212,43 @@ class SupportsController extends Controller
     }
 
     public function assignTicket(Request $request){
+        
         dd($request->all());
+    }
+
+    public function validateCommentPost($request){
+        $rules = [
+            'comment' => 'required'
+        ];
+
+        $this->validate($request,$rules);
     }
 
     /**
      * Post comment and attachment on ticket
-     * @return [type] [description]
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     * @author Rahul
      */
     public function postComment(Request $request){
-        dd($request->all());
+        $this->validateCommentPost($request);
+        $model = new SupportComments;
+        if($request->hasFile('attachment')){
+            $attachedFiles = [];
+            foreach($request->attachment as $key => $attachment){
+                $path = upload_path('comments_attachments');
+                $filename = $attachment->getClientOriginalName();
+                $attachedFiles[] = $filename;
+                $attachment->move($path, $filename);
+            }
+            $model->attachments = json_encode($attachedFiles);
+        }
+        $model->comment = $request->comment;
+        $model->ticket_id = $request->ticket_id;
+        $model->user_id = get_user_id();
+        $model->save();
+        Session::flash('success','Comment posted successfully!');
+        return back();
     }
 
 }

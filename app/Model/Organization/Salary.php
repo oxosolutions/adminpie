@@ -14,6 +14,6 @@ class Salary extends Model
     }
 
     public function user_detail(){
-    	return $this->belongsTo('App\Model\Organization\User','user_id','id');
+    	return $this->belongsTo('App\Model\Group\GroupUsers','user_id','id');
     }
 }

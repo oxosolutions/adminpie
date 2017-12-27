@@ -10,4 +10,5 @@
     Route::post('ticket/save',      ['as'=>'save.ticket','uses'=>'SupportsController@save'] );
 
     Route::post('assign/ticket/{ticket_id}',['as'=>'assign.ticket','uses'=>'SupportsController@assignTicket']);
+    Route::post('post/comment/{ticket_id}',['as'=>'post.ticket','uses'=>'SupportsController@postComment']);
 ?>

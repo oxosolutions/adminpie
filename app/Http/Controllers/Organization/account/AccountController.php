@@ -16,6 +16,7 @@ use App\Model\Organization\Project;
 use App\Model\Organization\ProjectMeta;
 use Session;
 use Image;
+use App\Model\Group\GroupUserMeta;
 use App\Model\Organization\Campaign;
 use App\Model\Organization\EmailLayout;
 use App\Model\Organization\EmailTemplate;
@@ -156,7 +157,6 @@ class AccountController extends Controller
             //     }
             // }
         }
-        
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }
@@ -307,11 +307,12 @@ class AccountController extends Controller
 		
 		
 
-        $model = UM::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
+        // $model = UM::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
+        $model = GroupUserMeta::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
         $model->user_id  = $id; 
         $model->key      = "user_profile_picture"; 
         $model->value   = $complete_file_name;
-        $model->type    = "";
+        // $model->type    = "";
         $model->save();
 
        
@@ -321,7 +322,7 @@ class AccountController extends Controller
 
     public function deleteProfilePicture($id)
     {
-        $model = UM::where(['key' => 'user_profile_picture' , 'user_id' => $id])->delete();
+        $model = GroupUserMeta::where(['key' => 'user_profile_picture' , 'user_id' => $id])->delete();
         return back();
     }
     public function uploadimage($id , $file_name)

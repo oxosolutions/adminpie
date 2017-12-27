@@ -20,6 +20,9 @@
         <li class="aione-tab {{(Request::route()->action['as'] == 'filter.dataset')?'nav-item-current':''}}">
         <a href="{{route('filter.dataset',$id)}}"><span class="nav-item-text">Data Filter</span></a>
       </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'api.dataset')?'nav-item-current':''}}">
+        <a href="{{route('api.dataset', $id)}}"><span class="nav-item-text">API</span></a>
+      </li>
         <li class="aione-tab {{(Request::route()->action['as'] == 'validate.dataset')?'nav-item-current':''}}">
         <a href="{{route('validate.dataset',$id)}}"><span class="nav-item-text">Validate</span></a>
       </li>

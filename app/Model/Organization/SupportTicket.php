@@ -17,4 +17,12 @@ class SupportTicket extends Model
     public function user(){
         return $this->belongsTo('App\Model\Group\GroupUsers','user_id','id');
     }
+
+    public function periority(){
+        return [
+            'high' => 'High',
+            'mediuum' => 'Medium',
+            'low' => 'Low',
+        ];
+    }
 }

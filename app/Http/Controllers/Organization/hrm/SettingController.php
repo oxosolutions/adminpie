@@ -413,4 +413,34 @@ class SettingController extends Controller
             return false;
         }
     }
+
+    /**
+     * Show support settings form
+     * @return  will return view
+     * @author Rahul
+     */
+    public function supportSettings(){
+        $settings = OrganizationSetting::whereIn('key',['role_to_show_in_behalf_of','who_can_view_behalf_of'])->get();
+        $model = [];
+        foreach($settings as $key => $value){
+            $model[$value->key] = json_decode($value->value);
+        }
+        return view('organization.settings.support',['model'=>$model]);
+    }
+
+    /**
+     * Save support settings
+     * @param  Request $request having all posted data
+     * @return [type]           back to settings
+     */
+    public function saveSupportSettings(Request $request){
+        foreach($request->except(['_token']) as $key => $value){
+            $model = OrganizationSetting::firstOrNew(['key'=>$key]);
+            $model->key = $key;
+            $model->value = json_encode($value);
+            $model->save();
+        }
+        Session::flash('success','Settings saved successfully!');
+        return back();
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organization\hrm;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\Payscale;
 use App\Model\Organization\Salary;
@@ -72,7 +73,7 @@ class SalaryController extends Controller
 		return back();
 	}
 	public function view_salary_slip($id ){
-			$salary = Salary::with(['user_detail.belong_group:id,name,email', 'user_detail:id,user_id'])->where([ 'id'=>$id ]);
+			$salary = Salary::with(['user_detail:id,name,email','user_detail.metas'])->where([ 'id'=>$id ]);
       if($salary->exists()){
         $salary = $salary->first();
       }else{
@@ -81,18 +82,17 @@ class SalaryController extends Controller
 			return view('organization.salary.generate_salary_slip',compact('salary'));
 	}
 	public function salary_download_pdf($id){
-		$salary = Salary::with(['user_detail.belong_group:id,name,email', 'user_detail:id,user_id'])->where([ 'id'=>$id ]);
+		$salary = Salary::with(['user_detail:id,name,email'])->where([ 'id'=>$id ]);
       if($salary->exists()){
         $salary = $salary->first();
         $file_name =  'pay-slip-'.$salary->employee_id.'-'.$salary->year.'-'.$salary->month;
       }else{
         Session::flash('error','Not Valid ID.');
       }
+      // dump($salary);
       $pdf = PDF::loadView('organization.salary.pdf',compact('salary'));
-            return $pdf->download($file_name.'.pdf');
-			  // return view('organization.salary.pdf',compact('salary'));
-
-	}
+      return $pdf->download($file_name.'.pdf');
+		}
 	public function generate_salary_slip_view(Request $request){
 			$date = Carbon::now();
 			$date->subMonth();
@@ -123,7 +123,7 @@ class SalaryController extends Controller
 				$data['year'] 	=  	$year 	= $date->year;
 			}
      
-      $data['users']  = User::with(['belong_group',
+      $data['users']  = GroupUsers::with([
         'salary'=>function($q)use($year, $month){
                       $q->where(['year'=>$year, 'month'=>$month]);  
                     }, 
@@ -133,7 +133,8 @@ class SalaryController extends Controller
                             'metas', function ($query)use($year, $month) {
                         $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
                         }
-                  )->where(['user_type'=>'employee'])->get();
+                  )->get();
+
 
               // $data['users']  = User::with(['belong_group',
               //         'salary'=>function($q)use($year, $month){
@@ -152,9 +153,9 @@ class SalaryController extends Controller
 
   	public function generate_salary_slip($year , $month, $user_select){
   			
-        $user = User::with(['belong_group', 'metas'=>function($query){
+        $user = GroupUsers::with(['metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
-          }])->whereIn('id',$user_select)->where(['user_type'=>'employee'])->get();
+          }])->whereIn('id',$user_select)->get();
         $current_date = Carbon::parse("$year-$month-1");
         // $current_date->subMonth(); 
         $daysInMonth = $current_date->daysInMonth;

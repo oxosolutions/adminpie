@@ -39,112 +39,47 @@
                             @endforeach
                         @endif
 					</div>
-					<div class="aione-border-bottom pv-10">
-						Attachments:-
-						<div class="mb-10">Reply to : <span class="font-weight-600">Sample Customer</span></div>
-						<div class="aione-border" contenteditable="true" style="max-height: 160px;min-height: 160px;overflow-y: auto"></div>
-						<div class="aione-border-bottom aione-border-right aione-border-left p-10 mb-10 border-darken-2">
-                            <div class="mb-10">Attachments</div>
-                            <input type="file" name="attachment" multiple="multiple">
-							{{-- <i class="fa fa-paperclip font-size-18"></i> --}}
-						</div>
-						<button class="aione-float-right" type="submit">Post Comment</button>
-						<div class="clear"></div>
-					</div>
+                    {!! Form::open(['route'=>['post.ticket',request()->id],'files'=>true]) !!}
+    					<div class="aione-border-bottom pv-10">
+    						Attachments:-
+    						<div class="mb-10">Reply to : <span class="font-weight-600">Sample Customer</span></div>
+    						{{-- <div class="aione-border" contenteditable="true" style="max-height: 160px;min-height: 160px;overflow-y: auto"></div> --}}
+                            {!! Form::textarea('comment',null,['style'=>'max-height: 160px;min-height: 160px;overflow-y: auto']) !!}
+                            @if($errors->has('comment'))
+                                <span style="color: red;">
+                                    {{ $errors->first('comment') }}                                    
+                                </span>
+                            @endif
+    						<div class="aione-border-bottom aione-border-right aione-border-left p-10 mb-10 border-darken-2">
+                                <div class="mb-10">Attachments</div>
+                                {!! Form::file('attachment[]',['multiple'=>'multiple']) !!}
+    						</div>
+    						<button class="aione-float-right" type="submit">Post Comment</button>
+    						<div class="clear"></div>
+    					</div>
+                    {!! Form::close() !!}
 					<div class="pv-15">
-						<!-- sample 1 -->
-						{{-- <div class="pv-20">
-							<span><img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style=""></span>
-							<div class=" display-inline-block line-height-34 font-weight-600 valign-top">
-								Fabrizio Cedrone<br>
-								<div class="aione-border p-6 line-height-24 font-weight-400">
-									this is the message DIV
-								</div>
 
-								
-							</div>
-							<span class="aione-float-right line-height-34 font-weight-300 font-size-13">!0:45am</span>
-						</div>
-						<div class="pv-20">
-							<span><img src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" class="contact-avatar" style=""></span>
-							<div class=" display-inline-block line-height-34 font-weight-600 valign-top">
-								Sample Customer<br>
-								<div class="aione-border p-6 line-height-24 font-weight-400">
-									Question asked by the customer
-								</div>
+                        @foreach($comments as $key => $comment)
+                        
+    						<div class=" ar aione-border mb-20">
+    							<div  class="ac l15 p-10 aione-align-center aione-border-right line-height-24">
+    								<img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style="">
+    								Fabrizio Cedrone
+    								<span class="aione-align-center mb-5 grey lighten-1	">10:35pm</span>
+    							</div>
+    							<div class="ac l85 p-10 line-height-20 font-weight-400">
+    								When visitors enter your domain name into a Web browser, the browser request uses your domain 
+    							</div>
+    							
+    						</div>
 
-								
-							</div>
-							<span class="aione-float-right line-height-34 font-weight-300 font-size-13">!0:45am</span>
-						</div>
-						<div class="pv-20">
-							<span><img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style=""></span>
-							<div class=" display-inline-block line-height-34 font-weight-600 valign-top">
-								Fabrizio Cedrone<br>
-								<div class="aione-border p-6 line-height-24 font-weight-400">
-									this is the message DIV
-								</div>
+                        @endforeach
 
-								
-							</div>
-							<span class="aione-float-right line-height-34 font-weight-300 font-size-13">10 oct</span>
-						</div>
-						<div class="pv-20">
-							<span><img src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" class="contact-avatar" style=""></span>
-							<div class=" display-inline-block line-height-34 font-weight-600 valign-top">
-								Sample Customer<br>
-								<div class="aione-border p-6 line-height-24 font-weight-400">
-									Question asked by the customer
-								</div>
 
-								
-							</div>
-							<span class="aione-float-right line-height-34 font-weight-300 font-size-13">4 jun</span>
-						</div> --}}
-						<!-- sample 2 -->
-						
 						<div class=" ar aione-border mb-20">
-							<div  class="ac l15 p-10 aione-align-center aione-border-right line-height-24">
-								<img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style="">
-								Fabrizio Cedrone
-								<span class="aione-align-center mb-5 grey lighten-1	">10:35pm</span>
-							</div>
-							<div class="ac l85 p-10 line-height-20 font-weight-400">
-								When visitors enter your domain name into a Web browser, the browser request uses your domain 
-							</div>
-							
-						</div>
-						
-						<div class=" ar aione-border mb-20">
-							
 							<div class="ac l85 p-10 line-height-20 font-weight-400">
 								When
-
-							</div>
-							<div  class="ac l15 p-10 aione-align-center aione-border-left line-height-24">
-								<img src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" class="contact-avatar" style="">
-								sample customer
-								<span class="aione-align-center mb-5 grey lighten-1	">10:35pm</span>
-							</div>
-						</div>
-						
-						<div class=" ar aione-border mb-20">
-							<div  class="ac l15 p-10 aione-align-center aione-border-right line-height-24">
-								<img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style="">
-								Fabrizio Cedrone
-								<span class="aione-align-center mb-5 grey lighten-1	">10:35pm</span>
-							</div>
-							<div class="ac l85 p-10 line-height-20 font-weight-400">
-								When visitors enter your domain name into a Web browser, the browser request uses your domain name to find the domain name's associated IP address and, therefore, the website. People use domain names instead of IP addresses because it is easier to remember a name rather than a series of numbers.
-							</div>
-						</div>
-						
-						<div class=" ar aione-border mb-20">
-							
-							<div class="ac l85 p-10 line-height-20 font-weight-400">
-								When visitors enter your domain name into a Web browser, the browser request uses your domain name to find the domain name's associated IP address and, therefore, the website. People use domain names instead of IP addresses because it is easier to remember a name rather than a series of numbers.
-									When visitors enter your domain name into a Web browser, the browser request uses your domain name to find the domain name's associated IP address and, therefore, the website. People use domain names instead of IP addresses because it is easier to remember a name rather than a series of numbers.
-										When visitors enter your domain name into a Web browser, the browser request uses your domain name to find the domain name's associated IP address and, therefore, the website. People use domain names instead of IP addresses because it is easier to remember a name rather than a series of numbers.
 							</div>
 							<div  class="ac l15 p-10 aione-align-center aione-border-left line-height-24">
 								<img src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" class="contact-avatar" style="">

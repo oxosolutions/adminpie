@@ -491,12 +491,12 @@ class UsersController extends Controller
         }
 
         public function UserMetaUpdate(Request $request){
-
           $model = GroupUserMeta::firstOrNew(['user_id'=>Auth::guard('org')->user()->id,'key'=>'layout_sidebar_small']);
           $model->key = 'layout_sidebar_small';
           $model->user_id = Auth::guard('org')->user()->id;
           $model->value = $request->layout_sidebar_small;
           $model->save();
+
       }
 
 

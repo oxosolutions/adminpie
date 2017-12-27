@@ -13,6 +13,8 @@
    $user_count    = count($data['users']);
    $salary_count  = count(array_filter( array_column($data['users']->toArray(), 'salary')));
    $body_text = "";
+   dump($salary->payscale);
+   
 @endphp
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
@@ -178,8 +180,8 @@
                       <a href="{{route('salary.slip.delete',['id'=>$value['salary']['id']]) }}">  Delete  </a>
                   @endif
                 </td>
-                <td >{{ $value['belong_group']['name'] }}</td>
-                <td >01/10/2017</td>
+                <td >{{ $value['name'] }}</td>
+                <td >{{$value->metas->where('key','date_of_joining')->first()->value}}</td>
             </tr>
         @endforeach
          @if($user_count != $salary_count)

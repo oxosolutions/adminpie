@@ -18,4 +18,8 @@ class UserRoleMapping extends Model
 
 		return $this->belongsTo('App\Model\Organization\UsersRole','role_id','id');
 	}
+
+    public function group_user(){
+        return $this->belongsTo('App\Model\Group\GroupUsers','user_id','id');
+    }
 }

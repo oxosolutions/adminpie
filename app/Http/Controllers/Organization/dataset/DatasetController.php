@@ -20,6 +20,7 @@ class DatasetController extends Controller
 {
 
 	protected function validateUser($id){
+        // dd(223264354);
 		$user_id = Auth::guard('org')->user()->id;
 		$model = Dataset::find($id);
         if($model == null){
@@ -36,6 +37,37 @@ class DatasetController extends Controller
     public function importDataset(){
         return view('organization.dataset.import');
     }
+    public function apiDataset($id)
+    {   
+        if(!$this->validateUser($id)){
+            return redirect()->route('list.dataset');
+        }
+        $data = Dataset::where('id', $id)->first();
+        if(!empty($data->dataset_table)){
+            $dataset_table = str_replace('ocrm_', '', $data->dataset_table);
+            $check_columns =   DB::table($dataset_table);//->first();
+            if($check_columns->exists()) {
+               $data['columns'] =  $check_columns->first();
+               dump((array)$data['columns']);
+               $this->api_data_result($data['columns'], $dataset_table);
+            }else{
+                 Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table columns does not exist!');
+                return redirect()->route('list.dataset');
+            }
+        }else{
+              Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table empty!');
+            return redirect()->route('list.dataset');
+        }
+        
+        return view('organization.dataset.api');
+    }
+
+     protected function api_data_result($fields , $dataset_table){
+
+        dump($fields , $dataset_table);
+        // DB::select()
+     }
+
     public function listDataset(Request $request){
     	$user_id = Auth::guard('org')->user()->id;
         $search = $this->saveSearch($request);
@@ -94,6 +126,7 @@ class DatasetController extends Controller
                                         'edit'=>['route'=>'edit.dataset','title'=>'Edit'],
                                         'define'=>['route'=>'define.dataset','title'=>'Define'],
                                         'filter'=>['route'=>'filter.dataset','title'=>'Filter'],
+                                        'api'=>['route'=>'api.dataset','title'=>'Api'],
                                         'validate'=>['route'=>'validate.dataset','title'=>'Validate'],
                                         'visualize'=>['route'=>'visualize.dataset','title'=>'Visualization'],
                                         'collaborate'=>['route'=>'collaborate.dataset','title'=>'Collaborate'],
@@ -1280,4 +1313,5 @@ class DatasetController extends Controller
         }
         return $columns;
     }
+   
 }

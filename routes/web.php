@@ -3,9 +3,6 @@
 	/****************************************** All Routes For Admin *************************************************/
 		//Public route
 		Route::group(['middleware'=>'web'], function(){
-			
-
-
 				Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
 				Route::get('demo/{slug}',	['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
 				Route::post('comment/save',	['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
@@ -14,14 +11,13 @@
 				Route::get('comment/del/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
 				Route::get('comment/edit/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
                 Route::post('formdata/save',    ['as'=>'save.form.data','uses'=>'Admin\FormBuilderController@saveGeneratedForm']);
-
 		});
-		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function () {
+		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function (){
 			Route::group(['namespace'=>'Admin'], function(){
 				Route::group(['middleware' => 'auth.admin'], function(){
 
 					Route::get('widget/sort/admin',	['as'=>'admin.widget.sort','uses'=>'DashboardController@widgetSort']);
-					Route::get('/',				['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
+					Route::get('/',['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
 
 					//Activity 
 					Route::get('activities', ['as'=>'activities' , 'uses'=>'ActivityTemplateController@index']);
@@ -187,12 +183,17 @@
 				Route::group(['middleware'=>'role'],function(){
 					Route::get('settings/department', ['as' => 'department.settings' , 'uses' => 'hrm\SettingController@departmentSetting']);
 					Route::get('settings/organization' , ['as'=>'setting.org' , 'uses' => 'hrm\SettingController@orgSetting']);
+
+
 					//Deleted employees
 					Route::get('deleted/employees',['as'=>'deleted.employee','uses'=>'hrm\SettingController@deletedEmployees']);
 					//Tools Widget
 					Route::get('/tools',['as'=>'tools','uses'=>'tools\ToolsController@tools']);
 				});
-					Route::post('/tools/website-rank',['as'=>'website.rank','uses'=>'tools\ToolsController@websiteRank']);
+                Route::get('settings/support', ['as'=>'support.settings','uses'=>'hrm\SettingController@supportSettings']);
+                Route::post('settings/support/save', ['as'=>'save.support.settings','uses'=>'hrm\SettingController@saveSupportSettings']);
+                
+                Route::post('/tools/website-rank',['as'=>'website.rank','uses'=>'tools\ToolsController@websiteRank']);
 
 
 				//Settings Module

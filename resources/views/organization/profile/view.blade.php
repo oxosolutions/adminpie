@@ -146,7 +146,11 @@ $page_title_data = array(
 						@endphp
 						{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
 							<div class="abc" >
-								<img src="{{ asset(@get_profile_picture($id,'medium')) }}" >
+								{{-- <img src="{{ asset(@get_profile_picture($id,'medium')) }}" > --}}
+								@php
+									$profilePicture = App\Model\Group\GroupUserMeta::where(['user_id' => $id,'key' => 'user_profile_picture'])->first();
+								@endphp
+								<img src="{{ asset('/files/organization_'.get_organization_id().'/user_profile_picture/'.@$profilePicture->value) }}" >
 							
 							@php
 								$parameters = request()->route()->parameters();

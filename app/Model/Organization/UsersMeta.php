@@ -46,6 +46,9 @@ public function get_user_meta(){
 	   }
    }
 
+public function payscale_meta(){
+   return $this->hasOne('App\Model\Organization\Payscale','value','id');
+}
    public static function getDataListSettings($url){
    	if(Auth::guard('admin')->check()){
    		$user = Auth::guard('admin')->user()->id;

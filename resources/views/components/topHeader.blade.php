@@ -9,12 +9,13 @@ $show_tagline = App\Model\Organization\OrganizationSetting::getSettings('show_ta
 $site_tagline = App\Model\Organization\OrganizationSetting::getSettings('tagline');
 
 
-$sidebar_small = App\Model\Organization\UsersMeta::getUserMeta('layout_sidebar_small');
-
+$sidebar_small = App\Model\Group\GroupUserMeta::where(['user_id'=>Auth::guard('org')->user()->id,'key'=>'layout_sidebar_small'])->first();
 $user_profile_picture = App\Model\Organization\UsersMeta::getUserMeta('user_profile_picture');
-
-
+	if(!empty($sidebar_small)){
+		$sidebar_small = $sidebar_small->value;
+	}
 @endphp
+
 <div id="aione_header_left" class="aione-header-left">
 	<div class="aione-row">
 		<div class="aione-header-item aione-nav-toggle">

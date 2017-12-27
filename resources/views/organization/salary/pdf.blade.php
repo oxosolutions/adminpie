@@ -1,10 +1,12 @@
 {{-- @include('common.pageheader',$page_title_data)  --}}
 
+@php
+dump($salary);
+@endphp
 <style type="text/css">
     .mycolor{
         color: blue;
-    }    
-
+    }
 </style>
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -33,7 +35,7 @@
             <tr>
                 <td class="light-blue darken-4 aione-align-center">01832401000, 9501010103, 9914149090</td>
                 <td>Pay Date:</td>
-                <td>13/11/2017</td>
+                <td>1X/1X/201X</td>
             </tr>
         </tbody>
      </table>

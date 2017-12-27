@@ -39,4 +39,8 @@ class UsersRole extends Model
    {
       return self::whereNotIn('name',['Super Admin','Employee','Client'])->get();
    }
+
+   public function role_map_rel(){
+        return $this->hasMany('App\Model\Organization\UserRoleMapping','role_id','id');
+   }
 }

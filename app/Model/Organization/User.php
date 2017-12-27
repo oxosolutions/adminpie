@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Model\Group\GroupUsers;
-
+use App\Model\Organization\UsersRole;
 class User extends Authenticatable 
 {
    use SoftDeletes;
@@ -192,5 +192,25 @@ class User extends Authenticatable
             $employeesList[$user->belong_group->id] = $user->belong_group->name;
         }
         return $employeesList;
+    }
+
+    public static function roleWiseUsers(){
+        $usersArray = [];
+        $model = UsersRole::with(['role_map_rel'=>function($query){
+            $query->with(['group_user']);
+        }])->get();
+
+        foreach($model as $key => $role){
+            $users = [];
+            foreach($role->role_map_rel as $k => $roles){
+                if($roles->group_user != null){
+                     $users[$roles->group_user->id] = $roles->group_user->name;
+                }
+            }
+            $usersArray[$role->name] = $users;
+        }
+
+        return $usersArray;
+        
     }
 }

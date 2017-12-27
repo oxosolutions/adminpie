@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
 use App\Model\Group\GroupUsers;
+use App\Model\Group\GroupUserMeta;
 use App\Model\Organization\UsersMeta;
 use App\Model\Organization\User;
 use App\Model\Organization\forms as Forms;
@@ -113,7 +114,10 @@ class ProfileController extends Controller
     public function getCurrentProfilePicture()
     {
         $user_id = get_user_id();
-        $profilePic = UsersMeta::where(['user_id' => $user_id, 'key' => 'profilePic'])->first();
+        $profilePic = GroupUserMeta::where(['user_id' => $user_id, 'key' => 'user_profile_picture'])->first();
+        if($profilePic != null){
+            $profilePic = $profilePic->value;
+        }
         return view('organization.my-profile.profilePic',['profilePic' => $profilePic]);
     }
 

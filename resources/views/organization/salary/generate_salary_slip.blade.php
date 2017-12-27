@@ -8,9 +8,13 @@ $page_title_data = array(
   'show_navigation' => 'yes',
   'page_title' => 'Salary',
 ); 
-  $id = "";
-  // dump($salary);
-  @endphp 
+    $id = "";
+    $payscale = json_decode($salary->payscale,true);
+    // $details = $salary->user_detail->metas->pluck('value','key');
+     // $details['pay_scale']
+     // App\\Model\\Organization
+    // dump($salary);
+@endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -120,7 +124,13 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15">
-                007
+                    {{-- "employee_id" => "40085012"
+                    "designation" => "2"
+                    "department" => "3"
+                    "user_shift" => "1"
+                    "pay_scale" => "1"
+                    "date_of_joining" --}}
+                 {{$salary['employee_id']}} 
             </div>
         </div>
     </div>
@@ -132,7 +142,8 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15">
-                    Mr James Bond                   
+                   {{$salary['user_detail']['name']}} 
+
             </div>
         </div>
     </div>
@@ -144,7 +155,7 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15">
-                   31-Jan-2012
+              {{date('d-M-Y', strtotime($salary->created_at))}}
             </div>
         </div>
     </div>
@@ -156,7 +167,7 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15">
-                   AX55248K0
+                   XXXXXXXXXXXX
             </div>
         </div>
     </div>
@@ -171,13 +182,29 @@ $page_title_data = array(
                     Payment<span class="aione-float-right">Amount</span>
                 </h5>
             </div>
+            {{-- "title" => "Fresher"
+  "description" => null
+  "currency" => "rupeees"
+  "pay_cycle" => null
+  "pay_scale" => "0.00"
+  "basic_pay" => "85000.00"
+  "grade_pay" => "0.00"
+  "ta" => "10000.00"
+  "da" => "200.00"
+  "sa" => null
+  "hra" => null
+  "epf_addiction" => null
+  "epf_deducation" => null
+  "sa_details" => null
+  "total_salary" => "100000.00"
+  "gross_salary" => "100000.00" --}}
             <div class="p-15 line-height-30">
-                   Basic pay<span class="aione-float-right">6600</span><br>
-                   TA<span class="aione-float-right">1600</span><br>
-                   DA(16%)<span class="aione-float-right">2500</span><br>
-                   HRA(18%)<span class="aione-float-right">4000</span><br>
-                   Other allowence<span class="aione-float-right">3000</span><br>
-                   Bonus<span class="aione-float-right">0</span><br>
+                   Basic pay<span class="aione-float-right">{{$payscale['basic_pay']}}</span><br>
+                   TA<span class="aione-float-right">{{$payscale['ta']}}</span><br>
+                   DA(16%)<span class="aione-float-right">{{$payscale['da']}}</span><br>
+                   HRA(18%)<span class="aione-float-right">{{$payscale['hra']}}</span><br>
+                   Other allowence<span class="aione-float-right">-</span><br>
+                   Bonus<span class="aione-float-right">-</span><br>
             </div>
         </div>
     </div>
@@ -189,10 +216,10 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15 line-height-30">
-                   Income Tax & EC<span class="aione-float-right">600</span><br>
-                   National Insurence<span class="aione-float-right">160</span><br>
-                   PLI<span class="aione-float-right">250</span><br>
-                   Provident Fund<span class="aione-float-right">400</span><br>
+                   Income Tax & EC<span class="aione-float-right">-</span><br>
+                   National Insurence<span class="aione-float-right">-</span><br>
+                   PLI<span class="aione-float-right">-</span><br>
+                   Provident Fund<span class="aione-float-right">-</span><br>
                    
             </div>
         </div>
@@ -207,10 +234,10 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15 line-height-30">
-               James Bond<br>
-               Gali no 10<br>
-               Rani ka bagh<br>
-               Amritsar
+                {{$salary['user_detail']['name']}} <br>
+               Gali no XX<br>
+               XXXXX<br>
+             city:  XX
             </div>
         </div>
     </div>
@@ -222,8 +249,8 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15 line-height-30">
-                Total Payments<span class="aione-float-right">6000</span><br>
-                Total Deductions<span class="aione-float-right">160</span><br>
+                Total Payments<span class="aione-float-right">{{$salary['salary']}}</span><br>
+                Total Deductions<span class="aione-float-right">--</span><br>
             </div>
         </div>
     </div>
@@ -235,10 +262,10 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15 line-height-30">
-                Taxable Gross Pay<span class="aione-float-right">600000000</span><br>
-                Income Tax<span class="aione-float-right">1600000</span><br>
-                Employee NIC<span class="aione-float-right">1600000</span><br>
-                Employer NIC<span class="aione-float-right">1600000</span><br>
+                Taxable Gross Pay<span class="aione-float-right">--</span><br>
+                Income Tax<span class="aione-float-right">--</span><br>
+                Employee NIC<span class="aione-float-right">--</span><br>
+                Employer NIC<span class="aione-float-right">--</span><br>
             </div>
         </div>
     </div>

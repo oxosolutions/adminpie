@@ -22,6 +22,10 @@ class GroupUsers extends Authenticatable
     		$this->table = 'group_'.Session::get('group_id').'_users';
     	}
     }
+
+    public function salary(){
+    return $this->hasOne('App\Model\Organization\Salary','user_id','id');
+  }
     public function organization_user(){
       
       return $this->hasOne('App\Model\Organization\User','user_id','id');
