@@ -313,15 +313,15 @@ try{
                                 'name'=>'create_'.$org_id.'_user_role_mappings',
                                 '--schema'=>'user_id:integer, role_id:integer, status:integer:default(1)'
                             ]);
-        Artisan::call('make:migration:schema',[
-                                '--model'=>false,
-                                'name'=>'create_'.$org_id.'_user_role_mappings',
-                                '--schema'=>'user_id:integer, role_id:integer, status:integer:default(1)'
-                            ]);
+        // Artisan::call('make:migration:schema',[
+        //                         '--model'=>false,
+        //                         'name'=>'create_'.$org_id.'_user_role_mappings',
+        //                         '--schema'=>'user_id:integer, role_id:integer, status:integer:default(1)'
+        //                     ]);
           Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_support_comments',
-                                '--schema'=>'user_id:integer, comment:text:nullable, attachments:text:nullable, ticket_id:integet, status:integer:default(1)'
+                                '--schema'=>'user_id:integer, comment:text:nullable, attachments:text:nullable, ticket_id:integer, status:integer:default(1)'
                             ]);
        
 		Artisan::call('make:migration:schema',[

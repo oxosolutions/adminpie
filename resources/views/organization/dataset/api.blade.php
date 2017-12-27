@@ -21,10 +21,10 @@ $page_title_data = array(
 				
 			</div>
 			<div class="ac l50 aione-border p-10 fbox" id="origin" style="min-height: 200px;max-height: 200px">
-				<div id="one" class="draggable p-10 ">
+				<div id="one" class="draggable p-10 aione-border mb-10">
 					this is dragable item
 				</div>
-				<div id="two" class="draggable p-10">
+				<div id="two" class="draggable p-10 aione-border">
 					this is dragable item
 				</div>
 			</div>

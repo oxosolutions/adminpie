@@ -47,8 +47,7 @@ class DatasetController extends Controller
             $dataset_table = str_replace('ocrm_', '', $data->dataset_table);
             $check_columns =   DB::table($dataset_table);//->first();
             if($check_columns->exists()) {
-               $data['columns'] =  $check_columns->first();
-               dump((array)$data['columns']);
+               $data['columns'] =  (array)$check_columns->first();
                $this->api_data_result($data['columns'], $dataset_table);
             }else{
                  Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table columns does not exist!');
@@ -63,8 +62,20 @@ class DatasetController extends Controller
     }
 
      protected function api_data_result($fields , $dataset_table){
+        // dump($fields);
 
-        dump($fields , $dataset_table);
+
+        // $field  =  unset($fields['1']);
+        //$array1 = array_keys($field);
+        //$array2 = array_values($field);
+
+        // dump($field);
+
+        // $combined = array_map(function($a, $b) {return $a . ' as ' . $b; }, $array1, $array2);
+        // dump(implode(', ',$combined));
+
+       // $data =  DB::table($dataset_table)->select(array_keys($fields))->get();
+        // dump($data , $fields , $dataset_table);
         // DB::select()
      }
 
