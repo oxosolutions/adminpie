@@ -211,9 +211,20 @@ class SupportsController extends Controller
          
     }
 
+    /**
+     * Update ticket details
+     * @param  Request $request having posted data
+     * @return [type]           return back to same route
+     */
     public function assignTicket(Request $request){
-        
-        dd($request->all());
+        $model = SupportTicket::find($request->route()->ticket_id);
+        $model->assign_to = $request->assignee;
+        $model->classification = $request->classification;
+        $model->priority = $request->priority;
+        $model->end = $request->change_due_date;
+        $model->save();
+        Session::flash('success','Ticket updated successfully!');
+        return back();
     }
 
     public function validateCommentPost($request){

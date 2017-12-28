@@ -37,18 +37,29 @@ class DatasetController extends Controller
     public function importDataset(){
         return view('organization.dataset.import');
     }
-    public function apiDataset($id)
+    public function apiDataset($id , Request $request)
     {   
+
         if(!$this->validateUser($id)){
             return redirect()->route('list.dataset');
         }
-        $data = Dataset::where('id', $id)->first();
-        if(!empty($data->dataset_table)){
-            $dataset_table = str_replace('ocrm_', '', $data->dataset_table);
+        $data_set = Dataset::where('id', $id)->first();
+        if(!empty($data_set->dataset_table)){
+            $dataset_table = str_replace('ocrm_', '', $data_set->dataset_table);
+            if($request->isMethod('post')){
+                $this->api_data_result($request->column, $dataset_table);
+            }
             $check_columns =   DB::table($dataset_table);//->first();
             if($check_columns->exists()) {
-               $data['columns'] =  (array)$check_columns->first();
-               $this->api_data_result($data['columns'], $dataset_table);
+               $columns =  (array)$check_columns->first();
+               if(isset($columns['id'])){
+                unset($columns['id']);
+                $map = array_map(function($key, $val){
+                    return ['column'=> $val, 'alias'=>$key.' as '.$val]; 
+                }, array_keys($columns), array_values($columns) );
+                dump($data['columns'] = $map);
+               }
+              
             }else{
                  Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table columns does not exist!');
                 return redirect()->route('list.dataset');
@@ -58,11 +69,11 @@ class DatasetController extends Controller
             return redirect()->route('list.dataset');
         }
         
-        return view('organization.dataset.api');
+        return view('organization.dataset.api', compact('data'));
     }
 
      protected function api_data_result($fields , $dataset_table){
-        // dump($fields);
+         // dump($fields, $dataset_table );
 
 
         // $field  =  unset($fields['1']);
@@ -74,7 +85,9 @@ class DatasetController extends Controller
         // $combined = array_map(function($a, $b) {return $a . ' as ' . $b; }, $array1, $array2);
         // dump(implode(', ',$combined));
 
-       // $data =  DB::table($dataset_table)->select(array_keys($fields))->get();
+    $data =  DB::table($dataset_table)->select($fields);
+    // ->get();
+    dd($data->exists());
         // dump($data , $fields , $dataset_table);
         // DB::select()
      }

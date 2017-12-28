@@ -1,6 +1,7 @@
 @extends('layouts.main')
 @section('content')
 @php
+dump($data);
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -17,13 +18,19 @@ $page_title_data = array(
 	<div>
 		Select columns to make api
 		<div class="ar p-10 wrapper">
+			{!! Form::open(['route'=>['api.dataset',149]]) !!}
 			<div class="ac l50 aione-border p-10 pr-10 fbox" id="drop" style="min-height: 200px;max-height: 200px">
 				
 			</div>
+			{!! Form::submit() !!}
+			{!! Form::close() !!}
 			<div class="ac l50 aione-border p-10 fbox" id="origin" style="min-height: 200px;max-height: 200px">
-				<div id="one" class="draggable p-10 aione-border mb-10">
-					this is dragable item
-				</div>
+				@foreach($data['columns'] as $key => $val)
+					<div id="one" class="draggable p-10 aione-border mb-10">
+						<input type="text" name="column[]" value="{{$val['alias']}}">
+						{{$val['column']}}
+					</div>
+				@endforeach
 				<div id="two" class="draggable p-10 aione-border">
 					this is dragable item
 				</div>
@@ -49,6 +56,8 @@ $("#drop").droppable({ accept: ".draggable",
                    $(this).removeClass("border").removeClass("over");
              var dropped = ui.draggable;
             var droppedOn = $(this);
+ 			$("#drop draggable ")
+
             $(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);      
              
              
