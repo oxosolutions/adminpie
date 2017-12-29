@@ -1,23 +1,20 @@
 @extends('layouts.main')
 @section('content')
-<div class="row">
-	<div class="col-md-12">
-	{!! Form::open(['route'=>'save.client', 'class'=> 'form-horizontal','method' => 'post'])!!}
-			<div class="row">
-				<div class="col-md-12 ">
-					<div class="panel panel-flat">
+@php
+$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Add Products',
+	'add_new' => 'All Product',
+	'route' => 'list.products'
+); 
+@endphp
+@include('common.pageheader',$page_title_data)
+	
+{!! Form::open(['route'=>'save.product' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+	{!!FormGenerator::GenerateForm('create_product_form')!!}
+{!!Form::close()!!}
 
-						<div class="panel-body">
-							@include ('organization.client._form')
-							<div class="text-right">
-								<button type="submit" class="btn btn-primary">Submit form <i class="icon-arrow-right14 position-right"></i></button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{!!Form::close()!!}
-	</div>
-</div>
 
 @endsection()

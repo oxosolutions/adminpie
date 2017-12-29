@@ -39,7 +39,7 @@ class ProductsController extends Controller
                           'datalist'=>  $model,
                           'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created'],
                           'actions' => [
-                                          'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
+                                          'edit' => ['title'=>'Edit','route'=>'edit.product' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.products'],
                                           'price'=>['title'=>'Set Price','route'=>'price.products']
                                        ],
@@ -48,15 +48,22 @@ class ProductsController extends Controller
                       ];
         return view('organization.crm.product.list',$datalist);
     }
-    public function create(Request $request)
+    public function save(Request $request)
     {
       $product =  new Product();
       $product->fill($request->all());
       $product->save();
-      return back();
+      return redirect()->route('list.products');
+    }
+    public function create()
+    {    
+
+        return view('organization.crm.product.create');
     }
     public function edit(Request $request, $id)
     {
+      $model = Product::where('id',$id)->get();
+      return view('organization.crm.product.edit',['model'=>$model]);
     }
 
     public function common_price($request , $use_for, $id){
@@ -121,5 +128,12 @@ return $model;
     {
       Product::whereId($id)->delete();
       return back();
+    }
+    public function update(Request $request,$id)
+    {
+      $product = Product::find($id);
+      $product->fill($request->all());
+      $product->save();
+      return redirect()->route('edit.product',$id);
     }
 }

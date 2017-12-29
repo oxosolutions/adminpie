@@ -318,10 +318,16 @@ try{
         //                         'name'=>'create_'.$org_id.'_user_role_mappings',
         //                         '--schema'=>'user_id:integer, role_id:integer, status:integer:default(1)'
         //                     ]);
-          Artisan::call('make:migration:schema',[
+        Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_support_comments',
                                 '--schema'=>'user_id:integer, comment:text:nullable, attachments:text:nullable, ticket_id:integer, status:integer:default(1)'
+                            ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_log_systems',
+                                '--schema'=>'user_id:integer:nullable, type:string:nullable, route_name:string:nullable, text:text:nullable, ip_address:string:nullable'
                             ]);
        
 		Artisan::call('make:migration:schema',[
@@ -606,7 +612,7 @@ try{
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_dataset_meta',
-                                '--schema'=>'dataset_id:integer, key:string, value:text:nullable'
+                                '--schema'=>'dataset_id:integer, key:string, value:text:nullable, token:string:nullable'
                             ]);
 
         Artisan::call('make:migration:schema',[

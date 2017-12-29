@@ -59,34 +59,38 @@
     					</div>
                     {!! Form::close() !!}
 					<div class="pv-15">
-
+                        {{-- {{ dd($model) }} --}}
+                        {{-- {{ dd($comments) }} --}}
                         @foreach($comments as $key => $comment)
-                        
-    						<div class=" ar aione-border mb-20">
-    							<div  class="ac l15 p-10 aione-align-center aione-border-right line-height-24">
-    								<img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style="">
-    								Fabrizio Cedrone
-    								<span class="aione-align-center mb-5 grey lighten-1	">10:35pm</span>
-    							</div>
-    							<div class="ac l85 p-10 line-height-20 font-weight-400">
-    								When visitors enter your domain name into a Web browser, the browser request uses your domain 
-    							</div>
-    							
-    						</div>
+                            @if($model->user_id == $comment->user_id)
+                                <div class=" ar aione-border mb-20">
+                                    <div class="ac l85 p-10 line-height-20 font-weight-400">
+                                        {{ $comment->comment }}
+                                    </div>
+                                    <div  class="ac l15 p-10 aione-align-center aione-border-left line-height-24">
+                                        <img src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" class="contact-avatar" style="">
+                                        sample customer
+                                        <span class="aione-align-center mb-5 grey lighten-1 ">10:35pm</span>
+                                    </div>
+                                </div>
+                            @else
+                                <div class=" ar aione-border mb-20">
+                                    <div  class="ac l15 p-10 aione-align-center aione-border-right line-height-24">
+                                        <img src="http://fuse-angular-material.withinpixels.com/assets/images/avatars/Velazquez.jpg" class="contact-avatar" style="">
+                                        Fabrizio Cedrone
+                                        <span class="aione-align-center mb-5 grey lighten-1 ">10:35pm</span>
+                                    </div>
+                                    <div class="ac l85 p-10 line-height-20 font-weight-400">
+                                        {{ $comment->comment }}
+                                    </div>
+                                </div>
+                            @endif
+    						
 
                         @endforeach
 
 
-						<div class=" ar aione-border mb-20">
-							<div class="ac l85 p-10 line-height-20 font-weight-400">
-								When
-							</div>
-							<div  class="ac l15 p-10 aione-align-center aione-border-left line-height-24">
-								<img src="https://www.atomix.com.au/media/2015/06/atomix_user31.png" class="contact-avatar" style="">
-								sample customer
-								<span class="aione-align-center mb-5 grey lighten-1	">10:35pm</span>
-							</div>
-						</div>
+						
 						<div class="aione-align-center">
 							<a href="">View older conversation</a>
 						</div>
@@ -94,7 +98,7 @@
 				</div>	
 			</div>
 			<div class="ac l30 m70 s100">                
-                {!! Form::open(['route'=>['assign.ticket',request()->id]]) !!}
+                {!! Form::model(@$model,['route'=>['assign.ticket',request()->id]]) !!}
                     @if(is_admin())
         				{!! FormGenerator::GenerateForm('edit_support_ticket_form') !!}
         				<button style="width: 100%">Save</button>

@@ -16,8 +16,107 @@ use App\Model\Organization\UsersMeta;
 use Illuminate\Support\Facades\Schema;
 use App\Model\Organization\Visualization;
 use App\Model\Organization\Collaborator;
+use App\Model\Admin\GlobalOrganization;
 class DatasetController extends Controller
 {
+   /**
+     * apiDataset
+     * @param  Request $request [posted data]
+     * @return [route]           [will redirect back]
+     paljinder Singh
+     */
+
+    public function apiDataset($id , Request $request)
+    {
+       
+        if(!$this->validateUser($id)){
+            return redirect()->route('list.dataset');
+        }
+        $data['id'] = $id;
+        $data_set = Dataset::where('id', $id)->first();
+        if(!empty($data_set->dataset_table)){
+            $dataset_table = str_replace('ocrm_', '', $data_set->dataset_table);
+            $check_columns =   DB::table($dataset_table);//->first();
+            if($check_columns->exists()) {
+               $columns =  (array)$check_columns->first();
+               if(isset($columns['id'])){
+                unset($columns['id']);
+                $map = array_map(function($key, $val){
+                     return ['column'=> $val, 'alias'=>$key.' as '.$val]; 
+                    //return [$val=>$key.' as '.$val]; 
+                }, array_keys($columns), array_values($columns));
+                $data['columns'] = collect($map)->keyBy('column')->toArray();
+                // dump( $data['columns']);
+               }
+                if($request->isMethod('post')){
+                    // dump($request->all(),  $data['columns']);
+                    foreach(array_keys($request->column) as $value ){
+                        $data['in_columns'][$value] = $data['columns'][$value];
+                        unset($data['columns'][$value]);
+                    }
+                    $check_meta = DatasetMeta::where(['key'=>'api_slug' ,'dataset_id'=>$id]);
+                    if($check_meta->exists()){
+                        $check_meta->update(['value'=>json_encode($data['in_columns'])]);
+                        $token = $check_meta->first()->token;
+                    }else{
+                        $dataset_meta = new DatasetMeta();
+                        $dataset_meta->dataset_id =  $id;
+                        $dataset_meta->key =  'api_slug';
+                        $dataset_meta->value =  json_encode($data['in_columns']);
+                        $dataset_meta->token =  str_random(25);
+                        $dataset_meta->save();
+                        $token = $dataset_meta->token;
+                    }
+                    $data['response'] = $this->api_data_result($request->column, $dataset_table);
+                    $go  = GlobalOrganization::find(get_organization_id());
+                    $organization_slug = $go->slug;
+                    $active_code =  $go->active_code;
+                    $data['link'] = url('/api/dataset/'.$active_code.'/'.$token);//->current();
+                }
+            }else{
+                 Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table columns does not exist!');
+                return redirect()->route('list.dataset');
+            }
+        }else{
+              Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table empty!');
+            return redirect()->route('list.dataset');
+        }
+        return view('organization.dataset.api-builder',[ 'menus' => [], 'menulist' => [],'routes'=>[],'pages'=>[] ]);
+        // return view('organization.dataset.api', compact('data'));
+    }
+
+     protected function api_data_result($fields , $dataset_table){
+        $data =  DB::table($dataset_table)->select($fields);
+        if($data->exists()){
+            return $data->skip(1)->take(5)->get()->toJson();
+        }
+        return null;
+     }
+/**
+     * apiDataset
+     * @param  Request $request [posted data]
+     * @return [route]           [will redirect back]
+     paljinder Singh
+     */
+     public function api_response($active_code, $token ){
+        // dump($token , $active_code);
+        $check = GlobalOrganization::select('id')->where('active_code',$active_code);
+        if($check->exists()){
+          Session::put('organization_id',$check->first()->id);
+        }
+
+        $dataset_meta =  DatasetMeta::where(['key'=>'api_slug' ,'token'=>$token])->first();
+         $datset_id = $dataset_meta->dataset_id;
+         $fields = json_decode($dataset_meta->value,true);
+         $sel_fields = array_column($fields, 'alias');
+
+          $data_set = Dataset::where('id',$datset_id)->first();
+        if(!empty($data_set->dataset_table)){
+            $dataset_table = str_replace('ocrm_', '', $data_set->dataset_table);
+              return DB::table($dataset_table)->select($sel_fields)->get();
+        }
+        return null;
+     }
 
 	protected function validateUser($id){
         // dd(223264354);
@@ -37,60 +136,7 @@ class DatasetController extends Controller
     public function importDataset(){
         return view('organization.dataset.import');
     }
-    public function apiDataset($id , Request $request)
-    {   
-
-        if(!$this->validateUser($id)){
-            return redirect()->route('list.dataset');
-        }
-        $data_set = Dataset::where('id', $id)->first();
-        if(!empty($data_set->dataset_table)){
-            $dataset_table = str_replace('ocrm_', '', $data_set->dataset_table);
-            if($request->isMethod('post')){
-                $this->api_data_result($request->column, $dataset_table);
-            }
-            $check_columns =   DB::table($dataset_table);//->first();
-            if($check_columns->exists()) {
-               $columns =  (array)$check_columns->first();
-               if(isset($columns['id'])){
-                unset($columns['id']);
-                $map = array_map(function($key, $val){
-                    return ['column'=> $val, 'alias'=>$key.' as '.$val]; 
-                }, array_keys($columns), array_values($columns) );
-                dump($data['columns'] = $map);
-               }
-              
-            }else{
-                 Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table columns does not exist!');
-                return redirect()->route('list.dataset');
-            }
-        }else{
-              Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table empty!');
-            return redirect()->route('list.dataset');
-        }
-        
-        return view('organization.dataset.api', compact('data'));
-    }
-
-     protected function api_data_result($fields , $dataset_table){
-         // dump($fields, $dataset_table );
-
-
-        // $field  =  unset($fields['1']);
-        //$array1 = array_keys($field);
-        //$array2 = array_values($field);
-
-        // dump($field);
-
-        // $combined = array_map(function($a, $b) {return $a . ' as ' . $b; }, $array1, $array2);
-        // dump(implode(', ',$combined));
-
-    $data =  DB::table($dataset_table)->select($fields);
-    // ->get();
-    dd($data->exists());
-        // dump($data , $fields , $dataset_table);
-        // DB::select()
-     }
+   
 
     public function listDataset(Request $request){
     	$user_id = Auth::guard('org')->user()->id;

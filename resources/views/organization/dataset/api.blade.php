@@ -1,12 +1,12 @@
 @extends('layouts.main')
 @section('content')
 @php
-dump($data);
+// dump($data);
 $page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'yes',
+	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Add Ticket',
+	'page_title' => 'API Builder',
 	'add_new' => 'All Ticket',
 	'route' => 'add.ticket'
 );
@@ -17,41 +17,80 @@ $page_title_data = array(
 @include('organization.dataset._tabs')
 	<div>
 		Select columns to make api
+		
 		<div class="ar p-10 wrapper">
-			{!! Form::open(['route'=>['api.dataset',149]]) !!}
-			<div class="ac l50 aione-border p-10 pr-10 fbox" id="drop" style="min-height: 200px;max-height: 200px">
+			{!! Form::open(['route'=>['api.dataset',$data['id']]]) !!}
+			<div class="ac l50  p-10 pr-10 " >
+				<div class="fbox aione-border p-10 pt-0"  id="drop" style="min-height: 200px;max-height: 200px;overflow: auto;">
+					@if(!empty($data['in_columns']))
+						@foreach($data['in_columns'] as $key => $val)
+							<div id="one" class="draggable p-10 aione-border mb-10 display-inline-block" style="cursor: pointer">
+								<input type="hidden" name="column[{{$val['column']}}]" value="{{$val['alias']}}">
+								{{$val['column']}}
+							</div>
+						@endforeach
+					@endif	
+				</div>
+				<div>
+					{!! Form::submit() !!}		
+				</div>
 				
 			</div>
-			{!! Form::submit() !!}
+				
 			{!! Form::close() !!}
-			<div class="ac l50 aione-border p-10 fbox" id="origin" style="min-height: 200px;max-height: 200px">
+			
+			<div class="ac l50 aione-border p-10 fbox" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
 				@foreach($data['columns'] as $key => $val)
-					<div id="one" class="draggable p-10 aione-border mb-10">
-						<input type="text" name="column[]" value="{{$val['alias']}}">
+					<div id="one" class="draggable p-10 aione-border mb-10 display-inline-block" style="cursor: pointer">
+						<input type="hidden" name="column[{{$val['column']}}]" value="{{$val['alias']}}">
 						{{$val['column']}}
 					</div>
 				@endforeach
-				<div id="two" class="draggable p-10 aione-border">
-					this is dragable item
-				</div>
+				
 			</div>
 		</div>
+	
+		
 	</div>
-	<div>
+	{{-- <div>
 		{!! FormGenerator::GenerateForm('api_condition_form') !!}
-	</div>
+	</div> --}}
 	<div class="pv-20">
-		Api Link :- <a href="https://thisisthedemoapi.com/v2/route101">https://thisisthedemoapi.com/v2/route101</a>
+		@if(!empty($data['link']))
+			Api Link :- <a href="{{$data['link']}}">{{$data['link']}}</a>
+		@endif
 	</div>
 	<div class="aione-border p-10" style="min-height: 350px;max-height: 350px;overflow: auto">
-		this is json data ...
+		@if(isset($data['response']))
+		<code>
+			<pre>
+				@php
+					$newArray = [];
+						foreach(json_decode($data['response']) as $k => $v){
+							$appendedData = [];
+							foreach ($v as $key => $value) {
+								$appendedData[$key] = $value; 
+							}
+								$newArray[] = $appendedData;
+						}
+						
+					$json = json_encode($newArray , JSON_PRETTY_PRINT);
+					print_r($json);
+				@endphp
+				{{-- {{json_encode($data['response'],JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)}} --}}
+			</pre>
+		</code>
+		@endif	
+		
+			
+
 	</div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 	<script type="text/javascript">
 		$(".draggable").draggable({ cursor: "crosshair", revert: "invalid"});
-$("#drop").droppable({ accept: ".draggable", 
-           drop: function(event, ui) {
+			$("#drop").droppable({ accept: ".draggable", 
+           	drop: function(event, ui) {
                     console.log("drop");
                    $(this).removeClass("border").removeClass("over");
              var dropped = ui.draggable;

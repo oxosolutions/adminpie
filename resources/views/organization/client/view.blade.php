@@ -19,7 +19,7 @@ $page_title_data = array(
 		font-weight: 600;
 	}
 </style>
-	<div class="row">
+	{{-- <div class="row">
 		<div class="col-md-12">
 			<div class="row">
 				<div class="col-md-12 ">
@@ -102,5 +102,56 @@ $page_title_data = array(
 				</div>
 			</div>
 		</div>
+	</div> --}}
+	
+	<div class="aione-table">
+		<table>
+			<thead>
+				<tr>
+					<th>key</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Name</td>
+					<td>{{$detail->name}}</td>
+				</tr>
+				<tr>
+					<td>Company Name</td>
+					<td>{{$detail->company_name}}</td>
+				</tr>
+				<tr>
+					<td>Address</td>
+					<td>{{$detail->address}}</td>
+				</tr>
+				<tr>
+					<td>country</td>
+					<td>{{$detail->country}}</td>
+				</tr>
+				<tr>
+					<td>state</td>
+					<td>{{$detail->state}}</td>
+				</tr>
+				<tr>
+					<td>City</td>
+					<td>{{$detail->city}}</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td>{{$detail->email}}</td>
+				</tr>
+				<tr>
+					<td>Phone</td>
+					<td>{{$detail->phone}}</td>
+				</tr>
+				<tr>
+					<td>Additional Info</td>
+					<td>{{$detail->additional_info}}</td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
+
+	
 @endsection()

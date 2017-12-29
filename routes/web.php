@@ -571,9 +571,13 @@
 					//billing
 						Route::get('/billings',['as'=>'list.billing','uses'=>'BillingController@billing']);
 					//products
-						Route::get('/products',['as'=>'list.products','uses'=>'ProductsController@index']);
-						Route::get('/product/delete/{id}',['as'=>'delete.products','uses'=>'ProductsController@delete']);
-						Route::match(['get','post'],'/product/save',['as'=>'save.product','uses'=>'ProductsController@create']);
+						Route::get('/products',				['as'=>'list.products',		'uses'=>'ProductsController@index']);
+						Route::get('/product/delete/{id}',	['as'=>'delete.products',	'uses'=>'ProductsController@delete']);
+						Route::get('/product/create',		['as'=>'create.product',	'uses'=>'ProductsController@create']);
+						Route::post('/product/save',		['as'=>'save.product',		'uses'=>'ProductsController@save']);
+						Route::get('/product/edit/{id}',	['as'=>'edit.product',		'uses'=>'ProductsController@edit']);
+						Route::post('/product/update/{id}',	['as'=>'update.product',	'uses'=>'ProductsController@update']);
+
 						Route::match(['get','post'],'/product/price/{id?}',['as'=>'price.products','uses'=>'ProductsController@prices']);
 						Route::get('delete/product/price/{id?}',['as'=>'delete.price.products','uses'=>'ProductsController@delete_pricing']);
 					//Category price.products
@@ -757,3 +761,4 @@ Route::group(['prefix'=>'front'], function(){
 	Route::get('/public/custom-maps/{map_id}/{theme?}/{data?}',['as'=>'public.map','uses'=>'Admin\CustomMapsController@publicMaps']);
 	Route::get('/public/maps/{map_id}/{theme?}/{source?}/{data?}',['as'=>'public.maps','uses'=>'Admin\CustomMapsController@public_maps']);
 	
+	Route::match(['get','post'], '/user-meta-update',			['as'=>'user.updatemeta',			'uses'=>'Organization\users\UsersController@UserMetaUpdate']);

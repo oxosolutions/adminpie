@@ -23,3 +23,5 @@ Route::post('organization/users' , ['uses'=>"Api\SurveyController@organization_u
 
 //api for complaint box Android App
 Route::post('/send_complaint' , [ 'uses' =>'Api\FeedbackController@complaintAppResponce'] );
+Route::get('/dataset/{active_code}/{token}' , [ 'uses' =>'Organization\dataset\DatasetController@api_response'] );
+

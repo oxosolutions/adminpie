@@ -1,7 +1,19 @@
 @php
 $sidebar_small = 1;
 	$orgData = App\Model\Admin\GlobalGroup::where('id',Auth::guard('group')->user()->group_id)->first();
+
+	$sidebar_small = App\Model\Group\GroupUserMeta::where(['user_id'=>Auth::guard('group')->user()->id,'key'=>'layout_sidebar_small'])->first();
+
+	if(!empty($sidebar_small)){
+		$sidebar_small = $sidebar_small->value;
+	}
 @endphp
+<style type="text/css">
+	.aione-main.sidebar-small .side-bar-text{
+		display: none
+	}
+</style>
+<input type="hidden"  name="_token" value="{{ csrf_token() }}">
 <div id="aione_header_left" class="aione-header-left">
 	<div class="aione-row">
 		<div class="aione-header-item aione-nav-toggle">

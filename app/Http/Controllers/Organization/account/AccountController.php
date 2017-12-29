@@ -134,11 +134,8 @@ class AccountController extends Controller
     	if($id == null){
     		 $id = Auth::guard('org')->user()->id;
     	}
-        $userDetails = User::with(['applicant_rel','client_rel','user_role_rel'])->find($id);
-       
+        $userDetails = User::with(['applicant_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
-         
-
         if($userDetails != null){
             $userDetails->password = '';
             if($userMeta != false){

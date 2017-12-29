@@ -491,9 +491,21 @@ class UsersController extends Controller
         }
 
         public function UserMetaUpdate(Request $request){
-          $model = GroupUserMeta::firstOrNew(['user_id'=>Auth::guard('org')->user()->id,'key'=>'layout_sidebar_small']);
+          if(Auth::guard('org')->check()){
+            $model = GroupUserMeta::firstOrNew(['user_id'=>Auth::guard('org')->user()->id,'key'=>'layout_sidebar_small']);
+            $model->user_id = Auth::guard('org')->user()->id;
+          }
+          if(Auth::guard('group')->check()){
+            $model = GroupUserMeta::firstOrNew(['user_id'=>Auth::guard('group')->user()->id,'key'=>'layout_sidebar_small']);
+            $model->user_id = Auth::guard('group')->user()->id;
+          }
+          // if(Auth::guard('admin')->check()){
+          //   dd(Auth::guard('admin')->user()->id);
+          //   $model = GroupUserMeta::firstOrNew(['user_id'=>Auth::guard('admin')->user()->id,'key'=>'layout_sidebar_small']);
+          //   $model->user_id = Auth::guard('admin')->user()->id;
+          // }
+
           $model->key = 'layout_sidebar_small';
-          $model->user_id = Auth::guard('org')->user()->id;
           $model->value = $request->layout_sidebar_small;
           $model->save();
 

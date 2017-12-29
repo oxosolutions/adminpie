@@ -169,6 +169,9 @@ class SupportsController extends Controller
         $comments = SupportComments::with(['user_role_map'=>function($query){
             $query->with('roles');
         }])->where('ticket_id',$id)->get();
+        $model['assignee'] = $model->assign_to;
+        $date = strtotime($model->end);
+        $model['change_due_date'] = date('Y-m-d',$date);
         return view('organization.support.ticket.edit',['model'=>$model,'comments'=>$comments]);
     }
 

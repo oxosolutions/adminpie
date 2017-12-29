@@ -24,7 +24,6 @@
 	Route::get('/changeStatus/{id}',			['as'=>'change.user.status',		'uses'=>'UsersController@changeStatus']);
 
 
-	Route::match(['get','post'], '/user-meta-update',			['as'=>'user.updatemeta',			'uses'=>'UsersController@UserMetaUpdate']);
 
 	Route::post('role_permisson_save',		['as'=>'save.role_permisson', 'uses'=>'UserRoleController@role_permisson_save']);
 	

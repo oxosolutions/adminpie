@@ -181,8 +181,19 @@ class ClientController extends Controller
 
     public function view($id)
     {
-    	$data = GroupUsers::find($id);
-        return view('organization.client.view')->with('detail',$data);
+    	// $data = GroupUsers::find($id);
+       $model = GroupUsers::with(['organization_user','metas'=>function($query) use ($id){
+            $query->where(['user_id'=>$id]);
+        }])->whereHas('organization_user', function($query){
+            $query->where(['user_type'=>'client']);
+        })->where('id',$id)->first();
+        $model->client_name = $model->name;
+        if($model != null){
+            foreach($model->metas as $key => $meta){
+                $model[$meta->key] = $meta->value;
+            }
+        }
+        return view('organization.client.view')->with('detail',$model);
     }
 
     protected function validateUpdateClientRequest($request){

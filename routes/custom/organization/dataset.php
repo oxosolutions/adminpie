@@ -7,6 +7,7 @@
 	Route::get('/dataset/import',						['as' => 'import.dataset','uses' => 'DatasetController@importDataset']);
 	Route::get('/dataset/create',						['as' => 'create.dataset','uses' => 'DatasetController@craeteDataset']);
 	Route::match(['get','post'],'/dataset/api/{id}',						['as' => 'api.dataset','uses' => 'DatasetController@apiDataset']);
+	Route::match(['get','post'],'/dataset/api/{slug}',						['as' => 'api.dataset','uses' => 'DatasetController@apiResponse']);
 		
 	Route::get('/dataset/edit/{id}',					['as' => 'edit.dataset','uses' => 'DatasetController@editDataset']);
 	Route::match(['get','post'],'/dataset/define/{id}',	['as' => 'define.dataset','uses' => 'DatasetController@defineDataset']);

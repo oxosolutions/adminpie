@@ -11,6 +11,11 @@
 		</div> <!-- .aione-header-item -->
     </div><!-- .aione-row -->
 </div><!-- #aione_header_left -->
+<style type="text/css">
+    .aione-main.sidebar-small .side-bar-text{
+        display: none
+    }
+</style>
 <div id="aione_header_right" class="aione-header-right">
     <div class="aione-row">
         <div class="aione-header-item aione-profile">
