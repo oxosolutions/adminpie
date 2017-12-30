@@ -207,9 +207,9 @@ $page_title_data = array(
             var html = `
                     <li class="dd-item" data-id="`+$(this).data('column')+`">
                         <div class="dd-handle">`+$(this).data('alias')+`
-                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">`+$(this).data('column')+`</span>
+                            
+                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">`+$(this).data('column')+`<i class="fa fa-trash" style="float:right;cursor:pointer;font-size:18px;padding-left:10px"></i></span>
                         </div>
-                            <span><i class="fa fa-times"></i></span>
                         
                     </li>
             `;
@@ -242,7 +242,7 @@ $page_title_data = array(
             var replace_space = inputVal.replace(/ /g,"_");
             var html = `
                     <li class="dd-item" data-id="`+replace_space+`">
-                        <div class="dd-handle">`+replace_space+`</div>
+                        <div class="dd-handle">`+replace_space+`<span><i class="fa fa-trash" style="float:right;cursor:pointer;font-size:18px"></i></span></div>
                     </li>
             `;
             $('#api-columns').append(html);
