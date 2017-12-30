@@ -23,7 +23,7 @@ class DatasetController extends Controller
      * apiDataset
      * @param  Request $request [posted data]
      * @return [route]           [will redirect back]
-     paljinder Singh
+     by paljinder Singh
      */
 
     public function apiDataset($id , Request $request)
@@ -41,15 +41,20 @@ class DatasetController extends Controller
                $columns =  (array)$check_columns->first();
                if(isset($columns['id'])){
                 unset($columns['id']);
-                $map = array_map(function($key, $val){
-                     return ['column'=> $val, 'alias'=>$key.' as '.$val]; 
-                    //return [$val=>$key.' as '.$val]; 
-                }, array_keys($columns), array_values($columns));
-                $data['columns'] = collect($map)->keyBy('column')->toArray();
+                unset($columns['status']);
+                unset($columns['parent']);
+                $data['columns'] = $columns;
+                // $map = array_map(function($key, $val){
+                //      return ['column'=> $val, 'alias'=>$key.' as '.$val]; 
+                //     //return [$val=>$key.' as '.$val]; 
+                // }, array_keys($columns), array_values($columns));
+                // dd($map);
+                // $data['columns'] = collect($map)->keyBy('column')->toArray();
+                // dd($data);
                 // dump( $data['columns']);
                }
                 if($request->isMethod('post')){
-                    // dump($request->all(),  $data['columns']);
+                    dd($request->all(),  $data['columns']);
                     foreach(array_keys($request->column) as $value ){
                         $data['in_columns'][$value] = $data['columns'][$value];
                         unset($data['columns'][$value]);
@@ -81,8 +86,7 @@ class DatasetController extends Controller
               Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table empty!');
             return redirect()->route('list.dataset');
         }
-        return view('organization.dataset.api-builder',[ 'menus' => [], 'menulist' => [],'routes'=>[],'pages'=>[] ]);
-        // return view('organization.dataset.api', compact('data'));
+        return view('organization.dataset.api', compact('data'));
     }
 
      protected function api_data_result($fields , $dataset_table){
@@ -117,7 +121,7 @@ class DatasetController extends Controller
         }
         return null;
      }
-
+// PALJINDER SINGH CODE END HERE.
 	protected function validateUser($id){
         // dd(223264354);
 		$user_id = Auth::guard('org')->user()->id;

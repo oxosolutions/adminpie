@@ -1,4 +1,4 @@
-@extends('layouts.main')
+  @extends('layouts.main')
 @section('content')
 @php
 // dump($data);
@@ -15,13 +15,96 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.dataset._tabs')
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/nestable.css') }}">
+    <style type="text/css">
+        /*===============================================
+          Nestable
+        ================================================= */
+        .nestable-lists:before,
+        .nestable-lists:after {
+          content: " ";
+          display: table;
+        }
+        .nestable-lists:after {
+          clear: both;
+        }
+        .nestable-lists:before,
+        .nestable-lists:after {
+          content: " ";
+          display: table;
+        }
+        .nestable-lists:after {
+          clear: both;
+        }
+        /*nestable*/
+        .dd {
+          max-width: 100%;
+        }
+        /* Item heading */
+        .dd-handle {
+          display: block;
+          height: auto;
+          cursor: pointer;
+          margin: 7px 0;
+          padding: 10px 14px;
+          color: #777;
+          font-size: 15px;
+          font-weight: 600;
+          text-decoration: none;
+          border-radius: 2px;
+          border: 1px solid #ddd;
+          background-color: #f2f2f2;
+        }
+        /* heading hover */
+        .dd-handle:hover {
+          color: #333;
+          background: #ededed;
+        }
+        .dd-handle:hover + .dd-content {
+          border-color: #f9d58b;
+        }
+        .dd-item > button {
+          margin: 7px 0;
+        }
+        /* item content */
+        .dd-content {
+          margin-top: -5px;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-top: 0;
+          background: #fafafa;
+        }
+        .dd-list .dd-list {
+          padding-top: 5px;
+          padding-bottom: 5px;
+        }
+        /* heading/content - dragged */
+        .dd-empty {
+          background: #f8f8f8;
+        }
+        .dd-item.dd-info > button,
+        .dd-item.dd-primary > button {
+          color: #FFF;
+        }
+        .dd-item.dd-primary .dd-handle {
+          color: #FFF;
+          background-color: #4a89dc !important;
+          border-color: #4a89dc !important;
+        }
+        .dd-item.dd-info .dd-handle {
+          color: #FFF;
+          background-color: #3bafda !important;
+          border-color: #3bafda !important;
+        }
+
+    </style>
 	<div>
 		Select columns to make api
 		
 		<div class="ar p-10 wrapper">
 			{!! Form::open(['route'=>['api.dataset',$data['id']]]) !!}
 			<div class="ac l50  p-10 pr-10 " >
-				<div class="fbox aione-border p-10 pt-0"  id="drop" style="min-height: 200px;max-height: 200px;overflow: auto;">
+				{{-- <div class="fbox aione-border p-10 pt-0"  id="drop" style="min-height: 200px;max-height: 200px;overflow: auto;">
 					@if(!empty($data['in_columns']))
 						@foreach($data['in_columns'] as $key => $val)
 							<div id="one" class="draggable p-10 aione-border mb-10 display-inline-block" style="cursor: pointer">
@@ -30,7 +113,8 @@ $page_title_data = array(
 							</div>
 						@endforeach
 					@endif	
-				</div>
+				</div> --}}
+                @include('organization.dataset.api-builder')
 				<div>
 					{!! Form::submit() !!}		
 				</div>
@@ -41,12 +125,15 @@ $page_title_data = array(
 			
 			<div class="ac l50 aione-border p-10 fbox" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
 				@foreach($data['columns'] as $key => $val)
-					<div id="one" class="draggable p-10 aione-border mb-10 display-inline-block" style="cursor: pointer">
-						<input type="hidden" name="column[{{$val['column']}}]" value="{{$val['alias']}}">
-						{{$val['column']}}
+					<div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="{{$key}}" data-alias="{{$val}}" style="cursor: pointer">
+						<input type="hidden" name="{{ $key }}" value="{{ $val }}">
+						{{$val}}
 					</div>
 				@endforeach
-				
+                <div class="p-10 aione-border mb-10 display-inline-block blank-click" style="cursor: pointer">
+                    <input type="hidden" name="blank" value="blank">
+                    Blank
+                </div>
 			</div>
 		</div>
 	
@@ -87,8 +174,87 @@ $page_title_data = array(
 	</div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+    <div class="p-10 tooltip-input" style="position: absolute;display: none">
+       
+            <i class="fa fa-close aione-float-right"></i>
+            <input type="text" name="blank_text">
+            <button type="submit" class="add-blank">Add New</button>
+      
+          
+    </div>
+    <script src="{{ asset('js/jquery.nestable.js') }}"></script>
+
 	<script type="text/javascript">
-		$(".draggable").draggable({ cursor: "crosshair", revert: "invalid"});
+        $('#nestable').nestable({
+                group: 1
+        }).on('change', function(e){
+            var list = e.length ? e : $(e.target);
+            console.log(list.nestable('serialize'));
+            // var output = list.data('output');
+            // console.log(output);
+        });
+
+        /*var updateOutput = function(e) {
+            
+            if (window.JSON) {
+                output.val(window.JSON.stringify(list.nestable('serialize'))); //, null, 2));
+            } else {
+                output.val('JSON browser support required for this demo.');
+            }
+        };*/
+
+        $('.column-click').click(function(){
+            var html = `
+                    <li class="dd-item" data-id="`+$(this).data('column')+`">
+                        <div class="dd-handle">`+$(this).data('alias')+`
+                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">`+$(this).data('column')+`</span>
+                        </div>
+                            <span><i class="fa fa-times"></i></span>
+                        
+                    </li>
+            `;
+            $('#api-columns').append(html); 
+            $(this).remove();
+        });
+
+        $('.blank-click').click(function(e){
+            e.stopPropagation();
+            var left = e.pageX;
+            var top = e.pageY;
+            $('.tooltip-input').find('input').val('');
+            $('.tooltip-input').css({
+                'display':'block',
+                'left': (left-300)+'px',
+                'top': (top)+'px',
+                'box-shadow': '0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)',
+                'background-color': '#FFF'
+            }).show();
+
+             /*var html = `
+                    <li class="dd-item" data-id="1">
+                        <div class="dd-handle">Click to edit</div>
+                    </li>
+            `;
+            $('#api-columns').append(html); */
+        });
+        $('.add-blank').click(function(){
+            var inputVal = $('input[name=blank_text]').val();
+            var replace_space = inputVal.replace(/ /g,"_");
+            var html = `
+                    <li class="dd-item" data-id="`+replace_space+`">
+                        <div class="dd-handle">`+replace_space+`</div>
+                    </li>
+            `;
+            $('#api-columns').append(html);
+            $('.tooltip-input').hide();
+        });
+        $('.fa-close').click(function(){
+            $('.tooltip-input').hide();
+        });
+
+
+
+		/*$(".draggable").draggable({ cursor: "crosshair", revert: "invalid"});
 			$("#drop").droppable({ accept: ".draggable", 
            	drop: function(event, ui) {
                     console.log("drop");
@@ -110,9 +276,9 @@ $page_title_data = array(
                     $(this).removeClass("over");
                   }
                      });
-$("#drop").sortable();
+            $("#drop").sortable();
 
-$("#origin").droppable({ accept: ".draggable", drop: function(event, ui) {
+            $("#origin").droppable({ accept: ".draggable", drop: function(event, ui) {
                     console.log("drop");
                    $(this).removeClass("border").removeClass("over");
              var dropped = ui.draggable;
@@ -120,7 +286,7 @@ $("#origin").droppable({ accept: ".draggable", drop: function(event, ui) {
             $(dropped).detach().css({top: 0,left: 0}).appendTo(droppedOn);      
              
              
-                }});
+                }});*/
 	</script>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

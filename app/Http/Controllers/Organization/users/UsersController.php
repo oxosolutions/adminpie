@@ -95,6 +95,7 @@ class UsersController extends Controller
                     }
                 }
             }
+
             Session::flash('success' , 'User Created Successfully');
             return redirect()->route('list.user');
         }
@@ -166,7 +167,7 @@ class UsersController extends Controller
                                         'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.status']
                                        ]
                       ];
-
+                      dd($datalist);
         return view('organization.user.list',$datalist);
 
     }

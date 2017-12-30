@@ -35,13 +35,10 @@ class EmployeeController extends Controller
     protected $user;
     public function __construct(UserRepositoryContract $user)
     {
-
         $this->user = $user;
-
     }
     public function index(Request $request, $id=null)
-    {
-        //
+    {   //
         //  $lists = GroupUsers::with('organization_user')->has('organization_user')->get();
 
         $search = $this->saveSearch($request);
@@ -159,7 +156,7 @@ class EmployeeController extends Controller
         $sortedBy = @$request->orderby;
 
          $model = $this->getQueryResult($request,$sortedBy,$perPage);
-       
+         // dd($model);
 
         // foreach ($model as $key => $record) {
         //     dump($record['belong_group']['email']);
@@ -575,19 +572,16 @@ class EmployeeController extends Controller
     {
         try{
             DB::beginTransaction();
-            $user =  User::find($id);
+            $user =  User::where('user_id', $id);
             if(empty($user)){
-                 return back();
+                return back();
             }
-            $user_id = $user->user_id;
             $model_meta = User::where('id',$id)->delete();
             $model_meta = UsersMeta::where('user_id',$id)->delete();
-            
             DB::commit();
+            Session::flash('success','Employee delete successfullly');
         }catch(Exception $e){
             DB::rollBack();
-            
-            // throw $e;
         }
         return back();
     }
