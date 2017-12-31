@@ -13,7 +13,7 @@
    $user_count    = count($data['users']);
    $salary_count  = count(array_filter( array_column($data['users']->toArray(), 'salary')));
    $body_text = "";
-   dump($salary->payscale);
+   // dump($salary->payscale);
    
 @endphp
 @include('common.pageheader',$page_title_data) 

@@ -55,7 +55,7 @@ class DatasetController extends Controller
                }
                 if($request->isMethod('post')){
                     http_response_code(500);
-                    dd($request->all(),  $data['columns']);
+                    dd(json_decode($request->data, true));
                     foreach(array_keys($request->column) as $value ){
                         $data['in_columns'][$value] = $data['columns'][$value];
                         unset($data['columns'][$value]);

@@ -1,8 +1,6 @@
-{{-- @include('common.pageheader',$page_title_data)  --}}
 
-@php
-dump($salary);
-@endphp
+
+{{-- <link rel="stylesheet" type="text/css" href="http://master.scolm.com/assets/css/aione.css"> --}}
 <style type="text/css">
     .mycolor{
         color: blue;

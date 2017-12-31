@@ -69,8 +69,8 @@ class SalaryController extends Controller
 		return view('organization.profile.salary', compact('data'));
 	}
 	public function delete_salary_slip($id){
-		Salary::find($id)->delete();
-		return back();
+		    Salary::find($id)->delete();
+		    return back();
 	}
 	public function view_salary_slip($id ){
 			$salary = Salary::with(['user_detail:id,name,email','user_detail.metas'])->where([ 'id'=>$id ]);
@@ -89,7 +89,7 @@ class SalaryController extends Controller
       }else{
         Session::flash('error','Not Valid ID.');
       }
-      // dump($salary);
+      // return view('organization.salary.pdf',compact('salary'));
       $pdf = PDF::loadView('organization.salary.pdf',compact('salary'));
       return $pdf->download($file_name.'.pdf');
 		}

@@ -6,7 +6,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'API Builder',
+	'page_title' => 'Dataset API',
 	'add_new' => 'All Ticket',
 	'route' => 'add.ticket'
 );
@@ -102,7 +102,7 @@ $page_title_data = array(
 		Select columns to make api
 		
 		<div class="ar p-10 wrapper">
-			{!! Form::open(['route'=>['api.dataset',$data['id']]]) !!}
+			
 			<div class="ac l50  p-10 pr-10 " >
 				{{-- <div class="fbox aione-border p-10 pt-0"  id="drop" style="min-height: 200px;max-height: 200px;overflow: auto;">
 					@if(!empty($data['in_columns']))
@@ -116,14 +116,13 @@ $page_title_data = array(
 				</div> --}}
                 @include('organization.dataset.api-builder')
 				<div>
-					{!! Form::submit() !!}		
+					{!! Form::submit('Submit',['class'=>'submit-json']) !!}		
 				</div>
 				
 			</div>
 				
-			{!! Form::close() !!}
 			
-			<div class="ac l50 aione-border p-10 fbox" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
+			<div class="ac l50 aione-border p-10 fbox columns-box" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
 				@foreach($data['columns'] as $key => $val)
 					<div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="{{$key}}" data-alias="{{$val}}" style="cursor: pointer">
 						<input type="hidden" name="{{ $key }}" value="{{ $val }}">
@@ -175,12 +174,16 @@ $page_title_data = array(
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
     <div class="p-10 tooltip-input" style="position: absolute;display: none">
-       
-            <i class="fa fa-close aione-float-right"></i>
-            <input type="text" name="blank_text">
-            <button type="submit" class="add-blank">Add New</button>
-      
-          
+        <i class="fa fa-close aione-float-right p-5"></i>
+        <div id="aione_form_wrapper_70" class="aione-form-wrapper aione-form-theme-light aione-form-label-position- aione-form-style-   ">
+            <div id="aione_form_section_97" class="aione-form-section non-repeater">
+                <div id="field_email" class="field field-type-email">
+                    <input type="text" name="blank_text">
+                </div>
+            </div>
+        </div>
+        
+        <button type="submit" class="add-blank" style="width: 100%;">Add New</button>
     </div>
     <script src="{{ asset('js/jquery.nestable.js') }}"></script>
 
@@ -188,10 +191,22 @@ $page_title_data = array(
         $('#nestable').nestable({
                 group: 1
         }).on('change', function(e){
-            var list = e.length ? e : $(e.target);
-            console.log(list.nestable('serialize'));
+           var list = e.length ? e : $(e.target);
+           window.data = list.nestable('serialize');
             // var output = list.data('output');
             // console.log(output);
+        });
+
+        $('.submit-json').click(function(){
+            console.log(window.data);
+            $.ajax({
+                type: 'POST',
+                url: route()+'/dataset/api/'+{{ request()->id }},
+                data: {'data': JSON.stringify(window.data), '_token':'{{ csrf_token() }}' },
+                success: function(result){
+                    console.log(result);
+                }
+            });
         });
 
         /*var updateOutput = function(e) {
@@ -203,12 +218,13 @@ $page_title_data = array(
             }
         };*/
 
-        $('.column-click').click(function(){
+        $('body').on('click','.column-click', function(){
             var html = `
                     <li class="dd-item" data-id="`+$(this).data('column')+`">
+                        <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="`+$(this).data('column')+`" data-value="`+$(this).data('alias')+`"></i></a>
                         <div class="dd-handle">`+$(this).data('alias')+`
                             
-                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">`+$(this).data('column')+`<i class="fa fa-trash" style="float:right;cursor:pointer;font-size:18px;padding-left:10px"></i></span>
+                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">`+$(this).data('column')+`</span>
                         </div>
                         
                     </li>
@@ -216,6 +232,41 @@ $page_title_data = array(
             $('#api-columns').append(html); 
             $(this).remove();
         });
+
+
+        $('body').on('click','.removeColumn',function(e){
+            var key = $(this).data('key');
+            var value = $(this).data('value');
+            
+            window.keyValue = {};
+            getChildsLi($(this).parent().parent('li'));
+            var html = `
+                    <div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="`+key+`" data-alias="`+value+`" style="cursor: pointer">
+                        <input type="hidden" name="`+key+`" value="`+value+`">
+                        `+value+`
+                    </div>`;
+            $('.columns-box').prepend(html);
+            $.each(keyValue, function(key,val){
+                 var html = `
+                    <div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="`+key+`" data-alias="`+val+`" style="cursor: pointer">
+                        <input type="hidden" name="`+key+`" value="`+val+`">
+                        `+val+`
+                    </div>`;
+                $('.columns-box').prepend(html);
+            });
+            $(this).parent().parent('li').remove();
+        });
+
+        function getChildsLi(elem){
+            elem.find('li').each(function(){
+                if($(this).find('li').length >= 1){
+                    window.keyValue[$(this).find('i').data('key')] = $(this).find('i').data('value');
+                    getChildsLi($(this));
+                }else{
+                    window.keyValue[$(this).find('i').data('key')] = $(this).find('i').data('value');
+                }
+            });
+        }
 
         $('.blank-click').click(function(e){
             e.stopPropagation();
@@ -241,8 +292,9 @@ $page_title_data = array(
             var inputVal = $('input[name=blank_text]').val();
             var replace_space = inputVal.replace(/ /g,"_");
             var html = `
-                    <li class="dd-item" data-id="`+replace_space+`">
-                        <div class="dd-handle">`+replace_space+`<span><i class="fa fa-trash" style="float:right;cursor:pointer;font-size:18px"></i></span></div>
+                    <li class="dd-item" data-id="`+replace_space+`" data-blank="blank">
+                        <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;"></i></a>
+                        <div class="dd-handle">`+replace_space+`<span></span></div>
                     </li>
             `;
             $('#api-columns').append(html);

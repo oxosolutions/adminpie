@@ -167,7 +167,6 @@ class UsersController extends Controller
                                         'status_option'  =>  ['title'=>'status option','class'=>'status_option' ,'route' =>'change.user.status']
                                        ]
                       ];
-                      dd($datalist);
         return view('organization.user.list',$datalist);
 
     }

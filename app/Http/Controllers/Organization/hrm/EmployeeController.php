@@ -576,7 +576,8 @@ class EmployeeController extends Controller
             if(empty($user)){
                 return back();
             }
-            $model_meta = User::where('id',$id)->delete();
+            $user->delete();
+            // $model_meta = User::where('id',$id)->delete();
             $model_meta = UsersMeta::where('user_id',$id)->delete();
             DB::commit();
             Session::flash('success','Employee delete successfullly');
