@@ -28,7 +28,6 @@ class DatasetController extends Controller
 
     public function apiDataset($id , Request $request)
     {
-       
         if(!$this->validateUser($id)){
             return redirect()->route('list.dataset');
         }
@@ -55,7 +54,7 @@ class DatasetController extends Controller
                }
                 if($request->isMethod('post')){
                     http_response_code(500);
-                    dd(json_decode($request->data, true));
+                    dd($request->all() , json_decode($request->data, true));
                     foreach(array_keys($request->column) as $value ){
                         $data['in_columns'][$value] = $data['columns'][$value];
                         unset($data['columns'][$value]);
