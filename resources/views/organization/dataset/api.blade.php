@@ -141,12 +141,12 @@ $page_title_data = array(
 	{{-- <div>
 		{!! FormGenerator::GenerateForm('api_condition_form') !!}
 	</div> --}}
-	<div class="pv-20">
+	<div class="pv-20 link"  >
 		@if(!empty($data['link']))
 			Api Link :- <a href="{{$data['link']}}">{{$data['link']}}</a>
 		@endif
 	</div>
-	<div class="aione-border p-10" style="min-height: 350px;max-height: 350px;overflow: auto">
+	<div class="aione-border p-10 data-view" style="min-height: 350px;max-height: 350px;overflow: auto">
 		@if(isset($data['response']))
 		<code>
 			<pre>
@@ -204,7 +204,10 @@ $page_title_data = array(
                 url: route()+'/dataset/api/'+{{ request()->id }},
                 data: {'data': JSON.stringify(window.data), '_token':'{{ csrf_token() }}' },
                 success: function(result){
-                    console.log(result);
+                    console.log(result.response);
+                    $('.data-view').html(result.response);
+                    $('.link').html('Api Link :- <a href='+result.link+' >'+ result.link+'</a>');
+
                 }
             });
         });

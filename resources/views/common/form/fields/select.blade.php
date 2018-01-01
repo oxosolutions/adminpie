@@ -61,5 +61,4 @@
 	}
 	
 @endphp
-
 {!! Form::select($name,$arrayOptions,null,['class'=>'input_'.$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder])!!}

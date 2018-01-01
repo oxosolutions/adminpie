@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalSetting;
+use Session;
 class SettingController extends Controller
 {
 	public function list_setting(){
@@ -94,5 +95,29 @@ class SettingController extends Controller
 	{
 		$model = GlobalSetting::all();
 	}
+	public function modelSetting()
+	{
+        $model = GlobalSetting::where(['key'=>'model_associate'])->first();
+        $associateModel = [];
+        if($model != null){
+            $associateModel['model'] = json_decode($model->value,true);
+        }
+        // dd($associateModel);
+		return view('admin.settings.model-associate',['model'=>$associateModel]);
+	}
+
+    /**
+     * Save Model Associate Request
+     * @param  Request $request [have posted data]
+     * @return [type]           [return back to view]
+     */
+    public function saveModelAssociate(Request $request){
+        $model = GlobalSetting::firstOrNew(['key'=>'model_associate']);
+        $model->key = 'model_associate';
+        $model->value = json_encode($request->model);
+        $model->save();
+        Session::flash('success','Models saved successfully!!');
+        return back();
+    }
 }
 	

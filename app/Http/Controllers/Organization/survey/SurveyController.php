@@ -544,4 +544,26 @@ class SurveyController extends Controller
     public function convertToDataset($id){
         return view('organization.survey.convert-dataset');
     }
+
+    /**
+     * Get selected survey columns
+     * @param  Request $request having posted data by user
+     * @return [type]         will return options(columns) for selcted survey
+     * @author Rahul
+     */
+    public function getSurveyColumns(Request $request){
+        
+        try{
+            $model = (array)DB::table(get_organization_id().'_survey_results_'.$request->survey_id)->first();
+            $columnsArray = array_keys($model);
+            unset($columnsArray['id']);
+            $options = '<option>Select Column</option>';
+            foreach($columnsArray as $key => $column){
+                $options .= '<option value="'.$column.'">'.$column.'</option>';
+            }
+            return $options;
+        }catch(\Exception $e){
+            return '';
+        }
+    }
 }

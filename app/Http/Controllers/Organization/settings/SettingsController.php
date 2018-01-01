@@ -55,4 +55,6 @@ class SettingsController extends Controller
 		Session::flash('success', 'Successfully Updated!');
 		return redirect()->route('setting.user');
     }
+
+    
 }

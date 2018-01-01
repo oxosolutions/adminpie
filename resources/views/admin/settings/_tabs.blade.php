@@ -3,6 +3,9 @@
        <li class="aione-tab {{(Request::route()->action['as'] == 'organization.settings')?'nav-item-current':''}}">
         <a href="{{route('organization.settings')}}"><span class="nav-item-text">Organization</span></a>
       </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == 'model.settings')?'nav-item-current':''}}">
+        <a href="{{route('model.settings')}}"><span class="nav-item-text">Model Associates</span></a>
+      </li>
      
       
       <div class="clear"></div>

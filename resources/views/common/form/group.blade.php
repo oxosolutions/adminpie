@@ -11,7 +11,7 @@
 		z-index: 999999
 	}
 </style>
-<div class="repeater-group" >
+<div class="repeater-group {{ @$collection->section_slug}}" >
 	@if($model != null && !empty($model[strtolower($collection->section_slug)]))
 		<div class="repeater-wrapper" id="sortable-options">
 			@if(@$model[strtolower($collection->section_slug)] != '')

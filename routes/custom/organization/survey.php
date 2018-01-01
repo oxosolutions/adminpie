@@ -23,6 +23,7 @@
 
 	//ajax
 	Route::get('/change/survey/status' , ['as' => 'change.share.status' , 'uses' => 'survey\SurveyController@changeShareStatus']);
+    Route::get('/survey/columns', ['as'=>'list.survey.columns','uses'=>'survey\SurveyController@getSurveyColumns']);
 
 
 ?>
