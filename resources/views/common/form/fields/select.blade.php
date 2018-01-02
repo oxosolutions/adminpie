@@ -39,7 +39,7 @@
 		}
 	}else{
 		try{
-			$arrayOptions = @$result->{$exploded[1]}();
+			$arrayOptions = @$result->{$exploded[1]}($collection);
 		}catch(\Exception $e){
 			$arrayOptions = [];
 		}

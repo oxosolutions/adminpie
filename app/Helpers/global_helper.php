@@ -420,6 +420,60 @@ function get_file_size($name = null){
 
 
 /************************************************************
+*   @function remove_prefix
+*   @description Returns string
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+*   @perm name      [string required    default null]
+*   @return size [string]
+************************************************************/
+function remove_prefix($string){
+    return str_replace('ocrm_','',$string);
+}
+
+
+/************************************************************
+*   @function update_meta
+*   @description Returns boolean
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+*   @perm name      [string required    default null]
+*   @return size [boolean]
+************************************************************/
+function update_meta($model, Array $metaArray = [], $isWhere = []){ 
+    if(class_exists($model)){
+        if(!empty($metaArray)){
+            foreach($metaArray as $key => $value){
+                $whereKeys = ['key'=>$key];
+                if(!empty($isWhere)){
+                    foreach($isWhere as $wKey => $wValue){
+                        $whereKeys[$wKey] = $wValue;
+                    }
+                }
+                $model = $model::firstOrNew($whereKeys);
+                $model->key = $key;
+                $model->value = $value;
+                if(!empty($isWhere)){
+                    foreach($isWhere as $wKey => $wValue){
+                        $model->{$wKey} = $wValue;
+                    }
+                }
+                $model->save();
+            }
+            return true;
+        }else{
+            return ['error'=>'Meta array should not empty!'];
+        }
+    }else{
+        http_response_code(500);
+        return ['error'=>'Model not exists'];
+    }
+}
+
+
+/************************************************************
 *   @function form
 *   @description Returns form with form action
 *   @access public

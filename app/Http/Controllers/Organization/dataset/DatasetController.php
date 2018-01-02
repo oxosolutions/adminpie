@@ -28,20 +28,20 @@ class DatasetController extends Controller
      protected function get_columns($data){
         $columns =null;
         foreach ($data as $key => $value) {
-                            if(isset($value['children'])){
-                                if(!empty($this->get_columns($value['children']))){
-                                    $another  = $this->get_columns($value['children']);
-                                    for($i =0; $i < count($another); $i++){
-                                        $columns[] = $another[$i];
-                                    }
-                                }
-                            }else{
-                                if(isset($value['blank'])){
-                                }else{
-                                    $columns[] = $value['id'];
-                                }
-                            }
-                        } 
+            if(isset($value['children'])){
+                if(!empty($this->get_columns($value['children']))){
+                    $another  = $this->get_columns($value['children']);
+                    for($i =0; $i < count($another); $i++){
+                        $columns[] = $another[$i];
+                    }
+                }
+            }else{
+                if(isset($value['blank'])){
+                }else{
+                    $columns[] = $value['id'];
+                }
+            }
+        } 
          return $columns;
      }
 
@@ -50,9 +50,9 @@ class DatasetController extends Controller
         if($check_columns->exists()) {
            $columns =  (array)$check_columns->first();
            if(isset($columns['id'])){
-            unset($columns['id']);
-            unset($columns['status']);
-            unset($columns['parent']);
+            unset($columns['id'], $columns['status'] ,$columns['parent'] );
+            // unset($columns['status']);
+            // unset($columns['parent']);
             $data['columns'] = $columns;
            }
         return $data;
@@ -71,24 +71,28 @@ class DatasetController extends Controller
             $dataset_table = str_replace('ocrm_', '', $data_set->dataset_table);
             $data = $this->dataset_table_column($dataset_table);
             if(!empty($data)) {
-                
                 if($request->isMethod('post')){
                     http_response_code(500);
                     $fields = json_decode($request->data, true);
-                    $sel_fields =  $this->get_columns($fields);
-                    $check_meta = DatasetMeta::where(['key'=>'api_slug' ,'dataset_id'=>$id]);
-                    if($check_meta->exists()){
-                        $check_meta->update(['value'=>json_encode($fields)]);
-                        $token = $check_meta->first()->token;
-                    }else{
-                        $dataset_meta = new DatasetMeta();
-                        $dataset_meta->dataset_id =  $id;
-                        $dataset_meta->key =  'api_slug';
-                        $dataset_meta->value =  json_encode($fields);
-                        $dataset_meta->token =  str_random(25);
-                        $dataset_meta->save();
-                        $token = $dataset_meta->token;
+                    if(empty($fields)){
+                        $data['error'] = 'Fields not set to build api.';
+                        return $data;
                     }
+                    $sel_fields =  $this->get_columns($fields);
+                    update_meta('App\Model\Organization\DatasetMeta', ['api_fields'=>json_encode($fields)], ['dataset_id'=>$id]);
+                    // $check_meta = DatasetMeta::where(['key'=>'api_slug' ,'dataset_id'=>$id]);
+                    // if($check_meta->exists()){
+                    //     $check_meta->update(['value'=>json_encode($fields)]);
+                    //     $token = $check_meta->first()->token;
+                    // }else{
+                    //     $dataset_meta = new DatasetMeta();
+                    //     $dataset_meta->dataset_id =  $id;
+                    //     $dataset_meta->key =  'api_slug';
+                    //     $dataset_meta->value =  json_encode($fields);
+                    //     $dataset_meta->token =  str_random(25);
+                    //     $dataset_meta->save();
+                    //     $token = $dataset_meta->token;
+                    // }
                        $result =  $this->api_data_result($sel_fields, $dataset_table);
                        $res = $this->manipulation_data($result, $fields, $data);
                        

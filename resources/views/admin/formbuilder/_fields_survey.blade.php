@@ -160,84 +160,90 @@
 	});
 
     /************************************************************************************/
-    var selectedFill = '{{ $model["prefilled_with"] }}';
-    console.log(selectedFill);
-    var toHide = '';
-    switch(selectedFill){
-        case'static':
-            toHide = '#field_3168, #field_3165, #field_3169, #field_3170';
-        break;
+    $(document).ready(function(){
+        var selectedFill = '{{ $model["prefilled_with"] }}';
+        console.log(selectedFill);
+        var toHide = '';
+        switch(selectedFill){
+            case'static':
+                toHide = '#field_3168, #field_3165, #field_3169, #field_3170';
+            break;
 
-        case'model':
-            toHide = '#field_3168, #field_3169, #field_3170, .field_options';
-        break;
+            case'model':
+                toHide = '#field_3168, #field_3169, #field_3170, .field_options';
+            break;
 
-        case'dataset':
-            toHide = '#field_3165, #field_3170, .field_options';
-            $('#field_3168 select').change();
-        break;
+            case'dataset':
+                toHide = '#field_3170, .field_options';
+                setTimeout(function(){
+                    $('#field_3168 select').trigger('change');
+                },1000);
+            break;
 
-        case'survey':
-            toHide = '#field_3165, #field_3168, .field_options';
-            $('#field_3168 select').change();
-        break;
-    }
-    $(toHide).hide();
-
-    $('#field_3171 input').click(function(){
-        if($(this).val() == 'model'){
-            $('#field_3165').show();
-            $('#field_3168').hide();
-            $('#field_3169').hide();
-            $('#field_3170').hide();
-            $('.field_options').hide();
-            $('#field_3169 select').html('');
-        }else if($(this).val() == 'dataset'){
-            $('#field_3168').show();
-            $('#field_3165').hide();
-            $('#field_3169').show();
-            $('#field_3170').hide();
-            $('.field_options').hide();
-            $('#field_3169 select').html('');
-        }else if($(this).val() == 'survey'){
-            $('#field_3170').show();
-            $('#field_3169').show();
-            $('#field_3165').hide();
-            $('#field_3168').hide();
-            $('.field_options').hide();
-            $('#field_3169 select').html('');
-        }else if($(this).val() == 'static'){
-            $('.field_options').show();
-            $('#field_3170').hide();
-            $('#field_3169').hide();
-            $('#field_3165').hide();
-            $('#field_3168').hide();
-            $('#field_3169 select').html('');
+            case'survey':
+                toHide = '#field_3165, #field_3168, .field_options';
+                $('#field_3168 select').change();
+            break;
         }
-    });
+        $(toHide).hide();
 
-    $('#field_3168 select').change(function(){
-        var datasetId = $(this).val();
-        $.ajax({
-           type:'GET',
-           url: route()+'/dataset/columns/',
-           data: {dataset: datasetId,status:true},
-           success: function(result){
-                $('#field_3169 select').html(result);
-           }
+        $('#field_3171 input').click(function(){
+            if($(this).val() == 'model'){
+                $('#field_3165').show();
+                $('#field_3168').hide();
+                $('#field_3169').hide();
+                $('#field_3170').hide();
+                $('.field_options').hide();
+                $('#field_3169 select').html('');
+            }else if($(this).val() == 'dataset'){
+                $('#field_3168').show();
+                $('#field_3165').hide();
+                $('#field_3169').show();
+                $('#field_3170').hide();
+                $('.field_options').hide();
+                $('#field_3169 select').html('');
+            }else if($(this).val() == 'survey'){
+                $('#field_3170').show();
+                $('#field_3169').show();
+                $('#field_3165').hide();
+                $('#field_3168').hide();
+                $('.field_options').hide();
+                $('#field_3169 select').html('');
+            }else if($(this).val() == 'static'){
+                $('.field_options').show();
+                $('#field_3170').hide();
+                $('#field_3169').hide();
+                $('#field_3165').hide();
+                $('#field_3168').hide();
+                $('#field_3169 select').html('');
+            }
+        });
+
+        $('#field_3168 select').change(function(){
+            var datasetId = $(this).val();
+            $.ajax({
+               type:'GET',
+               url: route()+'/dataset/columns/',
+               data: {dataset: datasetId,status:true},
+               success: function(result){
+                    $('#field_3169 select').html(result);
+                    $('#field_3169 select').val('{{ $model['select_column'] }}');
+               }
+            });
+        });
+        $('#field_3170 select').change(function(){
+            var surveyId = $(this).val();
+            $.ajax({
+               type:'GET',
+               url: route()+'/survey/columns' ,
+               data: {survey_id: surveyId},
+               success: function(result){
+                    $('#field_3169 select').html(result);
+               }
+            });
         });
     });
-    $('#field_3170 select').change(function(){
-        var surveyId = $(this).val();
-        $.ajax({
-           type:'GET',
-           url: route()+'/survey/columns' ,
-           data: {survey_id: surveyId},
-           success: function(result){
-                $('#field_3169 select').html(result);
-           }
-        });
-    });
+    
     /*****************************************************************************/
 </script>
 <script type="text/javascript">
@@ -301,7 +307,7 @@ window.Laravel = <?php echo json_encode([
                 }
 	     	});
 
-		});   
+		});
 		$(document).on('click','.gallery-item',function(){
 			$('.gallery-form').show();
 			$('.gallery-files').addClass('l8');

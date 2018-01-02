@@ -98,6 +98,9 @@ $page_title_data = array(
         }
 
     </style>
+    <div id="error">
+      
+    </div>
 	<div>
 		Select columns to make api
 		
@@ -204,7 +207,11 @@ $page_title_data = array(
                 url: route()+'/dataset/api/'+{{ request()->id }},
                 data: {'data': JSON.stringify(window.data), '_token':'{{ csrf_token() }}' },
                 success: function(result){
-                    console.log(result.response);
+                    console.log(result.error);
+                    $("#error").html("");
+                    if(result.error){
+                      $("#error").html(result.error);
+                    }
                     $('.data-view').html(result.response);
                     $('.link').html('Api Link :- <a href='+result.link+' >'+ result.link+'</a>');
 

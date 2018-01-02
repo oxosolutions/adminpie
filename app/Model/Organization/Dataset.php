@@ -5,6 +5,7 @@ namespace App\Model\Organization;
 use Illuminate\Database\Eloquent\Model;
 use Session;
 use DB;
+use FormGenerator;
 class Dataset extends Model
 {
    
@@ -86,5 +87,16 @@ class Dataset extends Model
 
     public function collaborate(){
         return $this->hasMany('App\Model\Organization\Collaborator','relation_id','id')->where('type','dataset');
+    }
+
+    public function getDatasetColumnRecords($collectionData){
+        $datasetId = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_dataset');
+        $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+        $datasetTable = self::find($datasetId)->dataset_table;
+        if(($datasetTable != null && $datasetTable != '') && ($column != null && $column != '')){
+            $datasetData = DB::table(remove_prefix($datasetTable))->select($column)->where(['status'=>'1'])->get();
+            dd($datasetData);
+        }
+        dd($datasetTable);
     }
 }
