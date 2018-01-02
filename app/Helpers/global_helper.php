@@ -442,7 +442,7 @@ function remove_prefix($string){
 *   @perm name      [string required    default null]
 *   @return size [boolean]
 ************************************************************/
-function update_meta($model, Array $metaArray = [], $isWhere = []){ 
+function update_meta($model, Array $metaArray = [], $isWhere = [], $allowUpdate = true){ 
     if(class_exists($model)){
         if(!empty($metaArray)){
             foreach($metaArray as $key => $value){
@@ -453,14 +453,27 @@ function update_meta($model, Array $metaArray = [], $isWhere = []){
                     }
                 }
                 $model = $model::firstOrNew($whereKeys);
-                $model->key = $key;
-                $model->value = $value;
-                if(!empty($isWhere)){
-                    foreach($isWhere as $wKey => $wValue){
-                        $model->{$wKey} = $wValue;
+                if($model->exists){
+                    if($allowUpdate){
+                        $model->key = $key;
+                        $model->value = $value;
+                        if(!empty($isWhere)){
+                            foreach($isWhere as $wKey => $wValue){
+                                $model->{$wKey} = $wValue;
+                            }
+                        }
+                        $model->save();
                     }
+                }else{
+                    $model->key = $key;
+                    $model->value = $value;
+                    if(!empty($isWhere)){
+                        foreach($isWhere as $wKey => $wValue){
+                            $model->{$wKey} = $wValue;
+                        }
+                    }
+                    $model->save();
                 }
-                $model->save();
             }
             return true;
         }else{

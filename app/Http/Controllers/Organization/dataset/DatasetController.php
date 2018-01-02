@@ -79,7 +79,13 @@ class DatasetController extends Controller
                         return $data;
                     }
                     $sel_fields =  $this->get_columns($fields);
+                    $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false); 
+                    if(!$token){
+                        update_meta('App\Model\Organization\DatasetMeta', ['token'=>str_random(25)], ['dataset_id'=>$id], false);
+                        $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false);
+                    }
                     update_meta('App\Model\Organization\DatasetMeta', ['api_fields'=>json_encode($fields)], ['dataset_id'=>$id]);
+
                     // $check_meta = DatasetMeta::where(['key'=>'api_slug' ,'dataset_id'=>$id]);
                     // if($check_meta->exists()){
                     //     $check_meta->update(['value'=>json_encode($fields)]);

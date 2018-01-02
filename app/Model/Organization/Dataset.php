@@ -92,11 +92,15 @@ class Dataset extends Model
     public function getDatasetColumnRecords($collectionData){
         $datasetId = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_dataset');
         $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+        $listArray = [];
         $datasetTable = self::find($datasetId)->dataset_table;
         if(($datasetTable != null && $datasetTable != '') && ($column != null && $column != '')){
-            $datasetData = DB::table(remove_prefix($datasetTable))->select($column)->where(['status'=>'1'])->get();
-            dd($datasetData);
+            $datasetData = (array)DB::table(remove_prefix($datasetTable))->select($column)->where(['status'=>'1','parent'=>'0'])->where('id','!=',1)->get()->toArray();
+            foreach($datasetData as $key => $value){
+                $listArray[$value->{array_keys((array)$value)[0]}] = $value->{array_keys((array)$value)[0]};
+            }
+            return $listArray;
         }
-        dd($datasetTable);
+        return [];
     }
 }

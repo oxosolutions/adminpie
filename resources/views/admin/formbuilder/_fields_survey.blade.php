@@ -194,28 +194,28 @@
                 $('#field_3169').hide();
                 $('#field_3170').hide();
                 $('.field_options').hide();
-                $('#field_3169 select').html('');
+                // $('#field_3169 select').html('');
             }else if($(this).val() == 'dataset'){
                 $('#field_3168').show();
-                $('#field_3165').hide();
+                $('#field_3165').show();
                 $('#field_3169').show();
                 $('#field_3170').hide();
                 $('.field_options').hide();
-                $('#field_3169 select').html('');
+                // $('#field_3169 select').html('');
             }else if($(this).val() == 'survey'){
                 $('#field_3170').show();
                 $('#field_3169').show();
-                $('#field_3165').hide();
+                $('#field_3165').show();
                 $('#field_3168').hide();
                 $('.field_options').hide();
-                $('#field_3169 select').html('');
+                // $('#field_3169 select').html('');
             }else if($(this).val() == 'static'){
                 $('.field_options').show();
                 $('#field_3170').hide();
                 $('#field_3169').hide();
                 $('#field_3165').hide();
                 $('#field_3168').hide();
-                $('#field_3169 select').html('');
+                // $('#field_3169 select').html('');
             }
         });
 
