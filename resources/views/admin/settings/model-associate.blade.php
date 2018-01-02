@@ -15,7 +15,10 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
 @include('admin.settings._tabs')
     {!! Form::model($model,['route'=>'save.model.associate']) !!}
-	   {!! FormGenerator::GenerateForm('model_setting',[],$model) !!}
+    	<div style="min-height:80vh;max-height:80vh;overflow:scroll">
+    		{!! FormGenerator::GenerateForm('model_setting',[],$model) !!}
+    	</div>
+	   	<button type="submit">Save</button>
     {!! Form::close() !!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

@@ -3,8 +3,10 @@
 namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 use Auth;
 use Session;
+use FormGenerator;
 class forms extends Model
 {
     protected $fillable = ['form_title','form_slug','form_description','type','created_by'];
@@ -44,6 +46,27 @@ class forms extends Model
     public static function surveyList(){
 
         return self::where('type','survey')->pluck('form_title','id');
+    }
+
+
+    public function getSurveyResultRecords($collectionData){
+        $surveyid = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_survey');
+        $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+        $listArray = [];
+        if(($surveyid != '' && $surveyid != null) && ($column != '' && $column != null)){
+            try{
+                $surveyRecords = DB::table(get_organization_id().'_survey_results_'.$surveyid)->select($column)->get()->toArray();
+                foreach($surveyRecords as $key => $record){
+                    if(trim($record->{$column}) != ''){
+                        $listArray[$record->{$column}] = $record->{$column};
+                    }
+                }
+                return $listArray;
+            }catch(\Exception $e){
+                return [];
+            }
+        }
+        return [];
     }
 
 }

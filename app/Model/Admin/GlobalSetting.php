@@ -19,7 +19,11 @@ class GlobalSetting extends Model
         foreach($assocList as $key => $value){
             $explodedModel = explode('\\',$value['model_associate']);
             $explodeMethod = explode('@',$explodedModel[3]);
-            $listArray[$value['model_associate']] = $explodedModel[2].' > '.$explodeMethod[0].' > '.$explodeMethod[1];
+            if($value['alias'] == ''){
+                $listArray[$value['model_associate']] = $explodedModel[2].' > '.$explodeMethod[0].' > '.$explodeMethod[1];
+            }else{
+                $listArray[$value['model_associate']] = $value['alias'];
+            }
         }
         return $listArray;
 

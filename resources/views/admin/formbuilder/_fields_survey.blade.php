@@ -181,8 +181,10 @@
             break;
 
             case'survey':
-                toHide = '#field_3165, #field_3168, .field_options';
-                $('#field_3168 select').change();
+                toHide = '#field_3168, .field_options';
+                setTimeout(function(){
+                    $('#field_3170 select').trigger('change');
+                },1000);
             break;
         }
         $(toHide).hide();
@@ -201,6 +203,8 @@
                 $('#field_3169').show();
                 $('#field_3170').hide();
                 $('.field_options').hide();
+                {{-- $('select[name=choice_model] option[value="{{ 'App\\Model\\Organization\\Dataset@getDatasetColumnRecords()' }}"]').prop('selected',true);
+                $('select[name=choice_model]').attr('disabled','disabled'); --}}
                 // $('#field_3169 select').html('');
             }else if($(this).val() == 'survey'){
                 $('#field_3170').show();
@@ -239,6 +243,7 @@
                data: {survey_id: surveyId},
                success: function(result){
                     $('#field_3169 select').html(result);
+                    $('#field_3169 select').val('{{ $model['select_column'] }}');
                }
             });
         });

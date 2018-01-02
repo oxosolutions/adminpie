@@ -89,6 +89,11 @@ class Dataset extends Model
         return $this->hasMany('App\Model\Organization\Collaborator','relation_id','id')->where('type','dataset');
     }
 
+    /**
+     * [getDatasetColumnRecords get dataset records column for survey]
+     * @param  [type] $collectionData [collection of form generator]
+     * @return [type]       array     [collection of array]
+     */
     public function getDatasetColumnRecords($collectionData){
         $datasetId = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_dataset');
         $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');

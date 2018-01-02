@@ -77,6 +77,9 @@
 					// Custom Maps
 					include_once 'custom/admin/custom-maps.php';
 
+					Route::get('control-panel/testing',			['as'=>'testing.control',		'uses'=>'ControlPanelController@testing']);
+					Route::get('control-panel/consistency',		['as'=>'consistency.control',	'uses'=>'ControlPanelController@consistency']);
+
 				});
 				Route::get('logout',  		['as'=> 'admin.logout','uses'=>'Auth\LoginController@logout']);
 				Route::get('login',			['as'=>'admin.login','uses'=>'Auth\LoginController@showLoginForm']);

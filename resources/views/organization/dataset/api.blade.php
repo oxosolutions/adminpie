@@ -117,7 +117,7 @@ $page_title_data = array(
 						@endforeach
 					@endif	
 				</div> --}}
-                @include('organization.dataset.api-builder')
+                {{-- @include('organization.dataset.api-builder') --}}
 				<div>
 					{!! Form::submit('Submit',['class'=>'submit-json']) !!}		
 				</div>
