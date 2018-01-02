@@ -8,11 +8,11 @@
 @endphp
 <nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal"  >
     <ul id="sortable_tabs" class="aione-tabs">
-        <li class="aione-tab {{(Request::route()->action['as'] == 'view.dataset')?'nav-item-current':''}}">
-            <a href="{{route('view.dataset',$id)}}"><span class="nav-item-text">testing</span></a>
+        <li class="aione-tab {{(Request::route()->action['as'] == 'testing.control')?'nav-item-current':''}}">
+            <a href="{{route('testing.control')}}"><span class="nav-item-text">Testing</span></a>
         </li>
-        <li class="aione-tab {{(Request::route()->action['as'] == 'edit.dataset')?'nav-item-current':''}}">
-            <a href="{{route('edit.dataset',$id)}}"><span class="nav-item-text">Consistency</span></a>
+        <li class="aione-tab {{(Request::route()->action['as'] == 'consistency.control')?'nav-item-current':''}}">
+            <a href="{{route('consistency.control')}}"><span class="nav-item-text">Consistency</span></a>
         </li> 
         <div class="clear"></div>
     </ul>

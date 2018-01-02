@@ -77,8 +77,7 @@
 					// Custom Maps
 					include_once 'custom/admin/custom-maps.php';
 
-					Route::get('control-panel/testing',			['as'=>'testing.control',		'uses'=>'ControlPanelController@testing']);
-					Route::get('control-panel/consistency',		['as'=>'consistency.control',	'uses'=>'ControlPanelController@consistency']);
+					include_once 'custom/admin/controlpanel.php';
 
 				});
 				Route::get('logout',  		['as'=> 'admin.logout','uses'=>'Auth\LoginController@logout']);
@@ -391,6 +390,7 @@
 						Route::get('leaves/{id?}',				['as'=> 'leaves' , 'uses' =>'LeavesController@index']);
 						Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
 						Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
+						
 						Route::get('/holidays/{id?}',			['as'=> 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
 						
 						Route::post('/attendance/import',		['as'=> 'upload.attendance' , 'uses' => 'AttendanceController@attendance_import']);
@@ -406,6 +406,7 @@
 
 
 					});
+					Route::get('/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
 

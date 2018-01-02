@@ -435,6 +435,41 @@
                     </li>
                 </ul>
             </li>
+            <li class="aione-nav-item level0 has-children {{in_array(Request::path(),array('control'))?'active-state':''}}">
+                <a href="javascript:;">
+                    <span class="nav-item-icon side-bar-icon fa fa-cogs darken-1 center-align side-bar-icon-bg white-text">
+                    </span>
+                    <span class="side-bar-text">
+                        Control Panel
+                    </span>
+                    <span class="nav-item-arrow">
+                            
+                        </span>
+                 
+                </a>
+                <ul class="side-bar-submenu" >
+                    <li class="aione-nav-item level1 {{Request::is('control')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('testing.control')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Testing
+                        </span>
+                        </a>
+                    </li>
+                    <li class="aione-nav-item level1 {{Request::is('control')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('consistency.control')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Consistency
+                        </span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             
             
             

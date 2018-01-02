@@ -446,5 +446,12 @@ public function attendance_file(){
 		}
 		Attendance::where(['month'=>$mo , 'year'=> $request['year'] ])->update($lock_status);
 	}
+	/**
+	 * @auther Ashish
+	 */
+	public function attendanceList()
+	{
+		return view('organization.attendance.attendence-list');
+	}
 
 }

@@ -18,4 +18,8 @@ class ControlPanelController extends Controller
 	{
 		return view('admin.control-panel.consistency');
 	}
+
+    public function runRouteTest(Request $request){
+        dd($request->all());
+    }
 }

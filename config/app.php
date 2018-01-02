@@ -174,8 +174,7 @@ return [
         Gornymedia\Shortcodes\ShortcodesServiceProvider::class,
         Netinternet\Logicboxes\LogicboxesServiceProvider::class,
         OxoSolutions\DomainManagement\DomainManagementProvider::class,
-
-        
+        Laravel\Dusk\DuskServiceProvider::class,
 
         /*
          * Package Service Providers...

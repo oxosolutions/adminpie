@@ -117,7 +117,46 @@ $page_title_data = array(
 						@endforeach
 					@endif	
 				</div> --}}
-                {{-- @include('organization.dataset.api-builder') --}}
+
+        @if(isset($data['meta_fields']))
+        {{dd($data['meta_fields'])}}
+      <div class="ac l50  p-10 pr-10 " >
+        <div class="dd mb35" id="nestable">
+        <ol class="dd-list" id="api-columns">
+          @foreach($data['meta_fields'] as $mKey => $mVal)
+          
+          <li class="dd-item" data-id="{{$mVal['id']}}">
+                        <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
+                        <div class="dd-handle">
+                            @if(isset($data['columns'][$mVal['id']]))
+                                {{$data['columns'][$mVal['id']]}}
+                                @else 
+                                {{$mVal['id']}}
+                            @endif
+                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$mVal['id']}}</span>
+                        </div>
+                        @if(isset($mVal['children']))
+                          @foreach($mVal['children'] as $nKey => $nValue)
+                              <ol class="dd-list"><li class="dd-item" data-id="{{$nValue['id']}}">
+                        <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_2" data-value="Employee Name"></i></a>
+                        <div class="dd-handle"> {{$data['columns'][$nValue['id']]}}
+                            
+                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$nValue['id']}}</span>
+                        </div>
+                        
+                    </li></ol>
+                          @endforeach
+                        @endif
+          </li>
+
+          @endforeach
+        </ol>
+      </div>
+      </div>
+      @else
+        @include('organization.dataset.api-builder')
+      @endif
+
 				<div>
 					{!! Form::submit('Submit',['class'=>'submit-json']) !!}		
 				</div>
@@ -150,25 +189,11 @@ $page_title_data = array(
 		@endif
 	</div>
 	<div class="aione-border p-10 data-view" style="min-height: 350px;max-height: 350px;overflow: auto">
-		@if(isset($data['response']))
-		<code>
-			<pre>
-				@php
-					$newArray = [];
-						foreach(json_decode($data['response']) as $k => $v){
-							$appendedData = [];
-							foreach ($v as $key => $value) {
-								$appendedData[$key] = $value; 
-							}
-								$newArray[] = $appendedData;
-						}
-						
-					$json = json_encode($newArray , JSON_PRETTY_PRINT);
-					print_r($json);
-				@endphp
-				{{-- {{json_encode($data['response'],JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)}} --}}
-			</pre>
-		</code>
+		@if(isset($data['res']))
+      {{$data['res']->content()}}
+    @endif
+    @if(isset($data['response']))
+     {{$data['response']->content()}}
 		@endif	
 		
 			

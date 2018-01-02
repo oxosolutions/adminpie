@@ -64,13 +64,26 @@ class DatasetController extends Controller
         }
         $data['id'] = $id;
         $data_set = Dataset::where('id', $id)->first();
-        $meta_fields = get_meta('Organization\DatasetMeta',$id, $key = 'api_fields', $column = 'dataset_id', $array = true);
-        if($meta_fields){
-           $data['meta_fields']   =  json_decode($meta_fields,true);
-        }
+
         if(!empty($data_set->dataset_table)){
             $dataset_table = str_replace('ocrm_', '', $data_set->dataset_table);
+            $meta_fields = get_meta('Organization\DatasetMeta',$id, $key = 'api_fields', $column = 'dataset_id', $array = true);
             $data['columns'] = $this->dataset_table_column($dataset_table);
+            $go  = GlobalOrganization::find(get_organization_id());
+            $organization_slug = $go->slug;
+            $active_code =  $go->active_code;
+            $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false); 
+                    
+            if($meta_fields){
+                $data['meta_fields']   =  json_decode($meta_fields,true);
+                
+                $select_fields = $this->get_columns($data['meta_fields']);
+                $result =  $this->api_data_result($select_fields, $dataset_table);
+                $res = $this->manipulation_data($result, $data['meta_fields'], $data);
+                $data['response'] = response()->json($res);
+                $data['link'] = url('/api/dataset/'.$active_code.'/'.$token);
+               // $data['res'] = $this->api_response('123456',$token );
+            }
             if(!empty($data['columns'])) {
                 if($request->isMethod('post')){
                     http_response_code(500);
@@ -80,7 +93,6 @@ class DatasetController extends Controller
                         return $data;
                     }
                     $sel_fields =  $this->get_columns($fields);
-                    $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false); 
                     if(!$token){
                         update_meta('App\Model\Organization\DatasetMeta', ['token'=>str_random(25)], ['dataset_id'=>$id], false);
                         $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false);
