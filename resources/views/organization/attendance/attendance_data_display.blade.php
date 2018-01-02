@@ -45,7 +45,7 @@
 						$getDay = Carbon\Carbon::create($year, $month, $d, 0);
 						if($getDay->format('l')=="Sunday")
 						{
-							$td .="<div class='attendance-sheet column sunday'>S</div>";
+							$td .="<div class='attendance-sheet column sunday'>Ss</div>";
 						}else
 						{
 							$td .="<div class='attendance-sheet column'>-</div>";
@@ -149,6 +149,7 @@
 
 					}
 				@endphp
+				<br>
 			@endforeach
 			<div style="clear: both;"></div>
 			

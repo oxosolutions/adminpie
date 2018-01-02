@@ -119,13 +119,16 @@ $page_title_data = array(
 				</div> --}}
 
         @if(isset($data['meta_fields']))
-        {{dd($data['meta_fields'])}}
+        {{-- {{dd($data['meta_fields'])}} --}}
       <div class="ac l50  p-10 pr-10 " >
         <div class="dd mb35" id="nestable">
         <ol class="dd-list" id="api-columns">
           @foreach($data['meta_fields'] as $mKey => $mVal)
-          
-          <li class="dd-item" data-id="{{$mVal['id']}}">
+          @if(isset($mVal['blank']))
+          <li class="dd-item"  data-blank="blank" data-id="{{$mVal['id']}}">
+            @else 
+            <li class="dd-item" data-id="{{$mVal['id']}}">
+          @endif
                         <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
                         <div class="dd-handle">
                             @if(isset($data['columns'][$mVal['id']]))

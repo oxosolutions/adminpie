@@ -375,17 +375,17 @@ public function attendance_file(){
 		return $data;
 	}
 	public function attendance_by_hr(Request $request){	
+
 		$filter_dates = $attendance_data = null;
 		$current_dates = $this->current_date_data;
 		if($request->isMethod('post')){
 			$filter_dates = $current_dates = $request->except(['_token']);
 		}
 		$cDate =	date('Y-m-d',strtotime($current_dates["year"].'-'.$current_dates["month"].'-'.$current_dates["date"]));
-		$employee_data = User::with('metas_for_attendance')->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
-
+		$employee_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
+		// $employee_data = User::with('metas_for_attendance')->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		if($request->isMethod('post')){
-
 			$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		}
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);

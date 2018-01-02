@@ -6,10 +6,12 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Attendence',
-	'add_new' => 'List Attendence',
+	'add_new' => '+ Import Attendence',
 	'route' => 'upload.attendance',
-	// 'second_button_route' => 'hr.attendance',
-	// 'second_button_title' => 'Mark Attendence'
+	'second_button_route' => 'hr.attendance',
+	'second_button_title' => 'Mark Attendence',
+	'third_button_title' => 'List attendance',
+	'third_button_route' => 'lists.attendance'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 

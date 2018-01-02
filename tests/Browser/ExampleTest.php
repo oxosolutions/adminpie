@@ -15,9 +15,11 @@ class ExampleTest extends DuskTestCase
      */
     public function testBasicExample()
     {
+        //$this->route('GET', 'org.login');
+        //$this->assertResponseOk();
         $this->browse(function (Browser $browser) {
-            $browser->visit('/')
-                    ->assertSee('New');
+            dd($browser->visit('http://master.scolm.com/login')
+                    ->assertSee('Login'));
         });
     }
 }
