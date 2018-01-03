@@ -26,7 +26,9 @@
 {{-- <a href="{{ route('hr.attendance') }}" class="btn blue">Mark attendance</a> --}}
 	<div id="att_data" >
 		<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
-			
+		<input id="years" type="hidden" value="{{$data['year']}}" >
+		<input id="months" type="hidden"  value="{{$data['month']}}" >
+
 		<div id="projects" class="projects list-view">
 		
 		</div>
@@ -34,9 +36,7 @@
 		<div id="main" class="main-container">
 		
 		</div>
-		
 	</div>
-
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')
@@ -124,7 +124,15 @@
 </style>
 	<script type="text/javascript">
 	$(document).ready(function(){
+		year = $("#years").val();
+		month = $("#months").val();
+		if(month != null && year !=null){
+			attendance_filter(null, null, month, year)
+		}
+		else{
 		attendance_list();
+		}
+
 
 	
 

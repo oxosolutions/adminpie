@@ -612,7 +612,7 @@ try{
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_dataset_meta',
-                                '--schema'=>'dataset_id:integer, key:string, value:text:nullable, token:string:nullable'
+                                '--schema'=>'dataset_id:integer, key:string, value:text:nullable'
                             ]);
 
         Artisan::call('make:migration:schema',[

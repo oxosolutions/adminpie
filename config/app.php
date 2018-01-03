@@ -175,6 +175,7 @@ return [
         Netinternet\Logicboxes\LogicboxesServiceProvider::class,
         OxoSolutions\DomainManagement\DomainManagementProvider::class,
         Laravel\Dusk\DuskServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -256,6 +257,7 @@ return [
         'Menu' => OxoSolutions\Menu\Facades\Menu::class,
         'Shortcode' => Gornymedia\Shortcodes\Facades\Shortcode::class,
         'Logicboxes' => Netinternet\Logicboxes\Facades\Logicboxes::class,
+        'Curl'          => Ixudra\Curl\Facades\Curl::class,
     ],
 
 ];

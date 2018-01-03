@@ -82,9 +82,11 @@ class AttendanceController extends Controller
 
 		return ['message'=>'successfully '];
 	}
-	public function import_form()
+	public function import_form($year, $month)
 	{
-		return view('organization.attendance.attendance_import');
+		$data['year'] = $year;
+		$data['month'] = $month;
+		return view('organization.attendance.attendance_import',compact('data'));
 	}
 
 	public function attendance_import(Request $request)
@@ -322,14 +324,15 @@ public function attendance_file(){
 		return $where;
 	}
 
-	public function list_attendance(Request $request)
+	public function list_attendance(Request $request, $year=null, $month=null)
 	{
-
+			$data['year'] = $year;
+			$data['month'] = $month;
 			$plugins = [
 				'js' => ['custom'=>['attendance']],
 				'css' => ['custom'=>['attendance']]
 		];		
- 		return view('organization.attendance.attendance',['plugins'=>$plugins]);
+ 		return view('organization.attendance.attendance',['plugins'=>$plugins, 'data'=>$dat]);
 	}
 
 	public function ajax(Request $request){

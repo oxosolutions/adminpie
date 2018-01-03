@@ -38,6 +38,8 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
 <div class="row">
 	{!! Form::open(['route'=>'upload.attendance', "files"=>true , 'class'=> 'form-horizontal','method' => 'post'])!!}
+	<input type="hidden" name="year" value="$data['year']">
+	<input type="hidden" name="month" value="$data['month']">
 	<div class="row no-margin-bottom">
 			{!! FormGenerator::GenerateForm('import_attendance_form') !!}
 	</div>

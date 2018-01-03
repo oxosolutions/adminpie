@@ -310,7 +310,7 @@ $number = 1;
 								
 								<div class="switch">
 										    <label>
-												lock 
+												lock {{$lock_status}}
 													@if(@$lock_status == 1)
 														<input type="checkbox">
 													@else

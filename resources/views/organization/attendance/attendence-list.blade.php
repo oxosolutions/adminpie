@@ -24,20 +24,15 @@ $page_title_data = array(
 
                     {{-- {!! Form::selectRange('year', 2016, 2030,['id'=>'input_group_id', 'class'=>'input_group_id browser-default']) !!} --}}
                     <select class="input_group_id browser-default " id="input_group_id" name="group_id">
-                        <option value="2011">2011</option>
-                        <option value="">2012</option>
-                        <option value="">2013</option>
-                        <option value="">2014</option>
-                        <option value="">2015</option>
-                        <option value="">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2016">2016</option>
                         <option value="2017">2017</option>
-                        <option value="">2018</option>
-                        <option value="">2019</option>
-                        <option value="">2020</option>
-                        <option value="">2021</option>
-                        <option value="">2022</option>
-                        <option value="">2023</option>
-                        
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
                     </select>
                 </div><!-- field -->
             </div>
@@ -70,8 +65,9 @@ $page_title_data = array(
                         
                     </div>
                     <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="attendance_filter(null, null, 1, 2017)"> View </a>
+                        <a href=""> 
+                            {{-- {{url('hrm/atendance/2017/1')}} --}}
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(1)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -82,7 +78,7 @@ $page_title_data = array(
 
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
+                            <i class="fa fa-sign-in ph-5"></i><a href="#" onclick="import_attendance(1)"> Import </a>    
                         </a>
                         
                     </div>
@@ -108,7 +104,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(2)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -145,7 +141,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(3)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -182,7 +178,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(4)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -219,7 +215,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(5)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -256,7 +252,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(6)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -293,7 +289,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(7)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -330,7 +326,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(8)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -367,7 +363,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(9)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -404,7 +400,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(10)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -441,7 +437,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(11)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -478,7 +474,7 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-television ph-5"></i> View
+                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(12)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
@@ -511,53 +507,10 @@ $page_title_data = array(
         </div>
     </div>
 <script type="text/javascript">
-
-    function attendance_filter(date, week, mo, yr){
-        yr = $("#input_group_id").val();
-       
-        date =  week =null;
-        console.log(date, week, mo, yr);
-        var postData = {};
-        postData['date'] = date;
-        postData['week'] = week;
-        postData['month'] = mo;
-        postData['years'] = yr;
-        postData['_token'] = $("#token").val();
-        $.ajax({
-                url:route()+'/attendance/list/ajax',
-                type:'POST',
-                data:postData,
-                success: function(res){
-
-                    $("#main").html(res);
-                    $("#month , #week ,#days").hide();
-
-                    if(date)
-                    {
-                        $("#days").show();
-                        console.log('day');
-                        $(".daily").addClass("aione-active");
-
-                    }else if(week){
-                        $("#week").show();
-                        console.log('week');
-                        $(".weekly").addClass("aione-active");
-                    }else{
-                        $("#month").show();
-                        console.log('month');
-                        $(".monthly").addClass("aione-active");
-                    }
-                    $('select').material_select();
-                
-                    console.log('data sent successfull ');
-                }
-            });
-        }
-    
-
-
-        
-    
+    function view_attendance(month){
+        year = $("#input_group_id").val();
+        window.location.replace(route()+'/atendance/'+year+'/'+month);
+    }
 </script>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

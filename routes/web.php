@@ -380,6 +380,7 @@
 				
 				//Employee	
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
+					Route::get('/atendance/{year?}/{month?}', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 					Route::group(['middleware'=>'role'],function(){
 						// Route::post('role_permisson_save',		['as'=>'save.role_permisson', 'uses'=>'UserRoleController@role_permisson_save']);
 						Route::get('employees', 				['as'=> 'list.employee' , 'uses' => 'EmployeeController@index']);
@@ -389,12 +390,12 @@
 						Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
 						Route::get('leaves/{id?}',				['as'=> 'leaves' , 'uses' =>'LeavesController@index']);
 						Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
-						Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
+						// Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 						
 						Route::get('/holidays/{id?}',			['as'=> 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
 						
 						Route::post('/attendance/import',		['as'=> 'upload.attendance' , 'uses' => 'AttendanceController@attendance_import']);
-						Route::get('/attendance/import',		['as' => 'import.form.attendance' , 'uses' => 'AttendanceController@import_form']);
+						Route::get('/attendance/import/{year?}/{month?}',		['as' => 'import.form.attendance' , 'uses' => 'AttendanceController@import_form']);
 						Route::post('employee/update', 			['as' => 'update.employee' , 'uses' => 'EmployeeController@update']);
 						Route::get('employee/delete/{id}', 		['as' => 'delete.employee' , 'uses' => 'EmployeeController@delete']);
 						Route::get('/designations/{id?}',		['as' => 'designations' , 'uses' => 'DesignationsController@index']);
