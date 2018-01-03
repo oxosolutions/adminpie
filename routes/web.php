@@ -380,7 +380,6 @@
 				
 				//Employee	
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
-					Route::get('/atendance/{year?}/{month?}', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 					Route::group(['middleware'=>'role'],function(){
 						// Route::post('role_permisson_save',		['as'=>'save.role_permisson', 'uses'=>'UserRoleController@role_permisson_save']);
 						Route::get('employees', 				['as'=> 'list.employee' , 'uses' => 'EmployeeController@index']);
@@ -408,6 +407,7 @@
 					});
 					Route::get('/attendance/import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
+					Route::get('/atendance/{year?}/{month?}', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
 

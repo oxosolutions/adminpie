@@ -16,9 +16,15 @@ class ControlPanelController extends Controller
 	{
 		return view('admin.control-panel.testing');
 	}
-	public function consistency()
+	public function consistency(Request $request)
 	{
-		return view('admin.control-panel.consistency');
+        $listArray = [];
+        if($request->isMethod('post')){
+            if($request->has('conistancy')){
+                $listArray = $this->fileConsistancy($request);
+            }
+        }
+		return view('admin.control-panel.consistency',['dir_list'=>$listArray]);
 	}
 
     /**
@@ -37,7 +43,7 @@ class ControlPanelController extends Controller
      * @return [type]           will return directory name or id
      * @author Rahul 
      */
-    public function fileConsistancy(Request $request){
+    protected function fileConsistancy($request){
         $model = GlobalOrganization::select('id')->get()->keyBy('id')->keys()->toArray();
         $directories = File::directories('files');
         $listToRemove = [];

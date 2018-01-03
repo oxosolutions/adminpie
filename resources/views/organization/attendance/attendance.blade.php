@@ -126,16 +126,12 @@
 	$(document).ready(function(){
 		year = $("#years").val();
 		month = $("#months").val();
-		if(month != null && year !=null){
+		if(month  && year){
 			attendance_filter(null, null, month, year)
 		}
 		else{
 		attendance_list();
 		}
-
-
-	
-
 	});
 	function showHide(show)
 	{

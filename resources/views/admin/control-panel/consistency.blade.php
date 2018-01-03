@@ -18,8 +18,8 @@ $page_title_data = array(
 				File Consistency
 			</div>
 			<div class=" p-10">
-                {!! Form::open(['route'=>'file.consistency']) !!}
-				    <button type="submit">Check File Consistancy</button>
+                {!! Form::open(['route'=>'consistency.control']) !!}
+				    <button type="submit" name="conistancy" value="cons">Check File Consistancy</button>
                 {!! Form::close() !!}
 				<div class="pv-20">Result:-</div>
 				<div class="aione-border" style="min-height: 300px;max-height: 300px;overflow: auto">
