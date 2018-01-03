@@ -395,7 +395,6 @@
 						Route::get('/holidays/{id?}',			['as'=> 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
 						
 						Route::post('/attendance/import',		['as'=> 'upload.attendance' , 'uses' => 'AttendanceController@attendance_import']);
-						Route::get('/attendance/import/{year?}/{month?}',		['as' => 'import.form.attendance' , 'uses' => 'AttendanceController@import_form']);
 						Route::post('employee/update', 			['as' => 'update.employee' , 'uses' => 'EmployeeController@update']);
 						Route::get('employee/delete/{id}', 		['as' => 'delete.employee' , 'uses' => 'EmployeeController@delete']);
 						Route::get('/designations/{id?}',		['as' => 'designations' , 'uses' => 'DesignationsController@index']);
@@ -407,7 +406,8 @@
 
 
 					});
-					Route::get('/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
+					Route::get('/attendance/import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
+					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
 

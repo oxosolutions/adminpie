@@ -8,6 +8,7 @@ $page_title_data = array(
 	'page_title' => 'Attendance List',
 	'add_new' => '+ Add Designation'
 );
+    $month = [1=>'jan', 'feb' , 'March' ,'April', 'May', 'June' , 'july', 'Aug', 'Sep', 'oct', 'nov','dec'];
 @endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
@@ -21,9 +22,10 @@ $page_title_data = array(
                     </label>
                 </div><!-- field label-->
                 <div id="field_group_id" class="field field-type-select">
+                    {!! Form::open(['route'=>'lists.attendance']) !!}
 
-                    {{-- {!! Form::selectRange('year', 2016, 2030,['id'=>'input_group_id', 'class'=>'input_group_id browser-default']) !!} --}}
-                    <select class="input_group_id browser-default " id="input_group_id" name="group_id">
+                    {!! Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default']) !!}
+                   {{--  <select class="input_group_id browser-default " id="input_group_id" name="year">
                         <option value="2015">2015</option>
                         <option value="2016">2016</option>
                         <option value="2017">2017</option>
@@ -33,10 +35,17 @@ $page_title_data = array(
                         <option value="2021">2021</option>
                         <option value="2022">2022</option>
                         <option value="2023">2023</option>
-                    </select>
+                    </select> --}}
+                    {!! Form::submit() !!}
                 </div><!-- field -->
             </div>
         </div>
+
+
+       {{--  {{dump($data['lock_status'])}} --}}
+        {{-- {{dd($data['lock_status']['01'])}} --}}
+      
+    
         <div class="mt-20">
             <ul>
                 <li class="p-10 ar">
@@ -54,13 +63,34 @@ $page_title_data = array(
                     </div>
                     
                 </li>
-                <li class="aione-border p-10 mb-10 ar">
+        @for($i=1; $i<=12; $i++)
+            @if(strlen($i)==1)
+                @php
+                $j = '0'.$i;
+                @endphp
+                @else
+                 @php
+                $j = $i;
+                @endphp
+
+            @endif
+            
+             <li class="aione-border p-10 mb-10 ar">
                     <div class="ac l15">
-                        <strong>January</strong>    
+                        <strong>{{$month[$i]}}</strong>    
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
+                            <i class="fa fa-lock ph-5"></i>
+                            @if(!empty($data['lock_status'][$j]))
+                                    @if($data['lock_status'][$j]==0)
+                                        Locked
+                                    @else 
+                                        unlock
+                                    @endif
+                                @else
+                                    not have Attendance data
+                            @endif   
                         </a>
                         
                     </div>
@@ -92,415 +122,8 @@ $page_title_data = array(
                         
                     </div>
                 </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                        February
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(2)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    March
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(3)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    April
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(4)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    May
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(5)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    June
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(6)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    July
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(7)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    August
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(8)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    September
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(9)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    October
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(10)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    November
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(11)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
-                    December
-                      </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-lock ph-5"></i>Locked    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(12)"> View </a>
-                        </a>
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
-                        </a>
-                    </div>
-
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-sign-in ph-5"></i>Import    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
-                        
-                    </div>
-                    <div class="ac l15">
-                        
-                    </div>
-                </li>
-                
-            </ul>
+        @endfor
+              </ul>
         </div>
         <div id="main">
 
@@ -510,6 +133,12 @@ $page_title_data = array(
     function view_attendance(month){
         year = $("#input_group_id").val();
         window.location.replace(route()+'/atendance/'+year+'/'+month);
+    }
+
+    function import_attendance(month){
+        year = $("#input_group_id").val();
+        alert(year, month);
+         window.location.replace(route()+'/attendance/import/'+year+'/'+month);//+);
     }
 </script>
 @include('common.page_content_primary_end')

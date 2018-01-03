@@ -16,6 +16,7 @@ use App\Model\Organization\FormBuilder;
 Use Carbon\carbon;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Group\GroupUsers;
+use App\Model\Organization\Dataset;
 
 class SurveyController extends Controller
 {
@@ -42,9 +43,14 @@ class SurveyController extends Controller
         }
         return response()->json(['status'=>'success', 'users'=>$users],200);
     }
+
+    /**
+     * Will send all survey questions in API for android application
+     * @param  Request $request have all posted dat
+     * @return [type]           json of array
+     */
     public function surveys(Request $request){
-        // $org_id = GO::where('active_code',$request['activation_key'])->first()->id; 
-         $org = GO::where('active_code',$request['activation_key']);
+        $org = GO::where('active_code',$request['activation_key']);
         if(!$org->exists()){
             return ['status'=>'error', 'message'=>'active code not exist'];
         }
@@ -52,23 +58,13 @@ class SurveyController extends Controller
         $group_id = $org->first()->group_id;
         Session::put('organization_id',$org_id);
         Session::put('group_id',$group_id);
-      //  $users = User::with('belong_group')->get()->keyBy('belong_group');
         $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
-     // group user according //   $users = GroupUsers::with('user_role_rel.roles')->has('organization_user')->get()->toArray();
-        // dump($group_orgnization_user->toArray());
 
         foreach ($users as $key => $value) {
-           // array_push($users, $org_id);
            $users[$key]['org_id'] = $org_id; 
            $users[$key]['user_roles'] =  array_column(array_column($users[$key]['organization_user']['user_role_rel'], 'roles'), 'slug');
-// group user according // $users[$key]['user_roles'] =  array_column(array_column($value['user_role_rel'], 'roles'), 'slug');
-
            unset($users[$key]['organization_user']); 
-
-
-
         }
-        // dump($users);
 
  
         $form  =  forms::with(['section'=>function($query){
@@ -150,10 +146,7 @@ class SurveyController extends Controller
 
                                 }
 
-                                
-
-
-                                    $options = json_decode(@$form_meta['field_options'],true);
+                                $options = json_decode(@$form_meta['field_options'],true);
                                 $form_fields['next_question_key'] ="";
                                 if($fieldValue['field_type']=='select' ||  $fieldValue['field_type']=='multi_select' || $fieldValue['field_type']== 'radio' || $fieldValue['field_type'] == 'checkbox')
                                 {   $option = null;
@@ -170,6 +163,7 @@ class SurveyController extends Controller
                                        }
                                     }
                                     $form_fields['answers'] = [$option];
+                                    $form_fields = $this->checkPrefilledWith($form_meta, $form_fields);
                                 }
                                  
                                     if($section_type_value =='repeater' && $repeater_check ==0 )
@@ -195,19 +189,97 @@ class SurveyController extends Controller
             $data['questions']      = $question;
             $data['surveys']     = $surveys;           
             $data['groups']      = $groups;
-            $data["users"]       = $users;//GroupUsers::all();
-            $data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
+            //$data["users"]       = $users;//GroupUsers::all();
+            //$data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
             $mediaArray = [];
             if(isset($data['settings']['android_application_logo'])){
                 $mediaArray['android_application_logo'] = $data['settings']['android_application_logo'];
             }
             $data['media'] = $mediaArray;
             return $data;   
-}
-            public function surveyPerview($form_id)
-            {
+    }
 
+    /**
+     * Check and fill answer of specific question with dataset 
+     * or survey values
+     * @param  [array] $form_meta   having meta data of form field
+     * @param  [array] $form_fields havind array with generated data for fields
+     * @return [array]              will return array of form_fields with append answers
+     * @author Rahul
+     */
+    protected function checkPrefilledWith($form_meta, $form_fields){
+        if($form_meta->has('prefilled_with')){
+            switch($form_meta['prefilled_with']){
+
+                case'dataset':
+                    $datasetColumnsResult = Dataset::getDatasetColumnRecords($form_meta,true);
+                    $options = [];
+                    $i = 0;
+                    foreach($datasetColumnsResult as $key => $option){
+                        $options[$i]['option_type'] = $form_fields['question_type'];
+                        $options[$i]['option_value'] = $key;
+                        $options[$i]['option_text'] = $option;
+                        $options[$i]['option_next'] = "";
+                        $i++;
+                    }
+                    $form_fields['answers'] = [$options];
+                    return $form_fields;
+                break;
+
+                case'survey':
+                    $surveyColumnsResult = forms::getSurveyResultRecords($form_meta,true);
+                    $options = [];
+                    $i = 0;
+                    foreach($surveyColumnsResult as $key => $option){
+                        $options[$i]['option_type'] = $form_fields['question_type'];
+                        $options[$i]['option_value'] = $key;
+                        $options[$i]['option_text'] = $option;
+                        $options[$i]['option_next'] = "";
+                        $i++;
+                    }
+                    $form_fields['answers'] = [$options];
+                    return $form_fields;
+                break;
+
+                case'model':
+                    $modelAssoc = $form_meta['choice_model'];
+                    try{
+                        if($modelAssoc != null && $modelAssoc != ''){
+                            $modelAssoc = explode('@',$modelAssoc);
+                            $functionName = str_replace('()','',$modelAssoc[1]);
+                            $modelObject = new $modelAssoc[0];
+                            $modelResult = $modelObject->{$functionName}();
+                            $options = [];
+                            $i = 0;
+                            foreach($modelResult as $key => $option){
+                                $options[$i]['option_type'] = $form_fields['question_type'];
+                                $options[$i]['option_value'] = $key;
+                                $options[$i]['option_text'] = $option;
+                                $options[$i]['option_next'] = "";
+                                $i++;
+                            }
+                            $form_fields['answers'] = [$options];
+                            return $form_fields;
+                        }
+                    }catch(\Exception $e){
+                        return $form_fields;
+                    }
+                break;
+
+                case'static':
+                    return $form_fields;
+                break;
             }
+        }
+        return $form_fields;
+    }
+
+
+
+    public function surveyPerview($form_id)
+    {
+
+    }
 
     public function save_app_survey_filled_data(Request $request){
         //dump($request['activation_code']);

@@ -103,8 +103,10 @@ $total_warning_count = 0;
 											    <thead>
 											    	<tr>
 													    <th>Questions</th> 
+													    <th>Slug</th>
 													    <th>Type</th>
-													    <th style="min-width: 180px">Options</th>
+													    <th style="min-width: 100px">Options</th>
+													    <th>Conditions</th>
 													    <th>Validations</th>
 												    </tr>
 												</thead>
@@ -113,6 +115,7 @@ $total_warning_count = 0;
 										      	@if(!empty(@$section['fields']))
 										      		@foreach(@$section['fields'] as $fieldKey => $fieldVal)
 										      		@php
+										      			// $field_meta = array_column($fieldVal['field_meta'], 'value','key'));
 										      			$field_slug[] = $fieldVal['field_slug'];
 										      			$field_title[$fieldVal['field_slug']][]	= 	substr($fieldVal['field_title'], 0, 30);
 										      			$field_id[$fieldVal['field_slug']][]	=   $fieldVal['id'];
@@ -121,6 +124,7 @@ $total_warning_count = 0;
 										      		@endphp
 										      		<tr class='{{$fieldVal['field_slug']}}'>
 										      			<td>{{@$fieldVal['field_title']}}</td>
+										      			<td>{{@$fieldVal['field_slug']}}</td>
 											      		<td>{{@$fieldVal['field_type']}}</td> 
 											      		
 														@php
@@ -130,8 +134,6 @@ $total_warning_count = 0;
 															$meta = $collection->toArray();
 									            		@endphp
 									            		<td>
-										            		
-
 									            		@if(in_array($fieldVal['field_type'], ['radio','select','checkbox']))
 									            			 <span class="bg-cyan white p-4 show-details">{{ @count(json_decode($meta['field_options'])) }} Options</span>
 									            			 
@@ -141,6 +143,9 @@ $total_warning_count = 0;
 									            				@php
 									            					if($metaVal==null || count(json_decode($metaVal,true)) ==0 ) {
 									            						$opt_miss_error[] =[$fieldVal['field_type'],$fieldVal['field_slug']]; 
+									            						if(empty($error)){
+									            							$error = [];
+									            						}
 									            						if(!array_key_exists($section['section_slug'], $error)){
 																			 			$error[$section['section_slug']][] = $section['section_name'];
 																			 		}
@@ -172,8 +177,34 @@ $total_warning_count = 0;
 {{-- 									            		 <span class="bg-cyan white p-4">{{ @count(json_decode($meta['field_options'])) }} Options</span>
  --}}									            		  <span class="bg-blue-grey white p-4">No Options</span>
 									            		@endif
+								            			</td>
+								            			<td>@if(!empty($meta['field_conditions']))
+								            					@php
+								            					 $meta_field_conditions = json_decode($meta['field_conditions'],true);
+								            					if(!empty($meta_field_conditions)){
+									            					foreach ($meta_field_conditions[0] as $codkey => $codvalue) {
+									            						if(!empty($codvalue)){
+									            							echo $codkey.':'.$codvalue.', ';
+									            						}
+									            					}
+								            					}
+								            					@endphp
+								            				@endif 
 								            			</td>	
-								            			<td>require, email, number</td>
+								            			<td>
+								            				@if(!empty($meta['field_validations']))
+								            					@php
+								            					$meta_validation = json_decode($meta['field_validations'],true);
+								            					if(!empty($meta_validation)){
+									            					foreach ($meta_validation[0] as $key => $value) {
+									            						if(!empty($value)){
+									            							echo $key.':'.$value.', ';
+									            						}
+									            					}
+								            					}
+								            					@endphp
+								            				@endif
+								            			</td>
 										      		</tr>
 										      		@endforeach		
 							            		@endif

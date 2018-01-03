@@ -94,9 +94,14 @@ class Dataset extends Model
      * @param  [type] $collectionData [collection of form generator]
      * @return [type]       array     [collection of array]
      */
-    public function getDatasetColumnRecords($collectionData){
-        $datasetId = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_dataset');
-        $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+    public static function getDatasetColumnRecords($collectionData, $callStatus = false){
+        if($callStatus){
+            $datasetId = $collectionData['select_dataset'];
+            $column = $collectionData['select_column'];
+        }else{
+            $datasetId = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_dataset');
+            $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+        }
         $listArray = [];
         $datasetTable = self::find($datasetId)->dataset_table;
         if(($datasetTable != null && $datasetTable != '') && ($column != null && $column != '')){

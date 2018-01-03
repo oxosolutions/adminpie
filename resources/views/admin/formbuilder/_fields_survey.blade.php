@@ -161,7 +161,7 @@
 
     /************************************************************************************/
     $(document).ready(function(){
-        var selectedFill = '{{ $model["prefilled_with"] }}';
+        var selectedFill = '{{ @$model["prefilled_with"] }}';
         console.log(selectedFill);
         var toHide = '';
         switch(selectedFill){
@@ -231,7 +231,7 @@
                data: {dataset: datasetId,status:true},
                success: function(result){
                     $('#field_3169 select').html(result);
-                    $('#field_3169 select').val('{{ $model['select_column'] }}');
+                    $('#field_3169 select').val('{{ @$model['select_column'] }}');
                }
             });
         });
@@ -243,7 +243,7 @@
                data: {survey_id: surveyId},
                success: function(result){
                     $('#field_3169 select').html(result);
-                    $('#field_3169 select').val('{{ $model['select_column'] }}');
+                    $('#field_3169 select').val('{{ @$model['select_column'] }}');
                }
             });
         });

@@ -86,11 +86,15 @@ class AttendanceController extends Controller
 	{
 		$data['year'] = $year;
 		$data['month'] = $month;
+		dump($data);
 		return view('organization.attendance.attendance_import',compact('data'));
 	}
 
+
+
 	public function attendance_import(Request $request)
 	{
+
 		$file = $request->file('attendance_file');
 
 		$this->validate($request, [
@@ -121,8 +125,8 @@ class AttendanceController extends Controller
 			$file_name = str_random(13).$file->getClientOriginalName();
 			$file->move($storage_path, $file_name);	
 		
-		Excel::load($storage_path.'/'.$file_name, function ($reader)
-		{
+		Excel::load($storage_path.'/'.$file_name, function ($reader)use($request)
+		{	
 			$reader->noHeading();
 			$all_data = json_decode(json_encode($reader->all()) , true);
 			unset($all_data[0] , $all_data[1]); 
@@ -131,8 +135,17 @@ class AttendanceController extends Controller
 			$i = 1;
 			$dates = explode('~',$all_data[0][2]);
 			$month_year = date('m-Y', strtotime($dates[0]));
+
 			$year = date('Y', strtotime($dates[0]));
 			$month = date('m', strtotime($dates[0]));
+			if(!empty($request['year'])  &&  $request['year'] != $year && !empty($request['month'])  &&  $request['month'] != $month){
+				Session::flash('error','Not match Month & year.');
+
+				dd('not match');
+				return redirect()->route('import.form.attendance', ['year' => $request['year'], 'month'=>$request['month']]);
+				// return redirect('/attendance/import/'.$request['year'].'/'.$request['month']);
+			}
+
 			$check_attendance = Attendance::where(['year'=>$year,'month'=>$month,'lock_status'=>0])->count();	
 			if($check_attendance>0)
 			{
@@ -332,7 +345,7 @@ public function attendance_file(){
 				'js' => ['custom'=>['attendance']],
 				'css' => ['custom'=>['attendance']]
 		];		
- 		return view('organization.attendance.attendance',['plugins'=>$plugins, 'data'=>$dat]);
+ 		return view('organization.attendance.attendance',['plugins'=>$plugins, 'data'=>$data]);
 	}
 
 	public function ajax(Request $request){
@@ -452,9 +465,20 @@ public function attendance_file(){
 	/**
 	 * @auther Ashish
 	 */
-	public function attendanceList()
+	public function attendanceList(request $request)
 	{
-		return view('organization.attendance.attendence-list');
+		$year = date('Y');
+		if($request->isMethod('post')){
+			$year = $request['year'];
+		}
+		$data['year'] =$year;
+		$query = Attendance::select('month','lock_status')->where(['year'=>$year])->groupBy('month');//->get();
+		if($query->exists()){
+			$query_data = $query->get();
+		 	$data['lock_status'] = array_column($query_data->keyBy('month')->toArray(), 'lock_status','month');
+		// dump($data['lock_status']);
+		}
+		return view('organization.attendance.attendence-list',compact('data'));
 	}
 
 }

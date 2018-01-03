@@ -136,6 +136,7 @@ class SurveyStatsController extends Controller
 
     }
     public function survey_structure($id){
+      
         $id =intval($id);
         $survey_data = forms::with(['formsMeta','section'=>function($query){
                                 $query->orderBy('order','asc');

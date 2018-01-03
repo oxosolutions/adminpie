@@ -49,9 +49,14 @@ class forms extends Model
     }
 
 
-    public function getSurveyResultRecords($collectionData){
-        $surveyid = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_survey');
-        $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+    public static function getSurveyResultRecords($collectionData, $callStatus = false){
+        if($callStatus){
+            $surveyid = $collectionData['select_survey'];
+            $column = $collectionData['select_column'];
+        }else{
+            $surveyid = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_survey');
+            $column = FormGenerator::GetMetaValue($collectionData->fieldMeta,'select_column');
+        }
         $listArray = [];
         if(($surveyid != '' && $surveyid != null) && ($column != '' && $column != null)){
             try{
