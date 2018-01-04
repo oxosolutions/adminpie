@@ -45,7 +45,7 @@
 						$getDay = Carbon\Carbon::create($year, $month, $d, 0);
 						if($getDay->format('l')=="Sunday")
 						{
-							$td .="<div class='attendance-sheet column sunday'>Ss</div>";
+							$td .="<div class='attendance-sheet column sunday'>S</div>";
 						}else
 						{
 							$td .="<div class='attendance-sheet column'>-</div>";
@@ -104,8 +104,8 @@
 									echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].' </div>';
 								}
 								
-								if(strlen($value['name']) > 12){
-									echo '<div class="attendanc-sheet content">'.substr($value['name'], 0,12).'.. </div>';
+								if(strlen($value['name']) > 10){
+									echo '<div class="attendanc-sheet content">'.substr($value['name'], 0,10).'.. </div>';
 								}else{
 									echo '<div class="attendanc-sheet content">'.$value['name'].' </div>';
 								}

@@ -405,7 +405,7 @@
 
 
 					});
-					Route::get('/attendance/import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
+					Route::match(['get','post'],'/attendance/import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
 					Route::get('/atendance/{year?}/{month?}', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 				});

@@ -8,7 +8,7 @@ $page_title_data = array(
 	'page_title' => 'Attendance List',
 	'add_new' => '+ Add Designation'
 );
-    $month = [1=>'jan', 'feb' , 'March' ,'April', 'May', 'June' , 'july', 'Aug', 'Sep', 'oct', 'nov','dec'];
+    $month = [1=>'January', 'February' , 'March' ,'April', 'May', 'June' , 'July', 'August', 'September', 'October', 'November','December'];
 @endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
@@ -42,7 +42,7 @@ $page_title_data = array(
         </div>
 
 
-       {{--  {{dump($data['lock_status'])}} --}}
+        {{dump($data['year'])}}
         {{-- {{dd($data['lock_status']['01'])}} --}}
       
     
