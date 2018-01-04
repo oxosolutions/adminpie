@@ -140,13 +140,16 @@ class AttendanceController extends Controller
 
 			$year = date('Y', strtotime($dates[0]));
 			$month = date('m', strtotime($dates[0]));
-			if(!empty($request['year'])  &&  $request['year'] != $year && !empty($request['month'])  &&  $request['month'] != $month){
+			$check_month = str_replace(0,'', $month);
+			// if(strlen($check_month)==1) {
+			// 	$check_month = '0'.$check_month;
+			// }&&  $request['year'] != $year  &&  $request['month'] != $check_month
+			if(!empty($request['year']) && !empty($request['month'])){
 				Session::flash('error','Not match Month & year.');
-
-				dd('not match');
-				return redirect()->route('import.form.attendance', ['year' => $request['year'], 'month'=>$request['month']]);
-				// return redirect('/attendance/import/'.$request['year'].'/'.$request['month']);
+				return redirect()->route('leave.categories');
+				dump('not match');
 			}
+			dd($year, $month, $request['year'], $request['month'], $check_month);
 
 			$check_attendance = Attendance::where(['year'=>$year,'month'=>$month,'lock_status'=>0])->count();	
 			if($check_attendance>0)

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalOrganization;
 use Ixudra\Curl\Facades\Curl;
 use File;
+use Session;
 class ControlPanelController extends Controller
 {
 	/**
@@ -61,6 +62,10 @@ class ControlPanelController extends Controller
     }
 
     public function removeSpecificDirectory(Request $request){
-        dd($request->all());
+        // File::deleteDirectory($request->dir,true);
+        // File::deleteDirectory($request->dir);
+        Session::flash('success','Directory Removed Successfully!');
+        $dirs = $this->fileConsistancy($request);
+        return redirect()->back()->with(['dir_list'=>$dirs]);
     }
 }

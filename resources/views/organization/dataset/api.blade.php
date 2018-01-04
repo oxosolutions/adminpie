@@ -1,4 +1,4 @@
-  @extends('layouts.main')
+@extends('layouts.main')
 @section('content')
 @php
 // dump($data);
@@ -120,7 +120,7 @@ $page_title_data = array(
 
         @if(isset($data['meta_fields']))
         {{-- {{dd($data['meta_fields'])}} --}}
-      <div class="ac l50  p-10 pr-10 " >
+      <div class="p-10 pr-10 " >
         <div class="dd mb35" id="nestable">
         <ol class="dd-list" id="api-columns">
           @foreach($data['meta_fields'] as $mKey => $mVal)
