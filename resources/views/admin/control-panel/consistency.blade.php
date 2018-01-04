@@ -1,5 +1,10 @@
 @extends('admin.layouts.main')
 @section('content')
+<style type="text/css">
+	.delete-all{
+		display: none;
+	}
+</style>
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
@@ -21,14 +26,16 @@ $page_title_data = array(
                 {!! Form::open(['route'=>'consistency.control']) !!}
 				    <button type="submit" name="conistancy" value="cons">Check File Consistancy</button>
                 {!! Form::close() !!}
-				<div class="pv-20">Result:-</div>
+				<div class="pv-20 display-inline-block">Result:-</div>
+				<button class="aione-button float-right red delete-all"><i class="fa fa-trash ph-5"></i>Delete Selected</button>
 				<div class="aione-border" style="min-height: 300px;max-height: 300px;overflow: auto">
+
 					<div class="aione-table">
 						<table>
 							<thead>
 								<tr>
 									<th>
-										<input type="checkbox" name="" id="checkbox_all">
+										<input type="checkbox" name="select_all_dir" id="checkbox_all">
 										<label for="checkbox_all" class="ph-10">Select All</label>
 									</th>
 									<th>Directories List</th>
@@ -47,7 +54,7 @@ $page_title_data = array(
     								<tr>
     									<td>
     										
-    										<input type="checkbox" name="" id="checkbox_1">
+    										<input type="checkbox" name="select_dir[]" id="checkbox_1" class="select_dir_check" value="{{ $dir }}">
     										<label for="checkbox_1" class="ph-10"></label>
     									</td>
     									<td class="font-weight-700" title="{{ url('/') }}/public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
@@ -87,7 +94,7 @@ $page_title_data = array(
 								<tr>
 									<td>
 										
-										<input type="checkbox" name="" id="checkbox_1">
+										<input type="checkbox" name="select_all" id="checkbox_1">
 										<label for="checkbox_1" class="ph-10">Select</label>
 									</td>
 									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_formsscolm_175_formsscolm_175_formsscolm_175_forms</td>
@@ -96,7 +103,7 @@ $page_title_data = array(
 								</tr>
 								<tr>
 									<td>
-										<input type="checkbox" name="" id="checkbox_2"> 
+										<input type="checkbox" name="" id="checkbox_2" value=""> 
 										<label for="checkbox_2" class="ph-10">Select</label>
 									</td>
 									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
@@ -172,7 +179,23 @@ $page_title_data = array(
 @include('common.pagecontentend')
 <script type="text/javascript">
     $(document).ready(function(){
-         
+        $('#checkbox_all').click(function(){
+            if($(this).is(':checked')){
+                $('.select_dir_check').each(function(){
+                    $(this).prop('checked',true);
+                });
+            }else{
+                $('.select_dir_check').each(function(){
+                    $(this).prop('checked',false);
+                });
+            }
+        });
+        $('.select_dir_check').click(function(){
+           if($(this).is(':checked')){
+                $('.delete-all').fadeIn(300);
+           }
+           
+        });
     });
 </script>
 @endsection

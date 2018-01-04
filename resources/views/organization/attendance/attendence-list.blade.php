@@ -114,7 +114,7 @@ $page_title_data = array(
                     		<input type="hidden" name="import_year" value="{{$data['year']}}">
                     		<input type="hidden" name="import_month" value="{{$i}}">
                            
-                            {!! Form::submit() !!}
+                            {!! Form::submit('Import') !!}
                         {!! Form::close() !!}
                     </div>
                     <div class="ac l15">

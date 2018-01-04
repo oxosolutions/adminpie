@@ -174,7 +174,7 @@ $page_title_data = array(
                         @endif
 
         				<div>
-        					{!! Form::submit('GET API URL',['class'=>'submit-json']) !!}		
+        					{!! Form::submit('Submit',['class'=>'submit-json']) !!}		
         				</div>
                     </div>
                 </div>
@@ -211,7 +211,23 @@ $page_title_data = array(
                 </div>
             </div>
 
+
         </div>
+        <div class="ac l50">
+            <div class="aione-border">
+                <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+                    Output ( Pretty )
+                </div>
+                <div class="p-10">
+                    @if(isset($data['res']))
+                        {{$data['res']->content()}}
+                    @endif
+                    @if(isset($data['response']))
+                        {{$data['response']->content()}}
+                    @endif        
+                </div>
+                
+            </div>
 		      
 	</div>
 @include('common.page_content_primary_end')

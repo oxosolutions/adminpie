@@ -145,9 +145,8 @@ class AttendanceController extends Controller
 			// &&  $request['year'] != $year  &&  $request['month'] != $check_month
 			if(!empty($request['year']) && !empty($request['month'])){
 				Session::flash('error','Not match Month & yearmyyyy.');
-				$checkStatus = "not-match";
+				$checkStatus = "not-match-month-year";
 				return false;
-				
 			}
 			dd($year, $month, $request['year'], $request['month'], $check_month);
 
@@ -286,7 +285,7 @@ class AttendanceController extends Controller
 		
 		});
 
-dd($checkStatus);
+// dd($checkStatus);
 
 	if(!Session::has('error')){
 		Session::flash('success','File upload successfully!');
@@ -295,7 +294,8 @@ dd($checkStatus);
 		$attendanceFile->name =  $file_name;
 		$attendanceFile->save(); 
 	}else{
-		return redirect()->route('list.attendance');
+		if(!empty($checkStatus) && $checkStatus =='not-match-month-year')
+		return redirect()->route('lists.attendance');
 	}
 		// return redirect()->route('import.form.attendance');
 		return redirect()->route('attendance.files');
