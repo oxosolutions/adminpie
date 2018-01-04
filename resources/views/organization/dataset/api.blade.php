@@ -102,68 +102,83 @@ $page_title_data = array(
       
     </div>
 	<div>
-		Select columns to make api
-		<div class="ar p-10 wrapper">
-            <div class="ac l25 aione-border p-10 fbox columns-box" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
-                @foreach($data['columns'] as $key => $val)
-                    <div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="{{$key}}" data-alias="{{$val}}" style="cursor: pointer">
-                        <input type="hidden" name="{{ $key }}" value="{{ $val }}">
-                        {{$val}}
+		
+		<div class="ar wrapper">
+            <div class="ac l25 p-10 fbox columns-box" id="origin" >
+                <div class="aione-border">
+                    <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+                        Select Dataset Columns
                     </div>
-                @endforeach
-                <div class="p-10 aione-border mb-10 display-inline-block blank-click" style="cursor: pointer">
-                    <input type="hidden" name="blank" value="blank">
-                    Blank
-                </div>
-            </div>
-			<div class="ac l75  p-10 pr-10 " >
-                @if(isset($data['meta_fields']))
-                    <div class="p-10 pr-10 " >
-                        <div class="dd mb35" id="nestable">
-                            <ol class="dd-list" id="api-columns">
-                                @foreach($data['meta_fields'] as $mKey => $mVal)
-                                    @if(isset($mVal['blank']))
-                                        <li class="dd-item"  data-blank="blank" data-id="{{$mVal['id']}}">
-                                    @else 
-                                        <li class="dd-item" data-id="{{$mVal['id']}}">
-                                    @endif
-                                            <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
-                                            <div class="dd-handle">
-                                                @if(isset($data['columns'][$mVal['id']]))
-                                                    {{$data['columns'][$mVal['id']]}}
-                                                @else 
-                                                    {{$mVal['id']}}
-                                                @endif
-                                                <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$mVal['id']}}</span>
-                                            </div>
-                                            @if(isset($mVal['children']))
-                                                @foreach($mVal['children'] as $nKey => $nValue)
-                                                    <ol class="dd-list">
-                                                        <li class="dd-item" data-id="{{$nValue['id']}}">
-                                                            <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_2" data-value="Employee Name"></i></a>
-                                                            <div class="dd-handle"> {{$data['columns'][$nValue['id']]}}
-                                    
-                                                                <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$nValue['id']}}</span>
-                                                            </div>
-                                
-                                                        </li>
-                                                    </ol>
-                                                @endforeach
-                                            @endif
-                                        </li>
-
-                                @endforeach
-                            </ol>
+                    <div class="p-10">
+                        @foreach($data['columns'] as $key => $val)
+                            <div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="{{$key}}" data-alias="{{$val}}" style="cursor: pointer">
+                                <input type="hidden" name="{{ $key }}" value="{{ $val }}">
+                                {{$val}}
+                            </div>
+                        @endforeach
+                        <div class="p-10 aione-border mb-10 display-inline-block blank-click" style="cursor: pointer">
+                            <input type="hidden" name="blank" value="blank">
+                            Blank
                         </div>
                     </div>
-                @else
-                    @include('organization.dataset.api-builder')
-                @endif
+                </div>
+                        
+            </div>
+			<div class="ac l75  p-10 pr-10 " >
+                <div class="aione-border">
+                    <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+                        Design API Structure
+                    </div>
+                    <div class="p-10">
+                        @if(isset($data['meta_fields']))
+                            <div class="p-10 pr-10 " >
+                                <div class="dd mb35" id="nestable">
+                                    <ol class="dd-list" id="api-columns">
+                                        @foreach($data['meta_fields'] as $mKey => $mVal)
+                                            @if(isset($mVal['blank']))
+                                                <li class="dd-item"  data-blank="blank" data-id="{{$mVal['id']}}">
+                                            @else 
+                                                <li class="dd-item" data-id="{{$mVal['id']}}">
+                                            @endif
+                                                    <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
+                                                    <div class="dd-handle">
+                                                        @if(isset($data['columns'][$mVal['id']]))
+                                                            {{$data['columns'][$mVal['id']]}}
+                                                        @else 
+                                                            {{$mVal['id']}}
+                                                        @endif
+                                                        <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$mVal['id']}}</span>
+                                                    </div>
+                                                    @if(isset($mVal['children']))
+                                                        @foreach($mVal['children'] as $nKey => $nValue)
+                                                            <ol class="dd-list">
+                                                                <li class="dd-item" data-id="{{$nValue['id']}}">
+                                                                    <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_2" data-value="Employee Name"></i></a>
+                                                                    <div class="dd-handle"> {{$data['columns'][$nValue['id']]}}
+                                            
+                                                                        <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$nValue['id']}}</span>
+                                                                    </div>
+                                        
+                                                                </li>
+                                                            </ol>
+                                                        @endforeach
+                                                    @endif
+                                                </li>
 
-				<div>
-					{!! Form::submit('Submit',['class'=>'submit-json']) !!}		
-				</div>
-				
+                                        @endforeach
+                                    </ol>
+                                </div>
+                            </div>
+                        @else
+                            @include('organization.dataset.api-builder')
+                        @endif
+
+        				<div>
+        					{!! Form::submit('GET API URL',['class'=>'submit-json']) !!}		
+        				</div>
+                    </div>
+                </div>
+        				
 			</div>
 				
 			
@@ -180,16 +195,24 @@ $page_title_data = array(
 			Api Link :- <a href="{{$data['link']}}">{{$data['link']}}</a>
 		@endif
 	</div>
-	<div class="aione-border p-10 data-view" style="min-height: 350px;max-height: 350px;overflow: auto">
-		@if(isset($data['res']))
-      {{$data['res']->content()}}
-    @endif
-    @if(isset($data['response']))
-     {{$data['response']->content()}}
-		@endif	
-		
-			
+	<div class="ar p-10 data-view" >
+        <div class="ac l50">
+            <div class="aione-border">
+                <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+                    Output ( Raw )
+                </div>
+                <div class="p-10">
+                    @if(isset($data['res']))
+                        {{$data['res']->content()}}
+                    @endif
+                    @if(isset($data['response']))
+                        {{$data['response']->content()}}
+                    @endif        
+                </div>
+            </div>
 
+        </div>
+		      
 	</div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

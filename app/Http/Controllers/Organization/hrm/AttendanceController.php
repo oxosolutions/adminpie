@@ -126,8 +126,8 @@ class AttendanceController extends Controller
 			$file = $request->file('attendance_file');
 			$file_name = str_random(13).$file->getClientOriginalName();
 			$file->move($storage_path, $file_name);	
-		
-		Excel::load($storage_path.'/'.$file_name, function ($reader)use($request)
+			$checkStatus = '';
+		Excel::load($storage_path.'/'.$file_name, function ($reader)use($request,&$checkStatus)
 		{	
 			$reader->noHeading();
 			$all_data = json_decode(json_encode($reader->all()) , true);
@@ -145,8 +145,9 @@ class AttendanceController extends Controller
 			// &&  $request['year'] != $year  &&  $request['month'] != $check_month
 			if(!empty($request['year']) && !empty($request['month'])){
 				Session::flash('error','Not match Month & yearmyyyy.');
-				return redirect()->route('leave.categories2112');
-				dump('not match');
+				$checkStatus = "not-match";
+				return false;
+				
 			}
 			dd($year, $month, $request['year'], $request['month'], $check_month);
 
@@ -285,6 +286,7 @@ class AttendanceController extends Controller
 		
 		});
 
+dd($checkStatus);
 
 	if(!Session::has('error')){
 		Session::flash('success','File upload successfully!');

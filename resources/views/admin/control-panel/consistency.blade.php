@@ -170,4 +170,9 @@ $page_title_data = array(
 
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+<script type="text/javascript">
+    $(document).ready(function(){
+         
+    });
+</script>
 @endsection
