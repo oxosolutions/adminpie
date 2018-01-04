@@ -144,8 +144,8 @@ class AttendanceController extends Controller
 			
 			// &&  $request['year'] != $year  &&  $request['month'] != $check_month
 			if(!empty($request['year']) && !empty($request['month'])){
-				Session::flash('error','Not match Month & year.');
-				return redirect()->route('leave.categories');
+				Session::flash('error','Not match Month & yearmyyyy.');
+				return redirect()->route('leave.categories2112');
 				dump('not match');
 			}
 			dd($year, $month, $request['year'], $request['month'], $check_month);

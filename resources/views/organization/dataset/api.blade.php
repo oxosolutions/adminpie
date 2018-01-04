@@ -103,62 +103,62 @@ $page_title_data = array(
     </div>
 	<div>
 		Select columns to make api
-		
 		<div class="ar p-10 wrapper">
-			
-			<div class="ac l50  p-10 pr-10 " >
-				{{-- <div class="fbox aione-border p-10 pt-0"  id="drop" style="min-height: 200px;max-height: 200px;overflow: auto;">
-					@if(!empty($data['in_columns']))
-						@foreach($data['in_columns'] as $key => $val)
-							<div id="one" class="draggable p-10 aione-border mb-10 display-inline-block" style="cursor: pointer">
-								<input type="hidden" name="column[{{$val['column']}}]" value="{{$val['alias']}}">
-								{{$val['column']}}
-							</div>
-						@endforeach
-					@endif	
-				</div> --}}
+            <div class="ac l25 aione-border p-10 fbox columns-box" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
+                @foreach($data['columns'] as $key => $val)
+                    <div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="{{$key}}" data-alias="{{$val}}" style="cursor: pointer">
+                        <input type="hidden" name="{{ $key }}" value="{{ $val }}">
+                        {{$val}}
+                    </div>
+                @endforeach
+                <div class="p-10 aione-border mb-10 display-inline-block blank-click" style="cursor: pointer">
+                    <input type="hidden" name="blank" value="blank">
+                    Blank
+                </div>
+            </div>
+			<div class="ac l75  p-10 pr-10 " >
+                @if(isset($data['meta_fields']))
+                    <div class="p-10 pr-10 " >
+                        <div class="dd mb35" id="nestable">
+                            <ol class="dd-list" id="api-columns">
+                                @foreach($data['meta_fields'] as $mKey => $mVal)
+                                    @if(isset($mVal['blank']))
+                                        <li class="dd-item"  data-blank="blank" data-id="{{$mVal['id']}}">
+                                    @else 
+                                        <li class="dd-item" data-id="{{$mVal['id']}}">
+                                    @endif
+                                            <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
+                                            <div class="dd-handle">
+                                                @if(isset($data['columns'][$mVal['id']]))
+                                                    {{$data['columns'][$mVal['id']]}}
+                                                @else 
+                                                    {{$mVal['id']}}
+                                                @endif
+                                                <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$mVal['id']}}</span>
+                                            </div>
+                                            @if(isset($mVal['children']))
+                                                @foreach($mVal['children'] as $nKey => $nValue)
+                                                    <ol class="dd-list">
+                                                        <li class="dd-item" data-id="{{$nValue['id']}}">
+                                                            <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_2" data-value="Employee Name"></i></a>
+                                                            <div class="dd-handle"> {{$data['columns'][$nValue['id']]}}
+                                    
+                                                                <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$nValue['id']}}</span>
+                                                            </div>
+                                
+                                                        </li>
+                                                    </ol>
+                                                @endforeach
+                                            @endif
+                                        </li>
 
-        @if(isset($data['meta_fields']))
-        {{-- {{dd($data['meta_fields'])}} --}}
-      <div class="p-10 pr-10 " >
-        <div class="dd mb35" id="nestable">
-        <ol class="dd-list" id="api-columns">
-          @foreach($data['meta_fields'] as $mKey => $mVal)
-          @if(isset($mVal['blank']))
-          <li class="dd-item"  data-blank="blank" data-id="{{$mVal['id']}}">
-            @else 
-            <li class="dd-item" data-id="{{$mVal['id']}}">
-          @endif
-                        <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
-                        <div class="dd-handle">
-                            @if(isset($data['columns'][$mVal['id']]))
-                                {{$data['columns'][$mVal['id']]}}
-                                @else 
-                                {{$mVal['id']}}
-                            @endif
-                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$mVal['id']}}</span>
+                                @endforeach
+                            </ol>
                         </div>
-                        @if(isset($mVal['children']))
-                          @foreach($mVal['children'] as $nKey => $nValue)
-                              <ol class="dd-list"><li class="dd-item" data-id="{{$nValue['id']}}">
-                        <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_2" data-value="Employee Name"></i></a>
-                        <div class="dd-handle"> {{$data['columns'][$nValue['id']]}}
-                            
-                            <span class="text-success pull-right fs11 fw600" style="font-size:10px;">{{$nValue['id']}}</span>
-                        </div>
-                        
-                    </li></ol>
-                          @endforeach
-                        @endif
-          </li>
-
-          @endforeach
-        </ol>
-      </div>
-      </div>
-      @else
-        @include('organization.dataset.api-builder')
-      @endif
+                    </div>
+                @else
+                    @include('organization.dataset.api-builder')
+                @endif
 
 				<div>
 					{!! Form::submit('Submit',['class'=>'submit-json']) !!}		
@@ -167,18 +167,7 @@ $page_title_data = array(
 			</div>
 				
 			
-			<div class="ac l50 aione-border p-10 fbox columns-box" id="origin" style="min-height: 200px;max-height: 200px;overflow: auto">
-				@foreach($data['columns'] as $key => $val)
-					<div class="p-10 aione-border mb-10 display-inline-block column-click" data-column="{{$key}}" data-alias="{{$val}}" style="cursor: pointer">
-						<input type="hidden" name="{{ $key }}" value="{{ $val }}">
-						{{$val}}
-					</div>
-				@endforeach
-                <div class="p-10 aione-border mb-10 display-inline-block blank-click" style="cursor: pointer">
-                    <input type="hidden" name="blank" value="blank">
-                    Blank
-                </div>
-			</div>
+			
 		</div>
 	
 		
