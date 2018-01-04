@@ -141,9 +141,8 @@ class AttendanceController extends Controller
 			$year = date('Y', strtotime($dates[0]));
 			$month = date('m', strtotime($dates[0]));
 			$check_month = str_replace(0,'', $month);
-			// if(strlen($check_month)==1) {
-			// 	$check_month = '0'.$check_month;
-			// }&&  $request['year'] != $year  &&  $request['month'] != $check_month
+			
+			// &&  $request['year'] != $year  &&  $request['month'] != $check_month
 			if(!empty($request['year']) && !empty($request['month'])){
 				Session::flash('error','Not match Month & year.');
 				return redirect()->route('leave.categories');

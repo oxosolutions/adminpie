@@ -62,8 +62,8 @@ class ControlPanelController extends Controller
     }
 
     public function removeSpecificDirectory(Request $request){
-        // File::deleteDirectory($request->dir,true);
-        // File::deleteDirectory($request->dir);
+        File::deleteDirectory($request->dir,true);
+        File::deleteDirectory($request->dir);
         Session::flash('success','Directory Removed Successfully!');
         $dirs = $this->fileConsistancy($request);
         return redirect()->back()->with(['dir_list'=>$dirs]);
