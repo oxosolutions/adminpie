@@ -344,13 +344,16 @@ public function attendance_file(){
 	}
 
 	public function list_attendance(Request $request, $year=null, $month=null)
-	{
-			$data['year'] = $year;
-			$data['month'] = $month;
+	{	
+		$data['year'] = $data['month'] = null;
+		if($request->isMethod('post')){
+			$data['year'] = $request['year'];
+			$data['month'] = $request['month'];
+		}
 			$plugins = [
 				'js' => ['custom'=>['attendance']],
 				'css' => ['custom'=>['attendance']]
-		];		
+			];		
  		return view('organization.attendance.attendance',['plugins'=>$plugins, 'data'=>$data]);
 	}
 
@@ -466,7 +469,15 @@ public function attendance_file(){
 		else{
 			$lock_status['lock_status'] =1;
 		}
+
+		if(isset($request['lock'])){
+			$lock_status['lock_status'] =0;
+		}elseif(isset($request['unlock'])){
+			$lock_status['lock_status'] =1;
+		}
 		Attendance::where(['month'=>$mo , 'year'=> $request['year'] ])->update($lock_status);
+		Session::flash('attendance_year',$request['year']);
+		return redirect()->route('lists.attendance');
 	}
 	/**
 	 * @author Ashish, paljinder singh
@@ -474,6 +485,9 @@ public function attendance_file(){
 	public function attendanceList(request $request)
 	{
 		$year = date('Y');
+		if(Session::has('attendance_year'))  {
+			$year = Session::get('attendance_year');
+		}
 		if($request->isMethod('post')){
 			$year = $request['year'];
 		}
@@ -482,7 +496,7 @@ public function attendance_file(){
 		if($query->exists()){
 			$query_data = $query->get();
 		 	$data['lock_status'] = array_column($query_data->keyBy('month')->toArray(), 'lock_status','month');
-		}
+ 		}
 		return view('organization.attendance.attendence-list',compact('data'));
 	}
 

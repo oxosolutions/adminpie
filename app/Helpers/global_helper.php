@@ -507,6 +507,21 @@ function form($form_slug, $form_from = 'admin', $default_model_data = null){
 
 
 /************************************************************
+*   @function survey
+*   @description Returns form with form action
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+*   @perm name      [string required    default null]
+*   @return size [string]
+************************************************************/
+function survey($token){
+    $controllerObject = new App\Http\Controllers\Organization\survey\SurveyController(App\Http\Controllers\Api\SurveyController::class);
+    return $controllerObject->embededSurvey($token,true);
+}
+
+
+/************************************************************
 *	@function generate_filename
 *	@access	public
 *	@since	1.0.0.0

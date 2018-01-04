@@ -78,14 +78,21 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            
-                            @if(!empty($data['lock_status'][$j]))
+                            @if(isset($data['lock_status'][$j]))
+                        	
+                             {!! Form::open(['route'=>'ajax.lock.attendance']) !!}
+                             	<input type="hidden" name="year" value="{{$data['year']}}">
+                    			<input type="hidden" name="month" value="{{$j}}">
                                     @if($data['lock_status'][$j]==0)
                                     	<i class="fa fa-lock ph-5"></i>
                                         Locked
+                                        {!! Form::submit('make it unlock',['name'=>'unlock']) !!}
+
                                     @else 
                                         unlock
+                                        {!! Form::submit('make it locked',['name'=>'lock']) !!}
                                     @endif
+                              {!! Form::close() !!}
                                 @else
                                     not have Attendance data
                             @endif   
@@ -96,11 +103,22 @@ $page_title_data = array(
                         <a href=""> 
                             <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(1)"> View </a>
                         </a>
+                        {!! Form::open(['route'=>'list.attendance']) !!}
+                    		<input type="hidden" name="year" value="{{$data['year']}}">
+                    		<input type="hidden" name="month" value="{{$j}}">
+                            {!! Form::submit('view',[]) !!}
+                        {!! Form::close() !!}
                     </div>
                     <div class="ac l15">
-                    	 @if(!empty($data['lock_status'][$j]))
+                    	 @if(isset($data['lock_status'][$j]))
                         <a href="">
                             <i class="fa fa-pencil ph-5"></i> Edit
+                            {!! Form::open(['route'=>'hr.attendance']) !!}
+                    		<input type="hidden" name="year" value="{{$data['year']}}">
+                    		<input type="hidden" name="month" value="{{$j}}">
+                    		<input type="hidden" name="date" value="1">
+                            {!! Form::submit('edit') !!}
+                        {!! Form::close() !!}
                         </a>
                         @else
                         	-

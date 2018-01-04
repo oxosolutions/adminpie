@@ -640,6 +640,7 @@ class EmployeeController extends Controller
              'metas'=>function($q)use($meta_key){
             $q->select(['user_id','key', 'value'])->whereIn('key', $meta_key);
         }])->where(['user_type'=>'employee'])->get();
+        dd($model);
         $arrays = $model->toArray();
         foreach ($arrays as $key => $value) {
             $data[$key]['name'] =   $value['belong_group']['name'];

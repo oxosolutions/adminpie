@@ -407,7 +407,7 @@
 					});
 					Route::match(['get','post'],'/attendance/form-import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
-					Route::get('/atendance/{year?}/{month?}', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
+					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
 

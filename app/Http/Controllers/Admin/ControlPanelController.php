@@ -8,6 +8,7 @@ use App\Model\Admin\GlobalOrganization;
 use Ixudra\Curl\Facades\Curl;
 use File;
 use Session;
+use DB;
 class ControlPanelController extends Controller
 {
 	/**
@@ -17,15 +18,19 @@ class ControlPanelController extends Controller
 	{
 		return view('admin.control-panel.testing');
 	}
-	public function consistency(Request $request)
-	{
+	public function consistency(Request $request){
         $listArray = [];
+        $listTables = [];
         if($request->isMethod('post')){
             if($request->has('conistancy')){
                 $listArray = $this->fileConsistancy($request);
             }
+            if($request->has('conistancy_database')){
+                Session::put('remove_token',str_random());
+                $listTables = $this->consistantOrganizationTables();
+            }
         }
-		return view('admin.control-panel.consistency',['dir_list'=>$listArray]);
+		return view('admin.control-panel.consistency',['dir_list'=>$listArray,'list_tables'=>$listTables]);
 	}
 
     /**
@@ -61,6 +66,13 @@ class ControlPanelController extends Controller
         return $listToRemove;
     }
 
+
+    /**
+     * To remove single or selected directory by user
+     * @param  Request $request having posted data
+     * @return [type]           return back to same route
+     * @author Rahul
+     */
     public function removeSpecificDirectory(Request $request){
         File::deleteDirectory($request->dir,true);
         File::deleteDirectory($request->dir);
@@ -69,6 +81,13 @@ class ControlPanelController extends Controller
         return redirect()->back()->with(['dir_list'=>$dirs]);
     }
 
+
+    /**
+     * To remove multiple selected directories by user
+     * @param  Request $request having all posted data
+     * @return [type]           back to same route
+     * @author Rahul
+     */
     public function bulkDeleteDirs(Request $request){
         if(!empty($request->select_dir)){
             foreach($request->select_dir as $key => $dir){
@@ -81,5 +100,48 @@ class ControlPanelController extends Controller
         }
         $dirs = $this->fileConsistancy($request);
         return redirect()->back()->with(['dir_list'=>$dirs]);
+    }
+
+
+    /**
+     * To get all tables which organization does not exists
+     * @return [array] [return array of filtered tables]
+     * @author Rahul
+     */
+    protected function consistantOrganizationTables(){
+        $model = GlobalOrganization::select('id')->get()->keyBy('id')->keys()->toArray();
+        $prefix = DB::getTablePrefix();
+        $unusedTables = [];
+        $db = env('DB_DATABASE');
+        $TablesList = DB::select(" SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='".$db."' and TABLE_NAME like '%".$prefix."%' ");
+        foreach($TablesList as $k => $table){
+            $str = preg_replace('/(\v|\s)+/', '', $table->TABLE_NAME);
+            $explodedString = explode('_',$str);
+            if((int)$explodedString[1] != 0){
+                if(!in_array((int)$explodedString[1],$model)){
+                    $unusedTables[] = $str;
+                }
+            }
+        }
+        return $unusedTables;
+    }
+
+
+    /**
+     * Remove specific table which one selected by user
+     * @param  Request $request having posted data
+     * @return [type]           return back to same route with session data
+     * @author Rahul
+     */
+    public function removeSpecificTable(Request $request){
+        $remove_token = Session::get('remove_token');
+        if($request->token == $remove_token){
+            DB::select("DROP TABLE ".$request->table);
+            Session::flash('success','Table removed successfully');
+        }else{
+            Session::flash('error','Token mismatch!');
+        }
+        $tablesList = $this->consistantOrganizationTables();
+        return redirect()->back()->with(['list_tables'=>$tablesList]);
     }
 }

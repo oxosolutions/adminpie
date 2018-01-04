@@ -270,7 +270,7 @@ class SurveyController extends Controller
      * @return [view]        [will return view of HTML]
      * @author Paljinder,Rahul
      */
-    public function embededSurvey($token){
+    public function embededSurvey($token, $from_status = false){
 
         $current_data = [];
         $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
@@ -352,8 +352,11 @@ class SurveyController extends Controller
                 $current_data = json_decode(json_encode($data),true);
             }
         }
-
-        return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
+        if($from_status){
+            return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'))->render();
+        }else{
+            return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
+        }
     }
 
   

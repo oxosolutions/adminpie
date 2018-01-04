@@ -75,7 +75,9 @@ $page_title_data = array(
 				Database Consistency
 			</div>
 			<div class=" p-10">
-				<button>Check Database Consistancy</button>
+                {!! Form::open(['route'=>'consistency.control']) !!}
+                    <button type="submit" name="conistancy_database" value="cons">Check Database Consistancy</button>
+                {!! Form::close() !!}
 				<div class="pv-20">Result:-</div>
 				<div class="aione-border" style="min-height: 300px;max-height: 300px;overflow: auto">
 					<div class="aione-table">
@@ -93,79 +95,28 @@ $page_title_data = array(
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>
-										
-										<input type="checkbox" name="select_all" id="checkbox_1">
-										<label for="checkbox_1" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_formsscolm_175_formsscolm_175_formsscolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_2" value=""> 
-										<label for="checkbox_2" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_3">
-										<label for="checkbox_3" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_4">
-										<label for="checkbox_4" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_2"> 
-										<label for="checkbox_2" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_3">
-										<label for="checkbox_3" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_4">
-										<label for="checkbox_4" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
+                                @php
+                                    if(session()->has('list_tables')){
+                                        $list_tables = session('list_tables');
+                                    }
+                                @endphp
+                                @foreach($list_tables as $key => $table)
+    								<tr>
+    									<td>
+    										<input type="checkbox" name="select_all" id="checkbox_1">
+    										<label for="checkbox_1" class="ph-10">Select</label>
+    									</td>
+    									<td class="font-weight-700"> <i class="fa fa-database blue"></i> {{ $table }}</td>
+    									<td><a href="{{ route('remove.specific.table',['token'=>session('remove_token'),'table'=>$table]) }}" onclick="return confirm('Are you sure to delete this table?')"><i class="fa fa-trash ph-5"></i>Delete</a></td>
+    								</tr>
+                                @endforeach
 							</tbody>
 						</table>
 					</div>
 				</div>	
 			</div>
 		</div>
-		<div class="ar aione-align-center
-		">
+		<div class="ar aione-align-center">
 			<div class="ac l50 aione-border-right p-20">
 				
 			</div>

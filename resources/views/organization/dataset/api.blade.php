@@ -208,12 +208,12 @@ $page_title_data = array(
 	{{-- <div>
 		{!! FormGenerator::GenerateForm('api_condition_form') !!}
 	</div> --}}
-	<div class="pv-20 link"  >
+	<div class="p-15 m-10 mb-20 aione-border link"  >
 		@if(!empty($data['link']))
 			Api Link :- <a href="{{$data['link']}}">{{$data['link']}}</a>
 		@endif
 	</div>
-	<div class="ar p-10 data-view" >
+	<div class="ar data-view" >
         <div class="ac l50">
             <div class="aione-border">
                 <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
@@ -236,15 +236,15 @@ $page_title_data = array(
                 <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
                     Output ( Pretty )
                 </div>
-                <div class="p-10" style="position: relative;min-height: 300px;">
-                    <div id="editor" class="editor">
+                <div class="p-10" style="position: relative;min-height: 300px;max-height: auto">
+                    <pre id="editor" class="editor">
 @if(isset($data['res']))
-    {{$data['res']->content()}}
+{{json_encode(json_decode($data['res']->content()),JSON_PRETTY_PRINT)}}
 @endif
 @if(isset($data['response']))
-    {{$data['response']->content()}}
+{{json_encode(json_decode($data['response']->content()),JSON_PRETTY_PRINT)}}
 @endif        
-                    </div>
+                    </pre>
                 </div>
 
             </div>
@@ -267,16 +267,10 @@ $page_title_data = array(
     <script src="{{ asset('js/jquery.nestable.js') }}"></script>
 
 	<script type="text/javascript">
-            var editor = ace.edit("editor");
-        //editor.setValue($('#'+value).val()); 
+        var editor = ace.edit("editor");
         editor.setTheme("ace/theme/chrome");
-        editor.getSession().setMode("ace/mode/JSON");
-        editor.setAutoScrollEditorIntoView(true);
-         ace.createEditSession("string or array", "ace/mode/JSON")
-        editor.setShowPrintMargin(false);
-        editor.setOption("enableEmmet", true); 
-        editor.setOption('enableBasicAutocompletion',true);
-        editor.setAutoScrollEditorIntoView(true);
+        editor.getSession().setMode("ace/mode/lucene");
+        editor.setReadOnly(true);
         $('#nestable').nestable({
                 group: 1
         }).on('change', function(e){
