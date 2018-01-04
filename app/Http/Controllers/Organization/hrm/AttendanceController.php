@@ -84,9 +84,7 @@ class AttendanceController extends Controller
 	}
 	public function import_form($year, $month)
 	{
-		$data['year'] = $year;
-		$data['month'] = $month;
-		dump($data);
+		dd($request->all());
 		return view('organization.attendance.attendance_import',compact('data'));
 	}
 
@@ -463,7 +461,7 @@ public function attendance_file(){
 		Attendance::where(['month'=>$mo , 'year'=> $request['year'] ])->update($lock_status);
 	}
 	/**
-	 * @auther Ashish
+	 * @author Ashish, paljinder singh
 	 */
 	public function attendanceList(request $request)
 	{
