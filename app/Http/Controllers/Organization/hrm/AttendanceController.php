@@ -477,13 +477,11 @@ public function attendance_file(){
 		if($request->isMethod('post')){
 			$year = $request['year'];
 		}
-		dump($request->all());
 		$data['year'] =$year;
 		$query = Attendance::select('month','lock_status')->where(['year'=>$year])->groupBy('month');//->get();
 		if($query->exists()){
 			$query_data = $query->get();
 		 	$data['lock_status'] = array_column($query_data->keyBy('month')->toArray(), 'lock_status','month');
-		// dump($data['lock_status']);
 		}
 		return view('organization.attendance.attendence-list',compact('data'));
 	}

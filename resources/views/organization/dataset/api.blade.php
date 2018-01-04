@@ -96,6 +96,24 @@ $page_title_data = array(
           background-color: #3bafda !important;
           border-color: #3bafda !important;
         }
+            .editor{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left:0;
+            width: 100%;
+            border-right: 1px solid #e8e8e8
+        }
+        /*.preview{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right:0;
+            width: 50%;
+        }*/
+        .ace_content{
+            background: linear-gradient( to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.05) 50%, rgba(0, 0, 0, 0.05) );
+            ba
 
     </style>
     <div id="error">
@@ -218,15 +236,17 @@ $page_title_data = array(
                 <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
                     Output ( Pretty )
                 </div>
-                <div class="p-10">
-                    @if(isset($data['res']))
-                        {{$data['res']->content()}}
-                    @endif
-                    @if(isset($data['response']))
-                        {{$data['response']->content()}}
-                    @endif        
+                <div class="p-10" style="position: relative;min-height: 300px;">
+                    <div id="editor" class="editor">
+@if(isset($data['res']))
+    {{$data['res']->content()}}
+@endif
+@if(isset($data['response']))
+    {{$data['response']->content()}}
+@endif        
+                    </div>
                 </div>
-                
+
             </div>
 		      
 	</div>
@@ -247,6 +267,16 @@ $page_title_data = array(
     <script src="{{ asset('js/jquery.nestable.js') }}"></script>
 
 	<script type="text/javascript">
+            var editor = ace.edit("editor");
+        //editor.setValue($('#'+value).val()); 
+        editor.setTheme("ace/theme/chrome");
+        editor.getSession().setMode("ace/mode/JSON");
+        editor.setAutoScrollEditorIntoView(true);
+         ace.createEditSession("string or array", "ace/mode/JSON")
+        editor.setShowPrintMargin(false);
+        editor.setOption("enableEmmet", true); 
+        editor.setOption('enableBasicAutocompletion',true);
+        editor.setAutoScrollEditorIntoView(true);
         $('#nestable').nestable({
                 group: 1
         }).on('change', function(e){

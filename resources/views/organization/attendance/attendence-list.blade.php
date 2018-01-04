@@ -39,15 +39,10 @@ $page_title_data = array(
                     {!! Form::submit() !!}
 
                     {!! Form::close() !!}
-                </div><!-- field -->
+                </div>
             </div>
         </div>
 
-
-        {{dump($data['year'])}}
-        {{-- {{dd($data['lock_status']['01'])}} --}}
-      
-    
         <div class="mt-20">
             <ul>
                 <li class="p-10 ar">
@@ -83,9 +78,10 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href="">
-                            <i class="fa fa-lock ph-5"></i>
+                            
                             @if(!empty($data['lock_status'][$j]))
                                     @if($data['lock_status'][$j]==0)
+                                    	<i class="fa fa-lock ph-5"></i>
                                         Locked
                                     @else 
                                         unlock
@@ -98,14 +94,17 @@ $page_title_data = array(
                     </div>
                     <div class="ac l15">
                         <a href=""> 
-                            {{-- {{url('hrm/atendance/2017/1')}} --}}
                             <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(1)"> View </a>
                         </a>
                     </div>
                     <div class="ac l15">
+                    	 @if(!empty($data['lock_status'][$j]))
                         <a href="">
                             <i class="fa fa-pencil ph-5"></i> Edit
                         </a>
+                        @else
+                        	-
+                        @endif
                     </div>
 
                     <div class="ac l15">
@@ -121,6 +120,12 @@ $page_title_data = array(
                         <a href="">
                             <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
                         </a>
+                        {!! Form::open(['route'=>'hr.attendance']) !!}
+                    		<input type="hidden" name="year" value="{{$data['year']}}">
+                    		<input type="hidden" name="month" value="{{$j}}">
+                    		<input type="hidden" name="date" value="1">
+                            {!! Form::submit('Mark attendace') !!}
+                        {!! Form::close() !!}
                         
                     </div>
                     <div class="ac l15">

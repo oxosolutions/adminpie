@@ -68,4 +68,18 @@ class ControlPanelController extends Controller
         $dirs = $this->fileConsistancy($request);
         return redirect()->back()->with(['dir_list'=>$dirs]);
     }
+
+    public function bulkDeleteDirs(Request $request){
+        if(!empty($request->select_dir)){
+            foreach($request->select_dir as $key => $dir){
+                File::deleteDirectory($dir,true);
+                File::deleteDirectory($dir);
+            }
+            Session::flash('success','Directories Removed Successfully!');
+        }else{
+            Session::flash('error','Select at least one directory!');
+        }
+        $dirs = $this->fileConsistancy($request);
+        return redirect()->back()->with(['dir_list'=>$dirs]);
+    }
 }

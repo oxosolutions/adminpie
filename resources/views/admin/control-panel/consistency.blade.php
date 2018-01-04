@@ -27,45 +27,47 @@ $page_title_data = array(
 				    <button type="submit" name="conistancy" value="cons">Check File Consistancy</button>
                 {!! Form::close() !!}
 				<div class="pv-20 display-inline-block">Result:-</div>
-				<button class="aione-button float-right red delete-all"><i class="fa fa-trash ph-5"></i>Delete Selected</button>
-				<div class="aione-border" style="min-height: 300px;max-height: 300px;overflow: auto">
+                {!! Form::open(['route'=>'bulk.delete.directories']) !!}
+    				<button class="aione-button float-right red delete-all"><i class="fa fa-trash ph-5"></i>Delete Selected</button>
+    				<div class="aione-border" style="min-height: 300px;max-height: 300px;overflow: auto">
 
-					<div class="aione-table">
-						<table>
-							<thead>
-								<tr>
-									<th>
-										<input type="checkbox" name="select_all_dir" id="checkbox_all">
-										<label for="checkbox_all" class="ph-10">Select All</label>
-									</th>
-									<th>Directories List</th>
-									<th>Actions <a href=""><i class="fa fa-trash ph-5"></i>Delete Selected</a></th>
-									
-									
-								</tr>
-							</thead>
-							<tbody>
-                                @php
-                                    if(session()->has('dir_list')){
-                                        $dir_list = session('dir_list');
-                                    }
-                                @endphp
-                                @foreach($dir_list as $key => $dir)
+    					<div class="aione-table">
+    						<table>
+    							<thead>
     								<tr>
-    									<td>
-    										
-    										<input type="checkbox" name="select_dir[]" id="checkbox_1" class="select_dir_check" value="{{ $dir }}">
-    										<label for="checkbox_1" class="ph-10"></label>
-    									</td>
-    									<td class="font-weight-700" title="{{ url('/') }}/public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
-    									<td><a href="{{ route('remove.specific.directory',['dir'=>$dir]) }}" onclick="return confirm('Are you sure to delete?')"><i class="fa fa-trash ph-5"></i>Delete</a></td>
+    									<th>
+    										<input type="checkbox" name="select_all_dir" id="checkbox_all">
+    										<label for="checkbox_all" class="ph-10">Select All</label>
+    									</th>
+    									<th>Directories List</th>
+    									<th>Actions <a href=""><i class="fa fa-trash ph-5"></i>Delete Selected</a></th>
+    									
     									
     								</tr>
-                                @endforeach
-							</tbody>
-						</table>
-					</div>
-				</div>
+    							</thead>
+    							<tbody>
+                                    @php
+                                        if(session()->has('dir_list')){
+                                            $dir_list = session('dir_list');
+                                        }
+                                    @endphp
+                                    @foreach($dir_list as $key => $dir)
+        								<tr>
+        									<td>
+        										
+        										<input type="checkbox" name="select_dir[]" id="checkbox_1" class="select_dir_check" value="{{ $dir }}">
+        										<label for="checkbox_1" class="ph-10"></label>
+        									</td>
+        									<td class="font-weight-700" title="{{ url('/') }}/public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
+        									<td><a href="{{ route('remove.specific.directory',['dir'=>$dir]) }}" onclick="return confirm('Are you sure to delete?')"><i class="fa fa-trash ph-5"></i>Delete</a></td>
+        									
+        								</tr>
+                                    @endforeach
+    							</tbody>
+    						</table>
+    					</div>
+    				</div>
+                {!! Form::close() !!}
 			</div>
 		</div>
 		<div class="aione-border">
@@ -181,10 +183,12 @@ $page_title_data = array(
     $(document).ready(function(){
         $('#checkbox_all').click(function(){
             if($(this).is(':checked')){
+                $('.delete-all').fadeIn(300);
                 $('.select_dir_check').each(function(){
                     $(this).prop('checked',true);
                 });
             }else{
+                $('.delete-all').fadeOut(300);
                 $('.select_dir_check').each(function(){
                     $(this).prop('checked',false);
                 });
@@ -194,7 +198,17 @@ $page_title_data = array(
            if($(this).is(':checked')){
                 $('.delete-all').fadeIn(300);
            }
-           
+           var status = false;
+           $('.select_dir_check').each(function(){
+                if($(this).is(':checked')){
+                    status = true;
+                }
+           });
+           if(status == true){
+                $('.delete-all').fadeIn(300);
+           }else{
+                $('.delete-all').fadeOut(300);
+           }
         });
     });
 </script>
