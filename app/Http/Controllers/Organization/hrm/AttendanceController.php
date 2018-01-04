@@ -82,9 +82,13 @@ class AttendanceController extends Controller
 
 		return ['message'=>'successfully '];
 	}
-	public function import_form($year, $month)
-	{
-		dd($request->all());
+	public function import_form(Request $request, $year=null, $month=null)
+	{	
+		$data['month'] =$data['year'] =null;
+		if($request->isMethod('post')){
+			$data['year']	= $request['import_year'];
+			$data['month']	= $request['import_month'];
+		}
 		return view('organization.attendance.attendance_import',compact('data'));
 	}
 

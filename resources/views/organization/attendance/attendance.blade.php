@@ -7,7 +7,7 @@
 	'show_navigation' => 'yes',
 	'page_title' => 'Attendence',
 	'add_new' => '+ Import Attendence',
-	'route' => 'upload.attendance',
+	'route' => 'import.form.attendance',
 	'second_button_route' => 'hr.attendance',
 	'second_button_title' => 'Mark Attendence',
 	'third_button_title' => 'List attendance',

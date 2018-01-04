@@ -46,7 +46,7 @@ $page_title_data = array(
     										<label for="checkbox_1" class="ph-10"></label>
     									</td>
     									<td class="font-weight-700" title="{{ url('/') }}/public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
-    									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
+    									<td><a href="{{ route('remove.specific.directory',['dir'=>$dir]) }}"><i class="fa fa-trash ph-5"></i>Delete</a></td>
     									
     								</tr>
                                 @endforeach

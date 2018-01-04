@@ -59,4 +59,8 @@ class ControlPanelController extends Controller
         }
         return $listToRemove;
     }
+
+    public function removeSpecificDirectory(Request $request){
+        dd($request->all());
+    }
 }
