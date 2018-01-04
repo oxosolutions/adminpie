@@ -45,7 +45,7 @@ $page_title_data = array(
     										<input type="checkbox" name="" id="checkbox_1">
     										<label for="checkbox_1" class="ph-10"></label>
     									</td>
-    									<td class="font-weight-700" title="{{ url('/') }}public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
+    									<td class="font-weight-700" title="{{ url('/') }}/public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
     									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
     									
     								</tr>
