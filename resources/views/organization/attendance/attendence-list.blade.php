@@ -107,9 +107,13 @@ $page_title_data = array(
                     </div>
 
                     <div class="ac l15">
+                    	{!! Form::open(['route'=>'import.form.attendance']) !!}
+                    	<input type="text" name="year" value="{{$data['year']}}">
+                    	<input type="text" name="year" value="{{$i}}">
                         <a href="">
                             <i class="fa fa-sign-in ph-5"></i><a href="#" onclick="import_attendance(1)"> Import </a>    
                         </a>
+                        {!! Form::close() !!}
                         
                     </div>
                     <div class="ac l15">

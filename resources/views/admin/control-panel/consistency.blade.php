@@ -31,78 +31,25 @@ $page_title_data = array(
 										<input type="checkbox" name="" id="checkbox_all">
 										<label for="checkbox_all" class="ph-10">Select All</label>
 									</th>
-									<th>Database List</th>
+									<th>Directories List</th>
 									<th>Actions <a href=""><i class="fa fa-trash ph-5"></i>Delete Selected</a></th>
 									
 									
 								</tr>
 							</thead>
 							<tbody>
-								<tr>
-									<td>
-										
-										<input type="checkbox" name="" id="checkbox_1">
-										<label for="checkbox_1" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_formsscolm_175_formsscolm_175_formsscolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_2"> 
-										<label for="checkbox_2" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_3">
-										<label for="checkbox_3" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_4">
-										<label for="checkbox_4" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-							
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_2"> 
-										<label for="checkbox_2" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_3">
-										<label for="checkbox_3" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
-								<tr>
-									<td>
-										<input type="checkbox" name="" id="checkbox_4">
-										<label for="checkbox_4" class="ph-10">Select</label>
-									</td>
-									<td class="font-weight-700"> <i class="fa fa-folder grey"></i> scolm_175_forms</td>
-									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
-									
-								</tr>
+                                @foreach($dir_list as $key => $dir)
+    								<tr>
+    									<td>
+    										
+    										<input type="checkbox" name="" id="checkbox_1">
+    										<label for="checkbox_1" class="ph-10"></label>
+    									</td>
+    									<td class="font-weight-700" title="{{ url('/') }}public/{{ $dir }}"> <i class="fa fa-folder grey"></i> {{ $dir }}</td>
+    									<td><a href=""><i class="fa fa-trash ph-5"></i>Delete</a></td>
+    									
+    								</tr>
+                                @endforeach
 							</tbody>
 						</table>
 					</div>
