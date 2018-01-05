@@ -83,6 +83,11 @@ public function payscale_meta(){
     public function payscale(){
       return $this->belongsTo('App\Model\Organization\Payscale','value','id');
     }
-    // public function payscale
+
+    public  function payscale_value(){
+      // return $this->belongsTo('App\Model\Organization\Payscale','value','id')->where('key','payscale_id');
+      //return self::where(['key'=>'payscale',])->belongsTo('App\Model\Organization\Payscale','value','id');//->where('key','payscale_id');
+    }
+    
 
 }

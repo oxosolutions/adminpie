@@ -1,5 +1,14 @@
 @extends('layouts.main')
 @section('content')
+<style type="text/css">
+        .special-btn{
+    color: #039be5 !important;
+    background: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 15px !important;
+    }
+</style>
 @php
 $page_title_data = array(
 	'show_page_title' => 'yes',
@@ -23,21 +32,16 @@ $page_title_data = array(
                 </div><!-- field label-->
                 <div id="field_group_id" class="field field-type-select">
                     {!! Form::open(['route'=>'lists.attendance']) !!}
-
-                    {!! Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default']) !!}
-                   {{--  <select class="input_group_id browser-default " id="input_group_id" name="year">
-                        <option value="2015">2015</option>
-                        <option value="2016">2016</option>
-                        <option value="2017">2017</option>
-                        <option value="2018">2018</option>
-                        <option value="2019">2019</option>
-                        <option value="2020">2020</option>
-                        <option value="2021">2021</option>
-                        <option value="2022">2022</option>
-                        <option value="2023">2023</option>
-                    </select> --}}
-                    {!! Form::submit() !!}
-
+                        <div class="ar">
+                            <div class="ac l80">
+                                {!! Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default']) !!}        
+                            </div>
+                            <div class="ac l20">
+                                {!! Form::submit('Submit',['style'=>'width:100%']) !!}        
+                            </div>
+                        </div>
+                        
+                        
                     {!! Form::close() !!}
                 </div>
             </div>
@@ -46,16 +50,19 @@ $page_title_data = array(
         <div class="mt-20">
             <ul>
                 <li class="p-10 ar">
-                    <div class="ac l15 font-weight-600">
+                    <div class="ac l14 font-weight-600">
                         Months
                     </div>
-                    <div class="ac l15 font-weight-600">
+                    <div class="ac l14 font-weight-600">
+                        lock/Unlock
+                    </div> 
+                    <div class="ac l14 font-weight-600">
                         Status
                     </div>
-                    <div class="ac l15">
+                    <div class="ac l14">
                         
                     </div>
-                    <div class="ac l15">
+                    <div class="ac l14">
                         
                     </div>
                     
@@ -73,51 +80,63 @@ $page_title_data = array(
             @endif
             
              <li class="aione-border p-10 mb-10 ar">
-                    <div class="ac l15">
+                    <div class="ac l14">
                         <strong>{{$month[$i]}}</strong>    
                     </div>
-                    <div class="ac l15">
-                        <a href="">
-                            @if(isset($data['lock_status'][$j]))
-                        	
+                    <div class="ac l14">
+                            @if(isset($data[$j]))
                              {!! Form::open(['route'=>'ajax.lock.attendance']) !!}
                              	<input type="hidden" name="year" value="{{$data['year']}}">
                     			<input type="hidden" name="month" value="{{$j}}">
-                                    @if($data['lock_status'][$j]==0)
-                                    	<i class="fa fa-lock ph-5"></i>
-                                        Locked
-                                        {!! Form::submit('make it unlock',['name'=>'unlock']) !!}
+                                    @if($data[$j]['lock_status']==0)
+                                    	
+                                        {!! Form::submit('Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']) !!}
 
                                     @else 
-                                        unlock
-                                        {!! Form::submit('make it locked',['name'=>'lock']) !!}
+                                        {!! Form::submit('Locked',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
                                     @endif
+                                    
                               {!! Form::close() !!}
                                 @else
-                                    not have Attendance data
-                            @endif   
-                        </a>
-                        
+                                    <span class="red">-</span>
+                            @endif
                     </div>
-                    <div class="ac l15">
-                        <a href=""> 
+                    <div class="ac l14">
+                         @if(isset($data[$j]))
+                                @if($data[$j]['attendance_status']==0)
+                                    @php
+                                       $attendance_status ='Partially';
+                                    @endphp
+                                @else
+                                    @php
+                                       $attendance_status ='Complete';
+                                    @endphp
+                                @endif
+                                {{$attendance_status}}
+                        @else
+                        Not Mark
+                        @endif
+
+                    </div>
+                    <div class="ac l14">
+                        {{-- <a href=""> 
                             <i class="fa fa-television ph-5"></i> <a href="#" onclick="view_attendance(1)"> View </a>
-                        </a>
+                        </a> --}}
                         {!! Form::open(['route'=>'list.attendance']) !!}
                     		<input type="hidden" name="year" value="{{$data['year']}}">
                     		<input type="hidden" name="month" value="{{$j}}">
-                            {!! Form::submit('view',[]) !!}
+                            {!! Form::submit('view',['class'=>'special-btn']) !!}
                         {!! Form::close() !!}
                     </div>
-                    <div class="ac l15">
-                    	 @if(isset($data['lock_status'][$j]))
+                    <div class="ac l14">
+                    	 @if(isset($data[$j]))
                         <a href="">
-                            <i class="fa fa-pencil ph-5"></i> Edit
+                             
                             {!! Form::open(['route'=>'hr.attendance']) !!}
                     		<input type="hidden" name="year" value="{{$data['year']}}">
                     		<input type="hidden" name="month" value="{{$j}}">
                     		<input type="hidden" name="date" value="1">
-                            {!! Form::submit('edit') !!}
+                            {!! Form::submit('edit',['class'=>'special-btn']) !!}
                         {!! Form::close() !!}
                         </a>
                         @else
@@ -125,28 +144,25 @@ $page_title_data = array(
                         @endif
                     </div>
 
-                    <div class="ac l15">
+                    <div class="ac l14">
 
                     	{!! Form::open(['route'=>'import.form.attendance']) !!}
                     		<input type="hidden" name="import_year" value="{{$data['year']}}">
                     		<input type="hidden" name="import_month" value="{{$i}}">
-                           
-                            {!! Form::submit('Import') !!}
+                            {!! Form::submit('Import',['class'=>'special-btn']) !!}
                         {!! Form::close() !!}
                     </div>
-                    <div class="ac l15">
-                        <a href="">
-                            <i class="fa fa-pencil-square-o ph-5"></i>Mark Attendance    
-                        </a>
+                    <div class="ac l14">
+                        
                         {!! Form::open(['route'=>'hr.attendance']) !!}
                     		<input type="hidden" name="year" value="{{$data['year']}}">
                     		<input type="hidden" name="month" value="{{$j}}">
                     		<input type="hidden" name="date" value="1">
-                            {!! Form::submit('Mark attendace') !!}
+                            {!! Form::submit('Mark attendace',['class'=>'special-btn']) !!}
                         {!! Form::close() !!}
                         
                     </div>
-                    <div class="ac l15">
+                    <div class="ac l14">
                         
                     </div>
                 </li>
@@ -157,6 +173,9 @@ $page_title_data = array(
 
         </div>
     </div>
+
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
 <script type="text/javascript">
     function view_attendance(month){
         year = $("#input_group_id").val();
@@ -168,10 +187,7 @@ $page_title_data = array(
         alert(year, month);
          window.location.replace(route()+'/attendance/import/'+year+'/'+month);//+);
     }
-</script>
-@include('common.page_content_primary_end')
-@include('common.page_content_secondry_start')
-	
+</script>	
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 

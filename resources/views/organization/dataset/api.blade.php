@@ -124,7 +124,7 @@ $page_title_data = array(
 		<div class="ar wrapper">
             <div class="ac l25 p-10 fbox columns-box" id="origin" >
                 <div class="aione-border">
-                    <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+                    <div class="bg-grey bg-lighten-3 p-15 font-size-18 aione-border-bottom">
                         Select Dataset Columns
                     </div>
                     <div class="p-10">
@@ -144,7 +144,7 @@ $page_title_data = array(
             </div>
 			<div class="ac l75  p-10 pr-10 " >
                 <div class="aione-border">
-                    <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+                    <div class="bg-grey bg-lighten-3 p-15 font-size-18 aione-border-bottom">
                         Design API Structure
                     </div>
                     <div class="p-10">
@@ -208,10 +208,16 @@ $page_title_data = array(
 	{{-- <div>
 		{!! FormGenerator::GenerateForm('api_condition_form') !!}
 	</div> --}}
-	<div class="p-15 m-10 mb-20 aione-border link"  >
-		@if(!empty($data['link']))
-			Api Link :- <a href="{{$data['link']}}">{{$data['link']}}</a>
-		@endif
+	<div class="m-10 mb-20 aione-border link">
+        <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
+            Api Link
+        </div>
+        <div class="p-10">
+            @if(!empty($data['link']))
+                <a href="{{$data['link']}}">{{$data['link']}}</a>
+            @endif
+        </div>
+    		
 	</div>
 	<div class="ar data-view" >
         <div class="ac l50">

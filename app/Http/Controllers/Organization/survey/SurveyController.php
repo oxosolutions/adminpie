@@ -352,8 +352,9 @@ class SurveyController extends Controller
                 $current_data = json_decode(json_encode($data),true);
             }
         }
+        // dd($token);
         if($from_status){
-            return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'))->render();
+            return view('organization.survey.shared_survey_without_layout',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'))->render();
         }else{
             return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
         }

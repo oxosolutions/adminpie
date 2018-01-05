@@ -27,8 +27,10 @@ class GroupUsers extends Authenticatable
     return $this->hasOne('App\Model\Organization\Salary','user_id','id');
   }
     public function organization_user(){
-      
       return $this->hasOne('App\Model\Organization\User','user_id','id');
+    }
+    public function organization_employee_user(){
+      return $this->hasOne('App\Model\Organization\User','user_id','id')->where('user_type','employee');
     }
     public function user_role_rel(){
       return $this->hasMany('App\Model\Organization\UserRoleMapping','user_id','id');

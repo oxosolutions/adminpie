@@ -307,23 +307,8 @@ $number = 1;
 
 							</div>
 							<div class=" col s3">
-								
-								<div class="switch">
-										    <label>
-												lock {{$lock_status}}
-													@if(@$lock_status == 1)
-														<input type="checkbox">
-													@else
-														<input type="checkbox" checked="checked">
-													@endif
-												
-										      <span class="lever"></span>
-										    </label>
-										  </div>
-								{{-- <button onclick="lock()">Lock</button> 							<button onclick="unlock({{$current_month}}, {{$current_year}})">un-Lock</button> --}}
 								<input id="current_month" type="hidden" value="{{$current_month}}">
 								<input id="year" type="hidden" value="{{$current_year}}">
-								
 							</div>
 						</div>
 						

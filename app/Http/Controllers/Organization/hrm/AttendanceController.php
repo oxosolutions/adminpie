@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\Attendance;
 use App\Model\Organization\AttendanceFile;
 use App\Model\Organization\User;
+use App\Model\Organization\UsersMeta;
 use App\Model\Group\GroupUsers;
 use Carbon\Carbon;
 use DB;
@@ -137,19 +138,14 @@ class AttendanceController extends Controller
 			$i = 1;
 			$dates = explode('~',$all_data[0][2]);
 			$month_year = date('m-Y', strtotime($dates[0]));
-
 			$year = date('Y', strtotime($dates[0]));
 			$month = date('m', strtotime($dates[0]));
 			$check_month = str_replace(0,'', $month);
-			
-			// &&  $request['year'] != $year  &&  $request['month'] != $check_month
-			if(!empty($request['year']) && !empty($request['month'])){
+			if(!empty($request['year']) && !empty($request['month']) && $request['month'] != $check_month && $request['year'] != $year){
 				Session::flash('error','Not match Month & yearmyyyy.');
 				$checkStatus = "not-match-month-year";
 				return false;
 			}
-			dd($year, $month, $request['year'], $request['month'], $check_month);
-
 			$check_attendance = Attendance::where(['year'=>$year,'month'=>$month,'lock_status'=>0])->count();	
 			if($check_attendance>0)
 			{
@@ -495,9 +491,28 @@ public function attendance_file(){
 		$query = Attendance::select('month','lock_status')->where(['year'=>$year])->groupBy('month');//->get();
 		if($query->exists()){
 			$query_data = $query->get();
-		 	$data['lock_status'] = array_column($query_data->keyBy('month')->toArray(), 'lock_status','month');
+		 	$data['lock'] = array_column($query_data->keyBy('month')->toArray(), 'lock_status','month');
+		 	foreach ($data['lock'] as $key => $value) {
+				$results =	$this->attendance_check($year, $key);
+				$data[$key]['lock_status'] = $value;
+				$data[$key]['attendance_status'] = $results;
+		 	}
  		}
 		return view('organization.attendance.attendence-list',compact('data'));
+	}
+
+	protected function attendance_check($year, $month){
+		$emplyee_ids = UsersMeta::where('key','employee_id')->pluck('value');
+		$daysInMonth = Carbon::parse($year.'-'.$month.'-1')->daysInMonth;
+		$attendance_status = 1;
+ 		foreach ($emplyee_ids as $value) {
+ 			$emp[$month][$value] = $attendance_count = Attendance::where(['year'=>$year, 'month'=>$month, 'employee_id'=>$value])->count();
+ 			if($daysInMonth == $attendance_count){
+ 			}else{
+ 				$attendance_status =0;
+ 			}
+ 		}
+ 		return $attendance_status;
 	}
 
 }

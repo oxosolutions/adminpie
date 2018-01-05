@@ -516,7 +516,8 @@ function form($form_slug, $form_from = 'admin', $default_model_data = null){
 *   @return size [string]
 ************************************************************/
 function survey($token){
-    $controllerObject = new App\Http\Controllers\Organization\survey\SurveyController(App\Http\Controllers\Api\SurveyController::class);
+    $apiServices = new App\Http\Controllers\Api\SurveyController;
+    $controllerObject = new App\Http\Controllers\Organization\survey\SurveyController($apiServices);
     return $controllerObject->embededSurvey($token,true);
 }
 
