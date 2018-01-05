@@ -113,7 +113,7 @@ class AttendanceController extends Controller
 			    ],
 			    [
 			        'file'          => 'required',
-			        'extension'      => 'required|in:csv',
+			        'extension'      => 'required|in:csv,xls,xlsx,XLS',
 			    ]
 			);
 
@@ -128,10 +128,12 @@ class AttendanceController extends Controller
 			$file_name = str_random(13).$file->getClientOriginalName();
 			$file->move($storage_path, $file_name);	
 			$checkStatus = '';
+            
 		Excel::load($storage_path.'/'.$file_name, function ($reader)use($request,&$checkStatus)
 		{	
 			$reader->noHeading();
-			$all_data = json_decode(json_encode($reader->all()) , true);
+
+			$all_data = json_decode(json_encode($reader->get()[1]) , true);
 			unset($all_data[0] , $all_data[1]); 
 			$all_data = array_slice($all_data, 0);
 			$keys = "abc";
@@ -415,6 +417,7 @@ public function attendance_file(){
 
 	public function attendance_fill_hr(Request $request )
 	{
+
 		$conditions = $request['dates'];
 		unset($request['dates']);
 		foreach ($request->all() as $key => $value) {
@@ -433,10 +436,17 @@ public function attendance_file(){
 				}else{
 					$value['in_out_data'] =Null;
 				}
-				
+
 				$where 		= 	array_collapse([$conditions, ['employee_id'=>$key]]);
 				$all_data 	= 	array_collapse([$conditions, $value]);
-				$attendance_check = Attendance::select('id')->where($where);
+				$attendance_check = Attendance::select('id','lock_status')->where($where);
+				if($attendance_check->exists())
+				{
+					if($attendance_check->first()->lock_status==0){
+						continue;
+					}
+				}
+
 				if($attendance_check->count() > 0)
 				{
 					$attendance = Attendance::find($attendance_check->first()->id);
