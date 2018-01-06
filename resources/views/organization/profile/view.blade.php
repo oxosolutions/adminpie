@@ -128,223 +128,213 @@ $page_title_data = array(
 			{{-- <script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script> --}}
 			<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div>
 		@endif
-		<div class="row">
-		<div class="col l9 pr-7">
-			<div class="card mt-14">
-				<div class="row basic-details">
-					<div class="col l3 profile-pic">
-						@php
-							if(count(request()->route()->parameters()) > 0){
-								$id = request()->route()->parameters()['id'];
-							}else{
-								if(Auth::guard('admin')->check()){
-									$id = Auth::guard('admin')->user()['id'];
-								}else{
-									$id = Auth::guard('org')->user()['id'];
-								}
-							}
-						@endphp
-						{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
-							<div class="abc" >
-								{{-- <img src="{{ asset(@get_profile_picture($id,'medium')) }}" > --}}
-								@php
-									$profilePicture = App\Model\Group\GroupUserMeta::where(['user_id' => $id,'key' => 'user_profile_picture'])->first();
-								@endphp
-								<img src="{{ asset('/files/organization_'.get_organization_id().'/user_profile_picture/'.@$profilePicture->value) }}" >
-							
-							@php
-								$parameters = request()->route()->parameters();
-							@endphp
-							@if(count($parameters) > 0)
-								@php
-						            $id = request()->route()->parameters()['id'];
-							   	@endphp
-							   	<input type="hidden" name="user_id" value="{{request()->route()->parameters()['id']}}">
-							@endif
-								<a href="" class="upload-image">Change Image</a>	
-								<input type="file" name="aione-dp"
-								onchange="document.getElementById('form1').submit()" class="chooser">
-							</div>
-						{!!Form::close()!!}
-							@if(@$model->user_profile_picture != null || @$model->user_profile_picture != "" || !empty(@$model->user_profile_picture))
-								<a href="{{route('profile.picture.delete',$id)}}">Remove Image</a>	
-							@endif
-						
-						
-
-						<div class="preloader-wrapper image-spinner big active" style="">
-							<div class="spinner-layer spinner-blue">
-								<div class="circle-clipper left">
-									<div class="circle">
-										
-									</div>
-								</div>
-								<div class="gap-patch">
-									<div class="circle">
-									
-									</div>
-								</div>
-								<div class="circle-clipper right">
-									<div class="circle">
-										
-									</div>
-								</div>
-							</div>
-
-							<div class="spinner-layer spinner-red">
-								<div class="circle-clipper left">
-									<div class="circle">
-										
-									</div>
-								</div>
-								<div class="gap-patch">
-									<div class="circle">
-									
-									</div>
-								</div>
-								<div class="circle-clipper right">
-									<div class="circle">
-										
-									</div>
-								</div>
-							</div>
-
-							<div class="spinner-layer spinner-yellow">
-								<div class="circle-clipper left">
-									<div class="circle">
-										
-									</div>
-								</div>
-								<div class="gap-patch">
-									<div class="circle">
-									
-									</div>
-								</div>
-								<div class="circle-clipper right">
-									<div class="circle">
-										
-									</div>
-								</div>
-							</div>
-
-							<div class="spinner-layer spinner-green">
-								<div class="circle-clipper left">
-									<div class="circle">
-										
-									</div>
-								</div>
-								<div class="gap-patch">
-									<div class="circle">
-									
-									</div>
-								</div>
-								<div class="circle-clipper right">
-									<div class="circle">
-										
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-					<div class="col l9 p-14">
-						<div class="row pb-5" >
-							<div class="col l3"><strong>Name:</strong></div>
-							<div class="col l5">{{@$model->name}}</div>
-							<div class="col l4 right-align" id="modal-wrapper">
-								<a class="grey-text darken-1 edit-button waves-effect" data-target="modal1"><i class="fa fa-pencil"></i></a>
-								
-								{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
-									@php
-										$meta_data = array_column(json_decode($model['metas'],true), 'value','key');
-										$shift = null;
-										if(isset($meta_data['user_shift'])){
-											$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
-										}
-										$userData = [];
-										$userData['about_me'] = $model->about_me;
-										$userData['shift'] = $shift;
-										$userData['email'] = $model->email;
-										$userData['name'] = $model->name;
-									@endphp
-								<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
-								{!!Form::model(@$userData,['route'=>'update.profile','method'=>'post'])!!}
-									<div class="modal-header white-text  blue darken-1" ">
-										<div class="row" style="padding:15px 10px;margin: 0px">
-											<div class="col l7 left-align">
-												<h5 style="margin:0px">Profile</h5>	
-											</div>
-											<div class="col l5 right-align">
-												<a href="javascript:;" name="closeModel"  id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
-											</div>	
-										</div>
-									</div>
-									<input type="hidden" name="id" value="{{ @$model->id }}">
-									<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
-										<div class="col s12 m2 l12 aione-field-wrapper">
-										{!! FormGenerator::GenerateField('name',['type'=>'inset']) !!}
-										</div>
-										<div class="col s12 m2 l12 aione-field-wrapper">
-										 {!! FormGenerator::GenerateField('email',['type'=>'inset']) !!}
-										 </div>
-										 <div class="col s12 m2 l12 aione-field-wrapper">
-										 {!! FormGenerator::GenerateField('about_me',['type'=>'inset']) !!}
-										 </div>
-										 <div class="col s12 m2 l12 aione-field-wrapper">
-											{{-- {!! Form::select('shift',null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!} --}}
-											
-											@if(@request()->route()->parameters()['id'])
-												@if($isEmployee)
-													{!! Form::select('shift',App\Model\Organization\Shift::listshifts(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!}
-												@endif
-
-											@endif
-										</div>
-									</div>
-									<div class="modal-footer">
-										<button class="btn blue" type="submit" name="action">save
-										</button>
-									</div>	
-									{!!Form::close()!!}
-								</div>
-
-								
-							</div>
-						</div>
-						
-						<div class="row pt-5" >
-							<div class="col l3"><strong>Email</strong></div>
-							<div class="col l9">{{@$model->email}}</div>
-						</div>
-						<div class="row pt-5" >
-							{{-- <div class="col l3"><strong>About Me</strong></div> --}}
-							<div class="col l9">{{@$mod->about_me}}</div>
-						</div>
-						{{-- @if($isEmployee != null)
-							<div class="row pt-5" >
-								<div class="col l3"><strong>Shift</strong></div>
-								@foreach(@$model->metas as $k => $Shift)
-									@if($Shift->key == 'shift')
-										<div class="col l9">{{App\Model\Organization\Shift::where('id',$Shift->value)->first()->name}}</div>
-									@endif
-								@endforeach
-							</div>
-						@endif --}}								
-					</div>
+	<div class="ar">
+		<div class="ac l70">
+			<div class="aione-border mb-15">
+				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+					Basic Details
 				</div>
-				{{-- @if($isEmployee || $isAdmin) --}}
-						<div class="row" style="padding: 0px 12px;">
-							<div class="col l3">
-								Shift
-							</div>
-							@if(!empty($shift))
-								<div class="col l3">
-									 {{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+				<div class="p-10">
+					<div class="ar basic-details">
+						<div class="ac l40 profile-pic">
+							@php
+								if(count(request()->route()->parameters()) > 0){
+									$id = request()->route()->parameters()['id'];
+								}else{
+									if(Auth::guard('admin')->check()){
+										$id = Auth::guard('admin')->user()['id'];
+									}else{
+										$id = Auth::guard('org')->user()['id'];
+									}
+								}
+							@endphp
+							{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
+								<div class="abc" >
+									{{-- <img src="{{ asset(@get_profile_picture($id,'medium')) }}" > --}}
+									@php
+										$profilePicture = App\Model\Group\GroupUserMeta::where(['user_id' => $id,'key' => 'user_profile_picture'])->first();
+									@endphp
+									<img src="{{ asset('/files/organization_'.get_organization_id().'/user_profile_picture/'.@$profilePicture->value) }}" >
+								
+								@php
+									$parameters = request()->route()->parameters();
+								@endphp
+								@if(count($parameters) > 0)
+									@php
+							            $id = request()->route()->parameters()['id'];
+								   	@endphp
+								   	<input type="hidden" name="user_id" value="{{request()->route()->parameters()['id']}}">
+								@endif
+									<a href="" class="upload-image">Change Image</a>	
+									<input type="file" name="aione-dp"
+									onchange="document.getElementById('form1').submit()" class="chooser">
 								</div>
-								<div class="col l3">
+							{!!Form::close()!!}
+								@if(@$model->user_profile_picture != null || @$model->user_profile_picture != "" || !empty(@$model->user_profile_picture))
+									<a href="{{route('profile.picture.delete',$id)}}">Remove Image</a>	
+								@endif
+							
+							
+
+							<div class="preloader-wrapper image-spinner big active" style="">
+								<div class="spinner-layer spinner-blue">
+									<div class="circle-clipper left">
+										<div class="circle">
+											
+										</div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle">
+										
+										</div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle">
+											
+										</div>
+									</div>
+								</div>
+
+								<div class="spinner-layer spinner-red">
+									<div class="circle-clipper left">
+										<div class="circle">
+											
+										</div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle">
+										
+										</div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle">
+											
+										</div>
+									</div>
+								</div>
+
+								<div class="spinner-layer spinner-yellow">
+									<div class="circle-clipper left">
+										<div class="circle">
+											
+										</div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle">
+										
+										</div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle">
+											
+										</div>
+									</div>
+								</div>
+
+								<div class="spinner-layer spinner-green">
+									<div class="circle-clipper left">
+										<div class="circle">
+											
+										</div>
+									</div>
+									<div class="gap-patch">
+										<div class="circle">
+										
+										</div>
+									</div>
+									<div class="circle-clipper right">
+										<div class="circle">
+											
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="ac l60 p-10">
+							<div class="ar" >
+								<div class="ac l25"><strong>Name:</strong></div>
+								<div class="ac l45">{{@$model->name}}</div>
+								<div class="ac l30 right-align" id="modal-wrapper">
+									<a class="grey-text darken-1 edit-button waves-effect" data-target="modal1"><i class="fa fa-pencil"></i></a>
+									
+									{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'modal1','heading'=>'Profile','button_title'=>'Save','section'=>'editempsec1']]) --}}
+										@php
+											$meta_data = array_column(json_decode($model['metas'],true), 'value','key');
+											$shift = null;
+											if(isset($meta_data['user_shift'])){
+												$shift = App\Model\Organization\Shift::where(['id' => $meta_data['user_shift']])->pluck('id','name');
+											}
+											$userData = [];
+											$userData['about_me'] = $model->about_me;
+											$userData['shift'] = $shift;
+											$userData['email'] = $model->email;
+											$userData['name'] = $model->name;
+										@endphp
+									<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
+									{!!Form::model(@$userData,['route'=>'update.profile','method'=>'post'])!!}
+										<div class="modal-header white-text  blue darken-1" ">
+											<div class="row" style="padding:15px 10px;margin: 0px">
+												<div class="col l7 left-align">
+													<h5 style="margin:0px">Profile</h5>	
+												</div>
+												<div class="col l5 right-align">
+													<a href="javascript:;" name="closeModel"  id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
+												</div>	
+											</div>
+										</div>
+										<input type="hidden" name="id" value="{{ @$model->id }}">
+										<div class="modal-content" style="padding: 20px;padding-bottom: 60px">
+											<div class="col s12 m2 l12 aione-field-wrapper">
+											{!! FormGenerator::GenerateField('name',['type'=>'inset']) !!}
+											</div>
+											<div class="col s12 m2 l12 aione-field-wrapper">
+											 {!! FormGenerator::GenerateField('email',['type'=>'inset']) !!}
+											 </div>
+											 <div class="col s12 m2 l12 aione-field-wrapper">
+											 {!! FormGenerator::GenerateField('about_me',['type'=>'inset']) !!}
+											 </div>
+											 <div class="col s12 m2 l12 aione-field-wrapper">
+												{{-- {!! Form::select('shift',null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!} --}}
+												
+												@if(@request()->route()->parameters()['id'])
+													@if($isEmployee)
+														{!! Form::select('shift',App\Model\Organization\Shift::listshifts(),null,["class"=>"no-margin-bottom aione-field " , 'placeholder'=>'Select Shift'])!!}
+													@endif
+
+												@endif
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button class="btn blue" type="submit" name="action">save
+											</button>
+										</div>	
+										{!!Form::close()!!}
+									</div>
+
+									
+								</div>
+							</div>
+							
+							<div class="ar" >
+								<div class="ac l25"><strong>Email</strong></div>
+								<div class="ac l75">{{@$model->email}}</div>
+							</div>
+							<div class="ar mb-15" >
+								{{-- <div class="col l3"><strong>About Me</strong></div> --}}
+								<div class="ac l75">{{@$mod->about_me}}</div>
+							</div>
+							<div class="ar">
+								<div class="ac l25">
+									Shift		
+								</div>
+								<div class="ac l25">
+									{{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+								</div>
+								<div class="ac l25">
 									{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}
 								</div>
-								<div class="col l3 week-days">
+								<div class="ac l25">
 									@if(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days))
 
 										@foreach(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
@@ -353,120 +343,112 @@ $page_title_data = array(
 										@endforeach
 									@endif
 								</div>
-							@endif
-							<style type="text/css">
-								.week-days > .active{
-									border-color: #2196f3;
-								}
-								.week-days > .active:hover{
-									background-color:#2196f3;
-									color: white;
-
-								}
-								.week-days > div{
-								    display: inline-block;
-								    width: 24px;
-								    text-align: center;
-								    font-size: 13px;
-								    line-height: 24px;
-								    border: 1px solid #e8e8e8;
-								    border-radius: 50%;
-								    font-weight: 700;
-								    color: #676767;
-								    cursor: pointer;
-								}
-								.week-days > div:last-child{
-									color: red
-								}
-							</style>
+								
+							</div>		
 						</div>
+					</div>
+					{{-- @if($isEmployee || $isAdmin) --}}
+					<div class="ar">
+						<div class="ac l25">
+							Shift
+						</div>
+						@if(!empty($shift))
+							<div class="ac l25">
+								 {{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+							</div>
+							<div class="ac l25">
+								{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}
+							</div>
+							<div class="ac l25 week-days">
+								@if(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days))
+
+									@foreach(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
+									
+									<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
+									@endforeach
+								@endif
+							</div>
+						@endif
+						<style type="text/css">
+							.week-days > .active{
+								border-color: #2196f3;
+							}
+							.week-days > .active:hover{
+								background-color:#2196f3;
+								color: white;
+
+							}
+							.week-days > div{
+							    display: inline-block;
+							    width: 24px;
+							    text-align: center;
+							    font-size: 13px;
+							    line-height: 24px;
+							    border: 1px solid #e8e8e8;
+							    border-radius: 50%;
+							    font-weight: 700;
+							    color: #676767;
+							    cursor: pointer;
+							}
+							.week-days > div:last-child{
+								color: red
+							}
+						</style>
+					</div>
+				</div>
 			</div>
-			<div class="card mt-14" >
-				
-				<div class="row ">
+			<div class="aione-border" >
+				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+					Recent Activities
+				</div>
+				<div class="ar ">
 					<div class="row activities">
 						<div class="activity-header">						
-							<h5>Recent Activities</h5>
+							
 							<a href="{{route('account.activities')}}" class=" btn-success" style="">View All</a>
 						</div>
 						
 						@foreach($user_log as $key => $value)
-							<div class="row valign-wrapper mb-0 pv-5" >
-								<div class="col l1 blue white-text center-align date" >
-									<div class="row mb-0 month ">
+							<div class="ar valign-wrapper mb-0 pv-5" >
+								<div class="ac l10 blue white-text center-align date" >
+									<div class=" month ">
 										{{date_format($value->created_at , "M")}}
 									</div>
-									<div class="row mb-0 day" >
+									<div class=" day" >
 										{{date_format($value->created_at , "d")}}
 									</div>
 								</div>
-								<div class="col l6 pl-7 truncate">
+								<div class="ac l50 truncate">
 									@foreach(json_decode($value->text) as $k => $val)
 										@if($loop->index == 0 )
 											{{str_replace('{id?}','id',$val)}}
 										@endif
 									@endforeach
 								</div>
-								<div class="col l3 pl-7 truncate">
+								<div class="ac l10  truncate">
 									@foreach(json_decode($value->text) as $k => $val)
 										@if($loop->index == 2 )
 											{{$val}}
 										@endif
 									@endforeach
 								</div>
-								<div class="col l2">
+								<div class="ac l10">
 									<span class="green white-text box">{{$value->type}}</span>
 								</div>
 								<!-- <div class="col l2">
 									<span style="padding: 4px 8px; font-size: 10px;border-radius: 3px" class="green white-text">ACCOMPLISHED</span>
 								</div> -->
-								<div class="col l2 grey-text center-align" style="font-size: 13px">
+								<div class="ac l20 grey-text center-align" style="font-size: 13px">
 									2 hour ago
 								</div>	
 							</div>
 						@endforeach
 					</div>					
 				</div>
-					 
 			</div>
 		</div>
-		<div class="col l3 pl-7">
-			{{-- <div class="card mt-14 " >
-				<div class="row center-align mb-0 pv-10" >
-				@if(@$errors->get('new_password') || @$errors->get('confirm_password'))
-					<script type="text/javascript">
-						$(window).load(function(){
-							document.getElementById('add_new').click();
-						});
-					</script>
-				@endif
-					<a href="#modal9" class="btn blue " id="add_new">Change Password1</a>
-					@if(!empty($errors->all()))
-						@if(@$errors->new_password  || @$errors->confirm_password )	
-							<script type="text/javascript">
-								window.onload = function(){
-									$('#modal9').modal('open');
-								}
-							</script>
-						@endif
-					@endif
-						{!! Form::open(['route' => 'change.password' , 'method' => 'post']) !!}
-						@include('common.modal-onclick',['data'=>['modal_id'=>'modal9','heading'=>'Change Password','button_title'=>'Update','section'=>'changepasssec1']])
-					@php
-						if(Auth::guard('admin')->check()){
-				            $id = Auth::guard('admin')->user()->id;
-				        }elseif(request()->route()->parameters()){
-				            $id = request()->route()->parameters()['id'];
-				        }else{
-				            $id = Auth::guard('org')->user()->id;
-				        }
-					@endphp
-					<input type="hidden" name="id" value="{{$id}}">
-					{!! Form::close() !!}
-				</div>
-				
-			</div> --}}
-			<div class="card info-card" >
+		<div class="ac l30">
+			<div class="aione-border info-card" >
 				<div class="row valign-wrapper mb-0">
 					<div class="col l10 headline-text" >Contact Detail</div>
 					<div class="col l2" id="modal-wrapper">
@@ -476,7 +458,6 @@ $page_title_data = array(
 						@include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'Contact Details','button_title'=>'Save ','section'=>'empsec2']])
 						{!!Form::close()!!}
 					</div>
-					
 				</div>
 				@if(@$model !=null)
 					@if(!$model->metas->isEmpty())
@@ -612,8 +593,6 @@ $page_title_data = array(
 					@endif
 				@endif
 
-			
-			
 		</div>
 	</div>
 	@include('common.page_content_primary_end')

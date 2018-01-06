@@ -1,17 +1,17 @@
 <?php
+        //Public route
+        Route::group(['middleware'=>'web'], function(){
+            Route::get('page/{slug}',   ['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
+            Route::get('demo/{slug}',   ['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
+            Route::post('comment/save', ['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
+            Route::post('comment/update', ['as'=>'update.comment' , 'uses'=>'Organization\cms\PagesController@update_comment' ]);
+            Route::get('like/{type}/{c_id}/{expression?}',  ['as'=>'like.comment' , 'uses'=>'Organization\cms\PagesController@likedislike' ]);
+            Route::get('comment/del/{c_id}',    ['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
+            Route::get('comment/edit/{c_id}',   ['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
+            Route::post('formdata/save',    ['as'=>'save.form.data','uses'=>'Admin\FormBuilderController@saveGeneratedForm']);
+        });
 
 	/****************************************** All Routes For Admin *************************************************/
-		//Public route
-		Route::group(['middleware'=>'web'], function(){
-				Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
-				Route::get('demo/{slug}',	['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
-				Route::post('comment/save',	['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
-				Route::post('comment/update', ['as'=>'update.comment' , 'uses'=>'Organization\cms\PagesController@update_comment' ]);
-				Route::get('like/{type}/{c_id}/{expression?}',	['as'=>'like.comment' , 'uses'=>'Organization\cms\PagesController@likedislike' ]);
-				Route::get('comment/del/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
-				Route::get('comment/edit/{c_id}',	['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
-                Route::post('formdata/save',    ['as'=>'save.form.data','uses'=>'Admin\FormBuilderController@saveGeneratedForm']);
-		});
 		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function (){
 			Route::group(['namespace'=>'Admin'], function(){
 				Route::group(['middleware' => 'auth.admin'], function(){
@@ -20,24 +20,14 @@
 					Route::get('/',['as'=>'admin.dashboard','uses'=>'DashboardController@index']);
 
 					//Activity 
-					Route::get('activities', ['as'=>'activities' , 'uses'=>'ActivityTemplateController@index']);
-					Route::match(['get','post'], 'activity/template', ['as'=>'activity.template' , 'uses'=>'ActivityTemplateController@create']);
-					Route::match(['get','post'], 'activity/edit/{id?}', ['as'=>'activity.edit' , 'uses'=>'ActivityTemplateController@edit']);
-					Route::get('activity/delete/{id?}', ['as'=>'activity.delete' , 'uses'=>'ActivityTemplateController@delete']);
+					include_once 'custom/admin/activity.php';
 
 					//Notification
-					Route::get('notifications', ['as'=>'notifications' , 'uses'=>'ActivityTemplateController@notificationList']);
-					Route::match(['get','post'], 'notification/template', ['as'=>'notification.template' , 'uses'=>'ActivityTemplateController@create_notification']);
+					include_once 'custom/admin/notification.php';
 
 
-					Route::get('widgets/{id?}', ['as'=>'index.widget' , 'uses'=>'WidgetController@index']);
-					Route::get('widget/delete/{id}', ['as'=>'delete.widget' , 'uses'=>'WidgetController@delete']);
-					Route::match(['get', 'post'],'widget/create', ['as'=>'create.widget' , 'uses'=>'WidgetController@create']);
-					Route::match(['get', 'post'],'widget/edit/{id?}', ['as'=>'edit.widget' , 'uses'=>'WidgetController@edit']);
-					Route::post('widget/status/update', ['as'=>'status.widget' , 'uses'=>'WidgetController@update_widget_status']);
-					Route::post('sort/widget' , ['as' => 'sort.widget' , 'uses' => 'WidgetController@sort']);
-					Route::get('sort/down/{id}' , ['as' => 'sort.down' , 'uses' => 'WidgetController@sortWidgetDown']);
-					Route::get('sort/up/{id}' , ['as' => 'sort.up' , 'uses' => 'WidgetController@sortWidgetUp']);
+					//Widgets
+                    include_once 'custom/admin/widgets.php';
 
 					//Module route
 					include_once 'custom/admin/module.php';
@@ -46,7 +36,6 @@
 
                     //Products routes
                     include_once 'custom/admin/products.php';
-
 
 					//admin users
 					Route::group(['prefix'=>'users'],function(){
@@ -69,10 +58,8 @@
                     //Orders
                     include_once 'custom/admin/order.php';
 					
-					//pages
-					Route::get('create/page',	['as'=> 'create.pages' , 'uses' => 'PagesController@create']);
-					Route::post('/store/pages',	['as'=> 'store.pages' , 'uses' => 'PagesController@store']);
-					Route::get('pages',			['as'=> 'admin.pages' , 'uses' => 'PagesController@listPages']);
+                    //Routes for pages  
+                    include_once 'custom/admin/pages.php';
 
 					// Custom Maps
 					include_once 'custom/admin/custom-maps.php';
@@ -83,9 +70,6 @@
 				Route::get('logout',  		['as'=> 'admin.logout','uses'=>'Auth\LoginController@logout']);
 				Route::get('login',			['as'=>'admin.login','uses'=>'Auth\LoginController@showLoginForm']);
 				Route::post('login',		['as'=>'login.post','uses'=>'Auth\LoginController@login']);
-			
-				//Routes for pages	
-				include_once 'custom/admin/pages.php';
 			});
 							
 			Route::group(['middleware' => 'auth.admin'], function(){
@@ -107,62 +91,45 @@
 			});
 		});
 
-	Route::group(['namespace'=>'Group','domain'=>'manage.'.env('MAIN_DOMAIN')], function(){
-		Route::group(['middleware' => 'auth.group'], function(){
-			Route::get('/',['as'=>'group.dashboard','uses'=>'DashboardController@index']);
-
-			//Users
-				include_once 'custom/group/user.php';
-
-			//organization
-				include_once 'custom/group/organization.php';
-
-
-		});
-		Route::get('logout',  		['as'=> 'group.logout','uses'=>'Auth\LoginController@logout']);
-		Route::get('login/{auth_token?}',['as'=>'group.login','uses'=>'Auth\LoginController@showLoginForm']);
-		Route::post('login',		['as'=>'group.post','uses'=>'Auth\LoginController@login']);
-	});
+        /*********************************** Admin Route End **************************************/
 
 
 
+        /*********************************** Manage Routes Start **********************************/
 
-			/******************************* All Routes For Admin *******************************************/
-										//demo form route for setting
-			/******************************* All Routes For Organization ************************************/
+        Route::group(['namespace'=>'Group','domain'=>'manage.'.env('MAIN_DOMAIN')], function(){
+            Route::group(['middleware' => 'auth.group'], function(){
+                Route::get('/',['as'=>'group.dashboard','uses'=>'DashboardController@index']);
+
+                //Users
+                include_once 'custom/group/user.php';
+
+                //organization
+                include_once 'custom/group/organization.php';
+            });
+            Route::get('logout',  		['as'=> 'group.logout','uses'=>'Auth\LoginController@logout']);
+            Route::get('login/{auth_token?}',['as'=>'group.login','uses'=>'Auth\LoginController@showLoginForm']);
+            Route::post('login',		['as'=>'group.post','uses'=>'Auth\LoginController@login']);
+        });
+
+        /********************************* Manage Routes End Here **********************************/
+
+
+
+
+										
+		/******************************* All Routes For Organization ************************************/
 
 		Route::group(['namespace'=>'Organization'], function(){
 
-
-			Route::post('/survey/filled/save', ['as'=>'filled.survey', 'uses'=>'survey\SurveyController@survey_filled_data_save']);
-			Route::post('/survey/filled_view/save', ['as'=>'view.filled.survey', 'uses'=>'survey\SurveyController@survey_filled_by_view']);
-
-			Route::match(['get','post'],'apply/{id?}',['as'=>'apply', 'uses'=>'hrm\ApplicantController@apply']);
-			Route::get('jobs',['as'=>'openingss', 'uses'=>'hrm\JobOpeningController@public_view_jobs']);
-			Route::get('logout',			['as'=>'org.logout','uses'=>'Auth\LoginController@logout']);
-			Route::get('login/{id?}',		['as'=>'org.login','uses'=>'Auth\LoginController@showLoginForm']);
-			Route::get('login-v2/{id?}',	['as'=>'org.login-v2','uses'=>'Auth\LoginController@showLoginFormv2']);
-			Route::post('login',			['as'=>'org.login.post','uses'=>'Auth\LoginController@login']);
-			Route::get('forgot-password',	['as'=>'forgot.password','uses'=>'Auth\LoginController@forgotpassword']);
-			Route::get('forgot-password-v1',['as'=>'forgot.password-v1','uses'=>'Auth\LoginController@forgotpasswordv1']);
-			Route::post('forgot',			['as'=>'forgot','uses'=>'Auth\LoginController@forgotMail']);
-			Route::get('reset-password/UfcZNQ0sU5w52FoXk28', ['as'=>'edit.password' ,'uses' => 'Auth\LoginController@changePass']);
-			Route::post('update-password', ['as'=>'update.pass' ,'uses' => 'Auth\LoginController@updatePass']);
-			Route::get('register', ['as'=>'register' ,'uses' => 'Auth\LoginController@register']);
-			Route::get('user/register', ['as'=>'org.register' ,'uses' => 'Auth\LoginController@registerUser']);
-
-			//Email Template
-			Route::get('emails',['as'=>'emails' , 'uses'=>'templates\EmailTemplateController@index']);
-
-			Route::match(['get','post'],'/signup',	['as'=>'signup.user','uses'=>'Auth\RegisterController@userRegister']);
-			// Route::post('/sign-up/save',		['as'=>'signup.user','uses'=>'users\UsersController@public_store_user']);
+            //Organization Public Routes
+			include_once 'custom/organization/public-routes.php';
+	
 			
-			// Route::get('/survey/report/{$id}', ['as'=>'survey.stats.reportss', 'uses'=>'survey\SurveyStatsController@survey_static_result']); 
-			
-			
-
-
+		
+            /************* Routes with auth organization *************/
 			Route::group(['middleware' => ['auth.org','org.status']], function(){
+
 				Route::get('404',['as' => 'demo5','uses' => function(){
 					return View::make('common.404');
 				}]);
@@ -185,89 +152,42 @@
 				Route::group(['middleware'=>'role'],function(){
 					Route::get('settings/department', ['as' => 'department.settings' , 'uses' => 'hrm\SettingController@departmentSetting']);
 					Route::get('settings/organization' , ['as'=>'setting.org' , 'uses' => 'hrm\SettingController@orgSetting']);
-
-
 					//Deleted employees
 					Route::get('deleted/employees',['as'=>'deleted.employee','uses'=>'hrm\SettingController@deletedEmployees']);
 					//Tools Widget
 					Route::get('/tools',['as'=>'tools','uses'=>'tools\ToolsController@tools']);
+
+                    Route::get('/holiday/list/{id?}',['as'=>'holiday.list','uses'=>'hrm\HolidayController@holidayList']);
+
+                    Route::any('/account/leaves/{id?}',['middleware'=>'role', 'as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@leave_listing']);
+                    Route::get('account/todo/{id?}',    ['as'=>'account.todo','uses'=>'project\ProjectController@todo']);
+                    Route::get('account/tasks/{id?}',   ['as'=>'account.tasks','uses'=>'account\TasksController@index']);
+                    
 				});
-                Route::get('settings/support', ['as'=>'support.settings','uses'=>'hrm\SettingController@supportSettings']);
-                Route::post('settings/support/save', ['as'=>'save.support.settings','uses'=>'hrm\SettingController@saveSupportSettings']);
+
                 
                 Route::post('/tools/website-rank',['as'=>'website.rank','uses'=>'tools\ToolsController@websiteRank']);
 
 
-				//Settings Module
-				Route::get('settings/user' , ['as'=>'setting.user' , 'uses'=>'settings\SettingsController@user_settings']);
-				Route::post('/settings/user/save',['as'=>'save.user.settings','uses'=>'settings\SettingsController@save_user_settings']);
-
-
-				//visual
+				//visualization
 				include_once 'custom/organization/visualization.php';
-
-
-
 
 				//survey routes
 				include_once 'custom/organization/survey.php';
 
-
-
 				//application routes
 				include_once 'custom/organization/application.php';
 				
+                //Email Template and Layout Routes
+                include_once 'custom/organization/email-layouts.php';
 
-				//new emails route by ashish
-				Route::get('email',					['as'=>'emails' , 'uses'=>'email\EmailController@index']);
-				Route::get('email/send', 			['as'=>'email.send' , 'uses'=>'email\EmailController@sendEmail']);
-				Route::get('/email/delete/{id}',	['as'=>'delete.email','uses'=>'email\EmailController@deleteEmail']);
-				Route::get('/document/delete/{id}',	['as'=>'delete.document','uses'=>'document\DocumentController@deleteDocument']);
-				Route::post('/document/send',	['as'=>'document.send','uses'=>'document\DocumentController@sendDocument']);
-				Route::post('campaign/save', 		['as'=>'save.campaign','uses'=>'email\EmailController@saveCampaign']);
-				Route::get('campaign/edit/{id}', 	['as'=>'edit.campaign','uses'=>'email\EmailController@sendEmail']);
-				Route::get('document/edit/{id}', 	['as'=>'edit.document','uses'=>'document\DocumentController@editDocument']);
-				Route::get('email/templates', 		['as'=>'email.templates' , 'uses'=>'email\EmailController@templates']);
-				Route::get('email/create-template', ['as'=>'create.template' , 'uses'=>'email\EmailController@createTemplates']);
-				Route::get('document/create-template', ['as'=>'create.document.template' , 'uses'=>'document\DocumentController@createTemplates']);
-				Route::get('email/edit-template/{id}',	['as'=>'edit.template' , 'uses'=>'email\EmailController@getInfoTemplates']);
-				Route::get('document/edit-template/{id}',	['as'=>'edit.document.template' , 'uses'=>'document\DocumentController@getInfoTemplates']);
-				Route::POST('email/update-template',	['as'=>'update.template' , 'uses'=>'email\EmailController@updateTemplates']);
-				Route::POST('document/update-template',	['as'=>'update.documant.template' , 'uses'=>'document\DocumentController@updateTemplates']);
-				Route::get('email/layouts', 		['as'=>'email.layouts' , 'uses'=>'email\EmailController@layouts']);
-				Route::get('email/layout/delete/{id}', ['as'=>'email.layout.delete' , 'uses'=>'email\EmailController@deleteLayout']);
-				Route::get('document/layout/delete/{id}', ['as'=>'document.layout.delete' , 'uses'=>'document\DocumentController@deleteLayout']);
-				Route::get('email/edit-layout/{id}',	['as'=>'edit.layout' , 'uses'=>'email\EmailController@getInfolayout']);
-				Route::get('document/document-layout/{id}',	['as'=>'document.layout' , 'uses'=>'document\DocumentController@getInfolayout']);
-				Route::get('document/layout/preview/{id}',	['as'=>'document.layout.view' , 'uses'=>'document\DocumentController@layoutPreview']);
-				Route::get('document/template/preview/{id}',	['as'=>'document.template.view' , 'uses'=>'document\DocumentController@TemplatePreview']);
-				Route::POST('email/update-layout',	['as'=>'update.layout' , 'uses'=>'email\EmailController@updatelayout']);
-				Route::POST('document/update-layout',	['as'=>'update.document.layout' , 'uses'=>'document\DocumentController@updatelayout']);
-				Route::get('email/template/delete/{id}', ['as'=>'templates.delete' , 'uses'=>'document\DocumentController@deleteTemplates']);
-				Route::get('email/create-layouts', 	['as'=>'create.layouts' , 'uses'=>'email\EmailController@createLayouts']);
-				Route::get('document/create-layouts', 	['as'=>'create.document.layouts' , 'uses'=>'document\DocumentController@createLayouts']);
-				Route::post('layout/save', 			['as'=>'save.layout' , 'uses'=>'email\EmailController@saveLayout']);
-				Route::post('document/layout/save', 			['as'=>'save.document.layout' , 'uses'=>'document\DocumentController@saveLayout']);
-				Route::post('template/save', 			['as'=>'save.template' , 'uses'=>'email\EmailController@saveTemplate']);
-				Route::post('document/template/save', 			['as'=>'save.document.template' , 'uses'=>'document\DocumentController@saveTemplate']);
+                //Document Layouts Route
+                include_once 'custom/organization/document-layout.php';
 
-				Route::get('documents', ['as'=>'documents' , 'uses'=>'document\DocumentController@index']);
-				Route::get('documents/create', ['as'=>'create.documents' , 'uses'=>'document\DocumentController@createDocument']);
-				Route::post('documents/update', ['as'=>'update.documents' , 'uses'=>'document\DocumentController@updateDocument']);
-				Route::post('documents/save', ['as'=>'save.documents' , 'uses'=>'document\DocumentController@saveDocument']);
-				Route::get('documents/preview/{id}', ['as'=>'view.document' , 'uses'=>'document\DocumentController@viewDocument']);
-
-				Route::get('document/templates', ['as'=>'document.templates' , 'uses'=>'document\DocumentController@templates']);
-				Route::get('document/layouts', ['as'=>'document.layouts' , 'uses'=>'document\DocumentController@layouts']);
-				Route::get('document/download/{id}', ['as'=>'document.download' , 'uses'=>'document\DocumentController@documentDownload']);
-
-				Route::post('organization/settings/save',['as'=>'save.organization.settings','uses'=>'hrm\SettingController@saveOrganizationSettings']);
-				Route::post('settings/save', ['as'=>'settings.save','uses'=>'hrm\SettingController@saveSettings']);
-				Route::get('settings/hrm' , ['as'=>'setting.attendance' , 'uses'=>'hrm\SettingController@attendanceSetting']);
-				Route::get('settings/emp' , ['as'=>'setting.employee' , 'uses' => 'hrm\SettingController@employeeSetting']);
-				Route::get('settings/role' , ['as'=>'setting.role' , 'uses' => 'hrm\SettingController@roleSetting']);
-				Route::get('settings/leaves' , ['as'=>'setting.leaves' , 'uses' => 'hrm\SettingController@leaveSetting']);
+                //Settings Module Routes
+                include_once 'custom/organization/settings.php';
 				
+
 				Route::get('/', ['as' => 'org.dashboard' , 'uses' => function(){
 					return redirect()->route('organization.dashboard');
 				}]);
@@ -281,21 +201,11 @@
 				}]);
 
 
-				Route::group(['middleware'=>'role'],function(){
-					Route::get('/holiday/list/{id?}',['as'=>'holiday.list','uses'=>'hrm\HolidayController@holidayList']);
-
-					Route::any('/account/leaves/{id?}',['middleware'=>'role', 'as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@leave_listing']);
-					Route::get('account/todo/{id?}',	['as'=>'account.todo','uses'=>'project\ProjectController@todo']);
-					Route::get('account/tasks/{id?}',	['as'=>'account.tasks','uses'=>'account\TasksController@index']);
-					Route::get('account/notes/{id?}',	['as'=>'account.notes','uses'=>'project\NotesController@index']);
-				});
+				
 				Route::any('account/leave/{id?}',['as'=>'store.employeeleave' , 'uses'=>'hrm\EmployeeLeaveController@store']);
 
 				//Notes
-				Route::get('account/notes/list',	['as'=>'account.notes.list.ajax','uses'=>'project\NotesController@listNotes']);
-				Route::post('account/notes/save',	['as'=>'save.account.notes','uses'=>'project\NotesController@createNotes']);
-				Route::post('account/notes/edit',	['as'=>'edit.account.notes','uses'=>'project\NotesController@edit']);
-				Route::post('account/notes/delete',	['as'=>'delete.account.notes','uses'=>'project\NotesController@delete']);
+				include_once 'custom/organization/notes.php';
 
 				
 				// Route::post('project/tasks/employee/filter',['as'=>'filterEmployee.tasks','uses'=>'account\TasksController@filterEmployee']);
@@ -368,11 +278,7 @@
 				
 					
 				});
-				// //Pages 
-				// 	Route::get('/pages',		['as'=>'list.pages' , 'uses'=>'PagesController@listPage' ]);
-				// 	Route::get('/page/{id}',	['as'=>'edit.pages' , 'uses'=>'PagesController@edit' ]);
-				// 	Route::post('/page/save',	['as'=>'store.page' , 'uses'=>'PagesController@save' ]);
-				// 	Route::post('/page/update',	['as'=>'update.page' , 'uses'=>'PagesController@update' ]);
+				
 
 				//TEAM MANAGEMENT ROUTES
 

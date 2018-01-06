@@ -85,27 +85,56 @@ class AttendanceController extends Controller
 	}
 	public function import_form(Request $request, $year=null, $month=null)
 	{	
-		$data['month'] =$data['year'] =null;
+		if(empty($year) || empty($month) ){
+			return redirect()->route('lists.attendance');
+		}
+		$data['month'] = $month;
+		$data['year'] =  $year;
 		if($request->isMethod('post')){
 			$data['year']	= $request['import_year'];
 			$data['month']	= $request['import_month'];
 		}
 		return view('organization.attendance.attendance_import',compact('data'));
 	}
-
-
-
-	public function attendance_import(Request $request)
-	{
-
+	/**
+	*excel upload
+	*
+	*/
+	protected function upload_import($request , $orgID){
+		$storage_path = env('USER_FILES_PATH').'_'.$orgID.'/hrm_attendance_import_files';
 		$file = $request->file('attendance_file');
+		$file_name = str_random(13).$file->getClientOriginalName();
+		$file->move($storage_path, $file_name);
+		
+		
 
+		
+		return $storage_path.'/'.$file_name;
+	}
+
+	protected function read_import_file($file_name){
+		$data =''; 
+		Excel::load($file_name, function ($reader)use(&$data)
+		{
+			$reader->noHeading();
+			$data = json_decode(json_encode($reader->get()[1]) , true);
+		});
+		unset($data[0] , $data[1]); 
+			$all_data = array_slice($data, 0);
+		return $all_data;
+	}
+
+	/*
+	*check validation 
+	*
+	*
+	*/
+	protected function validate_import_request($request, $file){
 		$this->validate($request, [
         'attendance_file' => 'required',
         'title'=>'required'
       
     	]);
-    	
 		$validator = Validator::make(
 			    [
 			        'file'      => $file,
@@ -116,26 +145,36 @@ class AttendanceController extends Controller
 			        'extension'      => 'required|in:csv,xls,xlsx,XLS',
 			    ]
 			);
+		return $validator;
+	}
+	/**
+	* excel Attendance sheet Data handle 
+	*/
+	protected function import_data_handling($data){
 
-		if ($validator->fails()) {
+	}
+	public function attendance_import(Request $request)
+	{
+		$checkStatus = '';
+		$orgID = Session::get('organization_id');
+		$file = $request->file('attendance_file');
+		if ($this->validate_import_request($request, $file)->fails()) {
         	return back();
     	}
 		if($request->file('attendance_file'))
-		{	
-			$orgID = Session::get('organization_id');
-			$storage_path = env('USER_FILES_PATH').'_'.$orgID.'/hrm_attendance_import_files';
-			$file = $request->file('attendance_file');
-			$file_name = str_random(13).$file->getClientOriginalName();
-			$file->move($storage_path, $file_name);	
-			$checkStatus = '';
-            
-		Excel::load($storage_path.'/'.$file_name, function ($reader)use($request,&$checkStatus)
+		{
+            $file_name = $this->upload_import($request ,$orgID);
+            $data = $this->read_import_file($file_name);
+            $this->import_data_handling
+            dd($data);
+		Excel::load($file_name, function ($reader)use($request,&$checkStatus)
 		{	
 			$reader->noHeading();
-
 			$all_data = json_decode(json_encode($reader->get()[1]) , true);
 			unset($all_data[0] , $all_data[1]); 
 			$all_data = array_slice($all_data, 0);
+			// $this->importExcelSheet($all_data);
+
 			$keys = "abc";
 			$i = 1;
 			$dates = explode('~',$all_data[0][2]);
@@ -286,7 +325,7 @@ class AttendanceController extends Controller
 // dd($checkStatus);
 
 	if(!Session::has('error')){
-		Session::flash('success','File upload successfully!');
+		Session::flash('success',' File upload successfully!');
 		$attendanceFile = new AttendanceFile();
 		$attendanceFile->title = $request->title;
 		$attendanceFile->name =  $file_name;

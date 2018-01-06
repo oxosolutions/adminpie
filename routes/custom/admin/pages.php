@@ -1,5 +1,10 @@
 <?php
 	
+    Route::get('create/page',   ['as'=> 'create.pages' , 'uses' => 'PagesController@create']);
+    Route::post('/store/pages', ['as'=> 'store.pages' , 'uses' => 'PagesController@store']);
+    Route::get('pages',         ['as'=> 'admin.pages' , 'uses' => 'PagesController@listPages']);
+
+
 	Route::match(['post','get'],'page/view/{id}',['as' => 'admin.page.view' , 'uses' => 'PagesController@viewPageById']);
 	Route::match(['post','get'],'pages/{slug}',['as' => 'admin.page.slug' , 'uses' => 'PagesController@viewPage']);
 

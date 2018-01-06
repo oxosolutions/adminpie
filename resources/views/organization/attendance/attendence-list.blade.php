@@ -151,6 +151,7 @@ $page_title_data = array(
                     		<input type="hidden" name="import_month" value="{{$i}}">
                             {!! Form::submit('Import',['class'=>'special-btn']) !!}
                         {!! Form::close() !!}
+                        <a href="{{route('import.form.attendance',['year'=>$data['year'],'month'=>$i])}}">import</a>
                     </div>
                     <div class="ac l14">
                         
