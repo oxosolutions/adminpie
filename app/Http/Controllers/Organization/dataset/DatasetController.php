@@ -19,14 +19,36 @@ use App\Model\Organization\Collaborator;
 use App\Model\Admin\GlobalOrganization;
 class DatasetController extends Controller
 {
+
+    protected $GoogleSpreadsheet = 'https://docs.google.com/spreadsheet/pub?key=<sheetCode>&single=true&gid=<gridid>&output=csv';
+
    /**
      * apiDataset
      * @param  Request $request [posted data]
      * @return [route]           [will redirect back]
-     by paljinder Singh
+     by paljinder Singh, rahul
      */
      protected function get_columns($data){
-        $columns =null;
+        static $columns = [];
+        foreach($data as $fieldKey => $field){
+            if(!array_key_exists('blank',$field)){
+                if(array_key_exists('children',$field)){
+                    $columns[] = $field['id'];
+                    $columns = $this->get_columns($field['children']);
+                }else{
+                    $columns[] = $field['id'];
+                }
+            }else{
+                if(array_key_exists('children',$field)){
+                    $columns = $this->get_columns($field['children']);
+                }
+            }
+        }
+        return $columns;
+     }
+
+     /*
+     $columns =null;
         foreach ($data as $key => $value) {
             if(isset($value['children'])){
                 if(!empty($this->get_columns($value['children']))){
@@ -43,7 +65,7 @@ class DatasetController extends Controller
             }
         } 
          return $columns;
-     }
+      */
 
      protected function dataset_table_column($dataset_table){
         $check_columns =   DB::table($dataset_table);
@@ -73,7 +95,7 @@ class DatasetController extends Controller
             $organization_slug = $go->slug;
             $active_code =  $go->active_code;
             $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false); 
-                    
+
             if($meta_fields){
                 $data['meta_fields']   =  json_decode($meta_fields,true);
                 
@@ -84,9 +106,9 @@ class DatasetController extends Controller
                 $data['link'] = url('/api/dataset/'.$active_code.'/'.$token);
                // $data['res'] = $this->api_response('123456',$token );
             }
+
             if(!empty($data['columns'])) {
                 if($request->isMethod('post')){
-                    http_response_code(500);
                     $fields = json_decode($request->data, true);
                     if(empty($fields)){
                         $data['error'] = 'Fields not set to build api.';
@@ -108,6 +130,7 @@ class DatasetController extends Controller
                     $data['link'] = url('/api/dataset/'.$active_code.'/'.$token);
                     return $data;
                 }
+
             }else{
                  Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset table columns does not exist!');
                 return redirect()->route('list.dataset');
@@ -120,29 +143,59 @@ class DatasetController extends Controller
     }
 
     protected function manipulation_data($query_data, $fields, $data){
-         foreach (json_decode($query_data, true) as $rKey => $rValue) {
-                        foreach ($fields as $fKey => $fValue) {
-                            if(!isset($fValue['children']) && !isset($fValue['blank'])) {
-                                $col_val = $data['columns'][$fValue['id']];
-                                $res[$rKey][$col_val] =  $rValue[$fValue['id']];
-                            }elseif(isset($fValue['children']) && !isset($fValue['blank'])){
-                                   $col = $data['columns'][$fValue['id']];
-                                  
-                                   foreach ($fValue['children'] as $cKey =>$cValue) {
-                                    $child_col = $data['columns'][$cValue['id']];
-                                    $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
-                                }
-                            }elseif(isset($fValue['children']) && isset($fValue['blank'])){
-                                   $col = $fValue['id'];
-                                   foreach ($fValue['children'] as $cKey =>$cValue) {
-                                    $child_col = $data['columns'][$cValue['id']];
-                                    $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
-                                }
-                            }
-                        }
-                       }
-            return $res;
+
+        // dd($fields);
+        // dd(json_decode($query_data,true));
+        $preparedData = [];
+        foreach (json_decode($query_data, true) as $rKey => $datasetData) {
+            foreach ($fields as $fieldKey => $field) {
+                dd($this->recursiveData($datasetData,$field));
+            }
+        }
+        return $res;
     }
+
+    protected function recursiveData($datasetData,$field, $prepareField = []){
+        if(!array_key_exists('blank',$field)){
+            $prepareField[$field['id']] = $datasetData[$field['id']];
+            if(array_key_exists('children',$field))
+            dd($prepareField);
+        }else{
+            if(array_key_exists('children',$field)){
+                foreach($field['children'] as $cKey => $children){
+                    $prepareField[$field['id']][] = $this->recursiveData($datasetData,$children,$prepareField);
+                }
+            }else{
+                $prepareField[$field['id']] = '';
+            }
+        }
+        return $prepareField;
+        // dd($field);
+    }
+    /*
+    foreach (json_decode($query_data, true) as $rKey => $rValue) {
+        foreach ($fields as $fKey => $fValue) {
+            if(!isset($fValue['children']) && !isset($fValue['blank'])) {
+                $col_val = $data['columns'][$fValue['id']];
+                $res[$rKey][$col_val] =  $rValue[$fValue['id']];
+            }elseif(isset($fValue['children']) && !isset($fValue['blank'])){
+               $col = $data['columns'][$fValue['id']];
+              
+               foreach ($fValue['children'] as $cKey =>$cValue) {
+                    $child_col = $data['columns'][$cValue['id']];
+                    $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
+                }
+            }elseif(isset($fValue['children']) && isset($fValue['blank'])){
+               $col = $fValue['id'];
+               foreach ($fValue['children'] as $cKey =>$cValue) {
+                    $child_col = $data['columns'][$cValue['id']];
+                    $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
+                }
+            }
+        }
+    }
+    return $res; 
+     */
 
      protected function api_data_result($fields , $dataset_table){
         $data =  DB::table($dataset_table)->select($fields)->where('status',1);
@@ -298,6 +351,13 @@ class DatasetController extends Controller
         if($request->import_source == 'file_on_server'){
             $rules['file_path'] = 'required';
         }
+        if($request->import_source == 'from_api'){
+            $rules['api_url'] = 'required';
+        }
+        if($request->import_source == 'google'){
+            $rules['uri'] = 'required';
+            $rules['grid_id'] = 'required';
+        }
         $this->validate($request,$rules);
     }
 
@@ -337,9 +397,23 @@ class DatasetController extends Controller
 
                 case'file_on_server':
                 case'url':
+                case'google':
+                case'from_api':
                     if($request->import_source == 'file_on_server'){
                         $filename = explode('/',$request->file_path);
                         $dowunloadLink = $filename;
+                    }elseif($request->import_source == 'google'){
+                        $prepareGoogleSheetResult = $this->prepareCSVFromGoogleSpreadSheet($request);
+                        if(!$prepareGoogleSheetResult){
+                            return back();
+                        }
+                        $filename =explode('/',$filePath.'/google_spread_sheet.csv');
+                        $dowunloadLink = $filePath.'/'.'google_spread_sheet.csv';
+
+                    }elseif($request->import_source == 'from_api'){
+
+                        $prepareApiResult = $this->prepareApiResponseToCSV($request,$filePath);
+
                     }else{
                         $filename = explode('/',$request->url);
                         $dowunloadLink = $request->url;
@@ -362,27 +436,6 @@ class DatasetController extends Controller
                     }
                     
                 break;
-                //##### Code Repeat 
-                /*case'url':
-                    $filename = explode('/',$request->url);
-                    $filename = $filename[count($filename)-1];
-                    $newFilename = 'downloaded_dataset_'.time().'.'.File::extension($filename);
-                    $fileExt = File::extension($filename);
-                    copy($request->url, $filePath.'/'.$newFilename);
-                    switch($request->add_replace){
-                        case'new':
-                            $dataset_id = $this->insertNewDatasetRecord($request,$filePath,$newFilename);
-                            $fileimportStatus = $this->processFileImport($filePath,$newFilename,$fileExt,$dataset_id);
-                        break;
-                        case'append':
-                            $dataset_id = $this->appendDataset($request,$fileExt,$newFilename,$filePath);
-                        break;
-                        case'replace':
-                            $dataset_id = $this->replaceDataset($request,$fileExt,$newFilename,$filePath);
-                        break;
-                    }
-                break;*/
-
                 case'from_survey':
                     switch($request->add_replace){
                         case'new':
@@ -418,6 +471,43 @@ class DatasetController extends Controller
             throw $e;
         }
         
+    }
+
+    protected function prepareApiResponseToCSV($request,$filePath){
+        $api_url = $request->api_url;
+        $content = file_get_contents($api_url);
+        if(json_decode($content,true) != null){
+            $arrayData = json_decode($content,true);
+            dd($arrayData);
+            Excel::create('api_dataset_file',function($excel) use ($arrayData){
+                $excel->sheet('Sheetname', function($sheet) use ($arrayData){
+                    $sheet->fromArray($arrayData);
+                });
+            })->store('csv',$filePath);
+        }
+        dd('Done');
+    }
+
+    protected function prepareCSVFromGoogleSpreadSheet($request){
+        $link = str_replace('<sheetCode>',$request->uri,$this->GoogleSpreadsheet);
+        $link = str_replace('<gridid>',$request->grid_id,$link);
+        $spreadsheet_data = [];
+        if (($handle = fopen($link, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000000, ",")) !== FALSE) {
+                if(empty($data) || $data[0] == null){ // in case if there is no data or un-published sheet
+                    Session::flash('error','Unable to access google sheet!');
+                    return false;
+                }
+                $spreadsheet_data[] = $data;
+            }
+            fclose($handle);
+        }
+        Excel::create('google_spread_sheet',function($excel) use ($spreadsheet_data){
+            $excel->sheet('Sheetname', function($sheet) use ($spreadsheet_data) {
+                    $sheet->fromArray($spreadsheet_data,null,'A1',false,false);
+                });
+        })->store('csv',$filePath);
+        return true;
     }
 
     protected function processSurveyToDataset($survey_id,$dataset_id){

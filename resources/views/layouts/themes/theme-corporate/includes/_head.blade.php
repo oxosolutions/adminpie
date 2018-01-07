@@ -5,11 +5,11 @@
 	<title>Aione Framework</title>
 
 	<!-- Global stylesheets -->
-	<link rel="stylesheet" type="text/css" href="http://manage.aioneframework.com/aioneframework/assets/css/aione.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.aioneframework.com/assets/css/aione.min.css">
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:100,300,400,600,800">
-	<link rel="stylesheet" type="text/css" href="http://manage.aioneframework.com/template-docs/assets/css/theme-docs.css">
-	<script type="text/javascript" src="http://manage.aioneframework.com/aioneframework/assets/js/vendor.min.js"></script>
-	<script type="text/javascript" src="http://manage.aioneframework.com/aioneframework/assets/js/aione.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://aioneframework.com/template-corporate/assets/css/style.css">
+	<script type="text/javascript" src="https://cdn.aioneframework.com/assets/js/vendor.min.js"></script>
+	<script type="text/javascript" src="https://cdn.aioneframework.com/assets/js/aione.min.js"></script>
 	
 	{!! @$design_settings['custom_content_head']!!}
 	<style type="text/css">

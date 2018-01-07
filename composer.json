@@ -39,7 +39,8 @@
             "App\\": "app/",
             "PHPMySQLWrapper\\MySQLWrapper\\" : "packages/phpmysqlwrapper/mysqlwrapper/src",
             "OxoSolutions\\Menu\\" : "packages/oxosolutions/laravel-menu/src",
-            "OxoSolutions\\DomainManagement\\" : "packages/oxosolutions/domain-management/src"
+            "OxoSolutions\\DomainManagement\\" : "packages/oxosolutions/domain-management/src",
+            "OxoSolutions\\GoogleClient\\" : "packages/oxosolutions/laravel-google-client/src"
         },
         "files": ["app/Helpers/widget_function.php", "app/Helpers/global_helper.php", "app/Helpers/aione_forms.php"]
     },

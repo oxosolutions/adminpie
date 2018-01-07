@@ -448,9 +448,13 @@ $page_title_data = array(
 			</div>
 		</div>
 		<div class="ac l30">
-			<div class="aione-border info-card" >
-				<div class="row valign-wrapper mb-0">
-					<div class="col l10 headline-text" >Contact Detail</div>
+
+			<div class="aione-border" >
+				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+					Contact Details
+				</div>
+				<div class="ar">
+					{{-- <div class="col l10 headline-text" >Contact Detail</div> --}}
 					<div class="col l2" id="modal-wrapper">
 						<a href="#modal2" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 						{!!Form::model(@$model,['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
@@ -483,13 +487,15 @@ $page_title_data = array(
 					//if role has permission to this widget
 				@endphp
 				@if(@$isEmployee || @$isAdmin)
-					<div class="card info-card" >
-
-							<div class="row valign-wrapper mb-0">
-								<div class="col l10 headline-text" >Employee Detail</div>
-								<div class="col l2 " id="modal-wrapper">
+					<div class="aione-border info-card" >
+							<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+								Employee Details
+							</div>
+							<div class="ar mb-0">
+								{{-- <div class="col l10 headline-text" >Employee Detail</div> --}}
+								<div class="ac l100 " id="modal-wrapper">
 										@if(@$isAdmin)
-											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect"> <i class="fa fa-pencil"></i></a>
+											<a href="#modal3" class="grey-text darken-1 edit-button waves-effect" style="float: right"> <i class="fa fa-pencil float-right" style="float: right;"></i></a>
 										@endif
 									{!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 									<input type="hidden" name="meta_table" value="employeemeta" />
@@ -499,13 +505,13 @@ $page_title_data = array(
 								</div>
 								
 							</div>
-							<div class="row" >
+							<div class="ar" >
 								@foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
-									<div class="row mb-0" >
-										<div class="col l12 subhead-wrapper" >
+									<div class="ar " >
+										<div class="ac l100 subhead-wrapper" >
 											<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
 										</div>
-										<div class="col l12 details-wrapper" >
+										<div class="ac l100 details-wrapper" >
 
 											@php
 												$fieldData = str_replace(' ', '_', strtolower($field));
@@ -545,10 +551,13 @@ $page_title_data = array(
 							</div>
 					</div>
 
-					<div class="card info-card" >
-						<div class="row valign-wrapper mb-0">
-							<div class="col l10 headline-text" >Bank Details</div>
-							<div class="col l2" id="modal-wrapper">
+					<div class="aione-border info-card" >
+						<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+							Bank Details
+						</div>
+						<div class="ar ">
+							{{-- <div class="col l10 headline-text" >Bank Details</div> --}}
+							<div class="ac l100" id="modal-wrapper">
 								@if($isAdmin)
 									<a href="#modal4" class="grey-text darken-1 edit-button waves-effect"><i class="fa fa-pencil"></i></a>
 								@endif
@@ -562,7 +571,7 @@ $page_title_data = array(
 								{!!Form::close()!!}
 							</div>
 						</div>
-						<div class="row" >
+						<div class="ar" >
 							@php
 								$data = [];
 							@endphp

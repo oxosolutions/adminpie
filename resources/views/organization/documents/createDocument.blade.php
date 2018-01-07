@@ -1,11 +1,13 @@
 @extends('layouts.main')
 @section('content')
+
 	@php
+
 		$page_title_data = array(
 			'show_page_title' => 'yes',
 			'show_add_new_button' => 'yes',
 			'show_navigation' => 'yes',
-			'page_title' => 'Create Document',
+			'page_title' => 'Edit Document',
 			'add_new' => 'All Documents',
 			'route' => 'documents'
 		);
@@ -25,35 +27,42 @@
 			});
 		</script>
 	@endif
-	<div class="row main-dashboard">
-		<div class="col l9 pl-7" style="width: 70%;float: left">
-			@if(@$document != null)
-				{!! Form::model($document,['route' => 'update.documents','method' => 'POST']) !!}
-				{!! Form::hidden('id',null) !!}
-			@else
-				{!! Form::open(['route' => 'save.documents','method' => 'POST']) !!}
-			@endif
-				{!! FormGenerator::GenerateSection('document',['type'=>'inset']) !!}
-					<button type="submit">Create Document</button>
-				{!! Form::close() !!}
+	<div class="ar main-dashboard">
+		<div class="ac l75" >
+			<div class="aione-border">
+				<div class="bg-grey bg-lighten-3 p-10 font-size-20">
+					Document Info
+				</div>
+				@if(@$document != null)
+					{!! Form::model($document,['route' => 'update.documents','method' => 'POST']) !!}
+					{!! Form::hidden('id',null) !!}
+				@else
+					{!! Form::open(['route' => 'save.documents','method' => 'POST']) !!}
+				@endif
+					{!! FormGenerator::GenerateSection('document',['type'=>'inset']) !!}
+						<button type="submit">Create Document</button>
+					{!! Form::close() !!}
+			</div>
+				
 		</div>
 
 		@if(request()->route()->parameters() != null)
-			<div class="col l3 pl-7" style="width: 30%;float: left">
-
+			<div class="ac l25" >
+				<div class="bg-grey bg-lighten-3 p-10 font-size-20">
+					Actions
+				</div>
 				{!! Form::open(['method' => 'post' , 'route' => 'document.send']) !!}
-					<div class="card">
-						<div class="content" >
-							
-							<div class="field">
-								<div id="field_send_to" class="field-wrapper field-wrapper-send_to field-wrapper-type-select ">
+						<div class="aione-border p-10">
+							<div>
+						
+								<div  class="field-wrapper field-wrapper-send_to field-wrapper-type-select ">
 									<div id="field_label_select_status" class="field-label">
 										<label for="input_select_status">
 											<h4 class="field-title" id="select_fiellds">Select Fields</h4>
 										</label>
 									</div>
 									<div id="field_send_to" class="field field-type-multi_select">
-										{!!Form::select('send_to[]',['all'=>'All','designation'=>'By Designation','department'=>'By Department','shift'=>'By Shifts','roles'=>'By Roles','users'=>'By Users'],null,['class'=>'filter','style' => 'color:black'])!!}
+										{!!Form::select('send_to[]',['all'=>'All','designation'=>'By Designation','department'=>'By Department','shift'=>'By Shifts','roles'=>'By Roles','users'=>'By Users'],null,['class'=>'filter browser-default ','style' => 'color:black'])!!}
 
 									</div><!-- field -->
 								</div>
@@ -168,9 +177,9 @@
 							</div>
 
 							<input type="hidden" name="document_id" value="{{ request()->route()->parameters()['id'] }}">
-						</div>
+					
 						<button type="submit">Send</button>
-					</div>
+						</div>
 				{!! Form::close() !!}
 
 			</div> 

@@ -150,53 +150,13 @@ class AttendanceController extends Controller
 	/**
 	* excel Attendance sheet Data handle 
 	*/
-	protected function import_data_handling($data){
-
-	}
-	public function attendance_import(Request $request)
-	{
-		$checkStatus = '';
-		$orgID = Session::get('organization_id');
-		$file = $request->file('attendance_file');
-		if ($this->validate_import_request($request, $file)->fails()) {
-        	return back();
-    	}
-		if($request->file('attendance_file'))
-		{
-            $file_name = $this->upload_import($request ,$orgID);
-            $data = $this->read_import_file($file_name);
-            $this->import_data_handling
-            dd($data);
-		Excel::load($file_name, function ($reader)use($request,&$checkStatus)
-		{	
-			$reader->noHeading();
-			$all_data = json_decode(json_encode($reader->get()[1]) , true);
-			unset($all_data[0] , $all_data[1]); 
-			$all_data = array_slice($all_data, 0);
-			// $this->importExcelSheet($all_data);
-
-			$keys = "abc";
+	protected function import_data_handling($data, $year, $month_year, $month, $dates, $daysInMonth){
+		// $month_year = date('m-Y', strtotime($datee[0]));
+		// $year = date('Y', strtotime($datee[0]));
+		$keys = "abc";
 			$i = 1;
-			$dates = explode('~',$all_data[0][2]);
-			$month_year = date('m-Y', strtotime($dates[0]));
-			$year = date('Y', strtotime($dates[0]));
-			$month = date('m', strtotime($dates[0]));
-			$check_month = str_replace(0,'', $month);
-			if(!empty($request['year']) && !empty($request['month']) && $request['month'] != $check_month && $request['year'] != $year){
-				Session::flash('error','Not match Month & yearmyyyy.');
-				$checkStatus = "not-match-month-year";
-				return false;
-			}
-			$check_attendance = Attendance::where(['year'=>$year,'month'=>$month,'lock_status'=>0])->count();	
-			if($check_attendance>0)
-			{
-				Session::flash('error','This month attendance locked!');
-			return redirect()->route('list.attendance');
-			}else{						
-				foreach($all_data as $logkey => $logvalue){				
-					if ($logvalue[0] == "Period :"){
-
-					}
+            foreach($data as $logkey => $logvalue){				
+					if ($logvalue[0] == "Period :"){}
 					if ($logvalue[0] == "No :"){
 						foreach($logvalue as $log_val_key => $log_value){
 							if (is_null($log_value)){
@@ -224,14 +184,14 @@ class AttendanceController extends Controller
 					}
 				}
 				foreach ($employee as $key => $value) {
-
 					$employee_id = $value['employee_id'];
 					$limitDays = 1;
-					$dt  = carbon::parse(date('Y-m-d',strtotime($dates[0])));
-				  	$endLimit = $dt->daysInMonth;
+					
+				  	
+
 				if(isset($value['attendence'])){
  					foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
-						if($limitDays > $endLimit){
+						if($limitDays > $daysInMonth){
 							break; 
 						}
 						$pus_in_out =null;
@@ -318,24 +278,45 @@ class AttendanceController extends Controller
 					}
 					}									
 				 }
-		}	
-		
-		});
-
-// dd($checkStatus);
-
-	if(!Session::has('error')){
-		Session::flash('success',' File upload successfully!');
-		$attendanceFile = new AttendanceFile();
-		$attendanceFile->title = $request->title;
-		$attendanceFile->name =  $file_name;
-		$attendanceFile->save(); 
-	}else{
-		if(!empty($checkStatus) && $checkStatus =='not-match-month-year')
-		return redirect()->route('lists.attendance');
+			return $employee;
 	}
-		// return redirect()->route('import.form.attendance');
-		return redirect()->route('attendance.files');
+	/**
+	* file save
+	*
+	*/
+	protected function import_file_save($title , $file_name){
+				Session::flash('success',' File upload successfully!');
+				$attendanceFile = new AttendanceFile();
+				$attendanceFile->title = $title;
+				$attendanceFile->name =  $file_name;
+				$attendanceFile->save(); 
+	}
+	public function attendance_import(Request $request)
+	{
+		$checkStatus = ''; $orgID = Session::get('organization_id'); $file = $request->file('attendance_file');
+		if ($this->validate_import_request($request, $file)->fails()) {
+        	return back();
+    	}
+		if($request->file('attendance_file')) {	
+			$file_name = $this->upload_import($request ,$orgID);
+            $data = $this->read_import_file($file_name);
+            $dates = explode('~',$data[0][2]);
+			$month_year = date('m-Y', strtotime($dates[0]));
+			$year = date('Y', strtotime($dates[0]));
+			$check_month = $month = date('m', strtotime($dates[0]));
+			$daysInMonth = cal_days_in_month(CAL_GREGORIAN,$month,$year);
+			 if(starts_with($month, 0)){
+				$check_month = str_replace(0,'', $month);
+			 }
+			if(!empty($request['year']) && !empty($request['month']) && $request['month'] != $check_month || $request['year'] != $year){
+				Session::flash('error','Not match Month & year.');
+				return redirect()->route('import.form.attendance',['year'=>$request['year'],'month'=>$request['month']]);
+			}
+        	$this->import_data_handling($data, $year, $month_year, $month, $dates, $daysInMonth);
+			if(!Session::has('error')){
+				$this->import_file_save($request->title, $file_name);
+			}
+			return redirect()->route('attendance.files');
 		}
 	}
 

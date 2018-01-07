@@ -6,8 +6,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Add Ticket',
-	'add_new' => 'All Ticket',
-	'route' => 'add.ticket'
+	'add_new' => 'All Tickets',
+	'route' => 'active.tickets'
 );
 @endphp 
 @include('common.pageheader',$page_title_data)

@@ -6,7 +6,10 @@ use Artisan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\FormBuilder;
+use App\Model\Organization\FormBuilder as OrgFormFields;
 use App\Model\Admin\forms as forms;
+use App\Model\Organization\forms as orgForms;
+use App\Model\Organization\FieldMeta as orgFieldMeta;
 use App\Model\Admin\FormsMeta;
 use App\Model\Admin\section as sec;
 use App\Model\Admin\SectionMeta as SM;
@@ -16,7 +19,7 @@ use App\Model\Organization\FormData;
 use Session;
 use Auth;
 use Schema;
-
+use FormGenerator;
 class FormBuilderController extends Controller
 {
     public function formTable()
@@ -1068,6 +1071,32 @@ class FormBuilderController extends Controller
     }
 
     /**
+     * Validate posted data by form (user validations)
+     * @param  [type] $request [having all posted data]
+     * @return [type]          [description]
+     * @author Rahul
+     */
+    protected function validatePostedFormRequest($request){
+        $rules = [];
+        $form_id = $request->form_id;
+        $model = OrgFormFields::with(['fieldMeta'])->where(['form_id'=>$form_id])->get();
+        foreach($model as $key => $field){
+            $metaValidation = FormGenerator::GetMetaValue($field->fieldMeta,'field_validations');
+            if($metaValidation != null && $metaValidation != ''){
+                $validations = json_decode($metaValidation,true);
+                $validationString = [];
+                foreach($validations as $index => $validation){
+                    if(in_array($validation['field_validation'],['required','email','url','date'])){
+                        $validationString[] = $validation['field_validation'];
+                    }
+                }
+                $rules[$field->field_slug] = implode('|',$validationString);
+            }
+        }
+        $this->validate($request,$rules);
+    }
+
+    /**
      * That method will create table of specific form and save its data
      * into the table
      * @param  Request $request [form request or posted data]
@@ -1075,6 +1104,7 @@ class FormBuilderController extends Controller
      * @author Rahul
      */
     public function saveGeneratedForm(Request $request){
+        $this->validatePostedFormRequest($request);
         $organization_id = get_organization_id();
         $form_id = $request->form_id;
         if(!Schema::hasTable($organization_id.'_form_data_'.$form_id)){

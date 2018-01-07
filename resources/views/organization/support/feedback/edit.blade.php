@@ -6,8 +6,8 @@
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
 	'page_title' => 'Edit Feedback',
-	'add_new' => '+ Add Feedback',
-	'route' => 'add.feedback'
+	'add_new' => 'List Feedback',
+	'route' => 'list.feedback'
 ); 
 
 @endphp
