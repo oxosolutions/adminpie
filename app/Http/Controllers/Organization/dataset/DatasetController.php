@@ -144,33 +144,37 @@ class DatasetController extends Controller
 
     protected function manipulation_data($query_data, $fields, $data){
 
-        // dd($fields);
-        // dd(json_decode($query_data,true));
         $preparedData = [];
         foreach (json_decode($query_data, true) as $rKey => $datasetData) {
             foreach ($fields as $fieldKey => $field) {
-                dd($this->recursiveData($datasetData,$field));
+                $preparedData[] = $this->recursiveData($datasetData,$field);
             }
         }
-        return $res;
+        return $preparedData;
     }
 
     protected function recursiveData($datasetData,$field, $prepareField = []){
+        
         if(!array_key_exists('blank',$field)){
-            $prepareField[$field['id']] = $datasetData[$field['id']];
-            if(array_key_exists('children',$field))
-            dd($prepareField);
+            try{
+                $prepareField[$field[0]['id']] = $datasetData[$field[0]['id']];
+            }catch(\Exception $e){
+                $prepareField[$field['id']] = $datasetData[$field['id']];
+            }
+            if(array_key_exists('children',$field)){
+
+                array_push($prepareField, $this->recursiveData($datasetData,$field['children'],$prepareField));
+            }
         }else{
             if(array_key_exists('children',$field)){
                 foreach($field['children'] as $cKey => $children){
                     $prepareField[$field['id']][] = $this->recursiveData($datasetData,$children,$prepareField);
                 }
             }else{
-                $prepareField[$field['id']] = '';
+                $prepareField[$field[0]['id']] = $datasetData[$field[0]['id']];
             }
         }
         return $prepareField;
-        // dd($field);
     }
     /*
     foreach (json_decode($query_data, true) as $rKey => $rValue) {
