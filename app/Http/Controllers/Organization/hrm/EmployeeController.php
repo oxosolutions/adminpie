@@ -38,26 +38,36 @@ class EmployeeController extends Controller
     {
         $this->user = $user;
     }
+    /**
+    *Export employee @author Paljinder singh
+    */
     public function export(){
-        $group_user = GroupUsers::select(['id','name','password','email'])->with( ['metas','user_role_rel.roles'])->has('organization_employee_user')->get();
-        $data =$group_user->map(function($item, $key){
-            if(!empty($item['user_role_rel'])){
-                $role = array_column(array_column(json_decode($item['user_role_rel'],true), 'roles'),'name');
-                $role_value = implode(', ',$role);
-            }
-            $meta =  array_column(json_decode($item['metas'],true), 'value','key');
-            $meta_value = $this->metas_value($meta);
-            return ['name' => @$item['name'], 'email'=>@$item['email'] , 'password'=>$item['password'], 'employee_id'=>@$meta['employee_id'], 'designation'=> @$meta_value['designation'], 'department'=> @$meta_value['department'], 'user_shift'=>@$meta_value['user_shift'], 'pay_scale'=>@$meta_value['pay_scale'] ,'date_of_joining'=>@$meta['date_of_joining'], 'role'=>$role_value  ];
-        });
-        Excel::create('Employees-List-'.date('Y-m-d H i s'), function($excel) use($data) {
-                $excel->sheet('Employees List', function($sheet) use($data) {
-                    $sheet->fromArray($data);
-                    $sheet->row(1, array_keys($data[0]));
-                    $sheet->row(1, function($row){
-                        $row->setFontWeight('bold');
+
+        $group_user = GroupUsers::select(['id','name','password','email'])->with( ['metas','user_role_rel.roles'])->has('organization_employee_user');
+        if($group_user->exists()){
+            $group_user = $group_user->get();
+            $data =$group_user->map(function($item, $key){
+                if(!empty($item['user_role_rel'])){
+                    $role = array_column(array_column(json_decode($item['user_role_rel'],true), 'roles'),'name');
+                    $role_value = implode(', ',$role);
+                }
+                $meta =  array_column(json_decode($item['metas'],true), 'value','key');
+                $meta_value = $this->metas_value($meta);
+                return ['name' => @$item['name'], 'email'=>@$item['email'] , 'password'=>$item['password'], 'employee_id'=>@$meta['employee_id'], 'designation'=> @$meta_value['designation'], 'department'=> @$meta_value['department'], 'user_shift'=>@$meta_value['user_shift'], 'pay_scale'=>@$meta_value['pay_scale'] ,'date_of_joining'=>@$meta['date_of_joining'], 'role'=>$role_value  ];
+            });
+            Excel::create('Employees-List-'.date('Y-m-d H i s'), function($excel) use($data) {
+                    $excel->sheet('Employees List', function($sheet) use($data) {
+                        $sheet->fromArray($data);
+                        $sheet->row(1, array_keys($data[0]));
+                        $sheet->row(1, function($row){
+                            $row->setFontWeight('bold');
+                        });
                     });
-                });
-           })->export('csv');
+               })->export('csv');
+        }else{
+            Session::flash('error','Employee not exists.');
+            return back();
+        }
     }
 
     protected function metas_value($metas){

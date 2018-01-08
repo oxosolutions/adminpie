@@ -32,6 +32,11 @@ class AttendanceController extends Controller
 	{
 		return view('common.Designattendances');
 	}
+	/**
+	*Check in & check out 
+	@author Paljinder singh
+	*/
+
 	public function check_in_out(Request $request)
 	{
 		$u_id = Auth::guard('org')->user()->id;
@@ -83,6 +88,10 @@ class AttendanceController extends Controller
 
 		return ['message'=>'successfully '];
 	}
+	/**
+	*Import attendance form
+	*
+	*/
 	public function import_form(Request $request, $year=null, $month=null)
 	{	
 		if(empty($year) || empty($month) ){
@@ -125,9 +134,9 @@ class AttendanceController extends Controller
 	}
 
 	/*
-	*check validation 
+	*check validation Import attendance
 	*
-	*
+	*@author Paljinder Singh
 	*/
 	protected function validate_import_request($request, $file){
 		$this->validate($request, [
