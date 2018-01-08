@@ -31,9 +31,7 @@ $page_title_data = array(
 @endif
 
 
-@if(Session::has('error'))
-<p class="alert">{{ Session::get('error') }}</p>
-@endif
+
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 <div class="row">

@@ -145,7 +145,7 @@ $page_title_data = array(
                     </div>
 
                     <div class="ac l14">
-                        <a href="{{route('import.form.attendance',['year'=>$data['year'],'month'=>$i])}}">import</a>
+                        <a href="{{route('import.form.attendance',['year'=>$data['year'],'month'=>$j])}}">import</a>
                     </div>
                     <div class="ac l14">
                         

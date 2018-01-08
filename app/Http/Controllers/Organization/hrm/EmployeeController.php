@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Organization\hrm;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Organization\Employee as EMP;
 use App\Model\Organization\Designation As DES;
 use App\Model\Organization\Department As DEP;
 use App\Model\Organization\Category as CAT;
@@ -42,7 +41,6 @@ class EmployeeController extends Controller
     *Export employee @author Paljinder singh
     */
     public function export(){
-
         $group_user = GroupUsers::select(['id','name','password','email'])->with( ['metas','user_role_rel.roles'])->has('organization_employee_user');
         if($group_user->exists()){
             $group_user = $group_user->get();
@@ -69,7 +67,9 @@ class EmployeeController extends Controller
             return back();
         }
     }
-
+/*
+*metas value use in export method @author Paljinder singh
+*/
     protected function metas_value($metas){
        // $model = [ "designation" => 'DES', "department" => "DEP", "user_shift" => "Shift", "pay_scale"=>'Payscale' ];
         $data =["designation" => '', "department" => "", "user_shift" => "", "pay_scale"=>'' ];
@@ -460,7 +460,7 @@ class EmployeeController extends Controller
             return false;
         }
     }
-
+/* should delete */
     public function getEmployeeList(Request $request){
         
         if($request->has('order')){
@@ -623,10 +623,7 @@ class EmployeeController extends Controller
     //     $shifts_insert->save();*/
     //     return redirect()->route('list.employee');
     // }
-    function editEmployee()
-    {
-        
-    }
+    /* should delete */
     public function update(Request $request)
     {
         $emp =  EMP::find($request->id);

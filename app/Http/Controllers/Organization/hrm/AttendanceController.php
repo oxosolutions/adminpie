@@ -20,6 +20,7 @@ use Session;
 use Auth;
 use Illuminate\Support\Collection;
 
+
 class AttendanceController extends Controller
 {
  	protected $current_date_data;
@@ -33,9 +34,11 @@ class AttendanceController extends Controller
 		return view('common.Designattendances');
 	}
 	/**
-	*Check in & check out 
-	@author Paljinder singh
-	*/
+     * check_in_out
+     * @param  Request $request [posted data]
+     * @return [route]           [will redirect back]
+     * @author  paljinder Singh, rahul
+     */
 
 	public function check_in_out(Request $request)
 	{
@@ -88,10 +91,13 @@ class AttendanceController extends Controller
 
 		return ['message'=>'successfully '];
 	}
+	
 	/**
-	*Import attendance form
-	*
-	*/
+     * import_form
+     * @param  Request $request [posted data]
+     * @return [route]           [will redirect back]
+     * @author  paljinder Singh, rahul
+     */
 	public function import_form(Request $request, $year=null, $month=null)
 	{	
 		if(empty($year) || empty($month) ){
@@ -105,22 +111,26 @@ class AttendanceController extends Controller
 		}
 		return view('organization.attendance.attendance_import',compact('data'));
 	}
+
 	/**
-	*excel upload
-	*
-	*/
+     * upload_import use in attendance_import method 
+     * @param  Request $request , organization id 
+     * @return file path + name
+     * @author  paljinder Singh
+     */
 	protected function upload_import($request , $orgID){
 		$storage_path = env('USER_FILES_PATH').'_'.$orgID.'/hrm_attendance_import_files';
 		$file = $request->file('attendance_file');
 		$file_name = str_random(13).$file->getClientOriginalName();
 		$file->move($storage_path, $file_name);
-		
-		
-
-		
 		return $storage_path.'/'.$file_name;
 	}
-
+	/**
+     * read_import_file  (read data of file) use in attendance_import method 
+     * @param  file name 
+     * @return attendance data
+     * @author  paljinder Singh
+     */
 	protected function read_import_file($file_name){
 		$data =''; 
 		Excel::load($file_name, function ($reader)use(&$data)
@@ -129,15 +139,16 @@ class AttendanceController extends Controller
 			$data = json_decode(json_encode($reader->get()[1]) , true);
 		});
 		unset($data[0] , $data[1]); 
-			$all_data = array_slice($data, 0);
+		$all_data = array_slice($data, 0);
 		return $all_data;
 	}
 
-	/*
-	*check validation Import attendance
-	*
-	*@author Paljinder Singh
-	*/
+	/**
+     * validate_import_request
+     * @param  request file 
+     * @return Validation result
+     * @author  paljinder Singh
+     */
 	protected function validate_import_request($request, $file){
 		$this->validate($request, [
         'attendance_file' => 'required',
@@ -157,8 +168,11 @@ class AttendanceController extends Controller
 		return $validator;
 	}
 	/**
-	* excel Attendance sheet Data handle 
-	*/
+     * import_data_handling use in attendance_import method 
+     * @param  Attendance data  
+     * @return 
+     * @author  paljinder Singh
+     */
 	protected function import_data_handling($data, $year, $month_year, $month, $dates, $daysInMonth){
 		// $month_year = date('m-Y', strtotime($datee[0]));
 		// $year = date('Y', strtotime($datee[0]));
@@ -290,9 +304,11 @@ class AttendanceController extends Controller
 			return $employee;
 	}
 	/**
-	* file save
-	*
-	*/
+     * import_file_save  (read data of file) use in attendance_import method 
+     * @param  title of file & name  
+     * @return 
+     * @author  paljinder Singh
+     */
 	protected function import_file_save($title , $file_name){
 				Session::flash('success',' File upload successfully!');
 				$attendanceFile = new AttendanceFile();
@@ -300,6 +316,17 @@ class AttendanceController extends Controller
 				$attendanceFile->name =  $file_name;
 				$attendanceFile->save(); 
 	}
+	/**
+     * attendance_import_file  list below include methods 
+     * 1. validate_import_request
+     * 2. upload_import
+     * 3. read_import_file
+     * 4. import_data_handling
+     * 5. import_file_save
+     * @param  file name 
+     * @return attendance data
+     * @author  paljinder Singh
+     */
 	public function attendance_import(Request $request)
 	{
 		$checkStatus = ''; $orgID = Session::get('organization_id'); $file = $request->file('attendance_file');
@@ -314,9 +341,6 @@ class AttendanceController extends Controller
 			$year = date('Y', strtotime($dates[0]));
 			$check_month = $month = date('m', strtotime($dates[0]));
 			$daysInMonth = cal_days_in_month(CAL_GREGORIAN,$month,$year);
-			 if(starts_with($month, 0)){
-				$check_month = str_replace(0,'', $month);
-			 }
 			if(!empty($request['year']) && !empty($request['month']) && $request['month'] != $check_month || $request['year'] != $year){
 				Session::flash('error','Not match Month & year.');
 				return redirect()->route('import.form.attendance',['year'=>$request['year'],'month'=>$request['month']]);
@@ -328,12 +352,22 @@ class AttendanceController extends Controller
 			return redirect()->route('attendance.files');
 		}
 	}
-
-public function attendance_file(){
-	$files = AttendanceFile::all();
-	return view('organization.attendance.attendance_file',['data'=>$files]);
-}
-
+	/**
+     * attendance_file  (read data of file) use in attendance_import method 
+     * @param -
+     * @return view list of fille
+     * @author  paljinder Singh
+     */
+	public function attendance_file(){
+		$files = AttendanceFile::all();
+		return view('organization.attendance.attendance_file',['data'=>$files]);
+	}
+	/**
+     * filter method use in ajax to set filter data for query
+     * @param $request
+     * @return array where
+     * @author  paljinder Singh
+     */
 	protected function filter($request)
 	{
 		$where['month_week_no'] = null;
@@ -369,7 +403,12 @@ public function attendance_file(){
 		}
 		return $where;
 	}
-
+	/**
+     * list_attendance all attendane display here.
+     * @param -
+     * @return view list of fille
+     * @author  paljinder Singh
+     */
 	public function list_attendance(Request $request, $year=null, $month=null)
 	{	
 		$data['year'] = $data['month'] = null;
@@ -383,9 +422,14 @@ public function attendance_file(){
 			];		
  		return view('organization.attendance.attendance',['plugins'=>$plugins, 'data'=>$data]);
 	}
-
+	/**
+     * ajax use for attendance display & filter attendance 
+     * @param -$request
+     * @return attendance data
+     * @author  paljinder Singh
+     */
 	public function ajax(Request $request){
-
+		$leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 		$now = Carbon::now();
 		$where['month'] = $month = $now->subMonth()->month;
 		$where['year']  = $years = $now->year;	
@@ -402,30 +446,29 @@ public function attendance_file(){
 			$year_month  = "$years-$month"; 			
 	 		$dt = Carbon::parse($year_month);	
 		}
-
-		$holidays = Holiday::whereMonth('date_of_holiday',$month)->get();
+		$holidays = Holiday::whereYear('date_of_holiday',$years)->whereMonth('date_of_holiday',$month)->get();
 		$holiday_data = $holidays->mapWithKeys(function($data){
 			$holiday_date = str_replace('0','',date('d', strtotime($data['date_of_holiday'])));
 			return [$holiday_date=> $data['title']];
 		});
 		$user_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
-
-		// dd($group);
-
-		// $user_data = User::with(['metas_for_attendance','belong_group'])->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
-		// dump($user_data);
 		$attendance  =Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
-		 $leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 
 		return view('organization.attendance.attendance_table', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
 	}
-
+/*should be delete*/
 	protected function employee_data($dates){
 		$data = Employee::with(['employ_info.metas', 'designations', 'department', 'department_rel','attendance' =>function($query) use($current_dates){
 				 		$query->where($current_dates);
 					}])->where('status',1)->get();	
 		return $data;
 	}
+	/**
+     * attendance_by_hr use in Mark attendance,  edit
+     * @param -
+     * @return view
+     * @author  paljinder Singh
+     */
 	public function attendance_by_hr(Request $request){	
 
 		$filter_dates = $attendance_data = null;
@@ -435,18 +478,20 @@ public function attendance_file(){
 		}
 		$cDate =	date('Y-m-d',strtotime($current_dates["year"].'-'.$current_dates["month"].'-'.$current_dates["date"]));
 		$employee_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
-		// $employee_data = User::with('metas_for_attendance')->whereHas('metas_for_attendance')->whereIn('user_type',['employee'])->get();
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		if($request->isMethod('post')){
 			$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		}
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);
 	}
-
-
+	/**
+     * attendance_fill_hr  save data
+     * @param -
+     * @return to list attendance
+     * @author  paljinder Singh
+     */
 	public function attendance_fill_hr(Request $request )
 	{
-
 		$conditions = $request['dates'];
 		unset($request['dates']);
 		foreach ($request->all() as $key => $value) {
@@ -493,6 +538,12 @@ public function attendance_file(){
 		}
 		return redirect()->route('list.attendance');
 	}
+	/**
+     * lock_status  lock un-lock attendance
+     * @param - 
+     * @return to list attendance
+     * @author  paljinder Singh
+     */
 	public function lock_status(Request $request){
 		$mo = $request['month'];
 		if(strlen($request['month'])==1){
@@ -514,9 +565,15 @@ public function attendance_file(){
 		Session::flash('attendance_year',$request['year']);
 		return redirect()->route('lists.attendance');
 	}
-	/**
-	 * @author Ashish, paljinder singh
-	 */
+	
+
+/** attendanceList  list accoding to year wise
+     * 
+     * @param - 
+     * @return to list attendance
+     * @author  Ashish, paljinder Singh
+     */
+
 	public function attendanceList(request $request)
 	{
 		$year = date('Y');
@@ -539,7 +596,12 @@ public function attendance_file(){
  		}
 		return view('organization.attendance.attendence-list',compact('data'));
 	}
-
+/** attendance_check  use in attendanceList
+     * 
+     * @param - 
+     * @return to list attendance
+     * @author  Ashish, paljinder Singh
+     */
 	protected function attendance_check($year, $month){
 		$emplyee_ids = UsersMeta::where('key','employee_id')->pluck('value');
 		$daysInMonth = Carbon::parse($year.'-'.$month.'-1')->daysInMonth;

@@ -136,12 +136,10 @@ $number = 1;
 		 {
 		 	if(!empty($fweek_no) || !empty($fdate))
 		 	{
-		 		//$total_days = $fill_attendance_days;
 		 		$total_days = $daysInMonth  =$dat->daysInMonth;
 		 	}
 		 	else{
 		 			$total_days = $daysInMonth  =$dat->daysInMonth;
-
 		 	}
 		 }else{
 		 $total_days = $daysInMonth  =$dat->daysInMonth;
@@ -150,7 +148,6 @@ $number = 1;
 		 $current_year =	$dat->year;
 		 $current_days = $dat->daysInMonth;
 		 $current_date = $dat->day;
-//dump($fweek_no);
 
 //previous days		 
 		$dat->subDay();
@@ -158,26 +155,19 @@ $number = 1;
 		$pre_month = $dat->month;
 		$pre_year = $dat->year;
 
-		// dump("previous day year month date $pre_year $pre_month $pre_date ");
 //next days 
 		$dat->addDays(2);
 		$nxt_date = $dat->day;
 		$nxt_date_month = $dat->month;
 		$nxt_date_year = $dat->year;
-		// dump("Next day year month date $nxt_date_year $nxt_date_month $nxt_date ");
 
 //week 
-// echo $dat->subWeek();
 		$pre_week = $dat->weekOfMonth;
-		//dump($dat->addWeek());
 		$pre_week_month = $dat->month;
 		$pre_week_year = $dat->year;
 
-		
 		if(!empty($fweek_no))
 		{
-
-
 			$weekDate = Carbon\Carbon::create($year, $month, 1, 00);
 			$current_week = $weekDate->weekOfMonth;
 			if($fweek_no==1)
@@ -191,29 +181,38 @@ $number = 1;
 			$nxt_week_month =	$weekDate->month;
 			$nxt_week_year =	$weekDate->year;
 			
-				$weekDate->subWeeks(2); 
-				
+			 
+				$weekDate->subWeeks(2);
+				$prev_week = $weekDate->weekOfMonth;
+				if($nxt_week==2){
+					if($current_month!=3){
+						$prev_week = $prev_week +1;
+					}else{
+						$check_leap_year = Carbon\Carbon::parse('01-02-'.$current_year); 
+						 if($check_leap_year->daysInMonth>28){
+						 	$prev_week = $prev_week +1;
+						 }
+					}
+					
+				}
 			
-
-			$prev_week = $weekDate->weekOfMonth;
+			
 			$prev_week_month =	$weekDate->month;
 		 	$prev_week_year =	$weekDate->year;
-			// dump("previous week $prev_week $prev_week_month $prev_week_year".  $weekDate->toDateTimeString());
+
+		 	
 		}		 
 
 			$previous = $dat->subMonth();
 			$previousMonth = $previous->month;
 			$previousYear  =  $previous->year;
 
-			// dump("previous month year $previousMonth  $previousYear");
 
 			$next = $dat->addMonth(2);
 			$nextMonth = $next->month;
 			$nextYear = $next->year;
-				// dump("next month year $nextMonth  $nextYear");
 
 		$week =4;
-		// dump("total day".$total_days);
 		if($total_days >28)
 		{
 			$week =5;
@@ -226,6 +225,7 @@ $number = 1;
 		$td="";
 		$MO_data = ['01'=>'JAN', '02'=>'FEB', '03'=>'MAR', '04'=>'APR' ,'05'=>'MAY', '06'=>'JUN','07'=>'JUL', '08'=>'AUG','09'=>'SEP', '10'=>'OCT','11'=>'NOV', '12'=>'DEC'];
 		$year_data = range(2015, 2050);
+
 	@endphp
 
 	@if($total_days==28)
@@ -365,9 +365,9 @@ $number = 1;
   	<div class="aione-navigation-1">
 		@for($w=1; $w <=$week; $w++)
 			@if(@$fweek_no==$w)
-				<a style="color:green;" href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$previousYear}} )" name="week" > {{$w}}</a>
+				<a style="color:green;" href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$current_year}} )" name="week" > {{$w}}</a>
 			@else
-				<a  href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$previousYear}} )" name="week" > {{$w}}</a>
+				<a  href="javascript:void(0)" onclick="attendance_filter(null, {{$w}}, {{$mo}} , {{$current_year}} )" name="week" > {{$w}}</a>
 			@endif
 		@endfor
 	</div> 		
@@ -402,10 +402,10 @@ $number = 1;
   	<div id="dates" class="aione-navigation-1">
 		@for($i=1; $i<=$current_days; $i++)
 			@if($current_date==$i)
-				<a style="cursor: pointer; color:red;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$previousYear}} )" name="date"  > {{$i}}</a>
+				<a style="cursor: pointer; color:red;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$current_year}} )" name="date"  > {{$i}}</a>
 
 			@else
-				<a style="cursor: pointer;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$previousYear}} )" name="date"  > {{$i}}</a>
+				<a style="cursor: pointer;" href="javascript:void(0)" onclick="attendance_filter({{$i}}, null, {{$mo}} , {{$current_year}} )" name="date"  > {{$i}}</a>
 			@endif
 		@endfor
 	</div>

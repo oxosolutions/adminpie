@@ -9,6 +9,7 @@
 			</div>
 			<div>
 					@php
+					
 					$number=1;
 					if(!empty($fweek_no)){
 						if($fweek_no==5){
@@ -123,26 +124,30 @@
 									echo "<div class='attendance-sheet column sunday'>S</div>";
 								}else
 								{
-								if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
-								{
-									@endphp
-										@if(!empty($holiday_data[$d]))
-											<div class="attendance-sheet column present-bg-color">H</div>
-										@elseif(@$attendanceVal[$d]['attendance_status']=='present')
-												<div class="attendance-sheet column present-bg-color">P</div>
-										@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
-											<div class="attendance-sheet column absent-bg-color">A</div>
-										@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')
-											<div class="attendance-sheet column sunday">S</div>
-										@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
-											<div class="attendance-sheet column sunday">L</div>
-										@else
-											<div class="attendance-sheet column ">-</div>
-										@endif
-									@php
-								}else{
-									echo '<div class="attendance-sheet column ">-</div>';
-								}	
+									if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
+									{
+										@endphp
+											@if(!empty($holiday_data[$d]))
+												<div class="attendance-sheet column present-bg-color">H</div>
+											@elseif(@$attendanceVal[$d]['attendance_status']=='present')
+													<div class="attendance-sheet column present-bg-color">P</div>
+											@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
+												<div class="attendance-sheet column absent-bg-color">A</div>
+											@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')
+												<div class="attendance-sheet column sunday">S</div>
+											@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
+												<div class="attendance-sheet column sunday">L</div>
+											@else
+												<div class="attendance-sheet column ">-</div>
+											@endif
+										@php
+									}else{
+										if(!empty($holiday_data[$d])){
+											echo '<div class="attendance-sheet column present-bg-color">H</div>';
+										}else{
+											echo '<div class="attendance-sheet column ">-</div>';
+										}
+									}	
 								}
 							}
 

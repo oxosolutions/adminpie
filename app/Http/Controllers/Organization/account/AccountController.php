@@ -136,6 +136,7 @@ class AccountController extends Controller
     	}
         $userDetails = User::with(['applicant_rel','user_role_rel'])->find($id);
         $userMeta = get_user_meta($id,null,true);
+
         if($userDetails != null){
             $userDetails->password = '';
             if($userMeta != false){
@@ -144,15 +145,14 @@ class AccountController extends Controller
                 @$userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
                 @$userDetails->user_shift = (array_key_exists('user_shift',$userMeta))?$userMeta['user_shift']:'';
                 @$userDetails->pay_scale = (array_key_exists('pay_scale',$userMeta))?$userMeta['pay_scale']:'';
-                
                 @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
                 @$userDetails->date_of_joining = (array_key_exists('date_of_joining',$userMeta))?Carbon::parse($userMeta['date_of_joining'])->format('Y-m-d'):'';
             }
-            // if(!$userDetails->metas->isEmpty()){
-            //     foreach($userDetails->metas as $key => $value){
-            //         $userDetails->{$value->key} = $value->value;
-            //     }
-            // }
+            if(!$userDetails->metas->isEmpty()){
+                foreach($userDetails->metas as $key => $value){
+                    $userDetails->{$value->key} = $value->value;
+                }
+            }
         }
            
         return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
@@ -202,11 +202,9 @@ class AccountController extends Controller
     }
 
     public function storeMeta(Request $request, $id){
-        
         $request_data = $request->except([
-                            '_method','_token','action'
+                            '_method','_token','action','empId'
                         ]);
-
         if($request_data['meta_table'] == 'usermeta'){
             foreach($request_data as $key => $value){
                 if($value != null && $value != ''){
@@ -219,6 +217,7 @@ class AccountController extends Controller
             }
         }
         if($request_data['meta_table'] == 'employeemeta'){
+            unset($request_data['meta_table']);
             $tbl = Session::get('organization_id');
             /*$data = Employee::where(['user_id' => $id])->first();
             if(!array_key_exists('empId', $request->all())){
