@@ -29,22 +29,39 @@ class DatasetController extends Controller
      by paljinder Singh, rahul
      */
      protected function get_columns($data){
-        static $columns = [];
-        foreach($data as $fieldKey => $field){
-            if(!array_key_exists('blank',$field)){
-                if(array_key_exists('children',$field)){
-                    $columns[] = $field['id'];
-                    $columns = $this->get_columns($field['children']);
-                }else{
-                    $columns[] = $field['id'];
+        $columns =null;
+        foreach ($data as $key => $value) {
+            if(isset($value['children'])){
+                if(!empty($this->get_columns($value['children']))){
+                    $another  = $this->get_columns($value['children']);
+                    for($i =0; $i < count($another); $i++){
+                        $columns[] = $another[$i];
+                    }
                 }
             }else{
-                if(array_key_exists('children',$field)){
-                    $columns = $this->get_columns($field['children']);
+                if(isset($value['blank'])){
+                }else{
+                    $columns[] = $value['id'];
                 }
             }
-        }
+        } 
         return $columns;
+        // static $columns = [];
+        // foreach($data as $fieldKey => $field){
+        //     if(!array_key_exists('blank',$field)){
+        //         if(array_key_exists('children',$field)){
+        //             $columns[] = $field['id'];
+        //             $columns = $this->get_columns($field['children']);
+        //         }else{
+        //             $columns[] = $field['id'];
+        //         }
+        //     }else{
+        //         if(array_key_exists('children',$field)){
+        //             $columns = $this->get_columns($field['children']);
+        //         }
+        //     }
+        // }
+        // return $columns;
      }
 
      /*
@@ -100,6 +117,7 @@ class DatasetController extends Controller
                 $data['meta_fields']   =  json_decode($meta_fields,true);
                 
                 $select_fields = $this->get_columns($data['meta_fields']);
+
                 $result =  $this->api_data_result($select_fields, $dataset_table);
                 $res = $this->manipulation_data($result, $data['meta_fields'], $data);
                 $data['response'] = response()->json($res);
@@ -115,11 +133,13 @@ class DatasetController extends Controller
                         return $data;
                     }
                     $sel_fields =  $this->get_columns($fields);
+                    http_response_code(500);
+                    // dump('sel',$sel_fields);
                     if(!$token){
                         update_meta('App\Model\Organization\DatasetMeta', ['token'=>str_random(25)], ['dataset_id'=>$id], false);
                         $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false);
                     }
-                    update_meta('App\Model\Organization\DatasetMeta', ['api_fields'=>json_encode($fields)], ['dataset_id'=>$id]);
+                    // update_meta('App\Model\Organization\DatasetMeta', ['api_fields'=>json_encode($fields)], ['dataset_id'=>$id]);
                     $result =  $this->api_data_result($sel_fields, $dataset_table);
                     $res = $this->manipulation_data($result, $fields, $data);
 
@@ -141,16 +161,126 @@ class DatasetController extends Controller
         }
         return view('organization.dataset.api', compact('data'));
     }
+    protected function api_data_set($query_data , $field_value, $column , $next_column_name=null){
+        $new = [];
+         dump('f v', $field_value);
+         if(array_key_exists('blank', $field_value)) {
+            // if(!empty($next_column_name)){
+                $new[] = $this->api_data_set($query_data, $field_value['children'],  $column, $field_value['id']);
+            // }else{
+            //     $new[$field_value['id']] = $this->api_data_set($query_data, $field_value['children'],  $column);
+            // }
+           
+         }elseif(array_key_exists('children', $field_value)){
+            // if(!empty(@$blank)){
+            //     $new[$blank][$column[$field_value['id']]] = $this->api_data_set($query_data, $field_value['children'],  $column);
+            // }else{
+            dump($column);
+                $new[] = $this->api_data_set($query_data, $field_value['children'],  $column, $column[$field_value['id']]);
+            // }
+         }else{
 
-    protected function manipulation_data($query_data, $fields, $data){
-
-        $preparedData = [];
-        foreach (json_decode($query_data, true) as $rKey => $datasetData) {
-            foreach ($fields as $fieldKey => $field) {
-                $preparedData[] = $this->recursiveData($datasetData,$field);
+            foreach($field_value as $key => $value){
+                $new[$column[$value['id']]] = $query_data[$value['id']];
             }
+            
+         }
+
+          if(!empty($next_column_name)){
+            $new[$next_column_name] = $new;
+          }
+
+         return $new;
+    }
+
+    protected function check_child($field_val){
+        if(isset($field_val['children']) && !isset($cValue['blank']) ){
+            return True;
         }
-        return $preparedData;
+        return False;
+    }   
+
+    protected function set_datas($query_data, $fields, $columns , $new_key=null){
+        $data = [];
+        if($this->check_child($fields)){
+                foreach ($fields['children'] as $nextKey =>$nextValue) {
+                   if($this->check_child($nextValue)){
+                        $this->set_datas($query_data, $fields, $columns , $new_key=null);
+                   }else{
+                    // dump($nextValue);
+                    $data[$new_key][$columns[$nextValue['id']]] =  $query_data[$nextValue['id']];
+                    // foreach($nextValue as $key => $value){
+                    //     if(!empty($new_key)){
+                    //         $data[$new_key][$columns[$value['id']]] = $query_data[$value['id']];
+                    //     }
+                    // }
+
+                   }
+                }
+            }
+            // else{
+            //     foreach($fields as $key => $value){
+            //         if(!empty($new_key)){
+            //             $data[$new_key][$columns[$value['id']]] = $query_data[$value['id']];
+            //         }
+            //     }
+            // }
+            return $data;
+    } 
+    protected function manipulation_data($query_data, $fields, $data){
+        http_response_code(500);
+        // dump($fields, $data );
+        foreach (json_decode($query_data, true) as $rKey => $rValue) {
+            
+            foreach ($fields as $fKey => $fValue) {
+                // $res[$rKey] = $set_data = $this->api_data_set($rValue, $fValue, $data['columns']);
+               // dump();
+                // dump('in loop', $set_data);
+                if(!isset($fValue['children']) && !isset($fValue['blank'])) {
+                    $col_val = $data['columns'][$fValue['id']];
+                    $res[$rKey][$col_val] =  $rValue[$fValue['id']];
+                }elseif(isset($fValue['children']) && !isset($fValue['blank'])){
+                   $col = $data['columns'][$fValue['id']];
+                   foreach ($fValue['children'] as $cKey =>$cValue) {
+                        if($this->check_child($cValue)) {
+                            $children = $data['columns'][$cValue['id']];
+                          $res[$rKey][$col] = $d = $this->set_datas($rValue, $cValue, $data['columns'] , $children);
+                           // dd($d);
+                        }else{
+                            $child_col = $data['columns'][$cValue['id']];
+                           $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
+                        }
+                        // if($this->check_child($cValue)){
+                        //     @$child_col = $data['columns'][$cValue['id']];
+                        //        $res[$rKey][$col][@$child_col] =  $this->set_datas($rValue, $cValue ,$data['columns'] , @$child_col );
+                        // // if(isset($cValue['children']) && !isset($cValue['blank'])) {
+                        // //         foreach ($cValue['children'] as $nextKey =>$nextValue) {
+                        // //             $next_child_col = $data['columns'][$nextValue['id']];
+                        // //             $res[$rKey][$col][$child_col][$next_child_col] = $rValue[$nextValue['id']];
+                        // //         }
+                        // }else{
+                        //     $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
+                        // }
+                    }
+                }elseif(isset($fValue['children']) && isset($fValue['blank'])){
+                   $col = $fValue['id'];
+                   foreach ($fValue['children'] as $cKey =>$cValue) {
+                        $child_col = $data['columns'][$cValue['id']];
+                        $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
+                    }
+                }
+            }
+            // dump($rValue);
+        }
+    return $res; 
+
+        // $preparedData = [];
+        // foreach (json_decode($query_data, true) as $rKey => $datasetData) {
+        //     foreach ($fields as $fieldKey => $field) {
+        //         $preparedData[] = $this->recursiveData($datasetData,$field);
+        //     }
+        // }
+        // return $preparedData;
     }
 
     protected function recursiveData($datasetData,$field, $prepareField = []){
@@ -171,7 +301,11 @@ class DatasetController extends Controller
                     $prepareField[$field['id']][] = $this->recursiveData($datasetData,$children,$prepareField);
                 }
             }else{
-                $prepareField[$field[0]['id']] = $datasetData[$field[0]['id']];
+                try{
+                    $prepareField[$field[0]['id']] = $datasetData[$field[0]['id']];
+                }catch(\Exception $e){
+                    $prepareField[$field['id']] = $field['id'];
+                }
             }
         }
         return $prepareField;
@@ -770,7 +904,23 @@ class DatasetController extends Controller
         $model->user_id = Auth::guard('org')->user()->id;
         $model->uploaded_by = Auth::guard('org')->user()->name;
         $model->save();
+        $this->insertNewMetaDetails($request,$model->id);
         return $model->id;
+    }
+
+
+    protected function insertNewMetaDetails($request,$dataset_id){
+        if(in_array($request->import_source,['from_survey','google','from_api','file','url','file_on_server'])){
+            $exceptedArray = ['_token','add_replace','replace_or_append','datasetname','file'];
+            foreach($request->except($exceptedArray) as $key => $field){
+                $model = DatasetMeta::firstOrNew(['dataset_id'=>$dataset_id,'key'=>$key]);
+                $model->dataset_id = $dataset_id;
+                $model->key = $key;
+                $model->value = $field;
+                $model->save();
+            }
+        }
+        return true;
     }
 
 

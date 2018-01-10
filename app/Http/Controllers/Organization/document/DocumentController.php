@@ -61,13 +61,12 @@ class DocumentController extends Controller
     }
     public function createDocument()
     {
-      // $document = Document::where('id',$id)->first();
       $params = [
                   'departments'   => $data['departments'] = Department::pluck('name','id'),
                   'designations'  => $data['designations'] = Designation::pluck('name','id'),
                   'shifts'        => $data['shifts'] = Shift::pluck('name','id'),
                   'roles'         => $data['roles'] = UsersRole::pluck('name','id'),
-                  'users'         => $data['users'] = org_user::pluck('title','id')
+                  'users'         => $data['users'] = get_organization_users(true)->pluck('name','id')
                 ];
       return view('organization.documents.createDocument',compact('params'));
     }
@@ -246,13 +245,17 @@ class DocumentController extends Controller
                 ];
       return view('organization.documents.createDocument',compact(['document','params']));
     }
+
     public function updateDocument(Request $request)
     {
       $upadte = Document::where('id',$request['id'])->update($request->except('_token','id'));
       return back();
     }
+
+
     public function sendDocument(Request $request)
     {
+
         $document_id = $request['document_id'];
         $user_id = [];
         $send_to =  $request['send_to'][0];
@@ -288,6 +291,7 @@ class DocumentController extends Controller
                 }
             }
         }
+        dd('Done');
         foreach ($user_id as $key => $id) {
             $userMeta = new UsersMeta;
             $userMeta->user_id = $id;
@@ -296,8 +300,11 @@ class DocumentController extends Controller
             $userMeta->type = 'document';
             $userMeta->save();
         }
+
         return redirect()->route('documents'); 
     }
+
+
     function getUsersList($data , $field){
       $user_id = [];
       foreach ($data as $key => $value) {
@@ -315,5 +322,9 @@ class DocumentController extends Controller
         view()->share('document',$document);
             $pdf = PDF::loadView('organization.documents.downloadPDF',compact('document'));
             return $pdf->download($document->title.'.pdf',compact('document'));
+    }
+    public function documentAssign($id)
+    {
+        return view('organization.documents.assign');
     }
 }

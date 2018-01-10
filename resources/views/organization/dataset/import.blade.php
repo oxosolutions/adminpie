@@ -76,6 +76,20 @@
 		    		$('select').material_select();
 		    	}
 		    });
+
+            $('#field_3178').css('display','none');
+            $('input[name=import_source]').click(function(){
+                if($(this).val() == 'from_survey' || $(this).val() == 'google' || $(this).val() == 'from_api'){
+                    $('#field_3178').show();
+                    $('input[name=data_type]').each(function(){
+                        if($(this).val() == 'static'){
+                            $(this).prop('checked',true);
+                        } 
+                    });
+                }else{
+                    $('#field_3178').hide();
+                }
+            });
 		});
 </script>
 @endsection

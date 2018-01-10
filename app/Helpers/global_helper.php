@@ -433,6 +433,53 @@ function remove_prefix($string){
 }
 
 
+
+/************************************************************
+*   @function get_organization_users
+*   @description current organization users list
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+*   @return useres [array]
+************************************************************/
+function get_organization_users($collection = false){
+
+    $result = GroupUsers::with(['organization_user'=>function($query){
+        $query->with(['user_role_map'=>function($query){
+            $query->with(['roles'=>function($query){
+                $query->select(['id','name']);
+            }])->select(['id','role_id','user_id']);
+        }]);
+    }])->whereHas('organization_user')->get()->toArray();
+
+    $prepareUserArray = [];
+    $mainIndex = 0;
+    foreach($result as $key => $value){
+        foreach ($value as $field_key => $field) {
+            if($field_key == 'organization_user'){
+                $prepareUserArray[$mainIndex]['user_type'] = $value['user_type'];
+                $index = 0;
+                foreach($field['user_role_map'] as $k => $role){
+                    $prepareUserArray[$mainIndex]['role_id'][$index]['id'] = $role['role_id'];
+                    $prepareUserArray[$mainIndex]['role_id'][$index]['name'] = $role['roles']['name'];
+                    $index++;
+                }
+            }else{
+                $prepareUserArray[$mainIndex][$field_key] = $field;
+            }
+        }
+        $mainIndex++;
+    }
+    if($collection){
+        return collect($prepareUserArray);
+    }else{
+        return $prepareUserArray;
+    }
+}
+
+
+
+
 /************************************************************
 *   @function update_meta
 *   @description Returns boolean

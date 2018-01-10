@@ -28,7 +28,7 @@
 		</script>
 	@endif
 	<div class="ar main-dashboard">
-		<div class="ac l75" >
+		<div class="ac l100" >
 			<div class="aione-border">
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20">
 					Document Info
@@ -46,7 +46,8 @@
 				
 		</div>
 
-		@if(request()->route()->parameters() != null)
+
+		{{-- @if(request()->route()->parameters() != null)
 			<div class="ac l25" >
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20">
 					Actions
@@ -183,7 +184,7 @@
 				{!! Form::close() !!}
 
 			</div> 
-		@endif
+		@endif --}}
 	</div>
 	<script type="text/javascript">
 		$(document).ready(function(){
@@ -193,9 +194,9 @@
 				e.stopPropagation();
 
 				var value = $(this).val().toString();
+                console.log(value);
 				var arrayValue = value.split(',');
 				$(arrayValue).each(function(k,v){
-					console.log(v);
 					if(v != null || v != ''){
 						
 						$('.content').find('.'+v).parents('.card').find('.applyed-filters').hide();

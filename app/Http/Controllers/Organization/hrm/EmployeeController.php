@@ -51,7 +51,11 @@ class EmployeeController extends Controller
                 }
                 $meta =  array_column(json_decode($item['metas'],true), 'value','key');
                 $meta_value = $this->metas_value($meta);
-                return ['name' => @$item['name'], 'email'=>@$item['email'] , 'password'=>$item['password'], 'employee_id'=>@$meta['employee_id'], 'designation'=> @$meta_value['designation'], 'department'=> @$meta_value['department'], 'user_shift'=>@$meta_value['user_shift'], 'pay_scale'=>@$meta_value['pay_scale'] ,'date_of_joining'=>@$meta['date_of_joining'], 'role'=>$role_value  ];
+                $date_of_joining = "";
+                if(!empty($meta['date_of_joining'])){
+                 $date_of_joining = date('Y-m-d', strtotime($meta['date_of_joining']));
+                }
+                return ['name' => @$item['name'], 'email'=>@$item['email'] , 'password'=>$item['password'], 'employee_id'=>@$meta['employee_id'], 'designation'=> @$meta_value['designation'], 'department'=> @$meta_value['department'], 'user_shift'=>@$meta_value['user_shift'], 'pay_scale'=>@$meta_value['pay_scale'] ,'date_of_joining'=>@$date_of_joining, 'role'=>$role_value  ];
             });
             Excel::create('Employees-List-'.date('Y-m-d H i s'), function($excel) use($data) {
                     $excel->sheet('Employees List', function($sheet) use($data) {

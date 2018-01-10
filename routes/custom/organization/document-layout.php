@@ -23,6 +23,8 @@
     Route::get('document/templates', ['as'=>'document.templates' , 'uses'=>'document\DocumentController@templates']);
     Route::get('document/layouts', ['as'=>'document.layouts' , 'uses'=>'document\DocumentController@layouts']);
     Route::get('document/download/{id}', ['as'=>'document.download' , 'uses'=>'document\DocumentController@documentDownload']);
+    
+    Route::get('document/assign/{id}', ['as'=>'document.assign' , 'uses'=>'document\DocumentController@documentAssign']);
 
 
 ?>
