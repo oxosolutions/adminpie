@@ -331,6 +331,8 @@
 					Route::get('salary_slip/{id}',['as'=>'salary.slip.view','uses'=>'SalaryController@view_salary_slip']);
 					Route::get('download_salary_slip/{id}',['as'=>'salary.slip.download','uses'=>'SalaryController@salary_download_pdf']);
 					Route::get('salary_slip/delete/{id}',['as'=>'salary.slip.delete','uses'=>'SalaryController@delete_salary_slip']);
+					Route::get('salary_slip/edit/{id}',['as'=>'salary.slip.edit','uses'=>'SalaryController@edit']);
+					Route::post('salary_slip/update',['as'=>'salary.slip.update','uses'=>'SalaryController@update']);
 					// (){
 					// 		return view('organization.profile.salary');
 					// 	}]);

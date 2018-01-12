@@ -19,6 +19,37 @@ use PDF;
 class SalaryController extends Controller
 {
 
+/**
+*EDit Salary
+param salary id
+*
+*@author Paljinder singh
+*/
+  public function edit($id){
+    // with(['user_detail:id,name,email'])->
+    $salary_data = Salary::select(['id', 'total_days' , 'salary', 'no_of_leave', 'number_of_attendance', 'hours', 'over_time', 'short_hours', 'per_day_amount'])->where([ 'id'=>$id ]);
+    if($salary_data->exists()){
+      $data = $salary_data->first();
+    }else{
+      Session::flash('error',"Salary not exist's.");
+      return back();
+    }
+    return view('organization.salary.edit',compact('data'));
+
+  }
+
+/**
+*EDit Salary
+param salary id
+*@author Paljinder singh
+*/
+  public function update(Request $request){
+    Salary::where('id',$request['id'])->update($request->except('_token'));
+    // salary.slip.view
+    return redirect()->route('salary.slip.view',['id'=>$request['id']]);
+    // return redirect()->route('hrm.generate.salary_view');
+
+  }
   public function drop_downs()
   {
     return view('organization.salary.drop_down');
@@ -296,8 +327,6 @@ return back();
 
   }
 	public function generate_salary(Request $request){
-
-
     $current_dates = date('Y-m-d');
     $year = date('Y');
     $month = date('m');

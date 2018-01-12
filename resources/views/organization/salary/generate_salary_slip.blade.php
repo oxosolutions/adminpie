@@ -11,7 +11,6 @@ $page_title_data = array(
     $id = "";
     if(!empty($salary['payscale'])){
         $payscale = json_decode($salary->payscale,true);
-        dump($salary->payscale , $payscale);
     }
     // $details = $salary->user_detail->metas->pluck('value','key');
      // $details['pay_scale']
