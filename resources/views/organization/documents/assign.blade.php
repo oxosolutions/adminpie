@@ -14,7 +14,9 @@
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	{!! FormGenerator::GenerateForm('assign_document_form') !!}
+    {!! Form::open(['route'=>['save.assign.document',request()->id]]) !!}
+    	{!! FormGenerator::GenerateForm('assign_document_form') !!}
+    {!! Form::close() !!}
 @include('common.page_content_primary_end')
 @include('common.pagecontentend')
 @endsection

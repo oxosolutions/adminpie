@@ -301,6 +301,12 @@ try{
                                 'name'=>'create_'.$org_id.'_activity_logs',
                                 '--schema'=>'user_id:integer, name:string:nullable, slug:string:nullable'
                             ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
+                                'name'=>'create_'.$org_id.'_assign_documents',
+                                '--schema'=>'user_id:integer, document_id:integer'
+                            ]);
     
 		// USERS
 		Artisan::call('make:migration:schema',[

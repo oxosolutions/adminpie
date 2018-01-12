@@ -37,5 +37,12 @@
 	if(@$options['from'] == 'repeater'){
 		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
 	}
+    $question_repeater = @FormGenerator::GetMetaValue($collection->fieldMeta,'question_repeater');
+    $textArray = '';
+    if($question_repeater == 'yes'){
+        $textArray = '[]';
+    }
 @endphp
-{!!Form::text($name,$default_value,['class'=>$field_input_class,'id'=>$field_input_id,'placeholder'=>$placeholder, ' data-validation' => $field_validations])!!} 
+
+{!!Form::text($name.$textArray,$default_value,['class'=>$field_input_class,'id'=>$field_input_id,'placeholder'=>$placeholder, ' data-validation' => $field_validations])!!} 
+

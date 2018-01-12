@@ -24,7 +24,9 @@
     Route::get('document/layouts', ['as'=>'document.layouts' , 'uses'=>'document\DocumentController@layouts']);
     Route::get('document/download/{id}', ['as'=>'document.download' , 'uses'=>'document\DocumentController@documentDownload']);
     
-    Route::get('document/assign', ['as'=>'document.assign' , 'uses'=>'document\DocumentController@documentAssign']);
+    Route::get('document/assign/{id}', ['as'=>'document.assign' , 'uses'=>'document\DocumentController@documentAssign']);
+
+    Route::post('assign/document/save/{document_id}', ['as'=>'save.assign.document','uses'=>'document\DocumentController@saveAssignDocument']);
 
 
 ?>

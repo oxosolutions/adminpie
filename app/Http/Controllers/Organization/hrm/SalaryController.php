@@ -20,14 +20,16 @@ class SalaryController extends Controller
 {
 
 /**
-*EDit Salary
-param salary id
-*
-*@author Paljinder singh
-*/
+ * { edit Salary  }
+ *
+ * @param      <int>   $id     Salaray Id
+ *
+ * @return     <type>  ( to view  )
+ * @author Paljinder Singh
+ */
   public function edit($id){
-    // with(['user_detail:id,name,email'])->
-    $salary_data = Salary::select(['id', 'total_days' , 'salary', 'no_of_leave', 'number_of_attendance', 'hours', 'over_time', 'short_hours', 'per_day_amount'])->where([ 'id'=>$id ]);
+    // with(['user_detail:id,name,email'])->select(['id','loss_of_pay_day', 'dedicated_amount','total_days' , 'salary', 'no_of_leave', 'number_of_attendance', 'hours', 'over_time', 'short_hours', 'per_day_amount'])->
+    $salary_data = Salary::where([ 'id'=>$id ]);
     if($salary_data->exists()){
       $data = $salary_data->first();
     }else{
@@ -100,7 +102,8 @@ param salary id
 		return view('organization.profile.salary', compact('data'));
 	}
 	public function delete_salary_slip($id){
-		    Salary::find($id)->delete();
+		    Salary::where('id',$id)->delete();
+        dd(1213);
 		    return back();
 	}
   /**
@@ -240,6 +243,7 @@ param salary id
                     $data[$userKey]['holiday'] = $holiday;
                     $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
                     if($loss_of_pay_days>0){
+                      $data[$userKey]['loss_of_pay_day'] = $loss_of_pay_days;
                       $data[$userKey]['dedicated_amount'] = $loss_of_pay_days *  $per_day; 
                     }else{
                       $data[$userKey]['dedicated_amount'] =0;

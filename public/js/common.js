@@ -45,6 +45,11 @@ $(document).ready(function(){
       		});
       	});
 
+        $('.add_more_text').click(function(){
+            var inputField = $(this).parent('#field_name').find('input:first').clone();
+            $(this).parent('#field_name').append(inputField); 
+        });
+
 
 	/* code for visualization page */	
         $('.show-hide-charts').click(function(){

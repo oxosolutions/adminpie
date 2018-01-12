@@ -16,7 +16,10 @@ use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\User;
 use App\Model\Group\GroupUsers as org_user;
 use App\Model\Organization\UsersMeta;
+use App\Model\Organization\AssignDocument;
+use App\Mail\DocumentAssigned;
 use PDF;
+use Mail;
 
 class DocumentController extends Controller
 {
@@ -53,7 +56,7 @@ class DocumentController extends Controller
                                           'edit' => ['title'=>'Edit','route'=>'edit.document' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.document'],
                                           'view' => ['title' => 'View' , 'route' => 'view.document'],
-                                          'assign' => ['title'=>'Assign To Users','route'=>'assign.document']
+                                          'assign' => ['title'=>'Assign To Users','route'=>'document.assign']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
@@ -328,5 +331,24 @@ class DocumentController extends Controller
     public function documentAssign(){
 
         return view('organization.documents.assign');
+    }
+
+    public function saveAssignDocument(Request $request, $document_id){
+
+        $document = Document::with(['DocumentLayout' , 'DocumentTemplate'])->find($document_id);
+        $content = view('organization.documents.preview',compact('document'))->render();
+        foreach($request->users as $key => $user){
+            $model = AssignDocument::firstOrNew(['user_id'=>$user,'document_id'=>$document_id]);
+            $model->user_id = $user;
+            $model->document_id = $document_id;
+            $model->document_content = $content;
+            $model->save();
+            $userModel = org_user::where(['id'=>$user])->first();
+            if($request->send_email == 1){
+                Mail::to($userModel->email)->send(new DocumentAssigned($document_id));
+            }
+        }
+        Session::flash('success','Document assigned!');
+        return redirect()->route('documents');
     }
 }

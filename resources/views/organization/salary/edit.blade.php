@@ -27,10 +27,7 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
- <div class="content-wrapper">
 
-<h1>helloooo</h1>
-<div class="box-body">
   {!! Form::open(['route'=>'salary.slip.update'])!!}
 
   @foreach ($data->toArray() as $key => $value)
@@ -46,8 +43,24 @@ $page_title_data = array(
         {!!Form::hidden($key,$value, ['class'=>'form-control','placeholder'=>'Enter Role Name']) !!}
 
       @else
-        {!!Form::label($key,$key) !!}
-        {!!Form::text($key,$value, ['class'=>'form-control','placeholder'=>'Enter Role Name']) !!}
+        {{-- {!!Form::label($key,$key) !!} --}}
+        {{-- {!!Form::text($key,$value, ['class'=>'form-control','placeholder'=>'Enter Role Name']) !!} --}}
+            <div id="field_46" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-name field-wrapper-type-text ">
+                <div id="field_label_name" class="field-label">
+
+                    <label for="input_name">
+                    <h4 class="field-title" id="{{$key,$key}}">{{ucwords(str_replace('_',' ',$key,$key))}}</h4>
+                    </label>
+
+                </div><!-- field label-->
+
+
+                <div id="field_name" class="field field-type-text">
+
+                    <input class="input-name" id="input_name" placeholder="Enter Designation" data-validation="" name="name" type="text" value="{{$value}}"> 
+
+                </div><!-- field -->
+            </div>
         @if($errors->has($key))
           <span class="help-block">
               {{ $errors->first($key) }}
