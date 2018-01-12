@@ -25,7 +25,8 @@ use Hash;
 use DB;
 use App\Model\Organization\Shift;
 use App\Model\Organization\Payscale;
-
+use DateTime;
+use Carbon\Carbon;
 /**
  * work by paljinder singh
  * @Import emplyoyee
@@ -40,8 +41,11 @@ class EmployeeController extends Controller
     /**
     *Export employee @author Paljinder singh
     */
+
+   
     public function export(){
-        $group_user = GroupUsers::select(['id','name','password','email'])->with( ['metas','user_role_rel.roles'])->has('organization_employee_user');
+    
+ 		$group_user = GroupUsers::select(['id','name','password','email'])->with( ['metas','user_role_rel.roles'])->has('organization_employee_user');
         if($group_user->exists()){
             $group_user = $group_user->get();
             $data =$group_user->map(function($item, $key){
@@ -53,7 +57,7 @@ class EmployeeController extends Controller
                 $meta_value = $this->metas_value($meta);
                 $date_of_joining = "";
                 if(!empty($meta['date_of_joining'])){
-                 $date_of_joining = date('Y-m-d', strtotime($meta['date_of_joining']));
+                	$date_of_joining = date('d-F-Y', strtotime($meta['date_of_joining']));
                 }
                 return ['name' => @$item['name'], 'email'=>@$item['email'] , 'password'=>$item['password'], 'employee_id'=>@$meta['employee_id'], 'designation'=> @$meta_value['designation'], 'department'=> @$meta_value['department'], 'user_shift'=>@$meta_value['user_shift'], 'pay_scale'=>@$meta_value['pay_scale'] ,'date_of_joining'=>@$date_of_joining, 'role'=>$role_value  ];
             });
@@ -694,8 +698,11 @@ class EmployeeController extends Controller
             throw $e;
         }
     }
-
-
+/**
+     * check_employee_id   employee_id existence
+     @parm  employee_id
+     return  bool true false
+     */
 
     protected function check_employee_id($employee_id){
         $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $employee_id]);
@@ -704,10 +711,30 @@ class EmployeeController extends Controller
         }
         return false;
     }
-
+    /**
+     * ValidateDatet check valid date
+     @parm  date
+     return  bool true false
+     @author Paljinder Singh
+     */
+    protected function validateDate($date)
+	{
+		if(str_contains($date, '/')){
+            		$date_data = explode('/' , $value);
+            		$date = $date_data[1].'-'.$date_data[0].'-'.$date_data[2];
+        }
+	    $d = DateTime::createFromFormat('d-F-Y', $date);
+	    return $d && $d->format('d-F-Y') == $date;
+	}
+	/**
+     * Import Emploayee  csv employee dataa 
+     @parm  $request
+     return  
+      @author Paljinder Singh
+     */
     public function importEmployee(Request $request){
         $index = 1;
-       $emptyRow = $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $updateRecord = $alreadyInGroup = [];
+       $in_valid_date_format = $emptyRow = $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $updateRecord = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
             $organizationId = Session::get('organization_id');
             $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
@@ -718,9 +745,16 @@ class EmployeeController extends Controller
                 $sheetCount = $reader->getSheetCount();
             })->get();
             $import_record_options = $request['import_record_options'];
+
            foreach ($data->toArray() as $key => $value) {
             $index++;
             if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
+            	if(!empty($value['date_of_joining'])){
+            		if($this->validateDate($value['date_of_joining'])==false){
+            			$in_valid_date_format[$value['employee_id']] = $value['email'];
+            			 continue;
+            		}
+            	}
                 $alreadyExists = GroupUsers::where(['email'=>$value['email']]); 
                 if($alreadyExists->exists()){
                     $users_data = $alreadyExists->first();
@@ -747,7 +781,6 @@ class EmployeeController extends Controller
                             $org_user_id = $org_user_check->first()->id;
                             $this->add_metas($user_id, $value , $import_record_options);
                             $updateRecord[$value['employee_id']] = $value['email'];
-                            // array_push($alreadyInOrg , $value['employee_id']);
                         }
                         array_push($alreadyInGroup, [$value['employee_id']=>$value['email']]);
                     }
@@ -793,10 +826,16 @@ class EmployeeController extends Controller
         if($emptyRow){
             Session::flash('emptyRow', $emptyRow);
         }
-    }
-         return redirect()->route('import.employee');
+        if($in_valid_date_format){
+        	Session::flash('in_valid_date_format', $in_valid_date_format);
+        }
     }
 
+         return redirect()->route('import.employee');
+    }
+/*
+Create employee use in Import employee method
+*/
     protected function create_org_user($group_user_id , $value , $import_record_options){
         $user = new User();
         $user->user_id = $group_user_id;
@@ -808,7 +847,10 @@ class EmployeeController extends Controller
              $this->add_roles($uid , $value['role'] ,  $import_record_options);
         }
     }
-
+/*
+create roles if not exist & assign to employee Use in Import employse
+@author Paljinder singh 
+*/
     protected function add_roles($user_id , $roles, $import_record_options){
         $roles = array_map('trim', explode(',', $roles));
         $current = date('Y-m-d');
@@ -824,7 +866,6 @@ class EmployeeController extends Controller
                     $userRole->save();
                     $role_id = $userRole->id;
                 }
-                // UserRoleMapping::where('user_id',$user_id)->delete();
                    if(!UserRoleMapping::where(['user_id'=>$user_id, 'role_id'=>$role_id ])->exists()){
                        $userRoleMapping =  new UserRoleMapping();
                        $userRoleMapping->user_id = $user_id;
@@ -837,6 +878,9 @@ class EmployeeController extends Controller
                 UserRoleMapping::where('user_id', $user_id)->whereNotIn('role_id', $u_roles)->delete();
             }
     }
+/* add metas  use in import employee to handle meta data
+	@author Paljinder singh 
+*/
 
     protected function add_metas($user_id , $value , $import_record_options){
         foreach($value as $key => $val){
@@ -902,10 +946,19 @@ class EmployeeController extends Controller
         }
     }
 
+/*
+Add user meta use in add metas 
+@author Paljinder singh
 
+*/
         protected function add_user_meta($user_id , $key , $value, $import_record_options){
             $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
             if($key=="date_of_joining"){
+            	if(str_contains($value, '/')){
+            		$date_data = explode('/' , $value);
+            		$value = $date_data[1].'-'.$date_data[0].'-'.$date_data[2];
+            	}
+            	// str_replace('', replace, subject)
                 $value = date('Y-m-d',strtotime($value));
             }
                 if($meta->exists()){

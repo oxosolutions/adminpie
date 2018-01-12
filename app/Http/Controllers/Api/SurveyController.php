@@ -104,6 +104,7 @@ class SurveyController extends Controller
                     {
                         $index=0;
                         $repeater_check =0;
+                       
                         foreach ($sectionValue['fields'] as $fieldKey => $fieldValue) 
                         {
 
@@ -127,9 +128,9 @@ class SurveyController extends Controller
                                 $form_meta =  $collect->mapWithKeys(function($item){
                                     return [$item['key'] => $item['value']];
                                 });
-
+                                
                                 $form_fields =   ['question_text'=>$fieldValue['field_title'], 'question_type'=>$fieldValue['field_type'], 'question_key'=>'', "question_id"=> $fieldValue['id'], "question_message"=> '', "required"=> '', "pattern"=> '', "otherPattern"=>'', "survey_id"=> $fieldValue['form_id'], "group_id"=> $fieldValue['section_id'],
-                                            "question_order"=>$fieldValue["order"], "question_desc"=> $fieldValue["field_description"], "created_at"=>$fieldValue['created_at'], "updated_at"=>$fieldValue['updated_at'], "deleted_at"=>'', "answers"=>[[]], "fields"=>"" ]; 
+                                            "question_order"=>$fieldValue["order"], "question_desc"=> $fieldValue["field_description"], "created_at"=>$fieldValue['created_at'], "updated_at"=>$fieldValue['updated_at'], "deleted_at"=>'', "answers"=>[[]], "fields"=>"", "question_repeater" => @$form_meta['question_repeater'] ]; 
                                 if(!empty($form_meta['question_id'])){
                                     $form_fields['question_key'] = $form_meta['question_id'];
                                 } 
@@ -170,7 +171,7 @@ class SurveyController extends Controller
                                         {   $repeater_check = 1;
                                             
                                             $repeater_section =  ['question_text'=>'Fill the repeater', 'question_type'=>'repeater', 'question_key'=>$sectionValue['section_slug'], "question_id"=> $sectionValue['id'], "question_message"=> '', "required"=> '', "pattern"=> '', "otherPattern"=>'', "survey_id"=> $sectionValue['form_id'], "group_id"=> $sectionValue['id'],
-                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>'', "answers"=>[[]],'fields'=>[],'field_conditions'=>[],'field_validations'=>[],'next_question_key'=>'' ];                                
+                                                        "question_order"=>' ', "question_desc"=> 'repeted', "created_at"=>date('Y-m-d',strtotime($sectionValue['created_at'])), "updated_at"=>date('Y-m-d',strtotime($sectionValue['updated_at'])), "deleted_at"=>'', "answers"=>[[]],'fields'=>[],'field_conditions'=>[],'field_validations'=>[],'next_question_key'=>'', "question_repeater" => @$sectionValue['question_repeater'] ];                                
                                                 array_push($repeater_section['fields'] ,  $form_fields);
                                         }elseif($section_type_value =='repeater'){
                                                 array_push($repeater_section['fields'] ,  $form_fields);  
@@ -186,11 +187,12 @@ class SurveyController extends Controller
                }
             }
         }
+        
             $data['questions']      = $question;
             $data['surveys']     = $surveys;           
             $data['groups']      = $groups;
-            //$data["users"]       = $users;//GroupUsers::all();
-            //$data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
+            $data["users"]       = $users;//GroupUsers::all();
+            $data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
             $mediaArray = [];
             if(isset($data['settings']['android_application_logo'])){
                 $mediaArray['android_application_logo'] = $data['settings']['android_application_logo'];

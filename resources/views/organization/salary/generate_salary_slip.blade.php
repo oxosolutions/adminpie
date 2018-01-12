@@ -9,11 +9,14 @@ $page_title_data = array(
   'page_title' => 'Salary',
 ); 
     $id = "";
-    $payscale = json_decode($salary->payscale,true);
+    if(!empty($salary['payscale'])){
+        $payscale = json_decode($salary->payscale,true);
+        dump($salary->payscale , $payscale);
+    }
     // $details = $salary->user_detail->metas->pluck('value','key');
      // $details['pay_scale']
      // App\\Model\\Organization
-    // dump($salary);
+     
 @endphp 
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')

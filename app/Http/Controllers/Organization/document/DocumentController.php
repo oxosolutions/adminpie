@@ -52,7 +52,8 @@ class DocumentController extends Controller
                           'actions' => [
                                           'edit' => ['title'=>'Edit','route'=>'edit.document' , 'class' => 'edit'],
                                           'delete'=>['title'=>'Delete','route'=>'delete.document'],
-                                          'view' => ['title' => 'View' , 'route' => 'view.document']
+                                          'view' => ['title' => 'View' , 'route' => 'view.document'],
+                                          'assign' => ['title'=>'Assign To Users','route'=>'assign.document']
                                        ],
                           'js'  =>  ['custom'=>['list-designation']],
                           'css'=> ['custom'=>['list-designation']]
@@ -323,8 +324,9 @@ class DocumentController extends Controller
             $pdf = PDF::loadView('organization.documents.downloadPDF',compact('document'));
             return $pdf->download($document->title.'.pdf',compact('document'));
     }
-    public function documentAssign($id)
-    {
+
+    public function documentAssign(){
+
         return view('organization.documents.assign');
     }
 }

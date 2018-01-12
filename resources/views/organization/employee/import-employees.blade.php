@@ -26,6 +26,14 @@ $body_text="";
  					}
                @endphp
 @endif
+@if(Session::has('in_valid_date_format'))
+                @php
+                 foreach(Session::get('in_valid_date_format') as $keys => $vals) {
+                  $body_text .="<tr> <td>Error Occurred</td> <td>".$keys."</td> <td>".$vals."</td> <td>Invalid Date format </td></tr>";
+          }
+               @endphp
+@endif
+
 
 @if(Session::has('alreadyInGroupNotOrg'))
 				@php

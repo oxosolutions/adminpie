@@ -22,4 +22,8 @@ class Document extends Model
     {
     	return $this->belongsTo('App\Model\Organization\DocumentTemplate','template','id');
     }
+
+    public function documentsList(){
+        return self::orderBy('id','asc')->pluck('title','id');
+    }
 }

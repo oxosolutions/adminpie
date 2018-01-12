@@ -72,6 +72,12 @@ class SalaryController extends Controller
 		    Salary::find($id)->delete();
 		    return back();
 	}
+  /**
+  view_salary_slip
+  @description  for view indiviual employee with all detail
+  @parm id
+  @author PaljinderSingh 
+  */
 	public function view_salary_slip($id ){
 			$salary = Salary::with(['user_detail:id,name,email','user_detail.metas'])->where([ 'id'=>$id ]);
       if($salary->exists()){

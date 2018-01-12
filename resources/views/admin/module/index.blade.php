@@ -84,7 +84,6 @@ $page_title_data = array(
                     {!! Form::close() !!}
                         @endif
                 
-
                 <ul class="collection">
                     @if(@$moduleData->subModule != null)
                     @foreach($moduleData->subModule as $key=>$value)
@@ -213,18 +212,20 @@ $page_title_data = array(
                             
                             <!--new permission div starts -->
                             @if($permission != null)
-                                    {{ dump($permission) }}
+                                    
+                                    
                                 {!! Form::model($permission,['route' => 'edit.subModule','method' => 'POST'])!!}
                             @else
                                 {!! Form::open(['route' => 'edit.subModule','method' => 'POST'])!!}
                             @endif
                                     {{-- {!! Form::model(@$route,['route' => 'edit.subModule','method' => 'POST'])!!} --}}
-
+                                    
                                      <input type="hidden" name="subModule_id" value="{{@request()->route()->parameters()['subModule']}}" placeholder="Enter route name" />
+
                                         {!! FormGenerator::GenerateSection('permission',[],$permission) !!}
-                                                
                                     <input type="submit" value="Save Permission">
                                 {!!Form::close()!!}
+
                             <!--new permission div ends -->
                                   
                         </div>
@@ -232,7 +233,7 @@ $page_title_data = array(
                            
                 </div>
             @endif
-
+            
 			
 			<!-- http://admin.adminpie.com/modules -->
             @if(@$subModuleData == null && @$moduleData == null)
@@ -240,6 +241,7 @@ $page_title_data = array(
                  
                 	{!! FormGenerator::GenerateForm('add_module_form') !!}
                 {!! Form::close() !!}
+
                 <ul class="collection">
                     @foreach($listModule as $key => $val)
                         <li class="collection-item" style="position: relative;">

@@ -213,4 +213,5 @@ class User extends Authenticatable
         return $usersArray;
         
     }
+
 }
