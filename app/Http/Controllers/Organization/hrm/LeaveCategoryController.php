@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Designation As DES;
 use App\Model\Organization\User;
+use App\Model\Organization\UsersMeta;
 use App\Model\Organization\CategoryMeta as CM;
 use App\Repositories\Category\CategoryRepositoryContract;
 use App\Model\Organization\Leave as LV; 
 use App\Model\Organization\Category as CAT;
 use App\Model\Organization\UsersRole as Role;
+use App\Model\Group\GroupUsers;
 use Auth;
 use Session;
 /**
@@ -69,8 +71,6 @@ class LeaveCategoryController extends Controller
       */
     public function categoryMeta(Request $request , $cat_id=null)
      {
-      //dd($request->all());
-     // $data =  User::user_list();
         if(Auth::guard('org')->check()){
           $id = Auth::guard('org')->user()['id'];
         }else{
@@ -82,8 +82,8 @@ class LeaveCategoryController extends Controller
              return redirect()->route('leave.categories');
           }
         $select =[];
-        $data['cat'] = $this->catRepo->category_data_by_id($cat_id)->toArray();
-        $cm = CM::where('category_id',$cat_id)->get();
+        $data['cat'] = $this->catRepo->category_data_by_id($cat_id)->toArray();/*This get category name only*/
+        $cm = CM::where('category_id',$cat_id)->get(); /*This get all data like user include , exclude , designation etc only*/
         $data['data'] = $cm->pluck('value','key')->toArray();
         $merge = array_merge($data['cat'] , $data['data']);
         
@@ -106,15 +106,19 @@ class LeaveCategoryController extends Controller
         $merge =  array_merge($merge ,$data_include_designation);
 
         }else{
-          $user =  User::with('belong_group')->where('id','!=',$cat_id)->get();//->pluck('name','id');
-          $user_pluck =[];
-          foreach ($user as $userKey => $userValue) {
-            if(!empty($userValue['belong_group'])){
-              // $user_pluck[] = [$userValue['id']=>$userValue['belong_group']['name']];  
-              $user_pluck[$userValue['id']]= $userValue['belong_group']['name'];  
-            }
-          }
-       
+          $meta_shift = UsersMeta::with('group_user')->whereIn('key',['user_shift'])->get();//->keys();
+         
+          $user_pluck = $meta_shift->pluck('group_user.name','group_user.id')->toArray();
+          // $user = User::with('belong_group')->where('id','!=',$cat_id)->get();//->pluck('name','id');
+
+          // dd('meta', $meta_shift->toArray() , $user->toArray());
+          // $user_pluck =[];
+          // foreach ($user as $userKey => $userValue) {
+          //   if(!empty($userValue['belong_group'])){
+          //     // $user_pluck[] = [$userValue['id']=>$userValue['belong_group']['name']];  
+          //     $user_pluck[$userValue['id']]= $userValue['belong_group']['name'];  
+          //   }
+          // }
           // unset($data);
          $data['userData'] = $data['user_include'] = $data['user_exclude']= $user_pluck; //[['12'=>'user']];// User::where('id','!=',$cat_id)->
          $merge = array_merge($merge ,  $data);
@@ -123,7 +127,8 @@ class LeaveCategoryController extends Controller
         $designationData['designationData'] = $data['designationData'] = DES::where('status',1)->pluck('name','id');
         $data['roles'] = Role::where('status',1)->pluck('name','id');
         $merge = array_merge($merge, $designationData);
-        dump($select);
+       // dd($merge);
+        
         return view('organization.leave_category.leave_rule',['data'=>$merge ,'select'=>$select]);
      }
 
@@ -154,18 +159,40 @@ class LeaveCategoryController extends Controller
     }
 
     protected function user_by_designation($designation_id){
-      $exclude =  User::with('belong_group')->with('metas')->whereHas('metas', function($query) use($designation_id) {
-          $query->where('key','designation')->whereIn('value',$designation_id);
-          })->where('user_type','employee')->get();
       $user_include = $user_exclude =[];
-      foreach ($exclude as $userKey => $userValue) {
-            if(!empty($userValue['belong_group'])){
-              // $user_exclude[] = [$userValue['id']=>$userValue['belong_group']['name']];  
-              $user_exclude[$userValue['id']] = $userValue['belong_group']['name'];  
-            }
-          }      
+      http_response_code(500);
+/*exclude user */      
+      $user = GroupUsers::with('metas')->whereHas('metas', function($query){
+                                                $query->where('key','user_shift');
+                                    })->whereHas('metas', function($query) use($designation_id) {
+                                          $query->where('key','designation')->whereIn('value',$designation_id);
+                                })->get();
+      $user_exclude = $user->pluck('name','id')->toArray();
+/*include user */ 
+      $include = GroupUsers::with('metas')->whereHas('metas', function($query){
+                                                $query->where('key','user_shift');
+                                    })->whereHas('metas', function($query) use($designation_id) {
+                                          $query->where('key','designation')->whereNotIn('value',$designation_id);
+                                })->get();
+      $user_include = $include->pluck('name','id')->toArray();
+      
+      // $exclude =  User::with('belong_group')->with('metas')->whereHas('metas', function($query){
+      //   $query->where('key','user_shift');
+      // })->whereHas('metas', function($query) use($designation_id) {
+      //     $query->where('key','designation')->whereIn('value',$designation_id);
+      //     })->where('user_type','employee')->get();
+     
+      // 
+      // foreach ($exclude as $userKey => $userValue) {
+      //       if(!empty($userValue['belong_group'])){
+      //         // $user_exclude[] = [$userValue['id']=>$userValue['belong_group']['name']];  
+      //         $user_exclude[$userValue['id']] = $userValue['belong_group']['name'];  
+      //       }
+      //     }      
 
-      $include =  User::with('metas')->whereHas('metas', function($query) use($designation_id) {
+      $include =  User::with('metas')->whereHas('metas', function($query){
+        $query->where('key','user_shift');
+      })->whereHas('metas', function($query) use($designation_id) {
           $query->where('key','designation')->whereNotIn('value',$designation_id);
           })->where('user_type','employee')->get();
 
@@ -175,7 +202,7 @@ class LeaveCategoryController extends Controller
               $user_include[$userValue['id']]=$userValue['belong_group']['name'];  
             }
           } 
-           // dump(@$user_include);
+        
       return compact('user_exclude','user_include');
     }
 

@@ -224,6 +224,11 @@ class DocumentController extends Controller
       $model = new Document();
       $model->fill($request->except('_token'));
       $model->save();
+      $document = Document::with(['DocumentLayout' , 'DocumentTemplate'])->find($model->id);
+      $document_content = view('organization.documents.preview',compact('document'))->render();
+      $model = Document::find($model->id);
+      $model->document_content = $document_content;
+      $model->save();
       Session::flash('success','Document Created Successfully');
       return back();;
     }
@@ -237,8 +242,14 @@ class DocumentController extends Controller
       $document = Document::where('id',$id)->delete();
       return back();
     }
-    public function editDocument($id)
-    {
+
+    /**
+     * To update document and its content
+     * @param  [type] $id having selected document id 
+     * @return [type]   will show the form of document
+     * @author Rahul
+     */
+    public function editDocument($id){
       $document = Document::where('id',$id)->first();
       $params = [
                   'departments'   => $data['departments'] = Department::pluck('name','id'),
@@ -250,10 +261,20 @@ class DocumentController extends Controller
       return view('organization.documents.createDocument',compact(['document','params']));
     }
 
-    public function updateDocument(Request $request)
-    {
-      $upadte = Document::where('id',$request['id'])->update($request->except('_token','id'));
-      return back();
+    /**
+     * Update document content and details
+     * @param  Request $request having all posted data
+     * @return [type]           return back to same route
+     * @author Rahul
+     */
+    public function updateDocument(Request $request){
+        $updateArray = $request->except('_token','id');
+        $document = Document::with(['DocumentLayout' , 'DocumentTemplate'])->find($request['id']);
+        $document_content = view('organization.documents.preview',compact('document'))->render();
+        $updateArray['document_content'] = $document_content;
+        $upadte = Document::where('id',$request['id'])->update($updateArray);
+        Session::flash('success','Document updated successfully!!');
+        return back();
     }
 
 
@@ -333,15 +354,20 @@ class DocumentController extends Controller
         return view('organization.documents.assign');
     }
 
+
+    /**
+     * Save Assign Document Form Request
+     * @param  Request $request     have all the posted data by assign user
+     * @param  [type]  $document_id having integer type document id
+     * @return [type]               will return back to previous page from where post the requets
+     */
     public function saveAssignDocument(Request $request, $document_id){
 
         $document = Document::with(['DocumentLayout' , 'DocumentTemplate'])->find($document_id);
-        $content = view('organization.documents.preview',compact('document'))->render();
         foreach($request->users as $key => $user){
             $model = AssignDocument::firstOrNew(['user_id'=>$user,'document_id'=>$document_id]);
             $model->user_id = $user;
             $model->document_id = $document_id;
-            $model->document_content = $content;
             $model->save();
             $userModel = org_user::where(['id'=>$user])->first();
             if($request->send_email == 1){

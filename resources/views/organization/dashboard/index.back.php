@@ -163,7 +163,7 @@
 <div>
 @include('organization.dashboard._tabs')
 		<div class="row">
-			{{-- {{dump($model)}} --}}
+		
 			{{-- @foreach($model as $key => $value)
 				<div class="col l3 pr-7">
 					<div class="card shadow mt-0" style="">

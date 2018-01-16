@@ -22,7 +22,7 @@ if($is_visualization){
 			$visual_settings[$value['key']] = $value['value'];
 		}
 	}
-	//dump($visual_settings);
+	
 }
 
 

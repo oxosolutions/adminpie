@@ -141,7 +141,7 @@ class DatasetController extends Controller
                     http_response_code(500);
                     // dd($fields);
                      // dd($fields , $sel_fields);
-                    // dump('sel',$sel_fields);
+                   
                     if(!$token){
                         update_meta('App\Model\Organization\DatasetMeta', ['token'=>str_random(25)], ['dataset_id'=>$id], false);
                         $token = get_meta('Organization\DatasetMeta',$id, $key = 'token', $column = 'dataset_id', $array = false);
@@ -170,7 +170,7 @@ class DatasetController extends Controller
     }
     protected function api_data_set($query_data , $field_value, $column , $next_column_name=null){
         $new = [];
-         dump('f v', $field_value);
+         
          if(array_key_exists('blank', $field_value)) {
             // if(!empty($next_column_name)){
                 $new[] = $this->api_data_set($query_data, $field_value['children'],  $column, $field_value['id']);
@@ -182,7 +182,7 @@ class DatasetController extends Controller
             // if(!empty(@$blank)){
             //     $new[$blank][$column[$field_value['id']]] = $this->api_data_set($query_data, $field_value['children'],  $column);
             // }else{
-            dump($column);
+           
                 $new[] = $this->api_data_set($query_data, $field_value['children'],  $column, $column[$field_value['id']]);
             // }
          }else{
@@ -216,7 +216,7 @@ class DatasetController extends Controller
                     if(!empty($columns[$nextValue['id']])){
                             $new = $columns[$nextValue['id']];
                     }
-                            //dump($nextValue);
+                           
                             $data[$new_key] = $this->set_datas($query_data, $nextValue, $columns , $new);
 
                         // $data[$nextValue['id']] = $this->set_datas($query_data, $fields, $columns , $nextValue['id']);
@@ -243,17 +243,17 @@ class DatasetController extends Controller
             //         }
             //     }
             // }
-            // dump($data);
+            
             return $data;
     } 
     protected function manipulation_data($query_data, $fields, $data){
         http_response_code(500);
-        // dump($fields, $data );
+       
         foreach (json_decode($query_data, true) as $rKey => $rValue) {
             foreach ($fields as $fKey => $fValue) {
                 // $res[$rKey] = $set_data = $this->api_data_set($rValue, $fValue, $data['columns']);
-               // dump();
-                // dump('in loop', $set_data);
+               
+                
                 if(empty($fValue['children']) && empty($fValue['blank'])) {
                     $col_val = $data['columns'][$fValue['id']];
                     $res[$rKey][$col_val] =  $rValue[$fValue['id']];
@@ -296,9 +296,9 @@ class DatasetController extends Controller
                 //     }
                 // }
             }
-            // dump($rValue);
+           
         }
-        // dump($res);
+       
     return $res; 
 
         // $preparedData = [];
@@ -1001,7 +1001,7 @@ class DatasetController extends Controller
         $history = [];
         $dataset = Dataset::find($id);
         $datasetTable = Dataset::find($id)->dataset_table;
-        if(empty(Schema::hasTable($without_ocrm_tab_name))){
+        if(empty(Schema::hasTable($datasetTable))){
                 $data['error'] = "Dataset table not exist."; 
             }
         try{
@@ -1058,8 +1058,7 @@ class DatasetController extends Controller
         unset($datasetHeaders['status']);
         unset($datasetHeaders['parent']);
         foreach($request->records as $key => $record){
-            // dump(array_keys($datasetHeaders));
-            // dump($record);
+           
             $recordArray = array_combine(array_keys($datasetHeaders), $record);
             $isRecordExists = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->where('id',$recordArray['id'])->first();
             $lastInserted = (array)DB::table(str_replace('ocrm_','',$dataset->dataset_table))->orderby('id','desc')->first();

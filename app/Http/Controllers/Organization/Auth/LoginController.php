@@ -54,7 +54,6 @@ class LoginController extends Controller
             $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
             if($organizationToken != null){
                 Session::put('group_id',$organizationToken->group_id);
-
                 $organizationToken->auth_login_token = '';
                 $organizationToken->save();
 

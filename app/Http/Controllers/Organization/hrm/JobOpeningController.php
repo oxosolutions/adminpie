@@ -103,6 +103,9 @@ class JobOpeningController extends Controller
          $jobMeta = new JobOpeningMeta();
          $jobMeta->opening_id =  $job->id;
          $jobMeta->key =  $key;
+         if(is_array($value)){
+            $value = json_encode($value);   
+         }
          $jobMeta->value =  $value;
          $jobMeta->save();
         }

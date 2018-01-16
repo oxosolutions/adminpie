@@ -266,7 +266,7 @@ class AccountController extends Controller
                             $metaModel->save();
                         }
                     }else{
-                        // dump($key);
+                       
                         $metaModel = UM::firstOrNew(['key'=>$key,'user_id'=>$id]);
                         $metaModel->key = $key;
                         $metaModel->value = $value;

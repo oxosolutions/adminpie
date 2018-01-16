@@ -1,4 +1,4 @@
-    
+
     @if($default_model != null)
         
         {!! Form::model($default_model,['route'=>'save.form.data','method'=>'POST']) !!}

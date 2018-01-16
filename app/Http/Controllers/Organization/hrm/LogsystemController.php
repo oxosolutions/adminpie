@@ -31,7 +31,7 @@ class LogsystemController extends Controller
 			if(array_key_exists('query', $logAr))
           	   {
 
-          	   	dump($logAr['query']);
+          	  
 
 					// if($logAr['query'] != $value['query'])
 					// {

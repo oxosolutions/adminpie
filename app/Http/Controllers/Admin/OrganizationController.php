@@ -51,20 +51,26 @@ class OrganizationController extends Controller
         $sortedBy = @$request->sort_by;
         if($request->has('search')){
             if($sortedBy != ''){
-                $model = ORG::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->ORGc_asc)->paginate($perPage);
+                $model = ORG::with(['group_relation'])->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->ORGc_asc)->paginate($perPage);
             }else{
-                $model = ORG::where('name','like','%'.$request->search.'%')->paginate($perPage);
+                $model = ORG::with(['group_relation'])->where('name','like','%'.$request->search.'%')->paginate($perPage);
             }
         }else{
             if($sortedBy != ''){
-                $model = ORG::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+                $model = ORG::with(['group_relation'])->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
             }else{
-                $model = ORG::paginate($perPage);
+                // $model = ORG::with(['group_relation'])->paginate($perPage);
+                $model = ORG::with(['group_relation'])->paginate($perPage);
             }
         }
+
+        foreach($model as $key => $single_org){
+            $model[$key]->group_name = $single_org->group_relation->name; 
+        }
+
         $datalist =  [
                       'datalist'=>  $model,
-                      'showColumns' => ['name'=>'Name','status' => 'Status','created_at'=>'Created'],
+                      'showColumns' => ['name'=>'Name','status' => 'Status','group_name'=>'Group','created_at'=>'Created'],
                       'actions' => [
                                     'edit'    =>  ['title'=>'Edit','route'=>'edit.organization' , 'class' => 'edit'],
                                     'delete'  =>  ['title'=>'Delete','route'=>'delete.organization','class'=>'red'],
@@ -80,7 +86,7 @@ class OrganizationController extends Controller
 	}
 	
     public function authAttemptOrganization($organizationID){
-        if(Auth::guard('admin')->check()){
+        //if(Auth::guard('admin')->check()){
             Session::put('organization_id',$organizationID);
             $organization = ORG::find($organizationID);
 
@@ -98,9 +104,10 @@ class OrganizationController extends Controller
                 return redirect()->to('http://'.$organization->secondary_domains.'/login/'.$tokenString);
 
             }else{
+
                 return redirect()->to('http://'.$organization->slug.'.'.env('MAIN_DOMAIN').'/login/'.$tokenString);
             }
-        }
+        //}
     }
 
 
@@ -180,11 +187,12 @@ class OrganizationController extends Controller
         if(!empty($organizations)){
             foreach (json_decode(json_encode($organizations),true)  as $orgKey => $orgValue) {
                 $existed = $orgValue['TABLE_NAME'];
-                //if($existed != "ocrm_".$existed_id."_users"){
-                  $new = str_replace($existed_id, $new_id, $existed);
-                  DB::select("CREATE TABLE ".$new." LIKE ".$existed);
-                  DB::select("INSERT ".$new." SELECT * FROM ".$existed);
-                //}
+                
+                $new = str_replace($existed_id, $new_id, $existed);
+                DB::select("CREATE TABLE ".$new." LIKE ".$existed);
+                if($existed != "ocrm_".$existed_id."_users"){
+                    DB::select("INSERT ".$new." SELECT * FROM ".$existed);
+                }
             } 
             return 'table_exist';
         }else{
@@ -229,7 +237,6 @@ try{
             ORG::where('id',$org_id)->update(['active_code'=>$active_code]);
             Session::put('organization_id',$org->id);
             $checkMaster = GlobalSetting::where('key','primary_organization');
-            
             if($checkMaster->exists()){
                 $primary_orgnaization = $checkMaster->first();
                  if(!empty($primary_orgnaization->value)){
@@ -459,7 +466,7 @@ try{
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_document',
-                                '--schema'=>'title:string, description:text:nullable, layout:integer, template:integer, status:integer, order:integer'
+                                '--schema'=>'title:string, description:text:nullable, layout:integer, template:integer, document_content:longtext, status:integer, order:integer'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,

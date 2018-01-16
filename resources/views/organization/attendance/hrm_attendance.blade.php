@@ -262,13 +262,15 @@
 		
 			<tr class="table-tr">
 				<td>{{$loop->iteration}}</td>
-				<td>{{@$user_meta['employee_id']}}</td>
+				<td>{{@$user_meta['employee_id']}} {{$user_meta['user_shift'] }}</td>
 				<td>{{@$vals['name']}}</td>
 
 				<td>{{@$designation}}</td>
 				<td>{{@$department}}</td>
 			@if($lock_status)
-				<td> {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave','LP'=>'Loss of pay'],@$attendance_status	,['class' => 'browser-default', ]) !!}</td>
+
+				<td> {!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
+					 {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave','LP'=>'Loss of pay'],@$attendance_status	,['class' => 'browser-default', ]) !!}</td>
 				@if($punch_in_out)
 						<td>
 						@foreach($punch_in_out as $key =>$val)

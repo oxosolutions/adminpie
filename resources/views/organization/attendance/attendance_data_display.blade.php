@@ -60,7 +60,7 @@
  			</div>
 			<div style="clear:both;"> </div>
 
-			{{-- {{ dump($user_data->toArray()) }} --}}
+		
 			
 			@foreach($user_data as $userKey => $value)
 
@@ -114,7 +114,6 @@
 						if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 						{
  							$attendanceVal = collect($attendance_data[$user_meta['employee_id']])->keyBy('date');
- 							// dump($user_meta['employee_id'] , $attendanceVal->toArray());
  						}
 							for($d=$number; $d<=$total_days; $d++)
 							{

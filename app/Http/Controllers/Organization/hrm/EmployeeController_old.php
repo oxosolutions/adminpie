@@ -156,7 +156,7 @@ class EmployeeController_old extends Controller
        
 
         // foreach ($model as $key => $record) {
-        //     dump($record['belong_group']['email']);
+     
         //     $model[$key]['department'] = '';
         //     $model[$key]['designation'] = '';
         //     $model[$key]['employee_id'] = '';
@@ -169,7 +169,7 @@ class EmployeeController_old extends Controller
                //  return [$item['key']= $item['value'] ];
                //  });
 
-            // dump($model);
+           
 
 
 
@@ -660,7 +660,7 @@ class EmployeeController_old extends Controller
                             }
                             $groupUsers->fill($value);
                             $groupUsers->save();
-                            dump($groupUsers->id);
+                           
 
                             $user = new User();
                             $user->user_id = $groupUsers->id;

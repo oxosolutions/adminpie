@@ -12,6 +12,7 @@ use App\Model\Organization\Attendance;
 use App\Model\Organization\AttendanceFile;
 use App\Model\Organization\User;
 use App\Model\Organization\UsersMeta;
+use App\Model\Organization\Shift;
 use App\Model\Group\GroupUsers;
 use Carbon\Carbon;
 use DB;
@@ -19,7 +20,23 @@ use EmployeeHelper;
 use Session;
 use Auth;
 use Illuminate\Support\Collection;
-
+/*
+    |--------------------------------------------------------------------------
+    | Attendance Controller
+    |--------------------------------------------------------------------------
+    |
+    | This controller handles Employee's Attendance. Some important Methods list below with description:-
+    | @import_form : This method display Import form & form post on @attendance_Import
+    | @attendance_import :  This method handle xls file to import monthly attendance of employee.
+    |  
+    |	Method use To display attendance list below:-
+    |		1. 	list_attendance : Return on view (organization/attendance/attendance.blade.php) then Ajax request goes to AttendanceController@ajax method 
+    |							  & get attendance data by default previous month from current month.
+    |       2.  Ajax : This method use for Ajax Request to get attendance & also handle filter attendance by- Monthly, weekly, Daily. 
+    |				   Return on view (organization/attendance/attendance_table.blade.php) deal in monthly, weekly, daily tray.
+    |				   attendance_data_disply.blade.php deal in employee list & attendance data display in this file.
+    |
+    */
 
 class AttendanceController extends Controller
 {
@@ -29,6 +46,7 @@ class AttendanceController extends Controller
  		$current_date_time = Carbon::now('Asia/Calcutta');
  		$this->current_date_data  = ['date'=>$current_date_time->day, 'month'=> '0'.$current_date_time->month , 'year'=>$current_date_time->year, 'day'=> $current_date_time->format('l') , 'month_week_no'=>$current_date_time->weekOfMonth];
  	}
+ 	
 	public function design_attendance()
 	{
 		return view('common.Designattendances');
@@ -39,7 +57,6 @@ class AttendanceController extends Controller
      * @return [route]           [will redirect back]
      * @author  paljinder Singh, rahul
      */
-
 	public function check_in_out(Request $request)
 	{
 		$u_id = Auth::guard('org')->user()->id;
@@ -174,8 +191,6 @@ class AttendanceController extends Controller
      * @author  paljinder Singh
      */
 	protected function import_data_handling($data, $year, $month_year, $month, $dates, $daysInMonth){
-		// $month_year = date('m-Y', strtotime($datee[0]));
-		// $year = date('Y', strtotime($datee[0]));
 		$keys = "abc";
 			$i = 1;
             foreach($data as $logkey => $logvalue){				
@@ -209,9 +224,6 @@ class AttendanceController extends Controller
 				foreach ($employee as $key => $value) {
 					$employee_id = $value['employee_id'];
 					$limitDays = 1;
-					
-				  	
-
 				if(isset($value['attendence'])){
  					foreach ($value['attendence'] as $attendanceDate => $attendanceValue) {
 						if($limitDays > $daysInMonth){
@@ -425,7 +437,7 @@ class AttendanceController extends Controller
 	/**
      * ajax use for attendance display & filter attendance 
      * @param -$request
-     * @return attendance data
+     * @return view (organization/attendance/attendance_table.blade.php +include attendance_data_display.blade.php  ) 
      * @author  paljinder Singh
      */
 	public function ajax(Request $request){
@@ -469,8 +481,7 @@ class AttendanceController extends Controller
      * @return view
      * @author  paljinder Singh
      */
-	public function attendance_by_hr(Request $request){	
-
+	public function attendance_by_hr(Request $request){
 		$filter_dates = $attendance_data = null;
 		$current_dates = $this->current_date_data;
 		if($request->isMethod('post')){
@@ -485,18 +496,28 @@ class AttendanceController extends Controller
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);
 	}
 	/**
+	 * Gets the shift time Use in attendance_fill_hr *
+	 * @param      <int>  $id     The identifier *
+	 * @return     <json> from time  , To time
+	 */
+	protected function get_shift_time($id){
+		$shift_hours = Shift::select(['from','to'])->where('id',$id)->first();
+		return json_encode([$shift_hours->from, $shift_hours->to]);
+	}
+	/**
      * attendance_fill_hr  save data
      * @param -
      * @return to list attendance
      * @author  paljinder Singh
      */
+	
 	public function attendance_fill_hr(Request $request )
 	{
+		$current_date_data = $this->current_date_data;
 		$conditions = $request['dates'];
 		unset($request['dates']);
 		foreach ($request->all() as $key => $value) {
 			if($key !='_token'){
-
 				if(isset($value['punch_in_out']))
 				{
 					$value['punch_in_out'] = json_encode($value['punch_in_out']);
@@ -510,8 +531,10 @@ class AttendanceController extends Controller
 				}else{
 					$value['in_out_data'] =Null;
 				}
-
 				$where 		= 	array_collapse([$conditions, ['employee_id'=>$key]]);
+				if($current_date_data['year']==$conditions['year'] && $current_date_data['month']==$conditions['month'] && $current_date_data['date']==$conditions['date'] ){
+					$value['shift_hours'] 	= $this->get_shift_time($value['shift_id']);
+				}
 				$all_data 	= 	array_collapse([$conditions, $value]);
 				$attendance_check = Attendance::select('id','lock_status')->where($where);
 				if($attendance_check->exists())
@@ -536,6 +559,7 @@ class AttendanceController extends Controller
 				$attendance->save();
 			}
 		}
+		
 		return redirect()->route('list.attendance');
 	}
 	/**

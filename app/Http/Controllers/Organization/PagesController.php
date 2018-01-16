@@ -45,7 +45,7 @@ class PagesController extends Controller
 
     // public function update(Request $request)
     // {
-    //     dump($request->all());
+   
     //     $update = Page::find($request->id);
     //     if($request['status'] == 'true'){
     //         $request['status'] = 1;

@@ -29,7 +29,7 @@
 </tr>
        
      
- <!-- {{dump($role_permisson)}}
+ <!-- 
  {{dump(App\Permisson::permisson_data())}} -->
 
  

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('content')
 
-{{-- {{dump($type)}} --}}
+
 <div class="row">
 	<div class="">
 	{!! Form::open(['route'=>'save.user_meta', 'class'=> 'form-horizontal','method' => 'post','id'=>'save-user-details'])!!}

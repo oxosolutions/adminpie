@@ -28,7 +28,7 @@ class ModuleController extends Controller
 
       $tables =  collect(json_decode(json_encode($table_list),true))->pluck('TABLE_NAME')->all();
      $tables =  array_combine($tables, $tables);
-     // dump($combine);
+    
     	return view('admin.module.index',['listModule'=>$model,'moduleData'=>$moduleData,'subModuleData' => $subModuleData, 'tables'=>$tables]);
     }
     public function create()

@@ -14,17 +14,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('admin.settings._tabs')
-	{!!Form::open(['route'=>'save.organizationSettings','method'=>'POST'])!!}
-		{{-- <div class="col l3" style="line-height: 30px">
-			Primary Organization
-		</div>
-		<div class="col l9">
-			@php
-				$organizationListArray = App\Model\Admin\GlobalOrganization::organizationsList()->toArray();
-				$organizationListArray[0] = 'Default';
-			@endphp
-			{!! Form::select('primary_organization',$organizationListArray,$model,['placeholder'=>'Select Primary Organization'])!!}
-		</div> --}}
+	{!!Form::model($model,['route'=>'save.organizationSettings','method'=>'POST'])!!}
 		<input type="hidden" name="key" value="primary_organization">
 		{!! FormGenerator::GenerateForm('organization_setting_form') !!}
 		<button type="submit" class="">Save</button>

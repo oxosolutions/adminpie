@@ -45,10 +45,20 @@ $(document).ready(function(){
       		});
       	});
 
+        /**
+         * Form builder Add New Field (textbox as repeater)
+         */
+        
         $('.add_more_text').click(function(){
-            var inputField = $(this).parent('#field_name').find('input:first').clone();
-            $(this).parent('#field_name').append(inputField); 
+            var elem = $(this).parent('.field-wrapper');
+            var fieldText = elem.find('label').text().trim();
+            console.log(fieldText);
+            var inputField = elem.find('input:first').clone();
+            elem.find('.field').append(inputField); 
+            elem.find('input:last').attr('placeholder',fieldText).css('margin-top','1%');
         });
+
+        /*************************** End Here *****************************/
 
 
 	/* code for visualization page */	

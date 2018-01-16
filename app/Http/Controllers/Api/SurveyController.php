@@ -90,7 +90,7 @@ class SurveyController extends Controller
                $section[] = $value['section'];
                foreach ($value['section'] as $sectionKey => $sectionValue) 
                {
-                // dump($sectionValue);
+                
                 $section_type = $sectionValue['sectionMeta']->where('key','section_type')->first();
                 $section_type_value ="";
                 if(!empty($section_type['key'])){
@@ -284,7 +284,7 @@ class SurveyController extends Controller
     }
 
     public function save_app_survey_filled_data(Request $request){
-        //dump($request['activation_code']);
+        
         $app_version =   $request['app_version'];
          $organization = GO::where('active_code',$request['activation_code']);
          if($organization->exists()){
@@ -310,7 +310,7 @@ class SurveyController extends Controller
            $value = array_filter($value);
            if(!$value){
            }else{
-            // dump($value);
+            
             $value['app_version'] = $app_version;
             $collect_data =  collect($value)->except('record_type', 'survey_sync_status', 'incomplete_name', 'survey_status', 'completed_groups', 'last_group_id', 'last_field_id', 'created_at', 'created_by', 'device_detail', 'unique_id', 'imei', 'mac_address', 'survey_submitted_from', 'survey_submitted_by', 'survey_completed_on', 'survey_started_on', 'ip_address');
             if(array_filter($collect_data->toArray())){
@@ -399,10 +399,10 @@ class SurveyController extends Controller
             $table_column_lower_case = array_map('strtolower', $table_column);
 
             $new_columns   = $columnsdata->diff($table_column_lower_case)->toArray();
-          // dump($new_columns);
+         
 
           //  $new_columns = array_unique($new_columns);
-            // dump($new_columns);
+           
             if(!empty($new_columns)){
                 foreach ($new_columns as $key => $value) {
 

@@ -31,5 +31,9 @@ class GlobalOrganization extends Model
 		return false;
   	}
 
+    public function group_relation(){
+        return $this->belongsTo('App\Model\Admin\GlobalGroup','group_id','id');
+    }
+
 
 }

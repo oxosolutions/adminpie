@@ -10,7 +10,7 @@
 @extends($layout)
 @section('content')
 	{!! $pageData->content !!}{{-- 
-{{ dump($pageData->comments) }}
+
 
 
 <div>

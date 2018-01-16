@@ -61,7 +61,25 @@
 		.days{
 		font-size: 13px;
 		}
-
+		.box{
+			height: 14px;
+			width: 14px
+		}
+		.bg-grey-light{
+			background-color:rgb(238, 238, 238);
+		}
+		.dark-green{
+			background-color: rgb(30, 104, 35)
+		}
+		.normal-green{
+			background-color: rgb(68, 163, 64)
+		}
+		.light-green{
+			background-color: rgb(140, 198, 101)
+		}
+		.pale-yellow{
+			background-color: rgb(214, 230, 133)
+		}
 </style>
 
 	<script type="text/javascript">
@@ -133,9 +151,442 @@
 						</div>	
 					</div>
 
+					
+
 						
 					{{--- YEARLY STARTS --}}
 		<div id="yearly_data" class="row year-view">
+			<div class="font-size-0" style="font-size: 10px">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Days</div>
+				<div class=" display-inline-block box ml-2 mt-2">1</div>
+				<div class=" display-inline-block box ml-2 mt-2">2</div>
+				<div class=" display-inline-block box ml-2 mt-2">3</div>
+				<div class=" display-inline-block box ml-2 mt-2">4</div>
+				<div class=" display-inline-block box ml-2 mt-2">5</div>
+				<div class=" display-inline-block box ml-2 mt-2">6</div>
+				<div class=" display-inline-block box ml-2 mt-2">7</div>
+				<div class=" display-inline-block box ml-2 mt-2">8</div>
+				<div class=" display-inline-block box ml-2 mt-2">9</div>
+				<div class=" display-inline-block box ml-2 mt-2">10</div>
+				<div class=" display-inline-block box ml-2 mt-2">11</div>
+				<div class=" display-inline-block box ml-2 mt-2">12</div>
+				<div class=" display-inline-block box ml-2 mt-2">13</div>
+				<div class=" display-inline-block box ml-2 mt-2">14</div>
+				<div class=" display-inline-block box ml-2 mt-2">15</div>
+				<div class=" display-inline-block box ml-2 mt-2">16</div>
+				<div class=" display-inline-block box ml-2 mt-2">17</div>
+				<div class=" display-inline-block box ml-2 mt-2">18</div>
+				<div class=" display-inline-block box ml-2 mt-2">19</div>
+				<div class=" display-inline-block box ml-2 mt-2">20</div>
+				<div class=" display-inline-block box ml-2 mt-2">21</div>
+				<div class=" display-inline-block box ml-2 mt-2">22</div>
+				<div class=" display-inline-block box ml-2 mt-2">23</div>
+				<div class=" display-inline-block box ml-2 mt-2">24</div>
+				<div class=" display-inline-block box ml-2 mt-2">25</div>
+				<div class=" display-inline-block box ml-2 mt-2">26</div>
+				<div class=" display-inline-block box ml-2 mt-2">27</div>
+				<div class=" display-inline-block box ml-2 mt-2">28</div>
+				<div class=" display-inline-block box ml-2 mt-2">29</div>
+				<div class=" display-inline-block box ml-2 mt-2">30</div>
+				<div class=" display-inline-block box ml-2 mt-2">31</div>
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Jan</div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Feb</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+					<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Mar</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Apr</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">May</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Jun</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Jul</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Aug</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Sep</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Oct</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Nov</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
+			<div class="font-size-0" style="font-size: 0">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Dec</div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="normal-green display-inline-block box ml-2 mt-2"></div>
+				<div class="light-green display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+				
+			</div>
 			<div class="row m-20" >
 				<div class=" col l5 right-align">
 					<i class="fa fa-arrow-left lh-44" onclick="attendance_yearly_filter({{$filter['year']-1}})" ></i>
@@ -226,7 +677,9 @@
 
 						
 			@endfor
+
 			</div>
+
 		</div>
 					{{-- YEARLY ENDS --}}
 

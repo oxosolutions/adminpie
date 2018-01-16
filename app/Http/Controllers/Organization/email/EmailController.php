@@ -62,6 +62,11 @@ class EmailController extends Controller
                       ];
     	return view('organization.emails.index',$datalist);
     }
+    /**
+     * List of all templates
+     * @param  Request $request Having all posted data
+     * @return [type]        view
+     */
     public function templates(Request $request)
     {
         $datalist= [];

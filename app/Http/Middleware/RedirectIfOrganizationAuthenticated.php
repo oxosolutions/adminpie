@@ -9,6 +9,8 @@ use App\Model\Admin\GlobalOrganization;
 use Session;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\Page;
+use Schema;
+use DB;
 class RedirectIfOrganizationAuthenticated
 {
     /**
@@ -23,6 +25,7 @@ class RedirectIfOrganizationAuthenticated
     {
         
         $organization_settings = OrganizationSetting::getSettings('default_page');
+        $group_id = Session::get('group_id');
         if($organization_settings != ''){
             $page_slug = Page::find($organization_settings)->slug;
         }
@@ -39,13 +42,23 @@ class RedirectIfOrganizationAuthenticated
                 }
                 Session::put('organization_id',$model->id);
                 $auth = Auth::guard('org');
-                if ($auth->check()) {
-                    if($organization_settings != ''){
-                        return redirect()->route('view.pages',$page_slug);
-                    }else{
-                        return redirect('/dashboard');
+                $prefix = DB::getTablePrefix();
+                //if(Schema::hasTable($prefix.'group_'.$group_id.'_users')){
+                    if($auth->check()) {
+                        if($organization_settings != ''){
+                            return redirect()->route('view.pages',$page_slug);
+                        }else{
+                            return redirect('/dashboard');
+                        }
                     }
-                }
+                /*}else{
+                    if(!$request->isMethod('post')){
+                        Session::flush();
+                        Session::regenerate();
+                    }
+                    Session::put('organization_id',$model->id);
+                }*/
+               
             }else{
                 Session::put('organization_id',$secondary_domain->id);
                 $auth = Auth::guard('org');

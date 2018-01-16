@@ -16,7 +16,7 @@ class FormsMeta extends Model
 		    	if(!empty(Session::get('organization_id'))){
 
 		    		$this->table = Session::get('organization_id').'_form_meta';
-                    // dump($this->table);
+                   
 		    	}
             
 		   //  }

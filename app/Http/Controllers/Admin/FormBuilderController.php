@@ -431,9 +431,7 @@ class FormBuilderController extends Controller
 
     public function getFieldDataById($form_id,$section_id,$field_id)
     {
-        dump($form_id);
-        dump($section_id);
-        dump($field_id);
+        
         $modelName = $this->assignModel('FormBuilder');
         $model = $modelName::where(['section_id' => $section_id,'form_id'=>$form_id])->with([
                 'fieldMeta'=>function($query) use ($form_id, $section_id){
@@ -953,7 +951,7 @@ class FormBuilderController extends Controller
     }
     public function sectionMove(Request $request)
     {
-        // dump($request->all());
+       
         $modelName = $this->assignModel('section');
 
         if($request->has('want_to')){
@@ -1107,17 +1105,54 @@ class FormBuilderController extends Controller
         $this->validatePostedFormRequest($request);
         $organization_id = get_organization_id();
         $form_id = $request->form_id;
-        if(!Schema::hasTable($organization_id.'_form_data_'.$form_id)){
+        $dataTable = $organization_id.'_form_data_'.$form_id;
+        if(!Schema::hasTable($dataTable)){
             $this->createFormDataTable($organization_id, $form_id, $request);
+        }else{
+            $existingFields = $this->validateTableFields($request,$dataTable);
         }
         Session::put('form_id',$form_id); //set form id for session model
         $model = new FormData;
+        $lastColumn = 'id'; // to set column after in mysql
         foreach($request->except(['_token']) as $key => $value){
-            $model[$key] = $value;
+            if(in_array($key,$existingFields)){
+                $lastColumn = $key; // will carry last column
+                $model[$key] = $value;
+            }else{
+                $this->createColumnInExistingTable($dataTable,$key,$lastColumn);
+                $model[$key] = $value;
+            }
         }
         $model->save();
         Session::flash('success','Form Saved successfully!');
         return back();
+    }
+
+    /**
+     * To alter existing data table with new column
+     * @param  [type] $table       having the data table name
+     * @param  [type] $column      new column name
+     * @param  [type] $columnAfter having column name for after create column
+     * @return [type]              return boolean
+     * @author Rahul
+     */
+    protected function createColumnInExistingTable($table,$column, $columnAfter){
+        Schema::table($table,function($table) use ($column,$columnAfter){
+            $table->text($column)->after($columnAfter)->nullable();
+        });
+        return true;
+    }
+
+    /**
+     * To get currently generated table fields for compare with posted request
+     * @param  [type] $reqeust having posted data by user
+     * @param  [type] $table   havin the table name of data table
+     * @return [type]         will return array of columns
+     * @author Rahul
+     */
+    protected function validateTableFields($reqeust,$table){
+        $tableColums = Schema::getColumnListing($table);
+        return $tableColums;
     }
 
     /**
@@ -1138,5 +1173,17 @@ class FormBuilderController extends Controller
         });
     }
 
+    public function rawData($id){
+        if(Schema::hasTable(get_organization_id().'_form_data_'.$id)){
+            dd('Yes Table Exists');
+        }else{
+            dd('Table Not found!');
+        }
+        $modelName = $this->assignModel('forms');
+
+        $form = $modelName::find($id);
+        $slug = $modelName::select('form_slug')->where('id',$id)->first()->form_slug;
+        return view('admin.formbuilder.raw-data',compact('slug','form'));
+    }
 
 }

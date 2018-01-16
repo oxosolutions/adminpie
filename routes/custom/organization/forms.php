@@ -40,6 +40,6 @@
 	Route::post('/field/move/{field_id}',							['as'=>'org.field.move',				'uses'=>'Admin\FormBuilderController@fieldMove']);
 	Route::post('/section',											['as'=>'org.get.section',				'uses'=>'Admin\FormBuilderController@listSections']);
 
-	Route::get('/field/sort' , 										['as' => 'sort.field' , 				'uses' => 'Admin\FormBuilderController@sortField'])
-
+	Route::get('/field/sort' , 										['as' => 'sort.field' , 				'uses' => 'Admin\FormBuilderController@sortField']);
+    Route::get('/form/result/{id}',                                 ['as'=>'org.raw.data','uses'=>'Admin\FormBuilderController@rawData']);
 ?>

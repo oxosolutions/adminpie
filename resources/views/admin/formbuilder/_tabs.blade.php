@@ -26,6 +26,9 @@
       <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.settings')?'nav-item-current':''}}">
         <a href="{{ route($route_slug.'form.settings',$id) }}"><span class="nav-item-text">Settings</span></a>
       </li>
+      <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'raw.data')?'nav-item-current':''}}">
+        <a href="{{ route($route_slug.'raw.data',$id) }}"><span class="nav-item-text">Raw Data</span></a>
+      </li>
       <li class="aione-tab {{(Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''}}">
         <a href="{{ route($route_slug.'form.custom',$id) }}"><span class="nav-item-text">Customize</span></a>
       </li>

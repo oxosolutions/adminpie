@@ -80,7 +80,7 @@
 			@foreach($widgets as $widgetKey => $widget)
 				@php
 					$count[] = $widget->id;
-					// dump($widget['widgets']);
+					
 
 				@endphp
 			@endforeach

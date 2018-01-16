@@ -70,7 +70,7 @@ $body_text="";
                @endphp
        
 @endif
-@if(Session::has('import_new') || Session::has('alreadyInGroupNotOrg') || Session::has('emptyRow') || Session::has('updateRecord'))
+@if(Session::has('import_new') || Session::has('alreadyInGroupNotOrg') || Session::has('emptyRow') || Session::has('updateRecord') || Session::has('in_valid_date_format'))
 <div class="aione-table aione-border mt-20 mb-20">
        <h4 class="light-blue darken-4 p-10 bg-grey bg-lighten-4 m-0">Employees Import Report</h4>
 <table class="compact">

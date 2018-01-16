@@ -11,7 +11,7 @@
 <h1>Demoooooo Pages</h1>
 	{!! $pageData->content !!}
 	
-{{-- {{ dump($pageData->coments->toArray()) }} --}}
+
 <div>
 	{!! Form::open(['route'=>'save.comment']) !!}
 			{!! Form::hidden('page_id',$pageData->id)!!}
@@ -74,9 +74,9 @@
 		</li>
 	
 			
-		{{-- {{dump($value->id , $value->coment)}} --}}
+		
 		@if(!empty($value->reply->toArray()))
-		{{-- {{dump($value->reply->toArray())}} --}}
+		
 					 @include('organization.pages.reply',['value'=>$value])
 		{{-- <ul style="margin-left: 50px;">
 				@foreach($value->reply as $nextk => $nextV )

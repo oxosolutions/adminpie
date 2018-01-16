@@ -102,8 +102,7 @@ class SurveyHelper{
 							}
 						}elseif(@$devqid==$qqvalue){
 
-							//dump($jsonData);
-							foreach ($jsonData as $devkey => $devValue) {
+								foreach ($jsonData as $devkey => $devValue) {
 								if(is_array($devValue))
 								{
 									foreach ($devValue as $infokey => $infoValue) {

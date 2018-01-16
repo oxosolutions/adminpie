@@ -68,4 +68,11 @@
 			</span>
 		@endif
 	</div><!-- field -->
+    @php
+        $question_repeater = @FormGenerator::GetMetaValue($collection->fieldMeta,'question_repeater');
+    @endphp
+    @if($question_repeater == 'yes')
+        {!! Form::button('Add More',['class'=>'add_more_text']) !!}
+    @endif
+    
 </div><!-- field wrapper -->

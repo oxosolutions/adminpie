@@ -89,10 +89,10 @@ class SurveyStatsController extends Controller
         $fieldOption  = $collections->mapWithKeys(function($item){
           $message =[];
           $option = collect($item['field_meta'])->where('key','field_options')->first();
-            // dump($item['field_slug'] , $option);
+          
           if(!empty($option['value'])){
             $opt_val =  json_decode($option['value'],true);
-            //dump($opt_val);
+         
             foreach ($opt_val as $key => $value) {
                 if(empty($value['key']) || empty($value['value'])){
                     $message['waring'] = 'May option key or val empty';
@@ -157,7 +157,8 @@ class SurveyStatsController extends Controller
        }
     }
     public function survey_result(Request $request, $id)
-    {  $condition_data =null;
+    {  
+       $condition_data =null;
        $metaTable =  FormsMeta::where(['form_id'=>$id,'key'=>'survey_data_table']);
        if($metaTable->exists()){
           $table =   $metaTable->first()->value;
@@ -282,7 +283,7 @@ class SurveyStatsController extends Controller
         $sec_repeater =  section::with(['sectionMeta'=>function($query){
         },'fields'])->where('form_id',$id)->get();
 
-        foreach ($sec_repeater as $key => $value) {// dump($key , $value['sectionMeta']);
+        foreach ($sec_repeater as $key => $value) {
           if( isset($value['sectionMeta'])  &&  count($value['sectionMeta']) >0  &&  $value['sectionMeta'][0]['value']=='repeater'){{
                 $repeater_data[$index]['section_slug'] = $value['section_slug'];
                 foreach ($value['fields'] as $field_key => $field_value) {
@@ -303,7 +304,7 @@ class SurveyStatsController extends Controller
        });
 
         if($request->isMethod('post')){
-          // dump($request->all());
+          
           if(empty($request['fields'])){
             $request['fields'] = array_keys($column_fields);
           }

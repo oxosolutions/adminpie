@@ -61,7 +61,7 @@ class AttendanceController extends Controller
 			{				
 				if ($logvalue[0] == "Period :")
 				{
-					dump($logvalue);
+					
 				}
 				if ($logvalue[0] == "No :")
 				{
@@ -221,7 +221,7 @@ class AttendanceController extends Controller
 
 			$year_month  = "$years-$month";
 		 	$dt = Carbon::parse($year_month);	
-		 	//dump($request->all());	  	
+		 		  	
 		 	//die;
 		}
 

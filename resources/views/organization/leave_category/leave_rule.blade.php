@@ -39,7 +39,8 @@ $page_title_data = array(
 	</div>
 @endif
 @include('common.pageheader',$page_title_data)
-
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
 <div class="row">
 			<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 			@if(isset($data))
@@ -220,37 +221,118 @@ $page_title_data = array(
 
 	
 		{!! FormGenerator::GenerateForm('edit_leave_category_form') !!}
-		<div class="row" style="padding-bottom: 15px">
+		<div data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-name field-wrapper-type-text ">
+			<div id="field_label_name" class="field-label">
+				<label for="input_name">
+					<h4 class="field-title" >
+						Minimum Saction Of Leave 1
+						{{@$data['minimum_saction_leave']}}
+					</h4>
+				</label>
+			</div><!-- field label-->
+			<div id="field_name" class="field field-type-text">
+				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field"]) !!} 
+			</div><!-- field -->
+            
+		</div>
+		{{-- <div class="row" style="padding-bottom: 15px">
 			<div class="col l3" style="line-height: 30px">
-				Minimum Saction Of Leave 
+				Minimum Saction Of Leave 1
 				{{@$data['minimum_saction_leave']}}
 			</div>
 			<div class="col l9">
-				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field","style"=>"border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px"]) !!}
+				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field"]) !!}
 			</div>
-		</div>
-		<div class="row"  style="padding-bottom: 15px">
-			<div class="col l3" style="line-height: 30px">
-				Include Designation
- 				@if(!empty($data['data_designation']))
-					
-					@php
-						$data['data_designation']= array_map('intval', json_decode($data['data_designation']));
-					@endphp
-				@endif
-			</div>
-			<div class="row"  style="padding-bottom: 15px">
-			<div class="col l9">
-				<div class="col l6 pl-7">
-				{{-- <h1> desss</h1> --}}
-					{!! Form::select('include_designation[]',@$data['designationData'],@$data['data_designation'],['multiple' => true, 'id'=>'include_designation','class'=>'browser-default', 'placeholder'=>"Valid For"])!!}
-				</div>
-			</div>
-		</div>	
-	</div>		
+		</div> --}}
+		<div id="aione_form_section_630" class="aione-form-section non-repeater">
+		    <div class="aione-row">
+		        <div id="aione_form_section_content" class="aione-form-section-content">
+		            <div class="aione-row ar">
+		                <div  data-conditions="0" data-field-type="multi_select" class="field-wrapper ac field-wrapper-label_select field-wrapper-type-multi_select ">
+		                    <div id="field_label_label_select" class="field-label">
+		                        <label for="input_label_select">
+		                            <h4 class="field-title" id="label select">
+		                                Include Designation
+						 				@if(!empty($data['data_designation']))
+											
+											@php
+												$data['data_designation']= array_map('intval', json_decode($data['data_designation']));
+											@endphp
+										@endif
+		                            </h4>
+		                        </label>
+		                    </div>
+		                    <!-- field label-->
+		                    <div id="field_label_select" class="field field-type-multi_select">
+		                        <input name="label_select" type="hidden">
+		                        {!! Form::select('include_designation[]',@$data['designationData'],@$data['data_designation'],['multiple' => true, 'id'=>'include_designation', 'placeholder'=>"Valid For"])!!}
+		                        <div class="field-actions">
+		                            <a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a>
+		                            / 
+		                            <a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a>
+		                        </div>
+		                    </div>
+		                    <!-- field -->
+		                </div>
+		                <!-- field wrapper -->
+		                <div  data-conditions="0" data-field-type="multi_select" class="field-wrapper ac field-wrapper-label_select field-wrapper-type-multi_select ">
+		                    <div id="field_label_label_select" class="field-label">
+		                        <label for="input_label_select">
+		                            <h4 class="field-title" id="label select">
+		                             	Include User
+		                            </h4>
+		                        </label>
+		                    </div>
+		                    <!-- field label-->
+		                    <div id="field_label_select" class="field field-type-multi_select">
+		                        <input name="label_select" type="hidden">
+		                        {!! Form::select('user_include[]',@$data['user_include'],@$select['user_include'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user include"])!!}
+		                        <div class="field-actions">
+		                            <a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a>
+		                            / 
+		                            <a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a>
+		                        </div>
+		                    </div>
+		                    <!-- field -->
+		                </div>
+		                <!-- field wrapper -->
+		                <div  data-conditions="0" data-field-type="multi_select" class="field-wrapper ac field-wrapper-label_select field-wrapper-type-multi_select ">
+		                    <div id="field_label_label_select" class="field-label">
+		                        <label for="input_label_select">
+		                            <h4 class="field-title" id="label select">
+		                            	Exclude User
+		                            </h4>
+		                        </label>
+		                    </div>
+		                    <!-- field label-->
+		                    <div id="field_label_select" class="field field-type-multi_select">
+		                        <input name="label_select" type="hidden">
+		                      		{!! Form::select('user_exclude[]',@$data['user_exclude'],@$select['user_exclude'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user exclude"])!!}
+		                        <div class="field-actions">
+		                            <a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a>
+		                            / 
+		                            <a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a>
+		                        </div>
+		                    </div>
+		                    <!-- field -->
+		                </div>
+		                <!-- field wrapper -->
+		            </div>
+		            <!-- .aione-row -->
+		        </div>
+		        <!-- .aione-form-content -->
+		    </div>
+		    <!-- .aione-row -->
+		</div> 
+		<!-- .aione-form-section -->
+			
+							
+								
+
+			
 
 			<div id="user_drop_down">	
-			<div class="row"  style="padding-bottom: 15px">
+		{{-- 	<div class="row"  style="padding-bottom: 15px">
 				<div class="col l3" style="line-height: 30px">
 					Include User
 					
@@ -262,8 +344,8 @@ $page_title_data = array(
 						
 					</div>
 				</div>
-			</div>	
-			<div class="row"  style="padding-bottom: 15px">
+			</div>	 --}}
+			{{-- <div class="row"  style="padding-bottom: 15px">
 				<div class="col l3" style="line-height: 30px">
 					Exclude User
 					
@@ -273,7 +355,7 @@ $page_title_data = array(
 						{!! Form::select('user_exclude[]',@$data['user_exclude'],@$select['user_exclude'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user exclude"])!!}
 					</div>
 				</div>
-			</div>
+			</div> --}}
 		</div>	
 
 
@@ -282,7 +364,7 @@ $page_title_data = array(
 
 
 		<div class="row" style="padding-bottom: 15px">
-		{!! Form::submit('submit',['class'=>'btn blue white-text'])!!}
+		{!! Form::submit('Save')!!}
 		</div>
 
 
@@ -405,4 +487,8 @@ $("#include_designation").on('change',function(event){
 	$('.'+id).show();
 }
 </script>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')	
 @endsection

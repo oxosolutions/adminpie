@@ -148,13 +148,13 @@ class ActivityTemplateController extends Controller
     	if($request->isMethod('post'))
     	{
     		foreach ($request->template as $key => $value) {
-    			dump($value);
+    			
     			GlobalActivityTemplate::where('id',$key)->update(['template'=>$value['template']]);
     		}
     		
     	}
     	return view('admin.activity-template.edit',compact('datas'));
-    	// dump($data);
+    	
     }
     public function delete($id){
     		GlobalActivityTemplate::where('id',$id)->delete();

@@ -227,7 +227,9 @@ class DashboardController extends Controller
 		
 		$id = get_user_id();
 		$dashboards = get_user_meta($id, 'dashboards');
-		$slug = strtolower(str_replace(' ', "-", $request->slug));
+        $slug = preg_replace('/[^a-zA-Z0-9\']/', '', $request->slug);
+        $slug = str_replace("'", '', $slug);
+		$slug = strtolower(str_replace(' ', "-", $slug));
 		$value = ['title'=>$request->title,'description'=>$request->description ,'slug' => $slug,'widgets' => array()];
 
 		if($dashboards != false && !empty(json_decode($dashboards))){

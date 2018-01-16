@@ -1,21 +1,18 @@
-
 @extends('layouts.main')
 @section('content')
-<div class="row">
-	<div class="col-md-12">
-	{!! Form::model($model, ['route'=>['edit.applicant',$model['id']], 'class'=> 'form-horizontal','method' => 'post'])!!}
-			<div class="row">
+@php
+    $page_title_data = array(
+    'show_page_title' => 'yes',
+    'show_add_new_button' => 'yes',
+    'show_navigation' => 'yes',
+    'page_title' => 'Create Applicant',
+    'add_new' => 'List Applicant'
+); 
 
-				<div class="col-md-12 ">
-					<div class="panel panel-flat">
-						<input type="text" value="{{$id}}">
-						<div class="panel-body">
-							{!! FormGenerator::GenerateForm('appinfo',['type'=>'inset'])!!}
-						</div>
-					</div>
-				</div>
-			</div>
-		{!!Form::close()!!}
-	</div>
-</div>
+     
+@endphp
+@include('common.pageheader',$page_title_data) 
+    {!! Form::model($model,['route'=>'save.applicant', 'class'=> 'form-horizontal','method' => 'post'])!!}
+        {!! FormGenerator::GenerateForm('appform')!!}
+    {!!Form::close()!!}
 @endsection()

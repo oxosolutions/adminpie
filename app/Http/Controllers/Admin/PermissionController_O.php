@@ -35,10 +35,10 @@ class PermissionController_o extends Controller
     public function create(){  
 
     		// $roles = 'App\Role'::rolePermisson(1);
-    		// dump($roles->permisson);
+    		
     		// foreach ($roles->permisson as  $value) {
     			
-    		// 	dump($value->permissons);
+    		
     		// }
       // $data = 'App\Permisson'::allRoute(2);
       // echo "<pre>";
@@ -52,7 +52,7 @@ class PermissionController_o extends Controller
 			
 		// 	foreach ($data as  $value) {
 		// 		# code...
-		// 		dump($value->routeMapping);
+		
 		// 	}
 
 			return view('permisson.create');

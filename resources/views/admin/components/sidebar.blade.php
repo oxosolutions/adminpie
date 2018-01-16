@@ -131,7 +131,7 @@
                         </a>
                     </li>
                     <li class="aione-nav-item level1 {{Request::is('product/create')?'active-state':''}}">
-                        <a href="{{Route('create.product')}}">
+                        <a href="{{Route('create.admin.product')}}">
                         <span class="nav-item-icon side-bar-icon fa fa-plus darken-1 center-align side-bar-icon-bg">
                         </span>
                         <span class="side-bar-text">

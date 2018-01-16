@@ -2,9 +2,9 @@
 	<div class="aione-nav-background"></div>
     <ul id="aione_menu" class="aione-menu">
     @php
-    // dump(role_id());
+  
     $permisson = drawSidebar::checkPermisson();
-    // dump($permisson , drawSidebar::drawSidebar());
+    
    
     @endphp
         @foreach(drawSidebar::drawSidebar() as $key => $sidebar)

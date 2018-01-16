@@ -371,7 +371,7 @@ class PagesController extends Controller
     protected function reply($reply){
         if(!empty($reply->toArray())){
             foreach ($reply as $key => $value) {
-               dump($value->coment);
+               
                $this->reply($value->reply);
             }
         }
@@ -413,7 +413,7 @@ class PagesController extends Controller
     
     public function deleteComment($id){
 
-        dump($id);
+        
         Comment::where(['id'=>$id])->delete();
 
         dump(current_organization_user_id());
@@ -425,9 +425,9 @@ class PagesController extends Controller
         $this->authOrganization();
         $Associate = $this->assignModel('Page');
         $pageData = $Associate::where('slug',$slug)->with(['pageMeta','coments'])->first();
-       //  dump($pageData->coments);
+       
         // foreach ($pageData->coments as $key => $value) {
-        //              dump($value->coment);
+        
         //             $this->reply($value->reply);
         //     }
 

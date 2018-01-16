@@ -36,5 +36,6 @@
 	Route::post('/section',												['as'=>'get.section','uses'=>'FormBuilderController@listSections']);
 	Route::get('/form/clone/{id}',										['as'=>'form.clone','uses'=>'FormBuilderController@formClone']);
 
-	Route::get('/field/sort' , 											['as' => 'sort.field' , 'uses' => 'FormBuilderController@sortField'])
+	Route::get('/field/sort' , 											['as' => 'sort.field' , 'uses' => 'FormBuilderController@sortField']);
+	Route::get('/form/result/{id}',['as'=>'raw.data','uses'=>'FormBuilderController@rawData']);
 ?>

@@ -45,8 +45,8 @@ class ApplicationController extends Controller
     {
     	return view('organization.mobile-application.android.change-log');
     }
-    public function documentation()
-    {
+    public function documentation(){
+        
     	return view('organization.mobile-application.android.documentation');
     }
 }

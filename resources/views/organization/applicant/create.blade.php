@@ -1,23 +1,18 @@
 @extends('layouts.main')
 @section('content')
-<div class="row">
-	<div class="col-md-12">
-	{!! Form::open(['route'=>'applicant.create', 'class'=> 'form-horizontal','method' => 'post'])!!}
-			<div class="row">
-				<div class="col-md-12 ">
-					<div class="panel panel-flat">
+@php
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Create Applicant',
+	'add_new' => 'List Applicant'
+); 
 
-						<div class="panel-body">
-							{!! FormGenerator::GenerateSection('appsec1',['type'=>'inset'])!!}
-							<div class="text-right">
-								<button type="submit" class="btn btn-primary">Submit form <i class="icon-arrow-right14 position-right"></i></button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{!!Form::close()!!}
-	</div>
-</div>
-
+	 
+@endphp
+@include('common.pageheader',$page_title_data) 
+	{!! Form::open(['route'=>'save.applicant', 'class'=> 'form-horizontal','method' => 'post'])!!}
+		{!! FormGenerator::GenerateForm('appform')!!}
+	{!!Form::close()!!}
 @endsection()

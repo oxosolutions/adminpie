@@ -113,7 +113,7 @@
 
 
 				
-							@foreach($attendance_data as $key => $val)
+						{{-- 	@foreach($attendance_data as $key => $val)
 								@php
 								$postDate=1;
 									$month_wise   = Carbon\Carbon::create(2017, $key, $postDate, 0);
@@ -140,13 +140,13 @@
 													<div class='square leave'>0</div>
 												@endif
 											
-												{{-- {{substr($data[$j]['attendance_status'], 0,1)}} --}}
+												
 										@else
 												<div class='square'>{{$j}}-</div>
 										@endif
 								@endfor
 							</div><br>
-							@endforeach
+							@endforeach --}}
 							<svg width="720" height="260" class="js-calendar-graph-svg">
 							  <g transform="translate(16, 20)" style="font-size: 13px">
 							      <g transform="translate(0, 0)">

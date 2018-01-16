@@ -104,9 +104,9 @@ class ManageTeamController extends Controller
                 $user_list = User::whereNotIn('id',$id)->where('user_type','["2"]')->get();
                 // foreach ($user_list as $key => $value) {
                 //     foreach ($value->metas as $mkey => $mvalue) {
-                //         dump($mvalue->id);
+               
                 //     }
-                //    dump($value->metas);
+               
                 // }
             }
 

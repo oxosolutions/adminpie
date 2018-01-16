@@ -219,8 +219,8 @@ $page_title_data = array(
         </div>
     		
 	</div>
-	<div class="ar data-view" >
-        <div class="ac l50">
+	<div class="ar " >
+       {{--  <div class="ac l50">
             <div class="aione-border">
                 <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
                     Output ( Raw )
@@ -236,14 +236,14 @@ $page_title_data = array(
             </div>
 
 
-        </div>
-        <div class="ac l50">
+        </div> --}}
+        <div class="ac l100">
             <div class="aione-border">
                 <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
                     Output ( Pretty )
                 </div>
                 <div class="p-10" style="position: relative;min-height: 300px;max-height: auto">
-                    <pre id="editor" class="editor">
+                    <pre id="editor" class="editor data-view" >
 @if(isset($data['res']))
 {{json_encode(json_decode($data['res']->content()),JSON_PRETTY_PRINT)}}
 @endif
@@ -298,7 +298,16 @@ $page_title_data = array(
                     if(result.error){
                       $("#error").html(result.error);
                     }
-                    $('.data-view').html(result.response);
+                    try{
+                        var json = JSON.stringify(JSON.parse(result.response),null,4);
+                        // $('.data-view').html(json);
+                        editor.setValue(json);
+                    }
+                    catch(e){
+                        console.log('error'); 
+                    }
+                    
+                                    
                     $('.link').html('Api Link :- <a href='+result.link+' >'+ result.link+'</a>');
 
                 }

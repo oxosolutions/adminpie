@@ -5,13 +5,17 @@ namespace App\Http\Controllers\Organization\hrm;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 // use App\Model\Organization\Applicant;
-// use App\Model\Organization\ApplicantMeta; 
 use App\Repositories\User\UserRepositoryContract;
 use App\Model\Organization\Application;
 // use App\Model\Organization\ApplicationMeta;
 use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
 use App\Model\Organization\UsersMeta;
 use Session;
+use Validator;
+use Redirect;
+use Hash;
+use App\Model\Organization\UserRoleMapping;
 
 class ApplicantController extends Controller
 {
@@ -69,62 +73,117 @@ class ApplicantController extends Controller
     {
         $datalist= [];
         $data= [];
-          if($request->has('per_page')){
-                $perPage = $request->per_page;
-                if($perPage == 'all'){
-                  $perPage = 999999999999999;
-                }
-              }else{
-                $perPage = get_items_per_page();;
-              }
-          $sortedBy = @$request->sort_by;
-          if($request->has('search')){
-              if($sortedBy != ''){
-                  $model = User::where('user_type','applicant')->where('id','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                  $model = User::where('user_type','applicant')->where('id','like','%'.$request->search.'%')->paginate($perPage);
-              }
-          }else{
-              if($sortedBy != ''){
-                  $model = User::where('user_type','applicant')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                   $model = User::where('user_type','applicant')->paginate($perPage);
-              }
-          }
-                  $datalist =  [
-                          'datalist'=>  $model,
-                          'showColumns' => ['id'=>'id', 'name'=>'Name','created_at'=>'Created'],
-                          'actions' => [
-                                          'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.applicant']
-                                       ],
-                          'js'  =>  ['custom'=>['list-designation']],
-                          'css'=> ['custom'=>['list-designation']]
-                      ];
-            return view('organization.applicant.list',$datalist);
+        if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+                $perPage = 999999999999999;
+            }
+        }else{
+            $perPage = get_items_per_page();;
+        }
+        $sortedBy = @$request->sort_by;
+        if($request->has('search')){
+            if($sortedBy != ''){
+                $model = GroupUsers::with(['organization_user'])->whereHas('organization_user', function($query){
+                    $query->where(['user_type'=>'applicant']);
+                })->where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                $model = GroupUsers::with(['organization_user'])->whereHas('organization_user', function($query){
+                    $query->where(['user_type'=>'applicant']);
+                })->where('name','like','%'.$request->search.'%')->paginate($perPage);
+            }
+        }else{
+            if($sortedBy != ''){
+                $model = GroupUsers::with(['organization_user'])->whereHas('organization_user', function($query){
+                    $query->where(['user_type'=>'applicant']);
+                })->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                $model = GroupUsers::with(['organization_user'])->whereHas('organization_user', function($query){
+                    $query->where(['user_type'=>'applicant']);
+                })->paginate($perPage);
+            }
+        }
+        $datalist = [
+                        'datalist'=>  $model,
+                        'showColumns' => ['name'=>'Name','created_at'=>'Created'],
+                        'actions'=> [
+                                        'edit' => ['title'=>'Edit','route'=>'edit.applicant' , 'class' => 'edit'],
+                                        'delete'=>['title'=>'Delete','route'=>'delete.applicant']
+                                    ],
+                        'js'    =>  ['custom'=>['list-designation']],
+                        'css'   =>  ['custom'=>['list-designation']]
+                    ];
+        return view('organization.applicant.list',$datalist);
     }
 
+
+    protected function validateApplicantUser($request){
+
+        $rules = [
+            'name' => 'required',
+            'email' => 'required',
+            'password' => 'required'
+        ];
+
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->passes()) {
+            $groupModel = GroupUsers::where(['email'=>$request->email])->first();
+            if($groupModel != null){
+                $userModel = User::where(['user_id'=>$groupModel->id,'user_type'=>'applicant'])->first();
+                if($userModel != null){
+                    $validator->getMessageBag()->add('email', 'Applicant already exists!');
+                    return Redirect::back()->withErrors($validator)->withInput();
+                }
+            }
+        }
+
+    }
+
+
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Save posted data by applicant
+     * @param  Request $request having all posted data
+     * @return [type]           redirect to applicants list
      */
-    public function create(Request $request)
+    public function save(Request $request)
     {
-      if($request->isMethod('post')){
+        $this->validateApplicantUser($request);
+
         $request['name'] = $request['name'];
         $request['email'] = $request['email'];
-        $tbl = Session::get('organization_id');
-        $valid_fields = [   'name'          => 'required',
-                            'email'         => 'required|email|unique:'.$tbl.'_users',
-                            'password'      => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/|min:8'
-                        ];
-        $this->validate($request , $valid_fields);
-        $request['role_id'] = setting_val_by_key('applicant_role');
-        $user_id = $this->user->create($request->all(),6,'applicant');
-      }
-      return redirect()->route('list.applicant');
+        $groupModel = GroupUsers::firstOrNew(['email'=>$request->email]);
+        if($groupModel->exists){
+            $user_id = $groupModel->id;
+        }else{
+            $groupModel->name = $request->name;
+            $groupModel->email = $request->email;
+            $groupModel->password = Hash::make($request->password);
+            $groupModel->app_password = $request->password;
+            $groupModel->status = 1;
+            $groupModel->save();
+            $user_id = $groupModel->id;
+        }
+
+        $userModel = new User;
+        $userModel->user_id = $user_id;
+        $userModel->user_type = 'applicant';
+        $userModel->status = 1;
+        $userModel->save();
+        $userRoleMapping = new UserRoleMapping;
+        $userRoleMapping->user_id = $user_id;
+        $userRoleMapping->role_id = 6;
+        $userRoleMapping->status = 1;
+        $userRoleMapping->save();
+        foreach ($request->except(['_token','email','password','name']) as $key => $value) {
+            $userMeta = UsersMeta::firstOrNew(['user_id'=>$user_id,'key'=>$key]);
+            $userMeta->user_id = $user_id;
+            $userMeta->key = $key;
+            $userMeta->value = $value;
+            $userMeta->save();
+        }
+        return redirect()->route('list.applicant');
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -134,42 +193,24 @@ class ApplicantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $appCheckFirst = User::where(['id'=>$id]);
-        if($appCheckFirst->exists()){
+        $this->validate($request,['name','email']);
 
-           $data =  $appCheckFirst->get()->keyBy('key');
-           $collection = collect($data->toArray());
-            $keyed = $collection->mapWithKeys(function ($item) {
-                return [$item['key'] => $item['value']];
-            });
-              $keyed['id'] = $id;
-          $model =  $keyed->all();
-          
-        }else{
-          $model= ['id'=>$id];
+        $request['name'] = $request['name'];
+        $request['email'] = $request['email'];
+        $groupModel = GroupUsers::where(['email'=>$request->email])->first();
+        $groupModel->name = $request->name;
+        $groupModel->email = $request->email;
+        $groupModel->save();
+
+        foreach ($request->except(['_token','email','password','name']) as $key => $value) {
+            $userMeta = UsersMeta::firstOrNew(['user_id'=>$user_id,'key'=>$key]);
+            $userMeta->user_id = $user_id;
+            $userMeta->key = $key;
+            $userMeta->value = $value;
+            $userMeta->save();
         }
-
-        if($request->isMethod('post')){
-            unset($request['_token']);
-            foreach ($request->all() as $key => $value) {
-                if(is_array($value)){
-                    $value = json_encode($value);
-                }
-               $applicantCheck =  ApplicationMeta::where(['applicant_id'=>$id, 'key'=>$key]);
-               if($applicantCheck->exists()){
-                    $applicantCheck->update(['value'=>$value]);
-                }else{
-                  $appMeta =  new ApplicationMeta();
-                  $appMeta->applicant_id = $id;
-                  $appMeta->key = $key;
-                  $appMeta->value = $value;
-                  $appMeta->save();
-              }
-            }
-                  return redirect()->route('list.applicant');
-            }
-    
-         return view('organization.applicant.edit', compact('model'));
+        Session::flash('success','Applicant updated successfully!');
+        return redirect()->route('list.applicant');
     }
 
    /**
@@ -179,8 +220,18 @@ class ApplicantController extends Controller
     */
     public function destroy($id)
     {
-        User::where('id',$id)->delete();
+        User::where('user_id',$id)->delete();
         UsersMeta::where('user_id', $id)->delete();
+        Session::flash('success','Applicant deleted successfully!');
         return back();
+    }
+
+    public function createApplicant(){
+        return view('organization.applicant.create');
+    }
+
+    public function edit($id){
+        $model = GroupUsers::with(['organization_user'])->whereHas('organization_user')->where('id',$id)->first();
+        return view('organization.applicant.edit',['model'=>$model]);
     }
 }

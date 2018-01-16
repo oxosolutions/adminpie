@@ -548,8 +548,16 @@ function form($form_slug, $form_from = 'admin', $default_model_data = null){
         $model = AdminForms::where('form_slug',$form_slug)->first();        
     }else{
         $model = forms::where('form_slug',$form_slug)->first();
+        if($model == null){
+            $model = AdminForms::where('form_slug',$form_slug)->first();
+            if($model == null){
+                return 'No Form Found!';
+            }else{
+                $form_from = 'admin';
+            }
+        }
     }
-    return view('common.form_data',['slug'=>$form_slug,'model'=>$model,'default_model'=>$default_model_data,'form_from'=>$form_from]);
+    return view('common.form_data',['slug'=>$form_slug,'model'=>$model,'default_model'=>$default_model_data,'form_from'=>$form_from])->render();
 }
 
 

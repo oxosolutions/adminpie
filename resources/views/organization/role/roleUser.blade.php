@@ -62,12 +62,12 @@ $page_title_data = array(
             List of users
         </div>
         <div class="row">
-       {{--  {{dump($roleUser)}} --}}
+      
             @foreach($roleUser as $key =>$value)
                 <input name="user[]" value="{{$value['id']}}" type="hidden">
                     <div class="list-user">
                         <div class="chip" style="position: relative;">
-                            {{-- {{dump($value->metas)}} --}}
+                           
                             @foreach($value->metas as $k => $v )
                                 
                                 @if($v->key == "profilePic")

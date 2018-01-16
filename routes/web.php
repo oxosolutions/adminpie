@@ -14,6 +14,7 @@
 	/****************************************** All Routes For Admin *************************************************/
 		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function (){
 			Route::group(['namespace'=>'Admin'], function(){
+                Route::get('/organization/auth/{id}' ,['as'=>'auth.organization','uses'=>'OrganizationController@authAttemptOrganization']);
 				Route::group(['middleware' => 'auth.admin'], function(){
 
 					Route::get('widget/sort/admin',	['as'=>'admin.widget.sort','uses'=>'DashboardController@widgetSort']);
@@ -306,11 +307,11 @@
 						Route::get('/departments/{id?}',		['as' => 'departments' , 'uses' => 'DepartmentsController@index']);
 						Route::get('shifts/{id?}',				['as' => 'shifts' , 'uses' =>'ShiftsController@index']);
 						Route::get('openings',					['as' => 'list.opening', 'uses'=>'JobOpeningController@index']);
-						Route::get('applicants',				['as' => 'list.applicant', 'uses'=>'ApplicantController@index']);
-						Route::get('applications',				['as' => 'list.applicantions', 'uses'=>'ApplicationController@index']);
-
-
 					});
+
+                    //Applicant Routes
+                    include_once 'custom/organization/applicant.php';
+
 					Route::match(['get','post'],'/attendance/form-import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
 					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
@@ -347,8 +348,6 @@
 							Route::get('application/delete/{id}',				['as' => 'delete.applicantion', 'uses'=>'ApplicationController@delete']);
 
 
-						Route::match(['get','post'],'applicant/create',['as'=>'applicant.create', 'uses'=>'ApplicantController@create']);
-						Route::match(['get','post'],'applicant/edit/{id?}',['as'=>'edit.applicant', 'uses'=>'ApplicantController@update']);
 						Route::get('applicant/delete/{id}',['as'=>'delete.applicant', 'uses'=>'ApplicantController@destroy']);
 
 

@@ -536,7 +536,7 @@ class ProjectController extends Controller
                    $model = ProjectCredentials::paginate($perPage);
               }
           }
-          // dump($model);
+      
           $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['website_title' =>'Title','created_at'=>'Created'],

@@ -85,7 +85,6 @@ class GroupOrganizationController extends Controller
         if(Auth::guard('admin')->check()){
             Session::put('organization_id',$organizationID);
             $organization = ORG::find($organizationID);
-
             ORG::where('id','>=',1)->update(['auth_login_token'=>'']);
             $tokenString = str_random(20);
             $organization->auth_login_token = $tokenString;
@@ -100,6 +99,7 @@ class GroupOrganizationController extends Controller
                 return redirect()->to('http://'.$organization->secondary_domains.'/login/'.$tokenString);
 
             }else{
+
                 return redirect()->to('http://'.$organization->slug.'.'.env('MAIN_DOMAIN').'/login/'.$tokenString);
             }
         }
@@ -134,7 +134,7 @@ class GroupOrganizationController extends Controller
 
 	public function create(){
 		
-        // dump($modules);
+     
 		return view('group.organization.create');
 	}
     public function edit(Request $request, $id){
@@ -194,7 +194,9 @@ class GroupOrganizationController extends Controller
                 $existed = $orgValue['TABLE_NAME'];
                 $new = str_replace($existed_id, $new_id, $existed);
                 DB::select("CREATE TABLE ".$new." LIKE ".$existed);
-                DB::select("INSERT ".$new." SELECT * FROM ".$existed);
+                if($existed != "ocrm_".$existed_id."_users"){
+                    DB::select("INSERT ".$new." SELECT * FROM ".$existed);
+                }
             } 
             return 'table_exist';
         }else{

@@ -14,6 +14,7 @@ use Session;
 
 class EmployeeLeaveController extends Controller
 {
+	// echo date('Y-m');
 	protected function mapping_category_id($id , $data){
 			$collection = collect($data);
 			$map  = $collection->map(function($item , $key)use($id){
@@ -24,14 +25,13 @@ class EmployeeLeaveController extends Controller
 			return array_filter($map->toArray());
 	}
 	public function leave_listing(){
-		
+		dump(date('Y-m'));
 		$leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
 		}else{
-			$user = user_info()->toArray();	
-			
-			echo $user_id = $user['id'];
+			$user = user_info()->toArray();
+			$user_id = $user['id'];
 			$designation_id =  get_current_user_meta('designation');
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
 			$group  = $catMetas->groupBy('key')->toArray();
@@ -49,17 +49,21 @@ class EmployeeLeaveController extends Controller
 			$not_assign_categories =[];
 			if(!empty($group['user_exclude'])){
 					$not_assign_categories  = $this->mapping_category_id($user_id , $group['user_exclude']);
-					
 				} 
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
 
 			$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
+			dump($leave_rule->toArray());
+
 			if(!empty($leave_rule->toArray())){
-			$emp_id = get_current_user_meta('employee_id');
-			$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->get();
-			$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
-			// dump($leave_count_by_cat);
+				$emp_id = get_current_user_meta('employee_id');
+				$fromLeavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereYear('from',date('Y'))->whereMonth('from',date('m'))->get()->keyBy('id');
+				$toLeavesData = EMP_LEV::whereNull('total_days')->where(['employee_id'=>$emp_id])->whereYear('to',date('Y'))->whereMonth('to',date('m'))->get()->keyBy('id');
+				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereYear('to',date('Y'))->get();
+				dump($fromLeavesData->toArray(), $toLeavesData->toArray());
+				$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
+			
 			}else{
 				$error = "Not assign with any category";
 			}
@@ -80,14 +84,15 @@ class EmployeeLeaveController extends Controller
 		 $this->validate($request, $valid_fields);
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
-		echo $emp_id = get_current_user_meta('employee_id');	
-		
+		$emp_id = get_current_user_meta('employee_id');
 		if($request->isMethod('post'))
 		{ 
 			$current = Carbon::now();
 			$from = Carbon::parse($request->from);
 			$before = $from->diffInDays($current);
 			$to = Carbon::parse($request->to);
+
+			// dd('from month' , $from->month , 'to month ', $to->month);
 			$request['from'] 	=	$from->toDateString();
 			$request['to'] 		=   $to->toDateString();
 			if(strtotime($request['from']) > strtotime($request['to'])){
@@ -117,7 +122,21 @@ class EmployeeLeaveController extends Controller
 			// 	return redirect()->route('account.leaves');
 			// }
 /*calculate total days of leave */
-			$request['total_days'] = $from->diffInDays($to) + 1;
+			if($from->month !=  $to->month){
+				$from_end_date_of_month = Carbon::parse($from->daysInMonth.'-'.$from->month.'-'.$from->year);
+				$from_leave_count = $from->diffInDays($from_end_date_of_month) + 1;
+				$request['from_leave_count'] = $from_leave_count;
+
+				$to_end_date_of_month = Carbon::parse('1-'.$to->month.'-'.$to->year);
+				$to_leave_count = $to_end_date_of_month->diffInDays($to) + 1;
+				$request['to_leave_count'] = $to_leave_count;
+			}else{
+				$request['total_days'] = $from->diffInDays($to) + 1;
+				
+			}
+			
+
+
 /* rules list get from category meta table */
 			$rules = catMeta::where('category_id', $request['leave_category_id']);
 			if($rules->exists())
@@ -327,6 +346,8 @@ class EmployeeLeaveController extends Controller
 				Session::flash('error', $error);
 			}
 		 }
+
+		
  	return redirect()->route('account.leaves');
 	}
 }

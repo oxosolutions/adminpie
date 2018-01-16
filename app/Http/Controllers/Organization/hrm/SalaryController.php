@@ -82,7 +82,7 @@ param salary id
                $model = UsersMeta::with(['user','payscale'])->where('key','pay_scale')->paginate($perPage);
           }
       }
-      // dump($model);
+     
       $datalist =  [
                       'datalist'=>  $model,
                       'showColumns' => ['user_id'=>'Id', 'user.name'=>'Name','payscale.title'=>'Pay Scale' ,'created_at'=>'Created'],
@@ -292,7 +292,7 @@ return back();
      //  $data['days_in_month'] =  $date->daysInMonth;
      //  $data['holiday'] = $holiday = Holiday::whereMonth('date_of_holiday',$date->month)->count();
      //  $leave_data =  Leave::where(['employee_id'=>$meta['employee_id']])->get();
-     // dump($leave_data , $date->month ,  $holiday);
+     
      // $data['working_days'] = $date->daysInMonth - $sunday - $holiday;
      // $data['dedicated_amount'] =  ($data['working_days'] - $data['present']) * $data['per_day'];
      // $data['salary'] = $data['total_salary'] - $data['dedicated_amount'];
@@ -322,7 +322,6 @@ return back();
       // $data['days_in_month'] =  $date->daysInMonth;
       // $data['holiday'] = $holiday = Holiday::whereMonth('date_of_holiday',$date->month)->count();
       // $leave_data =  Leave::where(['employee_id'=>$meta['employee_id']])->get();
-      //  dump($leave_data , $date->month ,  $holiday);
       //  $data['working_days'] = $date->daysInMonth - $sunday - $holiday;
       //  $data['dedicated_amount'] =  ($data['working_days'] - $data['present']) * $data['per_day'];
       //  $data['salary'] = $data['total_salary'] - $data['dedicated_amount'];
@@ -361,19 +360,19 @@ return back();
           }
       }
 		$user_data = UsersMeta::with(['user','payscale'])->where('key','pay_scale')->get()->toArray();
-		// dump($meta_collection = collect($user_data[0]['get_user_meta']));
+		
     //   $meta_key_value =  $meta_collection->mapWithKeys(function($item){
     //     return  [$item['key'] => $item['value']];
     //   });
 
-    // dump($meta_key_value);
+    
 
 
 		$salary_data =[];
 		if($request->isMethod('post')){
-        // dump($request->all());
+        
         $month_year_request  = '0'.$request['month'].'-'.$request['year'];
-        // dump($month ,  '0'.$request['month'] , $year , $request['year']);
+        
 
       if(strlen($request['month'])==1)
       {
@@ -395,7 +394,7 @@ return back();
   					$uid = $value['user_id'];
             $metas =  get_user_meta($uid, null, $array = false);
             // echo "metas";
-            // dump($metas);
+            
 
             if(empty($metas['employee_id'])){
               continue;
@@ -406,7 +405,7 @@ return back();
                 $end_date_of_month = strtotime($request['year'].'-'.$request['month'].'-'.$length_of_month);
                 $datediff = $end_date_of_month - $date_of_joining;
                 $total_days = floor($datediff / (60 * 60 * 24));
-                // dump($value['payscale']['total_salary']);
+                
                 $value['payscale']['total_salary'] = ceil(($value['payscale']['total_salary']/30*$total_days));
                
             }
@@ -415,9 +414,7 @@ return back();
                 $start_date_of_month = strtotime($request['year'].'-'.$request['month'].'-1');
                 $datediff = $date_of_leaving - $start_date_of_month;
                 $total_days = floor($datediff / (60 * 60 * 24));
-                // dump($total_days , $value['payscale']['total_salary']);
                 $value['payscale']['total_salary'] = ceil(($value['payscale']['total_salary']/30*$total_days));
-                // dump($value['payscale']['total_salary']);
 
                 
               }

@@ -84,10 +84,16 @@ class SettingController extends Controller
 		return view('admin.settings.roles',['model'=>$model]);
 	}
 
+	/**
+	 * To set primary organization
+	 */
 	public function organization(){
-		$model = GlobalSetting::where('key','primary_organization')->first();
-		if($model != null){
-			$model = $model->value;
+		
+		$organizationID = get_meta('Admin\GlobalSetting',null,'primary_organization');
+        $model = null;
+		if($organizationID != false){
+            $model = new \stdClass;
+			$model->primary_organization = $organizationID;
 		}
 		return view('admin.settings.organization',['model'=>$model]);
 	}

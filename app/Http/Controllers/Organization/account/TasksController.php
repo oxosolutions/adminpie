@@ -199,7 +199,7 @@ class TasksController extends Controller
                             ];
             }   
             foreach($data as $k => $val){
-                // dump($val['data']);
+          
                 if(in_array(Auth::guard('org')->user()->id,$val['data'])){
                     $id[] = $val['id'];
                 }

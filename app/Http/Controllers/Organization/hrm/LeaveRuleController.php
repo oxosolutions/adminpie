@@ -13,6 +13,6 @@ class LeaveRuleController extends Controller
 	
 	public function rule(Request $request)
 	{
-		dump($request->all());
+		
 	}
 }

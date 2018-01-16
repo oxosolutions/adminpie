@@ -34,7 +34,7 @@ $number = 1;
 		 $current_year =	$dat->year;
 		 $current_days = $dat->daysInMonth;
 		 $current_date = $dat->day;
-//dump($fweek_no);
+
 
 //previous days		 
 		$dat->subDay();
@@ -42,18 +42,15 @@ $number = 1;
 		$pre_month = $dat->month;
 		$pre_year = $dat->year;
 
-		// dump("previous day year month date $pre_year $pre_month $pre_date ");
 //next days 
 		$dat->addDays(2);
 		$nxt_date = $dat->day;
 		$nxt_date_month = $dat->month;
 		$nxt_date_year = $dat->year;
-		// dump("Next day year month date $nxt_date_year $nxt_date_month $nxt_date ");
 
 //week 
 // echo $dat->subWeek();
 		$pre_week = $dat->weekOfMonth;
-		//dump($dat->addWeek());
 		$pre_week_month = $dat->month;
 		$pre_week_year = $dat->year;
 
@@ -82,22 +79,18 @@ $number = 1;
 			$prev_week = $weekDate->weekOfMonth;
 			$prev_week_month =	$weekDate->month;
 		 	$prev_week_year =	$weekDate->year;
-			// dump("previous week $prev_week $prev_week_month $prev_week_year".  $weekDate->toDateTimeString());
 		}		 
 
 			$previous = $dat->subMonth();
 			$previousMonth = $previous->month;
 			$previousYear  =  $previous->year;
 
-			// dump("previous month year $previousMonth  $previousYear");
 
 			$next = $dat->addMonth(2);
 			$nextMonth = $next->month;
 			$nextYear = $next->year;
-				// dump("next month year $nextMonth  $nextYear");
 
 		$week =4;
-		// dump("total day".$total_days);
 		if($total_days >28)
 		{
 			$week =5;

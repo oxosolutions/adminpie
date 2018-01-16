@@ -1009,13 +1009,7 @@ class VisualisationController extends Controller
 				}
 			}
 		}*/
-		/*dump('View Data Array');
-		dump($viewData_array);
-		dump('Tooltip Data Array');
-		dump($tooltipData_array);
-		dump('Popup Data Array');
-		dump($popupData_array);
-		dump('Final Data Array');
+		
 		
 		*/
 		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_data'=>$popupData_array];

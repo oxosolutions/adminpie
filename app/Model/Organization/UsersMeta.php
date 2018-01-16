@@ -18,10 +18,9 @@ class UsersMeta extends Model
    
    protected $fillable = ['user_id', 'key', 'value', 'type'];
 
-   // public function users()
-   // {
-   //  return $this->belongsTo('')
-   // }
+   public function group_user(){
+    return $this->belongsTo('App\Model\Group\GroupUsers','user_id','id');
+   }
 
 public function get_user_meta(){
   return $this->hasMany('App\Model\Organization\UsersMeta' ,'user_id' ,'user_id');

@@ -240,7 +240,7 @@ class EmployeeController extends Controller
          // dd($model);
 
         // foreach ($model as $key => $record) {
-        //     dump($record['belong_group']['email']);
+       
         //     $model[$key]['department'] = '';
         //     $model[$key]['designation'] = '';
         //     $model[$key]['employee_id'] = '';
@@ -253,7 +253,7 @@ class EmployeeController extends Controller
                //  return [$item['key']= $item['value'] ];
                //  });
 
-            // dump($model);
+            
 
 
 
@@ -720,11 +720,11 @@ class EmployeeController extends Controller
     protected function validateDate($date)
 	{
 		if(str_contains($date, '/')){
-            		$date_data = explode('/' , $value);
-            		$date = $date_data[1].'-'.$date_data[0].'-'.$date_data[2];
+            		$date_data = explode('/' , $date);
+            		$date = date('d-F-Y' , strtotime($date_data[1].'-'.$date_data[0].'-'.$date_data[2]));
         }
-	    $d = DateTime::createFromFormat('d-F-Y', $date);
-	    return $d && $d->format('d-F-Y') == $date;
+        $d = DateTime::createFromFormat('d-F-Y', $date);
+        return $d && $d->format('d-F-Y') == $date;
 	}
 	/**
      * Import Emploayee  csv employee dataa 
@@ -749,11 +749,12 @@ class EmployeeController extends Controller
            foreach ($data->toArray() as $key => $value) {
             $index++;
             if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
-            	if(!empty($value['date_of_joining'])){
-            		if($this->validateDate($value['date_of_joining'])==false){
-            			$in_valid_date_format[$value['employee_id']] = $value['email'];
-            			 continue;
-            		}
+                if(!empty($value['date_of_joining'])){
+                    if($this->validateDate($value['date_of_joining'])==false){
+                        $in_valid_date_format[$value['employee_id']] = $value['email'];
+                         continue;
+                    }
+
             	}
                 $alreadyExists = GroupUsers::where(['email'=>$value['email']]); 
                 if($alreadyExists->exists()){
@@ -829,7 +830,10 @@ class EmployeeController extends Controller
         if($in_valid_date_format){
         	Session::flash('in_valid_date_format', $in_valid_date_format);
         }
+
     }
+    
+    // dd(Session::get('in_valid_date_format'), $in_valid_date_format);
 
          return redirect()->route('import.employee');
     }

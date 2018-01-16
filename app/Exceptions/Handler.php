@@ -58,8 +58,7 @@ class Handler extends ExceptionHandler
             // Redirect to a form. Here is an example of how I handle mine
             return redirect($request->fullUrl())->with('csrf_error',"Oops! Seems you couldn't submit form for a long time. Please try again.");
         }
-        // dump($exception->getFile());
-        // dump($request);
+        
         //if(env('APP_DEBUG')){
            // return parent::render($request, $exception);
         //}else{

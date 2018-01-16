@@ -7,7 +7,7 @@
 		}
 	}
 	$column_class = "s100 m".round(100/$count)." l".round(100/$count);
-	// dump($column_class);
+	
 @endphp
 @if($count > 0)
 <div id="aione_footer" class="aione-footer {{@$design_settings['footer_theme']}}">
