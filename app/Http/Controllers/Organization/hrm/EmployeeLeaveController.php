@@ -25,7 +25,6 @@ class EmployeeLeaveController extends Controller
 			return array_filter($map->toArray());
 	}
 	public function leave_listing(){
-		dump(date('Y-m'));
 		$leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
@@ -54,14 +53,54 @@ class EmployeeLeaveController extends Controller
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
 
 			$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
-			dump($leave_rule->toArray());
 
 			if(!empty($leave_rule->toArray())){
+				
+				$check_monthly_yearly_carry_forward = $leave_rule->mapWithKeys(function($items)use(&$new){
+					$meta_data  = $items['meta']->pluck('value','key');
+					if(!empty($meta_data['carry_farward']) && $meta_data['carry_farward']=='1'){
+						return [$items['id'] => ['for'=>$meta_data['valid_for'], 'carry_farward'=>true]];
+					}else{
+						return [$items['id'] => ['for'=>$meta_data['valid_for'], 'carry_farward'=>false]];
+					}
+				});
 				$emp_id = get_current_user_meta('employee_id');
-				$fromLeavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereYear('from',date('Y'))->whereMonth('from',date('m'))->get()->keyBy('id');
-				$toLeavesData = EMP_LEV::whereNull('total_days')->where(['employee_id'=>$emp_id])->whereYear('to',date('Y'))->whereMonth('to',date('m'))->get()->keyBy('id');
+				if($check_monthly_yearly_carry_forward->isNotEmpty()){
+					foreach ($check_monthly_yearly_carry_forward as $key => $value) {
+						if($value['carry_farward']){
+							if($value['for']=='monthly'){
+								$fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id])->whereYear('from',date('Y'))->whereMonth('from',date('m'))->get()->keyBy('id');
+								$total_leave = $fromLeavesData->sum('total_days'); 
+								$from_leave_count = $fromLeavesData->sum('from_leave_count'); 
+								$toLeavesData = EMP_LEV::whereNull('total_days')->where( ['leave_category_id'=>$key,'employee_id'=>$emp_id])->whereYear('to',date('Y'))->whereMonth('to',date('m'))->get()->keyBy('id');
+								$to_leave_count = $toLeavesData->sum('to_leave_count');
+								$sum_all[$key] = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
+								$merges[$key] = $fromLeavesData->merge($toLeavesData)->toArray();
+							}elseif($value['for']=='yearly'){
+
+								$fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id])->whereYear('from',date('Y'))->get()->keyBy('id');
+								$total_leave = $fromLeavesData->sum('total_days'); 
+								$from_leave_count = $fromLeavesData->sum('from_leave_count'); 
+								$toLeavesData = EMP_LEV::whereNull('total_days')->where( ['leave_category_id'=>$key,'employee_id'=>$emp_id])->whereYear('to',date('Y'))->get()->keyBy('id');
+								$to_leave_count = $toLeavesData->sum('to_leave_count');
+								$sum_all[$key] = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
+								$merges[$key] = $fromLeavesData->merge($toLeavesData)->toArray();
+
+							}
+
+						}else{
+
+						}
+					}
+				}
+				//dump('sum all', $sum_all, 'merge', $merges);
+				 //dump('final merges', $merges , 'total', $total_leave, 'from count', $from_leave_count , 'to leave count'.$to_leave_count );
+				
+
+				
+				
 				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereYear('to',date('Y'))->get();
-				dump($fromLeavesData->toArray(), $toLeavesData->toArray());
+				//dump($fromLeavesData->toArray(), $toLeavesData->toArray());
 				$leave_count_by_cat = $leavesData->where('status',1)->groupBy('leave_category_id');
 			
 			}else{

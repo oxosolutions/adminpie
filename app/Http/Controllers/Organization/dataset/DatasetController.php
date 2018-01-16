@@ -398,15 +398,22 @@ class DatasetController extends Controller
         return null;
      }
 // PALJINDER SINGH CODE END HERE.
-	protected function validateUser($id){
-        // dd(223264354);
+	protected function validateUser($id, $collaborate = false){
 		$user_id = Auth::guard('org')->user()->id;
-		$model = Dataset::find($id);
+		$model = Dataset::with(['collaborate','dataset_meta'])->find($id);
         if($model == null){
             Session::flash('warning','<i class="fa fa-exclamation-triangle"></i> Dataset id does not exist!');
             return false;
         }
 		if($model->user_id != $user_id){
+            if($collaborate == false){
+                $share_status = $model->dataset_meta->where('key','share_status')->first();
+                if($share_status != null){
+                    if($share_status->value == 'public'){
+                        return true;
+                    }
+                }
+            }
 			return false;
 		}else{
 			return true;
@@ -1463,7 +1470,7 @@ class DatasetController extends Controller
         return view('organization.dataset.visualize',['dataset'=>$model,'visualizations'=>$visualize]);
     }
      public function collaborateDataset($id)
-    {	if(!$this->validateUser($id)){
+    {	if(!$this->validateUser($id,true)){
         	return redirect()->route('list.dataset');
         }
         $model = Dataset::with(['dataset_meta'])->find($id);

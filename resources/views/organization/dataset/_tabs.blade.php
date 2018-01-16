@@ -29,9 +29,21 @@
         <li class="aione-tab {{(Request::route()->action['as'] == 'visualize.dataset')?'nav-item-current':''}}">
         <a href="{{route('visualize.dataset',$id)}}"><span class="nav-item-text">Visualizations</span></a>
       </li>
-      <li class="aione-tab {{(Request::route()->action['as'] == 'collaborate.dataset')?'nav-item-current':''}}">
-        <a href="{{route('collaborate.dataset',$id)}}"><span class="nav-item-text">Collaborate</span></a>
-      </li>
+      @php
+            $dataset_user_id = '';
+            $auth_user_id = '';
+            $datasetModel = App\Model\Organization\Dataset::find(request()->id);
+            if($datasetModel != null){
+                $dataset_user_id = $datasetModel->user_id;
+                $auth_user_id = Auth::guard('org')->user()->id;
+            }
+      @endphp
+
+      @if($dataset_user_id == $auth_user_id)
+          <li class="aione-tab {{(Request::route()->action['as'] == 'collaborate.dataset')?'nav-item-current':''}}">
+            <a href="{{route('collaborate.dataset',$id)}}"><span class="nav-item-text">Collaborate</span></a>
+          </li>
+      @endif
       <li class="aione-tab {{(Request::route()->action['as'] == 'customize.dataset')?'nav-item-current':''}}">
         <a href="{{route('customize.dataset',$id)}}"><span class="nav-item-text">Customize</span></a>
       </li>

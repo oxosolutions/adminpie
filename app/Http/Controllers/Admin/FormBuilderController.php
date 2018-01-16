@@ -1106,6 +1106,7 @@ class FormBuilderController extends Controller
         $organization_id = get_organization_id();
         $form_id = $request->form_id;
         $dataTable = $organization_id.'_form_data_'.$form_id;
+        $existingFields = [];
         if(!Schema::hasTable($dataTable)){
             $this->createFormDataTable($organization_id, $form_id, $request);
         }else{
@@ -1117,6 +1118,9 @@ class FormBuilderController extends Controller
         foreach($request->except(['_token']) as $key => $value){
             if(in_array($key,$existingFields)){
                 $lastColumn = $key; // will carry last column
+                if(is_array($value)){
+                    $value = json_encode($value);
+                }
                 $model[$key] = $value;
             }else{
                 $this->createColumnInExistingTable($dataTable,$key,$lastColumn);
@@ -1173,17 +1177,21 @@ class FormBuilderController extends Controller
         });
     }
 
+    /**
+     * To view filled data of form
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
     public function rawData($id){
-        if(Schema::hasTable(get_organization_id().'_form_data_'.$id)){
-            dd('Yes Table Exists');
-        }else{
-            dd('Table Not found!');
+        $model = [];
+        $formDatatable = get_organization_id().'_form_data_'.$id;
+        if(Schema::hasTable($formDatatable)){
+            Session::put('form_id',$id); //set form id for session model
+            $model = FormData::paginate(20);
         }
-        $modelName = $this->assignModel('forms');
-
-        $form = $modelName::find($id);
-        $slug = $modelName::select('form_slug')->where('id',$id)->first()->form_slug;
-        return view('admin.formbuilder.raw-data',compact('slug','form'));
+        $formModel = $this->assignModel('forms');
+        $form = $formModel::find($id);
+        return view('admin.formbuilder.raw-data',compact('model','form'));
     }
 
 }
