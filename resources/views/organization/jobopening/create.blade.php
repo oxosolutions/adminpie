@@ -14,7 +14,7 @@
 @include('common.page_content_primary_start')
 <div class="row">
 	<div class="col-md-12">
-		{!! Form::open(['route'=>'opening.create', 'class'=> 'form-horizontal','method' => 'post'])!!}
+		{!! Form::open(['route'=>'opening.create', 'class'=> 'form-horizontal','method' => 'post','files'=>true])!!}
 			<div class="row">
 				<div class="col-md-12 ">
 					<div class="panel panel-flat">

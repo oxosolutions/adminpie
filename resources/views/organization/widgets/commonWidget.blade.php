@@ -1,5 +1,7 @@
-
-<div class="aione-widget aione-border bg-grey bg-lighten-5" >
+@php
+    $dashboard_widget = get_organization_meta('dashboard_widget');
+@endphp
+<div class="aione-widget aione-border bg-grey bg-lighten-5" style="width: {{ ($dashboard_widget != false)?$dashboard_widget:23 }}%">
 	<div class="aione-title">
 
 		<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4" >

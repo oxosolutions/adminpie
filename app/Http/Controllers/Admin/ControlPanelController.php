@@ -144,4 +144,8 @@ class ControlPanelController extends Controller
         $tablesList = $this->consistantOrganizationTables();
         return redirect()->back()->with(['list_tables'=>$tablesList]);
     }
+
+    public function methodsTesting(){
+        return view('admin.control-panel.method_testing');
+    }
 }

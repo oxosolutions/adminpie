@@ -15,8 +15,8 @@ use Auth;
 use Session;
 use App\Model\Admin\GlobalOrganization;
 use Menu as wMenu;
-use App\Model\Organization\OrganizationSetting; 
-
+use App\Model\Organization\OrganizationSetting;
+use App\Model\Organization\JobOpening;
 class PagesController extends Controller
 {
     protected function assignModel($model){
@@ -627,7 +627,34 @@ class PagesController extends Controller
         }
         return back();
     }
-    public function updatePage(Request $request)
-    {
+    public function updatePage(Request $request){
+
+    }
+
+    /**
+     * To View all openings
+     * @return [type] [description]
+     */
+    public function JobOpenings(){
+        $model = JobOpening::with(['opening_meta'])->get();
+        if($model == null || $model->isEmpty()){
+            $model = [];
+        }
+        return view('organization.jobopening.openings',['model'=>$model]);
+    }
+
+    /**
+     * To view sepecific opening detail 
+     * @param  [type] $slug [description]
+     * @return [type]       [description]
+     * @author Rahul
+     */
+    public function openingDetails($id){
+        $model = JobOpening::with(['opening_meta'])->find($id);
+        if($model == null){
+            $model = [];
+        }
+
+        return view('organization.jobopening.opening-details',['model'=>$model]);   
     }
 }

@@ -9,6 +9,7 @@
             Route::get('comment/del/{c_id}',    ['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
             Route::get('comment/edit/{c_id}',   ['as'=>'del.comment' , 'uses'=>'Organization\cms\PagesController@deleteComment' ]);
             Route::post('formdata/save',    ['as'=>'save.form.data','uses'=>'Admin\FormBuilderController@saveGeneratedForm']);
+            Route::post('application/submit',['as'=>'submit.application','uses'=>'Organization\hrm\ApplicationController@submitApplication']);
         });
 
 	/****************************************** All Routes For Admin *************************************************/
@@ -565,14 +566,7 @@
 					include_once 'custom/organization/pages.php';
 
 					// posts
-					Route::get('/posts/{id}',	['as'=>'edit.posts' , 'uses'=>'PagesController@editposts' ]);
-					Route::post('/posts/save',	['as'=>'store.posts' , 'uses'=>'PagesController@savePosts' ]);
-					Route::post('/posts/update',	['as'=>'update.posts', 'uses'=>'PagesController@updatePosts' ]);
-					Route::get('/posts/delete/{id}',	['as'=>'delete.posts', 'uses'=>'PagesController@deletePosts' ]);
-					Route::post('/posts/status/update',['as'=>'update.status.posts','uses'=>'PagesController@updateStatusPosts']);
-					Route::post('/posts/save/custom-code',['as'=>'custom.save.post','uses'=>'PagesController@saveCustomeCode']);
-					Route::get('/posts/setting/{id}',['as'=> 'setting.posts' , 'uses' => 'PagesController@pageSetting']);
-					Route::get('/posts/custom/{id}',['as'=> 'custom.setting.posts' , 'uses' => 'PagesController@customeCode']);
+					include_once 'custom/organization/posts.php';
 
 					Route::post('/save/categories',['as' => 'category.save' , 'uses' => 'categoriesController@save']);
 					Route::get('/delete/categories/{id}',['as' => 'category.delete' , 'uses' => 'categoriesController@delete']);
@@ -674,3 +668,6 @@ Route::group(['prefix'=>'front'], function(){
 	Route::get('/public/maps/{map_id}/{theme?}/{source?}/{data?}',['as'=>'public.maps','uses'=>'Admin\CustomMapsController@public_maps']);
 	
 	Route::match(['get','post'], '/user-meta-update',			['as'=>'user.updatemeta',			'uses'=>'Organization\users\UsersController@UserMetaUpdate']);
+
+	Route::get('/openings',			['as'=>'job.openings','uses'=>'Organization\cms\PagesController@JobOpenings']);
+	Route::get('/opening/{id}',	['as'=>'detail.openings','uses'=>'Organization\cms\PagesController@openingDetails']);

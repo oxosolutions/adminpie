@@ -86,6 +86,22 @@ class JobOpeningController extends Controller
       $opening = JobOpening::with('applications.applicant.applicant_meta')->where('id',$id)->get();
 
     }
+
+    protected function validateJobCreatePost($request){
+        $rules = [
+            'title' => 'required',
+            'department' => 'required',
+            'designation' => 'required',
+            'skills' => 'required',
+            'job_type' => 'required',
+            'location' => 'required',
+            'number_of_post' => 'required',
+            'eligibility' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -93,60 +109,34 @@ class JobOpeningController extends Controller
      */
     public function create(Request $request)
     {	
-      if($request->isMethod('post')){
+        if($request->isMethod('post')){
+            $this->validateJobCreatePost($request);
     		$job = new JobOpening();
     		$job->fill($request->all());
     		$job->save();
-        $request['opening_id'] = $job->id;
-        unset($request['_token'],  $request['title'] ,$request['department'], $request['designation'],$request['skills'] ,$request['job_type'] ,$request['location'], $request['number_of_post']);
-        foreach ($request->all() as $key => $value) {
-         $jobMeta = new JobOpeningMeta();
-         $jobMeta->opening_id =  $job->id;
-         $jobMeta->key =  $key;
-         if(is_array($value)){
-            $value = json_encode($value);   
-         }
-         $jobMeta->value =  $value;
-         $jobMeta->save();
+            $request['opening_id'] = $job->id;
+            unset($request['_token'],  $request['title'] ,$request['department'], $request['designation'],$request['skills'] ,$request['job_type'] ,$request['location'], $request['number_of_post']);
+            if($request->hasFile('job_image')){
+                $uploadedImage = $this->uploadJobImage($request);
+                $request->request->add(['image'=>$uploadedImage]);
+            }
+            foreach ($request->all() as $key => $value) {
+                if(!in_array($key,['job_image'])){
+                    $jobMeta = new JobOpeningMeta();
+                    $jobMeta->opening_id =  $job->id;
+                    $jobMeta->key =  $key;
+                    if(is_array($value)){
+                        $value = json_encode($value);   
+                    }
+                    $jobMeta->value =  $value;
+                    $jobMeta->save();
+                }
+            }
+            return redirect()->route('list.opening');
         }
-        return redirect()->route('list.opening');
-    		}
-
         return view('organization.jobopening.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -156,38 +146,54 @@ class JobOpeningController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id=null){
+
         $model =  JobOpening::find($id);
+        if($request->isMethod('post')){
 
-
-      if($request->isMethod('post')){
-
-        $model->fill($request->all());
-        $model->save();
-        unset($request['_token'], $request['title'] ,$request['department'], $request['designation'],$request['skills'] ,$request['job_type'], $request['location'], $request['number_of_post']);
-
-      foreach ($request->all() as $key => $value) {
-        $checkExist = JobOpeningMeta::where(['opening_id'=>$id,'key'=>$key]);
-        if($checkExist->exists()){
-           $checkExist->update(['value'=>$value]);
-          }else{
-              $jobMeta = new JobOpeningMeta();
-              $jobMeta->opening_id =  $id;
-              $jobMeta->key =  $key;
-              $jobMeta->value =  $value;
-              $jobMeta->save();
+            $model->fill($request->all());
+            $model->save();
+            unset($request['_token'], $request['title'] ,$request['department'], $request['designation'],$request['skills'] ,$request['job_type'], $request['location'], $request['number_of_post']);
+            if($request->hasFile('job_image')){
+                $uploadedImage = $this->uploadJobImage($request);
+                $request->request->add(['image'=>$uploadedImage]);
+            }
+            foreach ($request->all() as $key => $value) {
+                if(!in_array($key,['job_image'])){
+                    $checkExist = JobOpeningMeta::where(['opening_id'=>$id,'key'=>$key]);
+                    if($checkExist->exists()){
+                        $checkExist->update(['value'=>$value]);
+                    }else{
+                        $jobMeta = new JobOpeningMeta();
+                        $jobMeta->opening_id =  $id;
+                        $jobMeta->key =  $key;
+                        $jobMeta->value =  $value;
+                        $jobMeta->save();
+                    }
+                }
+            }
+            return redirect()->route('list.opening');
         }
-      }
-        return redirect()->route('list.opening');
-      }
+        $opening = JobOpeningMeta::where('opening_id',$id)->get()->keyBy('key')->toArray();
+        $datas = collect($opening);
+        $data = $datas->mapWithKeys(function($items){
+            return [$items['key'] => $items['value']];
+        });
+        $col  = collect([$model->toArray(), $data->toArray()]);
+        $model = $col->collapse();
+        return view('organization.jobopening.edit', compact('model'));
+    }
 
-      $opening = JobOpeningMeta::where('opening_id',$id)->get()->keyBy('key')->toArray();
-      $datas = collect($opening);
-      $data = $datas->mapWithKeys(function($items){
-        return [$items['key'] => $items['value']];
-      });
-      $col  =collect([$model->toArray(), $data->toArray()]);
-      $model = $col->collapse();
-      return view('organization.jobopening.edit', compact('model'));
+    /**
+     * Upload posted job image to directory
+     * @param  [type] $request having all posted data by user 
+     * @return [type]          will return boolean 
+     * @author Rahul
+     */
+    protected function uploadJobImage($request){
+        $path = upload_path('job_opening_images');
+        $fileName = $request->file('job_image')->getClientOriginalName();
+        $request->file('job_image')->move($path, $fileName);
+        return $path.'/'.$fileName;
     }
 
     /**

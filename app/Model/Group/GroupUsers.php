@@ -83,10 +83,7 @@ class GroupUsers extends Authenticatable
     public function client_rel(){
       return $this->hasOne('App\Model\Organization\Client','user_id','id');
     }
-    /*public function userRole() // Should remove
-    {
-      return $this->hasOne('App\Model\Organization\UsersRole','id','role_id');
-    }*/
+   
     public function userType()
     {
       return $this->hasMany('App\Model\Organization\UsersType','id','user_type');
@@ -111,5 +108,9 @@ class GroupUsers extends Authenticatable
 
     public static function userListForAssignToOrganization(){
     	return Self::doesntHave('organization_user')->pluck('name','id');
+    }
+
+    public function applications(){
+        return $this->belongsTo('App\Model\Organization\Application','id','applicant_id');
     }
 }

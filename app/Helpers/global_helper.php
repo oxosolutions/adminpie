@@ -251,7 +251,6 @@ function get_user_id(){
 *	@author	SGS Sandhu(sgssandhu.com)
 *	@return uid [integer]
 ************************************************************/
-
 function get_image($path, $filename, $size = null, $html = false){
 	
 	$ds = directory_separator();
@@ -280,10 +279,6 @@ function get_image($path, $filename, $size = null, $html = false){
 	
 
 }
-
- // function get_form_settings($formId){
- // 	$model = 'use App\Model\\Organization\\';
- // }
 
 /************************************************************
 *	@function get_profile_picture
@@ -1004,6 +999,69 @@ function get_media(){
 
 
 
+/************************************************************
+*	@function to_html_table
+*	@description Returns HTML Table from an Array, an Object or JSON
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm data		[array/object/json	optional	default	null]
+*	@perm datatype		[string optional	default	array]
+*	@return output [string]
+************************************************************/
+
+function to_html_table($data = null, $datatype = 'array'){
+	$output = "";
+
+
+
+
+
+
+
+	
+	
+	return $output;
+}
+/************************************************************
+*	@function json_to_html_table
+*	@description Returns HTML Table from JSON String
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm data		[JSON	optional	default	null]
+*	@return output [string]
+************************************************************/
+function json_to_html_table($data = null){
+	$output = to_html_table($data , $datatype = 'json');
+	return $output;
+}
+/************************************************************
+*	@function array_to_html_table
+*	@description Returns HTML Table from Array
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm data		[Array	optional	default	null]
+*	@return output [string]
+************************************************************/
+function array_to_html_table($data = null){
+	$output = to_html_table($data , $datatype = 'array');
+	return $output;
+}
+/************************************************************
+*	@function object_to_html_table
+*	@description Returns HTML Table from Array
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm data		[Object	optional	default	null]
+*	@return output [string]
+************************************************************/
+function object_to_html_table($data = null){
+	$output = to_html_table($data , $datatype = 'object');
+	return $output;
+}
 
 
 /************************************************************
@@ -1889,6 +1947,66 @@ function get_survey_meta($sid){
 		}
 
 		return $unicode;
-	}	
+	}
+
+    function get_all_defined_functions(){
+        /*$functionlist = '';
+        $content = file_get_contents(base_path().'/app/Helpers/global_helper.php');
+        preg_match_all("/(function )(\S*)/", $content, $matches);
+        dd($matches);
+        foreach($matches[2] as $match) {
+            $function[] = trim($match);
+        }
+        natcasesort($function);
+        
+        return $function;*/
+        $source = file_get_contents(base_path().'/app/Helpers/global_helper.php');
+        $tokens = token_get_all($source);
+        $functions = array();
+        $nextStringIsFunc = false;
+        $inClass = false;
+        $bracesCount = 0;
+
+        foreach($tokens as $token) {
+
+            switch($token[0]) {
+                case T_CLASS:
+                    $inClass = true;
+                    break;
+                case T_FUNCTION:
+                    if(!$inClass) $nextStringIsFunc = true;
+                    break;
+
+                case T_STRING:
+                    if($nextStringIsFunc) {
+                        $nextStringIsFunc = false;
+                        $functions[$token[1]] = $token[1];
+                    }
+                    break;
+
+                // Anonymous functions
+                case '(':
+                case ';':
+                    $nextStringIsFunc = false;
+                    break;
+
+                // Exclude Classes
+                case '{':
+                    if($inClass) $bracesCount++;
+                    break;
+
+                case '}':
+                    if($inClass) {
+                        $bracesCount--;
+                        if($bracesCount === 0) $inClass = false;
+                    }
+                    break;
+            }
+        }
+
+        return $functions;
+
+        
+    }
 	
 ?>

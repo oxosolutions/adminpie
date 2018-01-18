@@ -13,7 +13,10 @@
         </li>
         <li class="aione-tab {{(Request::route()->action['as'] == 'consistency.control')?'nav-item-current':''}}">
             <a href="{{route('consistency.control')}}"><span class="nav-item-text">Consistency</span></a>
-        </li> 
+        </li>
+        <li class="aione-tab {{(Request::route()->action['as'] == 'method.testing')?'nav-item-current':''}}">
+            <a href="{{route('method.testing')}}"><span class="nav-item-text">Method Testing</span></a>
+        </li>
         <div class="clear"></div>
     </ul>
 </nav>

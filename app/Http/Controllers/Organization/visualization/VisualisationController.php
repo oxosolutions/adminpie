@@ -1010,8 +1010,6 @@ class VisualisationController extends Controller
 			}
 		}*/
 		
-		
-		*/
 		return ['view_data'=>$viewData_array, 'tooltip_data'=>$tooltipData_array,'popup_data'=>$popupData_array];
 	}
 	public function setting_visualization($id)

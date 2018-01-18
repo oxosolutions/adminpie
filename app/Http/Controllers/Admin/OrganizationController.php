@@ -405,7 +405,7 @@ try{
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_leaves',
-                                '--schema'=>'name:text, employee_id:integer, reason_of_leave:string:nullable, leave_category_id:integer, from:date, to:date, description:text:nullable, total_days:integer:nullable, apply_by:string, approved_by:string:nullable, status:integer'
+                                '--schema'=>'name:text, employee_id:integer, reason_of_leave:string:nullable, leave_category_id:integer, from:date, to:date, from_leave_count:integer:nullable, to_leave_count:integer:nullable, description:text:nullable, total_days:integer:nullable, apply_by:string, approved_by:string:nullable, status:integer'
                             ]);
 
 		Artisan::call('make:migration:schema',[

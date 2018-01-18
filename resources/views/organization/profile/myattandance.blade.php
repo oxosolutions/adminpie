@@ -156,39 +156,39 @@
 						
 					{{--- YEARLY STARTS --}}
 		<div id="yearly_data" class="row year-view">
-			<div class="font-size-0" style="font-size: 10px">
-				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Days</div>
-				<div class=" display-inline-block box ml-2 mt-2">1</div>
-				<div class=" display-inline-block box ml-2 mt-2">2</div>
-				<div class=" display-inline-block box ml-2 mt-2">3</div>
-				<div class=" display-inline-block box ml-2 mt-2">4</div>
-				<div class=" display-inline-block box ml-2 mt-2">5</div>
-				<div class=" display-inline-block box ml-2 mt-2">6</div>
-				<div class=" display-inline-block box ml-2 mt-2">7</div>
-				<div class=" display-inline-block box ml-2 mt-2">8</div>
-				<div class=" display-inline-block box ml-2 mt-2">9</div>
-				<div class=" display-inline-block box ml-2 mt-2">10</div>
-				<div class=" display-inline-block box ml-2 mt-2">11</div>
-				<div class=" display-inline-block box ml-2 mt-2">12</div>
-				<div class=" display-inline-block box ml-2 mt-2">13</div>
-				<div class=" display-inline-block box ml-2 mt-2">14</div>
-				<div class=" display-inline-block box ml-2 mt-2">15</div>
-				<div class=" display-inline-block box ml-2 mt-2">16</div>
-				<div class=" display-inline-block box ml-2 mt-2">17</div>
-				<div class=" display-inline-block box ml-2 mt-2">18</div>
-				<div class=" display-inline-block box ml-2 mt-2">19</div>
-				<div class=" display-inline-block box ml-2 mt-2">20</div>
-				<div class=" display-inline-block box ml-2 mt-2">21</div>
-				<div class=" display-inline-block box ml-2 mt-2">22</div>
-				<div class=" display-inline-block box ml-2 mt-2">23</div>
-				<div class=" display-inline-block box ml-2 mt-2">24</div>
-				<div class=" display-inline-block box ml-2 mt-2">25</div>
-				<div class=" display-inline-block box ml-2 mt-2">26</div>
-				<div class=" display-inline-block box ml-2 mt-2">27</div>
-				<div class=" display-inline-block box ml-2 mt-2">28</div>
-				<div class=" display-inline-block box ml-2 mt-2">29</div>
-				<div class=" display-inline-block box ml-2 mt-2">30</div>
-				<div class=" display-inline-block box ml-2 mt-2">31</div>
+			<div class="font-size-9 ">
+				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
+				<div class=" display-inline-block box aione-align-center ">1</div>
+				<div class=" display-inline-block box aione-align-center ">2</div>
+				<div class=" display-inline-block box aione-align-center ">3</div>
+				<div class=" display-inline-block box aione-align-center ">4</div>
+				<div class=" display-inline-block box aione-align-center ">5</div>
+				<div class=" display-inline-block box aione-align-center ">6</div>
+				<div class=" display-inline-block box aione-align-center ">7</div>
+				<div class=" display-inline-block box aione-align-center ">8</div>
+				<div class=" display-inline-block box aione-align-center ">9</div>
+				<div class=" display-inline-block box aione-align-center ">10</div>
+				<div class=" display-inline-block box aione-align-center ">11</div>
+				<div class=" display-inline-block box aione-align-center ">12</div>
+				<div class=" display-inline-block box aione-align-center ">13</div>
+				<div class=" display-inline-block box aione-align-center ">14</div>
+				<div class=" display-inline-block box aione-align-center ">15</div>
+				<div class=" display-inline-block box aione-align-center ">16</div>
+				<div class=" display-inline-block box aione-align-center ">17</div>
+				<div class=" display-inline-block box aione-align-center ">18</div>
+				<div class=" display-inline-block box aione-align-center ">19</div>
+				<div class=" display-inline-block box aione-align-center ">20</div>
+				<div class=" display-inline-block box aione-align-center ">21</div>
+				<div class=" display-inline-block box aione-align-center ">22</div>
+				<div class=" display-inline-block box aione-align-center ">23</div>
+				<div class=" display-inline-block box aione-align-center ">24</div>
+				<div class=" display-inline-block box aione-align-center ">25</div>
+				<div class=" display-inline-block box aione-align-center ">26</div>
+				<div class=" display-inline-block box aione-align-center ">27</div>
+				<div class=" display-inline-block box aione-align-center ">28</div>
+				<div class=" display-inline-block box aione-align-center ">29</div>
+				<div class=" display-inline-block box aione-align-center ">30</div>
+				<div class=" display-inline-block box aione-align-center ">31</div>
 			</div>
 			<div class="font-size-0" style="font-size: 0">
 				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">Jan</div>
