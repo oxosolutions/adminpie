@@ -39,4 +39,6 @@
 	Route::post('/customcode/save/{id}',				['as'=>'save.custom.code','uses'=>'DatasetController@saveCustomCode']);
 	Route::get('/delete/column/{id}/{column}' , 		['as'=>'delete.column','uses'=>'DatasetController@deleteColumn']);
 
+    Route::get('/data/refresh/{id}',                    ['as'=>'refresh.dataset','uses'=>'DatasetController@refreshDataset']);
+
 ?>

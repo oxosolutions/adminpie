@@ -8,4 +8,6 @@
 
 	Route::post('widget/sort',					['as'=>'widget.sort','uses'=>'DashboardController@widgetSort']);
 
+    Route::post('widget/resize',                ['as'=>'widget.resize','uses'=>'DashboardController@resizeWidget']);
+
 ?>

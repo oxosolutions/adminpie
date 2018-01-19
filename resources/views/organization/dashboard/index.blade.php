@@ -403,7 +403,7 @@
     	@endforeach
 
     	@if(!empty($listWidgets))
-    	<div class="aione-widget aione-border bg-grey bg-lighten-5">
+    	<div class="aione-widget aione-border bg-grey bg-lighten-5 width-layout-1-1">
 			<div class="aione-title">
 				<h5 class="aione-align-center font-weight-400 aione-border-bottom m-0 pv-10 bg-grey bg-lighten-4">
 					<a href="javascript:;" class="blue-grey darken-4">Add New Widget</a>

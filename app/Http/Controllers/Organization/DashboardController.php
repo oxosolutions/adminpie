@@ -18,6 +18,7 @@ use App\Model\Organization\RolePermisson as Permisson;
 use App\Model\Admin\GlobalWidget;
 use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalOrganization;
+use App\Model\Organization\OrganizationSetting;
 use App\Model\Admin\forms;
 use App\Model\Admin\FormsMeta;
 use File;
@@ -301,5 +302,27 @@ class DashboardController extends Controller
     		$model = GlobalWidget::where('id',$value)->update(['order' => $key]);
     	}
     	// return back();
+    }
+
+    public function resizeWidget(Request $request){
+        $existingWidgetsSettings = get_organization_meta('widget_settings');
+        if($existingWidgetsSettings == false){
+            $model = new OrganizationSetting;
+            $model->key = 'widget_settings';
+            $model->value = json_encode([$request->widget_id => ['size'=>$request->widget_size]]);
+            $model->type = 'web';
+            $model->save();
+            Session::flash('success','Widget settings saved Successfully');
+            return back();
+        }else{
+            $oldSettings = json_decode($existingWidgetsSettings,true);
+            $oldSettings[$request->widget_id] = ['size'=>$request->widget_size];
+            $model = OrganizationSetting::where(['key'=>'widget_settings'])->first();
+            $model->value = json_encode($oldSettings);
+            $model->save();
+            Session::flash('success','Widget settings saved Successfully!');
+            return back();
+        }
+        
     }
 }

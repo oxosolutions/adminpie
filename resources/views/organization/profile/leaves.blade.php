@@ -8,12 +8,15 @@ $page_title_data = array(
 'page_title' => 'Leaves',
 'add_new' => '+ Apply leave'
 ); 
-
-   $range = range(2017, 2022);
-   $years = array_combine($range, $range);
+$range = range(2017, 2022);
+$value = array_map( function($a){
+   $next_year = $a + 1;
+   return 'April '.$a.' to March '.$next_year; 
+}, $range);
+$years = array_combine($range, $value);
 if(!empty($error)){
-unset($page_title_data['add_new']);
-}	
+   unset($page_title_data['add_new']);
+}  
 @endphp
 @include('common.pageheader',$page_title_data)
 @if (Session::has('sucessful'))
@@ -30,13 +33,6 @@ unset($page_title_data['add_new']);
 </div>
 @endforeach
 @endif
-{{-- @if($errors->any())
-<script type="text/javascript">
-   window.onload = function(){
-     $('#add_new_model').modal('open');
-   }
-</script>
-@endif --}}
 <div class="row">
    @include('organization.profile._tabs')
    @if(!empty($error))
@@ -107,7 +103,14 @@ unset($page_title_data['add_new']);
                            </div>
                         </div>
                         <div class="col s3 right-align">
+                           <span class="teal white-text" style="padding: 2px 5px">{{$current_used_leave[$val->leave_category_id]['name']}} </span>
+                        </div>
+                        <div class="col s3 right-align">
+                           @if($total = collect([$val->from_leave_count,$val->to_leave_count])->sum())
+                           <span class="teal white-text" style="padding: 2px 5px">{{$total}} Days</span>
+                           @else
                            <span class="teal white-text" style="padding: 2px 5px">{{$val->total_days}} Days</span>
+                           @endif
                         </div>
                         <div class="col s3 right-align">
                            <span class="teal white-text" style="padding: 2px 5px">{{$val->from}} to {{$val->to}} </span>
@@ -137,8 +140,8 @@ unset($page_title_data['add_new']);
                {!!Form::close()!!}
                <div>
                   {!! Form::open(['route'=>'account.leaves']) !!}
-                     {!! Form::select('year',$years,$filter_year,['class'=>'browser-default'])!!}
-                     {!! Form::submit('search') !!}
+                  {!! Form::select('year',$years,$filter_year,['class'=>'browser-default'])!!}
+                  {!! Form::submit('search') !!}
                   {!! Form::close()!!}
                </div>
                <div class="card title-card" >
@@ -162,7 +165,7 @@ unset($page_title_data['add_new']);
                               @if($val['valid_for']=='monthly')
                               {{12*$val['assigned_leave']}}
                               @else
-                                 {{$val['assigned_leave']}}
+                              {{$val['assigned_leave']}}
                               @endif
                            </div>
                         </div>
@@ -182,11 +185,11 @@ unset($page_title_data['add_new']);
                            </div>
                            <div class="center-align" style="padding: 6px">
                               <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">
-                                 @if($val['valid_for']=='monthly')
-                                    {{12*$val['assigned_leave'] - $val['used_leave']}}
-                                 @else
-                                    {{$val['assigned_leave'] - $val['used_leave']}}
-                                 @endif
+                              @if($val['valid_for']=='monthly')
+                              {{12*$val['assigned_leave'] - $val['used_leave']}}
+                              @else
+                              {{$val['assigned_leave'] - $val['used_leave']}}
+                              @endif
                               </span>
                            </div>
                         </div>
@@ -195,13 +198,11 @@ unset($page_title_data['add_new']);
                            <div class="col l6">valid for</div>
                            <div class="col l6">{{$val['valid_for']}}</div>
                         </div>
-                        {{-- @if(!empty($val['apply_before']))
-                           <div class="divider"></div>
-                           <div class="row mb-0 p-10" style="">
-                              <div class="col l6">Apply Before</div>
-                              <div class="col l6">{{@$val['apply_before']}}</div>
-                           </div>
-                        @endif --}}
+                        <div class="divider"></div>
+                        <div class="row mb-0 p-10" >
+                           <div class="col l6">Apply Before</div>
+                           <div class="col l6">{{$val['apply_before']}} days</div>
+                        </div>
                         <div class="divider"></div>
                         <div class="row mb-0 p-10" style="">
                            <div class="col l6">Carry Forward</div>
@@ -225,113 +226,6 @@ unset($page_title_data['add_new']);
                </div>
                @endforeach
                @endif
-               {{-- 
-               <div class="card">
-                  <div class="row mb-0" >
-                     <div class="row mb-0 p-10">
-                        <div class="col l6">Title</div>
-                        <div class="col l6">t val</div>
-                     </div>
-                     <div class="divider"></div>
-                     <div class="row mb-0" >
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Total
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              Total value
-                           </div>
-                        </div>
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Used
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">used_leave</span>
-                           </div>
-                        </div>
-                        <div class="col l4">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              left
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              <span class="orange white-text" style="padding: 2px 5px;border-radius: 4px">value</span>
-                           </div>
-                        </div>
-                     </div>
-                     <div class="divider"></div>
-                     <div class="row mb-0 p-10" >
-                        <div class="col l6">Apply Before</div>
-                        <div class="col l6">metaVal['value Days</div>
-                     </div>
-                     <div class="divider"></div>
-                     <div class="row mb-0 p-10" style="">
-                        <div class="col l6">Yearly/Monthly</div>
-                        <div class="col l6">metaVal['value</div>
-                     </div>
-                  </div>
-               </div>
-               --}}
-               {{-- @foreach($leave_rule as $ruleKey => $ruleVal)
-               <div class="card">
-                  <div class="row mb-0" >
-                     <div class="row mb-0 p-10">
-                        <div class="col l6">Title</div>
-                        <div class="col l6">{{$ruleVal['name']}}</div>
-                     </div>
-                     <div class="divider"></div>
-                     @foreach($ruleVal['meta'] as $metakey =>$metaVal)
-                     @php	$used_leave =0;
-                     if(!empty($leave_count_by_cat[$ruleVal->id])){
-                     $used_leave = $leave_count_by_cat[$ruleVal->id]->sum('total_days');
-                     }
-                     @endphp
-                     <div class="row mb-0" >
-                        @if($metaVal['key'] =="number_of_day")
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Total
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              {{$metaVal['value']}}
-                           </div>
-                        </div>
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Used
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">{{$used_leave}}</span>
-                           </div>
-                        </div>
-                        <div class="col l4">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              left
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              <span class="orange white-text" style="padding: 2px 5px;border-radius: 4px">{{@$metaVal['value'] - $used_leave }}</span>
-                           </div>
-                        </div>
-                        @endif
-                     </div>
-                     @if($metaVal['key'] =="apply_before" )
-                     <div class="divider"></div>
-                     <div class="row mb-0 p-10" >
-                        <div class="col l6">Apply Before</div>
-                        <div class="col l6">{{$metaVal['value']}} Days</div>
-                     </div>
-                     @endif
-                     @if($metaVal['key'] =="valid_for" )
-                     <div class="divider"></div>
-                     <div class="row mb-0 p-10" style="">
-                        <div class="col l6">Yearly/Monthly</div>
-                        <div class="col l6">{{ucfirst($metaVal['value'])}}</div>
-                     </div>
-                     @endif
-                     @endforeach
-                  </div>
-               </div>
-               @endforeach --}}
             </div>
          </div>
       </div>
@@ -340,9 +234,9 @@ unset($page_title_data['add_new']);
 </div>
 <script type="text/javascript">
    $(".datepicker").pickadate({
-   	selectMonths:true,
-   	selectYear:15,
-   	min: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())
+      selectMonths:true,
+      selectYear:15,
+      min: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())
    });
    
 </script>

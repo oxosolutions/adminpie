@@ -54,7 +54,7 @@ class EmployeeLeaveController extends Controller
  * @return     <type>  Number of used leave.
  */
 	protected function count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $year){
-
+ 		$next_year  = $year + 1;
 		foreach ($check_monthly_yearly_carry_forward as $key => $value) {
 			$all_leave=null;
 			// $common_query = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id,'status'=>1]);
@@ -68,42 +68,27 @@ class EmployeeLeaveController extends Controller
 				// @$from_leave_count = @$fromLeavesData->sum('from_leave_count');
 				// @$to_leave_count = @$toLeavesData->sum('to_leave_count');
 				// @$all_leave =collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
-				// }elseif($value['for']=='yearly'){
-
-				$da[$key] =	$fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereYear('from',$year)->get();
-					
-					$toLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id,'status'=>1])->whereNull('total_days')->whereYear('to',$year)->get();
-					$from = $year;
+				// }elseif($value['for']=='yearly'){ ->whereNotIn('id',$exist_id)
+				 $frombetween[$key] = $fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('from',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
+				 $exist_id = array_pluck($fromLeavesData,'id');
+				 $toBetween[$key] = $toLeavesData =EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('to',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
+				 
+				 
+				// $fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereYear('from',$year)->get();
+				// $toLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id,'status'=>1])->whereNull('total_days')->whereYear('to',$year)->get();
 				@$total_leave = @$fromLeavesData->sum('total_days'); 
 				@$from_leave_count = @$fromLeavesData->sum('from_leave_count');
 				@$to_leave_count = @$toLeavesData->sum('to_leave_count');
-				 $sum[$key] = @$all_leave = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
-				
+				@$all_leave = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
 				// }
-				$used_leave[$key] = ['name'=> $value['name'] , 'apply_before' =>$value['apply_before'], 'assigned_leave'=>$value['assigned_leave'], 'used_leave'=> $all_leave,'carry_forward'=> $value['carry_farward'] , 'valid_for'=> $value['for'] , 'leave_used_in'=>@$from];
+				$used_leave[$key] = ['name'=> $value['name'] , 'apply_before' =>$value['apply_before'], 'assigned_leave'=>$value['assigned_leave'], 'used_leave'=> $all_leave,'carry_forward'=> $value['carry_farward'] , 'valid_for'=> $value['for'] , 'leave_used_in'=>@$year];
 		}
+		  // dd($frombetween, $toBetween);
 		return $used_leave;
 	}
 
-
-	public function leave_listing(Request $request){
-			$year = date('Y');
-			if($request->isMethod('post')){
-				$year = $request->year;
-			}
-		$current_used_leave = $leave_count_by_cat =$leave_rule =$leavesData = $error =null;
-		$emp_id = get_current_user_meta('employee_id');
-
-		if(in_array(1, role_id())){
-			$error = "You can not view leave.";
-		}else{
-			$user = user_info()->toArray();
-			$user_id = $user['id'];
-			$designation_id =  get_current_user_meta('designation');
-			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
-			$group  = $catMetas->groupBy('key')->toArray();
-/* Find leave category ids which Assign to designation of current user @$designation_categories contian Categories id in array form */
-			$designation_categories = [];
+	protected function assigned_categories($group , $user_id, $designation_id){
+		$designation_categories = [];
 			if(!empty($group['include_designation'])){
 				$designation_categories = $this->mapping_category_id($designation_id , $group['include_designation']);
 			} 
@@ -119,7 +104,25 @@ class EmployeeLeaveController extends Controller
 				} 
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
-/* check carry forward & set cat meta data */
+			return $assigned_categories;
+	}  
+	public function leave_listing(Request $request){
+			$year = date('Y');
+			if($request->isMethod('post')){
+				$year = $request->year;
+			}
+		$current_used_leave = $leave_count_by_cat =$leave_rule =$leavesData = $error =null;
+		$emp_id = get_current_user_meta('employee_id');
+		if(in_array(1, role_id())){
+			$error = "You can not view leave.";
+		}else{
+			$user = user_info()->toArray();
+			$user_id = $user['id'];
+			$designation_id =  get_current_user_meta('designation');
+			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
+			$group  = $catMetas->groupBy('key')->toArray();
+/*assigned_categories method get all Assigned categories */
+			$assigned_categories = $this->assigned_categories($group, $user_id, $designation_id);
 			if($assigned_categories->isNotEmpty()){
 				$check_monthly_yearly_carry_forward = $this->check_carry_forward($assigned_categories);
 			}else{
@@ -127,20 +130,25 @@ class EmployeeLeaveController extends Controller
 			}
 /*set used leave data cat wise from current year or monthly*/
 			if(!empty($check_monthly_yearly_carry_forward)){
-				//$leave_rule = cat::with('meta')->where(['type'=>'leave', 'status'=>1])->whereIn('id',$assigned_categories)->get();
-
 				$current_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $year);
-				// dd($current_used_leave);
-				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereYear('to',$year)->whereYear('from','=',$year,'or')->get();
+ 				$next_year = $year+1;
+				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
 			}
 		}
-
 		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error]);
 	}
-
+/**
+ * The store method work for apply leave's with various leave rule's. Coditions check before Applying. 
+ * 	1. From date must be less than to date.
+ * 	2. Secondly it check  emplyoee applying leave for same date's or not which they already gotten leave or rejected & 
+ * 	what ever status & return back with error message if true.
+ * 	3. 
+ * 
+ * 
+ */
 	Public function store(Request $request, $id=null)
 	{ 
-		//dd($request->all());
+		// dd($request->all());
 		$valid_fields = [
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
@@ -148,6 +156,7 @@ class EmployeeLeaveController extends Controller
                           'leave_category_id'=> 'required'
                       ];
 		 $this->validate($request, $valid_fields);
+		$leave_category_id = $request['leave_category_id'];
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
 		$emp_id = get_current_user_meta('employee_id');
@@ -158,13 +167,13 @@ class EmployeeLeaveController extends Controller
 			$before = $from->diffInDays($current);
 			$to = Carbon::parse($request->to);
 
-			// dd('from month' , $from->month , 'to month ', $to->month);
+/*check from < to date for applying leave.*/
 			$request['from'] 	=	$from->toDateString();
 			$request['to'] 		=   $to->toDateString();
 			if(strtotime($request['from']) > strtotime($request['to'])){
 				$error['from_greater_than_to'] = 'From date must be less than to.';
 			}
- /* Check apply leaves dates alredy exist  then notify employee to correct leave dates Accordinly*/
+ /* Check leaves applying dates already exist then notify employee to correct leave dates Accordinly*/
 			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
 			})->where('employee_id',$emp_id);
@@ -181,12 +190,7 @@ class EmployeeLeaveController extends Controller
 
  				}
 			}
-/* when user leave dates not correct notify to employee correct the leave date & Never from date greater than to date*/
-			// if($to->month < $from->month ) {
-			// 	$error['from_greater_than_to'] = 'from date must be less than to date.';
-			// 	Session::flash('error',$error);
-			// 	return redirect()->route('account.leaves');
-			// }
+
 /*calculate total days of leave */
 			if($from->month !=  $to->month){
 				$from_end_date_of_month = Carbon::parse($from->daysInMonth.'-'.$from->month.'-'.$from->year);
@@ -196,9 +200,9 @@ class EmployeeLeaveController extends Controller
 				$to_end_date_of_month = Carbon::parse('1-'.$to->month.'-'.$to->year);
 				$to_leave_count = $to_end_date_of_month->diffInDays($to) + 1;
 				$request['to_leave_count'] = $to_leave_count;
+				$applying_total_days =	$from_leave_count + $to_leave_count;
 			}else{
-				$request['total_days'] = $from->diffInDays($to) + 1;
-				
+				$applying_total_days = $request['total_days'] = $from->diffInDays($to) + 1;
 			}
 			
 
@@ -379,11 +383,36 @@ class EmployeeLeaveController extends Controller
 				}
 				elseif($rule_check['valid_for']['value'] == "yearly")
 				{
+					// $this->get_carry_forward_leave($emp_id, $leave_category_id, $from->year );
+					$check_monthly_yearly_carry_forward = $this->check_carry_forward([$leave_category_id]);
+					if(!empty($check_monthly_yearly_carry_forward)){
+						$count_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $from->year);
+						}
+						dump($count_used_leave[$leave_category_id]['carry_forward']);
+						if($count_used_leave[$leave_category_id]['carry_forward']==false){
+							$apply_taken_leave = $applying_total_days + $count_used_leave[$leave_category_id]['used_leave'];
+							if($apply_taken_leave > $count_used_leave[$leave_category_id]['assigned_leave']){
+								$pending_leave = $count_used_leave[$leave_category_id]['assigned_leave'] - $count_used_leave[$leave_category_id]['used_leave'];
+								$error['exceed_number_of_day'] = "you'r leave limit exceed than assign & pending leave ".$pending_leave;
+							}
+						}elseif($count_used_leave[$leave_category_id]['carry_forward']==true){
+							// $previous_year = $from->year -1;
+							// 	$previous_count_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $previous_year);
+								// $previous_count_used_leave[$leave_category_id] = 
+
+						}
+					// dd($request->all() ,  $check_monthly_yearly_carry_forward, $count_used_leave ,$error );
+						
+						
+
 					$leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
-						$total_sum = $leave_sumdays + $request['total_days'];
-						if($total_sum > $rule_check['number_of_day']['value']) {
-							$error['exceed_number_of_day'] = "You already taken leave  ".$leave_sumdays; 
-						}elseif($rule_check['valid_for']['value']){}
+
+/*old code   */		
+			$leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
+					$total_sum = $leave_sumdays + $request['total_days'];
+					if($total_sum > $rule_check['number_of_day']['value']) {
+						$error['exceed_number_of_day'] = "You already taken leave  ".$leave_sumdays; 
+					}elseif($rule_check['valid_for']['value']){}
 				}
 
 				if(!empty($rule_check['apply_before']['value']) && $current->toDateString() > $request['from'] )
@@ -416,7 +445,13 @@ class EmployeeLeaveController extends Controller
 		
  	return redirect()->route('account.leaves');
 	}
+	protected function get_carry_forward_leave($emp_id, $leave_cat_id,  $year, $month=null){
+		$data = EMP_LEV::where(['employee_id'=>$emp_id ,'leave_category_id'=>$leave_cat_id, 'status'=>1 ])->get();
+		dd($data->toArray());
+	}
 }
+
+
 
 // else if($request->isMethod('patch')){
 // 			$leave_id = $request['leave_id'];

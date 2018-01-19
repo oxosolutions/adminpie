@@ -128,6 +128,7 @@ $page_title_data = array(
 			{{-- <script type='text/javascript'>Materialize.toast('password Change Successfully', 4000)</script> --}}
 			<div id="card-alert" class="card green lighten-5"><div class="card-content green-text">Password Change Successfully<i class="material-icons dp48">clear</i></div></div>
 		@endif
+
 	<div class="ar">
 		<div class="ac l70">
 			<div class="aione-border mb-15">
@@ -175,7 +176,7 @@ $page_title_data = array(
 								@endif
 							
 							
-
+                                
 							<div class="preloader-wrapper image-spinner big active" style="">
 								<div class="spinner-layer spinner-blue">
 									<div class="circle-clipper left">
@@ -328,16 +329,18 @@ $page_title_data = array(
 								<div class="ac l25">
 									Shift		
 								</div>
-								<div class="ac l25">
-									{{App\Model\Organization\Shift::where('id',$shift)->first()->name}}
-								</div>
-								<div class="ac l25">
-									{{App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{App\Model\Organization\Shift::where('id',$shift)->first()->to}}
-								</div>
-								<div class="ac l25">
-									@if(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days))
 
-										@foreach(json_decode(App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
+								<div class="ac l25">
+									{{@App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+								</div>
+								<div class="ac l25">
+									{{@App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{@App\Model\Organization\Shift::where('id',$shift)->first()->to}}
+								</div>
+                                
+								<div class="ac l25">
+									@if(json_decode(@App\Model\Organization\Shift::where('id',$shift)->first()->working_days))
+
+										@foreach(json_decode(@App\Model\Organization\Shift::where('id',$shift)->first()->working_days) as $k => $v)
 										
 										<div class="active" title="{{ucfirst($v)}}">{{ucfirst($v[0])}}</div>
 										@endforeach
@@ -347,6 +350,7 @@ $page_title_data = array(
 							</div>		
 						</div>
 					</div>
+
 					{{-- @if($isEmployee || $isAdmin) --}}
 					<div class="ar">
 						<div class="ac l25">
@@ -369,6 +373,7 @@ $page_title_data = array(
 								@endif
 							</div>
 						@endif
+
 						<style type="text/css">
 							.week-days > .active{
 								border-color: #2196f3;

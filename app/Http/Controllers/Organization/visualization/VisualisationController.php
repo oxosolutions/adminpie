@@ -782,7 +782,7 @@ class VisualisationController extends Controller
     	}
     }
 
-	public function embedVisualization(Request $request){
+	public function embedVisualization(Request $request, $withLayout = true){
 		$visualization = Visualization::with([
 
 		'dataset','charts'=>function($query){
@@ -947,16 +947,30 @@ class VisualisationController extends Controller
                     });
                 })->download('xlsx');
             }
-			//Finaly load view
-			return view('organization.visualization.visualization',
-									[
-										'filters'=>$filters, // contain all filters
-										'titles'=>$chartTitles, // contains all titles 
-										'visualizations'=>$drawer_array, // data for draw all charts from lava charts
-										'javascript'=>$javascript, //data for custom map popup details
-										'custom_map_data'=>[] //data for pop click event
-									]
-						);
+            if($withLayout){
+                //Finaly load view
+                return view('organization.visualization.visualization',
+                                        [
+                                            'filters'=>$filters, // contain all filters
+                                            'titles'=>$chartTitles, // contains all titles 
+                                            'visualizations'=>$drawer_array, // data for draw all charts from lava charts
+                                            'javascript'=>$javascript, //data for custom map popup details
+                                            'custom_map_data'=>[], //data for pop click event
+                                        ]
+                            );
+            }else{
+                //Finaly load view
+                return view('organization.visualization.visualization-widget',
+                                        [
+                                            'filters'=>$filters, // contain all filters
+                                            'titles'=>$chartTitles, // contains all titles 
+                                            'visualizations'=>$drawer_array, // data for draw all charts from lava charts
+                                            'javascript'=>$javascript, //data for custom map popup details
+                                            'custom_map_data'=>[], //data for pop click event
+                                        ]
+                            );
+            }
+			
 		}else{
 			return redirect()->route('visualizations');
 		}

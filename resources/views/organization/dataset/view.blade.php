@@ -75,10 +75,11 @@
 
 	$page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'no',
+	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Dataset View <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
-	'add_new' => '+ Add Role'
+	'add_new' => 'Refresh List',
+    'route' => ['refresh.dataset',request()->id]
 	); 
 @endphp
 @include('common.pageheader',$page_title_data)

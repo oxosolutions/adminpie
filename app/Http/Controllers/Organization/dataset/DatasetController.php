@@ -575,7 +575,7 @@ class DatasetController extends Controller
                         $filename = explode('/',$request->file_path);
                         $dowunloadLink = $filename;
                     }elseif($request->import_source == 'google'){
-                        $prepareGoogleSheetResult = $this->prepareCSVFromGoogleSpreadSheet($request);
+                        $prepareGoogleSheetResult = $this->prepareCSVFromGoogleSpreadSheet($request,$filePath);
                         if(!$prepareGoogleSheetResult){
                             return back();
                         }
@@ -660,7 +660,7 @@ class DatasetController extends Controller
         dd('Done');
     }
 
-    protected function prepareCSVFromGoogleSpreadSheet($request){
+    protected function prepareCSVFromGoogleSpreadSheet($request, $filePath){
         $link = str_replace('<sheetCode>',$request->uri,$this->GoogleSpreadsheet);
         $link = str_replace('<gridid>',$request->grid_id,$link);
         $spreadsheet_data = [];
@@ -1730,6 +1730,33 @@ class DatasetController extends Controller
             }
         }
         return $columns;
+    }
+
+    public function refreshDataset($id){
+        $model = Dataset::with(['dataset_meta'])->find($id);
+        $request = new Request;
+        if($model != null){
+            $dataset_type = getMetaValue($model->dataset_meta,'dataset_type');
+            if($dataset_type == 'continues'){
+                $import_source = getMetaValue($model->dataset_meta,'import_source');
+                switch($import_source){
+                    case'google':
+                        $uri = getMetaValue($model->dataset_meta,'uri');
+                        $grid_id = getMetaValue($model->dataset_meta,'grid_id');
+                        $request->replace(['import_source'=>'google','uri'=>$uri,'grid_id'=>$grid_id,'add_replace'=>'replace','replace_or_append'=>$id]);
+                        $this->uploadDataset($request);
+                        Session::flash('success','Dataset updated successfully!');
+                        return back();
+                    break;
+                }
+            }else{
+                Session::flash('warning','Dataset is not continues!');
+                return back();
+            }
+        }else{
+            Session::flash('warning','Dataset does not exist!');
+            return back();
+        }
     }
    
 }
