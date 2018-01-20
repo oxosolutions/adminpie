@@ -1011,12 +1011,44 @@ function get_media(){
 ************************************************************/
 
 function to_html_table($data = null, $datatype = 'array'){
+	$output ="";
 	if(gettype($data) != $datatype){
 		return 'Not match datatype!';
 	}
-	dump($data);
-	$output = "";
-	return $output;
+	switch ($datatype) {
+		case 'array':
+			$data_array = (array)$data;
+			break;
+		case 'object':
+			$data_array = (array)$data;
+			break;
+		case 'json':
+			$data_array = json_decode($data, true);
+		default:
+			# code...
+			break;
+	}
+	if(!empty($data_array)){
+		$output ="<div class='aione-table'><table>";
+		foreach ($data_array as $key => $value) {
+			if($key==0){
+				$output .="<tr>";
+					foreach (array_keys($value) as $key => $th_value) {
+					 	$output .="<th> $th_value </th>";
+					 } 
+				$output .="</tr>";
+			}
+			$output .="<tr>";
+				foreach ($value as $key => $td_value) {
+					$output .="<td> $td_value </td>";
+				}
+			$output .="</tr>";
+		}
+		$output .="<table></div>";
+		echo $output;
+	}
+
+	// return $output;
 }
 /************************************************************
 *	@function json_to_html_table

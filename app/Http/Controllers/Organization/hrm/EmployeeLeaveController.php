@@ -57,31 +57,16 @@ class EmployeeLeaveController extends Controller
  		$next_year  = $year + 1;
 		foreach ($check_monthly_yearly_carry_forward as $key => $value) {
 			$all_leave=null;
-			// $common_query = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id,'status'=>1]);
- 		// 	$from_query = $common_query->whereYear('from',date('Y'));
- 		// 	$to_query = $common_query->whereNull('total_days')->whereYear('to',date('Y'));
-				// if($value['for']=='monthly'){
-				// 	$fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id])->whereYear('from',date('Y'))->whereMonth('from',date('m'))->get();
-				// 	$toLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id,'status'=>1])->whereMonth('to',date('m'))->whereNull('total_days')->whereYear('to',date('Y'))->get();
-				// 	$from = date('Y F');
-				// 	@$total_leave = @$fromLeavesData->sum('total_days'); 
-				// @$from_leave_count = @$fromLeavesData->sum('from_leave_count');
-				// @$to_leave_count = @$toLeavesData->sum('to_leave_count');
-				// @$all_leave =collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
-				// }elseif($value['for']=='yearly'){ ->whereNotIn('id',$exist_id)
-				 $frombetween[$key] = $fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('from',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
-				 $exist_id = array_pluck($fromLeavesData,'id');
-				 $toBetween[$key] = $toLeavesData =EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('to',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
-				 
-				 
-				// $fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereYear('from',$year)->get();
-				// $toLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id,'status'=>1])->whereNull('total_days')->whereYear('to',$year)->get();
-				@$total_leave = @$fromLeavesData->sum('total_days'); 
-				@$from_leave_count = @$fromLeavesData->sum('from_leave_count');
-				@$to_leave_count = @$toLeavesData->sum('to_leave_count');
-				@$all_leave = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
-				// }
-				$used_leave[$key] = ['name'=> $value['name'] , 'apply_before' =>$value['apply_before'], 'assigned_leave'=>$value['assigned_leave'], 'used_leave'=> $all_leave,'carry_forward'=> $value['carry_farward'] , 'valid_for'=> $value['for'] , 'leave_used_in'=>@$year];
+			$frombetween[$key] = $fromLeavesData = EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('from',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
+			$exist_id = array_pluck($fromLeavesData,'id');
+			$toBetween[$key] = $toLeavesData =EMP_LEV::where(['leave_category_id'=>$key, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('to',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
+
+			@$total_leave = @$fromLeavesData->sum('total_days'); 
+			@$from_leave_count = @$fromLeavesData->sum('from_leave_count');
+			@$to_leave_count = @$toLeavesData->sum('to_leave_count');
+			@$all_leave = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
+			// }
+			$used_leave[$key] = ['name'=> $value['name'] , 'apply_before' =>$value['apply_before'], 'assigned_leave'=>$value['assigned_leave'], 'used_leave'=> $all_leave,'carry_forward'=> $value['carry_farward'] , 'valid_for'=> $value['for'] , 'leave_used_in'=>@$year];
 		}
 		  // dd($frombetween, $toBetween);
 		return $used_leave;
@@ -174,8 +159,6 @@ protected function calculate_carry_forward($leave_category_id){
 }
 	public function leave_listing(Request $request){
 
-		$data = to_html_table((object)[1, 2, 3, 4, 5], 'object');
-		dd($data);
 		$year = date('Y');
 		if($request->isMethod('post')){
 			$year = $request->year;
@@ -184,7 +167,7 @@ protected function calculate_carry_forward($leave_category_id){
 		$emp_id = get_current_user_meta('employee_id');
 		// dump($date_of_joining , cat::all()->toArray());
 		 $all_leave_by_cat = $this->calculate_carry_forward(3 );
-		dump($all_leave_by_cat);
+		// dump($all_leave_by_cat);
 
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
