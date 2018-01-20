@@ -65,10 +65,8 @@ class EmployeeLeaveController extends Controller
 			@$from_leave_count = @$fromLeavesData->sum('from_leave_count');
 			@$to_leave_count = @$toLeavesData->sum('to_leave_count');
 			@$all_leave = collect([$total_leave,$from_leave_count,$to_leave_count])->sum();
-			// }
 			$used_leave[$key] = ['name'=> $value['name'] , 'apply_before' =>$value['apply_before'], 'assigned_leave'=>$value['assigned_leave'], 'used_leave'=> $all_leave,'carry_forward'=> $value['carry_farward'] , 'valid_for'=> $value['for'] , 'leave_used_in'=>@$year];
 		}
-		  // dd($frombetween, $toBetween);
 		return $used_leave;
 	}
 
@@ -159,16 +157,14 @@ protected function calculate_carry_forward($leave_category_id){
 }
 	public function leave_listing(Request $request){
 
+		dump($this->calculate_carry_forward(2));
 		$year = date('Y');
 		if($request->isMethod('post')){
 			$year = $request->year;
 		}
 		$current_used_leave = $leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		$emp_id = get_current_user_meta('employee_id');
-		// dump($date_of_joining , cat::all()->toArray());
-		 $all_leave_by_cat = $this->calculate_carry_forward(3 );
-		// dump($all_leave_by_cat);
-
+		$all_leave_by_cat = $this->calculate_carry_forward(3);
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
 		}else{

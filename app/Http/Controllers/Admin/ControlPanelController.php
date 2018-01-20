@@ -14,8 +14,8 @@ class ControlPanelController extends Controller
 	/**
 	 * @auther ashish 
 	 */
-	public function testing()
-	{
+	public function testing(){
+        
 		return view('admin.control-panel.testing');
 	}
 	public function consistency(Request $request){
