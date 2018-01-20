@@ -107,12 +107,17 @@ class EmployeeLeaveController extends Controller
 			return $assigned_categories;
 	}  
 	public function leave_listing(Request $request){
+
 			$year = date('Y');
 			if($request->isMethod('post')){
 				$year = $request->year;
 			}
 		$current_used_leave = $leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		$emp_id = get_current_user_meta('employee_id');
+		 // dump(cat::all()->toArray());
+		$all_leave_by_cat = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>3])->get();
+		dump($all_leave_by_cat);
+
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
 		}else{
