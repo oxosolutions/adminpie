@@ -1011,16 +1011,11 @@ function get_media(){
 ************************************************************/
 
 function to_html_table($data = null, $datatype = 'array'){
+	if(gettype($data) != $datatype){
+		return 'Not match datatype!';
+	}
+	dump($data);
 	$output = "";
-
-
-
-
-
-
-
-	
-	
 	return $output;
 }
 /************************************************************

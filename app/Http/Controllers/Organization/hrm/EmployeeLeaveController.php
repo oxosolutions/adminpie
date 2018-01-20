@@ -105,17 +105,85 @@ class EmployeeLeaveController extends Controller
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
 			return $assigned_categories;
-	}  
+	}
+protected function calculate_joining_year_carry_forward($leave_category_id, $leave_category_detail , $employee_id ){
+		$date_of_joining = get_current_user_meta('date_of_joining');
+		$assigned_leave = $leave_category_detail[$leave_category_id]['assigned_leave'];
+	 	$time  = strtotime($date_of_joining);
+        $joining_month = date('m', $time);
+        $year  = date('Y', $time);
+	if($joining_month < 4){
+            $year = $year -1;
+            $calculate_month =  4 - $joining_month;
+            $per_month_assigned = $assigned_leave/12;   
+            $alot_leave_joining_year     = $calculate_month * $per_month_assigned;
+            $count_used_leave = $this->count_used_leave($employee_id , $leave_category_detail, $year);    
+            array_set($count_used_leave, $leave_category_id.'.assigned_leave', $alot_leave_joining_year);
+            $carry_forward_value =0;
+            if($alot_leave_joining_year > $count_used_leave[$leave_category_id]['used_leave']){
+                $carry_forward_value = $alot_leave_joining_year - $count_used_leave[$leave_category_id]['used_leave'];
+            }
+            $count_used_leave[$leave_category_id]['carry_forward_value'] = $carry_forward_value[$leave_category_id];
+            $carry_forward[$year] =  $count_used_leave;
+            $year  = $year + 1;
+        }elseif($joining_month > 4){
+            $calculate_month = 12 - ($joining_month - 4);
+            $per_month_assigned = $assigned_leave/12;   
+            $alot_leave_joining_year     = $calculate_month * $per_month_assigned;
+            $count_used_leave = $this->count_used_leave($employee_id , $leave_category_detail, $year);    
+            array_set($count_used_leave, $leave_category_id.'.assigned_leave', $alot_leave_joining_year);
+            $carry_forward_value =0;
+            if($alot_leave_joining_year > $count_used_leave[$leave_category_id]['used_leave']){
+                $carry_forward_value = $alot_leave_joining_year - $count_used_leave[$leave_category_id]['used_leave'];
+            }
+            $count_used_leave[$leave_category_id]['carry_forward_value'] = $carry_forward_value;
+            $carry_forward[$year] =  $count_used_leave[$leave_category_id];
+            $year  = $year + 1;
+        }
+        if(!empty($carry_forward)){
+        	return ['year'=>$year , 'carry_forward'=>$carry_forward];
+        }
+        return ['year'=>$year, 'carry_forward'=>false];
+}   
+protected function calculate_carry_forward($leave_category_id){
+		$employee_id = get_current_user_meta('employee_id');
+        $leave_category_detail =  $this->check_carry_forward([$leave_category_id]);
+        $data = $this->calculate_joining_year_carry_forward($leave_category_id , $leave_category_detail, $employee_id);
+    	$year = $data['year'];
+    	if($data['carry_forward']!= false){
+    	 	$carry_forward = $data['carry_forward'];
+        }
+        $assigned_leave = $leave_category_detail[$leave_category_id]['assigned_leave'];
+        $current_month = date('m');
+        if($current_month < 4){
+            $end_year = date('Y') -1;
+        }elseif($current_month >3){
+            $end_year =  date('Y');   
+        }
+    for ($i=$year; $i <=$end_year; $i++) { 
+        $count_used_leave = $this->count_used_leave($employee_id , $leave_category_detail, $i);    
+        $carry_forward_value =0; 
+        if($assigned_leave > $count_used_leave[$leave_category_id]['used_leave']){
+        	$carry_forward_value = $assigned_leave - $count_used_leave[$leave_category_id]['used_leave'];
+        }
+        $count_used_leave[$leave_category_id]['carry_forward_value'] = $carry_forward_value;
+        $carry_forward[$i] =$count_used_leave[$leave_category_id];
+    }
+    $carry_forward['sum'] = collect($carry_forward)->sum('carry_forward_value');
+    return $carry_forward;
+}
 	public function leave_listing(Request $request){
 
-			$year = date('Y');
-			if($request->isMethod('post')){
-				$year = $request->year;
-			}
+		$data = to_html_table((object)[1, 2, 3, 4, 5], 'object');
+		dd($data);
+		$year = date('Y');
+		if($request->isMethod('post')){
+			$year = $request->year;
+		}
 		$current_used_leave = $leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		$emp_id = get_current_user_meta('employee_id');
-		 // dump(cat::all()->toArray());
-		$all_leave_by_cat = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>3])->get();
+		// dump($date_of_joining , cat::all()->toArray());
+		 $all_leave_by_cat = $this->calculate_carry_forward(3 );
 		dump($all_leave_by_cat);
 
 		if(in_array(1, role_id())){

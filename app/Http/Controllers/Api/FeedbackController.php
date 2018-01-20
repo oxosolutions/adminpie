@@ -20,7 +20,7 @@ class FeedbackController extends Controller
     		];
     	$this->validate($request , $rules);
         if( $request->token == '0)9(8*7&6^5%'){
-        	Session::put('organization_id','302');
+        	Session::put('organization_id',$request->org_id);
         	$model = new appFeedback;
         	$model->fill($request->all());
         	$model->save(); 

@@ -585,7 +585,8 @@ class DatasetController extends Controller
                     }elseif($request->import_source == 'from_api'){
 
                         $prepareApiResult = $this->prepareApiResponseToCSV($request,$filePath);
-
+                        $filename = explode('/',$filePath.'api_dataset_file.csv');
+                        $dowunloadLink = $filePath.'/'.'api_dataset_file.csv';
                     }else{
                         $filename = explode('/',$request->url);
                         $dowunloadLink = $request->url;
@@ -650,14 +651,33 @@ class DatasetController extends Controller
         $content = file_get_contents($api_url);
         if(json_decode($content,true) != null){
             $arrayData = json_decode($content,true);
-            dd($arrayData);
-            Excel::create('api_dataset_file',function($excel) use ($arrayData){
-                $excel->sheet('Sheetname', function($sheet) use ($arrayData){
-                    $sheet->fromArray($arrayData);
+            $result = $this->getRecursiveApiData($arrayData);
+            Excel::create('api_dataset_file',function($excel) use ($result){
+                $excel->sheet('Sheetname', function($sheet) use ($result){
+                    $sheet->fromArray($result);
                 });
             })->store('csv',$filePath);
         }
-        dd('Done');
+        return true;
+    }
+
+    protected function getRecursiveApiData($arrays, $index = 0){
+        static $simpleArray = [];
+        foreach($arrays as $key => $array){
+            if(is_array($array)){
+                foreach ($array as $inKey => $elements) {
+                    if(is_array($elements)){
+                        $this->getRecursiveApiData($elements,$index);
+                    }else{
+                        $simpleArray[$index][$inKey] = $elements;
+                    }
+                }
+            }else{
+                $simpleArray[$index][$key] = $array;
+            }
+            $index++;
+        }
+        return array_values($simpleArray);
     }
 
     protected function prepareCSVFromGoogleSpreadSheet($request, $filePath){
@@ -1744,6 +1764,13 @@ class DatasetController extends Controller
                         $uri = getMetaValue($model->dataset_meta,'uri');
                         $grid_id = getMetaValue($model->dataset_meta,'grid_id');
                         $request->replace(['import_source'=>'google','uri'=>$uri,'grid_id'=>$grid_id,'add_replace'=>'replace','replace_or_append'=>$id]);
+                        $this->uploadDataset($request);
+                        Session::flash('success','Dataset updated successfully!');
+                        return back();
+                    break;
+                    case'from_api':
+                        $api_url = getMetaValue($model->dataset_meta,'api_url');
+                        $request->replace(['import_source'=>'from_api','api_url'=>$api_url,'add_replace'=>'replace','replace_or_append'=>$id]);
                         $this->uploadDataset($request);
                         Session::flash('success','Dataset updated successfully!');
                         return back();
