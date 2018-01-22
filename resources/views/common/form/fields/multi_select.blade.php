@@ -43,7 +43,7 @@
 		}
 		
 	@endphp
-
+            
 			{!! Form::select($name.'[]',$arrayOptions,null,['class'=>$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'multiple'])!!}
 
 @endif

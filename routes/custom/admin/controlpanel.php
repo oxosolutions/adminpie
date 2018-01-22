@@ -9,4 +9,5 @@
     Route::get('drop-specific-table',        ['as'=>'remove.specific.table','uses'=>'ControlPanelController@removeSpecificTable']);
 
     Route::get('method/testing',             ['as'=>'method.testing','uses'=>'ControlPanelController@methodsTesting']);
+    Route::post('/method/serve',             ['as'=>'method.serve','uses'=>'ControlPanelController@methodServe']);
 ?>

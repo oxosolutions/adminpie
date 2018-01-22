@@ -148,4 +148,70 @@ class ControlPanelController extends Controller
     public function methodsTesting(){
         return view('admin.control-panel.method_testing');
     }
+
+    public function methodServe(Request $request){
+        $params = json_decode($request->params);
+        $params = $this->permutations($params);
+        Session::put('organization_id',$request->organization);
+        $errors = [];
+        foreach($params as $key => $param){
+            try{
+                if(!is_array($param)){
+                    $param = (array)$param;
+                }
+                $result = call_user_func_array($request->method,$param);
+                $errors[] = ['status'=>'success','message'=>'Success with that params!','params'=>json_encode($param),'output'=>$result];
+            }catch(\Exception $e){
+                $filePath = explode('/',$e->getFile());
+                $count = count($filePath);
+                $file = $filePath[$count-3].'/'.$filePath[$count-2].'/'.$filePath[$count-1];
+                $errors[] = [
+                                'status'=>'error',
+                                'message'=>'Error on passing params!',
+                                'error'=>$e->getMessage(),
+                                'file' => $file,
+                                'line' => $e->getLine(),
+                                'params'=>json_encode($param)
+                            ];
+            }
+        }
+        http_response_code(500);
+        dd($errors);
+        Session::put('organization_id',null);
+        dump($result);
+    }
+
+    protected function permutations(array $array, $inb=false){
+        switch (count($array)) {
+            case 1:
+                // Return the array as-is; returning the first item
+                // of the array was confusing and unnecessary
+                return $array[0];
+                break;
+            case 0:
+                throw new InvalidArgumentException('Requires at least one array');
+                break;
+        }
+     
+        // We 'll need these, as array_shift destroys them
+        $keys = array_keys($array);
+         
+        $a = array_shift($array);
+        $k = array_shift($keys); // Get the key that $a had
+        $b = $this->permutations($array, 'recursing');
+        $return = array();
+        foreach ($a as $v) {
+            if($v)
+            {
+                foreach ($b as $v2) {
+                    if($inb == 'recursing')
+                        $return[] = array_merge(array($v), (array) $v2);
+                    else
+                        $return[] = array($k => $v) + array_combine($keys, (array)$v2);
+                }
+            }
+        }
+     
+        return $return;
+    }
 }

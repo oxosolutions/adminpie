@@ -75,6 +75,7 @@ class EmployeeLeaveController extends Controller
 			if(!empty($group['include_designation'])){
 				$designation_categories = $this->mapping_category_id($designation_id , $group['include_designation']);
 			} 
+			// dd($designation_id , $designation_categories);
 /* Find leave category ids which Assign to current user  @$user_categories contian Categories id in array form */
 			$user_categories = [];
 			if(!empty($group['user_include'])){
@@ -83,8 +84,10 @@ class EmployeeLeaveController extends Controller
 /* Find leave category which Not Assign to current user @$not_assign_categories contian Categories id in array form */
 			$not_assign_categories =[];
 			if(!empty($group['user_exclude'])){
+				// dd('grp', $group, 'des', $designation_categories  );
 					$not_assign_categories  = $this->mapping_category_id($user_id , $group['user_exclude']);
 				} 
+
 			$total_categories	= 	collect([$designation_categories,$user_categories])->collapse()->unique();
 			$assigned_categories =  collect($total_categories)->diff($not_assign_categories);//->toArray();
 			return $assigned_categories;
@@ -157,14 +160,14 @@ protected function calculate_carry_forward($leave_category_id){
 }
 	public function leave_listing(Request $request){
 
-		dump($this->calculate_carry_forward(2));
+	//	dump($this->calculate_carry_forward(4));
 		$year = date('Y');
 		if($request->isMethod('post')){
 			$year = $request->year;
 		}
 		$current_used_leave = $leave_count_by_cat =$leave_rule =$leavesData = $error =null;
 		$emp_id = get_current_user_meta('employee_id');
-		$all_leave_by_cat = $this->calculate_carry_forward(3);
+		//$all_leave_by_cat = $this->calculate_carry_forward(3);
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
 		}else{
@@ -173,6 +176,7 @@ protected function calculate_carry_forward($leave_category_id){
 			$designation_id =  get_current_user_meta('designation');
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
 			$group  = $catMetas->groupBy('key')->toArray();
+
 /*assigned_categories method get all Assigned categories */
 			$assigned_categories = $this->assigned_categories($group, $user_id, $designation_id);
 			if($assigned_categories->isNotEmpty()){
