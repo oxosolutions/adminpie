@@ -118,7 +118,7 @@
 			            { data: 'status', name: 'status', orderable: false, searchable: false, "className": 'actions' },
 				    ],
 					"oLanguage": {
-			            "sLengthMenu": "_MENU_ Rows",
+			            "sLengthMenu": "_MENU_",
 			            "sSearch": ""
 			        },
 			        "aLengthMenu": [

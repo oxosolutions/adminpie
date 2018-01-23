@@ -29,11 +29,21 @@
 .dataTables_filter,
 .dataTables_length{
   display: inline-block;
-  width: 50%;
+  vertical-align: top;
+}
+.dataTables_filter{
+  width: 70%;
+}
+.dataTables_length{
+  width: 30%;
 }
 .dataTables_filter input{
-  width: 100%;
-  padding-right: 15px
+  width: 95%;
+  height: 32px;
+  border: 1px solid #ccc;
+}
+td > div > ul{
+  display: none !important
 }
 
 </style>

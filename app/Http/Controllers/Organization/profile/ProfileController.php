@@ -160,7 +160,6 @@ class ProfileController extends Controller
      */
     public function updateProfile(Request $request){
         $this->validateUpdateProfileFor($request);
-        dd($request['id']);
         if(Auth::guard('org')->user()->email != $request['email']){
             $checkEmail =  GroupUsers::where('email',$request['email']);
             if($checkEmail->exists()){

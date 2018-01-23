@@ -206,22 +206,14 @@ protected function calculate_carry_forward($leave_category_id){
  */
 	Public function store(Request $request, $id=null)
 	{ 
-		// dd($request->all());
-		$valid_fields = [
-                          'reason_of_leave'  => 'required',
-                          'from'             => 'required',
-                          'to'               => 'required',
-                          'leave_category_id'=> 'required'
-                      ];
+		$valid_fields = ['reason_of_leave'=>'required', 'from'=>'required', 'to'=>'required','leave_category_id'=>'required'];
 		 $this->validate($request, $valid_fields);
 		$leave_category_id = $request['leave_category_id'];
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
 		$emp_id = get_current_user_meta('employee_id');
 		if($request->isMethod('post'))
-		{ 
-
-
+		{
 			$current = Carbon::parse(date('Y-m-d'));
 			$from = Carbon::parse($request->from);
 			$before = $current->diffInDays($from);
@@ -236,20 +228,16 @@ protected function calculate_carry_forward($leave_category_id){
 			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
 			})->where('employee_id',$emp_id);
-			
 			if($data->exists()){
 				$leave = $data->first();
 				if($leave->status ==1){
 					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
  				}elseif($leave->status ==3){
 					$error['already_taken_leave_between_from_and_to_date'] = 'Already Reject leave between from and to date choose another  dates.';
-
  				}elseif($leave->status ==0){
 					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply not approved leave between from and to date choose another  dates.';
-
  				}
 			}
-
 /*calculate total days of leave */
 			if($from->month !=  $to->month){
 				$from_end_date_of_month = Carbon::parse($from->daysInMonth.'-'.$from->month.'-'.$from->year);
@@ -263,9 +251,6 @@ protected function calculate_carry_forward($leave_category_id){
 			}else{
 				$applying_total_days = $request['total_days'] = $from->diffInDays($to) + 1;
 			}
-			
-
-
 /* rules list get from category meta table */
 			$rules = catMeta::where('category_id', $request['leave_category_id']);
 			if($rules->exists())
@@ -274,14 +259,9 @@ protected function calculate_carry_forward($leave_category_id){
 				if(!empty($rule_check['maximum_saction_leave']['value']) && intval($rule_check['maximum_saction_leave']['value']) < $applying_total_days ){
 						$error['maximum_saction_leave'] = "exceed maximum saction limit.";
 					}
-
-					if(!empty($rule_check['minimum_saction_leave']['value']) && intval($rule_check['minimum_saction_leave']['value']) > $applying_total_days ){
+					if(!empty($rule_check['minimum_saction_leave']['value']) && intval($rule_check['minimum_saction_leave']['value']) > $applying_total_days){
 						$error['minimum_saction_leave'] = "less than minimum saction limit.";
 					}
-				dd( $error ,   $rule_check, $applying_total_days, intval($rule_check['maximum_saction_leave']['value']));
-				//dd($rule_check);
-
-
 /*Designation check */				
 				if(!empty($rule_check['include_designation']['value']))
 				{
@@ -317,62 +297,16 @@ protected function calculate_carry_forward($leave_category_id){
 							}
 						}
 					}
-/* Not Need  Exclude Designation Check */
-				// elseif(!empty($rule_check['exclude_designation']['value'])){
-				// 	$exclude_designation = array_map('intval',json_decode($rule_check['exclude_designation']['value'],true));
-				// 	if(in_array($designation_id, $exclude_designation))
-				// 	{
-				// 		$error['exclude_designation'] = "Exclude Designation"; 
-				// 	}
-				// }
-//user Include Check 				
-				// if(!empty($rule_check['user_include']['value']))
-				// {
-				// 	$include_designation = array_map('intval',json_decode($rule_check['user_include']['value'],true));
-				// 	if(!in_array($user['id'], $include_designation)) {
-				// 		$error['user_include'] = "User not Includes"; 
-				// 	}
-				// }
-/*user exclude Check*/
-				// elseif(!empty($rule_check['user_exclude']['value'])){
-				// 	$user_exclude = array_map('intval',json_decode($rule_check['user_exclude']['value'],true));
-				// 	if(in_array($user['id'], $exclude_designation)) {
-				// 		$error['user_exclude'] = "Exclude User"; 
-				// 	}
-				// }
-
-/*  correct code upto here*/
-				//Role Include Check 				
-				// if(!empty($rule_check['role_include']['value']))
-				// {
-				// 	$role_include = array_map('intval',json_decode($rule_check['role_include']['value'],true));
-				// 	$roleIdExistingVal = array_intersect($role_include,role_id());
-				// 	if(empty($roleIdExistingVal))
-				// 	{
-				// 		$error['role_include'] = "Role not Includes"; 
-				// 	}
-				// }
-/*Role Include Check*/
-				// elseif(!empty($rule_check['roles_exclude']['value'])){
-				// 	$roles_exclude = array_map('intval',json_decode($rule_check['roles_exclude']['value'],true));
-				// 	$roleIdExcludeExistingVal = array_intersect($roles_exclude,role_id());
-				// 	if(empty($roleIdExcludeExistingVal))
-				// 	{
-				// 		$error['roles_exclude'] = "Exclude Role"; 
-				// 	}					
-				// }
-
 /* Total day check */
 				if($request['total_days'] > $rule_check['number_of_day']['value']) {
 					$error['exceed_number_of_day'] = "You can only take leave  ".$rule_check['number_of_day']['value']; 
 				}
-
 				if($rule_check['valid_for']['value'] == "monthly")
 				{
-						$leaveFrm = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($from->month))->get()->keyBy('id');
+					$leaveFrm = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($from->month))->get()->keyBy('id');
 
-							$leaveTo = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($from->month))->get()->keyBy('id');
-							$leaveData = $leaveFrm->merge($leaveTo);//->toArray();
+					$leaveTo = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($from->month))->get()->keyBy('id');
+					$leaveData = $leaveFrm->merge($leaveTo);//->toArray();
 					if($from->month != $to->month)
 					{
 						$leaveToFormReq = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('from',array($to->month))->get()->keyBy('id');
@@ -380,8 +314,7 @@ protected function calculate_carry_forward($leave_category_id){
 						$leaveToReq = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereMonth('to',array($to->month))->get()->keyBy('id');
 							$data = $leaveToFormReq->merge($leaveToReq);
 							$leaveData = $data->merge($leaveData);
-					}				
-
+					}
 					foreach($leaveData->toArray() as $key => $val){
 						$fromMo = Carbon::parse($val['from']);
 						$toMo = Carbon::parse($val['to']);
@@ -399,7 +332,7 @@ protected function calculate_carry_forward($leave_category_id){
 						}
 					 }
 					if(!empty($total_days))
-					 {
+					{
 					 	if($from->month == $to->month)
 						{
 							$takenLeave = collect($total_days[$from->month])->sum();
@@ -415,7 +348,6 @@ protected function calculate_carry_forward($leave_category_id){
 							if(!empty($total_days[$from->month])){
 								$fromTakenLeave = collect($total_days[$from->month])->sum();
 							}
-							
 							if($from->day == $from->daysInMonth)
 							{
 								$totalFrm = $fromTakenLeave +1;   
@@ -439,21 +371,11 @@ protected function calculate_carry_forward($leave_category_id){
 										 $error['exceed_number_of_day'] = "you exceed leave limit in month ".$to->month;
 									}
 						}
-				}
-					// echo "to sum";
-					 //dump( @$total_days);
-
-					// $leave_sumdays = $leave->sum('total_days');
-					// $total_sum = $leave_sumdays + $request['total_days'];
-					// if($total_sum >= $rule_check['number_of_day']['value'])
-					// {
-					// 	$error['exceed_number_of_day'] = "You already taken leave include current  ".$total_sum; 
-					// }
+					}
 					
 				}
 				elseif($rule_check['valid_for']['value'] == "yearly")
 				{
-					// $this->get_carry_forward_leave($emp_id, $leave_category_id, $from->year );
 					$check_monthly_yearly_carry_forward = $this->check_carry_forward([$leave_category_id]);
 					if(!empty($check_monthly_yearly_carry_forward)){
 						$count_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $from->year);
@@ -489,15 +411,13 @@ protected function calculate_carry_forward($leave_category_id){
 				{
 					$error['not_apply_past_date_this_category'] = 'Not apply for past date in this leave rule';
  				}
- 				if(!empty($rule_check['apply_after']['value']) && $rule_check['apply_after']['value'] > $before )
+ 				if(!empty($rule_check['apply_after']['value']) && $rule_check['apply_after']['value'] < $before )
 				{
-					$error['not_apply_past_date_this_category'] = 'Apply leave before'.$rule_check['apply_after']['value'];
+					$error['not_apply_past_date_this_category'] = 'Apply leave after'.$rule_check['apply_after']['value'];
  				}
-
 				if(!empty($rule_check['apply_before']['value']) && $rule_check['apply_before']['value'] > $before) {
 					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
-				}	
-				
+				}
 			}
 
 			if(empty($error)) {
