@@ -192,7 +192,7 @@ protected function calculate_carry_forward($leave_category_id){
 /*set used leave data cat wise from current year or monthly*/
 			if(!empty($check_monthly_yearly_carry_forward)){
 				if($joining_year == $year){
-					dump($check_monthly_yearly_carry_forward);
+					
 					// $this->calculate_joining_year_carry_forward($leave_category_id, $leave_category_detail , $employee_id )
 				}
 				$current_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $year);
