@@ -303,8 +303,8 @@ class AccountController extends Controller
 		
 		
 
-        // $model = UM::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
-        $model = GroupUserMeta::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
+        $model = UM::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
+        // $model = GroupUserMeta::firstOrNew(['key' => 'user_profile_picture','user_id' => $id]);
         $model->user_id  = $id; 
         $model->key      = "user_profile_picture"; 
         $model->value   = $complete_file_name;

@@ -133,7 +133,7 @@ protected function calculate_joining_year_carry_forward($leave_category_id, $lea
 }   
 protected function calculate_carry_forward($leave_category_id){
 		$employee_id = get_current_user_meta('employee_id');
-        $leave_category_detail =  $this->check_carry_forward([$leave_category_id]);
+        $leave_category_detail = $this->check_carry_forward([$leave_category_id]);
         $data = $this->calculate_joining_year_carry_forward($leave_category_id , $leave_category_detail, $employee_id);
     	$year = $data['year'];
     	if($data['carry_forward']!= false){
@@ -206,6 +206,7 @@ protected function calculate_carry_forward($leave_category_id){
  */
 	Public function store(Request $request, $id=null)
 	{ 
+		$date_of_joining = get_current_user_meta('date_of_joining');
 		$valid_fields = ['reason_of_leave'=>'required', 'from'=>'required', 'to'=>'required','leave_category_id'=>'required'];
 		 $this->validate($request, $valid_fields);
 		$leave_category_id = $request['leave_category_id'];
@@ -255,14 +256,14 @@ protected function calculate_carry_forward($leave_category_id){
 			$rules = catMeta::where('category_id', $request['leave_category_id']);
 			if($rules->exists())
 			{	
-				$rule_check = json_decode($rules->get()->keyBy('key'),true);
+/*maximum saction*/$rule_check = json_decode($rules->get()->keyBy('key'),true);
 				if(!empty($rule_check['maximum_saction_leave']['value']) && intval($rule_check['maximum_saction_leave']['value']) < $applying_total_days ){
 						$error['maximum_saction_leave'] = "exceed maximum saction limit.";
 					}
-					if(!empty($rule_check['minimum_saction_leave']['value']) && intval($rule_check['minimum_saction_leave']['value']) > $applying_total_days){
-						$error['minimum_saction_leave'] = "less than minimum saction limit.";
-					}
-/*Designation check */				
+				if(!empty($rule_check['minimum_saction_leave']['value']) && intval($rule_check['minimum_saction_leave']['value']) > $applying_total_days){
+					$error['minimum_saction_leave'] = "less than minimum saction limit.";
+				}
+/*Check leave category Assign to current user or not - first Designation check */				
 				if(!empty($rule_check['include_designation']['value']))
 				{
 					$include_designation = array_map('intval',json_decode($rule_check['include_designation']['value'],true));
@@ -376,7 +377,20 @@ protected function calculate_carry_forward($leave_category_id){
 				}
 				elseif($rule_check['valid_for']['value'] == "yearly")
 				{
+					$joining_year = date('Y' , strtotime($date_of_joining));
+					dd($joining_year ,  $from->year);
+					$session_year = $from->year;
+					if(date('m') < 4){
+						$session_year = $from->year -1;
+					} 
 					$check_monthly_yearly_carry_forward = $this->check_carry_forward([$leave_category_id]);
+					$count_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $session_year);
+
+
+
+
+
+					dd($count_used_leave[$leave_category_id]['used_leave'] , $count_used_leave , $session_year);
 					if(!empty($check_monthly_yearly_carry_forward)){
 						$count_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $from->year);
 						}
@@ -397,15 +411,15 @@ protected function calculate_carry_forward($leave_category_id){
 						
 						
 
-					$leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
+					// $leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
 
 /*old code   */		
-			$leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
-					$total_sum = $leave_sumdays + $request['total_days'];
-					if($total_sum > $rule_check['number_of_day']['value']) {
-						$error['exceed_number_of_day'] = "You already taken leave  ".$leave_sumdays; 
-					}elseif($rule_check['valid_for']['value']){}
-				}
+			// $leave_sumdays = EMP_LEV::where(['employee_id'=>$emp_id, 'leave_category_id'=>$request['leave_category_id']])->whereYear('from',array($from->year))->sum('total_days');
+			// 		$total_sum = $leave_sumdays + $request['total_days'];
+			// 		if($total_sum > $rule_check['number_of_day']['value']) {
+			// 			$error['exceed_number_of_day'] = "You already taken leave  ".$leave_sumdays; 
+			// 		}elseif($rule_check['valid_for']['value']){}
+			}
 
 				if(!empty($rule_check['apply_before']['value']) && $current->toDateString() > $request['from'] )
 				{
@@ -432,8 +446,6 @@ protected function calculate_carry_forward($leave_category_id){
 				Session::flash('error', $error);
 			}
 		 }
-
-		
  	return redirect()->route('account.leaves');
 	}
 	protected function get_carry_forward_leave($emp_id, $leave_cat_id,  $year, $month=null){

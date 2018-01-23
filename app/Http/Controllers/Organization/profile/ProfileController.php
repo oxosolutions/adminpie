@@ -105,7 +105,7 @@ class ProfileController extends Controller
     public function getCurrentProfilePicture()
     {
         $user_id = get_user_id();
-        $profilePic = GroupUserMeta::where(['user_id' => $user_id, 'key' => 'user_profile_picture'])->first();
+        $profilePic = UsersMeta::where(['user_id' => $user_id, 'key' => 'user_profile_picture'])->first();
         if($profilePic != null){
             $profilePic = $profilePic->value;
         }
@@ -167,7 +167,8 @@ class ProfileController extends Controller
                 return back();
             }
         }
-    	$model = GroupUsers::firstOrNew(['id' => $request['id']]);
+    	$model = GroupUsers::firstOrNew(['id' => $request->id]);
+
     	$model->name = $request['name'];
     	$model->email = $request['email'];
     	$model->save();
@@ -180,7 +181,7 @@ class ProfileController extends Controller
             }else{
                 $userMetaModel->value = json_encode($value);
             }
-    		$userMetaModel->user_id = $request['id'];
+    		$userMetaModel->user_id = $request->id;
     		$userMetaModel->save();
     	}
     	Session::flash('success', 'Successfully updated!!');

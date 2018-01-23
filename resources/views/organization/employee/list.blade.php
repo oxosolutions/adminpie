@@ -26,6 +26,7 @@
 	 }
 @endphp
 <style type="text/css">
+
 .dataTables_filter,
 .dataTables_length{
   display: inline-block;
@@ -38,14 +39,32 @@
   width: 30%;
 }
 .dataTables_filter input{
-  width: 95%;
-  height: 32px;
+  width: 97%;
+  height: 36px;
   border: 1px solid #ccc;
 }
-td > div > ul{
-  display: none !important
+.dataTable td > div > ul{
+  display: none !important;
+  position: absolute;
+  left: 70px;
+}
+.dataTable td > div > ul > li{
+  display: inline-block;
+}
+.dataTable tr{
+  position: relative;
+}
+.dataTable tr:hover td > div > ul{
+  display: block !important
 }
 
+.dataTables_processing{
+  padding:20px;
+  background-color: white;
+  position: fixed;
+  top: calc(50% - 10px);
+  left: calc(50% - 100px);
+}
 </style>
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')

@@ -775,13 +775,13 @@ function get_meta($model, $uid = null, $key = null, $column = null, $array = fal
 ************************************************************/
 
 function get_user_meta($uid, $key = null, $array = false){	
-	
+	dd($uid,'test');
 	$meta = array();
 	
 	$model = "Organization\\UsersMeta";
 	
 	$meta = get_meta($model, $uid, $key, 'user_id', $array);
-
+    
 	//Return Meta Object 
 	return $meta;
 }
