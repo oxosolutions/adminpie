@@ -160,7 +160,9 @@ protected function calculate_carry_forward($leave_category_id){
 }
 	public function leave_listing(Request $request){
 		$year = date('Y');
-		if(date('m')<4 ){
+		$date_of_joining = get_current_user_meta('date_of_joining');
+		$joining_year =  date('Y',strtotime($date_of_joining));
+ 		if(date('m')<4 ){
 			$year = $year - 1;
 		}		
 		if($request->isMethod('post')){
@@ -183,11 +185,16 @@ protected function calculate_carry_forward($leave_category_id){
 			$assigned_categories = $this->assigned_categories($group, $user_id, $designation_id);
 			if($assigned_categories->isNotEmpty()){
 				$check_monthly_yearly_carry_forward = $this->check_carry_forward($assigned_categories);
+
 			}else{
 				$error = "Not assign leave category";
 			}
 /*set used leave data cat wise from current year or monthly*/
 			if(!empty($check_monthly_yearly_carry_forward)){
+				if($joining_year == $year){
+					dump($check_monthly_yearly_carry_forward);
+					// $this->calculate_joining_year_carry_forward($leave_category_id, $leave_category_detail , $employee_id )
+				}
 				$current_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $year);
  				$next_year = $year+1;
 				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
@@ -378,12 +385,17 @@ protected function calculate_carry_forward($leave_category_id){
 				elseif($rule_check['valid_for']['value'] == "yearly")
 				{
 					$joining_year = date('Y' , strtotime($date_of_joining));
-					dd($joining_year ,  $from->year);
 					$session_year = $from->year;
 					if(date('m') < 4){
 						$session_year = $from->year -1;
 					} 
 					$check_monthly_yearly_carry_forward = $this->check_carry_forward([$leave_category_id]);
+					if($joining_year==$session_year){
+						$data = $this->calculate_joining_year_carry_forward($leave_category_id , $leave_category_detail, $employee_id);
+
+					}
+					dd($joining_year,  $session_year);
+
 					$count_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $session_year);
 
 

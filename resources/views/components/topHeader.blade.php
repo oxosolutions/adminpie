@@ -15,7 +15,6 @@ $user_profile_picture = App\Model\Organization\UsersMeta::getUserMeta('user_prof
 		$sidebar_small = $sidebar_small->value;
 	}
 @endphp
-{{ dump(get_profile_picture()) }}
 <div id="aione_header_left" class="aione-header-left">
 	<div class="aione-row">
 		<div class="aione-header-item aione-nav-toggle">

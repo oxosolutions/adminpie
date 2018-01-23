@@ -79,14 +79,10 @@ $page_title_data = array(
 			
 			<div class="ac l30 m30 s100">
 				<div>
-					@php
-						$profilePicture = App\Model\Group\GroupUserMeta::where(['user_id' => $id,'key' => 'user_profile_picture'])->first();
-					@endphp
-					@if(@$profilePicture != null)
-						<img src="{{ asset('/files/organization_'.get_organization_id().'/user_profile_picture/'.@$profilePicture->value) }}" >
-					@else
+					
+					
 	          			<img class="aione-border border-grey-lighten-4 p-10" src="{{ asset(@get_profile_picture($id,'medium')) }}" >
-					@endif
+					
 
 	        	</div>
 	         	<div class="ac s100 m33 l100  bg-red darken-1 aione-align-center p-0">
