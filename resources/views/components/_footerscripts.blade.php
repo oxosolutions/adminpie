@@ -255,7 +255,7 @@
 		/*****************************************************
 		/*  Aione Collapsible
 		/*****************************************************/
-		$('.aione-accordion .aione-item-header').click(function(e){
+		$('body').on('click','.aione-accordion .aione-item-header',function(e){
 			e.preventDefault();
 			$(this).parent().toggleClass('active').siblings().removeClass('active'); 
 		})

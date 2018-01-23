@@ -25,7 +25,18 @@
 	 	$page_title_data['show_add_new_button'] ='no';
 	 }
 @endphp
+<style type="text/css">
+.dataTables_filter,
+.dataTables_length{
+  display: inline-block;
+  width: 50%;
+}
+.dataTables_filter input{
+  width: 100%;
+  padding-right: 15px
+}
 
+</style>
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -103,8 +114,8 @@
 
 
 
-
-	<table id="example" class="display" cellspacing="0" width="100%">
+<div class="">
+    <table id="example" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>User</th>
@@ -133,6 +144,8 @@
             
         </tbody>
     </table>
+</div>
+	
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 

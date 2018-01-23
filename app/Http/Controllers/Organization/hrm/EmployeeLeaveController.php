@@ -18,7 +18,8 @@ class EmployeeLeaveController extends Controller
 	protected function mapping_category_id($id , $data){
 			$collection = collect($data);
 			$map  = $collection->map(function($item , $key)use($id){
-				if(in_array($id,json_decode($item['value']))){
+				// dump($id,array_map('intval',json_decode($item['value'])));
+				if(in_array($id,array_map('intval',json_decode($item['value'])))) {
 					return $item['category_id'];
 				}
 			});
@@ -84,7 +85,6 @@ class EmployeeLeaveController extends Controller
 /* Find leave category which Not Assign to current user @$not_assign_categories contian Categories id in array form */
 			$not_assign_categories =[];
 			if(!empty($group['user_exclude'])){
-				// dd('grp', $group, 'des', $designation_categories  );
 					$not_assign_categories  = $this->mapping_category_id($user_id , $group['user_exclude']);
 				} 
 
@@ -159,9 +159,10 @@ protected function calculate_carry_forward($leave_category_id){
     return $carry_forward;
 }
 	public function leave_listing(Request $request){
-
-	//	dump($this->calculate_carry_forward(4));
 		$year = date('Y');
+		if(date('m')<4 ){
+			$year = $year - 1;
+		}		
 		if($request->isMethod('post')){
 			$year = $request->year;
 		}
@@ -173,6 +174,7 @@ protected function calculate_carry_forward($leave_category_id){
 		}else{
 			$user = user_info()->toArray();
 			$user_id = $user['id'];
+
 			$designation_id =  get_current_user_meta('designation');
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
 			$group  = $catMetas->groupBy('key')->toArray();
@@ -218,11 +220,12 @@ protected function calculate_carry_forward($leave_category_id){
 		$emp_id = get_current_user_meta('employee_id');
 		if($request->isMethod('post'))
 		{ 
-			$current = Carbon::now();
-			$from = Carbon::parse($request->from);
-			$before = $from->diffInDays($current);
-			$to = Carbon::parse($request->to);
 
+
+			$current = Carbon::parse(date('Y-m-d'));
+			$from = Carbon::parse($request->from);
+			$before = $current->diffInDays($from);
+			$to = Carbon::parse($request->to);
 /*check from < to date for applying leave.*/
 			$request['from'] 	=	$from->toDateString();
 			$request['to'] 		=   $to->toDateString();
@@ -268,6 +271,17 @@ protected function calculate_carry_forward($leave_category_id){
 			if($rules->exists())
 			{	
 				$rule_check = json_decode($rules->get()->keyBy('key'),true);
+				if(!empty($rule_check['maximum_saction_leave']['value']) && intval($rule_check['maximum_saction_leave']['value']) < $applying_total_days ){
+						$error['maximum_saction_leave'] = "exceed maximum saction limit.";
+					}
+
+					if(!empty($rule_check['minimum_saction_leave']['value']) && intval($rule_check['minimum_saction_leave']['value']) > $applying_total_days ){
+						$error['minimum_saction_leave'] = "less than minimum saction limit.";
+					}
+				dd( $error ,   $rule_check, $applying_total_days, intval($rule_check['maximum_saction_leave']['value']));
+				//dd($rule_check);
+
+
 /*Designation check */				
 				if(!empty($rule_check['include_designation']['value']))
 				{
@@ -483,6 +497,7 @@ protected function calculate_carry_forward($leave_category_id){
 				if(!empty($rule_check['apply_before']['value']) && $rule_check['apply_before']['value'] > $before) {
 					$error['apply_before'] = "Apply leave After ".$rule_check['apply_before']['value']; 
 				}	
+				
 			}
 
 			if(empty($error)) {

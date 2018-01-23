@@ -73,16 +73,7 @@ class ProfileController extends Controller
     	$model = Auth::guard('org')->user()->toArray();
     	$processMeta = UsersMeta::where(['user_id'=>Auth::guard('org')->user()->id])->get();
         foreach($processMeta as $key => $value){
-            // try{
-            //     $decodeValue = json_decode($value->value);
-            //     if(is_array($decodeValue) || $decodeValue == ''){
-            //         $model[$value->key] = $decodeValue;
-            //     }else{
-            //         $model[$value->key] = $value->value;
-            //     }
-            // }catch(\Exception $e){
-                $model[$value->key] = $value->value;
-            // }
+            $model[$value->key] = $value->value;
     	}
     	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
@@ -168,13 +159,15 @@ class ProfileController extends Controller
      * @author Rahul 
      */
     public function updateProfile(Request $request){
-        // $user_id = User::select('user_id')->where('id',$request['id'])->first()->user_id;
-    	$this->validateUpdateProfileFor($request);
-       $checkEmail =  GroupUsers::where('email',$request['email']);
-       if($checkEmail->exists()){
-        Session::flash('error','Which email you have choose already associate with other user.');
-         return back();
-       }
+        $this->validateUpdateProfileFor($request);
+        dd($request['id']);
+        if(Auth::guard('org')->user()->email != $request['email']){
+            $checkEmail =  GroupUsers::where('email',$request['email']);
+            if($checkEmail->exists()){
+                Session::flash('error','Which email you have choose already associate with other user.');
+                return back();
+            }
+        }
     	$model = GroupUsers::firstOrNew(['id' => $request['id']]);
     	$model->name = $request['name'];
     	$model->email = $request['email'];
@@ -193,7 +186,6 @@ class ProfileController extends Controller
     	}
     	Session::flash('success', 'Successfully updated!!');
         return back();
-    	// return redirect()->route('profile.edit');
     }
 
     /**

@@ -1000,6 +1000,30 @@ function get_media(){
 
 
 /************************************************************
+*	@function lang
+*	@description Returns HTML Table from an Array, an Object or JSON
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm data		[string	optional	default	null]
+*	@perm vars		[Array optional	default	null]
+*	@perm type		[single/multiple optional	default	single]
+*	@return output [string]
+************************************************************/
+
+function lang($key = null,$vars = null , $type = 'single'){
+	$output ="";
+
+	if($type != 'single'){
+		$output .= trans_choice($key, $vars);
+	} else{
+		$output .= __($key);
+	}
+	
+	return $output;
+} 
+
+/************************************************************
 *	@function to_html_table
 *	@description Returns HTML Table from an Array, an Object or JSON
 *	@access	public
@@ -1447,9 +1471,9 @@ function get_website_alexa_rank( $url = null ){
 	 */
 	function user_info(){
 		$id 	= Auth::guard('org')->user();
-		$user 	= User::select('id')->where(['user_id'=>$id->id])->first();
-		$user_merge = collect($id)->merge($user);
-		return $user_merge;
+		// $user 	= User::select('id')->where(['user_id'=>$id->id])->first();
+		// $user_merge = collect($id)->merge($user);
+		return $id;
 	}
 /************************************************************
 *	@function getMetaValue
@@ -1546,7 +1570,7 @@ function get_survey_meta($sid){
 	function role_id(){
 
 		$userData = user_info();
-		 $userInfo = User::with('user_role_map')->where('id',$userData['id'])->first();
+		 $userInfo = User::with('user_role_map')->where('user_id',$userData['id'])->first();//change
        	 $collection =  $userInfo['user_role_map'];
          $keyed = $collection->mapWithKeys(function ($item) {
              return [$item['role_id'] => $item['role_id']];

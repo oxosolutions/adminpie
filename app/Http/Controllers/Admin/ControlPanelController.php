@@ -150,35 +150,35 @@ class ControlPanelController extends Controller
     }
 
     public function methodServe(Request $request){
-        $params = json_decode($request->params);
-        $params = $this->permutations($params);
-        Session::put('organization_id',$request->organization);
         $errors = [];
-        foreach($params as $key => $param){
-            try{
-                if(!is_array($param)){
-                    $param = (array)$param;
+        if($request->has('method') && $request->has('params')){
+            $params = json_decode($request->params);
+            $params = $this->permutations($params);
+            Session::put('organization_id',$request->organization);
+            foreach($params as $key => $param){
+                try{
+                    if(!is_array($param)){
+                        $param = (array)$param;
+                    }
+                    $result = call_user_func_array($request->method,$param);
+                    $errors[] = ['status'=>'success','message'=>'Success with that params!','params'=>json_encode($param),'output'=>$result];
+                }catch(\Exception $e){
+                    $filePath = explode('/',$e->getFile());
+                    $count = count($filePath);
+                    $file = $filePath[$count-3].'/'.$filePath[$count-2].'/'.$filePath[$count-1];
+                    $errors[] = [
+                                    'status'=>'error',
+                                    'message'=>'Error on passing params!',
+                                    'error'=>$e->getMessage(),
+                                    'file' => $file,
+                                    'line' => $e->getLine(),
+                                    'params'=>json_encode($param)
+                                ];
                 }
-                $result = call_user_func_array($request->method,$param);
-                $errors[] = ['status'=>'success','message'=>'Success with that params!','params'=>json_encode($param),'output'=>$result];
-            }catch(\Exception $e){
-                $filePath = explode('/',$e->getFile());
-                $count = count($filePath);
-                $file = $filePath[$count-3].'/'.$filePath[$count-2].'/'.$filePath[$count-1];
-                $errors[] = [
-                                'status'=>'error',
-                                'message'=>'Error on passing params!',
-                                'error'=>$e->getMessage(),
-                                'file' => $file,
-                                'line' => $e->getLine(),
-                                'params'=>json_encode($param)
-                            ];
             }
         }
-        http_response_code(500);
-        dd($errors);
         Session::put('organization_id',null);
-        dump($result);
+        return response()->json(['status'=>true,'result'=>$errors,'length'=>count($errors)],200);
     }
 
     protected function permutations(array $array, $inb=false){
