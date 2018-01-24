@@ -44,8 +44,6 @@ class EmployeeLeaveController extends Controller
 				});
 		return 	$check_monthly_yearly_carry_forward;
 	}
-	
-
 /**
  * The count_used_leave method Counts the number of used leave .
  *
@@ -70,14 +68,13 @@ class EmployeeLeaveController extends Controller
 		}
 		return $used_leave;
 	}
-
 	protected function assigned_categories(){
-			$user = user_info()->toArray();
-			$user_id = $user['id'];
+			$user_id = get_user_id();
 			$designation_id =  get_current_user_meta('designation');
 			$catMetas = catMeta::whereIn('key',['include_designation','user_include','user_exclude'])->get();
 			$group  = $catMetas->groupBy('key')->toArray();
-		$designation_categories = [];
+			dd($group);
+			$designation_categories = [];
 			if(!empty($group['include_designation'])){
 				$designation_categories = $this->mapping_category_id($designation_id , $group['include_designation']);
 			} 
@@ -161,10 +158,15 @@ protected function calculate_carry_forward($leave_category_id){
     $carry_forward['sum'] = collect($carry_forward)->sum('carry_forward_value');
     return $carry_forward;
 }
-	public function leave_listing(Request $request){
-		$year = date('Y');
+public function employee_leave_detials($assigned_leave, $year, $type ='single'){
 		$date_of_joining = get_current_user_meta('date_of_joining');
 		$joining_year =  date('Y',strtotime($date_of_joining));
+	
+	dd($assigned_leave, $year,  $type);
+}
+
+	public function leave_listing(Request $request){
+		$year = date('Y');
  		if(date('m')<4 ){
 			$year = $year - 1;
 		}		
@@ -173,25 +175,19 @@ protected function calculate_carry_forward($leave_category_id){
 		}
 		$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error =null;
 		$emp_id = get_current_user_meta('employee_id');
-		//$all_leave_by_cat = $this->calculate_carry_forward(3);
 		if(in_array(1, role_id())){
 			$error = "You can not view leave.";
 		}else{
-			
 /*assigned_categories method get all Assigned categories */
 			$assigned_categories = $this->assigned_categories();
 			if($assigned_categories->isNotEmpty()){
+				$this->employee_leave_detials($assigned_categories, $year);
 				$check_monthly_yearly_carry_forward = $this->check_carry_forward($assigned_categories);
-
 			}else{
 				$error = "Not assign leave category";
 			}
 /*set used leave data cat wise from current year or monthly*/
 			if(!empty($check_monthly_yearly_carry_forward)){
-				if($joining_year == $year){
-					
-					// $this->calculate_joining_year_carry_forward($leave_category_id, $leave_category_detail , $employee_id )
-				}
 				$current_used_leave = $this->count_used_leave($emp_id , $check_monthly_yearly_carry_forward, $year);
  				$next_year = $year+1;
 				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
