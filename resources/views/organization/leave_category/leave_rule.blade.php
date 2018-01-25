@@ -225,8 +225,7 @@ $page_title_data = array(
 			<div id="field_label_name" class="field-label">
 				<label for="input_name">
 					<h4 class="field-title" >
-						Minimum Saction Of Leave 1
-						{{@$data['minimum_saction_leave']}}
+						Minimum Saction Of Leave
 					</h4>
 				</label>
 			</div><!-- field label-->
@@ -244,7 +243,7 @@ $page_title_data = array(
 				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field"]) !!}
 			</div>
 		</div> --}}
-		<div id="aione_form_section_630" class="aione-form-section non-repeater">
+		<div id="aione_form_section_630" class="user_drop_down  aione-form-section non-repeater">
 		    <div class="aione-row">
 		        <div id="aione_form_section_content" class="aione-form-section-content">
 		            <div class="aione-row ar">
@@ -274,6 +273,7 @@ $page_title_data = array(
 		                    </div>
 		                    <!-- field -->
 		                </div>
+		            <div id="user_drop_down">
 		                <!-- field wrapper -->
 		                <div  data-conditions="0" data-field-type="multi_select" class="field-wrapper ac field-wrapper-label_select field-wrapper-type-multi_select ">
 		                    <div id="field_label_label_select" class="field-label">
@@ -318,6 +318,8 @@ $page_title_data = array(
 		                </div>
 		                <!-- field wrapper -->
 		            </div>
+		                <!-- user detail -->
+		            </div>
 		            <!-- .aione-row -->
 		        </div>
 		        <!-- .aione-form-content -->
@@ -331,7 +333,7 @@ $page_title_data = array(
 
 			
 
-			<div id="user_drop_down">	
+			{{-- <div id="user_drop_down">	 --}}
 		{{-- 	<div class="row"  style="padding-bottom: 15px">
 				<div class="col l3" style="line-height: 30px">
 					Include User
@@ -356,7 +358,7 @@ $page_title_data = array(
 					</div>
 				</div>
 			</div> --}}
-		</div>	
+		{{-- </div>	 --}}
 
 
 				
@@ -441,11 +443,8 @@ $("#include_designation").on('change',function(event){
 		data:data,
 		success:function(res){
 			$("#user_drop_down").html(res);
-			
 		}
 	});
-	
-
 });
 
  function show_option(id){

@@ -4,8 +4,9 @@
 
 <nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal">
 	@php
-	$index = 0;
-	$permisson = drawSidebar::checkPermisson();
+    	$index = 0;
+    	$permisson = drawSidebar::checkPermisson();
+        $exceptArray = [];//['Chat','Bookmarks','Tasks','Notes','Performance','Discussion'];
 	@endphp
 	
 	@foreach(drawSidebar::drawSidebar() as $key => $sidebar)
@@ -14,26 +15,30 @@
 				$routes = [];
 			@endphp
 			@foreach($sidebar->subModule as $ke => $subModule)
-				@php
-					$routes[] = str_replace('/{id?}','',$subModule->sub_module_route);
-				@endphp
+                @if(!in_array($subModule->name,$exceptArray))
+    				@php
+    					$routes[] = str_replace('/{id?}','',$subModule->sub_module_route);
+    				@endphp
+                @endif
 			@endforeach
 			@if(isset($permisson['module'][$sidebar['id']]['permisson']) && $permisson['module'][$sidebar['id']]['permisson']=='on')
 				<ul class="aione-tabs">
 					@foreach($sidebar->subModule as $ke => $subModule)
-						@if(isset($permisson['submodule'][$subModule['id']]['permisson']) && $permisson['submodule'][$subModule['id']]['permisson']=='on')
-							<li class="aione-tab {{-- {{strpos($link, 'details')?'one-active':''}} --}} {{Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''}}">
-								@if(request()->route()->parameters())
-									<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route),@request()->route()->parameters()['id']) }}">
-										<span class="nav-item-text">{{@$subModule['name']}}</span>
-									</a>
-								@else
-									<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route)) }}">
-										<span class="nav-item-text">{{@$subModule['name']}}</span>
-									</a>
-								@endif
-							</li>
-						@endif
+                        @if(!in_array($subModule->name,$exceptArray))
+    						@if(isset($permisson['submodule'][$subModule['id']]['permisson']) && $permisson['submodule'][$subModule['id']]['permisson']=='on')
+    							<li class="aione-tab {{-- {{strpos($link, 'details')?'one-active':''}} --}} {{Request::is(str_replace('/{id?}','',$subModule->sub_module_route))?'nav-item-current':''}}">
+    								@if(request()->route()->parameters())
+    									<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route),@request()->route()->parameters()['id']) }}">
+    										<span class="nav-item-text">{{@$subModule['name']}}</span>
+    									</a>
+    								@else
+    									<a href="{{ url(str_replace('/{id?}','',$subModule->sub_module_route)) }}">
+    										<span class="nav-item-text">{{@$subModule['name']}}</span>
+    									</a>
+    								@endif
+    							</li>
+    						@endif
+                        @endif
 					@endforeach
 				</ul>
 				@php

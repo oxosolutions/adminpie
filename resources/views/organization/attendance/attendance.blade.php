@@ -3,9 +3,9 @@
 @php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
-	'show_add_new_button' => 'yes',
+	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Attendence',
+	'page_title' => 'Attendance',
 	// 'add_new' => '+ Import Attendence',
 	// 'route' => 'import.form.attendance',
 	// 'second_button_route' => 'hr.attendance',
@@ -24,6 +24,8 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 {{-- <a href="{{ route('hr.attendance') }}" class="btn blue">Mark attendance</a> --}}
+	@include('organization.attendance._tabs')
+
 	<div id="att_data" >
 		<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 		<input id="years" type="hidden" value="{{$data['year']}}" >
@@ -41,7 +43,7 @@
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
-	<style type="text/css">
+<style type="text/css">
 #att_data .active
 {
 	background-color: #005A8B;
@@ -50,11 +52,29 @@
 #att_data li
 {
 	border-radius:0px;
-	margin-left:-4px;
+	
+	display: inline-block;
+	
+
 }
-#att_data li:first-child
-{
-	margin:0;
+
+#att_data li:first-child > a{
+	border-radius: 10px 0 0 10px
+
+}
+#att_data li:last-child > a{
+	border-radius: 0 10px 10px 0;
+}
+#att_data li>a{
+	padding:10px;
+	display: inline-block;
+	margin-right: -5px;
+	border: 1px solid #e8e8e8;
+	background-color: rgb(50, 136, 184);
+	color: white;
+	width: 100px;
+	text-align: center;
+
 }
 #att_data .fa-calendar
 {

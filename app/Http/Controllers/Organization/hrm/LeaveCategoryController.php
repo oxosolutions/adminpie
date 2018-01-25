@@ -127,8 +127,6 @@ class LeaveCategoryController extends Controller
         $designationData['designationData'] = $data['designationData'] = DES::where('status',1)->pluck('name','id');
         $data['roles'] = Role::where('status',1)->pluck('name','id');
         $merge = array_merge($merge, $designationData);
-       // dd($merge);
-        
         return view('organization.leave_category.leave_rule',['data'=>$merge ,'select'=>$select]);
      }
 
@@ -161,6 +159,7 @@ class LeaveCategoryController extends Controller
     protected function user_by_designation($designation_id){
       $user_include = $user_exclude =[];
       http_response_code(500);
+      if(!empty($designation_id)){
 /*exclude user */      
       $user = GroupUsers::with('metas')->whereHas('metas', function($query){
                                                 $query->where('key','user_shift');
@@ -175,35 +174,14 @@ class LeaveCategoryController extends Controller
                                           $query->where('key','designation')->whereNotIn('value',$designation_id);
                                 })->get();
       $user_include = $include->pluck('name','id')->toArray();
-      
-      // $exclude =  User::with('belong_group')->with('metas')->whereHas('metas', function($query){
-      //   $query->where('key','user_shift');
-      // })->whereHas('metas', function($query) use($designation_id) {
-      //     $query->where('key','designation')->whereIn('value',$designation_id);
-      //     })->where('user_type','employee')->get();
-     
-      // 
-      // foreach ($exclude as $userKey => $userValue) {
-      //       if(!empty($userValue['belong_group'])){
-      //         // $user_exclude[] = [$userValue['id']=>$userValue['belong_group']['name']];  
-      //         $user_exclude[$userValue['id']] = $userValue['belong_group']['name'];  
-      //       }
-      //     }      
-
-      $include =  User::with('metas')->whereHas('metas', function($query){
-        $query->where('key','user_shift');
-      })->whereHas('metas', function($query) use($designation_id) {
-          $query->where('key','designation')->whereNotIn('value',$designation_id);
-          })->where('user_type','employee')->get();
-
-      foreach ($include as $userKey => $userValue) {
-            if(!empty($userValue['belong_group'])){
-              // $user_include[] = [$userValue['id']=>$userValue['belong_group']['name']];  
-              $user_include[$userValue['id']]=$userValue['belong_group']['name'];  
-            }
-          } 
-        
+    }else{
+        $user = GroupUsers::with('metas')->whereHas('metas', function($query){
+                                                $query->where('key','user_shift');
+                                    })->get();
+        $user_include = $user_exclude = $user->pluck('name','id')->toArray();
+    }
       return compact('user_exclude','user_include');
+    
     }
 
     public function get_user_by_designation(Request $request){

@@ -22,6 +22,7 @@ use App\Model\Organization\EmailLayout;
 use App\Model\Organization\EmailTemplate;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\Document;
+use App\Model\Organization\AssignDocument;
 use App\Http\Controllers\Organization\settings\SettingsController;
 use App\Model\Organization\User as EMP;
 
@@ -403,10 +404,8 @@ class AccountController extends Controller
         if($id == null){
             $id = get_user_id();
         }
-        $userMeta =  UM::where(['user_id' => $id , 'type' => 'document' , 'key' => 'document'])->pluck('value');
-        $document_id = $userMeta->toArray();
-
-        $documents = Document::whereIn('id',$document_id)->get();
+        $assignedDocuments = AssignDocument::where(['user_id'=>$id])->pluck('document_id')->toArray();
+        $documents = Document::whereIn('id',$assignedDocuments)->get();
         
         return view('organization.profile.document',compact('documents'));
     }

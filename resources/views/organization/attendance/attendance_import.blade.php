@@ -16,7 +16,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Import Attendance',
+	'page_title' => 'Attendance',
 	'add_new' => '+ Add Designation'
 ); 
 @endphp
@@ -34,6 +34,7 @@ $page_title_data = array(
 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+	  @include('organization.attendance._tabs')
 <div class="row">
 	{!! Form::open(['route'=>'upload.attendance', "files"=>true , 'class'=> 'form-horizontal','method' => 'post'])!!}
 	<input type="hidden" name="year" value="{{$data['year']}}">

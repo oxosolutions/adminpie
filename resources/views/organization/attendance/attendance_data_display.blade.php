@@ -1,7 +1,7 @@
 <div id="attendance_sheet_container" class="table-responsive">
-	<div class="attendance-sheet">
+	<div class="attendance-sheet line-height-30">
 		<div class="attendance-sheet">
-			<div class="attendanc-sheet content">
+			<div class="attendanc-sheet content ">
 				Employee
 			</div>
 			<div class="attendanc-sheet content">
@@ -33,7 +33,7 @@
 							$td .="<div class='attendance-sheet column sunday'>S</div>";
 						}else
 						{
-							$td .="<div class='attendance-sheet column'>-</div>";
+							$td .="<div class='attendance-sheet column bg-grey bg-lighten-3'></div>";
 						}
 						$fdate;
 						@endphp
@@ -49,7 +49,7 @@
 							$td .="<div class='attendance-sheet column sunday'>S</div>";
 						}else
 						{
-							$td .="<div class='attendance-sheet column'>-</div>";
+							$td .="<div class='attendance-sheet column bg-grey bg-lighten-3'></div>";
 						}
 						@endphp
 							<div class="attendance-sheet column">{{$d}}<br> 
@@ -137,14 +137,14 @@
 											@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
 												<div class="attendance-sheet column sunday">L</div>
 											@else
-												<div class="attendance-sheet column ">-</div>
+												<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
 											@endif
 										@php
 									}else{
 										if(!empty($holiday_data[$d])){
 											echo '<div class="attendance-sheet column present-bg-color">H</div>';
 										}else{
-											echo '<div class="attendance-sheet column ">-</div>';
+											echo '<div class="attendance-sheet column " style="background-color:rgba(128, 128, 128, 0.38);height:31px"></div>';
 										}
 									}	
 								}
@@ -160,9 +160,23 @@
 		</div>
 	</div>
 </div>
+
+{{-- 
+<div class="aione-border mt-100">
+	<div class="aione-border-bottom line-height-30">
+		<div class="display-inline-block " style="width: 10%">Employee</div>
+		<div class="display-inline-block" style="width: 10%">Name</div>
+		<div class="display-inline-block" style="width: 2.66%"></div>
+	</div>
+	<div class="aione-border-bottom line-height-30">
+		<div class="display-inline-block " style="width: 10%">112233</div>
+		<div class="display-inline-block" style="width: 10%">Ashish</div>
+		<div class="display-inline-block" style="width: 2.66%">p</div>
+	</div>
+</div>
 			
 
-
+ --}}
 
 
 

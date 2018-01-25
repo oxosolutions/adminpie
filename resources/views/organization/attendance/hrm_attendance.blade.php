@@ -125,72 +125,77 @@
 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')		
-<div class="card">
-	<div class="row design-bg">
-		{{-- <div class="col-md-4">
-			<ul class="pager">
-				<li class="previous"><a href="#">Previous Month</a></li>
-			</ul>
-		</div> --}}
-		<div class="col-md-4">
-			<div class="row">
-				{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post'] )!!}
-					<div class="col s3 pr-7 right-align">
-						<select name="date"  class="browser-default">
-							@foreach($daysInMonth as $key =>$val)
-							@if($date==$val)
-							<option selected="selected" value="{{$val}}">{{$val}} </option>
+@include('organization.attendance._tabs')
+	<div class="aione-border">
+		<div class="bg-grey bg-lighten-3 font-size-18 p-10	aione-border-bottom">
+			Filters
+		</div>
+		<div class="p-10">
+			{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post','class'=>'ar'] )!!}
+				<div class="ac l25">
+					<label for="days" class="line-height-28">Day</label>
+					<select name="date"  class="browser-default" id="days">
+						@foreach($daysInMonth as $key =>$val)
+						@if($date==$val)
+						<option selected="selected" value="{{$val}}">{{$val}} </option>
 
-								@else
-									<option value="{{$val}}">{{$val}} </option>
-								@endif
-							@endforeach
+							@else
+								<option value="{{$val}}">{{$val}} </option>
+							@endif
+						@endforeach
 
-						</select>
-					</div>
-					<div class="col s3 pl-7 pr-7">
-						<select name="month" class="browser-default">
-							@foreach($MO_data as $key => $val)
-								@if($month==$key)
-									<option selected="selected" value="{{$key}}">{{$val}} </option>
-								@else
-									<option value="{{$key}}">{{$val}} </option>
-								@endif
-							@endforeach
-						</select>
-					</div>
- 					<div class="col s3 pl-7 pr-7 right-align">
-						<select  name="year" class="browser-default">  
-							@foreach($year_data as $key =>$val)
-							@if($year==$val)
-							<option selected="selected" value="{{$val}}">{{$val}} </option>
-
-								@else
-									<option value="{{$val}}">{{$val}} </option>
-								@endif
-							@endforeach
-						</select>
-					</div>
-					<div class="col s3 pl-7">
-						<button class="btn blue" type="submit"  style="margin: 6px;width: 100%;">Search
-							
-						</button>	
-					</div>
+					</select>
 					
-				{!!Form::close()!!}
-			</div>
+				</div>
+				
+				<div class="ac l25">
+					<label for="months" class="line-height-28">Month</label>
+					<select name="month" id="months" class="browser-default ">
+						@foreach($MO_data as $key => $val)
+							@if($month==$key)
+								<option selected="selected" value="{{$key}}">{{$val}} </option>
+							@else
+								<option value="{{$key}}">{{$val}} </option>
+							@endif
+						@endforeach
+					</select>
+				</div>			
+
+				<div class="ac l25">
+					<label for="year" class="line-height-28">Year</label>
+					<select  name="year" class="browser-default " id="year">  
+						@foreach($year_data as $key =>$val)
+						@if($year==$val)
+						<option selected="selected" value="{{$val}}">{{$val}} </option>
+
+							@else
+								<option value="{{$val}}">{{$val}} </option>
+							@endif
+						@endforeach
+					</select>
+				</div>
+				<div class="ac l25 pt-12">
+					<button class=" " type="submit"  style="margin: 6px;width: 100%;">Search</button>
+				</div>
+						
 			
-			<div class="row">
-				<h5 class="design-style"><span>Attendance </span>{{$dateformat}}</h5>	
-			</div>
+					
+			{!!Form::close()!!}
 			
 		</div>
-		{{-- <div class="col-md-4">
-			<ul class="pager">
-				<li class="next"><a href="#">Next Month</a></li>
-			</ul>
-		</div>	  --}}
-	</div> 
+	</div>
+<div class="card">
+	
+		
+		
+				
+			
+			
+				<h5 class="design-style"><span>Attendance </span>{{$dateformat}}</h5>	
+			
+			
+		
+	
 	<div class="table-responsive">
 	@if($day=='Sunday')
 		<h1> Sunday off </h1>
@@ -280,7 +285,7 @@
 						@endforeach
 						</td>
 						@else
-						<td><button class="show_punch_in_out">add punch in out time1</button> <div class="add_punch_in_out">{!! Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}
+						<td><a href="#" class="show_punch_in_out">add punch in out time1</a> <div class="add_punch_in_out">{!! Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}
 						{!! Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}  </div> </td>
 				@endif
 				@if($in_out_data)

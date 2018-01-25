@@ -19,14 +19,11 @@
     display: inline-block; 
     color: #0073aa;
    }
-   .aione-active{
-      border: 1px solid #e8e8e8;
-      border-bottom: 1px solid #fff;
-      margin-bottom: -1px !important;
-   }
+   
    .aione-active a{
-      color: black !important;
-      font-weight: 500
+      color: white !important;
+      font-weight: 500;
+      background-color: rgb(243, 129, 115) !important;
    }
 
 
@@ -245,91 +242,97 @@ $number = 1;
 	</style>
 
 @endif
-
-<ul class="aione-tabs">
-	        <li class="tab col monthly" ><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="">Monthly</a></li>
-	        <li class="tab col weekly "><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class=" ">Weekly</a></li>
-	        <li class="tab col daily"><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class=" ">Daily</a></li>
-	       
-	        <div style="clear: both">
-	          
-	        </div>
-	    </ul>
-	    <div class="row">
-	<h5 class="text-center"></h5>
+<div class="aione-border mb-15">
+	<div class="aione-border-bottom bg-grey bg-lighten-3 p-10 font-size-18">
+		Filters
+	</div>
+	<div class="p-10">
+		<ul class="">
+		    <li class=" monthly" ><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="" id="monthly">Monthly</a></li>
+		    <li class=" weekly "><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class=" " id="weekly">Weekly</a></li>
+		    <li class=" daily"><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class=" " id="daily">Daily</a></li>
+		</ul>		
+	</div>
 </div>
+
+
+
+{{-- 
+<div class="row">
+	<h5 class="text-center"></h5>
+</div> --}}
 
 {{-- Month trey  --}}
 <div id="month">
 
 					
-			<div class="row design-bg valign-wrapper" style="padding:14px">
-				<div class=" col s2">
-					<?php  
-					 $dt = '1-'.$month.'-'.$year;
-					// 		$ym = date('Y-m', strtotime($dt));
-					 ?>
-					 	<div class="left-align">
-							<a class="nav left-align nav-past" onclick="attendance_filter(null, null, {{$previousMonth}} , {{$previousYear}} )">Previous Month</a>
-						</div>
+	<div class="row design-bg valign-wrapper p-10 bg-grey bg-lighten-3">
+		<div class=" col s2">
+			<?php  
+			 $dt = '1-'.$month.'-'.$year;
+			// 		$ym = date('Y-m', strtotime($dt));
+			 ?>
+			 	<div class="left-align">
+					<a class="nav left-align nav-past" onclick="attendance_filter(null, null, {{$previousMonth}} , {{$previousYear}} )">Previous Month</a>
 				</div>
-				
-				<div class="col l8">
-					<div class="aione aione-heading center-align">
-						<div class="row valign-wrapper" style="margin-bottom: 0px">
-							<div class="col s3">
-								
-							</div>
-							<div class="col s3 pr-7 right-align">
-								<select class="browser-default"  onchange="attendance_filter(null, null, {{$current_month}}, this.value )" >
-								@foreach($year_data as $key =>$val)
-									@if($current_year==$val)
-										<option selected="selected" value="{{$val}}">{{$val}} </option>
-									@else
-											<option value="{{$val}}">{{$val}} </option>
-										@endif
-								@endforeach
-
-								</select>
-							</div>
-							<div class="col s3 pl-7">
-								<select class="browser-default"  onchange="attendance_filter(null, null, this.value, {{$current_year}} )" >
-									@foreach($MO_data as $key => $val)
-										@if($current_month==$key)
-											<option selected="selected" value="{{$key}}">{{$val}} </option>
-
-										@else
-											<option value="{{$key}}">{{$val}} </option>
-										@endif
-									@endforeach
-									
-								</select>
-
-							</div>
-							<div class=" col s3">
-								<input id="current_month" type="hidden" value="{{$current_month}}">
-								<input id="year" type="hidden" value="{{$current_year}}">
-							</div>
-						</div>
+		</div>
+		
+		<div class="col l8">
+			<div class="aione aione-heading center-align">
+				<div class="row valign-wrapper" style="margin-bottom: 0px">
+					<div class="col s3">
 						
-						
-							
+					</div>
+					<div class="col s3 pr-7 right-align">
+						<select class="browser-default"  onchange="attendance_filter(null, null, {{$current_month}}, this.value )" >
+						@foreach($year_data as $key =>$val)
+							@if($current_year==$val)
+								<option selected="selected" value="{{$val}}">{{$val}} </option>
+							@else
+									<option value="{{$val}}">{{$val}} </option>
+								@endif
+						@endforeach
 
+						</select>
+					</div>
+					<div class="col s3 pl-7">
+						<select class="browser-default"  onchange="attendance_filter(null, null, this.value, {{$current_year}} )" >
+							@foreach($MO_data as $key => $val)
+								@if($current_month==$key)
+									<option selected="selected" value="{{$key}}">{{$val}} </option>
+
+								@else
+									<option value="{{$key}}">{{$val}} </option>
+								@endif
+							@endforeach
 							
-							{{-- <span class="design-style">{{date('F, Y', strtotime($dt))}}</span> --}}
+						</select>
+
+					</div>
+					<div class=" col s3">
+						<input id="current_month" type="hidden" value="{{$current_month}}">
+						<input id="year" type="hidden" value="{{$current_year}}">
 					</div>
 				</div>
 				
-				<div class=" col s2" style="text-align: right;">
-					<div class="right-align">
-						<a onclick="attendance_filter(null, null, {{$nextMonth}} , {{$nextYear}} )" style="cursor:pointer;" class="nav right-align nav-future">Next Month</a>
-						
-					</div>	 
-				</div>
 				
-				<div style="clear:both;">
-				</div>
-		  	</div>
+					
+
+					
+					{{-- <span class="design-style">{{date('F, Y', strtotime($dt))}}</span> --}}
+			</div>
+		</div>
+		
+		<div class=" col s2" style="text-align: right;">
+			<div class="right-align">
+				<a onclick="attendance_filter(null, null, {{$nextMonth}} , {{$nextYear}} )" style="cursor:pointer;" class="nav right-align nav-future">Next Month</a>
+				
+			</div>	 
+		</div>
+		
+		<div style="clear:both;">
+		</div>
+	</div>
 </div> 
 {{-- week trey  --}}
 

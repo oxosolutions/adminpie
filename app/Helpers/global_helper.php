@@ -27,9 +27,36 @@ use App\Model\Admin\Page as GlobalPage;
 use App\Model\Organization\PageMeta as PageMeta;
 use App\Model\Admin\PageMeta as GlobalPageMeta;
 use App\Model\Admin\GlobalOrganization;
+use App\Model\Admin\GlobalWidget;
 
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
+
+
+/************************************************************
+*   @function check_widget_permission
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+************************************************************/
+function check_widget_permission($widget_slug){ 
+    $GlobalWidget = GlobalWidget::where(['slug'=>$widget_slug])->first();
+    if($GlobalWidget == null){
+        return false;
+    }
+    $rolePermission = Permisson::where(['permisson_type'=>'widget','permisson_id'=>$GlobalWidget->id,'permisson'=>'on'])->get();
+    if(in_array(1,role_id()) && !$rolePermission->isEmpty()){
+        return true;
+    }else{
+        $getByCurrentRole = $rolePermission->whereIn('role_id',role_id());
+        if(!$getByCurrentRole->isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
+}
+
 
 /************************************************************
 *	@function get_current_user
@@ -1822,7 +1849,7 @@ function get_survey_meta($sid){
 	*	@return template
 	************************************************************/
 
-	function activity_log($slug){
+	function activity_log($slug, $language){
 		$activity = GlobalActivityTemplate::where(['type'=>'self', 'slug'=>$slug ,'language'=>$language]);
 		if($activity->exists()){
 			return $activity->first()->template;

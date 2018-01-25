@@ -8,6 +8,7 @@ $page_title_data = array(
 'page_title' => 'Leaves',
 'add_new' => '+ Apply leave'
 ); 
+//dd($data, $current_used_leave);
 $range = range(2017, 2022);
 $value = array_map( function($a){
    $next_year = $a + 1;
@@ -80,6 +81,7 @@ if(!empty($error)){
                      </div>
                   </div>
                </div>
+               @if(!empty($data->toArray()))
                @foreach($data as $key => $val)
                <div class="list" id="list">
                   <div class="card-panel shadow white z-depth-1 hoverable project"  >
@@ -132,6 +134,7 @@ if(!empty($error)){
                   </div>
                </div>
                @endforeach
+            @endif
             </div>
             <div class="col s12 m3 l3 pl-7" >
                {!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
@@ -153,7 +156,7 @@ if(!empty($error)){
                   <div class="row mb-0" >
                      <div class="row mb-0 p-10">
                         <div class="col l6">Title</div>
-                        <div class="col l6">{{$val['name']}}</div>
+                        <div class="col l6">{{@$val['name']}}</div>
                      </div>
                      <div class="divider"></div>
                      <div class="row mb-0" >
@@ -163,9 +166,9 @@ if(!empty($error)){
                            </div>
                            <div class="center-align" style="padding: 6px">
                               @if($val['valid_for']=='monthly')
-                              {{12*$val['assigned_leave']}}
+                              {{12*$val['number_of_day']}}
                               @else
-                              {{$val['assigned_leave']}}
+                              {{@$val['number_of_day']}}
                               @endif
                            </div>
                         </div>
@@ -186,9 +189,9 @@ if(!empty($error)){
                            <div class="center-align" style="padding: 6px">
                               <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">
                               @if($val['valid_for']=='monthly')
-                              {{12*$val['assigned_leave'] - $val['used_leave']}}
+                              {{12*$val['number_of_day'] - $val['used_leave']}}
                               @else
-                              {{$val['assigned_leave'] - $val['used_leave']}}
+                              {{$val['number_of_day'] - $val['used_leave']}}
                               @endif
                               </span>
                            </div>
@@ -201,7 +204,7 @@ if(!empty($error)){
                         <div class="divider"></div>
                         <div class="row mb-0 p-10" >
                            <div class="col l6">Apply Before</div>
-                           <div class="col l6">{{$val['apply_before']}} days</div>
+                           <div class="col l6">{{@$val['apply_before']}} days</div>
                         </div>
                         <div class="divider"></div>
                         <div class="row mb-0 p-10" style="">
@@ -213,14 +216,14 @@ if(!empty($error)){
                            @endif
                         </div>
                         <div class="divider"></div>
-                        <div class="row mb-0 p-10" style="">
+                        {{-- <div class="row mb-0 p-10" style="">
                            @if($val['valid_for']=='monthly')
                            <div class="col l6">Year Month</div>
                            @else
                            <div class="col l6">Year</div>
                            @endif
-                           <div class="col l6">{{$val['leave_used_in']}}</div>
-                        </div>
+                           <div class="col l6">{{@$val['leave_used_in']}}</div>
+                        </div> --}}
                      </div>
                   </div>
                </div>

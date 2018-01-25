@@ -63,9 +63,13 @@ class OrganizationController extends Controller
                 $model = ORG::with(['group_relation'])->paginate($perPage);
             }
         }
-
+        
         foreach($model as $key => $single_org){
-            $model[$key]->group_name = $single_org->group_relation->name; 
+            try{
+                $model[$key]->group_name = $single_org->group_relation->name;
+            }catch(\Exception $e){
+                continue;
+            }
         }
 
         $datalist =  [

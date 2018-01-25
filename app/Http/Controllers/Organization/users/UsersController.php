@@ -54,9 +54,16 @@ class UsersController extends Controller
             $this->validate($request , $emailValidate);
 
             $model = org_user::where(['email'=>$request->email])->first();
-            if(count($model) > 0){
-                Session::flash('error','Email already exist');
-                return back();
+            if($model != null){
+                foreach($request->role as $key => $role){
+                    $userSlug = UsersRole::find($role)->slug;
+                    $org_user =  new User();
+                    $org_user->user_id =  $model->id;
+                    $org_user->user_type = $userSlug;
+                    $org_user->status = 1;
+                    $org_user->save();
+                }
+                $user_id = $model->id;
             }else{
                 $rules = ['name' => 'required', 'email' =>  'required|email', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
                 $this->validate($request,$rules);
@@ -71,29 +78,28 @@ class UsersController extends Controller
                 $org_user =  new User();
                 $org_user->user_id =  $user_id;
                 $org_user->save();
-
-                $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role');
-                if(!empty($meta_data) && !empty($user_id)){
-                    update_user_metas($meta_data, $user_id, true);
-                }
-                if(isset($request['role'])){
-                    if(is_array($request->role)){
-                        foreach($request->role as $key => $role){
-                            $roleMapping = new UserRoleMapping;
-                            $roleMapping->user_id = $user_id;
-                            $roleMapping->role_id = (int) $role;
-                            $roleMapping->status = 1;
-                            $roleMapping->save();
-                        }
-                    }else{
+            }
+            if(isset($request['role'])){
+                if(is_array($request->role)){
+                    foreach($request->role as $key => $role){
                         $roleMapping = new UserRoleMapping;
                         $roleMapping->user_id = $user_id;
-                        $roleMapping->role_id = (int) $request['role'];
+                        $roleMapping->role_id = (int) $role;
                         $roleMapping->status = 1;
                         $roleMapping->save();
-
                     }
+                }else{
+                    $roleMapping = new UserRoleMapping;
+                    $roleMapping->user_id = $user_id;
+                    $roleMapping->role_id = (int) $request['role'];
+                    $roleMapping->status = 1;
+                    $roleMapping->save();
+
                 }
+            }
+            $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role');
+            if(!empty($meta_data) && !empty($user_id)){
+                update_user_metas($meta_data, $user_id, true);
             }
 
             Session::flash('success' , 'User Created Successfully');
@@ -266,51 +272,43 @@ class UsersController extends Controller
 
 
     /**
-     * undocumented function
-     *
-     * @return user data to edit
-     * @author sandip
-     **/
-      public function userDetails($id = null){   
-	        if($id == null){
-	          $id = get_user_id();
-	        }
-	        $form_slug = null;
-	       	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
-	        if($additionalForm != null){
-	            $additionalForm = Forms::find($additionalForm->value);
-	            if($additionalForm != null){
-	                $form_slug = $additionalForm->form_slug;
-	            }
-	        }
-          $model = org_user::with(['user_role_rel','metas'])->find($id);
-          if(!empty($model)){
-      			foreach($model->metas as $k => $v){
-                      $model[$v->key] = $v->value;
-      			}
-                $newData = [];
-      	        foreach ($model->toArray() as $key => $value) {
-      	        	if(!is_array($value)){
-      		        	json_decode($value);
-      		    		if (json_last_error() === JSON_ERROR_NONE){
-      		    			if(is_array( json_decode($value) )){
-      		    				$newData[$key] = json_decode($value);
-      		    			}else{
-      		    				$newData[$key] = $value;
-      		    			}
-      		    		}else{
-      		    			$newData[$key] = $value;
-      		    		}
-      	        	}else{
-      	        		$newData[$key] = $value;
-      	        	}
-      	        }
-          }else{
+     * To edit user details
+     * @param  [type] $id having user id
+     * @return [type]     return view
+     */
+    public function userDetails($id = null){   
+        if($id == null){
+          $id = get_user_id();
+        }
+        $form_slug = null;
+       	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
+        if($additionalForm != null){
+            $additionalForm = Forms::find($additionalForm->value);
+            if($additionalForm != null){
+                $form_slug = $additionalForm->form_slug;
+            }
+        }
+        $model = org_user::with(['user_role_rel','metas'])->find($id);
+        if(!empty($model)){
+  			foreach($model->metas as $k => $v){
+                  $model[$v->key] = $v->value;
+  			}
+            //For Meta
+            foreach($model->metas as $key => $meta) {
+                $model[$meta->key] = $meta->value;
+            }
+            //For User Relations
+            $relationsArray = [];
+            foreach ($model->user_role_rel as $rel_key => $rel_value) {
+                $relationsArray[] = $rel_value->role_id;
+            }
+            $model['role'] = $relationsArray;
+        }else{
             $newData =[];
             Session::flash('error',__('messages.data_not_found'));
-          }
-          return view('organization.user.edit',['model' => $newData,'form_slug'=>$form_slug]);
-      }
+        }
+        return view('organization.user.edit',['model' => $model,'form_slug'=>$form_slug]);
+    }
 
 
 

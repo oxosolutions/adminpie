@@ -132,15 +132,15 @@ class DashboardController extends Controller
 						$widgetPermissions = Permisson::whereIn('permisson_id',$listWidgets)->where(['permisson'=>'on'])->pluck('permisson_id')->toArray();
 						$allowed_widgets = array_intersect($allowed_widgets, array_map('intval',$widgetPermissions));
 						$allowed_widgets = array_intersect($allowed_widgets,array_map('intval',$dashboards[$slug]['widgets']));
-	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->orderBy('order','Asc')->get();
+	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->where(['type'=>'dashboard'])->orderBy('order','Asc')->get();
 
 	    				$listWidgets = array_intersect($listWidgets, array_map('intval',$widgetPermissions));
 						$listWidgets = array_diff($listWidgets,array_map('intval',$dashboards[$slug]['widgets']));
-		    			$listWidgets = GlobalWidget::whereIn('id',$listWidgets)->pluck('title','id');
+		    			$listWidgets = GlobalWidget::whereIn('id',$listWidgets)->where(['type'=>'dashboard'])->pluck('title','id');
 				} else{
 					if(isset($dashboards[$slug]['widgets'])){
 						$listWidgets = [];
-	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->orderBy('order','Asc')->get();
+	    				$widgets = GlobalWidget::whereIn('id',$allowed_widgets)->where(['type'=>'dashboard'])->orderBy('order','Asc')->get();
 	    				$listWidgets = array_diff($widgets->pluck('id')->toArray(),$dashboards[$slug]['widgets']);
 	    				$listWidgets = $widgets->whereIn('id',$listWidgets)->pluck('title','id');
 	    				$widgetsEnables = array_map('intval',array_intersect($dashboards[$slug]['widgets'] , $widgets->pluck('id')->toArray()));
@@ -156,6 +156,7 @@ class DashboardController extends Controller
 			$dashboards = $this->init_dashboards($user_id);
 			return redirect()->route('organization.dashboard','');
 		}
+    
 		$data = array(
 			'dashboards'			=>	$dashboards,
 			'current_dashboard'		=>	$slug,

@@ -23,7 +23,6 @@ class ProfileController extends Controller
 	 * @author Rahul
 	 */
     public function view(){
-
         $form_slug = null;
         $model = Auth::guard('org')->user();
         $userDetails['name'] = $model->name;

@@ -11,7 +11,7 @@ use Auth;
 
 class GlobalWidget extends Model
 {
-    protected $fillable = ['title', 'description', 'status', 'slug','model', 'module_id','order'];
+    protected $fillable = ['title', 'description', 'status', 'slug','model', 'module_id','order','type'];
 
     public function widget_permisson()
     {

@@ -47,6 +47,7 @@ class WidgetController extends Controller
             $LastOrderBy = GW::select('order')->orderBy('order','DESC')->first()->toArray();
             $request['order'] = $LastOrderBy['order']+1 ;
             $widget = new GW();
+            $request->request->add(['type'=>$request->widget_type]);
             $widget->fill($request->all());
             $widget->save();
             return redirect()->route('index.widget');

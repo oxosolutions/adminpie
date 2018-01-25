@@ -35,36 +35,40 @@ $page_title_data = array(
 	<div class="row mb-0">
 		@include('organization.profile._tabs')
 		<div class="row activities mb-0">
-			recent activities
+            @if(!$user_log->isEmpty())
+    			@foreach($user_log as $key => $value)
+    				<div class="row valign-wrapper  mb-0 pv-5" >
+    					<div class="col l1 blue white-text center-align date">
+    						<div class="row month mb-0" >
+    							{{date_format($value->created_at , "M")}}
+    						</div>
+    						<div class="row day mb-0" >
+    							{{date_format($value->created_at , "d")}}
+    						</div>
+    					</div>
+    					<div class="col l6 pl-7 truncate">
+    						<div class="row month mb-0" >
+    						{{ activity_log($value['slug'],'EN')}}
+    						</div>
 
-			@foreach($user_log as $key => $value)
-				<div class="row valign-wrapper  mb-0 pv-5" >
-					<div class="col l1 blue white-text center-align date">
-						<div class="row month mb-0" >
-							{{date_format($value->created_at , "M")}}
-						</div>
-						<div class="row day mb-0" >
-							{{date_format($value->created_at , "d")}}
-						</div>
-					</div>
-					<div class="col l6 pl-7 truncate">
-						<div class="row month mb-0" >
-						{{ activity_log($value['slug'],'EN')}}
-						</div>
-
-					</div>
-					<div class="col l3 pl-7 truncate">
-						
-					</div>
-					<div class="col l2">
-						<span class="box green white-text"></span>
-					</div>
-					
-					<div class="col l2 grey-text center-align" style="font-size: 13px">
-					{{Carbon\Carbon::parse($value->created_at)->diffForHumans()}}
-					</div>	
-				</div>
-			@endforeach
+    					</div>
+    					<div class="col l3 pl-7 truncate">
+    						
+    					</div>
+    					<div class="col l2">
+    						<span class="box green white-text"></span>
+    					</div>
+    					
+    					<div class="col l2 grey-text center-align" style="font-size: 13px">
+    					{{Carbon\Carbon::parse($value->created_at)->diffForHumans()}}
+    					</div>	
+    				</div>
+    			@endforeach
+            @else
+                <div class="aione-message warning">
+                    No recent activity found
+                </div>
+            @endif
 			{{$user_log->render()}}
 		</div>
 	</div>
