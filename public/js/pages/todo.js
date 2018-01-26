@@ -156,8 +156,8 @@ $(document).ready(function(){
 			var array = {
 						project_id 	: $('.project_id').val(),
 						user_id 	: $('input[name=user_id]').val(),
-						title 		: $('.todo-names').val(),
-						priority	: $('.priority_select').val(),
+						title 		: $('.todo-names input').val(),
+						priority	: $('.priority_select select').val(),
 						_token		: $('.shift_token').val(),
 					};
 			// console.log(array);

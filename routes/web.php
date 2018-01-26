@@ -258,7 +258,7 @@
 
 					//upload profile image
 					Route::post('/profile/upload',['as'=>'profile.picture','uses'=>'AccountController@uploadProfile']);
-					Route::get('/profile-picture/remove/{id}',['as'=>'profile.picture.delete','uses'=>'AccountController@deleteProfilePicture']);
+					Route::get('/profile-picture/remove/{id}',['as'=>'profile.picture.delete','uses'=>'AccountController@delete_user_profile_picture']);
 					Route::post('/attandance_monthly',['as'=>'account.attendance_monthly','uses'=>'AttendanceController@attendance_monthly']);
 					Route::post('/attandance_weekly',['as'=>'account.attendance_weekly','uses'=>'AttendanceController@attendance_weekly']);
 
@@ -673,3 +673,8 @@ Route::group(['prefix'=>'front'], function(){
 
 	Route::get('/openings',			['as'=>'job.openings','uses'=>'Organization\cms\PagesController@JobOpenings']);
 	Route::get('/opening/{id}',	['as'=>'detail.openings','uses'=>'Organization\cms\PagesController@openingDetails']);
+
+
+	Route::get('/resetpassword',function(){
+		return view('organization.login.reset-password');
+	});

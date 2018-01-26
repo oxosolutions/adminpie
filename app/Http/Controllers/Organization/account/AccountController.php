@@ -316,17 +316,22 @@ class AccountController extends Controller
         return back();  
     }
 
+    /************************************************************
+    *   @function delete_user_profile_picture
+    *   @description Delete User Profile Picture
+    *   @access public
+    *   @since  1.0.0.0
+    *   @author SGS Sandhu(sgssandhu.com)
+    *   @perm id        [integer    optional    default null]
+    *   @perm html      [true/false optional    default false]
+    *   @return back 
+    ************************************************************/
+    public function delete_user_profile_picture($id){
+        delete_user_meta('user_profile_picture', $id);
+        return back();
+    }
 
-    public function deleteProfilePicture($id)
-    {
-        $model = GroupUserMeta::where(['key' => 'user_profile_picture' , 'user_id' => $id])->delete();
-        return back();
-    }
-    public function uploadimage($id , $file_name)
-    {
-        
-        return back();
-    }
+    
     public function checkExistingPassword(request $request)
     {
          $validate = [

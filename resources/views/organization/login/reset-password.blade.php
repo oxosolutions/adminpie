@@ -2,8 +2,8 @@
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-<div class="login-wrapper">
-	<div class="aione-row">
+
+	
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'update.pass']) !!}
 		
 		{!! FormGenerator::GenerateForm('organization_user_reset_password_form',['type'=>'inset'])!!}
@@ -45,7 +45,7 @@
 	{!! Form::close() !!}
 
 	
-</div>
+
 @include('common.page_content_primary_end')
 
 	

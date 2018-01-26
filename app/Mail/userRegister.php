@@ -13,6 +13,7 @@ use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\EmailTemplate;
 use App\Model\Organization\EmailLayout;
 use App\Model\Organization\forms;
+use Shortcode;
 class userRegister extends Mailable
 {
     use Queueable, SerializesModels;
@@ -22,9 +23,9 @@ class userRegister extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($details)
     {
-        //
+        $this->details = $details;
     }
 
     /**
@@ -38,7 +39,7 @@ class userRegister extends Mailable
             $template_id = json_decode(get_organization_meta('user_registration_admin_notification_template',true));
             $emailTemplate = '';
             $emailLayout = '';
-            if($template_id != null || !empty($template_id)){
+            if($template_id != null && !empty($template_id) && $template_id != ''){
                 $get_template = EmailTemplate::with(['templateMeta'])->where('id',$template_id)->first();
                 $emailTemplate = $get_template->toArray();
             }
@@ -58,15 +59,40 @@ class userRegister extends Mailable
         $userName = GroupUsers::where('email',$email)->first()['name'];
 
         $sendFrom = get_organization_meta('from_email');
-            if($sendFrom != null){
-                $from = $sendFrom;
-            }else{
-                $from = 'oxosolutionsindia@gmail.com';
-            }
-
+        if($sendFrom != null){
+            $from = $sendFrom;
+        }else{
+            $from = 'oxosolutionsindia@gmail.com';
+        }
+        $details = $this->details;
+        $this->registerShorcodes($details['email'], $details['existing'], $details['token']);
         return $this->from($from)
                 ->subject($emailTemplate['subject']) 
                 ->view('organization.login.signup-email-template')
-                ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail , 'userName' => $userName]);
+                ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout]);
+    }
+
+
+    protected function registerShorcodes($registeredEmail, $existing, $token){
+        Shortcode::add('organization_name', function($atts,$content,$name){
+            $organizationMeta = get_organization_meta();
+            if($organizationMeta->has('title') && $organizationMeta['title'] != ''){
+                return $organizationMeta['title'];
+            }else{
+                return 'Un-titled';
+            }
+        });
+        Shortcode::add('registered_email', function($atts,$content,$name) use ($registeredEmail){
+            return $registeredEmail;
+        });
+        Shortcode::add('password_status', function($atts,$content,$name) use ($existing){
+            if($existing){
+                return '<p>Note: You have already register with this organization, you can use the same password here.</p>';
+            }else{
+                return 'Create Password: <a href="http://google.com">Click To Create Password</a>';
+            }
+            return $registeredEmail;
+        });
+
     }
 }

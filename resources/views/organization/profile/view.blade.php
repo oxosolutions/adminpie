@@ -4,11 +4,9 @@
 	// $isEmployee = App\Model\Organization\Employee::where('user_id' , $model->id)->first();
 	$isEmployee = is_employee(@request()->route()->parameters()['id']);
 	$isAdmin = is_admin();
-@endphp
-<style type="text/css">
 
-	
-</style>
+	$user_id = $model->id;
+@endphp
 
 @php
 $page_title_data = array(
@@ -33,16 +31,12 @@ $page_title_data = array(
 			<div class="aione-border mb-25">
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 					Basic Details
-					<button class="aione-button aione-float-right font-size-14 " data-target="modal1" style="margin-top: -6px">Edit</button>
+					{{-- <button class="aione-button aione-float-right font-size-14 " data-target="modal1" style="margin-top: -6px">Edit</button> --}}
 				</div>
 				<div class="p-10">
 					<div class="ar basic-details">
-						<div class="ac l30 profile-pic">
-
-							{{-- <img src="{{ asset('/files/organization_'.get_organization_id().'/user_profile_picture/'.@$profilePicture->value) }}" > --}}
-							<img src="http://www.workspaceit.com/frank/images/user.png">
-							
-							
+						<div class="ac l30 profile-pic p-10">
+							<img src="{{ asset(get_profile_picture($user_id,'medium')) }}" >
 						</div>
 						
 						<div class="ac l70 p-10">
@@ -57,10 +51,10 @@ $page_title_data = array(
 											<td>Email</td>
 											<td>{{@$model->email}}</td>
 										</tr>
-										<tr>
+										{{-- <tr>
 											<td>About me</td>
 											<td>{{@$mod->about_me}}</td>
-										</tr>
+										</tr> --}}
 										<tr>
 											<td>Shift</td>
 											<td>
@@ -342,11 +336,11 @@ $page_title_data = array(
 			<div class="aione-border mb-25" >
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 					Contact Details
-					<a href="#modal2" class="aione-button aione-float-right font-size-14 edit-button" style="margin-top: -6px">Edit</a>
+					{{-- <a href="#modal2" class="aione-button aione-float-right font-size-14 edit-button" style="margin-top: -6px">Edit</a>
 					{!!Form::model(@$model,['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 					<input type="hidden" name="meta_table" value="usermeta" />
 					@include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'Contact Details','button_title'=>'Save ','section'=>'empsec2']])
-					{!!Form::close()!!}
+					{!!Form::close()!!} --}}
 				</div>
 				@if(@$model !=null)
 					@if(!$model->metas->isEmpty())

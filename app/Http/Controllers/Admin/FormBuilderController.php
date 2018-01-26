@@ -347,6 +347,7 @@ class FormBuilderController extends Controller
         $model->field_title = $request->field_title;
         $model->field_slug = $request->field_slug;
         $model->field_type = $request->field_type;
+        $model->status = 1;
         $model->order = $newOrder;
         $model->save();
         if($request->type == 'survey'){

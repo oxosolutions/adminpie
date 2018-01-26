@@ -13,7 +13,7 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.profile._tabs')
-<div class="holidays-list">
+<div class=" aione-table">
 	<table>
 		<thead>
 			<tr>
@@ -36,7 +36,7 @@
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 <style type="text/css">
-.holidays-list table, td, th {    
+/*.holidays-list table, td, th {    
     border: 1px solid #e8e8e8;
     text-align: left;
 }
@@ -51,7 +51,7 @@
 }
 .holidays-list th{
 	font-weight: 600
-}
+}*/
 </style>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend') 
