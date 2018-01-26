@@ -18,7 +18,6 @@ use Carbon\carbon;
 use PDF;
 class SalaryController extends Controller
 {
-
 /**
  * { edit Salary  }
  *
@@ -47,10 +46,7 @@ param salary id
 */
   public function update(Request $request){
     Salary::where('id',$request['id'])->update($request->except('_token'));
-    // salary.slip.view
     return redirect()->route('salary.slip.view',['id'=>$request['id']]);
-    // return redirect()->route('hrm.generate.salary_view');
-
   }
   public function drop_downs()
   {
@@ -216,14 +212,12 @@ param salary id
 	               $payScale_error[] = $meta['employee_id'];
 	             }
          	}
-
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
-
               if($attendance_data->count()>0){
                 if(empty($payScale)){
                      $payScale_error[] = $meta['employee_id'];
                 }else{
-                    $loss_of_pay_days = $attendance_data->where('attendance_status','LP')->count();
+                    $loss_of_pay_days = $attendance_data->whereIn('attendance_status',['LP','absent'])->count();
                     $data[$userKey]['employee_id'] = $meta['employee_id'];
                     $data[$userKey]['user_id'] = $userValue['id'];
                     $data[$userKey]['department'] = $meta['department'];
@@ -243,7 +237,7 @@ param salary id
                     $data[$userKey]['holiday'] = $holiday;
                     $data[$userKey]['working_days'] =  $working_days = $daysInMonth - $sunday - $holiday;
                     if($loss_of_pay_days>0){
-                      $data[$userKey]['loss_of_pay_day'] = $loss_of_pay_days;
+                      // $data[$userKey]['loss_of_pay_day'] = $loss_of_pay_days;
                       $data[$userKey]['dedicated_amount'] = $loss_of_pay_days *  $per_day; 
                     }else{
                       $data[$userKey]['dedicated_amount'] =0;

@@ -30,7 +30,7 @@ $page_title_data = array(
 
 	<div class="ar">
 		<div class="ac l60">
-			<div class="aione-border mb-15">
+			<div class="aione-border mb-25">
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 					Basic Details
 					<button class="aione-button aione-float-right font-size-14 " data-target="modal1" style="margin-top: -6px">Edit</button>
@@ -339,7 +339,7 @@ $page_title_data = array(
 		</div>
 		<div class="ac l40">
 
-			<div class="aione-border" >
+			<div class="aione-border mb-25" >
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 					Contact Details
 					<a href="#modal2" class="aione-button aione-float-right font-size-14 edit-button" style="margin-top: -6px">Edit</a>
@@ -390,7 +390,7 @@ $page_title_data = array(
 					//if role has permission to this widget
 				@endphp
 				@if(check_widget_permission('employee_details'))
-					<div class="aione-border info-card" >
+					<div class="aione-border mb-25" >
 						<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 							Employee Details
 							@if(@$isAdmin)
@@ -466,24 +466,19 @@ $page_title_data = array(
 						<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 							Bank Details
 							@if($isAdmin)
-									<a href="#modal4" class=" edit-button "><i class="fa fa-pencil"></i></a>
-								@endif
-								{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
-							
-								<input type="hidden" name="meta_table" value="employeemeta" />
-								@if(count(request()->route()->parameters()) >0 )
-									<input type="hidden" name="empId" value="{{request()->route()->parameters()['id']}}" />
-								@endif
-									@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
-								{!!Form::close()!!}
+								<a href="#modal4" class="aione-float-right font-size-14 edit-button aione-button" style="margin-top: -6px">Edit</a>
+							@endif
+							{!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+						
+							<input type="hidden" name="meta_table" value="employeemeta" />
+							@if(count(request()->route()->parameters()) >0 )
+								<input type="hidden" name="empId" value="{{request()->route()->parameters()['id']}}" />
+							@endif
+								@include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
+							{!!Form::close()!!}
 						</div>
-						<div class="ar ">
-							{{-- <div class="col l10 headline-text" >Bank Details</div> --}}
-							<div class="ac l100" id="modal-wrapper">
-								
-							</div>
-						</div>
-						<div class="ar" >
+						
+						<div class="aione-table p-10" >
 							@php
 								$data = [];
 							@endphp
@@ -492,18 +487,23 @@ $page_title_data = array(
 									array_push($data , strtolower($v));
 								@endphp
 							@endforeach
-							@foreach($data as $key => $field)
+							<table>
+								<tbody>	
+									@foreach($data as $key => $field)
 
-								<div class="row mb-0">
-									<div class="col l12 subhead-wrapper" >
-										<span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
-									</div>
-									<div class="col l12 details-wrapper" >
-										{{$model[strtolower($field)]}}
-									</div>
-								</div>
+										<tr >
+											<td  >
+												{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
+											</td>
+											<td  >
+												{{$model[strtolower($field)]}}
+											</td>
+										</tr>
 
-							@endforeach
+									@endforeach
+								</tbody>
+							</table>
+										
 					
 						</div>
 					</div>

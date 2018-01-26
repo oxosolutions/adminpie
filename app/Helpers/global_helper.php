@@ -42,10 +42,14 @@ use App\Model\Organization\Cms\Slider\SliderMeta;
 function check_widget_permission($widget_slug){ 
     $GlobalWidget = GlobalWidget::where(['slug'=>$widget_slug])->first();
     if($GlobalWidget == null){
-        return false;
+        if(in_array(1,role_id())){
+            return true;
+        }else{
+            return false;
+        }
     }
     $rolePermission = Permisson::where(['permisson_type'=>'widget','permisson_id'=>$GlobalWidget->id,'permisson'=>'on'])->get();
-    if(in_array(1,role_id()) && !$rolePermission->isEmpty()){
+    if(in_array(1,role_id()) && $rolePermission->isEmpty()){
         return true;
     }else{
         $getByCurrentRole = $rolePermission->whereIn('role_id',role_id());

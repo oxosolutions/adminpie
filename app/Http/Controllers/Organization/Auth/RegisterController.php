@@ -79,10 +79,13 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
+
+    public function testTemplate(){
+        return view('organization.emails.user_register_email');
+    }
     
-    public function userRegister(Request $request, $status = null )
+    public function userRegister(Request $request )
     {           
-            
         if($request->isMethod('post')){
 
             $model = org_user::where(['email'=>$request->email])->first();
@@ -90,19 +93,15 @@ class RegisterController extends Controller
                 Session::flash('error','Email already exist');
                 return back();
             }else{
-                if($status != null){
-                    $status = $status;
-                }else{
-                    $status = 0;
-                }
 
                     $rules = ['name' => 'required', 'email' =>  'required|email', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
                     $this->validate($request,$rules);
                     $user = new org_user;
                     $user->fill($request->only('name','email'));
-                    $user->password = Hash::make($request->password);
-                    $user->app_password = $request->password;
-                    $user->status = 1;//$status;
+
+                    // $user->password = Hash::make($request->password);
+                    // $user->app_password = $request->password;
+                    $user->status = 0; // by default user will not approve 
                     $user->deleted_at = 0;
                     $user->save();
                     $user_id = $user->id;

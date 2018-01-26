@@ -178,6 +178,7 @@ class ModuleController extends Controller
     
     public function editsubModule(Request $request)
     {
+        // $route_existed =  Route::where('sub_module_id',$request['subModule_id'])->pluck('id')->toArray(); 
         $route_name = [];
         $routes = [];
         foreach($request->permission as $k => $value){
@@ -195,10 +196,12 @@ class ModuleController extends Controller
         foreach($newArray as $key => $routesData){
             $save = Route::firstOrNew(['sub_module_id'=>$request->subModule_id,'route'=>$key]);
             $save->sub_module_id = $request->subModule_id;
-            $save->route = $key;
+            // $save->route = $key;
             $save->route_name = $routesData;
             $save->save();
+            $ids[] =  $save->id;
         }
+        //dd($ids, $route_existed,  $newArray , $route_name ,$routes ,  $request->all());
         return back();
     }
     public function deletesubModulePermission($id,$route_name)

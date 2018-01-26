@@ -1,4 +1,6 @@
 <?php
+        //Routes For tetsing
+        Route::get('template/email',['as'=>'user.register.email.templates','uses'=>'Organization\Auth\RegisterController@testTemplate']);
         //Public route
         Route::group(['middleware'=>'web'], function(){
             Route::get('page/{slug}',   ['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);

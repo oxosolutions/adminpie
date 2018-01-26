@@ -105,7 +105,7 @@ class FormGenerator{
 			$model = 'App\\Model\\Organization\\section';
 		}
 		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields'=>function($query){
-			$query->orderBy('order');
+			$query->where('status',1)->orderBy('order');
 		},'formsMeta'])->orderBy('order','ASC');
 		if(isset($Options['form_id'])){
 			$SectionCollection = $SectionCollection->where('form_id',$Options['form_id'])->first();

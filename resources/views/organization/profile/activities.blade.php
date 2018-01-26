@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('content')
 <style type="text/css">
-		.activities .month{
+	/*.activities .month{
 		 font-size: 16px ;font-weight: 700
 	}
 	.activities .date{
@@ -18,7 +18,7 @@
 	}
 	.pv-5{
 		padding:5px 0px
-	}
+	}*/
 </style>
 @php
 $page_title_data = array(
@@ -36,7 +36,9 @@ $page_title_data = array(
 		@include('organization.profile._tabs')
 		<div class="row activities mb-0">
             @if(!$user_log->isEmpty())
+
     			@foreach($user_log as $key => $value)
+
     				<div class="row valign-wrapper  mb-0 pv-5" >
     					<div class="col l1 blue white-text center-align date">
     						<div class="row month mb-0" >
@@ -48,7 +50,11 @@ $page_title_data = array(
     					</div>
     					<div class="col l6 pl-7 truncate">
     						<div class="row month mb-0" >
-    						{{ activity_log($value['slug'],'EN')}}
+                          @foreach(json_decode($value->text) as $k => $val)
+                                        @if($loop->index == 0 )
+                                            {{str_replace('{id?}','id',$val)}}
+                                        @endif
+                                    @endforeach
     						</div>
 
     					</div>
