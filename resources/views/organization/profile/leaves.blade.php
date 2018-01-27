@@ -103,7 +103,7 @@ if(!empty($error)){
             <div class="p-10">
               {!! Form::open(['route'=>'account.leaves']) !!}
                   {!! Form::select('year',$years,$filter_year,['class'=>'browser-default mb-10'])!!}
-                  {!! Form::submit('search') !!}
+                  {!! Form::submit('Search',['style'=>'width:100%']) !!}
                   {!! Form::close()!!}
             </div>
          </div>
@@ -112,14 +112,108 @@ if(!empty($error)){
                Leave rule for you   
             </div>
             <div class="p-10">
-              
+              @if(!empty($current_used_leave))
+               {{-- {{dd($current_used_leave)}} --}}
+               @foreach($current_used_leave as $key => $val)
+               <div class="card">
+                  <div class="row mb-0" >
+                     <div class="row mb-0 p-10">
+                        <div class="col l6">Title</div>
+                        <div class="col l6">{{@$val['name']}}</div>
+                     </div>
+                     <div class="divider"></div>
+                     <div class="row mb-0" >
+                        <div class="col l4" style="border-right:1px solid #e8e8e8">
+                           <div class="center-align" style="font-weight: 500;padding: 6px">
+                              Assigned
+                           </div>
+                           <div class="center-align" style="padding: 6px">
+                              @if($val['valid_for']=='monthly')
+                              {{12*$val['number_of_day']}}
+                              @else
+                              {{@$val['number_of_day']}}
+                              @endif
+                           </div>
+                        </div>
+                        <div class="col l4" style="border-right:1px solid #e8e8e8">
+                           <div class="center-align" style="font-weight: 500;padding: 6px">
+                              Used
+                           </div>
+                           <div class="center-align" style="padding: 6px">
+                              <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">
+                              {{$val['used_leave']}}
+                              </span>
+                           </div>
+                        </div>
+                        <div class="col l4" style="border-right:1px solid #e8e8e8">
+                           <div class="center-align" style="font-weight: 500;padding: 6px">
+                              Left
+                           </div>
+                           <div class="center-align" style="padding: 6px">
+                              <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">
+                              @if($val['valid_for']=='monthly')
+                              {{12*$val['number_of_day'] - $val['used_leave']}}
+                              @else
+                              {{$val['number_of_day'] - $val['used_leave']}}
+                              @endif
+                              </span>
+                           </div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="row mb-0 p-10" >
+                           <div class="col l6">valid for</div>
+                           <div class="col l6">{{$val['valid_for']}}</div>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="row mb-0 p-10" >
+                           <div class="col l6">Apply Before</div>
+                           <div class="col l6">{{@$val['apply_before']}} days</div>
+                        </div>
+                        <div class="divider"></div>
+                        @if(!empty($val['minimum_saction_leave']))
+                           <div class="row mb-0 p-10" style="">
+                              <div class="col l6">Minimum saction leave</div>
+                              <div class="col l6">{{@$val['minimum_saction_leave']}}</div>
+                           </div>   
+                            <div class="divider"></div>
+                        @endif
+                        @if(!empty($val['maximum_saction_leave']))
+                           <div class="row mb-0 p-10" style=""> 
+                              <div class="col l6">Maximum saction leave</div>
+                              <div class="col l6">{{@$val['maximum_saction_leave']}}</div>
+                           </div>   
+                            <div class="divider"></div>
+                        @endif
+                         
+                         <div class="row mb-0 p-10" style="">
+                           <div class="col l6">Carry Forward</div>
+                           @if(@$val['carry_forward']==true)
+                           <div class="col l6">Yes</div>
+                           @else
+                           <div class="col l6">No</div>
+                           @endif
+                        </div>
+                         <div class="divider"></div>
+                        {{-- <div class="row mb-0 p-10" style="">
+                           @if($val['valid_for']=='monthly')
+                           <div class="col l6">Year Month</div>
+                           @else
+                           <div class="col l6">Year</div>
+                           @endif
+                           <div class="col l6">{{@$val['leave_used_in']}}</div>
+                        </div> --}}
+                     </div>
+                  </div>
+               </div>
+               @endforeach
+               @endif
             </div>
          </div>
       </div>
    </div>
 
 
-   <div class="row">
+   {{-- <div class="row">
       <div class="fade-background">
       </div>
       <div id="projects" class="projects list-view">
@@ -231,7 +325,7 @@ if(!empty($error)){
                   Leave rules for you
                </div>
                @if(!empty($current_used_leave))
-               {{-- {{dd($current_used_leave)}} --}}
+             
                @foreach($current_used_leave as $key => $val)
                <div class="card">
                   <div class="row mb-0" >
@@ -312,14 +406,7 @@ if(!empty($error)){
                            @endif
                         </div>
                          <div class="divider"></div>
-                        {{-- <div class="row mb-0 p-10" style="">
-                           @if($val['valid_for']=='monthly')
-                           <div class="col l6">Year Month</div>
-                           @else
-                           <div class="col l6">Year</div>
-                           @endif
-                           <div class="col l6">{{@$val['leave_used_in']}}</div>
-                        </div> --}}
+                      
                      </div>
                   </div>
                </div>
@@ -328,7 +415,7 @@ if(!empty($error)){
             </div>
          </div>
       </div>
-   </div>
+   </div> --}}
    @endif
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
