@@ -22,7 +22,9 @@ class Category extends Model
     // public function leave_meta(){
     //   return $this->hasMany('App\Model\Organization\CategoryMeta','category_id','id');
     // }
-
+    public function category_leave(){
+        return $this->hasMany('App\Model\Organization\Leave','leave_category_id','id');
+    }
 	public function meta()
     {
     	return $this->hasMany('App\Model\Organization\CategoryMeta','category_id','id');

@@ -30,10 +30,17 @@
 						All Todos	
 					</div>
 					<div class="pv-20 ph-10">
-						<div id="list_todo"></div>
+						<div class="aione-table">
+							<table>
+								<tbody id="list_todo">
+									
+								</tbody>
+							</table>
+						</div>
+						
 						<div class="empty-records">
-							<div>
-								<span>No Result Found</span>
+							<div class="aione-message error">
+								No Result Found
 							</div>
 						</div>
 					</div>
@@ -134,7 +141,7 @@
 		</div>
 	
 	
-	    <div class="ar">
+	   {{--  <div class="ar">
 			<div class="ac l75 " >
 					
 					<div class="col l12 s10 editable " >
@@ -173,28 +180,12 @@
 			</div>
 
 		</div>
-
+ --}}
 
 <style type="text/css">
-	.mt-14{
-		margin-top: 14px;
-	}
-	.mb-0{
-		margin-bottom: 0px;
-	}
-	.alpha-sort{
-		width: 25%;padding-left:7px;
-	}
-	
-	.priority-error{
-		position: absolute;border: 1px solid #e8e8e8;background-color: #e8e8e8;padding:10px;box-shadow: 3px 5px 17px #e8e8e8;margin-top: 10px;
-	}
-	.empty-records{
-		padding: 20px 0px;display: none;
-	}
-	.empty-records > div{
-	padding: 20px;text-align: center;font-size: 28px;color: #e8e8e8;border:2px dashed  #e8e8e8;
-	} 
+	 .edit-mode{
+	 	display: none
+	 }
 	.filters{
 		padding: 12px 0px 0px 0px;margin: 0px;margin-bottom: 14px;
 	}
@@ -210,5 +201,7 @@
 	.mb-0{
 		margin-bottom: 0px !important;
 	}
-	
+	.empty-records{
+		display: none;
+	}
 </style>

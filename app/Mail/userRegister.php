@@ -35,7 +35,6 @@ class userRegister extends Mailable
      */
     public function build()
     {
-        $check_notification_status = OrganizationSetting::where('key' , 'user_registration_admin_notification_status')->first();
             $template_id = json_decode(get_organization_meta('user_registration_admin_notification_template',true));
             $emailTemplate = '';
             $emailLayout = '';
@@ -66,33 +65,12 @@ class userRegister extends Mailable
         }
         $details = $this->details;
         $this->registerShorcodes($details['email'], $details['existing'], $details['token']);
+        $rawData = view('organization.login.signup-email-template')->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout])->compileShortcodes()->render();
         return $this->from($from)
                 ->subject($emailTemplate['subject']) 
-                ->view('organization.login.signup-email-template')
-                ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout]);
+                ->text($rawData);
     }
 
 
-    protected function registerShorcodes($registeredEmail, $existing, $token){
-        Shortcode::add('organization_name', function($atts,$content,$name){
-            $organizationMeta = get_organization_meta();
-            if($organizationMeta->has('title') && $organizationMeta['title'] != ''){
-                return $organizationMeta['title'];
-            }else{
-                return 'Un-titled';
-            }
-        });
-        Shortcode::add('registered_email', function($atts,$content,$name) use ($registeredEmail){
-            return $registeredEmail;
-        });
-        Shortcode::add('password_status', function($atts,$content,$name) use ($existing){
-            if($existing){
-                return '<p>Note: You have already register with this organization, you can use the same password here.</p>';
-            }else{
-                return 'Create Password: <a href="http://google.com">Click To Create Password</a>';
-            }
-            return $registeredEmail;
-        });
-
-    }
+    
 }

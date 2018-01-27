@@ -136,7 +136,7 @@ class LoginController extends Controller
                 Session::flash('error','You don\'t have rights to access this organization!');
                 return back();
             }elseif($ifUserAllowForOrganization->status == 0){
-                Session::flash('error','Your account is deactivated by organization admin!');
+                Session::flash('error','Your account is deactivated or not approved by organization admin!');
                 return back();
             }
             
@@ -195,11 +195,14 @@ class LoginController extends Controller
 
 
             $check_forgot_status = OrganizationSetting::where('key' , 'enable_forgot_password')->first();
-                if($check_forgot_status != null){
-                    if($check_forgot_status->value == 1){
-                        Mail::to($to_email)->send(new forgetPassword);
-                    }
+            if($check_forgot_status != null && $check_forgot_status->value != '' && $check_forgot_status->value != 0){
+                if($check_forgot_status->value == 1){
+                    Mail::to($to_email)->send(new forgetPassword);
                 }
+            }else{
+                Session::flash('error','Forget password not enable by Organization Admin!');
+                return back();
+            }
 
 
             // Mail::to($to_email)->send(new forgetPassword);
@@ -314,4 +317,6 @@ class LoginController extends Controller
             return false;
         }
     }
+
+    
 }

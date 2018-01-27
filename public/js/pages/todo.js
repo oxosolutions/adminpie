@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	
+
 	function list_todo() {
 		$.ajax({
 			url			: route()+'/project/todo/list',
@@ -60,11 +62,12 @@ $(document).ready(function(){
 	//check uncheck box
 	$(document).on('click','.todo-check',function(){
 		if($(this).is(':checked')){
-			$(this).parents('.valign-wrapper').find('.todo-name').css({'text-decoration':'line-through','color':'#d9d9d9'});
-			var id = $(this).parents('.todo_list').find('.todo_id').val();
+			$(this).parents('tr').find('.todo-name').css({'text-decoration':'line-through','color':'#d9d9d9'});
+			var id = $(this).parents('tr').find('.todo_id').val();
 		}else{
-			$(this).parents('.valign-wrapper').find('.todo-name').css({'text-decoration':'none','color':'black'});
-			var id = $(this).parents('.todo_list').find('.todo_id').val();
+			console.log("this line is running");
+			$(this).parents('tr').find('.todo-name').css({'text-decoration':'none','color':'black'});
+			var id = $(this).parents('tr').find('.todo_id').val();
 		}
 			$.ajax({
 					url 	: route()+'/project/todo/edit',
@@ -76,6 +79,11 @@ $(document).ready(function(){
 					success	:function(res){
 					}
 			});
+	});
+	$(document).on('click','.edit-single',function(){
+		$(this).parents('tr').find('.view-mode').hide();
+		$(this).parents('tr').find('.edit-mode').show();
+		$(this).hide();
 	});
 
 	$(document).on('click','.edit-todo',function(){
@@ -99,9 +107,9 @@ $(document).ready(function(){
 	});
 
 	//remove todo list item'
-	$(document).on('click','.fa-close',function(){
-		$(this).parents('.todo_list').remove();
-		var id = $(this).parents('.todo_list').find('.todo_id').val();
+	$(document).on('click','.delete-todo',function(){
+		$(this).parents('tr').remove();
+		var id = $(this).parents('tr').find('.todo_id').val();
 		$.ajax({
 			url : route()+'/project/todo/delete',
 			type: 'POST',
@@ -110,7 +118,13 @@ $(document).ready(function(){
 					_token	: $('.shift_token').val()
 				},
 			success:function(res){
-				console.log(res);
+				// console.log(res);
+
+				if($('#list_todo > tr').length == 0){
+					$('.empty-records').show();
+				}else{
+					$('.empty-records').hide();
+				}
 			}
 		}); 
 	});
@@ -170,6 +184,11 @@ $(document).ready(function(){
 					$(this).parent().parent().find('.todo-names').hide();
 					Materialize.toast('Success',4000);
 					$('#list_todo').html(res);
+					if($('#list_todo > tr').length == 0){
+						$('.empty-records').show();
+					}else{
+						$('.empty-records').hide();
+					}
 				}
 			});
 		
@@ -181,14 +200,15 @@ $(document).ready(function(){
 	//add todo to database
 			
 	$(document).on('click','.save-todo',function(){
-		$(this).parents('.add-details').find('.todo-details').slideUp();
-		$('.project-title').click();
-		var prefix = $(this).parents('.todo_list');
+		// $(this).parents('.add-details').find('.todo-details').slideUp();
+		// $('.project-title').click();
+		// console.log($(this).parents('tr').find('.edit-mode .priority').val());
+		var prefix = $(this).parents('tr');
 			var data = 	{
 						id 			: prefix.find('.todo_id').val(),
-						title 		: prefix.find('.todo-name').html(),
-						description	: prefix.find('.todo-desc').html(),
-						priority 	: prefix.find('.select-dropdown').val(),
+						title 		: prefix.find('.edit-mode .todo-name').val(),
+						// description	: prefix.find('.todo-desc').html(),
+						priority 	: prefix.find('.edit-mode .priority').val(),
 						_token		: prefix.find('.shift_token').val()
 					};
 
@@ -198,6 +218,13 @@ $(document).ready(function(){
 			data 	: data,
 			success : function(res){
 				console.log(res);
+				$('.edit-mode').hide();
+				$('.view-mode').show();
+				$('.edit-single').show();
+				var name = prefix.find('.edit-mode .todo-name').val();
+				var priority = prefix.find('.edit-mode .priority').val();
+				prefix.find('.view-mode.todo-name').html(name);
+				prefix.find('.view-mode .priority').html(priority);
 				Materialize.toast('Setting successfully save',4000);
 			}
 		});

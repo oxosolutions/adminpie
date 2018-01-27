@@ -22,4 +22,6 @@
 
     Route::match(['get','post'],'/signup',  ['as'=>'signup.user','uses'=>'Auth\RegisterController@userRegister']);
 
+    Route::get('create/password/{token}',['as'=>'create.password','uses'=>'Auth\RegisterController@createPassword']);
+    Route::post('create/password/save', ['as'=>'save.create.password','uses'=>'Auth\RegisterController@saveCreatePassword']);
 ?>

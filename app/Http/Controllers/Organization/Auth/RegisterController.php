@@ -17,6 +17,9 @@ use App\Mail\userRegister;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\PasswordReset;
 use App\Mail\UserRegisterEmail;
+use Shortcode;
+use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\EmailLayout;
 class RegisterController extends Controller
 {
     /*
@@ -86,7 +89,7 @@ class RegisterController extends Controller
         $groupUserModel = new GroupUsers;
         $groupUserModel->name = $request->name;
         $groupUserModel->email = $request->email;
-        $groupUserModel->status = 0;
+        $groupUserModel->status = 1;
         $groupUserModel->save();
         return $groupUserModel->id;
     }
@@ -103,6 +106,7 @@ class RegisterController extends Controller
     protected function putUser($details){
         $userModel = new User();
         $userModel->user_id = $details['user_id'];
+        $userModel->status = 0;
         $userModel->save();
     }
 
@@ -119,10 +123,37 @@ class RegisterController extends Controller
     }
 
     protected function sendEmailsToUsers($users){
-
+        /* Session::put('new_user_register_email',$request->email);
+        Session::put('new_user_register_name',$request->name);
+        $check_notification_status = OrganizationSetting::where('key' , 'user_registration_admin_notification_status')->first();
+        if($check_notification_status != null){
+            if($check_notification_status->value == 1){
+                $roles = json_decode(get_organization_meta('user_registration_admin_notification_roles',true));
+                $users = json_decode(get_organization_meta('user_registration_admin_notification_users',true));
+                $usresListId = [];
+                $user_id = [];
+                if($users != null){
+                    foreach ($users as $key => $value) {
+                        $usresListId[] = (int)$value;
+                    }
+                }
+                if($roles != null){
+                    $listAdmin = UserRoleMapping::select('user_id')->whereIn('role_id',$roles)->get()->toArray();
+                    foreach ($listAdmin as $key => $value) {
+                        $user_id[] = $value['user_id'];
+                    }
+                }
+                $usersId = array_unique(array_merge($usresListId,$user_id));;
+                foreach($usersId as $k => $v){
+                    $emails = org_user::select('email')->where('id',$v)->get()->toArray()[0]['email'];
+                    Mail::to($emails)->send(new userRegister);
+                }
+            }
+        }*/
     }
 
     protected function sendEmailToRegisteredUser($request, $existing){
+        $templateAndLayout = $this->getEmailTemplateAndLayout();
         $ceratePasswordToken = str_random(64);
         if(!$existing){
             $passwordReset = new PasswordReset;
@@ -132,17 +163,70 @@ class RegisterController extends Controller
             $details['email'] = $request->email;
             $details['token'] = $ceratePasswordToken;
             $details['existing'] = false;
-            Mail::to($request->email)->send(new userRegister($details))->compileShortcodes();
+            $this->registerShorcodes($request->email, false, $ceratePasswordToken);
+            $rawData = view('organization.login.signup-email-template')->with([
+                    'emailTemplate' => $templateAndLayout['template'],
+                    'emailLayout' => $templateAndLayout['layout']]
+            )->compileShortcodes()->render();
+
+            Mail::send([],[], function($message) use ($rawData, $request, $templateAndLayout){
+                $message->subject($templateAndLayout['template']['subject']);
+                $message->from('oxosolutionsindia@gmail.com','Oxo Solutions');
+                $message->setBody($rawData,'text/html');
+                $message->to($request->email);
+            });
         }else{
             $details['email'] = $request->email;
             $details['token'] = null;
             $details['existing'] = true;
-            Mail::to($request->email)->send(new userRegister($details))->compileShortcodes();
+            $this->registerShorcodes($request->email, true, $ceratePasswordToken);
+            $rawData = view('organization.login.signup-email-template')->with([
+                    'emailTemplate' => $templateAndLayout['template'],
+                    'emailLayout' => $templateAndLayout['layout']]
+            )->compileShortcodes()->render();
+            Mail::send([],[], function($message) use ($rawData, $request, $templateAndLayout){
+                $message->subject($templateAndLayout['template']['subject']);
+                $message->from('oxosolutionsindia@gmail.com','Oxo Solutions');
+                $message->setBody($rawData,'text/html');
+                $message->to($request->email);
+            });
         }
     }
 
-    protected function sendNewUserEmaiToAdmin(){
+    protected function registerShorcodes($registeredEmail, $existing, $token){
+        Shortcode::add('organization_name', function($atts,$content,$name){
+            $organizationMeta = get_organization_meta();
+            if($organizationMeta->has('title') && $organizationMeta['title'] != ''){
+                return $organizationMeta['title'];
+            }else{
+                return 'Un-titled';
+            }
+        });
+        Shortcode::add('registered_email', function($atts,$content,$name) use ($registeredEmail){
+            return $registeredEmail;
+        });
+        Shortcode::add('password_status', function($atts,$content,$name) use ($existing, $token){
+            if($existing){
+                return '<p>Note: You have already register with this organization, you can use the same password here.</p>';
+            }else{
+                return 'Create Password: <a href="'.route('create.password',$token).'">Click To Create Password</a>';
+            }
+            return $registeredEmail;
+        });
 
+    }
+
+    protected function sendNewUserEmaiToAdmin($request){
+        $userModel = User::with(['user_role_map'=>function($query){
+            $query->where('role_id',1);
+        }])->has('user_role_map')->first();
+        $gropUserModel = GroupUsers::find($userModel->user_id);
+        $gropUserModel->email;
+        Mail::send([],[],function($message) use ($gropUserModel, $request){
+            $message->to($gropUserModel->email)->subject('New user Registered!')
+            ->from('oxosolutionsindia@gmail.com','Oxo Solutions')
+            ->setBody('<h5>New User Registered with Email: '.$request->email.'</h5>','text/html');
+        });
     }
 
     protected function setGroupId(){
@@ -171,10 +255,9 @@ class RegisterController extends Controller
                 $userRole = 7;
             }
             if($existingUser){
-                $userModel = User::where(['user_id'=>$groupUserId])->with(['user_role_map'])->first();
-                $roles = $userModel->user_role_map->pluck('role_id')->toArray();
-                if(in_array($userRole, $roles)){ // in case if same email id and same user role already exists in user table
-                    Session::flash('error','Email id with same role already exists!');
+                $userModel = User::where(['user_id'=>$groupUserId,'user_type'=>null])->first();
+                if($userModel != null){
+                    Session::flash('error','Email id already exists!');
                     return back();
                 }else{
                     $details['user_id'] = $groupUserId;
@@ -194,6 +277,7 @@ class RegisterController extends Controller
             // Send Email to Admin and User
             $this->sendEmailToRegisteredUser($request,$existingUser);
 
+            $this->sendNewUserEmaiToAdmin($request);
 
             // Email Work
             /*if($organizationMeta->has('user_registration_admin_notification_status') && 
@@ -202,75 +286,8 @@ class RegisterController extends Controller
 
 
             }*/
-
-
-
-
-
-
-            dd('Last');
-            if(count($model) > 0){
-                Session::flash('error','Email already exist');
-                return back();
-            }else{
-                $rules = ['name' => 'required', 'email' =>  'required|email', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
-                $this->validate($request,$rules);
-                $user = new org_user;
-                $user->fill($request->only('name','email'));
-                // $user->password = Hash::make($request->password);
-                // $user->app_password = $request->password;
-                $user->status = 0; // by default user will not approve 
-                $user->deleted_at = 0;
-                $user->save();
-                $user_id = $user->id;
-                $org_user =  new User();
-                $org_user->user_id =  $user_id;
-                $org_user->save();
-                $meta_data = $request->except('name','email','password','confirm-password','_token','confirm_password','role_id');
-                if(!empty($meta_data) && !empty($user_id)){
-                    update_user_metas($meta_data, $user_id, true);
-                }
-
-                if(!$request->has('role')){
-                    $request['role'] = 2;
-                }
-                // $organizationMeta = get_organization_meta();
-                $roleMapping = new UserRoleMapping;
-                $roleMapping->user_id = $user_id;
-                $roleMapping->role_id = $request->role;
-                $roleMapping->status = 1;
-                $roleMapping->save();
-            }
-
-            Session::put('new_user_register_email',$request->email);
-            Session::put('new_user_register_name',$request->name);
-            $check_notification_status = OrganizationSetting::where('key' , 'user_registration_admin_notification_status')->first();
-            if($check_notification_status != null){
-                if($check_notification_status->value == 1){
-                    $roles = json_decode(get_organization_meta('user_registration_admin_notification_roles',true));
-                    $users = json_decode(get_organization_meta('user_registration_admin_notification_users',true));
-                    $usresListId = [];
-                    $user_id = [];
-                    if($users != null){
-                        foreach ($users as $key => $value) {
-                            $usresListId[] = (int)$value;
-                        }
-                    }
-                    if($roles != null){
-                        $listAdmin = UserRoleMapping::select('user_id')->whereIn('role_id',$roles)->get()->toArray();
-                        foreach ($listAdmin as $key => $value) {
-                            $user_id[] = $value['user_id'];
-                        }
-                    }
-                    $usersId = array_unique(array_merge($usresListId,$user_id));;
-                    foreach($usersId as $k => $v){
-                        $emails = org_user::select('email')->where('id',$v)->get()->toArray()[0]['email'];
-                        Mail::to($emails)->send(new userRegister);
-                    }
-                }
-            }
-            // Mail::to($to_email)->send(new userRegister);
             Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
+
             return back();
         }
         $userRegStatus = get_organization_meta('enableuserregisteration');
@@ -279,5 +296,52 @@ class RegisterController extends Controller
         }else{
             return view('errors.404');
         }
+        
+    }
+
+    protected function getEmailTemplateAndLayout(){
+        $template_id = json_decode(get_organization_meta('user_registration_admin_notification_template',true));
+        $emailTemplate = '';
+        $emailLayout = '';
+        if($template_id != null && !empty($template_id) && $template_id != ''){
+            $get_template = EmailTemplate::with(['templateMeta'])->where('id',$template_id)->first();
+            $emailTemplate = $get_template->toArray();
+        }
+        if($get_template->templateMeta != null || !empty($get_template->templateMeta)){
+            foreach ($get_template->templateMeta as $key => $value) {
+                if($value->key == 'layout'){
+                    if($value->value != ''){
+                        $emailLayout = EmailLayout::where('id',$value->value)->get()->toArray()[0];
+                    }
+                }
+            }
+        }
+        return ['layout'=>$emailLayout,'template'=>$emailTemplate];
+    }
+
+    public function createPassword($token){
+        $checkTokenExists = PasswordReset::where(['token'=>$token])->first();
+        if($checkTokenExists == null){
+            return redirect()->route('org.login');
+        }
+        return view('organization.login.reset-password',['from'=>'create_password']);
+    }
+
+    protected function validateCreatePassword($request){
+        $rules = [
+            'password' => 'required|confirmed|min:8'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
+    public function saveCreatePassword(Request $request){
+        $this->validateCreatePassword($request);
+        $resetUser = PasswordReset::where(['token'=>$request->reset_create_token])->first();
+        $this->setGroupId();
+        $groupUserModel = GroupUsers::where(['email'=>$resetUser->email])->update(['password'=>Hash::make($request->password),'app_password'=>$request->password]);
+        PasswordReset::where(['token'=>$request->reset_create_token])->delete();
+        Session::flash('success','Password Created Successfully!');
+        return redirect()->route('org.login');
     }
 }

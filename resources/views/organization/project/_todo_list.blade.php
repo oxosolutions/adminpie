@@ -1,6 +1,66 @@
 
 @foreach($model as $key => $value)
-	<div class="card-panel shadow white z-depth-1 hoverable project todo_list add-details">
+		
+				<tr>
+					<td style="width: 10%">
+						@if($value->status == 0)
+							<input type="checkbox" class="filled-in todo-check" id="filled-in-box{{$value->id}}" checked="checked" />
+						<label for="filled-in-box{{$value->id}}" style="vertical-align: middle"></label>
+						@else
+							<input type="checkbox" class="filled-in todo-check" id="filled-in-box{{$value->id}}"/>
+							<label for="filled-in-box{{$value->id}}" style="vertical-align: middle"></label>
+						@endif
+							<input type="hidden" name="_token" value="{{csrf_token()}}" class="shift_token" >
+						<input type="hidden" name="_todo_id" value="{{$value->id}}" class="todo_id" >
+					</td>
+					<td style="width: 50%">
+						@if($value->status == 0)
+							<span class=""  style="text-decoration: line-through;color:#d9d9d9" >{{$value->title}}</span>
+						@else
+							<span class="project-name todo-name font-size-14 view-mode" >{{$value->title}}</span>
+							<div class="field-wrapper-text edit-mode">
+								
+								<div class="field field-type-text">
+									<input class="text todo-name" id="input_password" name="password" type="text"  value="{{$value->title}}">
+								</div><!-- field -->
+							</div>
+							
+						@endif
+					</td>
+					<td style="width: 20%">
+						<div class="view-mode">
+							<div class="priority">
+								{{$value->priority}}
+							</div>	
+						</div>
+						<div class="field-wrapper-text edit-mode">
+								
+							<div class="field field-type-text">
+								<select class="browser-default priority">
+									<option value="low">Low</option>
+									<option value="high">High</option>
+									<option value="medium">Medium</option>
+								</select>
+							</div>
+						</div>
+						
+
+					</td>
+					<td style="width: 20%">
+						<a href="javascript:;" class="edit-single"><i class="fa fa-pencil mr-5"></i>Edit</a>
+						<a href="javascript:;" class="edit-mode green save-todo"><i class="fa fa-save mr-5 green"></i>Save</a>  |
+
+						<a href="javascript:;" class="delete-todo"><i class="fa fa-trash mr-5 red" ></i><span class="red">Delete</span></a>
+						{{-- @if($value->status == 0) |
+							<i class="fa fa-check mr-5 green"></i><span class="green">Completed</span>
+						@else |
+							<i class="fa fa-bars mr-5 light-blue"></i><span class="light-blue">Un-Completed</span>
+						@endif --}}
+
+					</td>	
+				</tr>
+	
+	{{-- <div class="card-panel shadow white z-depth-1 hoverable project todo_list add-details">
 		<div class="row valign-wrapper mb-0 ">
 			<div class="col l1 s2 center-align project-image-wrapper">
 				<a href="" data-toggle="popover" title=" " data-content="TEST">
@@ -28,7 +88,7 @@
 						<span id="select-priority " class="edit-priority" style="display: none">
 						@php $list_values = ['Low' => 'Low' ,'Medium' => 'Medium' ,'High' => 'High' ]; @endphp
 							<select >
-								{{-- <option disabled >Select Priority</option> --}}
+								
 								@foreach($list_values as $key => $list)
 									<option {{($list == $value->priority)?"selected":""}} value="{{$key}}">{{$list}}</option>
 								@endforeach
@@ -73,10 +133,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --}}
 	<script type="text/javascript">
 		 $(document).ready(function() {
-    $('select').material_select();
-  });
+		    $('select').material_select();
+		  });
 	</script>
 @endforeach

@@ -32,6 +32,15 @@ use App\Model\Admin\GlobalWidget;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
+/************************************************************
+*   @function get_current_organization_url
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+************************************************************/
+function get_current_organization_url(){
+    return request()->root();   
+}
 
 /************************************************************
 *   @function check_widget_permission

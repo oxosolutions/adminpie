@@ -272,7 +272,8 @@ class UsersController extends Controller
                 $form_slug = $additionalForm->form_slug;
             }
         }
-        $model = org_user::with(['user_role_rel','metas'])->find($id);
+        $model = org_user::with(['user_role_rel','metas','organization_user'])->find($id);
+        
         if(!empty($model)){
             foreach($model->metas as $k => $v){
                 $model[$v->key] = $v->value;
@@ -291,6 +292,7 @@ class UsersController extends Controller
             $newData =[];
             Session::flash('error',__('messages.data_not_found'));
         }
+        $model['user_type'] = $model->organization_user->user_type;
         return view('organization.user.edit',['model' => $model,'form_slug'=>$form_slug]);
     }
 
@@ -344,6 +346,9 @@ class UsersController extends Controller
         $model = org_user::find($id);
         $model->name = $request->name;
         $model->email = $request->email;
+        if($request->has('user_type')){
+            $userModel = User::where(['user_id'=>$id])->update(['user_type'=>$request->user_type]);
+        }
         // $model->user_type = 'employee';
         $model->save();
         $notToDeleteIds = [];

@@ -618,9 +618,9 @@
 					//Users
 					include_once 'custom/organization/user.php';					
 				});
-				
-					
 			});
+
+            
 		});
 					//custom maps
 					Route::get('/maps/{type?}', 		['as'=>'org.custom.maps','uses'=>'Admin\CustomMapsController@index']);
@@ -675,6 +675,4 @@ Route::group(['prefix'=>'front'], function(){
 	Route::get('/opening/{id}',	['as'=>'detail.openings','uses'=>'Organization\cms\PagesController@openingDetails']);
 
 
-	Route::get('/resetpassword',function(){
-		return view('organization.login.reset-password');
-	});
+	

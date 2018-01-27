@@ -132,7 +132,7 @@ protected function leave_category_detail($category_id, $year, $month=null){
 					$current_used_leave[$value] =  $this->leave_category_detail($value, $year); # code...
 				}
 				$next_year = $year+1;
-				$leavesData = EMP_LEV::where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
+				$leavesData = EMP_LEV::with('categories_rel')->where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
 			}else{
 				$error = "Not assign leave category";
 			}

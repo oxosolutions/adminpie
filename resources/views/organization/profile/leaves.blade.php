@@ -105,7 +105,7 @@ if(!empty($error)){
                            </div>
                         </div>
                         <div class="col s3 right-align">
-                           <span class="teal white-text" style="padding: 2px 5px">{{$current_used_leave[$val->leave_category_id]['name']}} </span>
+                           <span class="teal white-text" style="padding: 2px 5px">{{$val['categories_rel']['name']}} </span>
                         </div>
                         <div class="col s3 right-align">
                            @if($total = collect([$val->from_leave_count,$val->to_leave_count])->sum())
