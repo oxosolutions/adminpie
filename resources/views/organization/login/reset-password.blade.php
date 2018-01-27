@@ -7,7 +7,7 @@
         if($from == 'create_password'){
             $route = 'save.create.password';
         }else{
-            $route = 'reset.password';
+            $route = 'update.pass';
         }
     @endphp
 	

@@ -4,6 +4,7 @@
 @include('common.page_content_primary_start')
 	@php
 		$userRegStatus = get_organization_meta('enableuserregisteration');
+        $forgetPassword = get_organization_meta('enable_forgot_password');
 	@endphp
 	@if(Session::has('login_fails'))
 	<div class="row error">
@@ -20,10 +21,12 @@
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 		
 			{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
-			<div class="aione-align-center" style="margin: 10px 0 20px 0">
-				Have you forgotten your password? <br>
-				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>
-			</div>
+            @if($forgetPassword == 1)
+    			<div class="aione-align-center" style="margin: 10px 0 20px 0">
+    				Have you forgotten your password? <br>
+    				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>
+    			</div>
+            @endif
 			
 			@if(@$userRegStatus != 'no')
 				<div class="aione-align-center">

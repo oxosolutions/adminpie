@@ -12,7 +12,7 @@
     Route::get('forgot-password',   ['as'=>'forgot.password','uses'=>'Auth\LoginController@forgotpassword']);
     Route::get('forgot-password-v1',['as'=>'forgot.password-v1','uses'=>'Auth\LoginController@forgotpasswordv1']);
     Route::post('forgot',           ['as'=>'forgot','uses'=>'Auth\LoginController@forgotMail']);
-    Route::get('reset-password/UfcZNQ0sU5w52FoXk28', ['as'=>'edit.password' ,'uses' => 'Auth\LoginController@changePass']);
+    Route::get('reset-password/{token}', ['as'=>'edit.password' ,'uses' => 'Auth\LoginController@changePass']);
     Route::post('update-password', ['as'=>'update.pass' ,'uses' => 'Auth\LoginController@updatePass']);
     Route::get('register', ['as'=>'register' ,'uses' => 'Auth\LoginController@register']);
     Route::get('user/register', ['as'=>'org.register' ,'uses' => 'Auth\LoginController@registerUser']);

@@ -14,6 +14,7 @@
 @include('common.page_content_primary_start')
 @include('organization.profile._tabs')
 <div class=" aione-table">
+	@if($model != null && !$model->isEmpty())
 	<table>
 		<thead>
 			<tr>
@@ -32,6 +33,11 @@
 			@endforeach		
 		</tbody>
 	</table>
+	@else
+	<div class="aione-message warning">
+		No holiday available
+	</div>
+	@endif
 </div>
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

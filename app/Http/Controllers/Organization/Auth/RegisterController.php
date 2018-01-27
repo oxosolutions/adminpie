@@ -303,15 +303,18 @@ class RegisterController extends Controller
         $template_id = json_decode(get_organization_meta('user_registration_admin_notification_template',true));
         $emailTemplate = '';
         $emailLayout = '';
+        $get_template = null;
         if($template_id != null && !empty($template_id) && $template_id != ''){
             $get_template = EmailTemplate::with(['templateMeta'])->where('id',$template_id)->first();
             $emailTemplate = $get_template->toArray();
         }
-        if($get_template->templateMeta != null || !empty($get_template->templateMeta)){
-            foreach ($get_template->templateMeta as $key => $value) {
-                if($value->key == 'layout'){
-                    if($value->value != ''){
-                        $emailLayout = EmailLayout::where('id',$value->value)->get()->toArray()[0];
+        if($get_template != null){
+            if($get_template->templateMeta != null || !empty($get_template->templateMeta)){
+                foreach ($get_template->templateMeta as $key => $value) {
+                    if($value->key == 'layout'){
+                        if($value->value != ''){
+                            $emailLayout = EmailLayout::where('id',$value->value)->get()->toArray()[0];
+                        }
                     }
                 }
             }

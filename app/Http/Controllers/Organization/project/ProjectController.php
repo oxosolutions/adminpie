@@ -378,7 +378,7 @@ class ProjectController extends Controller
       $plugins = ['js' => ['custom'=>['todo']]];
       if($id != null || $id != "" || !empty($id) ){
         $list = TD::where('project_id',$id)->get();
-        return view('organization.project.todo',['plugins' => $plugins , 'list' => $list ]);
+        return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);
       }else{
         $list = TD::where('user_id',Auth::guard('org')->user()->id)->get();
         return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);

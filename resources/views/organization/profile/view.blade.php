@@ -336,11 +336,11 @@ $page_title_data = array(
 			<div class="aione-border mb-25" >
 				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 					Contact Details
-					{{-- <a href="#modal2" class="aione-button aione-float-right font-size-14 edit-button" style="margin-top: -6px">Edit</a>
+					<a href="#modal2" class="aione-button aione-float-right font-size-14 edit-button" style="margin-top: -6px">Edit</a>
 					{!!Form::model(@$model,['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
 					<input type="hidden" name="meta_table" value="usermeta" />
 					@include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'Contact Details','button_title'=>'Save ','section'=>'empsec2']])
-					{!!Form::close()!!} --}}
+					{!!Form::close()!!}
 				</div>
 				@if(@$model !=null)
 					@if(!$model->metas->isEmpty())
@@ -383,7 +383,7 @@ $page_title_data = array(
 					$roles = array_keys(@$model->user_role_rel->groupBy('role_id')->toArray());
 					//if role has permission to this widget
 				@endphp
-				@if(check_widget_permission('employee_details'))
+				@if($isAdmin)
 					<div class="aione-border mb-25" >
 						<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 							Employee Details

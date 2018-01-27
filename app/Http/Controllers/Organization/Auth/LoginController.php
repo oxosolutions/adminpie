@@ -17,6 +17,10 @@ use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Group\GroupUsers;
 use App\Model\Organization\forms as Forms;
+use App\Model\Organization\PasswordReset;
+use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\EmailLayout;
+use Shortcode;
 class LoginController extends Controller
 {
     /*
@@ -186,65 +190,122 @@ class LoginController extends Controller
     {
         return view('organization.login.forgot-password-v1');
     }
-    public function forgotMail(Request $request)
-    {
+
+    protected function getEmailTemplateAndLayout(){
+        $check_notification_status = get_organization_meta('key' , 'enable_forgot_password');
+        $template_id = get_organization_meta('forgot_password_template');
+        $emailTemplate = '';
+        $emailLayout = '';
+
+        if($template_id != null || !empty($template_id)){
+            $get_template = EmailTemplate::with(['templateMeta'])->where('id',$template_id)->first();
+            $emailTemplate = $get_template->toArray();
+        }
+        if($get_template->templateMeta != null || !empty($get_template->templateMeta)){
+            foreach ($get_template->templateMeta as $key => $value) {
+                if($value->key == 'layout'){
+                    if($value->value != ''){
+                        $emailLayout = EmailLayout::where('id',$value->value)->get()->toArray()[0];
+                    }
+                }
+            }
+        }
+        return ['layout'=>$emailLayout,'template'=>$emailTemplate];
+    }
+
+    protected function registerShortcodes($token){
+        Shortcode::add('organization_name', function($atts,$content,$name){
+            $organizationMeta = get_organization_meta();
+            if($organizationMeta->has('title') && $organizationMeta['title'] != ''){
+                return $organizationMeta['title'];
+            }else{
+                return 'Un-titled';
+            }
+        });
+       
+        Shortcode::add('forget_link', function($atts,$content,$name) use ($token){
+            return 'Reset Password: <a href="'.route('edit.password',$token).'">Click To Reset Password</a>';
+            
+        });
+    }
+
+    public function forgotMail(Request $request){
+
         $model = GroupUsers::where('email',$request->email)->first();
-        if(count($model) > 0){
+        if($model != null){
             Session::put('user_id',$model->id);
             $to_email = $request->email;
-
-
             $check_forgot_status = OrganizationSetting::where('key' , 'enable_forgot_password')->first();
             if($check_forgot_status != null && $check_forgot_status->value != '' && $check_forgot_status->value != 0){
                 if($check_forgot_status->value == 1){
-                    Mail::to($to_email)->send(new forgetPassword);
+                    $templateAndLayout = $this->getEmailTemplateAndLayout();
+                    $token = str_random(64);
+                    $passwordReset = new PasswordReset;
+                    $passwordReset->email = $request->email;
+                    $passwordReset->token = $token;
+                    $passwordReset->save();
+                    $this->registerShortcodes($token);
+                    $rawData = view('organization.login.signup-email-template',['emailTemplate' => $templateAndLayout['template'] , 'emailLayout' => $templateAndLayout['layout']])->compileShortcodes()->render();
+                    Mail::send([],[], function($message) use ($rawData, $to_email){
+                        $message->from('oxosolutions@gmail.com','OXO Solutions');
+                        $message->setBody($rawData,'text/html');
+                        $message->subject('Reset Password');
+                        $message->to($to_email);
+                    });
                 }
             }else{
                 Session::flash('error','Forget password not enable by Organization Admin!');
                 return back();
             }
-
-
-            // Mail::to($to_email)->send(new forgetPassword);
-            return view('success-msgs.email-success');
+            Session::flash('success','Reset Password mail sent on your email.');
+            return back();
         }else{
-            Session::flash('forgot-error','email not correct');
+            Session::flash('forgot-error','Email not correct');
             return back();
         }
     }
-    public function changePass()
+
+    public function changePass($token)
     {
-        if(Session::has('reset_token')){
-            return view('organization.login.reset-password');
-        }else{
+        $checkTokenExists = PasswordReset::where(['token'=>$token])->first();
+        if($checkTokenExists == null){
             return redirect()->route('org.login');
         }
+        return view('organization.login.reset-password',['from'=>'reset_password']);
     }
+
     public function changePassv1()
     {
-       
         return view('organization.login.reset-password-v1');
        
     }
+
+    protected function validateResetPassword($request){
+        $rules = [
+            'password' => 'required|min:8|confirmed',
+            'password_confirmation' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
+    protected function setGroupId(){
+        $globalOrganization = GlobalOrganization::find(get_organization_id());
+        Session::put('group_id',$globalOrganization->group_id);
+    }
+
     public function updatePass(Request $request)
     {
-        $model = User::where('remember_token',Session::get('reset_token'))->first();
-        $check = Hash::check($request->password , Hash::make($request->confirmpassword));
-
-        $validate = [
-                        'password'      => 'required|min:6',
-                        'confirmpassword'  => 'required|same:password|min:6'
-                    ];
-        $this->validate($request , $validate);
-       
-        $model = User::where('remember_token',Session::get('reset_token'))->update(['password' => Hash::make($request->confirmpassword)]);
-        if($model){
-            Session::flash('password-changed','Password change Successfully.');
-            return redirect()->route('org.login');
-        }else{
-            echo "Not Changed";
-        }
+        $this->validateResetPassword($request);
+        $resetUser = PasswordReset::where(['token'=>$request->reset_create_token])->first();
+        $this->setGroupId();
+        $groupUserModel = GroupUsers::where(['email'=>$resetUser->email])->update(['password'=>Hash::make($request->password),'app_password'=>$request->password]);
+        PasswordReset::where(['token'=>$request->reset_create_token])->delete();
+        Session::flash('success','Password Changed Successfully!');
+        return redirect()->route('org.login');
     }
+
+
     public function register(Request $request)
     {
         $arraySetting = [];

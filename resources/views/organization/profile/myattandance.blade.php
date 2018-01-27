@@ -124,7 +124,10 @@
 		<div class="row">
 			@include('organization.profile._tabs')
 			@if(!empty($error))
-			<h1>{{$error}}</h1>
+			<div class="aione-message warning">
+				{{$error}}	
+			</div>
+			
 			@else
 			<input id="token" type="hidden" name="_token" value="{{csrf_token()}}" >
 			<div class="row">

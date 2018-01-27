@@ -51,18 +51,6 @@ class forgetPassword extends Mailable
                     }
                 }
             }
-        // $email = Session::get('new_user_register_email');
-        // $name = Session::put('new_user_register_name');
-
-        // $userEmail = GroupUsers::where('email',$email)->first()['email'];
-        // $userName = GroupUsers::where('email',$email)->first()['name'];
-
-        // return $this->from('oxosolutionsindia@gmail.com')
-        //         ->subject($emailTemplate['subject']) 
-        //         ->view('organization.login.signup-email-template')
-        //         ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail , 'userName' => $userName]);
-
-
         $userName = GroupUsers::where('id',Session::get('user_id'))->first()['name'];
         
         $sendFrom = get_organization_meta('from_email');

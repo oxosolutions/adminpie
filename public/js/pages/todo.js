@@ -180,7 +180,10 @@ $(document).ready(function(){
 				type:'POST',
 				data: array,
 				success: function (res) {
-					console.log('hello');
+					$('.todo-names input').val('');
+					$('.priority_select select option').prop('selected', function() {
+				        return this.defaultSelected;
+				    });
 					$(this).parent().parent().find('.todo-names').hide();
 					Materialize.toast('Success',4000);
 					$('#list_todo').html(res);

@@ -10,11 +10,48 @@ $page_title_data = array(
 	'add_new' => ''
 ); 
 @endphp
-{{ dump($model) }}
+
 @include('common.pageheader',$page_title_data)
-	<div class="row">
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+
 		@include('organization.profile._tabs')
-		<div class="row">
+
+		<div class="aione-table">
+			<table>
+				<thead>
+					<tr>
+						<th>Name of project</th>
+						<th>Project start date</th>
+						<th>Deadline</th>
+						<th>Team leader</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($model as $k => $project)
+					<tr>
+						<td>{{ $project->name }}</td>
+						<td>
+							@foreach($project->projectMeta as $key => $meta)
+								@if($meta->key == 'start_date')
+									{{ $meta->value }}
+								@endif
+							@endforeach
+						</td>
+						<td>
+							@foreach($project->projectMeta as $key => $meta)
+								@if($meta->key == 'end_date')
+									{{ $meta->value }}
+								@endif
+							@endforeach
+						</td>
+						<td>Sgs Sandhu</td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
+		{{-- <div class="row">
 			<div class="fade-background">
 			</div>
 			<div id="projects" class="projects list-view">
@@ -22,7 +59,7 @@ $page_title_data = array(
 					<div class="col s12 m9 l12 pr-7" >
 						<div class="row no-margin-bottom">
 							<div class="col s12 m12 l6  pr-7 tab-mt-10" >
-								<!-- <input class="search aione-field" placeholder="Search" /> -->
+								
 								<nav>
 								    <div class="nav-wrapper">
 								      	<form>
@@ -120,17 +157,17 @@ $page_title_data = array(
 										</div>
 									</div>
 								@endforeach							
-							
-							{{-- @include('common.list.datalist') --}}
-	
 						</div>
 					</div>
 
 					
 				</div>
 			</div>
-		</div>
-	</div>
+		</div> --}}
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 	<style type="text/css">
 		.options{
 		position: absolute;

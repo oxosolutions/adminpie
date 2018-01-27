@@ -8,6 +8,7 @@ $page_title_data = array(
 'page_title' => 'Leaves',
 'add_new' => '+ Apply leave'
 ); 
+
 //dd($data, $current_used_leave);
 $range = range(2017, 2022);
 $value = array_map( function($a){
@@ -25,8 +26,8 @@ if(!empty($error)){
    <h1> {{Session::get('sucessful')}} </h1>
 </div>
 @endif
-@if (Session::has('error'))
-@foreach(Session::get('error') as $key => $value)
+@if (Session::has('errorss'))
+@foreach(Session::get('errorss') as $key => $value)
 <div class="alert alert-info" style="color:red;">
    <h3>
       {{e($value)}} 
@@ -34,11 +35,17 @@ if(!empty($error)){
 </div>
 @endforeach
 @endif
-<div class="row">
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+
    @include('organization.profile._tabs')
    @if(!empty($error))
-   <h1>{{$error}}</h1>
+   <div class="aione-message warning">
+      {{$error}}   
+   </div>
+   
    @else
+
    <div class="row">
       <div class="fade-background">
       </div>
@@ -234,7 +241,10 @@ if(!empty($error)){
       </div>
    </div>
    @endif
-</div>
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 <script type="text/javascript">
    $(".datepicker").pickadate({
       selectMonths:true,
