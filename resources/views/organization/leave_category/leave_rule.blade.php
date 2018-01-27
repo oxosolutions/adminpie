@@ -279,7 +279,7 @@ $page_title_data = array(
 		                    <div id="field_label_label_select" class="field-label">
 		                        <label for="input_label_select">
 		                            <h4 class="field-title" id="label select">
-		                             	Include User
+		                             	Select to include user's from leave rule
 		                            </h4>
 		                        </label>
 		                    </div>
@@ -300,7 +300,7 @@ $page_title_data = array(
 		                    <div id="field_label_label_select" class="field-label">
 		                        <label for="input_label_select">
 		                            <h4 class="field-title" id="label select">
-		                            	Exclude User
+		                            	Select to restric user's from leave rule
 		                            </h4>
 		                        </label>
 		                    </div>

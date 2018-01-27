@@ -46,6 +46,79 @@ if(!empty($error)){
    
    @else
 
+   <div class="ar">
+      <div class="ac l75">
+         <div class="aione-border mb-25">
+            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+               Leaves List   
+            </div>
+            <div class="p-10">
+               <div class="aione-table">
+                  <table>
+                     <thead>
+                        <tr>
+                           <th>Leave Reason</th>
+                           <th>No. of days</th>
+                           <th>Period</th>
+                           <th>Status</th>
+                           
+                        </tr>
+                     </thead>
+                     <tbody>
+                        @if(!empty($data->toArray()))
+                           @foreach($data as $key => $val)
+                              <tr>
+                                 <td>{{$val->reason_of_leave}}</td>
+                                 <td>
+                                    @if($total = collect([$val->from_leave_count,$val->to_leave_count])->sum())
+                                    {{$total}} Days
+                                    @else
+                                    {{$val->total_days}} Days
+                                    @endif
+                                 </td>
+                                 <td>{{$val->from}} to {{$val->to}} </td>
+                                 <td>
+                                    @if($val->status ==1)
+                                       Approved
+                                    @elseif($val->status ==3)
+                                       Un-Approved
+                                    @elseif($val->status ==0)
+                                       Pending
+                                    @endif  
+                                 </td>
+                              </tr>
+                           @endforeach
+                        @endif
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="ac l25">
+         <div class="aione-border mb-25">
+            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+               Session   
+            </div>
+            <div class="p-10">
+              {!! Form::open(['route'=>'account.leaves']) !!}
+                  {!! Form::select('year',$years,$filter_year,['class'=>'browser-default mb-10'])!!}
+                  {!! Form::submit('search') !!}
+                  {!! Form::close()!!}
+            </div>
+         </div>
+         <div class="aione-border mb-25">
+            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+               Leave rule for you   
+            </div>
+            <div class="p-10">
+              
+            </div>
+         </div>
+      </div>
+   </div>
+
+
    <div class="row">
       <div class="fade-background">
       </div>
@@ -158,6 +231,7 @@ if(!empty($error)){
                   Leave rules for you
                </div>
                @if(!empty($current_used_leave))
+               {{-- {{dd($current_used_leave)}} --}}
                @foreach($current_used_leave as $key => $val)
                <div class="card">
                   <div class="row mb-0" >
@@ -214,7 +288,22 @@ if(!empty($error)){
                            <div class="col l6">{{@$val['apply_before']}} days</div>
                         </div>
                         <div class="divider"></div>
-                        <div class="row mb-0 p-10" style="">
+                        @if(!empty($val['minimum_saction_leave']))
+                           <div class="row mb-0 p-10" style="">
+                              <div class="col l6">Minimum saction leave</div>
+                              <div class="col l6">{{@$val['minimum_saction_leave']}}</div>
+                           </div>   
+                            <div class="divider"></div>
+                        @endif
+                        @if(!empty($val['maximum_saction_leave']))
+                           <div class="row mb-0 p-10" style=""> 
+                              <div class="col l6">Maximum saction leave</div>
+                              <div class="col l6">{{@$val['maximum_saction_leave']}}</div>
+                           </div>   
+                            <div class="divider"></div>
+                        @endif
+                         
+                         <div class="row mb-0 p-10" style="">
                            <div class="col l6">Carry Forward</div>
                            @if(@$val['carry_forward']==true)
                            <div class="col l6">Yes</div>
@@ -222,7 +311,7 @@ if(!empty($error)){
                            <div class="col l6">No</div>
                            @endif
                         </div>
-                        <div class="divider"></div>
+                         <div class="divider"></div>
                         {{-- <div class="row mb-0 p-10" style="">
                            @if($val['valid_for']=='monthly')
                            <div class="col l6">Year Month</div>

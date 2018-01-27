@@ -383,7 +383,251 @@ $page_title_data = array(
 					$roles = array_keys(@$model->user_role_rel->groupBy('role_id')->toArray());
 					//if role has permission to this widget
 				@endphp
-				@if($isAdmin)
+                @if($isEmployee && request()->id != null)
+                    @if(check_widget_permission('employee_details'))
+                        <div class="aione-border mb-25" >
+                            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+                                Employee Details
+                                @if(@$isAdmin)
+                                    <a href="#modal3" class="aione-button font-size-14 aione-float-right edit-button " style="margin-top: -6px">Edit</a>
+                                @endif
+                                {!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
+                                <input type="hidden" name="meta_table" value="employeemeta" />
+                                
+                                @include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
+                                {!!Form::close()!!}
+                            </div>
+                            <div class="aione-table p-10">
+                                <table>
+                                    <tbody>
+                                        @foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
+                                        <tr>
+                                            <td>
+                                                {{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
+                                            </td>
+                                            <td>                                        
+                                                @php
+                                                    $fieldData = str_replace(' ', '_', strtolower($field));
+                                                @endphp
+                                                @if($fieldData == 'designation')
+                                                    {{@App\Model\Organization\Designation::find($model->designation)->name}}
+                                                @elseif($fieldData == 'department')
+                                                    {{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+                                                @elseif($fieldData == 'user_shift')
+                                                    {{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
+                                                @elseif($fieldData == 'pay_scale')
+                                                    {{@App\Model\Organization\Payscale::find($model->$fieldData)->title}}
+                                                @else
+                                                    {{ $model->$fieldData }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            {{-- <div class="ar" >
+                                @foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
+                                    <div class="ar " >
+                                        <div class="ac l100 subhead-wrapper" >
+                                            <span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
+                                        </div>
+                                        <div class="ac l100 details-wrapper" >
+
+                                            @php
+                                                $fieldData = str_replace(' ', '_', strtolower($field));
+                                            @endphp
+                                            @if($fieldData == 'designation')
+                                                {{@App\Model\Organization\Designation::find($model->designation)->name}}
+                                            @elseif($fieldData == 'department')
+                                                {{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+                                            @elseif($fieldData == 'user_shift')
+                                                {{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
+                                            @elseif($fieldData == 'pay_scale')
+                                                {{@App\Model\Organization\Payscale::find($model->$fieldData)->title}}
+                                            @else
+                                                {{ $model->$fieldData }}
+                                            @endif
+
+
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div> --}}
+                        </div>
+
+                        <div class="aione-border info-card" >
+                            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+                                Bank Details
+                                @if($isAdmin)
+                                    <a href="#modal4" class="aione-float-right font-size-14 edit-button aione-button" style="margin-top: -6px">Edit</a>
+                                @endif
+                                {!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+                            
+                                <input type="hidden" name="meta_table" value="employeemeta" />
+                                @if(count(request()->route()->parameters()) >0 )
+                                    <input type="hidden" name="empId" value="{{request()->route()->parameters()['id']}}" />
+                                @endif
+                                    @include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
+                                {!!Form::close()!!}
+                            </div>
+                            
+                            <div class="aione-table p-10" >
+                                @php
+                                    $data = [];
+                                @endphp
+                                @foreach(str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')) as $k => $v)
+                                    @php
+                                        array_push($data , strtolower($v));
+                                    @endphp
+                                @endforeach
+                                <table>
+                                    <tbody> 
+                                        @foreach($data as $key => $field)
+
+                                            <tr >
+                                                <td  >
+                                                    {{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
+                                                </td>
+                                                <td  >
+                                                    {{$model[strtolower($field)]}}
+                                                </td>
+                                            </tr>
+
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                            
+                        
+                            </div>
+                        </div>
+                    @endif
+                @endif
+
+                @if($isEmployee && request()->id == null)
+                    @if(check_widget_permission('employee_details'))
+                        <div class="aione-border mb-25" >
+                            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+                                Employee Details
+                                @if(@$isAdmin)
+                                    <a href="#modal3" class="aione-button font-size-14 aione-float-right edit-button " style="margin-top: -6px">Edit</a>
+                                @endif
+                                {!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
+                                <input type="hidden" name="meta_table" value="employeemeta" />
+                                
+                                @include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Employee Details','button_title'=>'Save ','section'=>'empsec7']])
+                                {!!Form::close()!!}
+                            </div>
+                            <div class="aione-table p-10">
+                                <table>
+                                    <tbody>
+                                        @foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
+                                        <tr>
+                                            <td>
+                                                {{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
+                                            </td>
+                                            <td>                                        
+                                                @php
+                                                    $fieldData = str_replace(' ', '_', strtolower($field));
+                                                @endphp
+                                                @if($fieldData == 'designation')
+                                                    {{@App\Model\Organization\Designation::find($model->designation)->name}}
+                                                @elseif($fieldData == 'department')
+                                                    {{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+                                                @elseif($fieldData == 'user_shift')
+                                                    {{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
+                                                @elseif($fieldData == 'pay_scale')
+                                                    {{@App\Model\Organization\Payscale::find($model->$fieldData)->title}}
+                                                @else
+                                                    {{ $model->$fieldData }}
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            {{-- <div class="ar" >
+                                @foreach(FormGenerator::GetSectionFieldsName('empsec7') as $key => $field)
+                                    <div class="ar " >
+                                        <div class="ac l100 subhead-wrapper" >
+                                            <span class="subhead">{{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;</span>
+                                        </div>
+                                        <div class="ac l100 details-wrapper" >
+
+                                            @php
+                                                $fieldData = str_replace(' ', '_', strtolower($field));
+                                            @endphp
+                                            @if($fieldData == 'designation')
+                                                {{@App\Model\Organization\Designation::find($model->designation)->name}}
+                                            @elseif($fieldData == 'department')
+                                                {{@App\Model\Organization\Department::find($model->$fieldData)->name}}
+                                            @elseif($fieldData == 'user_shift')
+                                                {{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
+                                            @elseif($fieldData == 'pay_scale')
+                                                {{@App\Model\Organization\Payscale::find($model->$fieldData)->title}}
+                                            @else
+                                                {{ $model->$fieldData }}
+                                            @endif
+
+
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div> --}}
+                        </div>
+
+                        <div class="aione-border info-card" >
+                            <div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+                                Bank Details
+                                @if($isAdmin)
+                                    <a href="#modal4" class="aione-float-right font-size-14 edit-button aione-button" style="margin-top: -6px">Edit</a>
+                                @endif
+                                {!!Form::model($model,['route'=>['update.profile.meta',$model->id],'method'=>'PATCH'])!!}
+                            
+                                <input type="hidden" name="meta_table" value="employeemeta" />
+                                @if(count(request()->route()->parameters()) >0 )
+                                    <input type="hidden" name="empId" value="{{request()->route()->parameters()['id']}}" />
+                                @endif
+                                    @include('common.modal-onclick',['data'=>['modal_id'=>'modal4','heading'=>'Bank Details','button_title'=>'Save ','section'=>'empsec6']])
+                                {!!Form::close()!!}
+                            </div>
+                            
+                            <div class="aione-table p-10" >
+                                @php
+                                    $data = [];
+                                @endphp
+                                @foreach(str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')) as $k => $v)
+                                    @php
+                                        array_push($data , strtolower($v));
+                                    @endphp
+                                @endforeach
+                                <table>
+                                    <tbody> 
+                                        @foreach($data as $key => $field)
+
+                                            <tr >
+                                                <td  >
+                                                    {{ucfirst(str_replace('_', ' ',$field))}}: &nbsp;
+                                                </td>
+                                                <td  >
+                                                    {{$model[strtolower($field)]}}
+                                                </td>
+                                            </tr>
+
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                            
+                        
+                            </div>
+                        </div>
+                    @endif
+                @endif
+
+				@if($isAdmin && $isEmployee && request()->id == null)
 					<div class="aione-border mb-25" >
 						<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 							Employee Details

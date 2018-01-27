@@ -37,9 +37,9 @@
 								
 							<div class="field field-type-text">
 								<select class="browser-default priority">
-									<option value="low">Low</option>
-									<option value="high">High</option>
-									<option value="medium">Medium</option>
+									<option value="Low">Low</option>
+									<option value="High">High</option>
+									<option value="Medium">Medium</option>
 								</select>
 							</div>
 						</div>

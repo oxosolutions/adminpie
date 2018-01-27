@@ -68,7 +68,7 @@ class EmployeeLeaveController extends Controller
 /*The Usesd_leave method use in leave_category detail to calculate used leave by user*/
 protected function used_leave($leave_category_id, $year){
 	$next_year = $year + 1;
-	dump($year ,$next_year);
+	// dump($year ,$next_year);
 	$emp_id = get_current_user_meta('employee_id');
 	$fromLeavesData = EMP_LEV::where(['leave_category_id'=>$leave_category_id, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('from',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
 	$exist_id = array_pluck($fromLeavesData,'id');
@@ -82,7 +82,7 @@ protected function used_leave($leave_category_id, $year){
 /*The leave category detail  use in leave listing method */
 protected function leave_category_detail($category_id, $year, $month=null){
 		$temp_add =  $year +1; 
-		echo 'joining --'.$date_of_joining = get_current_user_meta('date_of_joining');
+		$date_of_joining = get_current_user_meta('date_of_joining');
 		$data = catMeta::whereIn('key',['number_of_day','valid_for', 'apply_before', 'maximum_saction_leave','minimum_saction_leave','carry_farward'])->where('category_id', $category_id)->get()->pluck('value','key')->put('category_id',$category_id)->toArray();
 		$assigned_leave = $data['number_of_day'];
 	 	$time  = strtotime($date_of_joining);

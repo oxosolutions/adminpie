@@ -123,7 +123,6 @@ class AccountController extends Controller
      * profileDetails method alter BY Paljinder singh & comment code which not in use.
      */
     public function profileDetails($id = null){
-
         if($id == null){
             // $id = 8; 
             // $g_id = Auth::guard('org')->user()->id; 
@@ -151,7 +150,9 @@ class AccountController extends Controller
             }
             if(!$userDetails->metas->isEmpty()){
                 foreach($userDetails->metas as $key => $value){
-                    $userDetails->{$value->key} = $value->value;
+                    if($value->key != 'email'){
+                        $userDetails->{$value->key} = $value->value;
+                    }
                 }
             }
         }
