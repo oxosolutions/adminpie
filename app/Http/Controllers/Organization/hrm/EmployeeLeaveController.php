@@ -119,7 +119,7 @@ protected function leave_category_detail($category_id, $year, $month=null){
 
 	public function leave_listing(Request $request){
 		$year = date('Y');
- 		if(date('m')<4 ){
+ 		if(date('m')<4){
 			$year = $year - 1;
 		}		
 		if($request->isMethod('post')){
@@ -244,25 +244,29 @@ protected function leave_category_detail($category_id, $year, $month=null){
 						$to_leave_count = $to_end_date_of_month->diffInDays($to) + 1;
 						$request['to_leave_count'] = $to_leave_count;
 						$applying_total_days =	$from_leave_count + $to_leave_count;
+						
 					}else{
 						$applying_total_days = $request['total_days'] = $from->diffInDays($to) + 1;
 					}
-					$leave_rules = $this->leave_category_detail($leave_category_id, $from->year, $from->month);
-					//dd($leave_rules);
-					$leave_rule_check = $this->leave_rule_check($leave_rules , $applying_total_days, $before , $current , $request['from']);
-					if(!empty($leave_rule_check)){
-						$error = $leave_rule_check;
-					}
+						$leave_rules = $this->leave_category_detail($leave_category_id, $from->year, $from->month);
+						if($from->month ==3 && $to->month>3){
+/*From leave check*/		$error = $this->different_session_year($leave_rules, $leave_category_id, $from, $to, $request, $from_leave_count , $to_leave_count, $before, $current );
+							
+						}else{
+							$leave_rule_check = $this->leave_rule_check($leave_rules , $applying_total_days, $before , $current , $request['from']);
+							if(!empty($leave_rule_check)){
+								$error = $leave_rule_check;
+							}
+						}
 				}else{
 					$error['not_assigned_leave_this_category'] = "Not assigned this leave category.";
 					return redirect()->route('account.leaves')->with('errorss',$error);
 				}
 			}else{
 				$error['not_assigned_leave_category'] = "Not assigned leave category.";
-				return redirect()->route('account.leaves')->with('error',$error);
+				return redirect()->route('account.leaves')->with('errorss',$error);
 			}
 /* Total day check */
-
 			if(empty($error)) {
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  
@@ -275,6 +279,22 @@ protected function leave_category_detail($category_id, $year, $month=null){
 			}
 		 }
  	return redirect()->route('account.leaves');
+	}
+	protected function different_session_year($from_leave_rules ,$leave_category_id, $from, $to, $request, $from_leave_count, $to_leave_count, $before, $current  ){
+		$error = null;
+		$from_leave_rule_check = $this->leave_rule_check($from_leave_rules, $from_leave_count, $before , $current , $request['from']);
+		$to_leaves = $this->leave_category_detail($leave_category_id, $to->year, $to->month);
+		$to_leave_rule_check = $this->leave_rule_check($to_leaves, $to_leave_count, $before , $current , $request['to']);
+		if(!empty($from_leave_rule_check) ){
+			$error['from'] =$from_leave_rule_check;
+			$prev_year = $from->year - 1;
+			$error['from']['session_year'] = "April $prev_year March  $from->year"; 
+		}if(!empty($to_leave_rule_check) ){
+			$to_next_year = $to->year + 1;
+			$error['to'] = $to_leave_rule_check;
+			$error['to']['session_year'] = "April $to->year March  $to_next_year";
+		}
+		return $error;
 	}
 
 	Public function old_store(Request $request, $id=null)

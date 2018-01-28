@@ -5,7 +5,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Emails',
+	'page_title' => 'Documents',
 	'add_new' => ''
 ); 
 @endphp
@@ -14,21 +14,27 @@ $page_title_data = array(
 @include('common.page_content_primary_start')
 	@include('organization.profile._tabs')
 	{{-- @include('common.list.datalist') --}}
-	<ul >
-		@foreach($documents as $k => $v)
-			<li class="aione-list">
-				<div style="float: left;">
-					{{ $v->title }}
-				</div>
-				<div style="float: right;">
-					<a href="{{ route('document.download',$v->id) }}">DOWNLOAD</a>
-					<a href="{{ route('delete.user.document',$v->id) }}" style="color: red">DELETE</a>
-				</div>
-			</li>
-			<div class="clear"></div>
-		@endforeach
+	<div class="aione-table">
+		<table>
+			<tbody>
+				@foreach($documents as $k => $v)
+					<tr class="aione-list">
+						<td >
+							{{ $v->title }}
+						</td>
+						<td >
+							<a href="{{ route('document.download',$v->id) }}">DOWNLOAD</a>
+							<a href="{{ route('delete.user.document',$v->id) }}" class="red">DELETE</a>
+						</td>
+					</tr>
+					<div class="clear"></div>
+				@endforeach
 
-	</ul> 
+			</tbody>
+		</table>
+	</div>
+		
+		 
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')

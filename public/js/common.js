@@ -335,28 +335,44 @@ setInterval(function(){clock();},100);
 
 /********************* Dashboard *********************/
 
-$(document).on('click','.aione-widget-delete',function(){
-  
-  var slug      = $(this).parents('.aione-widget-header').find('input[name=slug]').val();
-  var widget_id = $(this).parents('.aione-widget-header').find('input[name=widget_id]').val();
-  var _token    = $('#token').val();
-    $(this).parents('.aione-widget').remove();
+$('body').on('click','.aione-widget-delete',function(e){
+    var slug      = $(this).data('slug');
+    var widget_id = $(this).data('widget');
+    var _token    = $('#token').val();
+    var elem = $(this);
+    e.preventDefault();
+    swal({   
+        title: "Are you sure?",   
+        text: "Are you sure you want to delete",   
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Delete",   
+        closeOnConfirm: false 
+    }, 
+    function(){
+        $.ajax({
+            url : route()+'/delete/dashboards/widget',
+            type : 'POST',
+            data : {  slug        : slug,
+                      widget_id   : widget_id,
+                      _token      : _token      
+            },
+            success: function(res){
+                if(res == "true"){
+                    // $(this).parents('.widget-wrapper').hide();
+                    Materialize.toast("Success",4000);
+                    elem.parents('.aione-widget').remove();
+                    swal("Deleted!", "Your widget has been deleted.", "success"); 
+                    window.location.reload();
+                }
 
-  $.ajax({
-    url : route()+'/delete/dashboards/widget',
-    type : 'POST',
-    data : {  slug        : slug,
-              widget_id   : widget_id,
-              _token      : _token      
-    },
-    success: function(res){
-        if(res == "true"){
-          // $(this).parents('.widget-wrapper').hide();
-          Materialize.toast("Success",4000);
-        }
+            }
+        });
+    }); 
+    
 
-    }
-  });
+    
 });
 
 

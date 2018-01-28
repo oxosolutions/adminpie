@@ -42,7 +42,8 @@
 
 						</a>
 						<ul style="right: 45px"> 
-							<li><a class="btn-floating red aione-widget-delete aione-tooltip aione-delete-confirmation" href="#" title="Delete Widget"><i class="aione-icon material-icons">close</i></a></li>
+							<li><a class="btn-floating red aione-widget-delete aione-tooltip" href="#" title="Delete Widget" data-widget="{{ @$widget_id }}" data-slug="{{@Request()->route()->parameters()['id']}}"><i class="aione-icon material-icons">close</i></a></li>
+                            {!! Form::hidden('_token',csrf_token(),['id'=>'token']) !!}
 							<li><a class="btn-floating resizeWidget" href="javascript:;" data-target="size-adjust" data-widget="{{ @$widget_id }}" data-current_size="{{ @$widget_settings[@$widget_id]['size'] }}" ><i  class="aione-icon material-icons">more_horiz</i></a>
 							</li>
 							<!--

@@ -170,6 +170,7 @@ class DashboardController extends Controller
     }
 	
 	
+    
 	
     public function saveWidget(Request $request)
     {
@@ -186,8 +187,8 @@ class DashboardController extends Controller
     		}else{
     			$current_slug_data->widgets = $request->widget;
     		}
-        update_user_meta('dashboards',json_encode($dashboard_data));
-    	return back();
+            update_user_meta('dashboards',json_encode($dashboard_data));
+    	   return back();
     	}
     }
     public function deleteWidget(Request $request)
@@ -225,8 +226,16 @@ class DashboardController extends Controller
 		$sorted = array_intersect_key(array_flip( $old_array), $request['data']);
     }
 	 
+    protected function validateCreateDashboard($request){
+        $rules = [
+            'title' => 'required',
+            'slug' => 'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
 	public function dashboards(Request $request){
-		
+		$this->validateCreateDashboard($request);
 		$id = get_user_id();
 		$dashboards = get_user_meta($id, 'dashboards');
         $slug = preg_replace('/[^a-zA-Z0-9\']/', '', $request->slug);
@@ -324,6 +333,5 @@ class DashboardController extends Controller
             Session::flash('success','Widget settings saved Successfully!');
             return back();
         }
-        
     }
 }

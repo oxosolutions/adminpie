@@ -201,7 +201,8 @@ class ModuleController extends Controller
             $save->save();
             $ids[] =  $save->id;
         }
-        //dd($ids, $route_existed,  $newArray , $route_name ,$routes ,  $request->all());
+
+        // dd($ids, $route_existed,  $request->all());
         return back();
     }
     public function deletesubModulePermission($id,$route_name)

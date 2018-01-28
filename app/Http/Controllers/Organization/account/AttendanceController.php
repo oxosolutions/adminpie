@@ -43,13 +43,13 @@ class AttendanceController extends Controller
              }
             $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
             $attendance_data = $attendance->groupBy('month')->toArray();
-            return view('organization.profile.ajaxmyattandance',['attendance_data'=>$attendance_data, 'filter'=>$where]);
+            return view('organization.account.ajaxmyattandance',['attendance_data'=>$attendance_data, 'filter'=>$where]);
         }
     	
     	$attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
         $attendance_data = $attendance->groupBy('month')->toArray();
     }
-        return view('organization.profile.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where, 'error'=>$error]);
+        return view('organization.account.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where, 'error'=>$error]);
     }
 
     public function attendance_monthly(Request $request){
@@ -64,7 +64,7 @@ class AttendanceController extends Controller
         $where['employee_id'] = get_user_meta(get_user_id(), $key = 'employee_id', $array = false);//Employee::where('user_id',$user_id)->select('employee_id')->first()->employee_id;
         $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
         $attendance_data = $attendance->keyBy('date')->toArray();
-        return view('organization.profile.monthlyattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
+        return view('organization.account.monthlyattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
     }
     public function attendance_weekly(Request $request){
 
@@ -78,6 +78,6 @@ class AttendanceController extends Controller
         $where['employee_id'] = get_user_meta(get_user_id(), $key = 'employee_id', $array = false);// Employee::where('user_id',$user_id)->select('employee_id')->first()->employee_id;
         $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month','month_week_no','day','total_hour'])->get();
         $attendance_data = $attendance->keyBy('date')->toArray();
-        return view('organization.profile.weeklyattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
+        return view('organization.account.weeklyattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);
     }
 }

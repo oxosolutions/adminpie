@@ -53,7 +53,11 @@ function check_widget_permission($widget_slug){
     if($GlobalWidget != null){
        $rolePermission = Permisson::where(['permisson_type'=>'widget','permisson_id'=>$GlobalWidget->id,'permisson'=>'on'])->get();
         if($rolePermission->isEmpty()){
-            return false;
+            if(in_array(1,role_id())){
+                return true;
+            }else{
+                return false;
+            }
         }else{
             return true;
         }

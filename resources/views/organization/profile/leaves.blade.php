@@ -10,7 +10,9 @@ $page_title_data = array(
 ); 
 
 //dd($data, $current_used_leave);
-$range = range(2017, 2022);
+$till_year = date('Y') +2;
+
+$range = range(1970, $till_year);
 $value = array_map( function($a){
    $next_year = $a + 1;
    return 'April '.$a.' to March '.$next_year; 
@@ -22,19 +24,36 @@ if(!empty($error)){
 @endphp
 @include('common.pageheader',$page_title_data)
 @if (Session::has('sucessful'))
-<div class="alert alert-info" style="color:green;">
-   <h1> {{Session::get('sucessful')}} </h1>
+<div class="aione-message success" >
+   {{Session::get('sucessful')}} 
 </div>
 @endif
 @if (Session::has('errorss'))
-@foreach(Session::get('errorss') as $key => $value)
-<div class="alert alert-info" style="color:red;">
-   <h3>
-      {{e($value)}} 
-   </h3>
-</div>
-@endforeach
+   @php
+
+      $errorss = Session::get('errorss');
+   @endphp
+   @if(empty($errorss['from']) &&  empty($errorss['to']))
+      @foreach($errorss as $key => $value)
+            <div class="aione-message error" >  {{e($value)}} 
+            </div>
+      @endforeach
+     {{--  {{dd($error)}} --}}
+   @endif
+   @if(!empty($errorss['from']))
+      @foreach($errorss['from'] as $key => $value)
+            <div class="aione-message error" >   {{e($value)}}
+            </div>
+      @endforeach
+   @endif
+   @if(!empty($errorss['to']))
+      @foreach($errorss['to'] as $key => $value)
+            <div class="aione-message error" >   {{e($value)}}
+            </div>
+      @endforeach
+   @endif
 @endif
+
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 
@@ -45,7 +64,10 @@ if(!empty($error)){
    </div>
    
    @else
-
+   {!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+               <input type="hidden" name="apply_by" value="employee">
+               @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
+               {!!Form::close()!!}
    <div class="ar">
       <div class="ac l75">
          <div class="aione-border mb-25">
@@ -79,11 +101,11 @@ if(!empty($error)){
                                  <td>{{$val->from}} to {{$val->to}} </td>
                                  <td>
                                     @if($val->status ==1)
-                                       Approved
+                                       <span class="green">Approved</span>
                                     @elseif($val->status ==3)
-                                       Un-Approved
+                                       <span class="red">Denied</span>
                                     @elseif($val->status ==0)
-                                       Pending
+                                       <span class="orange">Pending</span>
                                     @endif  
                                  </td>
                               </tr>
@@ -115,96 +137,68 @@ if(!empty($error)){
               @if(!empty($current_used_leave))
                {{-- {{dd($current_used_leave)}} --}}
                @foreach($current_used_leave as $key => $val)
-               <div class="card">
-                  <div class="row mb-0" >
-                     <div class="row mb-0 p-10">
-                        <div class="col l6">Title</div>
-                        <div class="col l6">{{@$val['name']}}</div>
-                     </div>
-                     <div class="divider"></div>
-                     <div class="row mb-0" >
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Assigned
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              @if($val['valid_for']=='monthly')
+                  <div class="aione-table">
+                     <table>
+                        <thead>
+                           <tr>
+                              <th colspan="2" class="aione-align-center">Title:-{{@$val['name']}}</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <td>Assigend</td>
+                              <td> @if($val['valid_for']=='monthly')
                               {{12*$val['number_of_day']}}
                               @else
                               {{@$val['number_of_day']}}
-                              @endif
-                           </div>
-                        </div>
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Used
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">
-                              {{$val['used_leave']}}
-                              </span>
-                           </div>
-                        </div>
-                        <div class="col l4" style="border-right:1px solid #e8e8e8">
-                           <div class="center-align" style="font-weight: 500;padding: 6px">
-                              Left
-                           </div>
-                           <div class="center-align" style="padding: 6px">
-                              <span class="green white-text" style="padding: 2px 5px;border-radius: 4px">
-                              @if($val['valid_for']=='monthly')
+                              @endif</td>
+                           </tr>
+                           <tr>
+                              <td>Used</td>
+                              <td>{{$val['used_leave']}}</td>
+                           </tr>
+                           <tr>
+                              <td>Left</td>
+                              <td>@if($val['valid_for']=='monthly')
                               {{12*$val['number_of_day'] - $val['used_leave']}}
                               @else
                               {{$val['number_of_day'] - $val['used_leave']}}
-                              @endif
-                              </span>
-                           </div>
-                        </div>
-                        <div class="divider"></div>
-                        <div class="row mb-0 p-10" >
-                           <div class="col l6">valid for</div>
-                           <div class="col l6">{{$val['valid_for']}}</div>
-                        </div>
-                        <div class="divider"></div>
-                        <div class="row mb-0 p-10" >
-                           <div class="col l6">Apply Before</div>
-                           <div class="col l6">{{@$val['apply_before']}} days</div>
-                        </div>
-                        <div class="divider"></div>
-                        @if(!empty($val['minimum_saction_leave']))
-                           <div class="row mb-0 p-10" style="">
-                              <div class="col l6">Minimum saction leave</div>
-                              <div class="col l6">{{@$val['minimum_saction_leave']}}</div>
-                           </div>   
-                            <div class="divider"></div>
-                        @endif
-                        @if(!empty($val['maximum_saction_leave']))
-                           <div class="row mb-0 p-10" style=""> 
-                              <div class="col l6">Maximum saction leave</div>
-                              <div class="col l6">{{@$val['maximum_saction_leave']}}</div>
-                           </div>   
-                            <div class="divider"></div>
-                        @endif
-                         
-                         <div class="row mb-0 p-10" style="">
-                           <div class="col l6">Carry Forward</div>
-                           @if(@$val['carry_forward']==true)
-                           <div class="col l6">Yes</div>
+                              @endif</td>
+                           </tr>
+                           <tr>
+                              <td>Valid for</td>
+                              <td>{{$val['valid_for']}}</td>
+                           </tr>
+                           <tr>
+                              <td>Apply Before</td>
+                              <td>{{@$val['apply_before']}} days</td>
+                           </tr>
+                           <tr>
+                              <td>Minimum saction leave</td>
+                              <td>{{@$val['minimum_saction_leave']}}</td>
+                           </tr>
+                           <tr>
+                              <td>Maximum saction leave</td>
+                              <td>{{@$val['maximum_saction_leave']}}</td>
+                           </tr>
+                           <tr>
+                              <td>Carry Forward</td>
+                              <td> @if(@$val['carry_forward']==true)
+                           Yes
                            @else
-                           <div class="col l6">No</div>
-                           @endif
-                        </div>
-                         <div class="divider"></div>
-                        {{-- <div class="row mb-0 p-10" style="">
-                           @if($val['valid_for']=='monthly')
-                           <div class="col l6">Year Month</div>
-                           @else
-                           <div class="col l6">Year</div>
-                           @endif
-                           <div class="col l6">{{@$val['leave_used_in']}}</div>
-                        </div> --}}
-                     </div>
+                           No
+                           @endif</td>
+                           </tr>
+                        </tbody>
+                           
+                     </table>
                   </div>
-               </div>
+                 
+                   
+                  
+                    
+                
+              
                @endforeach
                @endif
             </div>
