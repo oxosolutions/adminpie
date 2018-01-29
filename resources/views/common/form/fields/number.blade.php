@@ -36,5 +36,23 @@
 	if(@$options['from'] == 'repeater'){
 		$name = $collection->section->section_slug.'['.$options['loop_index'].']['.$name.']';
 	}
+    $fieldOptionsArray = [];
+    $fieldOptionsArray['class'] = $collection->field_slug.' '.$class_name;
+    $fieldOptionsArray['id'] = 'input_'.$collection->field_slug;
+    $fieldOptionsArray['placeholder'] = $placeholder;
+    $fieldOptionsArray['data-validation'] = '';
+    $validationString = '';
+    if($field_validations != null){
+        $javaScriptValidations = json_decode(@$field_validations);
+        if(!empty($javaScriptValidations)){
+            foreach($javaScriptValidations as $key => $validation){
+                if(@$validation->field_validation == 'length'){
+                    $fieldOptionsArray['data-validation-length'] = @$validation->validation_argument;
+                }
+                $validationString.= @$validation->field_validation.' ';
+            }
+            $fieldOptionsArray['data-validation'] = $validationString;
+        }
+    }
 @endphp
-{!!Form::number($name,$default_value,['class'=>$collection->field_slug.' '.$class_name,'id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder, ' data-validation' => $required])!!}
+{!!Form::number($name,$default_value,$fieldOptionsArray)!!}

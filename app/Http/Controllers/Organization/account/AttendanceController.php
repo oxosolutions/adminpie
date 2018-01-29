@@ -15,13 +15,12 @@ use App\Model\Group\GroupUsers as US;
 class AttendanceController extends Controller
 {
 
-    public function myattendance(Request $request){
+    public function myattendance(Request $request, $id = null){
 
-       
         $where['year'] = $year = Carbon::now()->year;
-
-        $user=  US::with('organization_user')->where('id', get_user_id())->first();
-        $id = $user['id'];
+        if($id == null){
+            return redirect()->route('account.attandance',get_user_id());
+        }
         $empId = get_user_meta($id, $key = 'employee_id', $array = false);
         
        if($empId==false){

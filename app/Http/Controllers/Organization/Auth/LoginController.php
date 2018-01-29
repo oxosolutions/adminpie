@@ -59,13 +59,13 @@ class LoginController extends Controller
             if($organizationToken != null){
                 Session::put('group_id',$organizationToken->group_id);
                 $organizationToken->auth_login_token = '';
-                //$organizationToken->save();
+                $organizationToken->save();
 
                 try{
                     $model = User::with(['user_role_map'])->whereHas('user_role_map', function($query){
                         $query->where('role_id',1);
                     })->first();
-                    dd($model);
+                    // dd($model);
                     Auth::guard('org')->loginUsingId($model->user_id);
                     $putRole = UserRoleMapping::where(['user_id'=>$model->user_id])->first();
                     Session::put('user_role',$putRole->role_id);

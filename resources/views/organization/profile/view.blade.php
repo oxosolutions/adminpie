@@ -390,6 +390,7 @@ $page_title_data = array(
                                 Employee Details
                                 @if(@$isAdmin)
                                     <a href="#modal3" class="aione-button font-size-14 aione-float-right edit-button " style="margin-top: -6px">Edit</a>
+                                   {{-- {{dd($model->toArray())}} --}}
                                 @endif
                                 {!!Form::model(@$model->toArray(),['route'=>['update.profile.meta',@$model->id],'method'=>'PATCH'])!!}
                                 <input type="hidden" name="meta_table" value="employeemeta" />
@@ -417,6 +418,8 @@ $page_title_data = array(
                                                     {{@App\Model\Organization\Shift::find($model->$fieldData)->name}}
                                                 @elseif($fieldData == 'pay_scale')
                                                     {{@App\Model\Organization\Payscale::find($model->$fieldData)->title}}
+                                                 @elseif($fieldData == 'leave_category')
+                                                    {{@$model->leave_category_name}}
                                                 @else
                                                     {{ $model->$fieldData }}
                                                 @endif

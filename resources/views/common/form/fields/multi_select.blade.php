@@ -13,6 +13,7 @@
 	if(@$options['from'] == 'repeater'){
 		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
 	}
+    $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
 @endphp
 
 	<input type="hidden" name="{{ $name }}">
@@ -24,9 +25,27 @@
 					}catch(\Exception $e){
 						$arrayOptions = [];
 					}
-					
+					$fieldOptionsArray = [];
+                    $fieldOptionsArray['class'] = $collection->field_slug.' browser-default no-margin-bottom aione-field';
+                    $fieldOptionsArray['id'] = 'input_'.$collection->field_slug;
+                    $fieldOptionsArray['placeholder'] = $placeholder;
+                    $fieldOptionsArray['multiple'] = true;
+                    $fieldOptionsArray['data-validation'] = '';
+                    $validationString = '';
+                    if($field_validations != null){
+                        $javaScriptValidations = json_decode(@$field_validations);
+                        if(!empty($javaScriptValidations)){
+                            foreach($javaScriptValidations as $key => $validation){
+                                if(@$validation->field_validation == 'length'){
+                                    $fieldOptionsArray['data-validation-length'] = @$validation->validation_argument;
+                                }
+                                $validationString.= @$validation->field_validation.' ';
+                            }
+                            $fieldOptionsArray['data-validation'] = $validationString;
+                        }
+                    }
 				@endphp
-			{!! Form::select($name.'[]',$arrayOptions,null,["class"=>"browser-default no-margin-bottom aione-field" , 'placeholder'=>FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder'),'multiple'=>true])!!}
+			{!! Form::select($name.'[]',$arrayOptions,null,$fieldOptionsArray)!!}
 		
 
 @else
@@ -41,10 +60,29 @@
 			$values = array_keys($collect->groupBy('value')->toArray());
 			$arrayOptions = array_combine($keys, $values);
 		}
+        $fieldOptionsArray = [];
+        $fieldOptionsArray['class'] = $collection->field_slug.' browser-default';
+        $fieldOptionsArray['id'] = 'input_'.$collection->field_slug;
+        $fieldOptionsArray['placeholder'] = $placeholder;
+        $fieldOptionsArray['multiple'] = true;
+        $fieldOptionsArray['data-validation'] = '';
+        $validationString = '';
+        if($field_validations != null){
+            $javaScriptValidations = json_decode(@$field_validations);
+            if(!empty($javaScriptValidations)){
+                foreach($javaScriptValidations as $key => $validation){
+                    if(@$validation->field_validation == 'length'){
+                        $fieldOptionsArray['data-validation-length'] = @$validation->validation_argument;
+                    }
+                    $validationString.= @$validation->field_validation.' ';
+                }
+                $fieldOptionsArray['data-validation'] = $validationString;
+            }
+        }
 		
 	@endphp
             
-			{!! Form::select($name.'[]',$arrayOptions,null,['class'=>$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'multiple'])!!}
+			{!! Form::select($name.'[]',$arrayOptions,null,$fieldOptionsArray)!!}
 
 @endif
 <div class="field-actions">

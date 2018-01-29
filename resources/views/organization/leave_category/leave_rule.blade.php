@@ -243,7 +243,7 @@ $page_title_data = array(
 				{!!Form::text('minimum_saction_leave',@$data['data']['minimum_saction_leave'],['class'=>"aione-setting-field"]) !!}
 			</div>
 		</div> --}}
-		<div id="aione_form_section_630" class="user_drop_down  aione-form-section non-repeater">
+		{{-- <div id="aione_form_section_630" class="user_drop_down  aione-form-section non-repeater">
 		    <div class="aione-row">
 		        <div id="aione_form_section_content" class="aione-form-section-content">
 		            <div class="aione-row ar">
@@ -283,7 +283,7 @@ $page_title_data = array(
 		                            </h4>
 		                        </label>
 		                    </div>
-		                    <!-- field label-->
+		                     field label
 		                    <div id="field_label_select" class="field field-type-multi_select">
 		                        <input name="label_select" type="hidden">
 		                        {!! Form::select('user_include[]',@$data['user_include'],@$select['user_include'],['multiple'=>true, 'class'=>'browser-default', 'placeholder'=>"user include"])!!}
@@ -325,7 +325,7 @@ $page_title_data = array(
 		        <!-- .aione-form-content -->
 		    </div>
 		    <!-- .aione-row -->
-		</div> 
+		</div>  --}}
 		<!-- .aione-form-section -->
 			
 							

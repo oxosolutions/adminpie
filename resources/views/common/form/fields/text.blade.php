@@ -42,7 +42,24 @@
     if($question_repeater == 'yes'){
         $textArray = '[]';
     }
+    $fieldOptionsArray = [];
+    $fieldOptionsArray['class'] = $field_input_class;
+    $fieldOptionsArray['id'] = $field_input_id;
+    $fieldOptionsArray['placeholder'] = $placeholder;
+    $fieldOptionsArray['data-validation'] = '';
+    $validationString = '';
+    if($field_validations != null){
+        $javaScriptValidations = json_decode(@$field_validations);
+        if(!empty($javaScriptValidations)){
+            foreach($javaScriptValidations as $key => $validation){
+                if(@$validation->field_validation == 'length'){
+                    $fieldOptionsArray['data-validation-length'] = @$validation->validation_argument;
+                }
+                $validationString.= @$validation->field_validation.' ';
+            }
+            $fieldOptionsArray['data-validation'] = $validationString;
+        }
+    }
 @endphp
-
-{!!Form::text($name.$textArray,$default_value,['class'=>$field_input_class,'id'=>$field_input_id,'placeholder'=>$placeholder, ' data-validation' => $field_validations])!!} 
+{!!Form::text($name.$textArray,$default_value,$fieldOptionsArray)!!} 
 

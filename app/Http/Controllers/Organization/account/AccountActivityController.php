@@ -12,10 +12,13 @@ use App\Model\Organization\ActivityLog;
 class AccountActivityController extends Controller
 {
     
-	public function listActivities()
+	public function listActivities($id = null)
 	{
-		$user_id = Auth::guard('org')->user()->id;
-		$user_log = LS::where('user_id',$user_id)->paginate(10);
+        if($id == null){
+            $id = current_organization_user_id();
+            return redirect()->route('account.activities',$id);
+        }
+		$user_log = LS::where('user_id',$id)->paginate(10);
 		
 		return view('organization.profile.activities')->with(['user_log' => $user_log]);
 	}

@@ -99,7 +99,6 @@ protected function leave_category_detail($category_id, $year, $month=null){
         }
 
         if($joining_year == $year &&  $joining_month < 4 && !empty($month) && $month < 4){
-        	
         	$year = $year - 1;
         	$calculate_month = 4 - $joining_month;
         	$per_month_assigned = $assigned_leave/12;   
@@ -118,31 +117,38 @@ protected function leave_category_detail($category_id, $year, $month=null){
 }
 
 	public function leave_listing(Request $request){
-		$year = date('Y');
- 		if(date('m')<4){
-			$year = $year - 1;
-		}		
-		if($request->isMethod('post')){
-			$year = $request->year;
-		}
-		$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error =null;
-		$emp_id = get_current_user_meta('employee_id');
-		if(in_array(1, role_id())){
-			$error = "You can not view leave.";
-		}else{
-/*assigned_categories method get all Assigned categories */
-			$assigned_categories = $this->assigned_categories();
-			if(!empty($assigned_categories)){
-				foreach($assigned_categories as $key => $value) {
-					$current_used_leave[$value] =  $this->leave_category_detail($value, $year); # code...
-				}
-				$next_year = $year+1;
-				$leavesData = EMP_LEV::with('categories_rel')->where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
-			}else{
-				$error = "Not assign leave category";
+		$assigned_categories = get_current_user_meta('leave_category');
+		if($assigned_categories !=false){
+			$year = date('Y');
+	 		if(date('m')<4){
+				$year = $year - 1;
+			}		
+			if($request->isMethod('post')){
+				$year = $request->year;
 			}
+			$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error =null;
+			$emp_id = get_current_user_meta('employee_id');
+			if(in_array(1, role_id())){
+				$error = "You can not view leave.";
+			}else{
+	/*assigned_categories method get all Assigned categories */
+				$assigned_categories = json_decode($assigned_categories, true); //$this->assigned_categories();
+				// dd($assigned_categories, $this->assigned_categories());
+				if(!empty($assigned_categories)){
+					foreach($assigned_categories as $key => $value) {
+						$current_used_leave[$value] =  $this->leave_category_detail($value, $year); # code...
+					}
+					$next_year = $year+1;
+					$leavesData = EMP_LEV::with('categories_rel')->where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
+				}else{
+					$error = "Not assign leave category";
+				}
+			}
+		}else{
+			$error = "Not assign leave category";
 		}
-		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error]);
+			return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error]);
+		
 	}
 /**
  * The store method work for apply leave's with various leave rule's. Coditions check before Applying. 
@@ -233,8 +239,8 @@ protected function leave_category_detail($category_id, $year, $month=null){
 				return redirect()->route('account.leaves')->with('errorss',$error);
 			}
 /*check Assigned cat & rules list get from category meta table */
-			$assigned_leave  = $this->assigned_categories();
-			if(!empty($assigned_leave)){
+			$assigned_leave  = get_current_user_meta('leave_category');//$this->assigned_categories();
+			if($assigned_leave !=false && !empty($assigned_leave = json_decode($assigned_leave))) {
 				if(in_array($leave_category_id, $assigned_leave)){
 					if($from->month !=  $to->month){
 						$from_end_date_of_month = Carbon::parse($from->daysInMonth.'-'.$from->month.'-'.$from->year);

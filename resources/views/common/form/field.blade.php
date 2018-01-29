@@ -2,9 +2,10 @@
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
 	$field_input_class = "input-".$collection->field_slug;
 	$field_input_id = "input_".$collection->field_slug;
-	$field_validations = "";
+	$field_validations = null;
 	$field_validation = "";
-	$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
+    $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
+	$field_validations = FormGenerator::GetMetaValue($collection->fieldMeta,'field_validations');
 
 	$field_conditions = FormGenerator::GetMetaValue($collection->fieldMeta,'field_conditions');
 

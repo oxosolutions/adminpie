@@ -483,8 +483,9 @@
 		/*****************************************************/
 		try{
 			$.validate();
+            console.log('Form Validations Initializae successfully!');
 		}catch(e){
-
+            console.error('Error on init Form Validations');
 		}
 
 		/*****************************************************

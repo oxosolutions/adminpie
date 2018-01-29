@@ -51,6 +51,9 @@
 .dataTable td > div > ul > li{
   display: inline-block;
 }
+.dataTable td > div > ul > li:before{
+  content: 'abc';
+}
 .dataTable tr{
   position: relative;
 }
@@ -65,16 +68,57 @@
   top: calc(50% - 10px);
   left: calc(50% - 100px);
 }
+.dataTables_paginate{
+  margin-top: 30px;
+}
+
+.current{
+	background: #2e73aa !important;
+    color: white !important;
+    border: 1px solid #2e73aa !important;
+}
+.dataTables_paginate .previous, .dataTables_paginate .next {
+	border: 1px solid #e8e8e8;
+    padding: 8px 15px;
+}
+.dataTables_paginate .paginate_button{
+	border: 1px solid #e8e8e8;
+    padding: 8px 15px;
+    margin: 2px;
+    color: #6e6e6e;
+}
+.odd, .even{
+    border-bottom: 1px solid #e8e8e8;
+}
+.sorting{
+	color:#2e73aa;
+}
+.sorting_asc, .actions{
+	color:#2e73aa;
+}
+.actions .aione-status.active{
+	border-color:#2e73aa;
+}
+.actions{
+	text-align: center;
+}
+
+#example{
+    margin-top: 34px;
+    border-top: 1px solid #e8e8e8;
+}
+.aione-page-content{
+	margin: 34px 10px 20px 0;
+}
 </style>
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 {{-- @include('common.list.datalist') --}}
-
 @if(Session::has('import_new'))
     <div class="aione-table aione-border mt-20 mb-20">
        <h4 class="light-blue darken-4 p-10 bg-grey bg-lighten-4 m-0">Employees Import Report</h4>
-           <table class="compact">
+           <table class="">
               <thead>
                 <tr>
                     <th>Action</th>
@@ -157,7 +201,7 @@
                 <th>Status</th>
             </tr>
         </thead>
-        <tfoot>
+        <!-- <tfoot>
             <tr>
                 <th>User</th>
                 <th>Employe ID</th>
@@ -168,7 +212,7 @@
                 <th>Created</th>
                 <th>Status</th>
             </tr>
-        </tfoot>
+        </tfoot> -->
         <tbody>
             
         </tbody>

@@ -1,4 +1,24 @@
-{!!Form::textarea(str_replace(' ','_',strtolower($collection->field_slug)), null,['class'=>$field_input_class,'id'=>$field_input_id,'placeholder'=>$placeholder, ' data-validation' => $field_validations])!!}
+@php
+    $fieldOptionsArray = [];
+    $fieldOptionsArray['class'] = $field_input_class;
+    $fieldOptionsArray['id'] = $field_input_id;
+    $fieldOptionsArray['placeholder'] = $placeholder;
+    $fieldOptionsArray['data-validation'] = '';
+    $validationString = '';
+    if($field_validations != null){
+        $javaScriptValidations = json_decode(@$field_validations);
+        if(!empty($javaScriptValidations)){
+            foreach($javaScriptValidations as $key => $validation){
+                if(@$validation->field_validation == 'length'){
+                    $fieldOptionsArray['data-validation-length'] = @$validation->validation_argument;
+                }
+                $validationString.= @$validation->field_validation.' ';
+            }
+            $fieldOptionsArray['data-validation'] = $validationString;
+        }
+    }
+@endphp
+{!!Form::textarea(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray)!!}
 <div class="aione-code-editor-wrapper">
 	<div id="" class="aione-code-editor-meta"><span class="editor-action-fullscreen"><i class="fa fa-expand"></i></span></div>
 	<div id="{{$field_input_id}}_editor" class="aione-code-editor" data-mode="{{@$field_meta->field_custom_code_language}}" data-theme="{{@$field_meta->field_custom_code_theme}}"></div> 

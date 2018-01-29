@@ -59,6 +59,23 @@
 	if(@$options['from'] == 'repeater'){
 		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
 	}
-	
+	$fieldOptionsArray = [];
+    $fieldOptionsArray['class'] = 'input_'.$collection->field_slug.' browser-default ';
+    $fieldOptionsArray['id'] = 'input_'.$collection->field_slug;
+    $fieldOptionsArray['placeholder'] = $placeholder;
+    $fieldOptionsArray['data-validation'] = '';
+    $validationString = '';
+    if($field_validations != null){
+        $javaScriptValidations = json_decode(@$field_validations);
+        if(!empty($javaScriptValidations)){
+            foreach($javaScriptValidations as $key => $validation){
+                if(@$validation->field_validation == 'length'){
+                    $fieldOptionsArray['data-validation-length'] = @$validation->validation_argument;
+                }
+                $validationString.= @$validation->field_validation.' ';
+            }
+            $fieldOptionsArray['data-validation'] = $validationString;
+        }
+    }
 @endphp
-{!! Form::select($name,$arrayOptions,null,['class'=>'input_'.$collection->field_slug.' browser-default ','id'=>'input_'.$collection->field_slug,'placeholder'=>$placeholder])!!}
+{!! Form::select($name,$arrayOptions,null,$fieldOptionsArray)!!}

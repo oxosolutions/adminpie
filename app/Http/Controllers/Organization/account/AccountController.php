@@ -25,6 +25,7 @@ use App\Model\Organization\Document;
 use App\Model\Organization\AssignDocument;
 use App\Http\Controllers\Organization\settings\SettingsController;
 use App\Model\Organization\User as EMP;
+use App\Model\Organization\Category;
 
 class AccountController extends Controller
 {
@@ -47,6 +48,7 @@ class AccountController extends Controller
           $sortedBy = @$request->orderby;
           if($id == null){
             $userid = get_user_id();
+            return redirect()->route('account.emails',$userid);
           }else{
             $userid = $id;
           }
@@ -85,7 +87,7 @@ class AccountController extends Controller
     }
     public function profileView($id = null)
     {
-      $user_log = $this->listActivities();
+        $user_log = $this->listActivities();
         if($id == null){
             $id = Auth::guard('org')->user()->id;
         }
@@ -123,41 +125,49 @@ class AccountController extends Controller
      * profileDetails method alter BY Paljinder singh & comment code which not in use.
      */
     public function profileDetails($id = null){
+
         if($id == null){
-            // $id = 8; 
-            // $g_id = Auth::guard('org')->user()->id; 
-            // $user=  US::with('organization_user')->where('id', $g_id)->first();
-            // $id = $user['organization_user']['id'];
              $id = current_organization_user_id();
+             return redirect()->route('account.profile',$id);
         }
         $user_log = $this->listActivities();
     	if($id == null){
-    		 $id = Auth::guard('org')->user()->id;
+    		$id = Auth::guard('org')->user()->id;
     	}
         $userDetails = User::with(['applicant_rel','user_role_rel'])->find($id);
-        $userMeta = get_user_meta($id,null,true);
-
         if($userDetails != null){
-            $userDetails->password = '';
-            if($userMeta != false){
-                @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
-                @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
-                @$userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
-                @$userDetails->user_shift = (array_key_exists('user_shift',$userMeta))?$userMeta['user_shift']:'';
-                @$userDetails->pay_scale = (array_key_exists('pay_scale',$userMeta))?$userMeta['pay_scale']:'';
-                @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
-                @$userDetails->date_of_joining = (array_key_exists('date_of_joining',$userMeta))?Carbon::parse($userMeta['date_of_joining'])->format('Y-m-d'):'';
+            $userMeta = get_user_meta($id,null,true);
+            if(!empty($userMeta['leave_category'])){
+            $cat = Category::WhereIn('id',json_decode($userMeta['leave_category'], true))->pluck('name','id');
+            $leave_category_with_name =   $cat->implode(', ', $cat);
+            $leave_category   = json_decode($userMeta['leave_category'],true); 
             }
-            if(!$userDetails->metas->isEmpty()){
-                foreach($userDetails->metas as $key => $value){
-                    if($value->key != 'email'){
-                        $userDetails->{$value->key} = $value->value;
+            if($userDetails != null){
+                $userDetails->password = '';
+                if($userMeta != false){
+                    @$userDetails->employee_id = (array_key_exists('employee_id',$userMeta))?$userMeta['employee_id']:'';
+                    @$userDetails->department = (array_key_exists('department',$userMeta))?$userMeta['department']:'';
+                    @$userDetails->designation = (array_key_exists('designation',$userMeta))?$userMeta['designation']:'';
+                    @$userDetails->user_shift = (array_key_exists('user_shift',$userMeta))?$userMeta['user_shift']:'';
+                    @$userDetails->pay_scale = (array_key_exists('pay_scale',$userMeta))?$userMeta['pay_scale']:'';
+                    @$userDetails->marital_status = (array_key_exists('marital_status',$userMeta))?$userMeta['marital_status']:'';
+                    @$userDetails->date_of_joining = (array_key_exists('date_of_joining',$userMeta))?Carbon::parse($userMeta['date_of_joining'])->format('Y-m-d'):'';
+                    @$userDetails->leave_category = (array_key_exists('leave_category',$userMeta))?@$leave_category:''; 
+                    @$userDetails->leave_category_name = (array_key_exists('leave_category',$userMeta))?@$leave_category_with_name:'';
+                }
+                if(!$userDetails->metas->isEmpty()){
+                    foreach($userDetails->metas as $key => $value){
+                        if(!in_array($value->key , ['email','leave_category'])){
+                            $userDetails->{$value->key} = $value->value;
+                        }
                     }
                 }
             }
+            return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
+        }else{
+            Session::flash('error','Something went wrong!');
+            return redirect()->route('org.dashboard');
         }
-           
-        return view('organization.profile.view',['model' => $userDetails , 'user_log' => $user_log]);
     }
 
     /**
@@ -221,6 +231,9 @@ class AccountController extends Controller
         if($request_data['meta_table'] == 'employeemeta'){
             unset($request_data['meta_table']);
             $tbl = Session::get('organization_id');
+
+            dd($request->all());
+
             /*$data = Employee::where(['user_id' => $id])->first();
             if(!array_key_exists('empId', $request->all())){
               if(@$data->user_id == $id){
@@ -242,6 +255,9 @@ class AccountController extends Controller
             
             foreach($request_data as $key => $value){
                 if($value != null && $value != ''){
+                    if(is_array($value)){
+                        $value = json_encode($value);
+                    }
                     /*if($key == 'designation'){
                         $employeeModel = Employee::where('user_id',$id)->update(['designation' => $value]);
                     }

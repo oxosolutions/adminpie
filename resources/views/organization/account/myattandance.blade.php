@@ -7,10 +7,11 @@
 		'add_new' => '+ Add Task'
 	);
 @endphp
-
 @extends('layouts.main')
 @section('content')
-
+<style type="text/css">
+	
+</style>
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -30,7 +31,200 @@
 	//$dt = Carbon\Carbon::create($now->year, $now->month, 1);
 	//$beforeDay = $dt->dayOfWeek;
 	@endphp
-	
+	<div class="ar">
+		<div class="ac l50">
+			<div class="aione-border mb-25 p-15">
+				<div class="display-inline-block">
+					Name :
+				</div>
+				<div class="display-inline-block">
+					Ashish Kumar
+				</div>
+			</div>
+		</div>
+		<div class="ac l50">
+			<div class="aione-border  mb-25 p-7">
+				<div class="aione-float-right">
+					<button class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px;background-color:rgb(243, 129, 115)">Yearly</button>
+					<button class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px">Monthly</button>
+					<button class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px">Weekly</button>
+					
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+	</div>
+	<div class="ar">
+		<div class="ac l100">
+			<div class="aione-border mb-25">
+				<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+					View attendance
+					<div class="aione-float-right font-size-16	">
+						<button class="aione-button" style="margin-top: -10px">
+							<i class="fa fa-chevron-left line-height-24 font-size-13"></i>
+						</button>
+							
+						<span class="aione-align-center display-inline-block" style="width: 200px">1-12-2018 - 7-12-2018 </span>
+						<button class="aione-button" style="margin-top: -10px">
+							<i class="fa fa-chevron-right line-height-24 font-size-13"></i>
+						</button>
+					</div>
+				</div>
+				<div class="p-40">
+					<div class="yearly p-40">
+						<div class="font-size-9 ">
+
+							<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
+							@for($i=1; $i<=31; $i++)
+							<div class=" display-inline-block box aione-align-center ">{{$i}}</div>
+							@endfor
+						</div>
+						@for($i=1; $i<=12; $i++ )
+							@if(strlen($i) ==1)
+								@php
+								$i ='0'.$i;
+								@endphp
+							@endif
+
+							@php
+								$postDate=1;
+								$month_wise   = Carbon\Carbon::create($filter['year'], $i, $postDate, 0);
+								$dayInMonth = $month_wise->daysInMonth;
+							@endphp
+							<div class="font-size-0" style="font-size: 0">
+								<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="vertical-align: bottom;width: 50px">{{substr($month_wise->format(' F'),0,4)}}</div>
+								@if(!empty($attendance_data[$i]))
+									@php
+										$val = collect($attendance_data[$i]);
+										$data = $val->keyBy('date')->toArray();
+									@endphp
+									@for($j=1; $j<=$dayInMonth; $j++)
+										
+										@if(!empty($data[$j]['attendance_status']))
+											@if($data[$j]['attendance_status']=='present')
+												<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+											@elseif($data[$j]['attendance_status']=='absent')
+												<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+											@elseif($data[$j]['attendance_status']=='Sunday')
+												<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+											@elseif($data[$j]['attendance_status']=='leave')
+												<div class="light-green display-inline-block box ml-2 mt-2"></div>
+											@else
+												<div class="light-green display-inline-block box ml-2 mt-2"></div>
+											@endif
+										@else
+											<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+										@endif
+
+
+									@endfor
+								@else
+									@for($j=1; $j<=$dayInMonth; $j++)
+										<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+									@endfor
+								@endif
+							
+							</div>
+						@endfor	
+					</div>
+
+					<div class="monthly p-40">
+						<div class="aione-border">
+							{{-- <div class="bg-grey bg-lighten-3 aione-border-bottom p-10 ">
+								<div class="display-inline-block line-height-60 aione-align-center" style="width: 60px"><i class="fa fa-chevron-left"></i></div>
+								<div class="display-inline-block aione-align-center" style="width: calc( 100% - 124px )">abc</div>
+								<div class="display-inline-block line-height-60 aione-align-center aione-float-right" style="width: 60px"><i class="fa fa-chevron-right"></i></div>
+							</div> --}}
+							<div class="font-size-16 font-weight-600 aione-align-center pv-20">
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px);">Sunday</div>
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Monday</div>
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Tuesday</div>
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Wednesday</div>
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Thrusday</div>
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Friday</div>
+								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Saturday</div>
+								
+							</div>
+							<div class="ml-4">
+								@for( $i = 1 ; $i <= 31 ; $i++)
+								<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$i}}</div>
+								@endfor
+								
+							</div>
+						</div>
+					</div>	
+
+					<div class="weekly p-20">
+						<div class=" aione-align-center aione-line-wrapper mb-20" style="position: relative;">
+							<div class="display-inline-block line-height-30 aione-float-left">
+								Mon,05  |  Check in : 9:10 am  
+							</div>
+							<div class="white display-inline-block line-height-30 bg-green ph-100">
+								Present
+							</div>
+							<div class="display-inline-block aione-float-right line-height-30">
+								Check out : 9:10 am | 8:21 Hours Total
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class=" aione-align-center aione-line-wrapper mb-20" style="position: relative;">
+							<div class="display-inline-block line-height-30 aione-float-left">
+								Mon,05  |  Check in : 9:10 am  
+							</div>
+							<div class="white display-inline-block line-height-30 bg-green ph-100">
+								Present
+							</div>
+							<div class="display-inline-block aione-float-right line-height-30">
+								Check out : 9:10 am | 8:21 Hours Total
+							</div>
+							<div class="clear"></div>
+						</div>
+						<div class=" aione-align-center aione-line-wrapper mb-20" style="position: relative;">
+							<div class="display-inline-block line-height-30 aione-float-left">
+								Mon,05  |  Check in : 9:10 am  
+							</div>
+							<div class="white display-inline-block line-height-30 bg-green ph-100">
+								Present
+							</div>
+							<div class="display-inline-block aione-float-right line-height-30">
+								Check out : 9:10 am | 8:21 Hours Total
+							</div>
+							<div class="clear"></div>
+						</div>
+					</div>
+					
+					<div class="weekly p-20">
+						<ul>
+							<li class="ar">
+								<div class="ac l20">
+									Days
+								</div>
+								<div class="ac l20">
+									Check In
+								</div>
+								<div class="ac l20">
+									Check Out
+								</div>
+								<div class="ac l20">
+									Total Hours
+								</div>
+								<div class="ac l20">
+									Attendance Status
+								</div>
+							</li>
+							<li>
+								
+							</li>
+							<li>
+								
+							</li>
+						</ul>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</div>
 
 		<div class="row">
 			
@@ -56,7 +250,7 @@
 						</div>
 
 
-						{{--- YEARLY STARTS --}}
+					
 						<div id="yearly_data" class="row year-view">
 							<div class="font-size-9 ">
 								<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
@@ -194,9 +388,7 @@
 								@endfor
 							</div>
 						</div>
-						{{-- YEARLY ENDS --}}
-
-						{{-- MONTHLY STARTS --}}
+					
 						@php
 						$now = Carbon\Carbon::now();
 						$where['year'] = $now->year;
@@ -250,8 +442,7 @@
 								</ul>
 							</div>
 						</div>
-						{{-- MONTHLY ENNDS --}}
-						{{-- WEEKLY STARTS --}}
+					
 						<div id="attendance-weekly" class="row week-view">
 							<div class="row center-align mt-40" >
 								<span><i class="fa fa-arrow-left mr-10 lh-36" ></i></span>
@@ -353,7 +544,7 @@
 								</div>
 							</div>
 						</div>
-						{{-- WEEKLY ENDS --}}
+						
 
 
 					</div>
@@ -367,7 +558,7 @@
 		@include('common.page_content_secondry_end')
 		@include('common.pagecontentend')
 		<style type="text/css">
-			td, th{
+			/*td, th{
 				padding: 0px !important;
 				border: 2px solid #FFF;
 				font-size: 12px;
@@ -375,7 +566,7 @@
 				text-align: center;
 				line-height: 25px;
 				border-radius: 8px
-			}
+			}*/
 			.absence-status{
 				border: 1px solid #f0989a;padding: 5px 25px;
 				font-size: 13px;
