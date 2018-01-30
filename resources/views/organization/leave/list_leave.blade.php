@@ -6,7 +6,8 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Leaves',
-	'add_new' => '+ Add Leave'
+	'add_new' => '+ Add Leave',
+
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 

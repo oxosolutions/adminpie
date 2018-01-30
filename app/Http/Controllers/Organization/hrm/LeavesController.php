@@ -138,22 +138,13 @@ class LeavesController extends Controller
   
     public function save(Request $request)
     {
-
-      // dd($request->all());
       if($request['from'] > $request['to']){
         Session::flash('error','From Date must be smaller than to date');
         return back();
       }
-        $employee_id = $request['employee_id'];
-
-        dump($employee_id);
-        
-
+        $user_id = $request['employee_id'];
         unset($request['employee_id']);
-        $data = GroupUsers::find(12);
-        $user = $data->organization_user->metas->where('key','employee_id')->toArray();
-         dd($user);
-        $emp_id = $request['employee_id']  = $user[0]['value'];
+        $request['employee_id'] = $employee_id = get_user_meta($user_id, 'employee_id', $array = false);
         $valid_fields = [
                           'reason_of_leave'  => 'required',
                           'from'             => 'required',
@@ -163,7 +154,7 @@ class LeavesController extends Controller
 
       $data = LV::where(function($query)use($request){
         $query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
-      })->where('employee_id',$emp_id);
+      })->where('employee_id',$employee_id);
         if($data->exists()){
           Session::flash('error','Already taken leave between dates');
         }else{

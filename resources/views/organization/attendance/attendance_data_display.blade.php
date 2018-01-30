@@ -129,7 +129,7 @@
 											@if(!empty($holiday_data[$d]))
 												<div class="attendance-sheet column present-bg-color">H</div>
 											@elseif(@$attendanceVal[$d]['attendance_status']=='present')
-													<div class="attendance-sheet column present-bg-color">P</div>
+													<div class="attendance-sheet column present-bg-color aione-tooltip" title="9:00 - 5:00">P</div>
 											@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
 												<div class="attendance-sheet column absent-bg-color">A</div>
 											@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')

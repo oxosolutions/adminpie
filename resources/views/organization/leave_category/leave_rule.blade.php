@@ -24,10 +24,11 @@ $page_title_data = array(
 @php
 $page_title_data = array(
 'show_page_title' => 'yes',
-'show_add_new_button' => 'no',
+'show_add_new_button' => 'yes',
 'show_navigation' => 'yes',
 'page_title' => 'Edit Leave Category',
-'add_new' => '+ Add Role'
+'add_new' => 'All Leave Categories',
+'route' => 'leave.categories'
 ); 
 
 // dump($data, current_organization_user_id());

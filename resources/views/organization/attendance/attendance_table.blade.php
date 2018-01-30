@@ -242,6 +242,7 @@ $number = 1;
 	</style>
 
 @endif
+
 <div class="aione-border mb-15">
 	<div class="aione-border-bottom bg-grey bg-lighten-3 p-10 font-size-18">
 		Filters

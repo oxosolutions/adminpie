@@ -19,7 +19,8 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Leave Categories',
-	'add_new' => '+ Add Leave Category'
+	'add_new' => '+ Add Leave Category',
+	'route' => 'leave.category.add'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 

@@ -71,26 +71,22 @@ class LeaveCategoryController extends Controller
       */
     public function categoryMeta(Request $request , $cat_id=null)
      {
-
         if(Auth::guard('org')->check()){
           $id = Auth::guard('org')->user()['id'];
         }else{
           $id = Auth::guard('admin')->user()['id'];
         }
-      if($request->isMethod('post')){
-            $this->catRepo->category_meta_save($request); 
-            Session::flash('success','leave category updated successfully');
-             return redirect()->route('leave.categories');
-          }
+        if($request->isMethod('post')){
+          $this->catRepo->category_meta_save($request); 
+          Session::flash('success','leave category updated successfully');
+          return redirect()->route('leave.categories');
+        }
         $select =[];
         $data['cat'] = $this->catRepo->category_data_by_id($cat_id)->toArray();/*This get category name only*/
         $cm = CM::where('category_id',$cat_id)->get(); /*This get all data like user include , exclude , designation etc only*/
         $data['data'] = $cm->pluck('value','key')->toArray();
-
         $merge = array_merge($data['cat'] , $data['data']);
-
-        dump($merge);
-        
+        //dd($merge);
         // if(!empty($merge['user_exclude'])){
         //   $select['user_exclude'] = json_decode($merge['user_exclude'],true);
         // }
@@ -201,6 +197,11 @@ class LeaveCategoryController extends Controller
         //   })->where('user_type','employee')->pluck('name','id');
 
          return view('organization.leave_category.user_drop_down',compact('user_exclude','user_include'));
+    }
+
+    public function create()
+    {
+        return view('organization.leave_category.add');
     }
 
 }

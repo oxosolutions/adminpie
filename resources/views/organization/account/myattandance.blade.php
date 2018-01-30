@@ -28,32 +28,32 @@
 		<div class="ac l50">
 			<div class="aione-border  mb-25 p-7">
 				<div class="aione-float-right">
-					<button class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px;background-color:rgb(243, 129, 115)">Yearly</button>
+					<button id="yearly" class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px;background-color:rgb(243, 129, 115)">Yearly</button>
 					<button class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px">Monthly</button>
 					<button class="aione-button bg-light-blue bg-darken-3 white ml-0" style="margin-right: -5px">Weekly</button>
-					
 				</div>
 				<div class="clear"></div>
 			</div>
 		</div>
 	</div>
 	<div class="aione-border mb-25">
-		<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
+		
+
+<div class="p-40">
+<div id="yearly_data" class="row year-view">
+	<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom">
 			View attendance
 			<div class="aione-float-right font-size-16	">
 				<button class="aione-button" style="margin-top: -10px">
-					<i class="fa fa-chevron-left line-height-24 font-size-13"></i>
+					<i class="fa fa-chevron-left line-height-24 font-size-13" onclick="attendance_yearly_filter({{$filter['year']-1}})"></i>
 				</button>
-					
-				<span class="aione-align-center display-inline-block" style="width: 200px">1-12-2018 - 7-12-2018 </span>
+				<span class="aione-align-center display-inline-block" style="width: 200px">{{$filter['year']}} </span>
 				<button class="aione-button" style="margin-top: -10px">
-					<i class="fa fa-chevron-right line-height-24 font-size-13"></i>
+					<i class="fa fa-chevron-right line-height-24 font-size-13" onclick="attendance_yearly_filter({{$filter['year']+1}})"></i>
 				</button>
 			</div>
 		</div>
 
-		<div class="p-40">
-<div id="yearly_data" class="row year-view">
 			<div class="font-size-9 ">
 				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
 				@for($i=1; $i<=31; $i++)
@@ -107,29 +107,29 @@
 				
 				</div>
 			@endfor
-		</div>
+</div>
 			
-			<div id="monthly-attendance" class="monthly p-40">
-				<div class="aione-border">
-					<div class="font-size-16 font-weight-600 aione-align-center pv-20">
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px);">Sunday</div>
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Monday</div>
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Tuesday</div>
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Wednesday</div>
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Thrusday</div>
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Friday</div>
-						<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Saturday</div>
-						
-					</div>
-					<div class="ml-4">
-						
-						@for($j=1; $j<=31; $j++ )
-						<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>
-						@endfor
-						
-					</div>
-				</div>
-			</div>	
+<div id="monthly-attendance" class="monthly p-40">
+	<div class="aione-border">
+		<div class="font-size-16 font-weight-600 aione-align-center pv-20">
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px);">Sunday</div>
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Monday</div>
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Tuesday</div>
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Wednesday</div>
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Thrusday</div>
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Friday</div>
+			<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Saturday</div>
+			
+		</div>
+		<div class="ml-4">
+			
+			@for($j=1; $j<=31; $j++ )
+			<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>
+			@endfor
+			
+		</div>
+	</div>
+</div>	
 
 			{{-- <div class="weekly p-20">
 				<div class=" aione-align-center aione-line-wrapper mb-20" style="position: relative;">

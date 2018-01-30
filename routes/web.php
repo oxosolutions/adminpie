@@ -298,7 +298,8 @@
 						Route::post('employee/import',			['as'=>	'import.employee.post','uses'=>'EmployeeController@importEmployee']);
 						Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
 						Route::get('leaves/{id?}',				['as'=> 'leaves' , 'uses' =>'LeavesController@index']);
-						Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
+						
+						// Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
 						// Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 						
 						Route::get('/holidays/{id?}',			['as'=> 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
@@ -314,13 +315,13 @@
 
                     //Applicant Routes
                     include_once 'custom/organization/applicant.php';
-
+                    Route::get('/leaves-category/add',		['as'=> 'leave.category.add','uses'=>'LeaveCategoryController@create']);
 					Route::match(['get','post'],'/attendance/form-import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
 					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
-
+					
 					Route::post('ajax_user_drop_down',['as'=>'user.drop-downs', 'uses'=>'LeaveCategoryController@get_user_by_designation']);
 					Route::get('drop-downs',['as'=>'drop-downs', 'uses'=>'SalaryController@drop_downs']);
 					Route::get('payscale/{id?}', ['as'=> 'list.payscale' , 'uses' => 'PayscaleController@index']);
