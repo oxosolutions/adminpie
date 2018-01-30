@@ -10,8 +10,8 @@
     $fieldOptionsArray = [];
     $fieldOptionsArray['class'] = $collection->field_slug;
     $fieldOptionsArray['id'] = 'input_'.$collection->field_slug;
-    $fieldOptionsArray['row'] = 'input_'.$collection->field_slug;
-    $fieldOptionsArray['cols'] = 'input_'.$collection->field_slug;
+    $fieldOptionsArray['rows'] = 5;
+    $fieldOptionsArray['cols'] = 20;
     $fieldOptionsArray['data-validation'] = '';
     $validationString = '';
     if($field_validations != null){
@@ -27,4 +27,4 @@
         }
     }
 @endphp
-{!!Form::textarea($name,null,['class'=>$collection->field_slug,'id'=>'input_'.$collection->field_slug, 'rows'=>'3', 'cols'=>'100'])!!}
+{!!Form::textarea($name,null,$fieldOptionsArray)!!}

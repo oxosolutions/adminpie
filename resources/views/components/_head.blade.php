@@ -79,13 +79,16 @@
 
 	
 	<script type="text/javascript">
-        function route(){
-        	if('{{Request::route()->getPrefix()}}' != ''){
-        		return '{{url('/')."/".Request::route()->getPrefix()}}';
-        	}else{
-        		return '{{url('/')}}';
-        	}
-        }
+        @if(Request::route() != null)
+            function route(){
+                if('{{@Request::route()->getPrefix()}}' != ''){
+                    return '{{url('/')."/".@Request::route()->getPrefix()}}';
+                }else{
+                    return '{{url('/')}}';
+                }
+            }
+        @endif
+        
         function csrf(){
             return '{{csrf_token()}}';
         }

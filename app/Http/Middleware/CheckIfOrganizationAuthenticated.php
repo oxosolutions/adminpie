@@ -21,7 +21,7 @@ class CheckIfOrganizationAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        
+    
         $organization_settings = OrganizationSetting::getSettings('default_page');
         if($organization_settings != ''){
             $page_slug = Page::find($organization_settings)->slug;

@@ -17,6 +17,28 @@
 @include('common.page_content_primary_start')
 
 @include('organization.profile._tabs')
+<script type="text/javascript">
+		$(document).ready(function(){
+			$('.month-view').hide();
+		    $(".week-view").hide();
+		    $("#weekly").click(function(){
+		        $('.month-view').hide();
+		        $('.week-view').show();
+		        $(".year-view").hide();
+
+		    });
+		    $("#monthly").click(function(){
+		       $('.week-view').hide();
+		        $('.year-view').hide();
+		        $(".month-view").show();
+		    });
+		    $("#yearly").click(function(){
+		        $('.year-view').show();
+		        $('.month-view').hide();
+		        $(".week-view").hide();
+		    });
+		});
+</script>
 
 	@php
 	$now = Carbon\Carbon::now();
@@ -71,7 +93,7 @@
 					</div>
 				</div>
 				<div class="p-40">
-					<div class="yearly p-40">
+					{{-- <div class="yearly p-40">
 						<div class="font-size-9 ">
 
 							<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
@@ -127,14 +149,25 @@
 							</div>
 						@endfor	
 					</div>
+					@php
+					$now = Carbon\Carbon::now();
+					$where['year'] = $now->year;
+					$month = $now->month;
+					if(strlen($month)==1)
+					{
+						$month = '0'.$month;
+					}
+					$dayInMonth = $now->daysInMonth;
+					$dt = Carbon\Carbon::create($now->year, $now->month, 1);
+					$beforeDay = $dt->dayOfWeek;
+					if(!empty($attendance_data[$month])){
+						$val = collect($attendance_data[$month]);
+						$data = $val->keyBy('date')->toArray();
+					}
 
-					<div class="monthly p-40">
+					@endphp
+					<div id="monthly-attendance" class="monthly p-40">
 						<div class="aione-border">
-							{{-- <div class="bg-grey bg-lighten-3 aione-border-bottom p-10 ">
-								<div class="display-inline-block line-height-60 aione-align-center" style="width: 60px"><i class="fa fa-chevron-left"></i></div>
-								<div class="display-inline-block aione-align-center" style="width: calc( 100% - 124px )">abc</div>
-								<div class="display-inline-block line-height-60 aione-align-center aione-float-right" style="width: 60px"><i class="fa fa-chevron-right"></i></div>
-							</div> --}}
 							<div class="font-size-16 font-weight-600 aione-align-center pv-20">
 								<div class="display-inline-block " style="width: calc( 14.28% - 5px);">Sunday</div>
 								<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Monday</div>
@@ -146,8 +179,11 @@
 								
 							</div>
 							<div class="ml-4">
-								@for( $i = 1 ; $i <= 31 ; $i++)
-								<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$i}}</div>
+								@for($i=1; $i<$beforeDay; $i++)
+									<li class="white-text">.</li>
+								@endfor
+								@for($j=1; $j<=$dayInMonth; $j++ )
+								<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>
 								@endfor
 								
 							</div>
@@ -191,11 +227,11 @@
 							</div>
 							<div class="clear"></div>
 						</div>
-					</div>
+					</div> --}}
 					
-					<div class="weekly p-20">
+					{{-- <div class="weekly p-20">
 						<ul>
-							<li class="ar">
+							<li class="ar p-10">
 								<div class="ac l20">
 									Days
 								</div>
@@ -212,14 +248,59 @@
 									Attendance Status
 								</div>
 							</li>
-							<li>
-								
+							<li class="ar p-10">
+								<div class="ac l20 p-10">
+									13 March
+								</div>
+								<div class="ac l20 p-10">
+									9:00
+								</div>
+								<div class="ac l20 p-10">
+									17:00
+								</div>
+								<div class="ac l20 p-10">
+									8:20 
+								</div>
+								<div class="ac l20 bg-green white p-10 aione-align-center">
+									Present
+								</div>
 							</li>
-							<li>
-								
+							<li class="ar p-10">
+								<div class="ac l20 p-10">
+									13 March
+								</div>
+								<div class="ac l20 p-10">
+									9:00
+								</div>
+								<div class="ac l20 p-10">
+									17:00
+								</div>
+								<div class="ac l20 p-10">
+									8:20 
+								</div>
+								<div class="ac l20 bg-green white p-10 aione-align-center">
+									Present
+								</div>
+							</li>
+							<li class="ar p-10">
+								<div class="ac l20 p-10">
+									13 March
+								</div>
+								<div class="ac l20 p-10">
+									9:00
+								</div>
+								<div class="ac l20 p-10">
+									17:00
+								</div>
+								<div class="ac l20 p-10">
+									8:20 
+								</div>
+								<div class="ac l20 bg-green white p-10 aione-align-center">
+									Present
+								</div>
 							</li>
 						</ul>
-					</div>
+					</div> --}}
 					
 				</div>
 			</div>
@@ -248,9 +329,6 @@
 								<a href="javascript:;" class="btn blue" id="yearly">Yearly</a>
 							</div>
 						</div>
-
-
-					
 						<div id="yearly_data" class="row year-view">
 							<div class="font-size-9 ">
 								<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
@@ -702,7 +780,8 @@
 		</style>
 		<script>
 			function attendance_yearly_filter(year)
-			{
+			{	
+				alert(year);
 				postData ={};
 				postData['year']  = year;
 				postData['_token'] = $("#token").val();
@@ -711,11 +790,11 @@
 					type:'POST',
 					data:postData,
 					success:function(res){
+						alert(res);
 						$("#year_display").html(year);
 						$('#yearly_data').html(res);
 					}
 				});
-
 			}
 			function attendance_monthly_filter(month, year)
 			{
@@ -723,18 +802,17 @@
 				postData['month'] = month;
 				postData['year']  = year;
 			//postData['month_week_no'] = week;
-			postData['_token'] = $("#token").val();
-			console.log(postData);
-			$.ajax({
-				url:route()+'/attandance_monthly',
-				type:'POST',
-				data:postData,
-				success:function(res){
-					$('#monthly-attendance').html(res);
-				}
-			});
-
-		}
+				postData['_token'] = $("#token").val();
+				console.log(postData);
+				$.ajax({
+					url:route()+'/attandance_monthly',
+					type:'POST',
+					data:postData,
+					success:function(res){
+						$('#monthly-attendance').html(res);
+					}
+				});
+			}
 		function attendance_weekly_filter(week_no, month, year)
 		{
 			postData ={};

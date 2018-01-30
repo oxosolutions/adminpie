@@ -50,10 +50,30 @@
 }
 .dataTable td > div > ul > li{
   display: inline-block;
+  margin-top: 6px;
 }
-.dataTable td > div > ul > li:before{
-  content: 'abc';
-}
+/*.dataTable td > div > ul > li:before{
+    font-family: FontAwesome;
+    content: "\f040";
+    color:#0095ff;
+    padding: 3px 3px;
+    border-radius: 3px;
+    font-size: 18px;
+    margin-left: 10px;
+} 
+.dataTable td > div > ul > li:after{
+    font-family: FontAwesome;
+    content: "\f014";
+    color: #ff4700;
+    padding: 3px 5px;
+    border-radius: 3px;
+    font-size: 18px;
+    margin-left: 5px;
+} 
+*/
+/*.delete-datalist-item{
+	display: none;
+} */
 .dataTable tr{
   position: relative;
 }
@@ -61,6 +81,11 @@
   display: block !important
 }
 
+table{
+      width: 100%;
+    word-wrap: break-word;
+    table-layout: fixed;
+}
 .dataTables_processing{
   padding:20px;
   background-color: white;
@@ -71,7 +96,6 @@
 .dataTables_paginate{
   margin-top: 30px;
 }
-
 .current{
 	background: #2e73aa !important;
     color: white !important;
@@ -90,19 +114,18 @@
 .odd, .even{
     border-bottom: 1px solid #e8e8e8;
 }
-.sorting{
+.sorting{																					
 	color:#2e73aa;
 }
 .sorting_asc, .actions{
 	color:#2e73aa;
 }
 .actions .aione-status.active{
-	border-color:#2e73aa;
+	
 }
 .actions{
 	text-align: center;
 }
-
 #example{
     margin-top: 34px;
     border-top: 1px solid #e8e8e8;

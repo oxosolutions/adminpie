@@ -59,10 +59,10 @@ $page_title_data = array(
 											<td>Shift</td>
 											<td>
 												<div class="">
-													{{@App\Model\Organization\Shift::where('id',$shift)->first()->name}}
+													{{@App\Model\Organization\Shift::where('id',$model->user_shift)->first()->name}}
 												</div>
 												<div class="">
-													{{@App\Model\Organization\Shift::where('id',$shift)->first()->from}} - {{@App\Model\Organization\Shift::where('id',$shift)->first()->to}}
+													{{@App\Model\Organization\Shift::where('id',$model->user_shift)->first()->from}} - {{@App\Model\Organization\Shift::where('id',$model->user_shift)->first()->to}}
 												</div>
 				                                
 												<div class="">

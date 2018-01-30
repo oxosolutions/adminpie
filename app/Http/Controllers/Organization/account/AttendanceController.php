@@ -18,9 +18,9 @@ class AttendanceController extends Controller
     public function myattendance(Request $request, $id = null){
 
         $where['year'] = $year = Carbon::now()->year;
-        if($id == null){
-            return redirect()->route('account.attandance',get_user_id());
-        }
+        // if($id == null){
+        //     return redirect()->route('account.attandance',get_user_id());
+        // }
         $empId = get_user_meta($id, $key = 'employee_id', $array = false);
         
        if($empId==false){
@@ -30,21 +30,20 @@ class AttendanceController extends Controller
             $error = null;
             $where['employee_id'] = $empId;
         
-        if($request->isMethod('post')){
-           if(!empty($request["month"])){
-                $where['month'] = $request["month"];
-             } 
-             if(!empty($request["year"])){
-                $where['year'] = $request["year"];
-             } 
-             if(!empty($request["month_week_no"])){
-                $where['month_week_no'] = $request["month_week_no"];
-             }
-            $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
-            $attendance_data = $attendance->groupBy('month')->toArray();
-            return view('organization.account.ajaxmyattandance',['attendance_data'=>$attendance_data, 'filter'=>$where]);
-        }
-    	
+            if($request->isMethod('post')){
+               if(!empty($request["month"])){
+                    $where['month'] = $request["month"];
+                 } 
+                 if(!empty($request["year"])){
+                    $where['year'] = $request["year"];
+                 } 
+                 if(!empty($request["month_week_no"])){
+                    $where['month_week_no'] = $request["month_week_no"];
+                 }
+                $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
+                $attendance_data = $attendance->groupBy('month')->toArray();
+                return view('organization.account.ajaxmyattandance',['attendance_data'=>$attendance_data, 'filter'=>$where]);
+            }
     	$attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
         $attendance_data = $attendance->groupBy('month')->toArray();
     }

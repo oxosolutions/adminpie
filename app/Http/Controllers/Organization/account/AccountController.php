@@ -232,8 +232,6 @@ class AccountController extends Controller
             unset($request_data['meta_table']);
             $tbl = Session::get('organization_id');
 
-            dd($request->all());
-
             /*$data = Employee::where(['user_id' => $id])->first();
             if(!array_key_exists('empId', $request->all())){
               if(@$data->user_id == $id){
@@ -257,6 +255,10 @@ class AccountController extends Controller
                 if($value != null && $value != ''){
                     if(is_array($value)){
                         $value = json_encode($value);
+                    }
+                    if($key == 'leave_category'){
+                        // dump($value);
+                        // $employeeModel = Employee::where('user_id',$id)->update(['designation' => $value]);
                     }
                     /*if($key == 'designation'){
                         $employeeModel = Employee::where('user_id',$id)->update(['designation' => $value]);
@@ -294,6 +296,7 @@ class AccountController extends Controller
                 }
             }
         }
+        // dd($request->all());
         return back();
     }
     public function uploadProfile(Request $request ){
