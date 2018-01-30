@@ -146,12 +146,13 @@ class LeavesController extends Controller
       }
         $employee_id = $request['employee_id'];
 
+        dump($employee_id);
         
 
         unset($request['employee_id']);
-        $data = GroupUsers::find($employee_id);
+        $data = GroupUsers::find(12);
         $user = $data->organization_user->metas->where('key','employee_id')->toArray();
-        // dd($user[0]['value']);
+         dd($user);
         $emp_id = $request['employee_id']  = $user[0]['value'];
         $valid_fields = [
                           'reason_of_leave'  => 'required',

@@ -1,4 +1,4 @@
-{{-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 
@@ -63,31 +63,18 @@ html {
 	
 </head>
 <body>
-<div id="aione_wrapper" class="aione-wrapper"> --}}
-@extends('layouts.main')
-@section('content')
-@php
-	$page_title_data = array(
-		'show_page_title' => 'yes',
-		'show_add_new_button' => 'no',
-		'show_navigation' => 'yes',
-		'page_title' => 'Internal error',
-		'add_new' => '+ Add Task'
-	);
-@endphp
-@include('common.pageheader',$page_title_data)
-@include('common.pagecontentstart')
-@include('common.page_content_primary_start')
-	<div class="ar ">
-		<div class="ac l70 error-detail-wrapper">
+<div id="aione_wrapper" class="aione-wrapper">
+	
+	<div class="ar">
+		<div class="ac l60 error-detail-wrapper">
 			<div class="aione-error-title">
-				<h4>Something went wrong!</h4>
+				Something went wrong!
 			</div>
 			<div class="aione-error-desc">
 				You have experienced Internal Server Error. This might happen due to many reasons. You should try again.
 			</div>
 			<div style="padding: 30px 0">
-				{{-- <button onclick="window.location.href='{{url()->previous()}}'"><i class="fa fa-arrow-left" style="margin-right: 16px"></i>Go Back	</button> --}}
+				<button onclick="window.location.href='{{url()->previous()}}'"><i class="fa fa-arrow-left" style="margin-right: 16px"></i>Go Back	</button>
 				<button class="show-details" style="background-color: transparent;border: 1px solid;color: #454545">View Error Details</button>
 			</div>
 			<div>
@@ -96,17 +83,19 @@ html {
 
 			</div>
 		</div>
-		<div class="ac l30 aione-align-center">
-			<img src="{{asset('assets/images/robot-msg-error.png')}}" style="width: 200px">
+		<div class="ac l40">
+			<img src="{{asset('assets/images/robot-msg-error.png')}}" width="300">
+			{{-- <img src="https://cdn.dribbble.com/users/740954/screenshots/2297964/error-screen.png"> --}}
+			
 		</div>
 	</div>
 
-	<div class="ar" style="background-color: white;max-height: 400px;overflow: auto">
+	<div class="ar" style="background-color: white">
 		<div class="error-header" style="border-bottom: 3px solid #DF8220">
 			<p style="font-weight: 300;padding: 20px"><span style="color:#0073AA;font-weight: 500">Error: </span><code style="font-size: 14px">{{ $exception->getMessage() }}</code></p>
 
 		</div>
-		<div class="error-content" style="padding: 20px;">
+		<div class="error-content" style="padding: 20px">
 			<code>ERROR CODE : [ {{ $exception->getCode() }} ]</code><br>
 			@php
 
@@ -139,10 +128,7 @@ html {
 		</div> --}}
 	</div>
 	
-		@include('common.page_content_primary_end')
-		@include('common.page_content_secondry_start')
-		@include('common.page_content_secondry_end')
-		@include('common.pagecontentend')
+
 
 
 
@@ -160,7 +146,6 @@ html {
 		})
 	})
 </script>
-@endsection
-{{-- 
+
 </body>
-</html> --}}
+</html>

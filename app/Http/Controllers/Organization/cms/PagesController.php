@@ -434,7 +434,7 @@ class PagesController extends Controller
         $coment = Comment::where(['page_id'=>$pageData->id, 'type'=>'page'])->whereNull('reply_id')->orderBy('id','Desc')->get();
         $form = [];
         if($pageData == null){
-            return view('errors.404');
+            return view('errors.web-404');
         }
         $menu = wMenu::wlist(6);
         return view('organization.pages.demoviewPage')->with(['coment'=>$coment ,  'pageData' => $pageData , 'formData' => $form , 'menu' => $menu])->compileShortcodes();
@@ -448,7 +448,7 @@ class PagesController extends Controller
         
         $form = [];
         if($pageData == null){
-            return view('errors.404');
+            return view('errors.web-404');
         }
         $menu = wMenu::wlist(6);
         return view('organization.pages.viewPage')->with(['pageData' => $pageData , 'formData' => $form , 'menu' => $menu])->compileShortcodes();

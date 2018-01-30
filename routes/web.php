@@ -129,14 +129,14 @@
             //Organization Public Routes
 			include_once 'custom/organization/public-routes.php';
 	
-			
+			Route::get('404',['as' => 'demo5','uses' => function(){
+                return View::make('errors.web-404');
+            }]);
 		
             /************* Routes with auth organization *************/
 			Route::group(['middleware' => ['auth.org','org.status']], function(){
 
-				Route::get('404',['as' => 'demo5','uses' => function(){
-					return View::make('common.404');
-				}]);
+				
 
                 include_once "custom/organization/domains.php";
 
@@ -675,4 +675,9 @@ Route::group(['prefix'=>'front'], function(){
 	Route::get('/opening/{id}',	['as'=>'detail.openings','uses'=>'Organization\cms\PagesController@openingDetails']);
 
 
+
+
+Route::get('/myattendance',function(){
+	return view('organization.account.ash-attendance');
+});
 	

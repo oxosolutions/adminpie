@@ -14,7 +14,7 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 @include('organization.profile._tabs')
-<div class="ar">
+	<div class="ar">
 		<div class="ac l50">
 			<div class="aione-border mb-25 p-15">
 				<div class="display-inline-block">
@@ -51,10 +51,8 @@
 				</button>
 			</div>
 		</div>
-
 		<div class="p-40">
-<div id="yearly_data" class="row year-view">
-			<div class="font-size-9 ">
+			{{-- <div class="font-size-9 ">
 				<div class="font-size-10 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
 				@for($i=1; $i<=31; $i++)
 				<div class=" display-inline-block box aione-align-center ">{{$i}}</div>
@@ -106,8 +104,7 @@
 					@endif
 				
 				</div>
-			@endfor
-		</div>
+			@endfor --}}
 			
 			<div id="monthly-attendance" class="monthly p-40">
 				<div class="aione-border">
@@ -246,188 +243,13 @@
 		</div>
 	</div>
 @include('common.page_content_primary_end')
-		@include('common.page_content_secondry_start')
-		@include('common.page_content_secondry_end')
-		@include('common.pagecontentend')
-		
-		<script>
-			function attendance_yearly_filter(year)
-			{
-				postData ={};
-				postData['year']  = year;
-				postData['_token'] = $("#token").val();
-				$.ajax({
-					url:route()+'/attendance',
-					type:'POST',
-					data:postData,
-					success:function(res){
-						$("#year_display").html(year);
-						$('#yearly_data').html(res);
-					}
-				});
-			}
-			function attendance_monthly_filter(month, year)
-			{
-				postData ={};
-				postData['month'] = month;
-				postData['year']  = year;
-			//postData['month_week_no'] = week;
-			postData['_token'] = $("#token").val();
-			console.log(postData);
-			$.ajax({
-				url:route()+'/attandance_monthly',
-				type:'POST',
-				data:postData,
-				success:function(res){
-					$('#monthly-attendance').html(res);
-				}
-			});
-		}
-		function attendance_weekly_filter(week_no, month, year)
-		{
-			postData ={};
-			postData['month'] = month;
-			postData['year']  = year;
-			postData['month_week_no'] = week_no;
-			postData['_token'] = $("#token").val();
-			console.log(postData);
-			$.ajax({
-				url:route()+'/attandance_weekly',
-				type:'POST',
-				data:postData,
-				success:function(res){
-					$('#attendance-weekly').html(res);
-				}
-			});
-		}
-		// 	function attendance_filter(date, week, mo, yr)
-	// {
-		// 	console.log(date, week, mo, yr);
-		
-		// 	var postData = {};
-		// 	postData['date'] = date;
-		// 	postData['week'] = week;
-		// 	postData['month'] = mo;
-		// 	postData['years'] = yr;
-		// 	postData['_token'] = $("#token").val();
-		// 	$.ajax({
-				// 			url:route()+'/attendance/list',
-				// 			type:'POST',
-				// 			data:postData,
-				// 			success: function(res){
-					// 				$("#main").html(res);
-					// 				$("#month , #week ,#days").hide();
-					// 				if(date)
-					// 				{
-						// 					$("#days").show();
-					// 				}else if(week){
-						// 					$("#week").show();
-					// 				}else{
-						// 					$("#month").show();
-					// 				}
-					// 				$('select').material_select();
-					// 				console.log('data sent successfull');
-				// 			}
-			// 		});
-		// 	}
-	</script>
-
-
-	<style>
-		.line{
-			width: 100%;
-			display: flex;
-		}
-		.mo{
-			width: 5%;
-			height: 18px;
-			display: block;
-			float: left;
-			margin-right: 2px;
-			font-size: 13px;
-		}
-		.square{
-			width: 15px;
-			height: 15px;
-			display: block;
-			float: left;
-			margin-left: 2px;
-			margin-right: 2px;
-			margin-bottom: 4px;
-		}
-		.present{
-			background-color: green;
-			color: green;
-			font-size: 1px;
-		}
-		.absent{
-			background-color: red;
-			color: red;
-			font-size: 1px;
-		}
-		.leave{
-			background-color: orange;
-			color:orange;
-			font-size: 1px;
-		}
-		.holiday{
-			background-color: yellow;
-			color:yellow;
-			font-size: 1px;
-		}
-		.sunday{
-			background-color: pink;
-			color:pink;
-			font-size: 1px;
-		}
-		.empty{
-			background-color: grey;
-			color:grey;
-			font-size: 1px;
-		}
-		.days{
-			font-size: 13px;
-		}
-		.box{
-			height: 14px;
-			width: 14px
-		}
-		.bg-grey-light{
-			background-color:rgb(238, 238, 238);
-		}
-		.dark-green{
-			background-color: rgb(30, 104, 35)
-		}
-		.normal-green{
-			background-color: rgb(68, 163, 64)
-		}
-		.light-green{
-			background-color: rgb(140, 198, 101)
-		}
-		.pale-yellow{
-			background-color: rgb(214, 230, 133)
-		}
-	</style>
-	<script type="text/javascript">
-		$(document).ready(function(){
-			$('.month-view').hide();
-			$(".week-view").hide();
-			$("#weekly").click(function(){
-				$('.month-view').hide();
-				$('.week-view').show();
-				$(".year-view").hide();
-			});
-			$("#monthly").click(function(){
-				$('.week-view').hide();
-				$('.year-view').hide();
-				$(".month-view").show();
-			});
-			$("#yearly").click(function(){
-				$('.year-view').show();
-				$('.month-view').hide();
-				$(".week-view").hide();
-			});
-		});
-	</script>
-
+@include('common.page_content_secondry_start')
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
 @endsection
+
+
+
+
+
+

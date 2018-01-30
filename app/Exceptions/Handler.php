@@ -9,6 +9,8 @@ use Illuminate\Session\TokenMismatchException;
 use DB;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Auth;
 class Handler extends ExceptionHandler
 {
     /**
@@ -55,20 +57,31 @@ class Handler extends ExceptionHandler
             }
         }*/
         if ($exception instanceof TokenMismatchException){
-            // Redirect to a form. Here is an example of how I handle mine
+            
             return redirect($request->fullUrl())->with('csrf_error',"Oops! Seems you couldn't submit form for a long time. Please try again.");
         }
+        if($exception instanceof NotFoundHttpException){
+            if(Auth::guard('org')->check() == false){
+                return response()->view('errors.web-404', [], 404);
+            }
+        }else{
+            if($exception instanceof \Illuminate\Validation\ValidationException || $exception instanceof MethodNotAllowedHttpException){
+                return parent::render($request, $exception);
+            }else{
+                if(Auth::guard('org')->check()){
+                    return response()->view('errors.error-page',['exception'=>$exception,'request'=>$request],500);
+                }else{
+                    return response()->view('errors.web-error-page',['exception'=>$exception,'request'=>$request],500);
+                }                
+            }
+        }
+        
         
         //if(env('APP_DEBUG')){
            return parent::render($request, $exception);
         //}else{
             
-            if($exception instanceof \Illuminate\Validation\ValidationException || $exception instanceof MethodNotAllowedHttpException){
-                return parent::render($request, $exception);
-            }else{
-                return response()->view('errors.error-page',['exception'=>$exception,'request'=>$request],500);
-                
-            }
+            
         //}
     }
 

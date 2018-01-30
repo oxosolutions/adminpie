@@ -7,7 +7,6 @@
             }
 		</script>
 	@endif
-	
 @php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
@@ -82,7 +81,7 @@
 }
 
 table{
-      width: 100%;
+    width: 100%;
     word-wrap: break-word;
     table-layout: fixed;
 }
