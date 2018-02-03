@@ -116,40 +116,50 @@ protected function leave_category_detail($category_id, $year, $month=null){
  	return $data;
 }
 
+protected function set_leave_available_category($assigned_categories){
+	$array = json_decode($assigned_categories,true);
+	foreach ($array as $key => $value) {
+		$check = cat::where(['id'=>$value , 'status'=>1 ]);	
+		if(!$check->exists()){
+			unset($array[$key]);
+		}
+	}
+	return $array;
+}
 	public function leave_listing(Request $request){
-		$assigned_categories = get_current_user_meta('leave_category');
-		if($assigned_categories !=false){
-			$year = date('Y');
+    
+		$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error =null;
+		$year = date('Y');
+		if(in_array(1, role_id())){
+				$error = "You can not view leave.";
+		}
+		$categories = get_current_user_meta('leave_category');
+		if($categories !=false){
+			$assigned_categories = $this->set_leave_available_category($categories);
 	 		if(date('m')<4){
 				$year = $year - 1;
 			}		
 			if($request->isMethod('post')){
 				$year = $request->year;
 			}
-			$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error =null;
 			$emp_id = get_current_user_meta('employee_id');
-			if(in_array(1, role_id())){
-				$error = "You can not view leave.";
-			}else{
-	/*assigned_categories method get all Assigned categories */
-				$assigned_categories = json_decode($assigned_categories, true); //$this->assigned_categories();
-				// dd($assigned_categories, $this->assigned_categories());
-				if(!empty($assigned_categories)){
-					foreach($assigned_categories as $key => $value) {
-						$current_used_leave[$value] =  $this->leave_category_detail($value, $year); # code...
-					}
-					$next_year = $year+1;
-					$leavesData = EMP_LEV::with('categories_rel')->where(['employee_id'=>$emp_id])->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or')->get();
-				}else{
-					$error = "Not assign leave category";
+/*assigned_categories method get all Assigned categories */
+			if(!empty($assigned_categories)){
+				foreach($assigned_categories as $key => $value) {
+					$current_used_leave[$value] =  $this->leave_category_detail($value, $year);
 				}
+				$next_year = $year + 1;
+				$leavesData = EMP_LEV::with('categories_rel')->where(function($query)use($year, $next_year){
+						$query->whereBetween('from',[$year.'-04-01', $next_year.'-03-31'])->whereBetween('to',[$year.'-04-01', $next_year.'-03-31'],'or');
+					})->where(['employee_id'=>$emp_id])->get();
+			}else{
+				$error = "Not assign leave category";
 			}
 		}else{
 			$error = "Not assign leave category";
 		}
-			return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error]);
-		
-	}
+		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error]);
+}
 /**
  * The store method work for apply leave's with various leave rule's. Coditions check before Applying. 
  * 	1. From date must be less than to date.
@@ -208,6 +218,13 @@ protected function leave_category_detail($category_id, $year, $month=null){
 	}
 
 	public function store(Request $request, $id=null){
+		$date_of_leaving = get_current_user_meta('date_of_leaving');
+		if($date_of_leaving != false){
+			if($request['from'] > $date_of_leaving || $request['to'] > $date_of_leaving ){
+				$error['from_greater_than_to'] = 'You are leaving the organization.';
+				return redirect()->route('account.leaves')->with('errorss',$error);
+			}
+		}
 		$valid_fields = ['reason_of_leave'=>'required', 'from'=>'required', 'to'=>'required','leave_category_id'=>'required'];
 		$this->validate($request, $valid_fields);
 		$leave_category_id = $request['leave_category_id'];

@@ -173,12 +173,10 @@ class AttendanceController extends Controller
       
     	]);
 		$validator = Validator::make(
-			    [
-			        'file'      => $file,
+			    [	'file'      => $file,
 			         'extension' => strtolower($file->getClientOriginalExtension()),
 			    ],
-			    [
-			        'file'          => 'required',
+			    [	'file'          => 'required',
 			        'extension'      => 'required|in:csv,xls,xlsx,XLS',
 			    ]
 			);
@@ -190,9 +188,13 @@ class AttendanceController extends Controller
      * @return 
      * @author  paljinder Singh
      */
+	protected function check_employee_id(){
+		return $employee_ids = UsersMeta::where('key','employee_id')->pluck('value','user_id')->toArray();
+	}
 	protected function import_data_handling($data, $year, $month_year, $month, $dates, $daysInMonth){
 		$keys = "abc";
 			$i = 1;
+			$employee_ids  = $this->check_employee_id();
             foreach($data as $logkey => $logvalue){				
 					if ($logvalue[0] == "Period :"){}
 					if ($logvalue[0] == "No :"){
@@ -202,6 +204,7 @@ class AttendanceController extends Controller
 							}
 							else{
 								if ($log_val_key == 2){
+									
 									$employee[$i]['employee_id'] = $log_value;
 								}
 								if ($log_val_key == 10){
@@ -222,6 +225,9 @@ class AttendanceController extends Controller
 					}
 				}
 				foreach ($employee as $key => $value) {
+					if(!in_array($value['employee_id'], $employee_ids)) {
+										continue;
+									}
 					$employee_id = $value['employee_id'];
 					$limitDays = 1;
 				if(isset($value['attendence'])){
@@ -302,18 +308,30 @@ class AttendanceController extends Controller
 												'submited_by' => "import"];
 						$attendance_query = Attendance::where(['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates]);
 						if($attendance_query->count() >0){
-							$attendance_query->update($data_for_insertion);
-							}else{
-
-								$attendance = new Attendance();
-								$attendance->fill($data_for_insertion);
-								$attendance->save();
-								$limitDays++;
+							$no_shift = $attendance_query->whereNull('shift_hours');
+							if($no_shift->exists()){
+								$data_for_insertion['shift_hours'] = $this->get_shift_hours($employee_id, $employee_ids);
 							}
+							$attendance_query->update($data_for_insertion);
+						}else{
+							$data_for_insertion['shift_hours'] = $this->get_shift_hours($employee_id, $employee_ids);
+							$attendance = new Attendance();
+							$attendance->fill($data_for_insertion);
+							$attendance->save();
+							$limitDays++;
+						}
 					}
 					}									
 				 }
 			return $employee;
+	}
+	protected function get_shift_hours($employee_id, $employee_ids){
+		$user_id  = array_search($employee_id, $employee_ids);
+		$shift_id = get_user_meta($user_id, 'user_shift');
+		$shift = Shift::select(['from','to'])->where('id',$shift_id)->first()->toArray();
+		$shift_hours = json_encode(array_values($shift));
+		// dd($employee_id, 'u id', $user_id, ' shift id', $shift_id , 'hours' , $shift_hours);
+		return $shift_hours;
 	}
 	/**
      * import_file_save  (read data of file) use in attendance_import method 
@@ -423,6 +441,11 @@ class AttendanceController extends Controller
      */
 	public function list_attendance(Request $request, $year=null, $month=null)
 	{	
+		// dump($year, $month);
+		// $attendance_query = Attendance::where(['employee_id'=>'40095065' , 'year'=>2018,'month'=>01, 'date'=>1]);
+		// $attendance_query->whereNull('shift_hours');
+		// dump($attendance_query->exists());
+
 		$data['year'] = $data['month'] = null;
 		if($request->isMethod('post')){
 			$data['year'] = $request['year'];
@@ -463,7 +486,8 @@ class AttendanceController extends Controller
 			$holiday_date = str_replace('0','',date('d', strtotime($data['date_of_holiday'])));
 			return [$holiday_date=> $data['title']];
 		});
-		$user_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
+		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
+		// $user_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
 		$attendance  =Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 
 		return view('organization.attendance.attendance_table', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
@@ -476,7 +500,7 @@ class AttendanceController extends Controller
 		return $data;
 	}
 	/**
-     * attendance_by_hr use in Mark attendance,  edit
+     * The attendance_by_hr use in Mark attendance, edit
      * @param -
      * @return view
      * @author  paljinder Singh
@@ -532,18 +556,19 @@ class AttendanceController extends Controller
 					$value['in_out_data'] =Null;
 				}
 				$where 		= 	array_collapse([$conditions, ['employee_id'=>$key]]);
-				if($current_date_data['year']==$conditions['year'] && $current_date_data['month']==$conditions['month'] && $current_date_data['date']==$conditions['date'] ){
-					$value['shift_hours'] 	= $this->get_shift_time($value['shift_id']);
-				}
+				$value['shift_hours'] 	= $this->get_shift_time($value['shift_id']);
 				$all_data 	= 	array_collapse([$conditions, $value]);
-				$attendance_check = Attendance::select('id','lock_status')->where($where);
+				$attendance_check = Attendance::select('id','lock_status','shift_hours')->where($where);
 				if($attendance_check->exists())
 				{
-					if($attendance_check->first()->lock_status==0){
+					$row_attendance = 	$attendance_check->first();
+					if($row_attendance->lock_status==0){
 						continue;
 					}
+					if(!empty($row_attendance['shift_hours'])){
+						unset($all_data['shift_hours']);
+					} 
 				}
-
 				if($attendance_check->count() > 0)
 				{
 					$attendance = Attendance::find($attendance_check->first()->id);
@@ -558,6 +583,7 @@ class AttendanceController extends Controller
 				$attendance->submited_by ="HR";
 				$attendance->save();
 			}
+
 		}
 		
 		return redirect()->route('list.attendance');

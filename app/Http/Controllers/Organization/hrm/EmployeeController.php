@@ -235,10 +235,7 @@ class EmployeeController extends Controller
         $department_name = '';
         $designation_name = '';
         $sortedBy = @$request->orderby;
-
-         $model = $this->getQueryResult($request,$sortedBy,$perPage);
-         // dd($model);
-
+        $model = $this->getQueryResult($request,$sortedBy,$perPage);
         // foreach ($model as $key => $record) {
        
         //     $model[$key]['department'] = '';
@@ -502,12 +499,10 @@ class EmployeeController extends Controller
      */
     public function save(Request $request)
     {
-        
         if(empty(setting_val_by_key('employee_role'))){
             Session::flash('error','Need to set Role Id for employee in setting.');
             return back();
         }
-
         $request['date_of_joining'] = date("Y-m-d");
         $tbl = Session::get('group_id');
         $valid_fields = [
@@ -521,6 +516,10 @@ class EmployeeController extends Controller
                             'employee_id'   =>  'required'
                         ];
         $this->validate($request , $valid_fields);
+        if($this->check_employee_id($request['employee_id'])) {
+             Session::flash('error', 'Employee Id already in use.');
+            return back();
+        }
         $manadatory_field = ['designation','department','user_shift','employee_id']; 
         if(count(array_intersect(array_keys($request->all()) , $manadatory_field))== count($manadatory_field)){
             $user =  new GroupUsers();
@@ -792,12 +791,14 @@ class EmployeeController extends Controller
                         continue;
                     }
                try{
+
                     DB::beginTransaction();
                         $groupUsers = new GroupUsers();
                         if(isset($value['password'])){
-                            $value['password'] = Hash::make($value['password']);
+                            $password = $value['password'] = Hash::make($value['password']);
                         }
                         $groupUsers->fill($value);
+                        $groupUsers->password = $password;
                         $groupUsers->save();
                         $this->create_org_user($groupUsers->id, $value,  $import_record_options);
                         DB::commit();

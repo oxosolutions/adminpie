@@ -224,12 +224,12 @@
 
 				//account
 				Route::group(['prefix' => 'account','namespace' => 'account'],function(){
-				
+				    
+                    Route::patch('/profile/storeMeta/{id}',['as'=>'update.profile.meta','uses'=>'AccountController@storeMeta']);
 					Route::group(['middleware'=>'role'],function(){
 						Route::get('/activities/{id?}',['as'=>'account.activities','uses'=>'AccountActivityController@listActivities']);
 						Route::any('/attendance/{id?}',['as'=>'account.attandance','uses'=>'AttendanceController@myattendance']);
 						Route::get('/profile/{id?}',['as'=>'account.profile','uses'=>'AccountController@profileDetails']);
-						Route::patch('/profile/storeMeta/{id}',['as'=>'update.profile.meta','uses'=>'AccountController@storeMeta']);
 
 						Route::get('/document/{id?}',['as'=>'account.document','uses'=>'AccountController@UserDocument']);
 						Route::get('/delete/document/{id}',['as'=>'delete.user.document','uses'=>'AccountController@DelDocument']);
@@ -297,7 +297,9 @@
 						Route::get('employee/import',			['as'=>	'import.employee','uses'=>'EmployeeController@import']);
 						Route::post('employee/import',			['as'=>	'import.employee.post','uses'=>'EmployeeController@importEmployee']);
 						Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
-						Route::get('leaves/{id?}',				['as'=> 'leaves' , 'uses' =>'LeavesController@index']);
+                        Route::get('leaves/{id?}',              ['as'=> 'leaves' , 'uses' =>'LeavesController@index']);
+
+						
 						
 						// Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
 						// Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
@@ -319,6 +321,9 @@
 					Route::match(['get','post'],'/attendance/form-import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
 					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
+					Route::get('leave/add',              ['as'=> 'leave.add' , 'uses' =>'LeavesController@addLeaves']);
+					Route::get('leave/edit/{id?}',			['as'=> 'edit.leave' , 'uses' =>'LeavesController@editLeave']);
+
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){
 					
@@ -388,7 +393,7 @@
 							Route::post('leave/save',		['as' => 'store.leave' , 'uses' =>'LeavesController@save']);
 							Route::post('leave/update',		['as' => 'update.leave' , 'uses' =>'LeavesController@update']);
 							Route::get('leave/delete/{id}',		['as' => 'delete.leave' , 'uses' =>'LeavesController@delete']);
-							Route::POST('leave/edit',		['as' => 'edit.leave' , 'uses' =>'LeavesController@editLeave']);
+							Route::POST('leave/update',		['as' => 'update.leave' , 'uses' =>'LeavesController@updateLeave']);
 							Route::get('leave/approve/{id?}',		['as' => 'approve.leave' , 'uses' =>'LeavesController@approve_leave']);
 							Route::get('leave/reject/{id?}',		['as' => 'reject.leave' , 'uses' =>'LeavesController@reject_leave']);
 

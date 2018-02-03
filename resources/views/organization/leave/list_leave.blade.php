@@ -7,6 +7,7 @@
 	'show_navigation' => 'yes',
 	'page_title' => 'Leaves',
 	'add_new' => '+ Add Leave',
+	'route' => 'leave.add'
 
 ); 
 @endphp
@@ -45,10 +46,10 @@
 		@include('common.list.datalist')
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
-{!! Form::open(['route'=>'store.leave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','form'=>'add_leave_form']])
-{!!Form::close()!!}
+
+{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add leave','button_title'=>'Save','form'=>'add_leave_form']]) --}}
+
 
 	
 	@include('common.page_content_secondry_end')

@@ -8,6 +8,10 @@
     margin: 0 !important;
     font-size: 15px !important;
     }
+    .aione-tooltip:before{
+        width: auto !important;
+        white-space: pre !important;
+    }
 </style>
 @php
 $page_title_data = array(

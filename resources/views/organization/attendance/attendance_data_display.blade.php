@@ -68,33 +68,55 @@
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
 						 }); 
+					
+					// if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year) ){
+					// 				continue;
+					// 			}
+					// 			
+					if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year)) {
+									continue;
+								}
+								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year && date('m', strtotime($user_meta['date_of_leaving'])) <  $current_month  )) {
+									continue;
+								}
 					if(!empty($user_meta['employee_id']) && !empty($user_meta['user_shift']) && !empty($user_meta['date_of_joining']))
 					{
  						if(!empty($fweek_no) || !empty($fdate)){
 							echo "<br>";
 							if(!empty($fdate))
 							{	
-								if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate")))
-								{
+								if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate")) || (!empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate"))) ) {
 									continue;
 								}
  							}
 							if(!empty($fweek_no)){
-								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month){
-								continue;
-								}
-								if(date('m', strtotime($user_meta['date_of_joining'])) ==  $current_month){
-									$joining_week = Carbon\Carbon::parse($user_meta['date_of_joining']);
-									
+								// dump($fweek_no, date('m', strtotime($user_meta['date_of_joining'])), $current_month);
+								// if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year) ){
+								// 	continue;
+								// }
+								// if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year ){
+								// 	continue;
+								// }
+								
+								if(date('Y', strtotime($user_meta['date_of_joining'])) == $current_year &&date('m', strtotime($user_meta['date_of_joining'])) ==  $current_month){
+									$joining_week = Carbon\Carbon::parse($user_meta['date_of_joining'])->weekOfMonth;
+									if($fweek_no < $joining_week)
+										continue;
+									}
+
+									if(!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year &&date('m', strtotime($user_meta['date_of_leaving'])) ==  $current_month){
+									$leaving_week = Carbon\Carbon::parse($user_meta['date_of_leaving'])->weekOfMonth;
+									if($fweek_no > $leaving_week)
+										continue;
 									}
 							}
 						}else{	
-								if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year ){
-									continue;
-								}
-								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year ){
-									continue;
-								}
+								// if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year)) {
+								// 	continue;
+								// }
+								// if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year && date('m', strtotime($user_meta['date_of_leaving'])) <  $current_month  )) {
+								// 	continue;
+								// }
  						}
 
 
@@ -129,7 +151,7 @@
 											@if(!empty($holiday_data[$d]))
 												<div class="attendance-sheet column present-bg-color">H</div>
 											@elseif(@$attendanceVal[$d]['attendance_status']=='present')
-													<div class="attendance-sheet column present-bg-color aione-tooltip" title="9:00 - 5:00">P</div>
+													<div class="attendance-sheet column present-bg-color aione-tooltip attendance-tardy" data-title="9:00 - 5:00">P</div>
 											@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
 												<div class="attendance-sheet column absent-bg-color">A</div>
 											@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')

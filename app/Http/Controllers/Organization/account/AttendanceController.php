@@ -16,20 +16,15 @@ class AttendanceController extends Controller
 {
 
     public function myattendance(Request $request, $id = null){
-
+        //can_i_access_this_user($id);
         $where['year'] = $year = Carbon::now()->year;
-        // if($id == null){
-        //     return redirect()->route('account.attandance',get_user_id());
-        // }
-        $empId = get_user_meta($id, $key = 'employee_id', $array = false);
-        
+        $empId = get_current_user_meta('employee_id');
        if($empId==false){
             $attendance_data = $where =null;
             $error = 'Your not employee user!';
        }else{
             $error = null;
             $where['employee_id'] = $empId;
-        
             if($request->isMethod('post')){
                if(!empty($request["month"])){
                     $where['month'] = $request["month"];

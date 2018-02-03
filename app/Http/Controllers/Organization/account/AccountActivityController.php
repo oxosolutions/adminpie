@@ -18,6 +18,7 @@ class AccountActivityController extends Controller
             $id = current_organization_user_id();
             return redirect()->route('account.activities',$id);
         }
+        can_i_access_this_user($id);
 		$user_log = LS::where('user_id',$id)->paginate(10);
 		
 		return view('organization.profile.activities')->with(['user_log' => $user_log]);

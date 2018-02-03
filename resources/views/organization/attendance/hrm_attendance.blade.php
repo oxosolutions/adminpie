@@ -10,92 +10,7 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
-<style type="text/css">
 
-	body{
-		background-color: #ffffff;
-	}
-	.main-container{
-		padding:17px;
-	}
-	.form_group{
-		margin:30px;
-	    font-size: 16px;
-	    font-weight: 400;
-	    color: #5d5c5c;
-	    font-family: 'Open Sans', sans-serif;
-	}
-	.form-control{
-		background: #f8f8f8;
-	}
-	.btn {
-	    background: #2196F3;
-	    margin-top: 30px;
-	}
-	.input-group{
-		margin-left: 54px;
-	   
-	}
-	.table > thead > tr > th{
-		    padding: 7px 7px !important;
-	}	
-	.table > tbody > tr > td{
-		  padding: 7px 7px;
-	}
-	.pager li > a{
-		    background-color: #006694;
-		    color: #ffffff;
-	}
-	.design-style{
-		
-	    text-align: center;
-	   
-	}
-	.design-bg{
-		background: #ececec;
-	    padding: 24px 14px 15px 14px;
-	    border-radius: 3px;
-	    border: 1px solid #ddd;
-	    margin-bottom: 10px;
-	}
-	.present-bg-color{
-		background: #8BC34A;
-	    color: #fff;
-	}
-	.absent-bg-color{
-		background:#e53935;
-		color: #fff;
-	}
-	.pager li > a:hover{
-		background-color: #006694;
-	}
-	.table-tr{
-		text-align: center;
-	}
-	/*select{
-		display: block;
-	}*/
-	table {
-    border-collapse: collapse;
-    width: 100%;
-	}
-
-	th, td {
-	    text-align: left;
-	    padding: 8px;
-	}
-
-	tr:nth-child(even){background-color: #f2f2f2}
-
-	th {
-	    background-color: #e8e8e8;
-	    color: #676767;
-	    font-weight: 700
-	}
-	input{
-		margin: 0px !important;
-	}
-</style>
 <?php
 
 
@@ -126,14 +41,19 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')		
 @include('organization.attendance._tabs')
-	<div class="aione-border">
-		<div class="bg-grey bg-lighten-3 font-size-18 p-10	aione-border-bottom">
-			Filters
+	<div class="ar">
+		<div class="ac l50 pl-0">
+			<div class="aione-border p-15">
+				Attendance {{$dateformat}}
+			</div>
 		</div>
-		<div class="p-10">
-			{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post','class'=>'ar'] )!!}
-				<div class="ac l25">
-					<label for="days" class="line-height-28">Day</label>
+		<div class="ac l50 pr-0">
+			<div class="aione-border p-15">
+				{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post','class'=>'ar'] )!!}
+				<div class="mb-10">
+					Select Date
+				</div>
+				<div>
 					<select name="date"  class="browser-default" id="days">
 						@foreach($daysInMonth as $key =>$val)
 						@if($date==$val)
@@ -145,11 +65,8 @@
 						@endforeach
 
 					</select>
-					
 				</div>
-				
-				<div class="ac l25">
-					<label for="months" class="line-height-28">Month</label>
+				<div>
 					<select name="month" id="months" class="browser-default ">
 						@foreach($MO_data as $key => $val)
 							@if($month==$key)
@@ -159,10 +76,8 @@
 							@endif
 						@endforeach
 					</select>
-				</div>			
-
-				<div class="ac l25">
-					<label for="year" class="line-height-28">Year</label>
+				</div>
+				<div>
 					<select  name="year" class="browser-default " id="year">  
 						@foreach($year_data as $key =>$val)
 						@if($year==$val)
@@ -174,14 +89,11 @@
 						@endforeach
 					</select>
 				</div>
-				<div class="ac l25 pt-12">
-					<button class=" " type="submit"  style="margin: 6px;width: 100%;">Search</button>
+				<div>
+					<button type="submit" style="width: 100%">Mark Attendance</button>
 				</div>
-						
-			
-					
-			{!!Form::close()!!}
-			
+			{!!Form::close()!!}	
+			</div>
 		</div>
 	</div>
 <div class="card">
@@ -191,7 +103,7 @@
 				
 			
 			
-				<h5 class="design-style"><span>Attendance </span>{{$dateformat}}</h5>	
+				<h5 class="design-style"><span></h5>	
 			
 			
 		
@@ -245,7 +157,7 @@
 		 if(empty($user_meta['employee_id']) || empty($user_meta['user_shift']) || empty($user_meta['date_of_joining'])){
 			continue;
 		}
-		if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat))){
+		if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat)) || ( !empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d', strtotime($dateformat)))) {
 				continue;
 		}
  			$in_out_data = $punch_in_out = $attendance_status = null;
@@ -358,6 +270,92 @@
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+<style type="text/css">
+
+	body{
+		background-color: #ffffff;
+	}
+	.main-container{
+		padding:17px;
+	}
+	.form_group{
+		margin:30px;
+	    font-size: 16px;
+	    font-weight: 400;
+	    color: #5d5c5c;
+	    font-family: 'Open Sans', sans-serif;
+	}
+	.form-control{
+		background: #f8f8f8;
+	}
+	.btn {
+	    background: #2196F3;
+	    margin-top: 30px;
+	}
+	.input-group{
+		margin-left: 54px;
+	   
+	}
+	.table > thead > tr > th{
+		    padding: 7px 7px !important;
+	}	
+	.table > tbody > tr > td{
+		  padding: 7px 7px;
+	}
+	.pager li > a{
+		    background-color: #006694;
+		    color: #ffffff;
+	}
+	.design-style{
+		
+	    text-align: center;
+	   
+	}
+	.design-bg{
+		background: #ececec;
+	    padding: 24px 14px 15px 14px;
+	    border-radius: 3px;
+	    border: 1px solid #ddd;
+	    margin-bottom: 10px;
+	}
+	.present-bg-color{
+		background: #8BC34A;
+	    color: #fff;
+	}
+	.absent-bg-color{
+		background:#e53935;
+		color: #fff;
+	}
+	.pager li > a:hover{
+		background-color: #006694;
+	}
+	.table-tr{
+		text-align: center;
+	}
+	/*select{
+		display: block;
+	}*/
+	table {
+    border-collapse: collapse;
+    width: 100%;
+	}
+
+	th, td {
+	    text-align: left;
+	    padding: 8px;
+	}
+
+	tr:nth-child(even){background-color: #f2f2f2}
+
+	th {
+	    background-color: #e8e8e8;
+	    color: #676767;
+	    font-weight: 700
+	}
+	input{
+		margin: 0px !important;
+	}
+</style>
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$('.add_punch_in_out').hide();

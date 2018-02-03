@@ -32,6 +32,7 @@ class AccountController extends Controller
      public function emailsList(Request $request, $id = null){
 
         $search = $this->saveSearch($request);
+        can_i_access_this_user($id);
         if($search != false && is_array($search)){
             $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
         }
@@ -125,11 +126,11 @@ class AccountController extends Controller
      * profileDetails method alter BY Paljinder singh & comment code which not in use.
      */
     public function profileDetails($id = null){
-
         if($id == null){
              $id = current_organization_user_id();
              return redirect()->route('account.profile',$id);
         }
+        can_i_access_this_user($id);
         $user_log = $this->listActivities();
     	if($id == null){
     		$id = Auth::guard('org')->user()->id;
@@ -394,7 +395,7 @@ class AccountController extends Controller
     }
     public function listProjects($id = null)
     {
-
+        can_i_access_this_user($id);        
         if($id == null){
             $model = Project::with('projectMeta')->get();
         }else{
@@ -425,7 +426,8 @@ class AccountController extends Controller
         }
     }
     public function UserDocument($id = null)
-    {
+    {   
+        can_i_access_this_user($id);
         if($id == null){
             $id = get_user_id();
         }

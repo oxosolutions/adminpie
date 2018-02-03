@@ -43,7 +43,7 @@ $page_title_data = array(
 		{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 
 	@endif
-	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add designation','button_title'=>'Save Designation','section'=>'titlesection']])
+	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Designation','button_title'=>'Save Designation','section'=>'titlesection']])
 	 {!!Form::close()!!}
 	@if(@$model)
 		{!! Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}

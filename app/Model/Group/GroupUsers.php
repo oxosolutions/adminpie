@@ -47,7 +47,7 @@ class GroupUsers extends Authenticatable
 
    	public function metas_for_attendance()
    	{
-   		return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id')->whereIn('key',['user_shift','employee_id','date_of_joining','designation','department']);
+   		return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id')->whereIn('key',['user_shift','employee_id','date_of_joining','designation','department','date_of_leaving']);
    	}
    	public static function userList()
    	{

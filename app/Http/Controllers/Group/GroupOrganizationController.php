@@ -233,6 +233,7 @@ class GroupOrganizationController extends Controller
            $request['modules'] = json_encode($request['modules']);
         }
      	try{
+                $createOrganization = new OrganizationController;
 	            DB::beginTransaction();
 		        $org = new ORG();
 		        $org->fill($request->all());
@@ -245,14 +246,13 @@ class GroupOrganizationController extends Controller
 		        if($checkMaster->exists()){
 		            $primary_orgnaization = $checkMaster->first();
                     if($primary_orgnaization->value != '' && $primary_orgnaization->value != null){
-                        $return =  $this->create_organization_database($primary_orgnaization->value, $org_id); 
+                        $return =  $createOrganization->create_organization_database($primary_orgnaization->value, $org_id); 
                     }else{
                         $return ='table_not_exist';
                     }
 		        }
 		        
 		        if(!$checkMaster->exists() || $return=='table_not_exist'){
-					$createOrganization = new OrganizationController;
 		            $createOrganization->create_db_through_migration($org_id);
 		        }
 		        if($checkUserExist == null){
@@ -298,7 +298,8 @@ class GroupOrganizationController extends Controller
         $org = new ORG();
         $org->fill($organization);
         $org->save();
-        $this->create_organization_database($id , $org->id);
+        $createOrganization = new OrganizationController;
+        $createOrganization->create_organization_database($id , $org->id);
         Session::flash('success', __('manage.organization_created') );
         return back();
     }

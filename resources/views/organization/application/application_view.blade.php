@@ -6,6 +6,8 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Application Detail',
+    'add_new' => 'All Applications',
+    'route' => 'list.applicantions'
 ); 
 @endphp
 
@@ -46,7 +48,7 @@
             </table>
         </div>
         <br/>
-        <a href="{{ route('list.applicantions') }}" class="aione-button">Go Back</a>
+        {{-- <a href="{{ route('list.applicantions') }}" class="aione-button">Go Back</a> --}}
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 @endsection

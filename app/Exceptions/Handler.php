@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Auth;
+
 class Handler extends ExceptionHandler
 {
     /**

@@ -126,11 +126,7 @@
     text-align: center;
     
 }
-#att_data .present-bg-color
-{
-	background-color:#79BEDB;
-	
-}
+
 #att_data .sunday
 {
 	background-color:#f2f2f2;

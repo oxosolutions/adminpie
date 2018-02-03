@@ -375,14 +375,15 @@ class ProjectController extends Controller
         return view('organization.project.documentation');
     }
     public function todo(Request $request , $id=null){
-      $plugins = ['js' => ['custom'=>['todo']]];
-      if($id != null || $id != "" || !empty($id) ){
-        $list = TD::where('project_id',$id)->get();
-        return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);
-      }else{
-        $list = TD::where('user_id',Auth::guard('org')->user()->id)->get();
-        return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);
-      }
+        can_i_access_this_user($id);
+        $plugins = ['js' => ['custom'=>['todo']]];
+        if($id != null || $id != "" || !empty($id) ){
+            $list = TD::where('project_id',$id)->get();
+            return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);
+        }else{
+            $list = TD::where('user_id',Auth::guard('org')->user()->id)->get();
+            return view('organization.profile.to-do',['plugins' => $plugins , 'list' => $list ]);
+        }
     }
 
     public function updateTeam(Request $request, $id){

@@ -28,9 +28,27 @@ use App\Model\Organization\PageMeta as PageMeta;
 use App\Model\Admin\PageMeta as GlobalPageMeta;
 use App\Model\Admin\GlobalOrganization;
 use App\Model\Admin\GlobalWidget;
-
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
+
+/************************************************************
+*   @function can_i_access_this_user
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+************************************************************/
+function can_i_access_this_user(){
+    if(is_admin()){
+        return true;
+    }else{
+        if(request()->id == current_organization_user_id()){
+            return true;
+        }else{
+            return \Route::dispatch(\Request::create(request()->route()->getName(), 'GET'));
+        }
+    }
+}
+
 
 /************************************************************
 *   @function get_current_organization_url

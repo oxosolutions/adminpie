@@ -1,4 +1,19 @@
 <style type="text/css">
+	 .aione-tooltip:before{
+	 	content: attr(data-title);
+        width: auto ;
+        white-space: pre ;
+    }
+    .attendance-tardy:after{
+    	content: '';
+    	position: absolute;
+    	height: 4px;
+    	width: 4px;
+    	border-radius:50%;
+    	background-color: red;
+    	bottom: 4px;
+    	right: 4px;
+    }
    .aione-tabs{
       border-bottom: 1px solid #e8e8e8;
       padding-bottom: 4px;

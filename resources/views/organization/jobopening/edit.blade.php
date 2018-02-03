@@ -1,23 +1,24 @@
-
 @extends('layouts.main')
 @section('content')
-<div class="row">
-	<div class="col-md-12">
-	{!! Form::model($model, ['route'=>['opening.update',$model['id']], 'class'=> 'form-horizontal','method' => 'post','files'=>true])!!}
-			<div class="row">
-				<div class="col-md-12 ">
-					<div class="panel panel-flat">
+@php
+	$page_title_data = array(
+	'show_page_title' => 'yes',
+	'show_add_new_button' => 'yes',
+	'show_navigation' => 'yes',
+	'page_title' => 'Edit Job Opening',
+	'add_new' => 'All Job Openings',
+	'route' => 'list.opening'
+); 
+@endphp
+@include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+{!! Form::model($model, ['route'=>['opening.update',$model['id']], 'class'=> 'form-horizontal','method' => 'post','files'=>true])!!}		
+	{!! FormGenerator::GenerateForm('job-opening-form')!!}
+{!!Form::close()!!}
+@include('common.page_content_primary_end')
+@include('common.page_content_secondry_start')
 
-						<div class="panel-body">
-							{!! FormGenerator::GenerateSection('opening',['type'=>'inset'])!!}
-							<div class="text-right">
-								<button type="submit" class="btn btn-primary">Update Opening <i class="icon-arrow-right14 position-right"></i></button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		{!!Form::close()!!}
-	</div>
-</div>
-@endsection()
+@include('common.page_content_secondry_end')
+@include('common.pagecontentend')
+@endsection

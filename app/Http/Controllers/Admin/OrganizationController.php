@@ -191,7 +191,6 @@ class OrganizationController extends Controller
         if(!empty($organizations)){
             foreach (json_decode(json_encode($organizations),true)  as $orgKey => $orgValue) {
                 $existed = $orgValue['TABLE_NAME'];
-                
                 $new = str_replace($existed_id, $new_id, $existed);
                 DB::select("CREATE TABLE ".$new." LIKE ".$existed);
                 if($existed != "ocrm_".$existed_id."_users"){
@@ -520,7 +519,7 @@ try{
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
                                 'name'=>'create_'.$org_id.'_attendances',
-                                '--schema'=>'employee_id:string, user_id:integer:nullable, shift_id:integer:nullable, date:string, month:string, year:string, day:string:nullable, punch_in_out:string:nullable, month_week_no:integer:nullable, total_hour:string:nullable, actual_hour:string:nullable, over_time:string:nullable, due_time:string:nullable, import_data:string:nullable, attendance_status:string:nullable, submited_by:string:nullable, check_for_checkin_checkout:string:null, in_out_data:string:nullable, lock_status:integer:default(1), deleted_at:timestamp:nullable'
+                                '--schema'=>'employee_id:string, user_id:integer:nullable, shift_id:integer:nullable, date:string, month:string, year:string, day:string:nullable, punch_in_out:string:nullable, month_week_no:integer:nullable, total_hour:string:nullable, actual_hour:string:nullable, over_time:string:nullable, due_time:string:nullable, import_data:string:nullable, attendance_status:string:nullable, submited_by:string:nullable, check_for_checkin_checkout:string:null, in_out_data:string:nullable, lock_status:integer:default(1), shift_hours:string:nullable, deleted_at:timestamp:nullable'
                             ]);
 		Artisan::call('make:migration:schema',[
 								'--model'=>false,
@@ -685,7 +684,7 @@ try{
           Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_opening_meta',
-                                '--schema'=>'opening_id:integer, key:string, value:text'
+                                '--schema'=>'opening_id:integer, key:string, value:text:nullable'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,

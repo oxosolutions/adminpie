@@ -9,8 +9,18 @@ $page_title_data = array(
 'add_new' => '+ Apply leave'
 ); 
 
-//dd($data, $current_used_leave);
 $till_year = date('Y') +2;
+$today = date('Y-m-d');
+
+$leaving_date = get_current_user_meta('date_of_leaving');
+if($leaving_date!=false){
+   if(date('Y-m-d',strtotime($leaving_date)) < $today){
+      unset($page_title_data['add_new']);
+   }
+   $till_year = date('Y',strtotime($leaving_date));
+}
+
+//dd($data, $current_used_leave);
 
 $range = range(1970, $till_year);
 $value = array_map( function($a){

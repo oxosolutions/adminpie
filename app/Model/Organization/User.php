@@ -56,7 +56,7 @@ class User extends Authenticatable
 
    public function metas()
    {
-    return $this->hasMany('App\Model\Organization\UsersMeta','user_id','id');
+    return $this->hasMany('App\Model\Organization\UsersMeta','user_id','user_id');
    }
    public function metas_for_attendance()
    {
