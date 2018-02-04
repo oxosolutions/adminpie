@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
 use Session;
 use App\Model\Organization\User;
+use Hash;
 class GroupUsers extends Authenticatable
 {
     protected $fillable = ['name','email','api_token','role_id','password','remember_token','app_password','status'];
@@ -112,5 +113,17 @@ class GroupUsers extends Authenticatable
 
     public function applications(){
         return $this->belongsTo('App\Model\Organization\Application','id','applicant_id');
+    }
+
+    public static function createUser($params){
+        $model = new self;
+        $model->name = $params['name'];
+        $model->email = $params['email'];
+        $model->password = Hash::make($params['password']);
+        $model->app_password = $params['password'];
+        $model->status = 1;
+        $model->deleted_at = 0;
+        $model->save();
+        return $model;
     }
 }

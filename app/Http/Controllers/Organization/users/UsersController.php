@@ -63,13 +63,7 @@ class UsersController extends Controller
         }else{
             $rules = ['name' => 'required', 'email' =>  'required|email', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
             $this->validate($request,$rules);
-            $user = new org_user;
-            $user->fill($request->only('name','email'));
-            $user->password = Hash::make($request->password);
-            $user->app_password = $request->password;
-            $user->status = 1;
-            $user->deleted_at = 0;
-            $user->save();
+            $user = org_user::createUser($request->toArray());
             $user_id = $user->id;
             $org_user =  new User();
             $org_user->user_id =  $user_id;

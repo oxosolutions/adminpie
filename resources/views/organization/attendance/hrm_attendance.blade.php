@@ -10,16 +10,38 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@include('common.pagecontentstart')
+@include('common.page_content_primary_start')
+@include('organization.attendance._tabs')
+
 
 <?php
+	$errors = array();
+	$attendance_mode_manual = $attendance_mode_machine = $attendance_mode_system = 0;
+
+	$attendance_sources = get_organization_meta('attendance_sources');
+	if($attendance_sources){
+		$attendance_sources = json_decode($attendance_sources,true);
+		if(is_array($attendance_sources)){
+			$attendance_mode_manual = in_array('manual',$attendance_sources)?1:0;
+			$attendance_mode_machine = in_array('machine',$attendance_sources)?1:0;
+			$attendance_mode_system = in_array('system',$attendance_sources)?1:0;
+		}
+	}
+	$mark_attendance_date = Carbon\Carbon::parse($mark_attendance_date);
+	// $mark_attendance_date_formatted = $mark_attendance_date->format('j')."<sup>".$mark_attendance_date->format('S')."</sup> ".$mark_attendance_date->format('F, Y');
+
+	// dump($mark_attendance_date);
+	// dump($mark_attendance_date_formatted);
 
 
-			if(isset($filter_dates)){
-				$dateFilter = $filter_dates['year'].'-'.$filter_dates['month'].'-'.$filter_dates['date'];
-				$current_date_time = Carbon\Carbon::parse($dateFilter);
-			}else{
-					$current_date_time = Carbon\Carbon::now('Asia/Calcutta');
-				}
+
+		if(isset($filter_dates)){
+			$dateFilter = $filter_dates['year'].'-'.$filter_dates['month'].'-'.$filter_dates['date'];
+			$current_date_time = Carbon\Carbon::parse($dateFilter);
+		}else{
+				$current_date_time = Carbon\Carbon::now('Asia/Calcutta');
+			}
 		$dateformat = $current_date_time->toDayDateTimeString();
 		$daysinmo = $current_date_time->daysInMonth;
 		$month 	= $current_date_time->month;
@@ -34,238 +56,189 @@
 ?>
 
 
-{{-- <div class="row">
-	<h5 class="text-center">Attendance<span style="font-size:26;"> {{$dateformat}}</span></h5>
-</div> --}}
-
-@include('common.pagecontentstart')
-@include('common.page_content_primary_start')		
-@include('organization.attendance._tabs')
-	<div class="ar">
-		<div class="ac l50 pl-0">
-			<div class="aione-border p-15">
-				Attendance {{$dateformat}}
-			</div>
+	<div class="ar aione-border pt-10 mb-15">
+		<div class="ac l60 line-height-40">
+			{!! @$mark_attendance_date_formatted !!} 
 		</div>
-		<div class="ac l50 pr-0">
-			<div class="aione-border p-15">
-				{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post','class'=>'ar'] )!!}
-				<div class="mb-10">
-					Select Date
-				</div>
-				<div>
-					<select name="date"  class="browser-default" id="days">
-						@foreach($daysInMonth as $key =>$val)
-						@if($date==$val)
-						<option selected="selected" value="{{$val}}">{{$val}} </option>
-
-							@else
-								<option value="{{$val}}">{{$val}} </option>
-							@endif
-						@endforeach
-
-					</select>
-				</div>
-				<div>
-					<select name="month" id="months" class="browser-default ">
-						@foreach($MO_data as $key => $val)
-							@if($month==$key)
-								<option selected="selected" value="{{$key}}">{{$val}} </option>
-							@else
-								<option value="{{$key}}">{{$val}} </option>
-							@endif
-						@endforeach
-					</select>
-				</div>
-				<div>
-					<select  name="year" class="browser-default " id="year">  
-						@foreach($year_data as $key =>$val)
-						@if($year==$val)
-						<option selected="selected" value="{{$val}}">{{$val}} </option>
-
-							@else
-								<option value="{{$val}}">{{$val}} </option>
-							@endif
-						@endforeach
-					</select>
-				</div>
-				<div>
-					<button type="submit" style="width: 100%">Mark Attendance</button>
+		<div class="ac l40">
+			{!!Form::open(['route'=>'hr.attendance' , 'method'=>'post','class'=>'ar'] )!!}
+				{{-- {!! FormGenerator::GenerateForm('mark-attendance-datepicker-form')!!} --}}
+				<div data-field-type="text" style="width: 40px;" class="aione-float-right field-wrapper  field-wrapper-name field-wrapper-type-text ">
+					<div id="field_name" class="field field-type-text ">
+						<input id="mark_attendance_date" type="date" name="mark-attendance-date" value="{{$mark_attendance_date}}" class="datepicker" >
+					</div><!-- field -->
 				</div>
 			{!!Form::close()!!}	
-			</div>
 		</div>
 	</div>
-<div class="card">
-	
-		
-		
-				
-			
-			
-				<h5 class="design-style"><span></h5>	
-			
-			
-		
-	
-	<div class="table-responsive">
 	@if($day=='Sunday')
 		<h1> Sunday off </h1>
 	@else
 	{!!Form::open(['route'=>'hr_store.attendance' , 'method'=>'post'] )!!}
-					{!! Form::hidden('dates[year]',$year,['class' => 'form-control']) !!}
-					@if(strlen($month)==1)
-					{!! Form::hidden('dates[month]','0'.$month,['class' => 'form-control']) !!}
-					@else
-					{!! Form::hidden('dates[month]',$month,['class' => 'form-control']) !!}
-					@endif
-					{!! Form::hidden('dates[date]',$date,['class' => 'form-control']) !!}
-					{!! Form::hidden('dates[day]',$day,['class' => 'form-control']) !!}
-					{!! Form::hidden('dates[month_week_no]',$month_week_no,['class' => 'form-control']) !!}
-					
-<table class="table table-bordered table-striped">
-	<thead>
-		<tr class="table-tr">
-			<th>Sr</th>
-			<th>Employee</th>
-			<th>Name</th>
-			<th>Designation</th>
-			<th>Department</th>
-			<th>Attendance Status</th>
-			<th>Punch In Out</th>		
-			<th>Check In Out</th>
- 		</tr>
-	</thead>
-	<tbody>
-	<?php
-	 	$lock_status	=1; 
-	 	$designation 	= $department = null;
-		$attValue 		=  $attendance_data->toArray();
-	?>
-		@foreach($employee_data as $keys => $vals)
-		@php 
- 		$user_meta  = $vals->metas_for_attendance->mapwithKeys(function($item){
-	 					return [$item['key'] => $item['value'] ];
-						 }); 
- 	
- 		if(!empty($user_meta['designation'])){
- 			$designation =	EmployeeHelper::get_designation($user_meta['designation']);
- 		}
- 		if(!empty($user_meta['department'])){
- 			$department =	EmployeeHelper::get_department($user_meta['department']);
- 		}
-		 if(empty($user_meta['employee_id']) || empty($user_meta['user_shift']) || empty($user_meta['date_of_joining'])){
-			continue;
-		}
-		if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat)) || ( !empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d', strtotime($dateformat)))) {
-				continue;
-		}
- 			$in_out_data = $punch_in_out = $attendance_status = null;
-			$emp_id = $user_meta['employee_id'];
-			if(!empty($attValue[$emp_id]['attendance_status'])){
-				$attendance_status = $attValue[$emp_id]['attendance_status'];
-			}
-			if(!empty($attValue[$emp_id]['punch_in_out'])){
-				$punch_in_out = json_decode($attValue[$emp_id]['punch_in_out'],true);
-			}
-			if(!empty($attValue[$emp_id]['in_out_data'])){
-				$in_out_data = json_decode($attValue[$emp_id]['in_out_data'],true);
-			}
-			if(!empty($attValue[$emp_id]['lock_status'])){
-				$lock_status = $attValue[$emp_id]['lock_status'];
-			}
-		@endphp
-
-		
-			<tr class="table-tr">
-				<td>{{$loop->iteration}}</td>
-				<td>{{@$user_meta['employee_id']}} {{$user_meta['user_shift'] }}</td>
-				<td>{{@$vals['name']}}</td>
-
-				<td>{{@$designation}}</td>
-				<td>{{@$department}}</td>
-			@if($lock_status)
-
-				<td> {!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
-					 {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave','LP'=>'Loss of pay'],@$attendance_status	,['class' => 'browser-default', ]) !!}</td>
-				@if($punch_in_out)
-						<td>
-						@foreach($punch_in_out as $key =>$val)
-						<div>
-								{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!} <a class="del_check">del </a>
-						</div>
-						@endforeach
-						</td>
-						@else
-						<td><a href="#" class="show_punch_in_out">add punch in out time1</a> <div class="add_punch_in_out">{!! Form::text($emp_id."[punch_in_out][]", null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}
-						{!! Form::text($emp_id."[punch_in_out][]",null,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!}  </div> </td>
-				@endif
-				@if($in_out_data)
-					
-						<td>
-						@foreach($in_out_data as $key =>$val)
-						{{$loop->iteration}}
-							@foreach($val as $ip =>$times)
-								<div>
-										 {{$ip}}{!! Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
-								</div>
-							@endforeach
-						@endforeach
-						</td>
-						@else
-						<td>--</td>
-					@endif
-			@else
-				<td>{{@$attendance_status}}</td>
-				@if($punch_in_out)
-						<td>
-						@foreach($punch_in_out as $key =>$val)
-						<div>
-								{{($val == null) ? '--' : $val}}
-						</div>
-						@endforeach
-						</td>
-						@else
-						<td>--</td>
-					@endif
-					
-				@if($in_out_data)
-					
-						<td>
-						@foreach($in_out_data as $key =>$val)
-						{{$loop->iteration}}
-							@foreach($val as $ip =>$times)
-								<div>
-										 {{$ip}}{{($times == null) ? '--' : $times}}
-								</div>
-
-							@endforeach
-						@endforeach
-						</td>
-						@else
-						<td>--</td>
-					@endif
-			@endif
-			</tr>
-	
-
-		
-		@endforeach
-		
-	</tbody>
-</table>
-		@if(@$lock_status==1)
-		<div class="col s12 m3 l12 aione-field-wrapper right-align">
-			<button class="btn waves-effect waves-light light-blue-text text-darken-2 white darken-2" type="submit" >Save Attendance
-				<i class="material-icons right">save</i>
-			</button>
-		</div>
+		{!! Form::hidden('dates[year]',$year,['class' => 'form-control']) !!}
+		@if(strlen($month)==1)
+		{!! Form::hidden('dates[month]','0'.$month,['class' => 'form-control']) !!}
+		@else
+		{!! Form::hidden('dates[month]',$month,['class' => 'form-control']) !!}
 		@endif
+		{!! Form::hidden('dates[date]',$date,['class' => 'form-control']) !!}
+		{!! Form::hidden('dates[day]',$day,['class' => 'form-control']) !!}
+		{!! Form::hidden('dates[month_week_no]',$month_week_no,['class' => 'form-control']) !!}
+		<div class="aione-table">
+			<table class="">
+				<thead>
+					<tr class="table-tr">
+						<th>Status</th>
+						<th>Employee</th>
+						<th>Name</th>
+						<th>Designation</th>
+						<th>Department</th>
+						@if($attendance_mode_manual)
+							<th>Attendance Status</th>
+						@endif
+						@if($attendance_mode_machine)
+						<th>Punch In Out</th>		
+						@endif
+						@if($attendance_mode_system)
+						<th>Check In Out</th>
+						@endif
+			 		</tr>
+				</thead>
+				<tbody>
+				<?php
+				 	$lock_status	=1; 
+				 	$designation 	= $department = null;
+					$attValue 		=  $attendance_data->toArray();
+				?>
 
-	{!! Form::close() !!}
-	@endif
-	</div>
-</div>
+					@foreach($employee_data as $keys => $vals)
+					@php 
+					$attendance_status_class = 'bg-red';	
+					// $attendance_status_class = 'bg-green';	
+			 		$user_meta  = $vals->metas_for_attendance->mapwithKeys(function($item){
+				 					return [$item['key'] => $item['value'] ];
+									 }); 
+			 	
+			 		if(!empty($user_meta['designation'])){
+			 			$designation =	EmployeeHelper::get_designation($user_meta['designation']);
+			 		}
+			 		if(!empty($user_meta['department'])){
+			 			$department =	EmployeeHelper::get_department($user_meta['department']);
+			 		}
+					 if(empty($user_meta['employee_id']) || empty($user_meta['user_shift']) || empty($user_meta['date_of_joining'])){
+						continue;
+					}
+					if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat)) || ( !empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d', strtotime($dateformat)))) {
+							continue;
+					}
+			 			$in_out_data = $punch_in_out = $attendance_status = null;
+						$emp_id = $user_meta['employee_id'];
+						if(!empty($attValue[$emp_id]['attendance_status'])){
+							$attendance_status = $attValue[$emp_id]['attendance_status'];
+						}
+						if(!empty($attValue[$emp_id]['punch_in_out'])){
+							$punch_in_out = json_decode($attValue[$emp_id]['punch_in_out'],true);
+						}
+						if(!empty($attValue[$emp_id]['in_out_data'])){
+							$in_out_data = json_decode($attValue[$emp_id]['in_out_data'],true);
+						}
+						if(!empty($attValue[$emp_id]['lock_status'])){
+							$lock_status = $attValue[$emp_id]['lock_status'];
+						}
+					@endphp
+
+					
+						<tr class="table-tr">
+							<td><span class="mark-attendance-status {{@$attendance_status_class}}"></span></td>
+							<td>{{@$user_meta['employee_id']}} {{-- {{$user_meta['user_shift'] }} --}}</td>
+							<td>{{@$vals['name']}}</td>
+
+							<td>{{@$designation}}</td>
+							<td>{{@$department}}</td>
+						@if($lock_status)
+							<td> {!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
+								 {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave','LP'=>'Loss of pay'],@$attendance_status	,['class' => 'browser-default', ]) !!}</td>
+									
+							@if($punch_in_out && $attendance_mode_machine)
+									<td>
+									@foreach($punch_in_out as $key =>$val)
+									
+									<div>
+											{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'punch_in_out'.$emp_id]) !!} <a class="del_check">del </a>
+									</div>
+									@endforeach
+									</td>
+									@else
+									
+									
+							@endif
+							@if($in_out_data && $attendance_mode_system)
+								
+									<td>
+									@foreach($in_out_data as $key =>$val)
+									{{$loop->iteration}}
+										@foreach($val as $ip =>$times)
+											<div>
+													 {{$ip}}{!! Form::text($emp_id."[in_out_data][][$ip]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
+											</div>
+										@endforeach
+									@endforeach
+									</td>
+									@else
+									<td>--</td>
+								@endif
+						@else
+							<td>{{@$attendance_status}}</td>
+							@if($punch_in_out)
+									<td>
+									@foreach($punch_in_out as $key =>$val)
+									<div>
+											{{($val == null) ? '--' : $val}}
+									</div>
+									@endforeach
+									</td>
+									@else
+									<td>--</td>
+								@endif
+								
+							@if($in_out_data)
+								
+									<td>
+									@foreach($in_out_data as $key =>$val)
+									{{$loop->iteration}}
+										@foreach($val as $ip =>$times)
+											<div>
+													 {{$ip}}{{($times == null) ? '--' : $times}}
+											</div>
+
+										@endforeach
+									@endforeach
+									</td>
+									@else
+									<td>--</td>
+								@endif
+						@endif
+						</tr>
+				
+
+					
+					@endforeach
+					
+				</tbody>
+			</table>	
+		</div>
+		
+		@if(@$lock_status==1)
+			<div class="col s12 m3 l12 aione-field-wrapper right-align">
+				<button class="" type="submit" >Save Attendance
+					{{-- <i class="material-icons right">save</i> --}}
+				</button>
+			</div>
+			@endif
+
+		{!! Form::close() !!}
+		@endif
+	
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')
@@ -296,12 +269,7 @@
 		margin-left: 54px;
 	   
 	}
-	.table > thead > tr > th{
-		    padding: 7px 7px !important;
-	}	
-	.table > tbody > tr > td{
-		  padding: 7px 7px;
-	}
+	
 	.pager li > a{
 		    background-color: #006694;
 		    color: #ffffff;
@@ -332,33 +300,31 @@
 	.table-tr{
 		text-align: center;
 	}
-	/*select{
+	
+	.mark-attendance-status{
 		display: block;
-	}*/
-	table {
-    border-collapse: collapse;
-    width: 100%;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		margin: 0 auto;
+	}
+	#mark_attendance_date{
+		text-indent: 100px;
+	}
+	#mark_attendance_date:before{
+		content: "\f073";
+		font-family: 'font-awesome';
 	}
 
-	th, td {
-	    text-align: left;
-	    padding: 8px;
-	}
-
-	tr:nth-child(even){background-color: #f2f2f2}
-
-	th {
-	    background-color: #e8e8e8;
-	    color: #676767;
-	    font-weight: 700
-	}
-	input{
-		margin: 0px !important;
-	}
+	
 </style>
 	<script type="text/javascript">
+	$(document).on('change', 'input[id="mark_attendance_date"]',function(){
+		this.form.submit();
+
+	});
 	$(document).ready(function(){
-		$('.add_punch_in_out').hide();
+		// $('.add_punch_in_out').hide();
 	});
 
 	$(document).on('click','.show_punch_in_out',function(e){
@@ -374,7 +340,6 @@
 				e.preventDefault();
 				$('.add-new-wrapper').toggleClass('active'); 
 			});
-
 		});
 
 		function add(id)

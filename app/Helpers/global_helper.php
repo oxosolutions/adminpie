@@ -1087,6 +1087,29 @@ function lang($key = null,$vars = null , $type = 'single'){
 	return $output;
 } 
 
+
+
+/************************************************************
+*	@function aione_format_date
+*	@description Returns formated date from string
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm data		[string	optional	default	null]
+*	@return date [string]
+************************************************************/
+
+function aione_format_date($date = null, $format = 'Y-m-d'){
+	$date = str_replace(",", " ", $date);
+	$date = str_replace("  ", " ", $date);
+	$date = strtotime($date);
+	$date = date($format,$date);
+	return $date;
+}
+
+
+
+
 /************************************************************
 *	@function to_html_table
 *	@description Returns HTML Table from an Array, an Object or JSON

@@ -6,7 +6,7 @@
 	 @include('common.pagecontentstart')
 		@include('common.page_content_primary_start')
 			@include('organization.settings._tabs')
-	{!!Form::model(@$model,['route'=>'settings.save','method'=>'POST','files'=>true])!!}
+	{!!Form::model(@$model,['route'=>'save.user.settings','method'=>'POST','files'=>true])!!}
 		{!!FormGenerator::GenerateForm('hrmsettings')!!}
 	{!!Form::close()!!}
 	@include('common.page_content_primary_end')

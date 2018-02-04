@@ -123,15 +123,10 @@ class UsersController extends Controller
           Session::flash('error','Email already exist');
           return back();
       }else{
-          $this->validateUseForm($request);
-          $model = new GroupUsers;
-          $model->name = $request->name;
-          $model->email = $request->email;
-          $model->password = Hash::make($request->password);
-          $model->app_password = $request->password;
-          $model->save();
+            $this->validateUseForm($request);
+            GroupUsers::createUser($request->toArray());
             Session::flash('success','User created succesfully');
-          return redirect()->route('group.users'); 
+            return redirect()->route('group.users'); 
       }
     }
     

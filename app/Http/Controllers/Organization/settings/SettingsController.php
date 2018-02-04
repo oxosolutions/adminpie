@@ -53,7 +53,7 @@ class SettingsController extends Controller
 			$model->save();
 		}
 		Session::flash('success', 'Successfully Updated!');
-		return redirect()->route('setting.user');
+		return back();
     }
 
     

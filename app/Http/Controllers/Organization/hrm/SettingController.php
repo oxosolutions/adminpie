@@ -267,7 +267,12 @@ class SettingController extends Controller
     	$model = OrganizationSetting::get();
     	$modelArray = [];
     	foreach($model as $key => $value){
-    		$modelArray[$value->key] = $value->value;
+            $jsonDecoded = json_decode($value->value);
+            if(is_array($jsonDecoded)){
+                $modelArray[$value->key] = $jsonDecoded;
+            }else{
+                $modelArray[$value->key] = $value->value;
+            }
     	}
     	return view('organization.settings.hrm',['model'=>$modelArray]);
     }

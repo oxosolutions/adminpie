@@ -1,24 +1,24 @@
 <?php
 
 namespace App\Http\Controllers\Organization\hrm;
-
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Model\Organization\OrganizationSetting as org_setting;
+use App\Repositories\User\UserRepositoryContract;
+use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\Designation As DES;
 use App\Model\Organization\Department As DEP;
 use App\Model\Organization\Category as CAT;
-use App\Repositories\User\UserRepositoryContract;
+use App\Http\Controllers\Controller;
+use App\Model\Organization\UsersMeta;
 use App\Model\Organization\User;
 use App\Model\Organization\UsersRole;
 use App\Model\Organization\UserRoleMapping;
-use App\Model\Organization\OrganizationSetting as org_setting;
-use App\Model\Organization\UsersMeta;
+use Illuminate\Http\Request;
+
 use Session;
 use Auth;
 use Excel;
 use Crypt;
 use Config;
-use App\Model\Organization\OrganizationSetting;
 use Datatables;
 use App\Model\Group\GroupUsers;
 use Hash;
@@ -507,7 +507,7 @@ class EmployeeController extends Controller
         $tbl = Session::get('group_id');
         $valid_fields = [
                             'name'          =>  'required',
-                            'email'         =>  'required|email|unique:group_'.$tbl.'_users',
+                            'email'         =>  'required|email',
                             'password'      =>  'required|min:8',
                             'employee_id'   =>  'required|min:4|regex:/^[a-z0-9-]+$/|max:256',
                             'user_shift'    =>  'required',
@@ -649,7 +649,7 @@ class EmployeeController extends Controller
     {
         try{
             DB::beginTransaction();
-            $user =  User::where('user_id', $id);
+            $user =  User::where(['user_id'=>$id,'user_type'=>'employee']);
             if(empty($user)){
                 return back();
             }
@@ -706,7 +706,7 @@ class EmployeeController extends Controller
     protected function check_employee_id($employee_id){
         $emp_id_check  = UsersMeta::where(['key'=>'employee_id', 'value'=> $employee_id]);
         if($emp_id_check->exists()){
-              return true;  
+              return true;
         }
         return false;
     }
@@ -1066,5 +1066,8 @@ Add user meta use in add metas
     {
         return view('organization.employee.import-employees');
     }
- 
+
+    public function addEmployee(){
+        return view('organization.employee.add');
+    }
 }

@@ -14,6 +14,7 @@
 	'show_navigation' => 'yes',
 	'page_title' => 'Employees',
 	'add_new' => '+ Add Employee',
+  'route' => 'add.employee',
 	'second_button_title' => 'Export Employees',
 	'second_button_route' => 'export.employee',
 	'third_button_title' => 'Import Employees',
@@ -24,115 +25,7 @@
 	 	$page_title_data['show_add_new_button'] ='no';
 	 }
 @endphp
-<style type="text/css">
 
-.dataTables_filter,
-.dataTables_length{
-  display: inline-block;
-  vertical-align: top;
-}
-.dataTables_filter{
-  width: 70%;
-}
-.dataTables_length{
-  width: 30%;
-}
-.dataTables_filter input{
-  width: 97%;
-  height: 36px;
-  border: 1px solid #ccc;
-}
-.dataTable td > div > ul{
-  display: none !important;
-  position: absolute;
-  left: 70px;
-}
-.dataTable td > div > ul > li{
-  display: inline-block;
-  margin-top: 6px;
-}
-/*.dataTable td > div > ul > li:before{
-    font-family: FontAwesome;
-    content: "\f040";
-    color:#0095ff;
-    padding: 3px 3px;
-    border-radius: 3px;
-    font-size: 18px;
-    margin-left: 10px;
-} 
-.dataTable td > div > ul > li:after{
-    font-family: FontAwesome;
-    content: "\f014";
-    color: #ff4700;
-    padding: 3px 5px;
-    border-radius: 3px;
-    font-size: 18px;
-    margin-left: 5px;
-} 
-*/
-/*.delete-datalist-item{
-	display: none;
-} */
-.dataTable tr{
-  position: relative;
-}
-.dataTable tr:hover td > div > ul{
-  display: block !important
-}
-
-table{
-    width: 100%;
-    word-wrap: break-word;
-    table-layout: fixed;
-}
-.dataTables_processing{
-  padding:20px;
-  background-color: white;
-  position: fixed;
-  top: calc(50% - 10px);
-  left: calc(50% - 100px);
-}
-.dataTables_paginate{
-  margin-top: 30px;
-}
-.current{
-	background: #2e73aa !important;
-    color: white !important;
-    border: 1px solid #2e73aa !important;
-}
-.dataTables_paginate .previous, .dataTables_paginate .next {
-	border: 1px solid #e8e8e8;
-    padding: 8px 15px;
-}
-.dataTables_paginate .paginate_button{
-	border: 1px solid #e8e8e8;
-    padding: 8px 15px;
-    margin: 2px;
-    color: #6e6e6e;
-}
-.odd, .even{
-    border-bottom: 1px solid #e8e8e8;
-}
-.sorting{																					
-	color:#2e73aa;
-}
-.sorting_asc, .actions{
-	color:#2e73aa;
-}
-.actions .aione-status.active{
-	
-}
-.actions{
-	text-align: center;
-}
-#example{
-    margin-top: 34px;
-    border-top: 1px solid #e8e8e8;
-}
-.aione-page-content{
-	margin: 34px 10px 20px 0;
-}
-</style>
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -243,10 +136,130 @@ table{
 	
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+<style type="text/css">
 
-{!! Form::open(['route'=>'store.employee' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Employee','button_title'=>'Save Employee','section'=>'addempsec1']])
-{!!Form::close()!!}
+.dataTables_filter,
+.dataTables_length{
+  display: inline-block;
+  vertical-align: top;
+}
+.dataTables_filter{
+  width: 70%;
+}
+.dataTables_length{
+  width: 30%;
+}
+.dataTables_filter input{
+  width: 97%;
+  height: 36px;
+  border: 1px solid #ccc;
+}
+.dataTable td > div > ul{
+  display: none !important;
+  position: absolute;
+  left: 70px;
+}
+.dataTable td > div > ul > li{
+  display: inline-block;
+  margin-top: 6px;
+}
+/*.dataTable td > div > ul > li:before{
+    font-family: FontAwesome;
+    content: "\f040";
+    color:#0095ff;
+    padding: 3px 3px;
+    border-radius: 3px;
+    font-size: 18px;
+    margin-left: 10px;
+} 
+.dataTable td > div > ul > li:after{
+    font-family: FontAwesome;
+    content: "\f014";
+    color: #ff4700;
+    padding: 3px 5px;
+    border-radius: 3px;
+    font-size: 18px;
+    margin-left: 5px;
+} 
+*/
+/*.delete-datalist-item{
+  display: none;
+} */
+.dataTable tr{
+  position: relative;
+}
+.dataTable tr:hover td > div > ul{
+  display: block !important
+}
+
+table{
+    width: 100%;
+    word-wrap: break-word;
+    table-layout: fixed;
+}
+.dataTables_processing{
+  padding:20px;
+  background-color: white;
+  position: fixed;
+  top: calc(50% - 10px);
+  left: calc(50% - 100px);
+}
+.dataTables_paginate{
+  margin-top: 30px;
+}
+.current{
+  background: #2e73aa !important;
+    color: white !important;
+    border: 1px solid #2e73aa !important;
+}
+.dataTables_paginate .previous, .dataTables_paginate .next {
+  border: 1px solid #e8e8e8;
+    padding: 8px 15px;
+}
+.dataTables_paginate .paginate_button{
+  border: 1px solid #e8e8e8;
+    padding: 8px 15px;
+    margin: 2px;
+    color: #6e6e6e;
+}
+.odd, .even{
+    border-bottom: 1px solid #e8e8e8;
+}
+.sorting{                                         
+  color:#2e73aa;
+}
+.sorting_asc, .actions{
+  color:#2e73aa;
+}
+.actions .aione-status.active{
+  
+}
+.actions{
+  text-align: center;
+}
+#example{
+    margin-top: 34px;
+    border-top: 1px solid #e8e8e8;
+}
+.aione-page-content{
+  margin: 34px 10px 20px 0;
+}
+  .aione-status.active{
+        border-color: #9ccc65;
+}
+.aione-status{
+  display: inline-block;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    border: 3px solid #ef5350;
+    border-radius: 50%;
+}
+.aione-status.pending{
+  border-color: orange;
+}
+</style>
+
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

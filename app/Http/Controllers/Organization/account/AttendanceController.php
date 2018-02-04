@@ -11,18 +11,31 @@ use App\Model\Organization\Employee;
 use Carbon\Carbon;
 use Auth;
 use App\Model\Group\GroupUsers as US;
+use Session;
 
 class AttendanceController extends Controller
 {
 
-    public function myattendance(Request $request, $id = null){
+    public function myattendance(Request $request, $user_id = null){
         //can_i_access_this_user($id);
+        $employee_name =null;
         $where['year'] = $year = Carbon::now()->year;
-        $empId = get_current_user_meta('employee_id');
-       if($empId==false){
+        if(!empty($user_id)){
+            $empId = false;
+            $employee_name = get_user_detail(false , false, $user_id)->name;
+            $empId = get_user_meta($user_id, $key = 'employee_id', $array = false);
+            
+        }else{
+            $user =  get_user_detail($meta = false);
+            $employee_name = $user->name;
+            $user_id = $user->id;
+            $empId = get_current_user_meta('employee_id');
+        }
+        if($empId==false){
             $attendance_data = $where =null;
             $error = 'Your not employee user!';
-       }else{
+
+        }else{
             $error = null;
             $where['employee_id'] = $empId;
             if($request->isMethod('post')){
@@ -42,19 +55,22 @@ class AttendanceController extends Controller
     	$attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
         $attendance_data = $attendance->groupBy('month')->toArray();
     }
-        return view('organization.account.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where, 'error'=>$error]);
+
+        return view('organization.account.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where, 'error'=>$error, 'user_id'=>$user_id, 'employee_name'=>$employee_name]);
     }
 
     public function attendance_monthly(Request $request){
         $where['year'] = $request['year'];
         $where['month'] = $request['month'];
-        if(strlen($request['month'])==1)
-        {
+        if(strlen($request['month'])==1) {
            $where['month'] = '0'.$request['month'];  
         }
-       
         $user_id = Auth::guard('org')->user()->id;
-        $where['employee_id'] = get_user_meta(get_user_id(), $key = 'employee_id', $array = false);//Employee::where('user_id',$user_id)->select('employee_id')->first()->employee_id;
+        if(!empty($request['employee_id'])){
+            $where['employee_id'] = $request['employee_id'];
+        }else{
+            $where['employee_id'] = get_user_meta(get_user_id(), $key = 'employee_id', $array = false);//Employee::where('user_id',$user_id)->select('employee_id')->first()->employee_id;
+        }
         $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
         $attendance_data = $attendance->keyBy('date')->toArray();
         return view('organization.account.monthlyattandance',['attendance_data'=>$attendance_data ,'filter'=>$where]);

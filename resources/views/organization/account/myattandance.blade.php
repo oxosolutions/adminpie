@@ -30,15 +30,20 @@
 		background-color: rgb(243, 129, 115)!important;
 	}
 </style>
+@if(!empty($error))
+			<div class="aione-message warning">
+				{{$error}}	
+			</div>
+@else
 <div class="ar">
-
 		<div class="ac l50">
 			<div class="aione-border mb-25 p-15">
 				<div class="display-inline-block">
 					Name :
 				</div>
 				<div class="display-inline-block">
-					{{get_user_detail($meta = false )->name}}
+						{{@$employee_name}}
+					
 				</div>
 			</div>
 		</div>
@@ -260,6 +265,7 @@
 			
 		</div>
 	</div>
+@endif
 	<input type="hidden" id="token" value="{{csrf_token()}}" name="">
 @include('common.page_content_primary_end')
 		@include('common.page_content_secondry_start')
@@ -274,7 +280,7 @@
 				postData['year']  = year;
 				postData['_token'] = $("#token").val();
 				$.ajax({
-					url:route()+'/attendance',
+					url:route()+'/attendance/'+{{$user_id}},
 					type:'POST',
 					data:postData,
 					success:function(res){
@@ -292,6 +298,8 @@
 				postData ={};
 				postData['month'] = month;
 				postData['year']  = year;
+				postData['employee_id']  = {{$user_id}};
+
 				postData['_token'] = $("#token").val();
 				// alert(month+ ' '+year);
 			$.ajax({

@@ -323,6 +323,7 @@
 					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
 					Route::get('leave/add',              ['as'=> 'leave.add' , 'uses' =>'LeavesController@addLeaves']);
 					Route::get('leave/edit/{id?}',			['as'=> 'edit.leave' , 'uses' =>'LeavesController@editLeave']);
+					Route::get('employee/add', 				['as'=> 'add.employee' , 'uses' => 'EmployeeController@addEmployee']);
 
 				});
 				Route::group(['prefix'=>'hrm', 'namespace' => 'hrm'],function(){

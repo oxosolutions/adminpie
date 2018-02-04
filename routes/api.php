@@ -21,6 +21,10 @@ Route::post('/survey_api',['uses'=>'Api\SurveyController@surveys']);
 Route::post('/survey_filled_data',['uses'=>'Api\SurveyController@save_app_survey_filled_data']);
 Route::post('organization/users' , ['uses'=>"Api\SurveyController@organization_users"]);
 
+//Api for ajax requests
+Route::match(['get','post'],'ajax/handle' , ['uses'=>'Api\AjaxController@handle']);
+
+
 //api for complaint box Android App
 Route::post('/send_complaint' , [ 'uses' =>'Api\FeedbackController@complaintAppResponce'] );
 Route::get('/dataset/{active_code}/{token}' , [ 'uses' =>'Organization\dataset\DatasetController@api_response'] );

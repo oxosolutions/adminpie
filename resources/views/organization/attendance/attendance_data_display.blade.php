@@ -103,7 +103,6 @@
 									if($fweek_no < $joining_week)
 										continue;
 									}
-
 									if(!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year &&date('m', strtotime($user_meta['date_of_leaving'])) ==  $current_month){
 									$leaving_week = Carbon\Carbon::parse($user_meta['date_of_leaving'])->weekOfMonth;
 									if($fweek_no > $leaving_week)
@@ -123,8 +122,14 @@
 							echo '<div class="attendance-sheet">';
 								if(strlen($user_meta['employee_id']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($user_meta['employee_id'], 0,10).'.. </div>';
+									@endphp
+									<div class="attendanc-sheet content"><a href="{{route('account.attandance',['id'=>$value['id']])}}">{{substr($user_meta['employee_id'], 0,10)}}.. </a></div>
+						 			@php
 								}else{
-									echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].' </div>';
+									// echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].' </div>';
+									@endphp
+									<div class="attendanc-sheet content"><a href="{{route('account.attandance',['id'=>$value['id']])}}">{{$user_meta['employee_id']}} </a></div>
+						 			@php
 								}
 								
 								if(strlen($value['name']) > 10){

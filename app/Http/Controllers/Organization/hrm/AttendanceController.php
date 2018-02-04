@@ -20,6 +20,7 @@ use EmployeeHelper;
 use Session;
 use Auth;
 use Illuminate\Support\Collection;
+
 /*
     |--------------------------------------------------------------------------
     | Attendance Controller
@@ -503,21 +504,24 @@ class AttendanceController extends Controller
      * The attendance_by_hr use in Mark attendance, edit
      * @param -
      * @return view
-     * @author  paljinder Singh
+     * @author  paljinder Singh 
      */
 	public function attendance_by_hr(Request $request){
-		$filter_dates = $attendance_data = null;
+		
+		$attendance_data = null;
 		$current_dates = $this->current_date_data;
 		if($request->isMethod('post')){
-			$filter_dates = $current_dates = $request->except(['_token']);
+			$time = aione_format_date($request['mark-attendance-date']); 
+			$time = strtotime($time); 
+			$current_dates['year'] =  date('Y', $time);
+			$current_dates['month'] = date('m', $time);
+			$current_dates['date'] = date('d', $time);
 		}
-		$cDate =	date('Y-m-d',strtotime($current_dates["year"].'-'.$current_dates["month"].'-'.$current_dates["date"]));
-		$employee_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
+		$employee_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
-		if($request->isMethod('post')){
-			$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
-		}
-		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'filter_dates'=>$filter_dates]);
+		$mark_attendance_date = $current_dates['year'].'-'.$current_dates['month'].'-'.$current_dates['date'];
+
+		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'mark_attendance_date'=>$mark_attendance_date]);
 	}
 	/**
 	 * Gets the shift time Use in attendance_fill_hr *
@@ -537,6 +541,7 @@ class AttendanceController extends Controller
 	
 	public function attendance_fill_hr(Request $request )
 	{
+		
 		$current_date_data = $this->current_date_data;
 		$conditions = $request['dates'];
 		unset($request['dates']);

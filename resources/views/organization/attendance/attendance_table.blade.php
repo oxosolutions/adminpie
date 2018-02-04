@@ -1,141 +1,7 @@
-<style type="text/css">
-	 .aione-tooltip:before{
-	 	content: attr(data-title);
-        width: auto ;
-        white-space: pre ;
-    }
-    .attendance-tardy:after{
-    	content: '';
-    	position: absolute;
-    	height: 4px;
-    	width: 4px;
-    	border-radius:50%;
-    	background-color: red;
-    	bottom: 4px;
-    	right: 4px;
-    }
-   .aione-tabs{
-      border-bottom: 1px solid #e8e8e8;
-      padding-bottom: 4px;
-      padding: 0px;
-      margin: 0px;
-   }
-   .aione-tabs > .tab{
-     
-    display: inline-block;
-   }
-   .aione-tabs > .tab:hover{
-      background-color: #e8e8e8;
-          border-bottom: 1px solid #EEE;
-   }
-   .aione-tabs > .tab > a{
-    padding: 0px 12px  !important; 
-    line-height: 40px;
-    display: inline-block; 
-    color: #0073aa;
-   }
-   
-   .aione-active a{
-      color: white !important;
-      font-weight: 500;
-      background-color: rgb(243, 129, 115) !important;
-   }
 
-
-	.aione-navigation-1 a{
-		    display: inline-block;
-		    text-align: center;
-		    width: 30px;
-		    line-height: 30px;
-	}
-	.aione-navigation-1 a:hover{
-		    background-color: #039BE5;
-		    color: white;
-	}
-
-	.nav-past{
-		    cursor: pointer;
-			display: inline-block;
-			position: relative;
-	}
-	.nav-past:before{
-		    content: "";
-		    position: absolute;
-		    top: 5px;
-		    left: -10px;
-		    border-top: 1px solid #d2d2d2;
-		    border-right: 1px solid #d2d2d2;
-		    width: 10px;
-		    height: 10px;
-		    -webkit-transform: rotate(225deg);
-		    -moz-transform: rotate(225deg);
-		    transform: rotate(225deg);
-		    -webkit-transition: all 150ms ease-out;
-		    -moz-transition: all 150ms ease-out;
-		    -o-transition: all 150ms ease-out;
-		    transition: all 150ms ease-out;
-	}
-
-	.select-dropdown{
-			margin-bottom: 0px !important;
-		    border: 1px solid #a8a8a8 !important;
-		    
-		}
-		.select-wrapper input.select-dropdown{
-			height: 30px;
-	    	line-height: 30px;
-	    	text-align: center;
-			
-			
-			background-color: white !important;
-		}
-		
-		.select-wrapper span.caret{
-			   
-			    z-index: 9 !important;
-		}
-		.dropdown-content{
-			background-color: white;
-			
-		}
-		.dropdown-content li>a, .dropdown-content li>span{
-			color: #0288D1 !important
-		}
-
-	.nav-future{
-		    cursor: pointer;
-			display: inline-block;
-			position: relative;
-	}
-	.nav-future:after{
-		    content: "";
-		    position: absolute;
-		    top: 5px;
-		    right: -10px;
-		    border-top: 1px solid #d2d2d2;
-		    border-right: 1px solid #d2d2d2;
-		    width: 10px;
-		    height: 10px;
-		    -webkit-transform: rotate(45deg);
-		    -moz-transform: rotate(45deg);
-		    transform: rotate(45deg);
-		    -webkit-transition: all 150ms ease-out;
-		    -moz-transition: all 150ms ease-out;
-		    -o-transition: all 150ms ease-out;
-		    transition: all 150ms ease-out;
-	}
-</style>
-{{-- @include('organization.attendance.date_manage'); --}}
 @php 
 $number = 1;
 	
-		// $holidays =[];
-		// if(!empty($holiday_data))
-		// {
-		// 	foreach ($holiday_data as $key => $value) {
-		// 	$holidays[$value->day] = $value->title;
-		// 	}
-		// }
 		$postDate = 01;
 		 if(!empty(Session::get('date')))
 		 {
@@ -161,19 +27,16 @@ $number = 1;
 		 $current_days = $dat->daysInMonth;
 		 $current_date = $dat->day;
 
-//previous days		 
 		$dat->subDay();
 		$pre_date = $dat->day;
 		$pre_month = $dat->month;
 		$pre_year = $dat->year;
 
-//next days 
 		$dat->addDays(2);
 		$nxt_date = $dat->day;
 		$nxt_date_month = $dat->month;
 		$nxt_date_year = $dat->year;
 
-//week 
 		$pre_week = $dat->weekOfMonth;
 		$pre_week_month = $dat->month;
 		$pre_week_year = $dat->year;
@@ -430,3 +293,130 @@ $number = 1;
 	</div>
 </div>
 @include('organization.attendance.attendance_data_display')
+<style type="text/css">
+	 .aione-tooltip:before{
+	 	content: attr(data-title);
+        width: auto ;
+        white-space: pre ;
+    }
+    .attendance-tardy:after{
+    	content: '';
+    	position: absolute;
+    	height: 4px;
+    	width: 4px;
+    	border-radius:50%;
+    	background-color: red;
+    	bottom: 4px;
+    	right: 4px;
+    }
+   .aione-tabs{
+      border-bottom: 1px solid #e8e8e8;
+      padding-bottom: 4px;
+      padding: 0px;
+      margin: 0px;
+   }
+   .aione-tabs > .tab{
+     
+    display: inline-block;
+   }
+   .aione-tabs > .tab:hover{
+      background-color: #e8e8e8;
+          border-bottom: 1px solid #EEE;
+   }
+   .aione-tabs > .tab > a{
+    padding: 0px 12px  !important; 
+    line-height: 40px;
+    display: inline-block; 
+    color: #0073aa;
+   }
+   
+   .aione-active a{
+      color: white !important;
+      font-weight: 500;
+      background-color: rgb(243, 129, 115) !important;
+   }
+
+
+	.aione-navigation-1 a{
+		    display: inline-block;
+		    text-align: center;
+		    width: 30px;
+		    line-height: 30px;
+	}
+	.aione-navigation-1 a:hover{
+		    background-color: #039BE5;
+		    color: white;
+	}
+
+	.nav-past{
+		    cursor: pointer;
+			display: inline-block;
+			position: relative;
+	}
+	.nav-past:before{
+		    content: "";
+		    position: absolute;
+		    top: 5px;
+		    left: -10px;
+		    border-top: 1px solid #d2d2d2;
+		    border-right: 1px solid #d2d2d2;
+		    width: 10px;
+		    height: 10px;
+		    -webkit-transform: rotate(225deg);
+		    -moz-transform: rotate(225deg);
+		    transform: rotate(225deg);
+		    -webkit-transition: all 150ms ease-out;
+		    -moz-transition: all 150ms ease-out;
+		    -o-transition: all 150ms ease-out;
+		    transition: all 150ms ease-out;
+	}
+
+	.select-dropdown{
+			margin-bottom: 0px !important;
+		    border: 1px solid #a8a8a8 !important;
+		    
+		}
+		.select-wrapper input.select-dropdown{
+			height: 30px;
+	    	line-height: 30px;
+	    	text-align: center;
+			
+			
+			background-color: white !important;
+		}
+		
+		.select-wrapper span.caret{
+			   
+			    z-index: 9 !important;
+		}
+		.dropdown-content{
+			background-color: white;
+			
+		}
+		.dropdown-content li>a, .dropdown-content li>span{
+			color: #0288D1 !important
+		}
+
+	.nav-future{
+		    cursor: pointer;
+			display: inline-block;
+			position: relative;
+	}
+	.nav-future:after{
+		    content: "";
+		    position: absolute;
+		    top: 5px;
+		    right: -10px;
+		    border-top: 1px solid #d2d2d2;
+		    border-right: 1px solid #d2d2d2;
+		    width: 10px;
+		    height: 10px;
+		    -webkit-transform: rotate(45deg);
+		    -moz-transform: rotate(45deg);
+		    transform: rotate(45deg);
+		    -webkit-transition: all 150ms ease-out;
+		    -moz-transition: all 150ms ease-out;
+		    -o-transition: all 150ms ease-out;
+		    transition: all 150ms ease-out;
+	}
+</style>
