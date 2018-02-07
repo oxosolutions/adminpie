@@ -92,6 +92,12 @@ class TasksController extends Controller{
         return redirect()->route('edit.tasks',$model->id);
     }
 
+    /**
+     * Update task status (pending,in_progress,completed) by ajax
+     * @param  Request $request having all posted data
+     * @return [type]        will return nothing
+     * @author Rahul
+     */
     public function changeStatus(Request $request){
 
         $status = $request->status;
@@ -100,24 +106,6 @@ class TasksController extends Controller{
     }
 
 
-
-
-
-    /*****************************************************************************************************************************/
-
-
-    
-
-    // chamge the task of the user from account user
-    //working wityh ajax (tasks.js)
-    
-    public function deleteTasks(Request $request)
-    {
-        Tasks::where('id',$request->id)->delete();
-        return back();
-    }
-
-    // edit by ajax ( extra)
     public function updateTask(Request $request)
     {   
         
@@ -161,6 +149,25 @@ class TasksController extends Controller{
             return 'true';
         }
     }
+
+
+
+
+
+    /*****************************************************************************************************************************/
+
+
+    
+
+    // chamge the task of the user from account user
+    //working wityh ajax (tasks.js)
+    
+    public function deleteTasks(Request $request)
+    {
+        Tasks::where('id',$request->id)->delete();
+        return back();
+    }
+
     
     //edit by php (Working)
     public function editTask($id)

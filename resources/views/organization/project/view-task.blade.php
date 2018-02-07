@@ -18,10 +18,10 @@
             <div class="aione-border mb-20">
                 <div class="p-10 bg-grey bg-lighten-3 font-size-18">
                      Task Details
-                     <button class="aione-button aione-float-right font-size-14 " data-target="edit-project-details"  style="margin-top: -6px">Edit</button>
-                     {{-- {!!Form::model(@$model,['route'=>['update.project.details',request()->id],'method'0=>'post'])!!}
-                     @include('common.modal-onclick',['data'=>['modal_id'=>'edit-project-details','heading'=>'Edit Project Details','button_title'=>'Save ','form'=>'edit-project-details-form']])
-                     {!! Form::close() !!} --}}
+                     <button class="aione-button aione-float-right font-size-14 " data-target="edit-task-modal"  style="margin-top: -6px">Edit</button>
+                     {{-- {!!Form::model(@$model,['route'=>['',request()->id],'method'=>'post'])!!} --}}
+                     @include('common.modal-onclick',['data'=>['modal_id'=>'edit-task-modal','heading'=>'Edit Task','button_title'=>'Save','section'=>'tassec1']])
+                     {{-- {!! Form::close() !!} --}}
                 </div>
                 <div class="p-10 ">
                     <div class="font-weight-600 line-height-30 font-size-18">

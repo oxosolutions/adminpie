@@ -68,7 +68,7 @@
                         @foreach($tasks->where('status',1) as $key => $task)
                             <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" taskid="{{ $task->id }}">
                                 <div class="truncate font-size-16 font-weight-700 line-height-22">
-                                    <a href="{{ route('view.tasks',$task->id) }}">{{ $task->title }}</a>
+                                    <a class="grey darken-1" href="{{ route('view.tasks',$task->id) }}">{{ $task->title }}</a>
                                 </div>
                                 <div class="line-height-22 grey truncate">
                                     Assign To : {{ call_model('Tasks','generateUsersList',$task) }}
@@ -91,7 +91,7 @@
                        @foreach($tasks->where('status',2) as $key => $task)
                             <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" taskid="{{ $task->id }}">
                                 <div class="truncate font-size-16 font-weight-700 line-height-22">
-                                    <a href="{{ route('view.tasks',$task->id) }}">{{ $task->title }}</a>
+                                    <a class="grey darken-1" href="{{ route('view.tasks',$task->id) }}">{{ $task->title }}</a>
                                 </div>
                                 <div class="line-height-22 grey truncate">
                                     Assign To : {{ call_model('Tasks','generateUsersList',$task) }}

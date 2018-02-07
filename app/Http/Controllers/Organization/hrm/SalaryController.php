@@ -206,17 +206,15 @@ class SalaryController extends Controller
           // dump($hours);
           $due_time = $attendance_data->where('over_time' ,'<', 0)->sum('over_time');
           $extra_time = $attendance_data->where('over_time' ,'>', 0)->sum('over_time');
-          if
+          $extra_hours = $due_hours =0;
           if($due_time){
               $replace_minus = str_replace('-', '',$due_time );
               $due_min =  $replace_minus/60;
               $due_hours = $this->convertToHoursMins($due_min);
-              dump('due_hours', $due_hours);
             } 
             if($extra_time){
-             $min =  $extra_time/60;
-            $extra_hours = $this->convertToHoursMins($min);
-              dump('extra_hours', $extra_hours);
+              $min =  $extra_time/60;
+              $extra_hours = $this->convertToHoursMins($min);
             } 
 
           $extra_days_in_month = $attendance_data->whereIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->count();
@@ -234,6 +232,7 @@ class SalaryController extends Controller
                     // $payScale =  Payscale::where('id',$meta['pay_scale'])->first();
                     $data[$userKey]['total_salary'] = $total_salary = $payScale['total_salary']; 
                     $data[$userKey]['per_day_amount'] = $per_day =  number_format($total_salary/30, 2,'.', '');
+                    $per_hour = $per_day/8;
                     // $attendance_data->where('attendance_status','present')->count();
                     $data[$userKey]['payscale'] = json_encode( $payScale );
                     $data[$userKey]['year'] = $year;
