@@ -38,6 +38,13 @@
     }
   @endphp
 @endif
+@if(Session::has('already_generate'))
+  @php
+    foreach(Session::get('already_generate') as $keys => $vals) {
+    $body_text .="<tr> <td>Error</td><td>".$vals."</td> <td>Salary slip alreay generated .</td> </tr>";
+    }
+  @endphp
+@endif
 
 
 @if(Session::has('error_payscale') || Session::has('error_attendance') )

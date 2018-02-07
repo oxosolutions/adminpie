@@ -195,6 +195,8 @@ class SalaryController extends Controller
                 if(empty($payScale)){
                     $payScale_error[] = $meta['employee_id'];
                 }else{
+
+        if(!Salary::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->exists()){
           $working_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->count();
           // $hours = $attendance_data->whereIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->mapWithKeys(function($data){
           //        $hours = json_decode($data['punch_in_out'],true);
@@ -204,8 +206,18 @@ class SalaryController extends Controller
           // dump($hours);
           $due_time = $attendance_data->where('over_time' ,'<', 0)->sum('over_time');
           $extra_time = $attendance_data->where('over_time' ,'>', 0)->sum('over_time');
-
-          dump($due_time, $extra_time);
+          if
+          if($due_time){
+              $replace_minus = str_replace('-', '',$due_time );
+              $due_min =  $replace_minus/60;
+              $due_hours = $this->convertToHoursMins($due_min);
+              dump('due_hours', $due_hours);
+            } 
+            if($extra_time){
+             $min =  $extra_time/60;
+            $extra_hours = $this->convertToHoursMins($min);
+              dump('extra_hours', $extra_hours);
+            } 
 
           $extra_days_in_month = $attendance_data->whereIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->count();
           // $extra_days_in_month->mapWithKeys()
@@ -247,17 +259,21 @@ class SalaryController extends Controller
                               $data[$userKey]['salary'] = $data[$userKey]['total_salary'];
                         }
                     }
+                }else{
+                 $already_generate[] = $meta['employee_id'];
                 }
+              }
               }else{
                   $error[] = $meta['employee_id'];
               }
           }
-          if(isset($data[$userKey])){
-            $salarys = new Salary();
-            $salarys->fill($data[$userKey]);
-            $salarys->save();
-	        $success[] = $meta['employee_id'];
-          }
+         // dd(1);
+         //  if(isset($data[$userKey])){
+         //    $salarys = new Salary();
+         //    $salarys->fill($data[$userKey]);
+         //    $salarys->save();
+	        // $success[] = $meta['employee_id'];
+         //  }
         }
 
         if(!empty($success)){
@@ -268,12 +284,17 @@ class SalaryController extends Controller
           // $payScale_error =  implode(', ', $payScale_error );
           Session::flash('error_payscale', $payScale_error);
         }
+        if(!empty($already_generate)){
+          $already_generate = array_unique($already_generate);
+          // $payScale_error =  implode(', ', $payScale_error );
+          Session::flash('already_generate', $already_generate);
+        }
 
         if(!empty($error)){
           // $employee =  implode(', ', $error );
           Session::flash('error_attendance', $error);
         }
-
+dd(122343);
 return back();
         
      //  $date = carbon::parse('2017-1-1');
@@ -318,6 +339,15 @@ return back();
 
 
   }
+
+  protected function convertToHoursMins($time, $format = '%02d:%02d') {
+    if ($time < 1) {
+        return;
+    }
+    $hours = floor($time / 60);
+    $minutes = ($time % 60);
+    return sprintf($format, $hours, $minutes);
+}
 	public function generate_salary(Request $request){
 
     $current_dates = date('Y-m-d');

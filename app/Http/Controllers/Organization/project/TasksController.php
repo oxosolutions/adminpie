@@ -26,7 +26,8 @@ class TasksController extends Controller{
      */
     public function viewTask($id)
     {
-        return view('organization.project.view-task');
+        $model = Tasks::where('id',$id)->first();
+        return view('organization.project.view-task',['task'=>$model]);
     }
 
 
@@ -91,6 +92,13 @@ class TasksController extends Controller{
         return redirect()->route('edit.tasks',$model->id);
     }
 
+    public function changeStatus(Request $request){
+
+        $status = $request->status;
+        
+        Tasks::where('id',$request->task_id)->update(['status'=>$status]);
+    }
+
 
 
 
@@ -102,17 +110,7 @@ class TasksController extends Controller{
 
     // chamge the task of the user from account user
     //working wityh ajax (tasks.js)
-    public function changeStatus(Request $request)
-    {
-        if($request->status == 'pending'){
-            $status = '0';
-        }elseif($request->status == 'complete'){
-            $status = '1';
-        }elseif($request->status == 'in-progress'){
-            $status = '2';
-        }
-        $model = Tasks::where('id',$request->id)->update(['status'=>$status]);
-    }
+    
     public function deleteTasks(Request $request)
     {
         Tasks::where('id',$request->id)->delete();

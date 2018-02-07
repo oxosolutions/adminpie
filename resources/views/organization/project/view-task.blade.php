@@ -12,7 +12,8 @@
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-     <div class="ar">
+    {{-- {{ dump($task) }} --}}
+    <div class="ar">
         <div class="ac l65 aione-table">
             <div class="aione-border mb-20">
                 <div class="p-10 bg-grey bg-lighten-3 font-size-18">
@@ -24,40 +25,46 @@
                 </div>
                 <div class="p-10 ">
                     <div class="font-weight-600 line-height-30 font-size-18">
-                        Problem in UI    
+                        {{ $task->title }}    
                     </div>
                    
                     <div class="line-height-26 mb-15" style="text-align: justify;">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tincidunt, mi ultricies lacinia sollicitudin, nisi urna blandit nulla, sed porta massa lorem at nulla. Sed egestas quam velit, quis sollicitudin felis aliquet eget. Nunc at mauris ultricies augue pretium dapibus eu a odio. Integer non erat porttitor, aliquet nulla at, auctor neque. Curabitur maximus quam diam, at malesuada arcu sodales in. Nam orci sem, porttitor non diam ut, volutpat accumsan ligula. Maecenas et dui ipsum. Nulla dui sapien, ornare et lobortis a, pretium et mauris. Praesent libero tellus, auctor id mollis sit amet, maximus at eros. Vestibulum id efficitur nulla. Pellentesque ultricies, dolor sed suscipit dignissim, tortor sapien sollicitudin enim, ac sagittis dolor purus vitae felis. Nulla maximus massa ut vulputate rutrum. Donec ex arcu, vehicula a maximus vel, varius ut lectus. In quis dignissim sapien. Praesent a sem id urna hendrerit feugiat ac ac lorem.
+                        {{ $task->description }} 
                     </div>
                  
                     <table>
                         <tbody>
                             <tr>
                                 <td>Due Date</td>
-                                <td>12-12-12</td>
+                                <td>{{ $task->end_date }}</td>
                             </tr>
                             <tr>
                                 <td>Created At</td>
-                                <td>12-12-12</td>
+                                <td>{{ $task->created_at }}</td>
                             </tr>
                             <tr>
                                 <td>Created By</td>
                                 <td>
-                                    ashish
+                                    {{ user_id_to_name($task->created_by) }}
                                 </td>
                             </tr>
                             <tr>
                                 <td>Priority</td>
-                                <td>    
+                                <td>
+
                                     <span class="red">
-                                        High    
+                                        {{ ucWords($task->priority) }}    
                                     </span>
                                 </td>
                             </tr>
                             <tr>
                                 <td>Status</td>
-                                <td>working</td>
+                                <td>
+                                    <span class=" mr-5 bg-light-blue bg-darken-2 white p-2 ph-10 posi" style="border-radius: 4px">
+                                    {{ call_model('Tasks','getStatus',$task->status) }}
+
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

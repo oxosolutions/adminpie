@@ -32,6 +32,11 @@ use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
 
+function call_model($model,$method,$param = null){
+    $modelPath = 'App\\Model\\Organization\\'.$model;
+    $modelObject = new $modelPath;
+    return $modelObject->{$method}($param);
+}
 
 function user_id_to_name($user_id){
     $groupUser_model = GroupUsers::find($user_id);

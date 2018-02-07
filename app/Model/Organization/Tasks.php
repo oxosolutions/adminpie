@@ -51,4 +51,16 @@ class Tasks extends Model
         return $days.' '.$string ;
     }
 
+    public static function getStatus($status){
+        if($status == 0){
+            return 'Panding';
+        }
+        if($status == 1){
+            return 'In Progress';
+        }
+        if($status == 2){
+            return 'Completed';
+        }
+    }
+
 }

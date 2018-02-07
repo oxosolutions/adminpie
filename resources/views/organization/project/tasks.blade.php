@@ -26,16 +26,6 @@
        
 
        @endif
-		{{-- <div class="row">
-			
-            {!!Form::open(['route'=>'create.tasks','method'=>'POST','files'=>true])!!}
-                @if(array_key_exists('id',request()->route()->parameters()))
-                    <input type="hidden" name="project_id" value="{{request()->route()->parameters()['id']}}">
-                @endif
-                @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Task','button_title'=>'Save task','section'=>'tassec1']])
-             {!!Form::close()!!} 
-			@include('common.tasks')
-		</div> --}}
         <div class="ph-15 mb-10">
             <div class="aione-border  pt-10">
                 {!! FormGenerator::GenerateForm('project-task-filter-form') !!}           
@@ -51,15 +41,15 @@
                     </h5>
                     <div class="p-10 task-list" id="pending" style="min-height: 400px;max-height: 400px;overflow: auto;">
                         @foreach($tasks->where('status',0) as $key => $task)
-                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" >
+                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" taskid="{{ $task->id }}">
                                 <div class="truncate font-size-16 font-weight-700 line-height-22">
-                                    {{ $task->title }}
+                                    <a class="grey darken-1" href="{{ route('view.tasks',$task->id) }}"> {{ $task->title }} </a>
                                 </div>
                                 <div class="line-height-22 grey truncate">
-                                    Assign To : {{ $Tasks::generateUsersList($task) }}
+                                    Assign To : {{ call_model('Tasks','generateUsersList',$task) }}
                                 </div>
                                 <div class="line-height-22 grey truncate">
-                                    Due : {{ $Tasks::generateDaysLeft($task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
+                                    Due : {{ call_model('Tasks','generateDaysLeft',$task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
                                 </div>
                             </div>
                         @endforeach
@@ -76,15 +66,15 @@
                     <div class="p-10 task-list" style="min-height: 400px;max-height: 400px;overflow: auto" id="in_progress">
                           
                         @foreach($tasks->where('status',1) as $key => $task)
-                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" >
+                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" taskid="{{ $task->id }}">
                                 <div class="truncate font-size-16 font-weight-700 line-height-22">
-                                    {{ $task->title }}
+                                    <a href="{{ route('view.tasks',$task->id) }}">{{ $task->title }}</a>
                                 </div>
                                 <div class="line-height-22 grey truncate">
-                                    Assign To : {{ $Tasks::generateUsersList($task) }}
+                                    Assign To : {{ call_model('Tasks','generateUsersList',$task) }}
                                 </div>
                                 <div class="line-height-22 grey truncate">
-                                    Due : {{ $Tasks::generateDaysLeft($task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
+                                    Due : {{ call_model('Tasks','generateDaysLeft',$task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
                                 </div>
                             </div>
                         @endforeach
@@ -99,15 +89,15 @@
                     </h5> 
                     <div class="p-10 task-list" id="completed" style="min-height: 400px;max-height: 400px;overflow: auto">
                        @foreach($tasks->where('status',2) as $key => $task)
-                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" >
+                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" taskid="{{ $task->id }}">
                                 <div class="truncate font-size-16 font-weight-700 line-height-22">
-                                    {{ $task->title }}
+                                    <a href="{{ route('view.tasks',$task->id) }}">{{ $task->title }}</a>
                                 </div>
                                 <div class="line-height-22 grey truncate">
-                                    Assign To : {{ $Tasks::generateUsersList($task) }}
+                                    Assign To : {{ call_model('Tasks','generateUsersList',$task) }}
                                 </div>
                                 <div class="line-height-22 grey truncate">
-                                    Due : {{ $Tasks::generateDaysLeft($task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
+                                    Due : {{ call_model('Tasks','generateDaysLeft',$task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
                                 </div>
                             </div>
                         @endforeach
@@ -162,16 +152,34 @@
                 onAdd: function (evt/**Event*/){
                     count();
                     console.log(evt);
-                    var dropedId = evt.to.attributes.id.nodeValue;
-                    console.log(dropedId);
-                    if(dropedId == 'in_progress'){
-
+                    var dropedIn = evt.to.attributes.id.nodeValue;
+                    var taskID = evt.clone.attributes.taskid.nodeValue;
+                    console.log(dropedIn,taskID);
+                    switch(dropedIn){
+                        case'in_progress':
+                            updateStatus(taskID,1);
+                        break;
+                        case'completed':
+                            updateStatus(taskID,2);
+                        break;
+                        case'pending':
+                            updateStatus(taskID,0);
+                        break;
                     }
                     var item = evt.item; 
                 }
             });
         });
-
+        function updateStatus(task_id, status){
+            $.ajax({
+               type:'POST',
+               url:route()+'/task/status/update',
+               data: {_token: '{{ csrf_token() }}',task_id: task_id, status: status},
+               success: function(result){
+                    console.log(result);
+               } 
+            });
+        }
         function count(){
             $('.task-list').each(
               function() {
