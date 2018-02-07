@@ -267,22 +267,22 @@ class AttendanceController extends Controller
 							}
 							$in_time 	= $time[0];
 							$out_time 	= $time[1];
-							$actual_hour = '09:00:00';
-							if(!empty($in_time ) && !empty($out_time)){
-								$actual_hours	= new Carbon('09:00:00');
-								$time = new Carbon($in_time);
-								$shift_end_time =new Carbon($out_time);
-								$totalDuration = $time->diffInSeconds($shift_end_time);
-								$total_time = gmdate('H:i:s', $totalDuration);
-								$total = new Carbon($total_time);
-									if($total>$actual_hours){	
-										$over_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
-									}else{ 
-										$due_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
-									}
-							}
-	    					$diff = (strtotime($out_time) - strtotime($in_time));
-	    					$total = $diff/60;
+							// $actual_hour = '09:00:00';
+							// if(!empty($in_time ) && !empty($out_time)){
+							// 	$actual_hours	= new Carbon('09:00:00');
+							// 	$time = new Carbon($in_time);
+							// 	$shift_end_time =new Carbon($out_time);
+							// 	$totalDuration = $time->diffInSeconds($shift_end_time);
+							// 	$total_time = gmdate('H:i:s', $totalDuration);
+							// 	$total = new Carbon($total_time);
+							// 		if($total>$actual_hours){	
+							// 			$over_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
+							// 		}else{ 
+							// 			$due_time = gmdate('H:i:s',$actual_hours->diffInSeconds($total));
+							// 		}
+							// }
+	    					// $diff = (strtotime($out_time) - strtotime($in_time));
+	    					// $total = $diff/60;
 							if(is_null($in_time) &&  is_null($out_time)){
 								$attendance_status = "absent";
 							}else{
@@ -294,7 +294,7 @@ class AttendanceController extends Controller
 						if(empty($in_time) || is_null($in_time)){
 							$in_time = Null;
 						}
-						if(empty($out_time) || is_null($in_time) ){
+						if(empty($out_time) || is_null($in_time)){
 							$out_time = Null;
 						}
 						$data_for_insertion = ['employee_id'=>$employee_id,
@@ -306,16 +306,27 @@ class AttendanceController extends Controller
 												'attendance_status' => $attendance_status,
 												'punch_in_out'=> $pus_in_out,
 												'import_data' => $attendanceValue,
-												'submited_by' => "import"];
-						$attendance_query = Attendance::where(['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates]);
+												'submited_by' => "import",
+												'over_time'=>null];
+						$where =['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates];
+						$attendance_query = Attendance::where($where);
 						if($attendance_query->count() >0){
-							$no_shift = $attendance_query->whereNull('shift_hours');
-							if($no_shift->exists()){
-								$data_for_insertion['shift_hours'] = $this->get_shift_hours($employee_id, $employee_ids);
+							$shift_hours_overtime = $this->shift_hours_overtime($attendance_query, $day, $employee_id, $employee_ids,  $pushinout);
+							if(!empty($shift_hours_overtime)){
+								$data_for_insertion = array_merge($data_for_insertion, $shift_hours_overtime);
 							}
-							$attendance_query->update($data_for_insertion);
+						$attendance_query->update($data_for_insertion);
 						}else{
-							$data_for_insertion['shift_hours'] = $this->get_shift_hours($employee_id, $employee_ids);
+							$shift_data = $this->get_shift_hours($employee_id, $employee_ids);
+								if(!empty($shift_data)){
+									if(in_array(strtolower($day), $shift_data['working_days'])){
+										$data_for_insertion['shift_hours'] = json_encode($shift_data['shift_hours']);
+										$over_times = $this->calculate_over_time($shift_data['shift_hours'] , $pushinout);
+										if(!empty($over_times)){
+											$data_for_insertion['over_time'] = $over_times;
+										}
+									}
+								}
 							$attendance = new Attendance();
 							$attendance->fill($data_for_insertion);
 							$attendance->save();
@@ -326,11 +337,65 @@ class AttendanceController extends Controller
 				 }
 			return $employee;
 	}
+	protected function shift_hours_overtime($attendance_query, $day, $employee_id, $employee_ids,$pushinout){
+		$data_for_insertion =null;
+		$shift_hours = $attendance_query->first()->shift_hours;
+		if(empty($shift_hours)){
+			$shift_data = $this->get_shift_hours($employee_id, $employee_ids);
+			if(!empty($shift_data)){
+				if(in_array(strtolower($day), $shift_data['working_days'])){
+					$over_times = $this->calculate_over_time($shift_data['shift_hours'] , $pushinout);
+					if(!empty($over_times)){
+						$data_for_insertion['over_time'] = $over_times;
+					}
+					$data_for_insertion['shift_hours'] = json_encode($shift_data['shift_hours']);
+				}else{
+					if(!empty($pushinout) && !empty($pushinout[1]) && !empty($pushinout[0])){
+						$data_for_insertion['over_time'] = $this->calculate_hour($pushinout[0],$pushinout[1], "sec");
+					}
+				}
+			}
+		}else{
+		 	$shift_hour = json_decode($shift_hours, true);
+		 	$over_times = $this->calculate_over_time($shift_hour , $pushinout);
+			if(!empty($over_times)){
+				$data_for_insertion['over_time'] = $over_times;
+			}
+		}
+		return $data_for_insertion;
+	}
+protected function calculate_over_time($shift_data, $pushinout ){
+	$actual_hours = $this->calculate_hour($shift_data[0], $shift_data[1], "hr");	
+	if(!empty($pushinout) && !empty($pushinout[1]) && !empty($pushinout[0])){
+		$total_working_hours = $this->calculate_hour($pushinout[0],$pushinout[1], "hr");
+			if($total_working_hours > $actual_hours || ($total_working_hours < $actual_hours)){
+				return $this->calculate_hour($actual_hours, $total_working_hours, "sec");
+			}
+	} 
+	return null;
+}
+	protected function calculate_hour($from, $to, $retun_time){
+ 		$time = new Carbon($from);
+		$shift_end_time =new Carbon($to);
+		$totalDuration = $time->diffInSeconds($shift_end_time, false);
+		if($retun_time=="sec"){
+			return $totalDuration;
+		}elseif($retun_time=="hr"){
+			return $total_time = gmdate('H:i', $totalDuration);
+		}
+	}
 	protected function get_shift_hours($employee_id, $employee_ids){
+		$shift_hours = null;
 		$user_id  = array_search($employee_id, $employee_ids);
 		$shift_id = get_user_meta($user_id, 'user_shift');
-		$shift = Shift::select(['from','to'])->where('id',$shift_id)->first()->toArray();
-		$shift_hours = json_encode(array_values($shift));
+		$shift = Shift::select(['working_days','from','to'])->where('id',$shift_id)->whereNotNull('from')->whereNotNull('to')->whereNotNull('working_days');
+		if($shift->exists()){
+			$shift_data 	= 	$shift->first()->toArray();
+			$working_days	=	json_decode($shift_data['working_days'], true);
+			$shift_time 	=	[$shift_data['from'],$shift_data['to']];  
+			$shift_hours 	=  	array_values($shift_time);
+			return ['working_days'=>$working_days, 'shift_hours'=>$shift_hours];
+		}
 		// dd($employee_id, 'u id', $user_id, ' shift id', $shift_id , 'hours' , $shift_hours);
 		return $shift_hours;
 	}
@@ -514,13 +579,15 @@ class AttendanceController extends Controller
 			$time = aione_format_date($request['mark-attendance-date']); 
 			$time = strtotime($time); 
 			$current_dates['year'] =  date('Y', $time);
-			$current_dates['month'] = date('m', $time);
-			$current_dates['date'] = date('d', $time);
+			$current_dates['month'] = intval(date('m', $time));
+			$current_dates['date'] = intval(date('d', $time));
+			unset($current_dates['month_week_no']);
+			unset($current_dates['day']);
 		}
 		$employee_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		$mark_attendance_date = $current_dates['year'].'-'.$current_dates['month'].'-'.$current_dates['date'];
-
+		
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'mark_attendance_date'=>$mark_attendance_date]);
 	}
 	/**
@@ -541,7 +608,7 @@ class AttendanceController extends Controller
 	
 	public function attendance_fill_hr(Request $request )
 	{
-		
+		// dd($request->all());
 		$current_date_data = $this->current_date_data;
 		$conditions = $request['dates'];
 		unset($request['dates']);
@@ -583,15 +650,14 @@ class AttendanceController extends Controller
 					$attendance = 	new Attendance();
 					$attendance->employee_id = $key;
 				}
-				
 				$attendance->fill($all_data);
 				$attendance->submited_by ="HR";
 				$attendance->save();
 			}
 
 		}
-		
-		return redirect()->route('list.attendance');
+		Session::flash('success','Successfully mark attendance');
+		return back();//redirect()->route('list.attendance');
 	}
 	/**
      * lock_status  lock un-lock attendance

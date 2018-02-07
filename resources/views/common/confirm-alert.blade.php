@@ -1,5 +1,5 @@
  <script type="text/javascript">
-    $(document).on('click','.delete-field',function(e){
+    $(document).on('click','.delete-sweet-alert',function(e){
         e.preventDefault();
         var href = $(this).attr("href");
         swal({   
@@ -13,7 +13,7 @@
         }, 
         function(){
             window.location = href;
-           swal("Deleted!", "Your widget has been deleted.", "success"); 
+           swal("Deleted!", "Your item has been deleted.", "success"); 
        });
     })
 </script>

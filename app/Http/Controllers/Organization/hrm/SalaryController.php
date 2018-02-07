@@ -27,7 +27,6 @@ class SalaryController extends Controller
  * @author Paljinder Singh
  */
   public function edit($id){
-    // with(['user_detail:id,name,email'])->select(['id','loss_of_pay_day', 'dedicated_amount','total_days' , 'salary', 'no_of_leave', 'number_of_attendance', 'hours', 'over_time', 'short_hours', 'per_day_amount'])->
     $salary_data = Salary::where([ 'id'=>$id ]);
     if($salary_data->exists()){
       $data = $salary_data->first();
@@ -39,11 +38,7 @@ class SalaryController extends Controller
 
   }
 
-/**
-*EDit Salary
-param salary id
-*@author Paljinder singh
-*/
+
   public function update(Request $request){
     Salary::where('id',$request['id'])->update($request->except('_token'));
     return redirect()->route('salary.slip.view',['id'=>$request['id']]);
@@ -98,8 +93,7 @@ param salary id
 		return view('organization.profile.salary', compact('data'));
 	}
 	public function delete_salary_slip($id){
-		    Salary::where('id',$id)->delete();
-        dd(1213);
+		  Salary::where('id',$id)->delete();
 		    return back();
 	}
   /**
@@ -129,11 +123,11 @@ param salary id
       $pdf = PDF::loadView('organization.salary.pdf',compact('salary'));
       return $pdf->download($file_name.'.pdf');
 		}
-	public function generate_salary_slip_view(Request $request){
+	public function generate_salary_slip_view(Request $request) {
 			$date = Carbon::now();
 			$date->subMonth();
 			$data['month'] = 	$month 	= $date->month;
-			$data['year'] 	=  	$year 	= $date->year;
+			$data['current_year'] = $data['year']  =  $year 	= $date->year;
 			if($request->isMethod('post')){
          $this->validate($request,['year'=>'required', 'month'=>'required']);
 				if($year == $request['year'] && $month <  $request['month']){
@@ -155,43 +149,27 @@ param salary id
  			}else{
 				$date = Carbon::now();
 				$date->subMonth();
-				$data['month'] = 	$month 	= $date->month;
-				$data['year'] 	=  	$year 	= $date->year;
+				$data['month']= 	$month 	= $date->month;
+				$data['year'] =  	$year 	= $date->year;
 			}
-     
-      $data['users']  = GroupUsers::with([
-        'salary'=>function($q)use($year, $month){
+       if(strlen($month)==1){
+          $data['month'] = $month = '0'.$month;
+        }
+      $data['users']  = GroupUsers::with( ['organization_employee_user', 'salary'=>function($q)use($year, $month){
                       $q->where(['year'=>$year, 'month'=>$month]);  
-                    }, 
-                  'metas'=>function($query)use($year, $month){
-                    $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
-                        }])->orWhereHas(
-                            'metas', function ($query)use($year, $month) {
-                        $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
-                        }
-                  )->get();
-
-
-              // $data['users']  = User::with(['belong_group',
-              //         'salary'=>function($q)use($year, $month){
-              //                       $q->where(['year'=>$year, 'month'=>$month]);  
-              //                     }, 
-              //                   'metas'=>function($query)use($year, $month){
-              //                     $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
-              //                         }])->orWhereHas(
-              //                             'metas', function ($query)use($year, $month) {
-              //                         $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
-              //                         }
-              //                   )->where(['user_type'=>'employee'])->get();
-
+                    }, 'metas'=>function($query)use($year, $month){
+                          $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
+                         }] )->whereHas('organization_employee_user')->orWhereHas('metas', function ($query)use($year, $month) {
+                                $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
+                         } )->get();
 	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
 	}
 
   	public function generate_salary_slip($year , $month, $user_select){
-  			
         $user = GroupUsers::with(['metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
           }])->whereIn('id',$user_select)->get();
+
         $current_date = Carbon::parse("$year-$month-1");
         // $current_date->subMonth(); 
         $daysInMonth = $current_date->daysInMonth;
@@ -215,9 +193,26 @@ param salary id
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
               if($attendance_data->count()>0){
                 if(empty($payScale)){
-                     $payScale_error[] = $meta['employee_id'];
+                    $payScale_error[] = $meta['employee_id'];
                 }else{
-                    $loss_of_pay_days = $attendance_data->whereIn('attendance_status',['LP','absent'])->count();
+          $working_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->count();
+          // $hours = $attendance_data->whereIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->mapWithKeys(function($data){
+          //        $hours = json_decode($data['punch_in_out'],true);
+          //           return [$data['id'] => $hours];
+          // });
+
+          // dump($hours);
+          $due_time = $attendance_data->where('over_time' ,'<', 0)->sum('over_time');
+          $extra_time = $attendance_data->where('over_time' ,'>', 0)->sum('over_time');
+
+          dump($due_time, $extra_time);
+
+          $extra_days_in_month = $attendance_data->whereIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->count();
+          // $extra_days_in_month->mapWithKeys()
+          $loss_of_pay_days = $attendance_data->whereIn('attendance_status',['LP','absent'])->whereNotIn('shift_hours',[null])->count();
+          $presents_in_month = $attendance_data->whereIn('attendance_status',['present'])->whereNotIn('shift_hours',[null])->count();
+          $leaves_in_month = $attendance_data->whereIn('attendance_status',['leave'])->whereNotIn('shift_hours',[null])->count();
+            //dd('extra_days_in_month ->'.$extra_days_in_month, 'working_days_in_month->'.$working_days_in_month,  'presents_in_month ->'.$presents_in_month, 'leaves_in_month->'.$leaves_in_month, 'loss_of_pay_days->'. $loss_of_pay_days);
                     $data[$userKey]['employee_id'] = $meta['employee_id'];
                     $data[$userKey]['user_id'] = $userValue['id'];
                     $data[$userKey]['department'] = $meta['department'];
@@ -324,6 +319,7 @@ return back();
 
   }
 	public function generate_salary(Request $request){
+
     $current_dates = date('Y-m-d');
     $year = date('Y');
     $month = date('m');

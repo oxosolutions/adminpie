@@ -31,6 +31,18 @@ use App\Model\Admin\GlobalWidget;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
+
+
+function user_id_to_name($user_id){
+    $groupUser_model = GroupUsers::find($user_id);
+    if($groupUser_model != null){
+        return $groupUser_model->name;
+    }else{
+        return false;
+    }
+}
+
+
 /************************************************************
 *   @function can_i_access_this_user
 *   @access public

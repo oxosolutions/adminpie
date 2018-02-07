@@ -44,6 +44,7 @@ class ShiftsController extends Controller
              $model = Shift::paginate($perPage);
         }
     }
+    // dd($model);
     $datalist =  [
                     'datalist'=>$model,
                     'showColumns' => ['name'=>'Name','from'=>'From','to'=>'To','working_days'=>['title' => 'Working Days','type' => 'json'],'created_at'=>'Created'],

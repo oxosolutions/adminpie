@@ -20,104 +20,912 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+<style type="text/css">
+    .crop{
+        width: 100%;
+        height: 140px;
+        overflow: hidden;
+    }
+    .crop img {
+        width: auto;
+        height: 250px;
+        margin: -65px 0 -30px -30px;
+    }
+</style>
 @if(Session::has('error'))
    
 @else
-{{-- <div class="aione-tables">
-    <table>
-        <thead>
-            <tr>
-                <th class="bg-light-blue bg-darken-4 white aione-align-center">EMPLOYER INFORMATION</th>
-                <th colspan="2" class="bg-light-blue bg-darken-4 white aione-align-center">PAY PERIOD</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="light-blue darken-4 aione-align-center">OXO IT SOLUTIONS PVT. LTD.</td>
-                <td >Begin Date:</td>
-                <td >01/{{ $salary['month'] }}/{{ $salary['year'] }}</td>
-            </tr>
-            <tr>
-                <td  class="light-blue darken-4 aione-align-center">158 Rani Ka Bagh, Amritsar, 143001.</td>
-                <td >End Date:</td>
-                <td >31/{{ $salary['month'] }}/{{ $salary['year'] }}</td>
-            </tr>
-            <tr>
-                <td class="light-blue darken-4 aione-align-center">01832401000, 9501010103, 9914149090</td>
-                <td>Pay Date:</td>
-                <td>13/11/2017</td>
-            </tr>
-        </tbody>
-     </table>
-    <table>
-        <thead>
-            <tr>
-                <th class="bg-light-blue bg-darken-4 white aione-align-center">EMPLOYEE ADDRESS</th>
-                <th colspan="2" class="bg-light-blue bg-darken-4 white aione-align-center">EMPLOYEE INFORMATION</th>
-            </tr>
-        </thead>
-         <tbody>
-            <tr>
-                <td class="light-blue darken-4 aione-align-center">Ashish Kumar</td>
-                <td >Employee Name</td>
-                <td >{{ $salary['user_detail']['belong_group']['name']}}</td>
-            </tr>
-            <tr>
-                <td  class="light-blue darken-4 aione-align-center">#14/560, Lane no 2, guru nanak avenue 8566820937</td>
-                <td >Employee ID</td>
-                <td >{{ $salary['employee_id'] }} </td>
-            </tr>
-            <tr>
-                <td class="light-blue darken-4 aione-align-center">majitha road, Amritsar,143001 {{  $salary['user_detail']['belong_group']['email'] }}</td>
-                <td>Employee Pan</td>
-                <td>Axxx33344KL</td>
-            </tr>
-        </tbody>
+<div class="aione-border p-20 grey mb-100">
+    <h4 class="aione-align-center font-weight-300 grey">PAYSLIP FOR THE MONTH OF SEPTEMBER 2017</h4>
+    <div class="ar">
+        <div class="ac l60">
+            <div>
+                <img src="http://oxoitsolutions.com/wp-content/uploads/sites/30/2017/09/oxo_solutions.png" style="height: 120px">                
+            </div>
+            <div class="font-weight-700 grey font-size-16 line-height-24">
+                OXO IT Solutions Private Limited
+            </div>
+            <div class="line-height-24">
+                #!58, Rani Ka Bagh,<br>
+                Near Shivaji Park,<br>
+                Amritsar, 143001
+            </div>
+                        
+        </div>
+        <div class="ac l40">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                Employee Detail
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Name</span>
+                    <span class="aione-float-right">Ashish Kumar</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Designation</span>
+                    <span class="aione-float-right">Web Developer</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Employee ID</span>
+                    <span class="aione-float-right">40015001</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Address</span>
+                    
+                    <span class="aione-float-right">#20, Rani ka bagh, Amritsar, 143001</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">PAN Number</span>
+                    
+                    <span class="aione-float-right">AUK3394L</span>
+                </li>
+            </ul>
+        </div>
 
+    </div>
+    <div class="mv-20" style="border: 1px dashed #e8e8e8">
         
-    </table>
-    <table>
-         <thead>
-            <tr>
-                <th colspan="6" class="bg-light-blue bg-darken-4 white aione-align-center">ACCOUNT</th>
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Payment
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Basic Pay</span>
+                    <span class="aione-float-right">12000</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">TA</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">DA</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">HRA</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10 aione-border-bottom">
+                    <span class="font-weight-700 grey ">Other Allowences</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Bonus</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+            </ul>
+           
+        </div>
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Deductions
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PF</span>
+                    <span class="aione-float-right">1900</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Income Tax & EC</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Opening Balance</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
                 
-            </tr>
-        </thead>
-         <tbody>
-            <tr>
-                <td colspan="2" class="light-blue darken-4 aione-align-center">SALARY</td>
-                <td colspan="2" class="light-blue darken-4 aione-align-center">DAYS</td>
-                <td colspan="2" class="light-blue darken-4 aione-align-center">TOTAL EARNED</td>
-            </tr>
-            <tr>
-                <td >P / Year</td>
-                <td >{{ $salary['salary'] }}</td>
-                <td >Total Days</td>
-                <td >{{ $salary['total_days'] }}</td>
-                <td >Employee ID</td>
-                <td >4095047</td>
-            </tr>
-            <tr>
-                <td >P / Month</td>
-                <td >{{ $salary['salary'] }}</td>
-                <td >Paid Leave</td>
-                <td >31</td>
-                <td >Income Tax</td>
-                <td >4095047</td>
-            </tr>
-            <tr>
-                <td >P / Day</td>
-                <td >{{ $salary['per_day_amount'] }}</td>
-                <td >Total Days</td>
-                <td >31</td>
-                <td >Employee ID</td>
-                <td >4095047</td>
-            </tr>
+            </ul>
             
-        </tbody>
-    </table>
-</div> --}}
-<div class="ar mb-20">
+        </div>
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700 grey font-size-18">Gross Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>
+        </div>
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700 grey font-size-18">Net Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>    
+        </div>
+            
+    </div>
+     <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+         <div class="ac l50">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                Year to date
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Taxable Gross Pay</span>
+                    <span class="aione-float-right">992283</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Income tax</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="ac l50">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                This Period
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Total Payment</span>
+                    <span class="aione-float-right">9922833</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Total Deduction</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+=====================================================================================================================================
+<div class="aione-border p-20 grey mv-100 ">
+    
+    <div class="ar">
+        <div class="ac l60">
+            <div class="">
+                <img src="http://oxoitsolutions.com/wp-content/uploads/sites/30/2017/09/oxo_solutions.png" style="height: 200px">                
+            </div>
+            <div class="font-weight-700 grey font-size-16 line-height-24">
+                OXO IT Solutions Private Limited
+            </div>
+            <div class="line-height-24">
+                #158, Rani Ka Bagh,
+                Near Shivaji Park,
+                Amritsar, 143001
+            </div>
+                        
+        </div>
+        <div class="ac l40">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                Employee Detail
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Name</span>
+                    <span class="aione-float-right">Ashish Kumar</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Designation</span>
+                    <span class="aione-float-right">Web Developer</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Employee ID</span>
+                    <span class="aione-float-right">40015001</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Address</span>
+                    
+                    <span class="aione-float-right">#20, Rani ka bagh, Amritsar, 143001</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">PAN Number</span>
+                    
+                    <span class="aione-float-right">AUK3394L</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Payment
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Basic Pay</span>
+                    <span class="aione-float-right">12000</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">TA</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">DA</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">HRA</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10 aione-border-bottom">
+                    <span class="font-weight-700 grey ">Other Allowences</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Bonus</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+            </ul>
+           
+        </div>
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Deductions
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PF</span>
+                    <span class="aione-float-right">1900</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Income Tax & EC</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Opening Balance</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                
+            </ul>
+            
+        </div>
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700 grey font-size-18">Gross Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>
+        </div>
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700 grey font-size-18">Net Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>    
+        </div>
+            
+    </div>
+     <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+         <div class="ac l50">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                Year to date
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Taxable Gross Pay</span>
+                    <span class="aione-float-right">992283</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Income tax</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="ac l50">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                This Period
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Total Payment</span>
+                    <span class="aione-float-right">9922833</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Total Deduction</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+=====================================================================================================================================
+<div class="aione-border p-20 grey mv-100">
+    
+    <div class="ar">
+        <div class="ac l60">
+            <div class="crop">
+                <img src="http://oxoitsolutions.com/wp-content/uploads/sites/30/2017/09/oxo_solutions.png" >                
+            </div>
+            <div class="font-weight-700 grey font-size-16 line-height-24">
+                OXO IT Solutions Private Limited
+            </div>
+            <div class="line-height-24">
+                #158, Rani Ka Bagh,
+                Near Shivaji Park,
+                Amritsar, 143001
+            </div>
+                        
+        </div>
+        <div class="ac l40">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                Employee Detail
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Name</span>
+                    <span class="aione-float-right">Ashish Kumar</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Designation</span>
+                    <span class="aione-float-right">Web Developer</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Employee ID</span>
+                    <span class="aione-float-right">40015001</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Address</span>
+                    
+                    <span class="aione-float-right">#20, Rani ka bagh, Amritsar, 143001</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">PAN Number</span>
+                    
+                    <span class="aione-float-right">AUK3394L</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Payment
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Basic Pay</span>
+                    <span class="aione-float-right">12000</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">TA</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">DA</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">HRA</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10 aione-border-bottom">
+                    <span class="font-weight-700 grey ">Other Allowences</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Bonus</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+            </ul>
+           
+        </div>
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Deductions
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PF</span>
+                    <span class="aione-float-right">1900</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Income Tax & EC</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Opening Balance</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                
+            </ul>
+            
+        </div>
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700 grey font-size-18">Gross Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>
+        </div>
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700 grey font-size-18">Net Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>    
+        </div>
+            
+    </div>
+     <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+         <div class="ac l50">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                Year to date
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Taxable Gross Pay</span>
+                    <span class="aione-float-right">992283</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Income tax</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="ac l50">
+            <div class="font-weight-700 grey font-size-16 line-height-24 p-10">
+                This Period
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Total Payment</span>
+                    <span class="aione-float-right">9922833</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Total Deduction</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+=====================================================================================================================================
+<div class="aione-border p-20 grey mv-100">
+    
+    <div class="ar">
+        <div class="ac l60">
+            <div class="crop">
+                <img src="http://oxoitsolutions.com/wp-content/uploads/sites/30/2017/09/oxo_solutions.png" >                
+            </div>
+            <div class="font-weight-700 grey font-size-16 line-height-24">
+                OXO IT Solutions Private Limited
+            </div>
+            <div class="line-height-24">
+                #158, Rani Ka Bagh,
+                Near Shivaji Park,
+                Amritsar, 143001
+            </div>
+                        
+        </div>
+        <div class="ac l40">
+            <div class="font-weight-700  font-size-16 line-height-24 p-10 light-blue darken-2">
+                Employee Detail
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Name</span>
+                    <span class="aione-float-right">Ashish Kumar</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Designation</span>
+                    <span class="aione-float-right">Web Developer</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Employee ID</span>
+                    <span class="aione-float-right">40015001</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Address</span>
+                    
+                    <span class="aione-float-right">#20, Rani ka bagh, Amritsar, 143001</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">PAN Number</span>
+                    
+                    <span class="aione-float-right">AUK3394L</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-light-blue bg-darken-2 white ">
+                Payment
+                <span class="aione-float-right white">Amount</span>
+            </h5>
+            <ul class="aione-border bg-light-blue bg-lighten-5 border-white">
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">Basic Pay</span>
+                    <span class="aione-float-right">12000</span>
+                </li>
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">TA</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">DA</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">HRA</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10 aione-border-bottom border-white">
+                    <span class="font-weight-700 grey ">Other Allowences</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Bonus</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+            </ul>
+           
+        </div>
+        <div class="ac l50">
+            <h5 class="font-weight-700 grey font-size-16 m-0 p-10 bg-light-blue bg-darken-2 white">
+                Deductions
+                <span class="aione-float-right white">Amount</span>
+            </h5>
+            <ul class="aione-border bg-light-blue bg-lighten-5 border-white">
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">PF</span>
+                    <span class="aione-float-right">1900</span>
+                </li>
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">Income Tax & EC</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10 border-white">
+                    <span class="font-weight-700 grey ">PLI</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 grey ">Opening Balance</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                
+            </ul>
+            
+        </div>
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10 border-light-blue border-darken-2">
+                <span class="font-weight-700 grey font-size-18">Gross Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>
+        </div>
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10 border-light-blue border-darken-2">
+                <span class="font-weight-700 grey font-size-18">Net Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>    
+        </div>
+            
+    </div>
+     <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+         <div class="ac l50">
+            <div class="font-weight-700 light-blue darken-2 font-size-16 line-height-24 p-10">
+                Year to date
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Taxable Gross Pay</span>
+                    <span class="aione-float-right">992283</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Income tax</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="ac l50">
+            <div class="font-weight-700 light-blue darken-2 font-size-16 line-height-24 p-10">
+                This Period
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 grey ">Total Payment</span>
+                    <span class="aione-float-right">9922833</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700 grey ">Total Deduction</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+=====================================================================================================================================
+<div class="aione-border p-20 mv-100">
+    
+    <div class="ar">
+        <div class="ac l60">
+            <div class="crop">
+                <img src="http://oxoitsolutions.com/wp-content/uploads/sites/30/2017/09/oxo_solutions.png" >                
+            </div>
+            <div class="font-weight-700  font-size-16 line-height-24">
+                OXO IT Solutions Private Limited
+            </div>
+            <div class="line-height-24">
+                #158, Rani Ka Bagh,
+                Near Shivaji Park,
+                Amritsar, 143001
+            </div>
+                        
+        </div>
+        <div class="ac l40">
+            <div class="font-weight-700  font-size-16 line-height-24 p-10">
+                Employee Detail
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">Name</span>
+                    <span class="aione-float-right">Ashish Kumar</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">Designation</span>
+                    <span class="aione-float-right">Web Developer</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">Employee ID</span>
+                    <span class="aione-float-right">40015001</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">Address</span>
+                    
+                    <span class="aione-float-right">#20, Rani ka bagh, Amritsar, 143001</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700  ">PAN Number</span>
+                    
+                    <span class="aione-float-right">AUK3394L</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <h5 class="font-weight-700  font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Payment
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">Basic Pay</span>
+                    <span class="aione-float-right">12000</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">TA</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700 ">DA</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">HRA</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10 aione-border-bottom">
+                    <span class="font-weight-700  ">Other Allowences</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700 ">Bonus</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+            </ul>
+           
+        </div>
+        <div class="ac l50">
+            <h5 class="font-weight-700  font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                Deductions
+                <span class="aione-float-right">Amount</span>
+            </h5>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">PF</span>
+                    <span class="aione-float-right">1900</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">PLI</span>
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">Income Tax & EC</span>
+                    <span class="aione-float-right">2300</span>
+                </li>
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">PLI</span>
+                    
+                    <span class="aione-float-right">1200</span>
+                </li>
+                <li class=" p-10">
+                    <span class="font-weight-700  ">Opening Balance</span>
+                    
+                    <span class="aione-float-right">0</span>
+                </li>
+                
+            </ul>
+            
+        </div>
+        
+    </div>
+    <div class="ar">
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700  font-size-18">Gross Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>
+        </div>
+        <div class="ac l50">
+            <div class="aione-border mv-10 p-10">
+                <span class="font-weight-700  font-size-18">Net Salary</span>
+                    
+                <span class="aione-float-right font-size-18">21000</span>
+            </div>    
+        </div>
+            
+    </div>
+     <div class="mv-20" style="border: 1px dashed #e8e8e8">
+        
+    </div>
+    <div class="ar">
+         <div class="ac l50">
+            <div class="font-weight-700  font-size-16 line-height-24 p-10">
+                Year to date
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">Taxable Gross Pay</span>
+                    <span class="aione-float-right">992283</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700  ">Income tax</span>
+                    <span class="aione-float-right">36445</span>
+                    
+                </li>
+                
+            </ul>
+        </div>
+        <div class="ac l50">
+            <div class="font-weight-700  font-size-16 line-height-24 p-10">
+                This Period
+            </div>
+            <ul class="aione-border">
+                <li class="aione-border-bottom p-10">
+                    <span class="font-weight-700  ">Total Payment</span>
+                    <span class="aione-float-right">9922833</span>
+                </li>
+                <li class="p-10">
+                    <span class="font-weight-700  ">Total Deduction</span>
+                    <span class="aione-float-right">36445</span>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+{{-- <div class="ar mb-20">
     <div class="ac l20">
         <div class="aione-border">
             <div class="">
@@ -126,12 +934,7 @@ $page_title_data = array(
                 </h5>
             </div>
             <div class="p-15">
-                    {{-- "employee_id" => "40085012"
-                    "designation" => "2"
-                    "department" => "3"
-                    "user_shift" => "1"
-                    "pay_scale" => "1"
-                    "date_of_joining" --}}
+                   
                  {{$salary['employee_id']}} 
             </div>
         </div>
@@ -184,22 +987,7 @@ $page_title_data = array(
                     Payment<span class="aione-float-right">Amount</span>
                 </h5>
             </div>
-            {{-- "title" => "Fresher"
-  "description" => null
-  "currency" => "rupeees"
-  "pay_cycle" => null
-  "pay_scale" => "0.00"
-  "basic_pay" => "85000.00"
-  "grade_pay" => "0.00"
-  "ta" => "10000.00"
-  "da" => "200.00"
-  "sa" => null
-  "hra" => null
-  "epf_addiction" => null
-  "epf_deducation" => null
-  "sa_details" => null
-  "total_salary" => "100000.00"
-  "gross_salary" => "100000.00" --}}
+
             <div class="p-15 line-height-30">
                    Basic pay<span class="aione-float-right">{{$payscale['basic_pay']}}</span><br>
                    TA<span class="aione-float-right">{{$payscale['ta']}}</span><br>
@@ -271,7 +1059,7 @@ $page_title_data = array(
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 
 @endif
 @include('common.page_content_primary_end')

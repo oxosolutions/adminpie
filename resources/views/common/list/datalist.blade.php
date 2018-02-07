@@ -48,6 +48,7 @@ $columns = $showColumns;
 $total_columns = count($columns);
 $column_classes = "column aione-column columns-".$total_columns;
 $class_list = array();
+// dd($columns);
 foreach($columns as $column){
 	if(is_array($column)){
 		$class_list[] = "aione-column-".strtolower(str_replace(' ', '-', $column['title']));
@@ -327,10 +328,14 @@ foreach($columns as $column){
     												}
     												if($columnType == 'json'){
     													$days = [];
-    													foreach (json_decode($dataset->{$k}) as $key => $value) {
-    														$days[] = ucfirst(substr($value, 0 , 2));
-    													}
-    													echo implode(',',$days);
+                                                        if($dataset->{$k} != ''){
+                                                            foreach (json_decode($dataset->{$k}) as $key => $value) {
+                                                                $days[] = ucfirst(substr($value, 0 , 2));
+                                                            }
+                                                            echo implode(',',$days);
+                                                        }else{
+                                                            echo '';
+                                                        }
     												}
     											}elseif($k == 'status'){
     												if($dataset->{$k} == 1){

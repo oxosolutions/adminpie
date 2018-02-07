@@ -17,6 +17,7 @@ use App\Model\Admin\GlobalOrganization;
 use Menu as wMenu;
 use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\JobOpening;
+use GitHub;
 class PagesController extends Controller
 {
     protected function assignModel($model){
@@ -331,6 +332,9 @@ class PagesController extends Controller
     }
 
     public function exportHTML(Request $request){
+        dd(GitHub::repo()->create('my-new-repo', 'This is the description of a repo', 'http://my-repo-homepage.org', true));
+        dd(GitHub::repo()->show('oxosolutions', 'adminpie'));
+        dd(GitHub::me()->organizations());
         if($request->isMethod('post')){
             $Associate = $this->assignModel('Page');
             $pages = $Associate::with('pageMeta')->whereIn('id',$request->export_page)->get();

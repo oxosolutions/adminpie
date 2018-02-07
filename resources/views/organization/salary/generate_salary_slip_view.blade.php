@@ -1,5 +1,3 @@
-
-
 @extends('layouts.main')
 @section('content')
 @php
@@ -13,7 +11,6 @@
    $user_count    = count($data['users']);
    $salary_count  = count(array_filter( array_column($data['users']->toArray(), 'salary')));
    $body_text = "";
-   // dump($salary->payscale);
    
 @endphp
 @include('common.pageheader',$page_title_data) 
@@ -82,7 +79,7 @@
                 </label> --}}
               </div>
               <div id="field_fields" class="field w100 field-type-select">
-                {!! Form::selectRange('year' , 2013,2017 , $data['year'], ['placeholder'=>'Select year' , 'class'=>'browser-default select']) !!}
+                {!! Form::selectRange('year' , 2013,$data['current_year'] , $data['year'], ['placeholder'=>'Select year' , 'class'=>'browser-default select']) !!}
               </div>
             </div>
           </div> 

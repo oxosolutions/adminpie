@@ -8,15 +8,20 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Model\Organization\Designation;
 use App\Model\Organization\Department;
-
+use App\Model\Organization\Shift;
 use App\Model\Organization\Employee as ORG_EMP;
-
-
-
 
 class EmployeeHelper{
 
-
+	public static function get_shift($shift_id = null){
+		if(!empty($shift_id)){
+			$shift = Shift::where(['id'=>$shift_id,'status'=>1]);
+			if($shift->exists()){
+			return $shift->first();	
+			}
+			 return null;
+		}
+	}
 	public static function get_designation($designation_id=null)
 	{
 		if(!empty($designation_id)){

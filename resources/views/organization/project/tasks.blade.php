@@ -8,13 +8,25 @@
     'page_title' => 'Tasks',
     'add_new' => '+ Add Tasks'
 ); 
+    $Tasks = 'App\Model\Organization\Tasks';
 @endphp
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	<div class="row">
-		@include('organization.project._tabs')
-		<div class="row">
+    @if($errors->any())
+        <script type="text/javascript">
+          window.onload = function(){
+            $('#add_new_model').modal('open');
+          }
+        </script>
+      @endif
+	   @if(request()->project_id != null)
+        
+        @include('organization.project._tabs')
+       
+
+       @endif
+		{{-- <div class="row">
 			
             {!!Form::open(['route'=>'create.tasks','method'=>'POST','files'=>true])!!}
                 @if(array_key_exists('id',request()->route()->parameters()))
@@ -23,79 +35,152 @@
                 @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Task','button_title'=>'Save task','section'=>'tassec1']])
              {!!Form::close()!!} 
 			@include('common.tasks')
-		</div>
-	</div>
+		</div> --}}
+        <div class="ph-15 mb-10">
+            <div class="aione-border  pt-10">
+                {!! FormGenerator::GenerateForm('project-task-filter-form') !!}           
+            </div>
+        </div>
+        <div class="ar" id="task_container">
+            <div class="ac l33 ">
+                <div class="aione-border" >
+                    <h5 class="font-weight-700  font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                        Pending          
+                        <span class="aione-float-right count"></span>   
+
+                    </h5>
+                    <div class="p-10 task-list" id="pending" style="min-height: 400px;max-height: 400px;overflow: auto;">
+                        @foreach($tasks->where('status',0) as $key => $task)
+                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" >
+                                <div class="truncate font-size-16 font-weight-700 line-height-22">
+                                    {{ $task->title }}
+                                </div>
+                                <div class="line-height-22 grey truncate">
+                                    Assign To : {{ $Tasks::generateUsersList($task) }}
+                                </div>
+                                <div class="line-height-22 grey truncate">
+                                    Due : {{ $Tasks::generateDaysLeft($task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>    
+                </div>
+            </div>
+            <div class="ac l33 ">
+                <div class="aione-border" >
+                    <h5 class="font-weight-700  font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                        In progress           
+                        <span class="aione-float-right count"></span>   
+
+                    </h5>  
+                    <div class="p-10 task-list" style="min-height: 400px;max-height: 400px;overflow: auto" id="in_progress">
+                          
+                        @foreach($tasks->where('status',1) as $key => $task)
+                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" >
+                                <div class="truncate font-size-16 font-weight-700 line-height-22">
+                                    {{ $task->title }}
+                                </div>
+                                <div class="line-height-22 grey truncate">
+                                    Assign To : {{ $Tasks::generateUsersList($task) }}
+                                </div>
+                                <div class="line-height-22 grey truncate">
+                                    Due : {{ $Tasks::generateDaysLeft($task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>     
+                </div>
+            </div>
+            <div class="ac l33 ">
+                <div class="aione-border" id="task_container">
+                    <h5 class="font-weight-700  font-size-16 m-0 p-10 bg-grey bg-lighten-4 ">
+                        Completed   
+                        <span class="aione-float-right count"></span>   
+                    </h5> 
+                    <div class="p-10 task-list" id="completed" style="min-height: 400px;max-height: 400px;overflow: auto">
+                       @foreach($tasks->where('status',2) as $key => $task)
+                            <div class="aione-shadow task  mb-15 p-10 priority-{{ $task->priority }}" data-target="edit_task" >
+                                <div class="truncate font-size-16 font-weight-700 line-height-22">
+                                    {{ $task->title }}
+                                </div>
+                                <div class="line-height-22 grey truncate">
+                                    Assign To : {{ $Tasks::generateUsersList($task) }}
+                                </div>
+                                <div class="line-height-22 grey truncate">
+                                    Due : {{ $Tasks::generateDaysLeft($task) }} left | By : {{ user_id_to_name($task->created_by) }} | 28 comments
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>      
+                </div>
+            </div>
+        </div>
+	
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+    
+    {!! Form::model(@$project,['route'=>'create.tasks','files'=>true]) !!}
+        @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Task','button_title'=>'Save','section'=>'tassec1']])
+    {!! Form::close() !!}
+    <style type="text/css">
+        .priority-high,
+        .priority-medium,
+        .priority-low{
+            position: relative;
+            cursor: move;
+            background: white
+            
+        }
+        .priority-high:before,
+        .priority-medium:before,
+        .priority-low:before{
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-top: 12px solid;
+            border-right: 12px solid transparent
+        }
+        .priority-high:before{
+            border-top-color: red;
+        }
+        .priority-medium:before{
+            border-top-color: green;
+        }
+        .priority-low:before{
+            border-top-color: yellow;
+        }
+    </style>
+    <script type="text/javascript" src="{{ asset('assets/js/Sortable.js') }}"></script>
+    <script type="text/javascript">
+        count();
+        [].forEach.call(document.getElementById('task_container').getElementsByClassName('task-list'), function (el){
+            Sortable.create(el, {
+                group: 'tasks',
+                animation: 150,
+                draggable: ".task",
+                onAdd: function (evt/**Event*/){
+                    count();
+                    console.log(evt);
+                    var dropedId = evt.to.attributes.id.nodeValue;
+                    console.log(dropedId);
+                    if(dropedId == 'in_progress'){
 
+                    }
+                    var item = evt.item; 
+                }
+            });
+        });
+
+        function count(){
+            $('.task-list').each(
+              function() {
+                $(this).parents('.aione-border').find('.count').text($('.task', $(this)).length);
+              }
+            );    
+        }
+    </script>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')    
-	<style type="text/css">
-		.options{
-		position: absolute;
-		font-size: 14px;
-		display: none;
-		margin-top:-3px;
-	}
-	.hover-me:hover .options{
-		display: block
-	}
-    .progress{
-        position: absolute;
-        z-index: 999;
-        width: 700px;
-        top: 60%;
-        left: 30%;
-        display: none;
-    }
 
-	 .task-font{
-        font-size: 13px !important;padding-top: 10px !important;
-    }
-    .mt-10{
-        margin-top: 10px !important;
-    }
-    .mr-5{
-        margin-right: 5px !important;
-    }
-    .pl-5{
-        padding-left: 5px !important;
-    }
-    .img-avatar{
-        width: 40px !important;float: right !important;
-    }
-    .pt-10{
-        padding-top: 10px;
-    }
-    .empty-box-text{
-        font-size: 20px;
-        font-weight: 700;
-        color:#d8d8d8;
-        text-align: center;
-        
-    }
-    .projects-logo{
-        
-        background-color: #000;margin: 10%;
-
-    }
-     .p-15{
-        padding: 15px !important;
-    }
-    .pv-5{
-        padding: 5px 0px !important; 
-    }
-     .p-15{
-        padding: 15px !important;
-    }
-    .mb-14{
-    	margin-bottom: 14px !important;
-    }
-    .optional{
-
-    }
-    .p-10{
-        padding: 10px !important;
-    }
-	</style>
 @endsection

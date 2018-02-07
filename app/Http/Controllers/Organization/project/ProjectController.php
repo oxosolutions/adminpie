@@ -8,7 +8,7 @@ use App\Repositories\User\UserRepositoryContract;
 use App\Repositories\Client\ClientRepositoryContract;
 use App\Model\Organization\Project;
 use Session;
-use App\Model\Organization\ProjectMeta as PM;
+use App\Model\Organization\ProjectMeta;
 use Auth;
 use App\Model\Organization\User;
 use App\Model\Organization\ProjectCategory as CAT;
@@ -29,6 +29,7 @@ class ProjectController extends Controller
         $this->user = $user;
         $this->client = $client;
     }
+    
     public function validation(Request $request)
     {
         $pro_table = Session::get('organization_id');
@@ -38,30 +39,288 @@ class ProjectController extends Controller
                             ];
         return $this->validate($request, $validation);
     }
+
     public function createCategories()
     {
       return view('organization.categories.createCategories');
     }
+
     public function create()
     {
       return view('organization.project._form');
     }
-    public function save(Request $request)
-    {
-      $this->validation($request);
-    	$project = new Project();
-    	$project->fill($request->all());
-        $project->tags = json_encode(['abc','cde']);
-    	$project->save();
-    	Session::flash('success','successfully created project');
-    	return redirect()->route('list.project');
+
+    protected function validateProjectDetailsRequest($request){
+        $rules = [
+            'name' => 'required',
+            'description' => 'required'
+        ];
+        $this->validate($request,$rules);
     }
+
+    /**
+     * Save edited details of project
+     * @param  Request $request having all posted data
+     * @return [type]           will return back to same page
+     * @author Rahul
+     */
+    public function updateProjectDetails(Request $request){
+        $this->validateProjectDetailsRequest($request);
+        $project_id = $request->id;
+        $project = Project::find($project_id);
+        $project->fill($request->all());
+        $project->save();
+        $metaForUpdate = $request->except(['name','category','description','tags','action','_token']);
+        update_meta('App\Model\Organization\ProjectMeta',$metaForUpdate,['project_id'=>$project_id]);
+        Session::flash('success','Details updated successfully!');
+        return back();
+    }
+
+
+    public function save(Request $request){
+
+        $created_by = get_user_id();
+        $this->validation($request);
+        $project = new Project();
+        $project->fill($request->all());
+        $project->save();
+        update_meta('App\Model\Organization\ProjectMeta',['created_by'=>$created_by],['project_id'=>$project->id],false);
+        Session::flash('success','successfully created project');
+        return redirect()->route('list.project');
+    }
+
+
+    /**
+     * To view all details of project
+     * @param  [type] $id having project id
+     * @return [type]     return to that view
+     * @author Rahul
+     */
+    public function details($id){
+        $model = Project::with('projectMeta')->find($id);
+        if(!$model->projectMeta->isEmpty()){
+            foreach($model->projectMeta as $key => $value){
+                if(in_array($value->key,['start_date','end_date'])){
+                    $model->{$value->key} = Carbon::parse($value->value)->format('Y-m-d');
+                }else{
+                    json_decode($value->value);
+                    if(json_last_error() == JSON_ERROR_NONE){
+                      $model->{$value->key} = json_decode($value->value);
+                    }else{
+                      $model->{$value->key} = $value->value;
+                    }
+                }
+            }
+        }
+        // dd($model);
+        return view('organization.project.details',['model'=>$model]);
+    }
+
+    /**
+     * Upload project attachments
+     * @param  Request $request having all posted dat
+     * @return [type]           return back to same route
+     * @author Rahul
+     */
+    public function uploadAttachments(Request $request){
+        $attachmentsArray = [];
+        if($request->has('attachments')){
+            foreach($request->attachments as $key => $attachment){
+                $tempArray = [];
+                if($attachment['file'] == null){
+                    continue;
+                }else{
+                    $uploadPath = upload_path('project_attachments');
+                    $filename = date('Y-m-d-H-i-s')."-".$attachment['file']->getClientOriginalName();
+                    $attachment['file']->move($uploadPath, $filename);
+                    $tempArray['name'] = ($attachment['name'] == null)?'Untitled':$attachment['name'];
+                    $tempArray['file'] = $filename;
+                    $attachmentsArray[] = $tempArray;
+                }
+            }
+            $attachmentsArray = $this->reArrangeOldAttachments($request->id, $attachmentsArray);
+            update_meta('App\Model\Organization\ProjectMeta',['attachments'=>json_encode($attachmentsArray)],['project_id'=>$request->id]);
+            Session::flash('success','Attachments upload successfully!');
+            return back();
+        }else{
+            Session::flash('error','Attachment not found!');
+            return back();
+        }
+    }
+
+    /**
+     * To manage old attachments of project
+     * @param  [type] $id               having project id
+     * @param  [type] $attachmentsArray having array of new attachments
+     * @return [type]                   will return array of attachments
+     * @author Rahul
+     */
+    protected function reArrangeOldAttachments($id, $attachmentsArray){
+        $projectMeta = get_meta('Organization\ProjectMeta',$id,'attachments','project_id');
+        if($projectMeta != false){
+            try{
+                $jsonDecoded = json_decode($projectMeta,true);
+                foreach($jsonDecoded as $key => $array){
+                    $attachmentsArray[] = $array;
+                }
+                return $attachmentsArray;
+            }catch(\Exception $e){
+                return $attachmentsArray;
+            }
+        }else{
+            return $attachmentsArray;
+        }
+    }
+
+    /**
+     * Delete project attachment
+     * @param  [type] $id project id
+     * @return [type]     return back to same route
+     * @author Rahul
+     */
+    public function deleteProjectAttachment($attachment_index, $id){
+        $projectMeta = get_meta('Organization\ProjectMeta',$id,'attachments','project_id');
+        if($projectMeta != false){
+            try{
+                $jsonAttachments = json_decode($projectMeta,true);
+                unset($jsonAttachments[$attachment_index]);
+                $updatedMeta = array_values($jsonAttachments);
+                update_meta('App\Model\Organization\ProjectMeta',['attachments'=>json_encode($updatedMeta)],['project_id'=>$id]);
+                Session::flash('success','Attachment successfully deleted!');
+                return back();
+            }catch(\Exception $e){
+                Session::flash('error','Unable to delete the attachment!');
+                return back();
+            }
+        }
+    }
+
+    /**
+     * Assign team to project
+     * @param  Request $request having all posted data
+     * @return [type]           will return back to same route
+     * @author Rahul
+     */
+    public function assignTeam(Request $request){
+        if($request->assigned_team != null){
+            $integerArray = array_map('intval',$request->assigned_team);
+            $project_id = $request->id;
+            update_meta('App\Model\Organization\ProjectMeta',['assigned_team'=>json_encode($integerArray)],['project_id'=>$request->id]);
+            Session::flash('success','Team assigned successfully!');
+            return back();
+        }else{
+            Session::flash('warning','Selecy atleast one team!');
+            return back();
+        }
+    }
+
+    /**
+     * Remove team from project 
+     * @param  [type] $project_id having project id
+     * @param  [type] $team_id    having team index to delete
+     * @return [type]             will return back to same view
+     * @author Rahul
+     */
+    public function removeProjectTeams($project_id, $team_id){
+        if($project_id != '' && $team_id != ''){
+            $projectMeta = get_meta('Organization\ProjectMeta',$project_id,'assigned_team','project_id');
+            if($projectMeta != false){
+                $projectTeams = json_decode($projectMeta, true);
+                unset($projectTeams[$team_id]);
+                $projectTeams = array_values($projectTeams);
+                if(count($projectTeams) != 0){
+                    update_meta('App\Model\Organization\ProjectMeta',['assigned_team'=>json_encode($projectTeams)],['project_id'=>$project_id]);
+                }
+                Session::flash('success','Team removed successfully!');
+                return back();
+            }else{
+                Session::flash('error','Unable to remove team!');
+                return back();
+            }
+        }else{
+            Session::flash('error','Something went wrong, please try again!');
+            return back();
+        }
+    }
+
+    /**
+     * Assign users to project
+     * @param  Request $request having all posted data
+     * @return [type]           return back to same view
+     * @author Rahul
+     */
+    public function assignUsers(Request $request){
+        if($request->assigned_user != null){
+            $integerArray = array_map('intval',$request->assigned_user);
+            update_meta('App\Model\Organization\ProjectMeta',['assigned_user'=>json_encode($integerArray)],['project_id'=>$request->id]);
+            Session::flash('success','Users assigned successfully!');
+            return back();
+        }else{
+            Session::flash('warning','Selecy atleast one user!');
+            return back();
+        }
+    }
+
+    /**
+     * Remove assigned users
+     * @param  [type] $project_id having project id
+     * @param  [type] $user_index having index of user to remove
+     * @return [type]             return back to same view
+     * @author Rahul
+     */
+    public function removeAssignedUsers($project_id, $user_index){
+        if($project_id != '' && $user_index != ''){
+            $projectMeta = get_meta('Organization\ProjectMeta',$project_id,'assigned_user','project_id');
+            if($projectMeta != false){
+                $projectUsers = json_decode($projectMeta, true);
+                unset($projectUsers[$user_index]);
+                $projectUsers = array_values($projectUsers);
+                if(count($projectUsers) != 0){
+                    update_meta('App\Model\Organization\ProjectMeta',['assigned_user'=>json_encode($projectUsers)],['project_id'=>$project_id]);
+                }
+                Session::flash('success','User removed successfully!');
+                return back();
+            }else{
+                Session::flash('error','Unable to remove user!');
+                return back();
+            }
+        }else{
+            Session::flash('error','Something went wrong, please try again!');
+            return back();
+        }
+    }
+
+    /**
+     * To View all tasks of project
+     * @param  [type] $id having project id and null to show all projets tasks
+     * @return [type]     return view
+     * @author Rahul
+     */
+    public function tasks($id){
+        if($id != null){
+            $model = Tasks::where('project_id',$id)->get();
+        }else{
+            $model = Tasks::get();
+        }
+        $project['project'] = $id;
+        return view('organization.project.tasks',['tasks'=>$model,'project'=>$project]);
+    }
+
+
+
+
+    /**************************************************************************/
+
+
+
+
+    
+
     public function add_client(Request $request)
     {
         $this->user->create($request->all(),3); 
         $this->client->create($request->all());
         return redirect()->route('list.project');
-
     }
     
     public function listProject(Request $request , $id = null)
@@ -107,29 +366,6 @@ class ProjectController extends Controller
       return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
     }
 
-    /*
-    * To load list project for ajax
-    * 
-     */
-    // public function projectsList(Request $request){
-    //     if($request->has('order')){
-    //         $order = $request->order;
-    //     }else{
-    //         $order = 'desc';
-    //     }
-    //     $projects = Project::orderBy('name',$order);
-
-    //     if($request->has('q')){
-    //         $projects = $projects->orWhere('name','like','%'.$request->q.'%');
-    //     }
-    //     if($request->has('tags')){
-    //         foreach($request->tags as $tag){
-    //             $projects->orWhere('tags','like','%'.$tag['tag'].'%');
-    //         }
-    //     }
-    //     $projects = $projects->paginate(10);
-    //     return view('organization.project.ajax.projects',['projects'=>$projects]);
-    // }
    
 
     public function edit($id)
@@ -336,33 +572,8 @@ class ProjectController extends Controller
         $model = CAT::where(['id' => $id])->delete();
         return back();
     }
-    public function tasks($id = null)
-    {
-      $model = Tasks::where('project_id',$id)->get();
-      $plugins = [
-
-      			'js' => ['custom'=>['tasks']]
-      ];
-      return view('organization.project.tasks',['plugins'=>$plugins,'model'=>$model]);
-    }
-    public function details($id){
-        $model = Project::with('projectMeta')->find($id);
-        if(!$model->projectMeta->isEmpty()){
-            foreach($model->projectMeta as $key => $value){
-                if(in_array($value->key,['start_date','end_date'])){
-                    $model->{$value->key} = Carbon::parse($value->value)->format('Y-m-d');
-                }else{
-                    json_decode($value->value);
-                    if(json_last_error() == JSON_ERROR_NONE){
-                      $model->{$value->key} = json_decode($value->value);
-                    }else{
-                      $model->{$value->key} = $value->value;
-                    }
-                }
-            }
-        }
-        return view('organization.project.details',['model'=>$model]);
-    }
+    
+    
 
     public function activities(){
          return view('organization.project.activities');

@@ -24,7 +24,7 @@ $page_title_data = array(
 
 
 
-@if(Session::has('success'))
+{{-- @if(Session::has('success'))
 <div id="card-alert" class="card green lighten-5"><div class="card-content green-text">
 <span class="alert">{{ Session::get('success') }}</span>
 <i class="material-icons dp48">clear</i></div></div>
@@ -33,7 +33,7 @@ $page_title_data = array(
 
 @if(Session::has('error'))
 <p class="alert">{{ Session::get('error') }}</p>
-@endif
+@endif --}}
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 

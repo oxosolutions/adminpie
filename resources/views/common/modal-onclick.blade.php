@@ -27,6 +27,11 @@
 		</button>
 	</div>	
 </div>
+<style type="text/css">
+	.modal-content > div{
+		margin-bottom: 50px
+	}
+</style>
 <script type="text/javascript">
 
 	$(document).ready(function(){

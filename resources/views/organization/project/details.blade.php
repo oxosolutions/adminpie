@@ -1,48 +1,6 @@
 @extends('layouts.main')
 @section('content')
-<style type="text/css">
-    .project-details > div{
-        padding-right: 14px !important;
-    }
-    .project-details .card{
-        padding: 10px;
 
-    }
-    .project-details .card .project-logo{
-        width: 50px;
-        margin: 10px auto;
-        line-height: 50px;
-        border-radius: 50%;
-        color: white
-    }
-    .project-details .card >div {
-        margin-bottom: 10px;
-    }
-    .project-details .card > .headline{
-       border-bottom: 1px solid #e8e8e8;
-       padding-bottom: 10px;
-    }
-    .project-details .card > .headline > h6{
-        display: inline-block;
-    }
-    .project-details .card > .headline > .edit{
-      float: right
-    }
-    .project-details .card > .list >div{
-        margin-bottom: 10px
-    }
-    .project-details .members-list img{
-        float: left;
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-    }
-    .project-details .members-list span{
-        float: left;
-        line-height: 30px;
-        padding-left: 10px;
-    }
-</style>
 @php
     $page_title_data = array(
     'show_page_title' => 'yes',
@@ -57,211 +15,258 @@
 @include('common.page_content_primary_start')
 
     @include('organization.project._tabs')
-    <div class="row project-details">
-        <div class="col l2 center-align "  >
-
-            <div class="card ">
-                
-                <div class="blue project-logo"  >
-                   {{@ucwords(substr($model->name,0,2))}} 
+    <div class="ar">
+        <div class="ac l65 aione-table">
+            <div class="aione-border mb-20">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
+                     Project Details
+                     <button class="aione-button aione-float-right font-size-14 " data-target="edit-project-details"  style="margin-top: -6px">Edit</button>
+                     {!!Form::model(@$model,['route'=>['update.project.details',request()->id],'method'=>'post'])!!}
+                     @include('common.modal-onclick',['data'=>['modal_id'=>'edit-project-details','heading'=>'Edit Project Details','button_title'=>'Save ','form'=>'edit-project-details-form']])
+                     {!! Form::close() !!}
                 </div>
-                <div class="p-15">
-                    {{@ucfirst($model->name)}} {{@ucfirst($model->name)}} {{@ucfirst($model->name)}}
-                </div>
-            </div>
-            <div class="card row" >
-                <div class="col s12 m12 l12 headline" >
-                    <h6 >Tasks</h6>
-                </div>
-                <div class="col l12 list">
-                    <div class="col s12 m12 l12 pv-5 "><strong>276</strong><span class="grey-text pl-7">Total tasks</span></div>
-                    <div class="col s12 m12 l12 pv-5"><strong>178</strong><span class="grey-text pl-7">Tasks left</span></div>
-                    <div class="col s12 m12 l12 pv-5"> <strong>98</strong><span class="grey-text pl-7">Tasks completed</span></div>
-                    <div class="col s12 m12 l12 pv-5"><a href="">Create a new task</a></div>
-                    <strong>OR</strong>
-                    <div class="col s12 m12 l12 pv-5"><a >Track task</a></div>
-                </div>
-            </div>
-        </div>
-        <div class="col l8 " >
-            <div class="card">  
-                <div class="col s12 m12 l12 headline" >
-                    <h6 >Project Details</h6>
-                    <a href="#modal3" class="edit">Edit</a>
-                    {!!Form::model($model,['route'=>['update.project',$model->id],'method'=>'POST'])!!}
-                   
-                    @include('common.modal-onclick',['data'=>['modal_id'=>'modal3','heading'=>'Project detail','button_title'=>'Save','section'=>'prosec3']])
-                     {!!Form::close()!!}
-                </div>
-                <div class="list row">
-                    <div class="col s12 m12  l12" >
-                        <div class=" col l3">
-                            Project Name
-                        </div>
-                        <div class=" col l9">
-                            {{$model->name}}
-                        </div>
+                <div class="p-10 ">
+                    <div class="font-weight-600 line-height-30 font-size-18">
+                        {{$model->name}}    
                     </div>
-                    <div class="col s12 m12  l12"  >
-                        <div class=" col l3">
-                            Description
-                        </div>
-                        <div class=" col l9">
-                            {{@$model->description}}
-                        </div>
+                    <div class="line-height-30 font-size-13 ">
+                        <span class="bg-green white p-2 ph-5">
+                          {{App\Model\Organization\ProjectCategory::find($model->category)->name}}      
+                        </span>
                     </div>
-                    <div class="col s12 m12  l12"  >
-                        <div class=" col l3">
-                            Location
-                        </div>
-                        <div class=" col l9">
-                            {{@$model->location}}
-                        </div>
+                    <div class="line-height-26 mb-15" style="text-align: justify;">
+                        {{$model->description}}
                     </div>
-                    <div class="col s12 m12 l12 "  >
-                        <div class=" col l3">
-                            Start Date
-                        </div>
-                        <div class=" col l9">
-                            {{@$model->start_date}}
-                        </div>
-                    </div>
-                    <div class="col s12 m12 l12"  >
-                        <div class=" col l3">
-                            End Date
-                        </div>
-                        <div class=" col l9">
-                            {{@$model->end_date}}
-                        </div>
-                    </div>
-                    <div class="col s12 m12 l12"  >
-                        <div class=" col l3">
-                            Added By
-                        </div>
-                        <div class=" col l9">
-                            <div class="col l6">
-                                {{@$model->added_by}}
-                            </div>
-                            <div class="col l6 right-align grey-text">
-                                2 hours ago 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col l2 " >
-            <div class="card row" >
-                 <div class="col s12 m12 l12 headline" >
-                    <h6 >Teams</h6>
-                </div>
-                <div class="col l12 members-list">
-                    @if($model->teams != null)
-                        @foreach(@$model->teams as $key => $value)
-                            @php
-                               $team =  App\Model\Organization\Team::find($value);
-                            @endphp
-                            <div class="col s10 m10 l10 p-10 grey-text fs-13">{{$team ->title}}</span></div>
-                            <div class="col s2 m2 l2 p-10"> <strong>{{count(json_decode($team->member_ids))}}</strong></div>
+                    <div class="line-height-30 mb-20 font-size-13 ">
+                        <i class="fa fa-tags"></i>
+                        @php
+                            $tags = explode(',',$model->tags);
+                        @endphp
+                        @foreach($tags as $tag)
+                        <span class=" mr-5 bg-light-blue bg-darken-2 white p-2 ph-10 posi" style="border-radius: 4px">
+                            {{$tag}}    
+                        </span>
+                        
                         @endforeach
-                    @endif
-                    <div class="col s12 m12 l12 pv-5">
-                        <?php
-                            if($model->teams != null){
-                                $model->teams = array_map('intval', $model->teams);
-                            }
-                        ?>
                     </div>
-                    <div class=" waves-effect" style="width: 100%;padding:5px">
-                        <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                        <span>Sgs Sandhu</span>
-                    </div>
-                    <div class=" waves-effect" style="width: 100%;padding:5px">
-                        <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                        <span>Sgs Sandhu</span>
-                    </div>
-                    <div class=" waves-effect" style="width: 100%;padding:5px">
-                        <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                        <span>Sgs Sandhu</span>
-                    </div>
-                  
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>End Date</td>
+                                <td>{{$model->end_date}}</td>
+                            </tr>
+                            <tr>
+                                <td>Created At</td>
+                                <td>{{$model->start_date}}</td>
+                            </tr>
+                            <tr>
+                                <td>Created By</td>
+                                <td>
+                                {{ App\Model\Group\GroupUsers::find($model->created_by)->name}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Priority</td>
+                                <td>
+                                    @if($model->priority == 'high')
+                                        <span class="red">
+                                            High    
+                                        </span>
+                                    @endif
+                                    @if($model->priority == 'medium')
+                                        <span class="blue">
+                                            Medium    
+                                        </span>
+                                    @endif
+                                    @if($model->priority == 'low')
+                                        <span class="green">
+                                            Low         
+                                        </span>
+                                    @endif
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Status</td>
+                                <td>{{ucWords(str_replace('_',' ',$model->status))}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                    
             </div>
-            <div class="card row" >
-                <div class="col s12 m12 l12 headline" >
-                    <h6 >Users</h6>
-                </div>
-                <div class="col l12">
-                    @if($model->users != null)
-                        @foreach(@$model->users as $key => $value)
-                            @php
-                               $users =  App\Model\Organization\User::find($value);
-                            @endphp
-                            <div class="col s12 m12 l12 pv-5 ">{{$users ->name}}</span></div>
-                           
-                        @endforeach
-                    @endif
-                    <div class="col s12 m12 l12 pv-5">
-                      
-                    </div>
-                     
-                   
-                    <div class="col s12 m12 l12 pv-5">
-                        <?php
-                            if($model->teams != null){
-                                $model->teams = array_map('intval', $model->teams);
-                            }
-                        ?>
-                        <a href="#modal2" >Assign another team</a>
-                        {!!Form::model($model,['route'=>['update.team',$model->id]])!!}
-                            @include('common.modal-onclick',['data'=>['modal_id'=>'modal2','heading'=>'This is Heading','button_title'=>'Save Data','section'=>'prosec4']])
-                        {!!Form::close()!!}
-                    </div>
+            <div class="aione-border">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
+                    Attachments
+                    <button class="aione-button aione-float-right font-size-14 " data-target="add-image"  style="margin-top: -6px">+ Add</button>
+                    {!! Form::open(['route'=>['upload.project.attachments',request()->id],'method'=>'post','files'=>true]) !!}
+                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-image','heading'=>'Add Image','button_title'=>'Upload ','form'=>'add-attachments-form']])
+                    {!! Form::close() !!}
                 </div>
                 
-            </div>
-            <div class="card row" >
-                <div class="col s12 m12 l12 headline" >
-                    <h6 >Clients</h6>
-                </div>
-                <div class="col s12 m12 l12">
-                    <div class="col l12 pv-5 ">
-                        <div class="chip">
-                            <img src="{{asset('assets/images/sgs_sandhu.jpg')}}" alt="Contact Person">
-                            Ashish Joshi
+                <div class="p-10 ar">
+                    @foreach($model->attachments as $key => $attachment)
+                        @php
+                            $exploded = explode('.',$attachment->file);
+                            $countIndex = count($exploded)-1;
+                        @endphp
+                        <div class="ac l25 aione-align-center mb-20">
+                            <span class="aione-border display-inline-block width-100 image-wrapper" style="width: 100%">
+                                @if(in_array($exploded[$countIndex],['jpg','jpeg','png','gif']))
+                                    <img src="{{ url('/').'/'.upload_path('project_attachments').'/'.$attachment->file}}" class="mr-20" style="height: 100px">   
+                                @else
+                                    <img src="{{asset('assets/images/file-icon.png')}}" class="mr-20" style="height: 100px">
+                                @endif
+                                <a href="{{route('delete.project.attachment',['attachment_index'=>$key,'id'=>request()->id])}}" class="delete-sweet-alert">
+                                    <i class="fa fa-trash"></i>    
+                                </a>
+                                <a href="{{ url('/').'/'.upload_path('project_attachments').'/'.$attachment->file}}" target="_blank">
+                                    <i class="fa fa-download"></i>    
+                                </a>
+                                
+                                <div class="bg-white p-5 aione-border-top truncate aione-tooltip" title="{{$attachment->name}}">
+                                    {{$attachment->name}}
+                                </div>
+                            </span>
+                            
                         </div>
-                    </div>
+                    @endforeach
                     
                 </div>
-                
-            </div>
-            <div class="card row">
-                <div class="col s12 m12 l12 headline" >
-                    <h6 >More</h6>
-                </div>
-                <div class="col s12 m12 l12 list" >
-                     <div class="col s12 m12 l12 pv-5 "><strong>9</strong><a href="{{ route('documentation.project',$model->id) }}"><span class="grey-text pl-7">Documentations</span></a></div>
-                     <div class="col s12 m12 l12 pv-5"><strong>7</strong><a href="{{ route('notes.project',$model->id) }}"><span class="grey-text pl-7">Notes</span></a></div>
-                     <div class="col s12 m12 l12 pv-5"> <strong>98</strong><a href="{{ route('credentials.project',$model->id) }}"><span class="grey-text pl-7">Credenatials</span></a></div>
-                     <div class="col s12 m12 l12 pv-5"> <strong>8</strong><a href="{{ route('attachment.project',$model->id) }}"><span class="grey-text pl-7">Attachments</span></a></div>
-                </div>
-                
+                    
             </div>
         </div>
+        <div class="ac l35">
+            <div class="aione-border mb-20">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
+                    Assign Teams
+                    <button class="aione-button aione-float-right font-size-14 " data-target="add-team" style="margin-top: -6px">+ Add</button>
+                    {!! Form::model(@$model,['route'=>['assign.project.team',request()->id]]) !!}
+                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-team','heading'=>'Add Team','button_title'=>'Save ','form'=>'assign-team-form']])
+                    {!! Form::close() !!}
+                </div>
+                <div class=" aione-table">
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Members</th>
+                                
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($model->assigned_team != null)
+                                @foreach($model->assigned_team as $key => $team_id)
+                                    @php
+                                        $members = 0;
+                                        $teamModel = App\Model\Organization\Team::find($team_id);
+                                        if($teamModel->member_ids != '' && $teamModel->member_ids != null){
+                                            $members = count(json_decode(@$teamModel->member_ids));
+                                        }
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $teamModel->title }}</td>
+                                        <td>{{ $members }}</td>
+                                        
+                                        <td>
+                                            <a href="{{ route('remove.project.team',['project_id'=>request()->id,'index_id'=>$key]) }}" class="delete-sweet-alert">Remove</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>          
+            <div class="aione-border mb-20">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
+                    Assign Users
+                    <button class="aione-button aione-float-right font-size-14 " data-target="add-user" style="margin-top: -6px">+ Add</button>
+                    {!! Form::model(@$model,['route'=>['assign.project.user',request()->id]]) !!}
+                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-user','heading'=>'Add User','button_title'=>'Save ','form'=>'assign-user-form']])
+                    {!! Form::close() !!}
+                </div>
+                <div class="aione-table">
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($model->assigned_user != null)
+                                @foreach($model->assigned_user as $key => $user_id)
+                                    <tr>
+                                        <td>{{ ucwords(user_id_to_name($user_id)) }}</td>
+                                        <td>
+                                            <a href="{{ route('remove.assigned.user',['user_index'=>$key,'project_id'=>request()->id]) }}"  class="delete-sweet-alert">Remove</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>          
+            <div class="aione-border mb-20">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
+                    Assign Clients
+                    <button class="aione-button aione-float-right font-size-14 " data-target="add-client" style="margin-top: -6px">+ Add</button>
+                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-client','heading'=>'Add Client','button_title'=>'Save ','form'=>'assign-client-form']])
+                </div>
+                <div class="aione-table">
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>John Dao</td>
+                                
+                                <td>
+                                    <a href="">Remove</a>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>          
+        </div>
     </div>
-        
 
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+@include('common.confirm-alert')
+<style type="text/css">
+    .image-wrapper{
+        position: relative;
+
+    }
+    .image-wrapper .fa-trash,
+    .image-wrapper .fa-download{
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        display: none;
+        cursor: pointer;
+    }
+    .image-wrapper .fa-download{
+        top: 7px;
+        right: 30px
+    }
+    .image-wrapper:hover .fa-trash,
+    .image-wrapper:hover .fa-download{
+        display: block;
+    }
+</style>
 
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 
-<script type="text/javascript">
-    $(document).ready(function(){
-      $('#modal1').modal();
-      $('#modal2').modal(); 
-      $('#modal3').modal();
-       });
-</script>
+
 @endsection

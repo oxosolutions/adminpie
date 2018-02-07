@@ -4,6 +4,7 @@ namespace App\Model\Organization;
 
 use Illuminate\Database\Eloquent\Model;
 use Session;
+use Carbon\Carbon;
 class Tasks extends Model
 {
   public static $breadCrumbColumn = 'id';
@@ -18,6 +19,36 @@ class Tasks extends Model
     public function users(){
 
       return $this->belongsTo('App\Model\Organization\User','assign_to','id');
+    }
+
+
+
+    public static function generateUsersList($task){
+        $usernames = [];
+        $userArray = $task->assign_to;
+        if($userArray != ''){
+            $users = json_decode($userArray,true);
+            if(@$users['user'] != null){
+                foreach($users['user'] as $key => $userId){
+                    if($userId != ''){
+                        $usernames[] = user_id_to_name($userId);
+                    }
+                }
+            }
+        }
+        return implode(',', $usernames);
+    }
+
+    public static function generateDaysLeft($task){
+        $today = Carbon::now();
+        $end_date = Carbon::parse($task->end_date);
+        $days = $end_date->diffInDays(Carbon::now())+1;
+        if($days < 2){
+            $string = 'day';
+        }else{
+            $string = 'days';
+        }
+        return $days.' '.$string ;
     }
 
 }

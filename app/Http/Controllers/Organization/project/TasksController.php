@@ -1,60 +1,57 @@
 <?php
 
-namespace App\Http\Controllers\Organization\account;
+namespace App\Http\Controllers\Organization\project;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Organization\Tasks;
 use Session;
 use Auth;
-class TasksController extends Controller
-{
+class TasksController extends Controller{
+
+    /**
+     * List of all tasks
+     * @return [type] return tasks view
+     * @author Rahul
+     */
     public function index(){
-        $model = Tasks::all();
-        $data = [];
-            foreach ($model as $key => $value) {
-                $data[] = [
-                            'data' => json_decode($value->assign_to)->user,
-                            'id' => $value->id
-                            ];
-            }   
-        if($data != null || $data != "" || !empty($data)){
-            foreach($data as $k => $val){
-                if(in_array(Auth::guard('org')->user()->id,$val['data'])){
-                    $id[] = $val['id'];
-                }
-            }
-            if(@$id){
-                $model = Tasks::with('users')->find($id);
-            }
-        }else{
-            $model = "";
-        }
-        $plugins = [
-                'js' => ['custom'=>['tasks']]
-            ];
-            return view('organization.profile.tasks',['plugins'=>$plugins,'model'=>$model]);
+        $model = Tasks::get();
+        return view('organization.project.tasks',['tasks'=>$model]);
     }
 
-    public function create(Request $request){
-        $validate = [
-                        'title' =>'required',
-                        'description' => 'required',
-                        'priority'=>'required',
-                        'due_date'=>'required',
-                        'team' => 'required'
+    /**
+     * view task
+     * @return [type] return single task view
+     * @author Ashish
+     */
+    public function viewTask($id)
+    {
+        return view('organization.project.view-task');
+    }
 
-                    ];
-        $this->validate($request, $validate);
+
+    protected function validateCreateTask($request){
+        $rules = [
+            'title' =>'required',
+            'project' => 'required',
+            'description' => 'required',
+            'priority'=>'required',
+            'due_date'=>'required'
+        ];
+
+        $this->validate($request,$rules);
+    }
+
+
+    /**
+     * Will create and array of assign team and users
+     * @param  [type] $request having all posted data
+     * @return [type]          will return array
+     * @author Rahul
+     */
+    protected function createAssignToAndTeamsArray($request){
         $assignTo = [];
-        if(@$request->team != null || @$request->team != "" || !empty(@$$request->team)){
-            foreach ($request->team as $key => $value) {
-                $assignTo['team'][] = $value;
-            }
-        }else{
-            $assignTo['team'][] = "";
-        }
-        if(@$request->assign_to != null || @$request->assign_to != "" || !empty(@$$request->assign_to)){
+        if(@$request->assign_to != null && @$request->assign_to != "" && $request->has('assign_to')){
             foreach ($request->assign_to as $key => $value) {
                 if (is_numeric($value)) {
                      $assignTo['user'][] = $value;
@@ -62,27 +59,46 @@ class TasksController extends Controller
             }
         }else{
             $assignTo['user'][] = "";
-        }   
+        }  
+        return $assignTo;
+    }
+
+    /**
+     * Create new task
+     * @param  Request $request having all posted data
+     * @return [type]           will return to edit task route
+     * @author Rahul
+     */
+    public function create(Request $request){
+        $this->validateCreateTask($request);
+        $assignTo = $this->createAssignToAndTeamsArray($request);
         $model = new Tasks;
-        if($request->hasFile('browse_attachment')){
-            $filename = $request->file('browse_attachment')->getClientOriginalName();
-            $request->file('browse_attachment')->move('tasks_attachment', $filename);
+        if($request->hasFile('file')){
+            $uploadPath = upload_path('tasks_attachment');
+            $filename = $request->file('file')->getClientOriginalName();
+            $request->file('file')->move($uploadPath, $filename);
             $model->attachment = $filename;
         }
-    	
-        if($request->has('project_id')){
-            $model->project_id = $request->project_id;
-        }else{
-            $model->project_id = $request->projects_list;
-        }
-    	$model->description = $request->description;
-    	$model->title = $request->title;
+        $model->description = $request->description;
+        $model->title = $request->title;
         $model->assign_to = json_encode($assignTo);
         $model->priority = $request->priority;
         $model->end_date = $request->due_date;
-    	$model->save();
-    	return back();
+        $model->project_id = $request->project;
+        $model->created_by = get_user_id();
+        $model->save();
+        Session::flash('success','Task created successfully!');
+        return redirect()->route('edit.tasks',$model->id);
     }
+
+
+
+
+
+    /*****************************************************************************************************************************/
+
+
+    
 
     // chamge the task of the user from account user
     //working wityh ajax (tasks.js)
