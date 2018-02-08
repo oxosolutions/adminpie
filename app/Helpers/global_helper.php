@@ -32,6 +32,7 @@ use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
 
+
 function call_model($model,$method,$param = null){
     $modelPath = 'App\\Model\\Organization\\'.$model;
     $modelObject = new $modelPath;

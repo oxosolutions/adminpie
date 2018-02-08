@@ -124,6 +124,7 @@ class SalaryController extends Controller
       return $pdf->download($file_name.'.pdf');
 		}
 	public function generate_salary_slip_view(Request $request) {
+
 			$date = Carbon::now();
 			$date->subMonth();
 			$data['month'] = 	$month 	= $date->month;
@@ -131,7 +132,7 @@ class SalaryController extends Controller
 			if($request->isMethod('post')){
          $this->validate($request,['year'=>'required', 'month'=>'required']);
 				if($year == $request['year'] && $month <  $request['month']){
-					Session::flash('error', "you can't generate salary slip of future month's.");
+					Session::flash('error', "you can't view & generate salary slip of Current & future month's.");
 					return back();
 				}
 				$data['year'] 	=  	$year 	 = $request['year'];
@@ -147,10 +148,10 @@ class SalaryController extends Controller
           }
         }
  			}else{
-				$date = Carbon::now();
-				$date->subMonth();
-				$data['month']= 	$month 	= $date->month;
-				$data['year'] =  	$year 	= $date->year;
+				// $date = Carbon::now();
+				// $date->subMonth();
+				// $data['month']= 	$month 	= $date->month;
+				// $data['year'] =  	$year 	= $date->year;
 			}
        if(strlen($month)==1){
           $data['month'] = $month = '0'.$month;
@@ -158,7 +159,7 @@ class SalaryController extends Controller
       $data['users']  = GroupUsers::with( ['organization_employee_user', 'salary'=>function($q)use($year, $month){
                       $q->where(['year'=>$year, 'month'=>$month]);  
                     }, 'metas'=>function($query)use($year, $month){
-                          $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
+                          $query->whereIn('key', [ 'date_of_joining', 'date_of_leaving' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
                          }] )->whereHas('organization_employee_user')->orWhereHas('metas', function ($query)use($year, $month) {
                                 $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
                          } )->get();
@@ -171,7 +172,6 @@ class SalaryController extends Controller
           }])->whereIn('id',$user_select)->get();
 
         $current_date = Carbon::parse("$year-$month-1");
-        // $current_date->subMonth(); 
         $daysInMonth = $current_date->daysInMonth;
         $holiday = Holiday::WhereYear('date_of_holiday', $year)->whereMonth('date_of_holiday',$month)->count();
         foreach ($user as $userKey => $userValue) {
@@ -190,13 +190,13 @@ class SalaryController extends Controller
 	               $payScale_error[] = $meta['employee_id'];
 	             }
          	}
+        if(!Salary::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->exists()){
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
               if($attendance_data->count()>0){
                 if(empty($payScale)){
                     $payScale_error[] = $meta['employee_id'];
                 }else{
 
-        if(!Salary::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->exists()){
           $working_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->count();
           // $hours = $attendance_data->whereIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->mapWithKeys(function($data){
           //        $hours = json_decode($data['punch_in_out'],true);
@@ -233,6 +233,8 @@ class SalaryController extends Controller
                     $data[$userKey]['total_salary'] = $total_salary = $payScale['total_salary']; 
                     $data[$userKey]['per_day_amount'] = $per_day =  number_format($total_salary/30, 2,'.', '');
                     $per_hour = $per_day/8;
+                    $data[$userKey]['over_time']    = $extra_hours * $per_hour;
+                    $data[$userKey]['short_hours']  = $due_hours * $per_hour;
                     // $attendance_data->where('attendance_status','present')->count();
                     $data[$userKey]['payscale'] = json_encode( $payScale );
                     $data[$userKey]['year'] = $year;
@@ -253,26 +255,27 @@ class SalaryController extends Controller
                        $data[$userKey]['salary'] = 0;   
                     }else{
                        if($loss_of_pay_days>0){
-                          $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'];
+                          $data[$userKey]['salary'] = $data[$userKey]['total_salary'] - $data[$userKey]['dedicated_amount'] + $data[$userKey]['over_time'] -  $data[$userKey]['short_hours'] ;
                         }else{
                               $data[$userKey]['salary'] = $data[$userKey]['total_salary'];
                         }
                     }
-                }else{
-                 $already_generate[] = $meta['employee_id'];
-                }
+                
               }
               }else{
                   $error[] = $meta['employee_id'];
               }
           }
-         // dd(1);
-         //  if(isset($data[$userKey])){
-         //    $salarys = new Salary();
-         //    $salarys->fill($data[$userKey]);
-         //    $salarys->save();
-	        // $success[] = $meta['employee_id'];
-         //  }
+        }else{
+                 $already_generate[] = $meta['employee_id'];
+                }
+        if(isset($data[$userKey])){
+            $salarys = new Salary();
+            $salarys->fill($data[$userKey]);
+            $salarys->save();
+          $success[] = $meta['employee_id'];
+          }
+        
         }
 
         if(!empty($success)){
@@ -293,7 +296,7 @@ class SalaryController extends Controller
           // $employee =  implode(', ', $error );
           Session::flash('error_attendance', $error);
         }
-dd(122343);
+// dd(122343);
 return back();
         
      //  $date = carbon::parse('2017-1-1');

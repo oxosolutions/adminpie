@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Organization\Tasks;
 use Session;
 use Auth;
+use Carbon\Carbon;
 class TasksController extends Controller{
 
     /**
@@ -27,6 +28,13 @@ class TasksController extends Controller{
     public function viewTask($id)
     {
         $model = Tasks::where('id',$id)->first();
+        if($model->assign_to != ''){
+            $model['assign_to'] = json_decode($model->assign_to,true)['user'];
+        }
+        $model['due_date'] = Carbon::parse($model->end_date)->format('Y-m-d');
+        $model['attachment'] = ($model->attachment != '')?json_decode($model->attachment,true):[];
+        $model['project'] = $model->project_id;
+       
         return view('organization.project.view-task',['task'=>$model]);
     }
 
@@ -78,7 +86,7 @@ class TasksController extends Controller{
             $uploadPath = upload_path('tasks_attachment');
             $filename = $request->file('file')->getClientOriginalName();
             $request->file('file')->move($uploadPath, $filename);
-            $model->attachment = $filename;
+            $model->attachment = json_encode([$filename]);
         }
         $model->description = $request->description;
         $model->title = $request->title;
@@ -108,48 +116,58 @@ class TasksController extends Controller{
 
     public function updateTask(Request $request)
     {   
-        
-
-        $assignTo = [];
-        if(@$request->team != null || @$request->team != "" || !empty(@$$request->team)){
-            foreach (@$request->team as $key => $value) {
-                $assignTo['team'][] = $value;
-            }
-        }else{
-            $assignTo['team'][] = "";
-        }
-        if(@$request->assign_to != null || @$request->assign_to != "" || !empty(@$request->assign_to)){
-            if(!is_array($request->assign_to)){
-                $assign_to = array($request->assign_to);
-                foreach (@$assign_to as $key => $value) {
-                    if (is_numeric($value)) {
-                         $assignTo['user'][] = $value;
-                    }
-                }
-            }else{
-                foreach (@$request->assign_to as $key => $value) {
-                    if (is_numeric($value)) {
-                         $assignTo['user'][] = $value;
-                    }
-                }
-            }
-            
-        }else{
-            $assignTo['user'][] = "";
-        }
+        $assignTo = $this->createAssignToAndTeamsArray($request);
         $data = [
-                'project_id'    => $request->project_id,
+                'project_id'    => $request->project,
                 'description'   => $request->description,
                 'title'         => $request->title,
                 'assign_to'     => json_encode($assignTo),
                 'priority'      => $request->priority
             ];
-        $model = Tasks::where('id',$request->id)->update($data);
-        if($model){
-            return 'true';
+        $model = Tasks::find($request->id);
+        if($request->hasFile('file')){
+            $uploadPath = upload_path('tasks_attachment');
+            $filename = $request->file('file')->getClientOriginalName();
+            $request->file('file')->move($uploadPath, $filename);
+            if($model->attachment == '' || $model->attachment == null){
+                $model->attachment = json_encode([$filename]);
+            }else{
+                $oldAttachments = json_decode($model->attachment,true);
+                $oldAttachments[] = $filename;
+                $model->attachment = json_encode($oldAttachments);
+            }
+        }
+        $model->description = $request->description;
+        $model->title = $request->title;
+        $model->assign_to = json_encode($assignTo);
+        $model->priority = $request->priority;
+        $model->end_date = $request->due_date;
+        $model->project_id = $request->project;
+        $model->created_by = get_user_id();
+        $model->save();
+        Session::flash('success','Task details update successfullly!');
+        return back();
+    }
+
+
+    public function removeAttachment($task_id,$attachment_index){
+        if($task_id != '' && $attachment_index != ''){
+            $model = Tasks::find($task_id);
+            $attachments = json_decode($model->attachment,true);
+            unset($attachments[$attachment_index]);
+            $model->attachment = json_encode(array_values($attachments));
+            Session::flash('success','Attachment removed successfullly!');
+            $model->save();
+            return back();
+        }else{
+            Session::flash('error','Something went wrong, please try again!');
+            return back();
         }
     }
 
+    public function uploadAttachment(Request $request){
+        dd($request->all());
+    }
 
 
 

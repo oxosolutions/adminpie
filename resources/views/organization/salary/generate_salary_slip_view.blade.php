@@ -86,7 +86,7 @@
                 </label> --}}
               </div>
               <div id="field_fields" class="field w100 field-type-select">
-                {!! Form::selectRange('year' , 2013,$data['current_year'] , $data['year'], ['placeholder'=>'Select year' , 'class'=>'browser-default select']) !!}
+                {!! Form::selectRange('year' , 2013,date('Y') , $data['year'], ['placeholder'=>'Select year' , 'class'=>'browser-default select']) !!}
               </div>
             </div>
           </div> 
@@ -174,6 +174,19 @@
         <tbody>
        {{-- {{ dump($data['users']->toArray() ) }} --}}
         @foreach($data['users'] as $key => $value)
+
+        @if(empty($value->metas->where('key','date_of_joining')->first()))
+            @continue
+          @endif
+           
+
+          @if(!empty($value->metas->where('key','date_of_joining')->first()) && strtotime($value->metas->where('key','date_of_joining')->first()->value) > strtotime($data['year'].'-'.$data['month'].'-1'))
+            @continue
+          @endif
+
+           @if(!empty($value->metas->where('key','date_of_leaving')->first()) && strtotime($value->metas->where('key','date_of_leaving')->first()->value) < strtotime($data['year'].'-'.$data['month'].'-1'))
+            @continue
+          @endif
             <tr>
                 <td class="light-blue darken-4 aione-align-center">
                   @if(empty($value['salary']))
@@ -186,7 +199,7 @@
                   @endif
                 </td>
                 <td >{{ $value['name'] }}</td>
-                <td >{{$value->metas->where('key','date_of_joining')->first()->value}}</td>
+                <td > {{$value->metas->where('key','date_of_joining')->first()->value}}</td>
             </tr>
         @endforeach
          @if($user_count != $salary_count)

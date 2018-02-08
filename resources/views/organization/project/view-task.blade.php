@@ -19,9 +19,9 @@
                 <div class="p-10 bg-grey bg-lighten-3 font-size-18">
                      Task Details
                      <button class="aione-button aione-float-right font-size-14 " data-target="edit-task-modal"  style="margin-top: -6px">Edit</button>
-                     {{-- {!!Form::model(@$model,['route'=>['',request()->id],'method'=>'post'])!!} --}}
+                     {!!Form::model(@$task,['route'=>['update.tasks',request()->id],'method'=>'post','files'=>true])!!}
                      @include('common.modal-onclick',['data'=>['modal_id'=>'edit-task-modal','heading'=>'Edit Task','button_title'=>'Save','section'=>'tassec1']])
-                     {{-- {!! Form::close() !!} --}}
+                     {!! Form::close() !!}
                 </div>
                 <div class="p-10 ">
                     <div class="font-weight-600 line-height-30 font-size-18">
@@ -75,30 +75,36 @@
                 <div class="p-10 bg-grey bg-lighten-3 font-size-18">
                     Attachments
                     <button class="aione-button aione-float-right font-size-14 " data-target="add-image"  style="margin-top: -6px">+ Add</button>
-                    {{-- {!! Form::open(['route'=>['upload.project.attachments',request()->id],'method'=>'post','files'=>true]) !!}
-                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-image','heading'=>'Add Image','button_title'=>'Upload ','form'=>'add-attachments-form']])
-                    {!! Form::close() !!} --}}
+                    {!! Form::open(['route'=>['upload.task.attachment',request()->id],'method'=>'post','files'=>true]) !!}
+                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-image','heading'=>'Add Image','button_title'=>'Upload ','form'=>'add-task-attachments-form']])
+                    {!! Form::close() !!}
                 </div>
                 
                 <div class="p-10 ar">
-                 
-                        <div class="ac l25 aione-align-center mb-20">
-                            <span class="aione-border display-inline-block width-100 image-wrapper" style="width: 100%">
-                                <img src="https://images.anandtech.com/doci/6993/DSC_0343.jpg" class="mr-20" style="height: 100px">
-                                <a href="" class="delete-sweet-alert">
-                                    <i class="fa fa-trash"></i>    
-                                </a>
-                                <a href="" target="_blank">
-                                    <i class="fa fa-download"></i>    
-                                </a>
-                                
-                                <div class="bg-white p-5 aione-border-top truncate aione-tooltip" title="">
-                                    askdaj
-                                </div>
-                            </span>
-                            
-                        </div>
-                 
+                        @foreach($task->attachment as $key => $file)
+                            @php
+                                $exploded = explode('.',$file);
+                                $countIndex = count($exploded)-1;
+                            @endphp
+                            <div class="ac l25 aione-align-center mb-20">
+                                <span class="aione-border display-inline-block width-100 image-wrapper" style="width: 100%">
+                                    @if(in_array($exploded[$countIndex],['jpg','jpeg','png','gif']))
+                                        <img src="{{ url('/').'/'.upload_path('tasks_attachment').'/'.$file }}" class="mr-20" style="height: 100px">
+                                    @else
+                                        <img src="{{asset('assets/images/file-icon.png')}}" class="mr-20" style="height: 100px">
+                                    @endif
+                                    <a href="{{ route('remove.task.attachment',['id'=>$task->id,'index'=>$key]) }}" class="delete-sweet-alert">
+                                        <i class="fa fa-trash"></i>    
+                                    </a>
+                                    <a href="{{ url('/').'/'.upload_path('tasks_attachment').'/'.$file }}" target="_blank">
+                                        <i class="fa fa-download"></i>    
+                                    </a>
+                                    {{-- <div class="bg-white p-5 aione-border-top truncate aione-tooltip" title="">
+                                        askdaj
+                                    </div> --}}
+                                </span>
+                            </div>
+                        @endforeach
                 </div>
                     
             </div>
@@ -142,6 +148,7 @@
 
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+@include('common.confirm-alert')
 <style type="text/css">
     .image-wrapper{
         position: relative;

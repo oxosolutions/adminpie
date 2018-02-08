@@ -364,16 +364,16 @@ class AttendanceController extends Controller
 		}
 		return $data_for_insertion;
 	}
-protected function calculate_over_time($shift_data, $pushinout ){
-	$actual_hours = $this->calculate_hour($shift_data[0], $shift_data[1], "hr");	
-	if(!empty($pushinout) && !empty($pushinout[1]) && !empty($pushinout[0])){
-		$total_working_hours = $this->calculate_hour($pushinout[0],$pushinout[1], "hr");
-			if($total_working_hours > $actual_hours || ($total_working_hours < $actual_hours)){
-				return $this->calculate_hour($actual_hours, $total_working_hours, "sec");
-			}
-	} 
-	return null;
-}
+	protected function calculate_over_time($shift_data, $pushinout ){
+		$actual_hours = $this->calculate_hour($shift_data[0], $shift_data[1], "hr");	
+		if(!empty($pushinout) && !empty($pushinout[1]) && !empty($pushinout[0])){
+			$total_working_hours = $this->calculate_hour($pushinout[0],$pushinout[1], "hr");
+				if($total_working_hours > $actual_hours || ($total_working_hours < $actual_hours)){
+					return $this->calculate_hour($actual_hours, $total_working_hours, "sec");
+				}
+		} 
+		return null;
+	}
 	protected function calculate_hour($from, $to, $retun_time){
  		$time = new Carbon($from);
 		$shift_end_time =new Carbon($to);
@@ -396,7 +396,6 @@ protected function calculate_over_time($shift_data, $pushinout ){
 			$shift_hours 	=  	array_values($shift_time);
 			return ['working_days'=>$working_days, 'shift_hours'=>$shift_hours];
 		}
-		// dd($employee_id, 'u id', $user_id, ' shift id', $shift_id , 'hours' , $shift_hours);
 		return $shift_hours;
 	}
 	/**
@@ -506,12 +505,7 @@ protected function calculate_over_time($shift_data, $pushinout ){
      * @author  paljinder Singh
      */
 	public function list_attendance(Request $request, $year=null, $month=null)
-	{	
-		// dump($year, $month);
-		// $attendance_query = Attendance::where(['employee_id'=>'40095065' , 'year'=>2018,'month'=>01, 'date'=>1]);
-		// $attendance_query->whereNull('shift_hours');
-		// dump($attendance_query->exists());
-
+	{
 		$data['year'] = $data['month'] = null;
 		if($request->isMethod('post')){
 			$data['year'] = $request['year'];
@@ -553,12 +547,11 @@ protected function calculate_over_time($shift_data, $pushinout ){
 			return [$holiday_date=> $data['title']];
 		});
 		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
-		// $user_data = GroupUsers::with(['metas_for_attendance'])->whereHas('metas_for_attendance')->get();
 		$attendance  =Attendance::select('employee_id','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 
 		return view('organization.attendance.attendance_table', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
 	}
-/*should be delete*/
+/*it should be delete*/
 	protected function employee_data($dates){
 		$data = Employee::with(['employ_info.metas', 'designations', 'department', 'department_rel','attendance' =>function($query) use($current_dates){
 				 		$query->where($current_dates);
@@ -608,7 +601,6 @@ protected function calculate_over_time($shift_data, $pushinout ){
 	
 	public function attendance_fill_hr(Request $request )
 	{
-		// dd($request->all());
 		$current_date_data = $this->current_date_data;
 		$conditions = $request['dates'];
 		unset($request['dates']);
