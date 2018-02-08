@@ -286,7 +286,7 @@ class LeavesController extends Controller
     //         }
     //     return back();
     // }
-    protected function leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status){
+    protected function leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status){
         $start_to_date = str_replace_first('0', '', $date);
         if(strlen($month)==1){
             $month = '0'.$month;
@@ -294,13 +294,13 @@ class LeavesController extends Controller
         $attendance_check = Attendance::where(['date'=>$date, 'month'=>$month, 'year'=>$year, 'employee_id'=>$emp_id]);
         if($attendance_check->exists()){
             if($status=='approve'){
-                $attendance_check->update(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month, 'day' =>$day, 'attendance_status'=>'leave','employee_id'=>$emp_id]); 
+                $attendance_check->update(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month, 'day' =>$day, 'attendance_status'=>$attendance_status,'employee_id'=>$emp_id]); 
             }elseif($status=='reject'){
                 $attendance_check->delete();
             }
         }elseif($status=='approve'){
             $attendance = new Attendance();
-            $attendance->fill(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month_week_no, 'day' =>$day, 'attendance_status'=>'leave', 'employee_id'=>$emp_id]);
+            $attendance->fill(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month_week_no, 'day' =>$day, 'attendance_status'=>$attendance_status, 'employee_id'=>$emp_id]);
             $attendance->save();
         }
     }
@@ -309,44 +309,49 @@ class LeavesController extends Controller
         return ['year'=>$set->year, 'month'=>$set->month, 'date'=>$set->day, 'day'=>$set->format('l'), 'month_week_no'=>$set->weekOfMonth, 'day_in_month'=>$set->daysInMonth];
     }
     public function approve_leave($id)
-    { 
+    {   
+        $attendance_status = 'leave';
         $model = LV::find($id);
+        $cat_data = CAT::with('meta')->where('id',$model->leave_category_id)->first();
+        if(!empty( $leave_category_type =$cat_data->meta->where('key','leave_category_type')->first())) {
+            if($leave_category_type->value == 'lop'){
+                $attendance_status = 'lop';
+            }
+        }
         if(!empty($model)){
-            //$model->to = "2017-12-15";
-            //$model->from = "2017-12-14";
             $from =  $this->set_dates($model->from);
             $to =  $this->set_dates($model->to);
             $emp_id = $model->employee_id;
             $status = 'approve';
             if($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] == $to['date']){
                 extract($from);
-                $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status);
+                $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
             }elseif($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] != $to['date']){
                 echo "more day leave in same month";
                 extract($from);
                 for ($i=$from['date']; $i <= $to['date']; $i++) { 
                     $date_details =  $this->set_dates("$year-$month-".$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
                 }
             }elseif ($from['year'] == $to['year'] && $from['month'] != $to['month']) {
                 extract($from);
                 for ($i=$from['date']; $i <= $from['day_in_month']; $i++) {
                     $date_details =  $this->set_dates("$year-$month-".$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
                 }
                 for ($i=1; $i <= $to['date']; $i++) { 
                     $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
                 }
             }elseif ($from['year'] != $to['year']) {
                 extract($from);
                 for ($i=$from['date']; $i <= $from['day_in_month']; $i++) {
                     $date_details =  $this->set_dates("$year-$month-".$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
                 }
                 for ($i=1; $i <= $to['date']; $i++) { 
                     $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
                 }
             }
             LV::where('id',$id)->update(['status'=> 1]);

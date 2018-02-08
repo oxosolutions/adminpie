@@ -64,6 +64,11 @@
                                     {{ call_model('Tasks','getStatus',$task->status) }}
 
                                     </span>
+                                    <span class="aione-float-right">
+                                        <a href="">
+                                            Change    
+                                        </a>
+                                    </span>
                                 </td>
                             </tr>
                         </tbody>
@@ -71,7 +76,100 @@
                 </div>
                     
             </div>
-            <div class="aione-border">
+
+            <div class="aione-border mb-20  ">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18 ">
+                     Comments 
+                </div>
+                <div class="p-10">
+                    <div class="aione-border-bottom pt-10">
+                        <div class="ar ">
+                            <div class="ac l50 font-weight-700 font-size-16">
+                                Rahul Sharma
+                            </div>
+                            <div class="ac l50 aione-align-right font-size-13">
+                                10 min ago
+                            </div>
+                        </div>    
+                        <div class="p-10 grey">
+                            Sandeep Please complete this task
+                        </div>
+                    </div>
+
+                    <div class="aione-border-bottom pt-10" >
+                        <div class="ar ">
+                            <div class="ac l50 font-weight-700 font-size-16">
+                                Sandeep Singh
+                            </div>
+                            <div class="ac l50 aione-align-right font-size-13">
+                                10 min ago
+                            </div>
+                        </div>    
+                        <div class="p-10 grey">
+                            I m busy
+                        </div>
+                    </div>
+
+                    <div class="aione-border-bottom pt-10">
+                        <div class="ar ">
+                            <div class="ac l50 font-weight-700 font-size-16">
+                                Ashish Kumar
+                            </div>
+                            <div class="ac l50 aione-align-right font-size-13">
+                                10 min ago
+                            </div>
+                        </div>    
+                        <div class="p-10 grey">
+                            I m free
+                        </div>
+                    </div>
+                    <div class="aione-align-center pv-20">
+                        <a href="">
+                            10 more previous comments                        
+                        </a>
+                    </div>
+                    <div>
+                        <textarea placeholder="Write Your Comment" rows="5"></textarea>
+                        <button class="mt-10 aione-float-right">Post Comment</button>
+                    </div>
+                </div>
+                    
+            </div>
+
+           
+        </div>
+        <div class="ac l35">
+              
+             <div class="aione-border mb-20">
+                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
+                    Assigned Users
+                    <button class="aione-button aione-float-right font-size-14 " data-target="add-user" style="margin-top: -6px">+ Add</button>
+                    {!! Form::model(@$model,['route'=>['assign.project.user',request()->id]]) !!}
+                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-user','heading'=>'Add User','button_title'=>'Save ','form'=>'assign-user-form']])
+                    {!! Form::close() !!}
+                </div>
+                <div class="aione-table">
+                    <table class="">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Ashish
+                                </td>
+                                <td>
+                                    <a href="">Remove</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>  
+             <div class="aione-border mb-20">
                 <div class="p-10 bg-grey bg-lighten-3 font-size-18">
                     Attachments
                     <button class="aione-button aione-float-right font-size-14 " data-target="add-image"  style="margin-top: -6px">+ Add</button>
@@ -86,7 +184,7 @@
                                 $exploded = explode('.',$file);
                                 $countIndex = count($exploded)-1;
                             @endphp
-                            <div class="ac l25 aione-align-center mb-20">
+                            <div class="ac l50 aione-align-center mb-20">
                                 <span class="aione-border display-inline-block width-100 image-wrapper" style="width: 100%">
                                     @if(in_array($exploded[$countIndex],['jpg','jpeg','png','gif']))
                                         <img src="{{ url('/').'/'.upload_path('tasks_attachment').'/'.$file }}" class="mr-20" style="height: 100px">
@@ -107,42 +205,7 @@
                         @endforeach
                 </div>
                     
-            </div>
-        </div>
-        <div class="ac l35">
-            <div class="aione-border mb-20">
-                <div class="p-10 bg-grey bg-lighten-3 font-size-18">
-                    Assign To
-                    <button class="aione-button aione-float-right font-size-14 " data-target="add-team" style="margin-top: -6px">+ Add</button>
-                    {{-- {!! Form::model(@$model,['route'=>['assign.project.team',request()->id]]) !!}
-                    @include('common.modal-onclick',['data'=>['modal_id'=>'add-team','heading'=>'Add Team','button_title'=>'Save ','form'=>'assign-team-form']])
-                    {!! Form::close() !!} --}}
-                </div>
-                <div class=" aione-table">
-                    <table class="">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Members</th>
-                                
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                    <tr>
-                                        <td>akdajsdhasd</td>
-                                        <td>akjsdjadasd</td>
-                                        
-                                        <td>
-                                            <a href="" class="delete-sweet-alert">Remove</a>
-                                        </td>
-                                    </tr>
-                              
-                        </tbody>
-                    </table>
-                </div>
-            </div>          
-               
+            </div>  
         </div>
     </div>
 

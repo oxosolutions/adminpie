@@ -166,7 +166,29 @@ class TasksController extends Controller{
     }
 
     public function uploadAttachment(Request $request){
-        dd($request->all());
+        if($request->has('attachments') && !empty($request->attachments)){
+            $model = Tasks::find($request->id);
+            if($model->attachment != null && $model->attachment != ''){
+                $attachmentsArray = json_decode($model->attachment,true);
+            }else{
+                $attachmentsArray = [];
+            }
+            foreach($request->attachments as $key => $attachment){
+                $tempArray = [];
+                if($attachment['file'] == null){
+                    continue;
+                }else{
+                    $uploadPath = upload_path('tasks_attachment');
+                    $filename = $attachment['file']->getClientOriginalName();
+                    $attachment['file']->move($uploadPath, $filename);
+                    $attachmentsArray[] = $filename;
+                }
+            }
+            $model->attachment = json_encode($attachmentsArray);
+            $model->save();
+            Session::flash('success','Attachmet\'s uploaded successfullly!');
+            return back();
+        }
     }
 
 
