@@ -14,6 +14,7 @@ use Session;
 use App\Model\Organization\Attendance;
 use App\Model\Organization\Holiday;
 use App\Model\Organization\Leave;
+use App\Model\Organization\Designation;
 use Carbon\carbon;
 use PDF;
 class SalaryController extends Controller
@@ -103,10 +104,16 @@ class SalaryController extends Controller
 			$salary = Salary::with(['user_detail:id,name,email','user_detail.metas'])->where([ 'id'=>$id ]);
       if($salary->exists()){
         $salary = $salary->first();
+        if(!empty($designation = $salary->user_detail->metas->where('key','designation')->first())){
+            $designation = Designation::select(['id','name'])->where('id',$designation->value);
+            if($designation->exists()){
+             $designation_name =  $designation->first()->name;
+            }
+        }
       }else{
         Session::flash('error','Not Valid ID.');
       }
-			return view('organization.salary.generate_salary_slip',compact('salary'));
+			return view('organization.salary.generate_salary_slip',compact('salary','designation_name'));
 	}
 	public function salary_download_pdf($id){
 		$salary = Salary::with(['user_detail:id,name,email'])->where([ 'id'=>$id ]);
@@ -166,8 +173,8 @@ class SalaryController extends Controller
           $meta = $userValue['metas']->mapWithKeys(function($item){
             return [$item['key'] => $item['value']];
           });
-          if(isset($meta['employee_id'])){
-            $have_not_employee_id[] = 
+          if(!isset($meta['employee_id'])){
+            $have_not_employee_id[] =1;
             continue;
           }
             if(strlen($month) ==1){
@@ -179,34 +186,36 @@ class SalaryController extends Controller
             }else{
 	             $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
 	             if(empty($payScale)){
-	               $payScale_error[] = $meta['employee_id'];
+                  $payScale_error[] = $meta['employee_id'];
                   continue;
-	             }
+               }
          	}
         if(!Salary::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->exists()){
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
-
               if($attendance_data->count()>0){
                 if(empty($payScale)){
                     $payScale_error[] = $meta['employee_id'];
                 }else{
-                 $lock_status =  $this->attendance_lock_check($attendance_data);
-                 if($lock_status == false){
-                  $unlock_error[] = $meta['employee_id'];
-                  continue;
-                 }
+                 
                   $data = $this->set_parm_for_insert_salary($attendance_data , $userKey , $meta, $userValue['id'] , $payScale, $year, $month);
                  if(empty($data)){
                    $error[] = $meta['employee_id'];
                    continue;
                  }
+                 $lock_status = $this->attendance_lock_check($attendance_data);
+                 if($lock_status == false){
+                  $unlock_error[] = $meta['employee_id'];
+                  continue;
+                 }
 
                 }
               }else{
                   $error[] = $meta['employee_id'];
+                  continue;
               }
           }else{
                  $already_generate[] = $meta['employee_id'];
+                 continue;
                 }
         
         if(isset($data[$userKey])){
@@ -241,7 +250,7 @@ class SalaryController extends Controller
   }
   protected function attendance_lock_check($attendance_data){
      $status = $attendance_data->every(function ($item, $key) {
-          return $item->lock_status =0;
+          return $item->lock_status ==0;
     });
    return $status;
   }
@@ -273,11 +282,9 @@ protected function set_parm_for_insert_salary($attendance_data, $userKey, $meta,
     if($due_time){
         $replace_minus = str_replace('-', '',$due_time );
         $due_min =  $replace_minus/60;
-        $due_hours = $this->convertToHoursMins($due_min);
       } 
     if($extra_time){
       $min =  $extra_time/60;
-      $extra_hours = $this->convertToHoursMins($min);
     }
     
     $data[$userKey]['employee_id'] = $meta['employee_id'];
@@ -290,7 +297,6 @@ protected function set_parm_for_insert_salary($attendance_data, $userKey, $meta,
     $data[$userKey]['per_day_amount'] = $per_day;
    
     $data[$userKey]['over_time']    = $min * $per_min_salary;
-    $data[$userKey]['short_hours']  = $due_min * $per_min_salary;
     $data[$userKey]['payscale'] = json_encode( $payScale );
     $data[$userKey]['year'] = $year;
     $data[$userKey]['month'] = $month;
@@ -304,27 +310,14 @@ protected function set_parm_for_insert_salary($attendance_data, $userKey, $meta,
     }else{
       $data[$userKey]['dedicated_amount'] =0;
     }
+    $data[$userKey]['short_hours']  = $due_min * $per_min_salary + $data[$userKey]['dedicated_amount']+ $no_mark_deduction;
     $data[$userKey]['total_days'] = $working_days_in_month;
     if($data[$userKey]['number_of_attendance'] ==0){
        $data[$userKey]['salary'] = 0;   
     }else{
-        $data[$userKey]['salary'] = $data[$userKey]['total_salary'] + $data[$userKey]['over_time'] - $data[$userKey]['short_hours'] -$data[$userKey]['dedicated_amount'] - $no_mark_deduction;
+        $data[$userKey]['salary'] = $data[$userKey]['total_salary'] + $data[$userKey]['over_time'] - $data[$userKey]['short_hours'];
     }
     return $data;
-}
-
-protected function calculation_salary(){
-    // $data[$userKey]['over_time']    = $min * $per_min_salary;
-    // $data[$userKey]['short_hours']  = $due_min * $per_min_salary;
-}
-
-  protected function convertToHoursMins($time, $format = '%02d:%02d') {
-    if ($time < 1) {
-        return;
-    }
-    $hours = floor($time / 60);
-    $minutes = ($time % 60);
-    return sprintf($format, $hours, $minutes);
 }
 	public function generate_salary(Request $request){
 

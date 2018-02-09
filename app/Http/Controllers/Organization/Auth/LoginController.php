@@ -21,6 +21,8 @@ use App\Model\Organization\PasswordReset;
 use App\Model\Organization\EmailTemplate;
 use App\Model\Organization\EmailLayout;
 use Shortcode;
+use Socialite;
+use App\Model\Group\GroupUserMeta;
 class LoginController extends Controller
 {
     /*
@@ -53,8 +55,8 @@ class LoginController extends Controller
         $this->middleware('guest.org', ['except' => 'logout']);
     }
 
-    public function showLoginForm(Request $request, $id = null){
-        if($id != null){
+    public function showLoginForm(Request $request, $id = null, $social_token = null){
+        if($id != null && $id != 'null'){
             $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
             if($organizationToken != null){
                 Session::put('group_id',$organizationToken->group_id);
@@ -73,6 +75,17 @@ class LoginController extends Controller
                 }catch(\Exception $e){
                     throw $e;
                 }
+            }
+        }
+        if($social_token != null && $social_token != 'null'){
+            $groupUserMeta = GroupUserMeta::where(['value'=>$social_token])->first();
+            if($groupUserMeta != null){
+                $userId = $groupUserMeta->user_id;
+                GroupUserMeta::where(['value'=>$social_token])->delete();
+                Auth::guard('org')->loginUsingId($userId);
+                $putRole = UserRoleMapping::where(['user_id'=>$userId])->first();
+                Session::put('user_role',$putRole->role_id);
+                return redirect()->route('org.dashboard');
             }
         }
         $arraySetting = [];
@@ -380,5 +393,19 @@ class LoginController extends Controller
         }
     }
 
+    public function socialLogin($loginFrom){
+        switch ($loginFrom) {
+            case 'github':
+                $redirectUrl = 'http://admin.scolm.com/handlecallback/github?organization='.get_organization_id();
+                break;
+            case'facebook':
+                $redirectUrl = 'http://admin.scolm.com/handlecallback/facebook?organization='.get_organization_id();
+                break;
+            case'twitter':
+                $redirectUrl = 'http://admin.scolm.com/handlecallback/twitter?organization='.get_organization_id();
+                break;
+        }
+        return Socialite::driver($loginFrom)->redirectUrl($redirectUrl)->redirect();
+    }
     
 }

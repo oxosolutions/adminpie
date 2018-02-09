@@ -84,7 +84,6 @@ class CheckIfOrganizationAuthenticated
                 }
             }
         }
-        
         return $next($request);
     }
 

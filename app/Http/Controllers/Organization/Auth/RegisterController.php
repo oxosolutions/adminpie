@@ -18,6 +18,7 @@ use App\Model\Organization\OrganizationSetting;
 use App\Model\Organization\PasswordReset;
 use App\Mail\UserRegisterEmail;
 use Shortcode;
+use Auth;
 use App\Model\Organization\EmailTemplate;
 use App\Model\Organization\EmailLayout;
 class RegisterController extends Controller
@@ -103,10 +104,10 @@ class RegisterController extends Controller
         $this->validate($request,$rules);
     }
 
-    protected function putUser($details){
+    protected function putUser($details, $registerFrom){
         $userModel = new User();
         $userModel->user_id = $details['user_id'];
-        $userModel->status = 0;
+        $userModel->status = ($registerFrom == 'social')?1:0;
         $userModel->save();
     }
 
@@ -235,7 +236,7 @@ class RegisterController extends Controller
     }
 
 
-    public function userRegister(Request $request, $role = null)
+    public function userRegister(Request $request, $role = null, $registerFrom = null)
     {   
         $this->setGroupId();
         $this->validateRegisterForm($request);
@@ -245,6 +246,7 @@ class RegisterController extends Controller
             $model = GroupUsers::where(['email'=>$request->email])->first();
             if($model == null){
                 $groupUserId = $this->createNewGroupUser($request);
+                // dd($groupUserId);
             }else{
                 $existingUser = true;
                 $groupUserId = $model->id;
@@ -257,18 +259,22 @@ class RegisterController extends Controller
             if($existingUser){
                 $userModel = User::where(['user_id'=>$groupUserId,'user_type'=>null])->first();
                 if($userModel != null){
-                    Session::flash('error','Email id already exists!');
-                    return back();
+                    if($registerFrom == 'social'){
+                        return $groupUserId;
+                    }else{
+                        Session::flash('error','Email id already exists!');
+                        return back();
+                    }
                 }else{
                     $details['user_id'] = $groupUserId;
                     $details['role'] = $userRole;
-                    $putUserInUserstable = $this->putUser($details);
+                    $putUserInUserstable = $this->putUser($details, $registerFrom);
                     $putUserRoleInRoletable = $this->putRole($details);
                 }
             }else{
                 $details['user_id'] = $groupUserId;
                 $details['role'] = $userRole;
-                $putUserInUserstable = $this->putUser($details);
+                $putUserInUserstable = $this->putUser($details, $registerFrom);
                 $putUserRoleInRoletable = $this->putRole($details);
             }
             $userDataForMeta = $request->except(['name','email']);
@@ -286,6 +292,9 @@ class RegisterController extends Controller
 
 
             }*/
+            if($registerFrom == 'social'){
+                return $groupUserId;
+            }
             Session::flash('success','Successfully SignUp !! you will able to login once admin Approve your account');
 
             return back();

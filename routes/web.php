@@ -16,7 +16,9 @@
 
 	/****************************************** All Routes For Admin *************************************************/
 		Route::group(['domain' => 'admin.'.env('MAIN_DOMAIN')], function (){
+
 			Route::group(['namespace'=>'Admin'], function(){
+                Route::match(['get','post'],'handlecallback/{driver}',['social.callback','uses'=>'Auth\LoginController@handlecallback']);
                 Route::get('/organization/auth/{id}' ,['as'=>'auth.organization','uses'=>'OrganizationController@authAttemptOrganization']);
 				Route::group(['middleware' => 'auth.admin'], function(){
 

@@ -54,7 +54,7 @@
 @endif
 
 
-@if(Session::has('error_payscale') || Session::has('error_attendance') )
+@if(Session::has('error_payscale') || Session::has('error_attendance') || Session::has('unlock_error') || Session::has('already_generate')  )
   <div class="aione-table aione-border mt-20 mb-20">
        <h4 class="light-blue darken-4 p-10 bg-grey bg-lighten-4 m-0">Salary  Error</h4>
     <table class="compact">
@@ -159,12 +159,8 @@
 {{-- {!! Form::submit('filter') !!} --}}
 
 </div>
-
 <div class="aione-tables">
-
-
 @if(isset($data['users']) && !empty($data['users']))
-       
  {{--  {!! Form::open(['route'=>'hrm.generate.salary']) !!}  --}}
    <table>
         <thead>
