@@ -41,7 +41,14 @@
 @if(Session::has('already_generate'))
   @php
     foreach(Session::get('already_generate') as $keys => $vals) {
-    $body_text .="<tr> <td>Error</td><td>".$vals."</td> <td>Salary slip alreay generated .</td> </tr>";
+    $body_text .="<tr> <td>Error</td><td>".$vals."</td> <td>Salary slip already generated .</td> </tr>";
+    }
+  @endphp
+@endif
+@if(Session::has('unlock_error'))
+  @php
+    foreach(Session::get('unlock_error') as $keys => $vals) {
+    $body_text .="<tr> <td>Error</td><td>".$vals."</td> <td>You have to verify attendance then lock it & after that generate salary work out.</td> </tr>";
     }
   @endphp
 @endif

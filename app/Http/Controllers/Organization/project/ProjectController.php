@@ -29,6 +29,49 @@ class ProjectController extends Controller
         $this->user = $user;
         $this->client = $client;
     }
+
+    public function listProject(Request $request , $id = null)
+    {
+        $data = "";
+        if(@$id){
+            $data = $this->getProjectById($id);
+        }
+        $datalist= [];
+        if($request->has('per_page')){
+            $perPage = $request->per_page;
+            if($perPage == 'all'){
+                $perPage = 999999999999999;
+            }
+        }else{
+            $perPage = get_items_per_page();;
+        }
+        $sortedBy = @$request->sort_by;
+        if($request->has('search')){
+            if($sortedBy != ''){
+                $model = Project::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                $model = Project::where('name','like','%'.$request->search.'%')->paginate($perPage);
+            }
+        }else{
+            if($sortedBy != ''){
+                $model = Project::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
+            }else{
+                $model = Project::paginate($perPage);
+            }
+        }
+        $datalist =  [
+                        'datalist'=>  $model,
+                        'showColumns' => ['name'=>'Name','created_at'=>'Created'],
+                        'actions' => [
+                                        // 'edit' => ['title'=>'Edit','route'=>'list.project' , 'class' => 'edit'],
+                                        'edit' => ['title'=>'Edit','route'=>'details.project' , 'class' => 'edit'],
+                                        'delete'=>['title'=>'Delete','route'=>'delete.project']
+                                    ],
+                            'js'  =>  ['custom'=>['list-designation']],
+                            'css' => ['custom'=>['list-designation']]
+                    ];
+        return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
+    }
     
     public function validation(Request $request)
     {
@@ -173,6 +216,40 @@ class ProjectController extends Controller
     }
 
     /**
+     * To edit existing project
+     * @param  [type] $id id to edit project details
+     * @return [type]     return thr view
+     * @author Rahul
+     */
+    public function edit($id){
+        try{
+            $edit = Project::findOrFail($id);
+            return view('organization.project.edit',['model'=>$edit]);
+        }catch(Exception $e){
+            throw $e;   
+        }
+    }
+
+    /**
+     * To update project meta
+     * @param  Request $request having all posted data
+     * @param  [type]  $id      having project id
+     * @return [type]           return back to same page
+     */
+    public function update(Request $request, $id){
+        foreach($request->except('_token') as $key => $value){
+            $model = PM::firstOrNew(['project_id'=>$id,'key'=>$key]);
+            $model->project_id = $id;
+            $model->key = $key;
+            $model->value = ($value == null)?'':$value;
+            $model->type = 'test';
+            $model->save();
+        }
+        Session::flash('success','Details saved successfully!');
+        return back();
+    }
+
+    /**
      * Delete project attachment
      * @param  [type] $id project id
      * @return [type]     return back to same route
@@ -312,92 +389,12 @@ class ProjectController extends Controller
     /**************************************************************************/
 
 
-
-
     
-
-    public function add_client(Request $request)
-    {
-        $this->user->create($request->all(),3); 
-        $this->client->create($request->all());
-        return redirect()->route('list.project');
-    }
     
-    public function listProject(Request $request , $id = null)
-    {
-        $data = "";
-        if(@$id){
-            $data = $this->getProjectById($id);
-        }
-        $datalist= [];
-          if($request->has('per_page')){
-            $perPage = $request->per_page;
-            if($perPage == 'all'){
-              $perPage = 999999999999999;
-            }
-          }else{
-            $perPage = get_items_per_page();;
-          }
-          $sortedBy = @$request->sort_by;
-          if($request->has('search')){
-              if($sortedBy != ''){
-                  $model = Project::where('name','like','%'.$request->search.'%')->orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                  $model = Project::where('name','like','%'.$request->search.'%')->paginate($perPage);
-              }
-          }else{
-              if($sortedBy != ''){
-                  $model = Project::orderBy($sortedBy,$request->desc_asc)->paginate($perPage);
-              }else{
-                   $model = Project::paginate($perPage);
-              }
-          }
-          $datalist =  [
-                          'datalist'=>  $model,
-                          'showColumns' => ['name'=>'Name','created_at'=>'Created'],
-                          'actions' => [
-                                          // 'edit' => ['title'=>'Edit','route'=>'list.project' , 'class' => 'edit'],
-                                          'edit' => ['title'=>'Edit','route'=>'details.project' , 'class' => 'edit'],
-                                          'delete'=>['title'=>'Delete','route'=>'delete.project']
-                                       ],
-                          'js'  =>  ['custom'=>['list-designation']],
-                          'css'=> ['custom'=>['list-designation']]
-                      ];
-      return view('organization.project.list',$datalist)->with(['categories' => CAT::all() , 'data' => $data]);
-    }
 
    
 
-    public function edit($id)
-    {
-
-    	try{
-    		 $edit = Project::findOrFail($id);
-    		 return view('organization.project.edit',['model'=>$edit]);
-    		}catch(Exception $e)
-    		{
-    			throw $e;	
-    		}
-    }
-
-    public function update(Request $request, $id)
-    {
-        foreach($request->except('_token') as $key => $value){
-            $model = PM::firstOrNew(['project_id'=>$id,'key'=>$key]);
-            $model->project_id = $id;
-            $model->key = $key;
-            $model->value = ($value == null)?'':$value;
-            $model->type = 'test';
-            $model->save();
-        }
-        return back();
-        /*$id = $request->id;
-    	$project = Project::findOrFail($id);
-    	$project->fill($request->all());
-    	$project->save();
-    	Session::flash('success','successfully update project');
-    	return redirect()->route('list.project');*/
-    }
+    
 
     public function add_project_info($id)
     {

@@ -177,6 +177,7 @@ return [
         Laravel\Dusk\DuskServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
+        Laravel\Socialite\SocialiteServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -260,6 +261,7 @@ return [
         'Logicboxes' => Netinternet\Logicboxes\Facades\Logicboxes::class,
         'Curl'          => Ixudra\Curl\Facades\Curl::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
+        'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
 
 ];

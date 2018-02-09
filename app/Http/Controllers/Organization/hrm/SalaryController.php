@@ -35,10 +35,7 @@ class SalaryController extends Controller
       return back();
     }
     return view('organization.salary.edit',compact('data'));
-
   }
-
-
   public function update(Request $request){
     Salary::where('id',$request['id'])->update($request->except('_token'));
     return redirect()->route('salary.slip.view',['id'=>$request['id']]);
@@ -147,12 +144,7 @@ class SalaryController extends Controller
             Session::flash('error','Employee must be select to generate salary slip.');
           }
         }
- 			}else{
-				// $date = Carbon::now();
-				// $date->subMonth();
-				// $data['month']= 	$month 	= $date->month;
-				// $data['year'] =  	$year 	= $date->year;
-			}
+ 			}
        if(strlen($month)==1){
           $data['month'] = $month = '0'.$month;
         }
@@ -162,7 +154,7 @@ class SalaryController extends Controller
                           $query->whereIn('key', [ 'date_of_joining', 'date_of_leaving' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
                          }] )->whereHas('organization_employee_user')->orWhereHas('metas', function ($query)use($year, $month) {
                                 $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
-                         } )->get();
+                         })->get();
 	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
 	}
 
@@ -175,36 +167,48 @@ class SalaryController extends Controller
             return [$item['key'] => $item['value']];
           });
           if(isset($meta['employee_id'])){
+            $have_not_employee_id[] = 
+            continue;
+          }
             if(strlen($month) ==1){
               $month = '0'.$month;
             }
             if(empty($meta['pay_scale'])){
             	$payScale_error[] = $meta['employee_id'];
+              continue;
             }else{
 	             $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
 	             if(empty($payScale)){
 	               $payScale_error[] = $meta['employee_id'];
+                  continue;
 	             }
          	}
         if(!Salary::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->exists()){
             $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
+
               if($attendance_data->count()>0){
                 if(empty($payScale)){
                     $payScale_error[] = $meta['employee_id'];
                 }else{
+                 $lock_status =  $this->attendance_lock_check($attendance_data);
+                 if($lock_status == false){
+                  $unlock_error[] = $meta['employee_id'];
+                  continue;
+                 }
                   $data = $this->set_parm_for_insert_salary($attendance_data , $userKey , $meta, $userValue['id'] , $payScale, $year, $month);
                  if(empty($data)){
                    $error[] = $meta['employee_id'];
+                   continue;
                  }
 
                 }
               }else{
                   $error[] = $meta['employee_id'];
               }
-          }
-        }else{
+          }else{
                  $already_generate[] = $meta['employee_id'];
                 }
+        
         if(isset($data[$userKey])){
             $salarys = new Salary();
             $salarys->fill($data[$userKey]);
@@ -221,15 +225,25 @@ class SalaryController extends Controller
           $payScale_error = array_unique($payScale_error);
           Session::flash('error_payscale', $payScale_error);
         }
+        if(!empty($unlock_error)){
+          $unlock_error = array_unique($unlock_error);
+          Session::flash('unlock_error', $unlock_error);
+        }
         if(!empty($already_generate)){
           $already_generate = array_unique($already_generate);
           Session::flash('already_generate', $already_generate);
         }
+
         if(!empty($error)){
           Session::flash('error_attendance', $error);
         }
-        // dd(123);
-        return back();
+      return back();
+  }
+  protected function attendance_lock_check($attendance_data){
+     $status = $attendance_data->every(function ($item, $key) {
+          return $item->lock_status =0;
+    });
+   return $status;
   }
 protected function set_parm_for_insert_salary($attendance_data, $userKey, $meta, $user_id, $payScale,$year, $month){
     $attendant_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->count();
