@@ -27,7 +27,11 @@
     				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>
     			</div>
             @endif
-			
+            <div style="width:100%; text-align: center;">
+                <img src="https://image.flaticon.com/icons/png/512/25/25231.png" style="width: 10%;" />
+                <img src="https://image.flaticon.com/icons/png/512/25/25231.png" style="width: 10%;" />
+                <img src="https://image.flaticon.com/icons/png/512/25/25231.png" style="width: 10%;" />
+            </div>
 			@if(@$userRegStatus != 'no')
 				<div class="aione-align-center">
 					If you do not have a user account?
@@ -39,7 +43,6 @@
 				<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
 			@endif
 	{!!Form::close()!!}
-
 
 		{{-- @include('components._footer') --}}
 
