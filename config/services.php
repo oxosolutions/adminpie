@@ -46,4 +46,10 @@ return [
         'redirect'      => 'http://admin.scolm.com/handlecallback/facebook',
     ],
 
+    'twitter' => [
+        'client_id'     => 'xnX99KEnHhV53dbQgOISrCI0p',
+        'client_secret' => '5PTX5TxGksBUPScAEbkCOhcc2ACWoDNJIKAmmwTUyrUwvMVpuF',
+        'redirect'      => 'http://admin.scolm.com/handlecallback/twitter',
+    ],
+
 ];

@@ -22,6 +22,7 @@
         "musonza/chat": "^2.0",
         "netinternet/logicboxes": "^0.0.3",
         "php-http/guzzle6-adapter": "^1.1",
+        "socialiteproviders/twitter": "^3.0",
         "spatie/laravel-fractal": "^4.3",
         "yajra/laravel-datatables-buttons": "^2.0",
         "yajra/laravel-datatables-html": "^2.0",

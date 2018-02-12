@@ -4,6 +4,7 @@
 			<div id="aione_header_logo" class="aione-header-item">
 				<a href="http://aioneframework.com" target="_blank">
 					<img src="/{!! @get_organization_meta('logo') !!}" class="aione-float-left" style="height:40px;">
+                </a>
 			</div><!-- .aione-topbar-item -->
 		@endif
 		@if( @$design_settings['header_show_site_title'] == 1 || @$design_settings['header_show_site_description'] == 1)

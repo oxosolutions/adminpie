@@ -58,7 +58,7 @@ class Handler extends ExceptionHandler
             }
         }*/
 
-        // return parent::render($request, $exception); 
+         return parent::render($request, $exception); 
         if ($exception instanceof TokenMismatchException){
             
             return redirect($request->fullUrl())->with('csrf_error',"Oops! Seems you couldn't submit form for a long time. Please try again.");

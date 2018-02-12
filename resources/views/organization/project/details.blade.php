@@ -104,33 +104,34 @@
                 </div>
                 
                 <div class="p-10 ar">
-                    @foreach($model->attachments as $key => $attachment)
-                        @php
-                            $exploded = explode('.',$attachment->file);
-                            $countIndex = count($exploded)-1;
-                        @endphp
-                        <div class="ac l25 aione-align-center mb-20">
-                            <span class="aione-border display-inline-block width-100 image-wrapper" style="width: 100%">
-                                @if(in_array($exploded[$countIndex],['jpg','jpeg','png','gif']))
-                                    <img src="{{ url('/').'/'.upload_path('project_attachments').'/'.$attachment->file}}" class="mr-20" style="height: 100px">   
-                                @else
-                                    <img src="{{asset('assets/images/file-icon.png')}}" class="mr-20" style="height: 100px">
-                                @endif
-                                <a href="{{route('delete.project.attachment',['attachment_index'=>$key,'id'=>request()->id])}}" class="delete-sweet-alert">
-                                    <i class="fa fa-trash"></i>    
-                                </a>
-                                <a href="{{ url('/').'/'.upload_path('project_attachments').'/'.$attachment->file}}" target="_blank">
-                                    <i class="fa fa-download"></i>    
-                                </a>
+                    @if($model->attachments != null)
+                        @foreach($model->attachments as $key => $attachment)
+                            @php
+                                $exploded = explode('.',$attachment->file);
+                                $countIndex = count($exploded)-1;
+                            @endphp
+                            <div class="ac l25 aione-align-center mb-20">
+                                <span class="aione-border display-inline-block width-100 image-wrapper" style="width: 100%">
+                                    @if(in_array($exploded[$countIndex],['jpg','jpeg','png','gif']))
+                                        <img src="{{ url('/').'/'.upload_path('project_attachments').'/'.$attachment->file}}" class="mr-20" style="height: 100px">   
+                                    @else
+                                        <img src="{{asset('assets/images/file-icon.png')}}" class="mr-20" style="height: 100px">
+                                    @endif
+                                    <a href="{{route('delete.project.attachment',['attachment_index'=>$key,'id'=>request()->id])}}" class="delete-sweet-alert">
+                                        <i class="fa fa-trash"></i>    
+                                    </a>
+                                    <a href="{{ url('/').'/'.upload_path('project_attachments').'/'.$attachment->file}}" target="_blank">
+                                        <i class="fa fa-download"></i>    
+                                    </a>
+                                    
+                                    <div class="bg-white p-5 aione-border-top truncate aione-tooltip" title="{{$attachment->name}}">
+                                        {{$attachment->name}}
+                                    </div>
+                                </span>
                                 
-                                <div class="bg-white p-5 aione-border-top truncate aione-tooltip" title="{{$attachment->name}}">
-                                    {{$attachment->name}}
-                                </div>
-                            </span>
-                            
-                        </div>
-                    @endforeach
-                    
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
                     
             </div>

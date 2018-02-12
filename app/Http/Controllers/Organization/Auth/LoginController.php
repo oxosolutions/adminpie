@@ -397,15 +397,17 @@ class LoginController extends Controller
         switch ($loginFrom) {
             case 'github':
                 $redirectUrl = 'http://admin.scolm.com/handlecallback/github?organization='.get_organization_id();
+                return Socialite::driver($loginFrom)->redirectUrl($redirectUrl)->redirect();
                 break;
             case'facebook':
-                $redirectUrl = 'http://admin.scolm.com/handlecallback/facebook?organization='.get_organization_id();
+                $redirectUrl = 'http://admin.scolm.com/handlecallback/facebook';
+                return Socialite::driver($loginFrom)->with(['state'=>json_encode(['organization'=>get_organization_id()])])->redirectUrl($redirectUrl)->redirect();
                 break;
             case'twitter':
                 $redirectUrl = 'http://admin.scolm.com/handlecallback/twitter?organization='.get_organization_id();
+                return Socialite::driver($loginFrom)->redirect();
                 break;
         }
-        return Socialite::driver($loginFrom)->redirectUrl($redirectUrl)->redirect();
     }
     
 }

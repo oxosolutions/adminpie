@@ -32,6 +32,13 @@ use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
 
+function get_user_id_from_employee_id($emp_id){
+	$user = UsersMeta::select('user_id')->where('value',$emp_id)->first();
+	if(empty($user) || empty($user->user_id)){
+		return;
+	}
+	return $user->user_id;
+}
 
 function call_model($model,$method,$param = null){
     $modelPath = 'App\\Model\\Organization\\'.$model;
