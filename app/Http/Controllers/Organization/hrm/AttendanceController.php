@@ -621,13 +621,13 @@ class AttendanceController extends Controller
 			if($key !='_token'){
 				dump($value);
 				continue;
-				if(isset($value['punch_in_out']) && !empty($value['punch_in_out']))
+				if(isset($value['punch_in_out']) && !empty($value['punch_in_out'][0]))
 				{
 					$value['punch_in_out'] = json_encode($value['punch_in_out']);
 				}else{
 					$value['punch_in_out'] =Null;
 				}
-				if(isset($value['in_out_data']) && !empty($value['in_out_data']))
+				if(isset($value['in_out_data']) && !empty($value['in_out_data'][0]))
 				{
 					$value['in_out_data'] = json_encode($value['in_out_data']);
 				}else{
