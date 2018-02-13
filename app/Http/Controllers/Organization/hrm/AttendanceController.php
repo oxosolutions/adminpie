@@ -619,8 +619,6 @@ class AttendanceController extends Controller
 		unset($request['dates']);
 		foreach ($request->all() as $key => $value) {
 			if($key !='_token'){
-				dump($value);
-				continue;
 				if(isset($value['punch_in_out']) && !empty($value['punch_in_out'][0]))
 				{
 					$value['punch_in_out'] = json_encode($value['punch_in_out']);
@@ -669,7 +667,6 @@ class AttendanceController extends Controller
 			}
 
 		}
-		dd(12);
 		Session::flash('success','Successfully mark attendance');
 		return back();//redirect()->route('list.attendance');
 	}
