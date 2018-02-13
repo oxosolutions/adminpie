@@ -142,6 +142,8 @@
 						if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 						{
  							$attendanceVal = collect($attendance_data[$user_meta['employee_id']])->keyBy('date');
+ 						}else{
+ 							$attendanceVal = [];
  						}
 
 							for($d=$number; $d<=$total_days; $d++)
@@ -152,33 +154,45 @@
 									echo "<div class='attendance-sheet column sunday'>O</div>";
 								}else
 								{
-									http_response_code(500);
-									//dd($attendance_data);
+									// http_response_code(500);
+									// dump($attendance_data);
+									// continue;
 									if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 									{
-										 ?>
-											<?php if(!empty($holiday_data[$d])): ?>
-												
-													<div class="attendance-sheet column ">H</div>
-												
-											<?php elseif(empty($attendanceVal[$d]['shift_hours'])): ?>
-												
-													<div class="attendance-sheet column present-bg-color">O</div>
-												
-													<div class="attendance-sheet column">O</div>
-												
-											<?php elseif(@$attendanceVal[$d]['attendance_status']=='present'): ?>
-													<div class="attendance-sheet column present-bg-color aione-tooltip attendance-tardy" data-title="9:00 - 5:00">P</div>
-											<?php elseif(@$attendanceVal[$d]['attendance_status']=='absent'): ?>
-												<div class="attendance-sheet column absent-bg-color">A</div>
-											<?php elseif(@$attendanceVal[$d]['attendance_status']=='Sunday'): ?>
-												<div class="attendance-sheet column sunday">O</div>
-											<?php elseif(@$attendanceVal[$d]['attendance_status']=='leave'): ?>
-												<div class="attendance-sheet column sunday">L</div>
+									 ?>
+										<?php if(!empty($holiday_data[$d])): ?>
+											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+												<div class="attendance-sheet column present-bg-color">H</div>
+
 											<?php else: ?>
-												<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
+											<div class="attendance-sheet column ">H</div>
 											<?php endif; ?>
-										<?php 
+										<?php elseif(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours'])): ?>
+											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+												<div class="attendance-sheet column present-bg-color">O</div>
+											<?php else: ?>
+												<div class="attendance-sheet column">O</div>
+											<?php endif; ?>
+										<?php elseif(@$attendanceVal[$d]['attendance_status']=='present'): ?>
+												<div class="attendance-sheet column present-bg-color aione-tooltip attendance-tardy" data-title="9:00 - 5:00">P</div>
+										<?php elseif(@$attendanceVal[$d]['attendance_status']=='absent'): ?>
+											<div class="attendance-sheet column absent-bg-color">A</div>
+										<?php elseif(@$attendanceVal[$d]['attendance_status']=='Sunday'): ?>
+											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+												<div class="attendance-sheet column sunday present-bg-color">O</div>
+											<?php else: ?>
+												<div class="attendance-sheet column sunday">O</div>
+											<?php endif; ?>
+										<?php elseif(@$attendanceVal[$d]['attendance_status']=='leave'): ?>
+											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+												<div class="attendance-sheet column sunday present-bg-color">L</div>
+											<?php else: ?>
+												<div class="attendance-sheet column sunday">L</div>
+											<?php endif; ?>
+										<?php else: ?>
+											<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
+										<?php endif; ?>
+									<?php 
 									}else{
 										if(!empty($holiday_data[$d])){
 											echo '<div class="attendance-sheet column present-bg-color">H</div>';
@@ -188,9 +202,12 @@
 									}	
 								}
 							}
-							echo "<div class='attendance-details'>this is the content of hidden div </div>";
-
-
+							 ?>
+								<div class='attendance-details'> 
+									<?php echo $__env->make('organization.attendance.attendance_stats', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+ 									
+ 								</div>
+							<?php 
 					}
 				 ?>
 				<br>
@@ -214,7 +231,6 @@
 		})
 	})
 </script>
-
 
 
 

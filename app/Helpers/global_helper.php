@@ -31,7 +31,22 @@ use App\Model\Admin\GlobalWidget;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
-
+function convert_sec_to_hour($sec, $format = '%02d:%02d') {
+  
+    if ($sec < 1) {
+       return;
+    }
+    $time = $sec/60;
+    $hours = floor($time / 60);
+    $minutes = ($time % 60);
+    return sprintf($format, $hours, $minutes);
+}
+/************************************************************
+*   @function get_user_id_from_employee_id
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+************************************************************/
 function get_user_id_from_employee_id($emp_id){
 	$user = UsersMeta::select('user_id')->where('value',$emp_id)->first();
 	if(empty($user) || empty($user->user_id)){

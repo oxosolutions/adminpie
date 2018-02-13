@@ -142,6 +142,8 @@
 						if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 						{
  							$attendanceVal = collect($attendance_data[$user_meta['employee_id']])->keyBy('date');
+ 						}else{
+ 							$attendanceVal = [];
  						}
 
 							for($d=$number; $d<=$total_days; $d++)
@@ -152,35 +154,45 @@
 									echo "<div class='attendance-sheet column sunday'>O</div>";
 								}else
 								{
-									http_response_code(500);
-									//dd($attendance_data);
+									// http_response_code(500);
+									// dump($attendance_data);
+									// continue;
 									if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 									{
-										@endphp
-											@if(!empty($holiday_data[$d]))
-												{{-- @if(!empty($attendanceVal[$d]['punch_in_out']))
-													<div class="attendance-sheet column present-bg-color">H</div>
-													@else --}}
-													<div class="attendance-sheet column ">H</div>
-												{{-- @endif --}}
-											@elseif(empty($attendanceVal[$d]['shift_hours']))
-												{{-- @if(!empty($attendanceVal[$d]['punch_in_out'])) --}}
-													<div class="attendance-sheet column present-bg-color">O</div>
-												{{-- @else --}}
-													<div class="attendance-sheet column">O</div>
-												{{-- @endif --}}
-											@elseif(@$attendanceVal[$d]['attendance_status']=='present')
-													<div class="attendance-sheet column present-bg-color aione-tooltip attendance-tardy" data-title="9:00 - 5:00">P</div>
-											@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
-												<div class="attendance-sheet column absent-bg-color">A</div>
-											@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')
-												<div class="attendance-sheet column sunday">O</div>
-											@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
-												<div class="attendance-sheet column sunday">L</div>
+									@endphp
+										@if(!empty($holiday_data[$d]))
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
+												<div class="attendance-sheet column present-bg-color">H</div>
+
 											@else
-												<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
+											<div class="attendance-sheet column ">H</div>
 											@endif
-										@php
+										@elseif(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours']))
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
+												<div class="attendance-sheet column present-bg-color">O</div>
+											@else
+												<div class="attendance-sheet column">O</div>
+											@endif
+										@elseif(@$attendanceVal[$d]['attendance_status']=='present')
+												<div class="attendance-sheet column present-bg-color aione-tooltip attendance-tardy" data-title="9:00 - 5:00">P</div>
+										@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
+											<div class="attendance-sheet column absent-bg-color">A</div>
+										@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
+												<div class="attendance-sheet column sunday present-bg-color">O</div>
+											@else
+												<div class="attendance-sheet column sunday">O</div>
+											@endif
+										@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
+												<div class="attendance-sheet column sunday present-bg-color">L</div>
+											@else
+												<div class="attendance-sheet column sunday">L</div>
+											@endif
+										@else
+											<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
+										@endif
+									@php
 									}else{
 										if(!empty($holiday_data[$d])){
 											echo '<div class="attendance-sheet column present-bg-color">H</div>';
@@ -190,9 +202,12 @@
 									}	
 								}
 							}
-							echo "<div class='attendance-details'>this is the content of hidden div </div>";
-
-
+							@endphp
+								<div class='attendance-details'> 
+									@include('organization.attendance.attendance_stats')
+ 									
+ 								</div>
+							@php
 					}
 				@endphp
 				<br>
@@ -216,22 +231,6 @@
 		})
 	})
 </script>
-{{-- 
-<div class="aione-border mt-100">
-	<div class="aione-border-bottom line-height-30">
-		<div class="display-inline-block " style="width: 10%">Employee</div>
-		<div class="display-inline-block" style="width: 10%">Name</div>
-		<div class="display-inline-block" style="width: 2.66%"></div>
-	</div>
-	<div class="aione-border-bottom line-height-30">
-		<div class="display-inline-block " style="width: 10%">112233</div>
-		<div class="display-inline-block" style="width: 10%">Ashish</div>
-		<div class="display-inline-block" style="width: 2.66%">p</div>
-	</div>
-</div>
-			
-
- --}}
 
 
 
