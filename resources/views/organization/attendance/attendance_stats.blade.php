@@ -2,6 +2,27 @@
 @if(!empty($attendanceVal))
 <h3> Attendance stats </h3>
 	@php
+	// function difference_secs($time_1 , $time_2){
+	// 	$start_shift = new Carbon\Carbon($time_1);
+	// 		$come_at = new Carbon\Carbon($time_2);
+	// 		$diff = $start_shift->diffInSeconds($come_at);
+	// 		$secs = convert_sec_to_hour($diff);
+	// 	return $secs;
+	// }
+	$data = $attendanceVal->whereNotIn('shift_hours',[null])->whereNotIn('punch_in_out',[null]);
+		$shift = $data->mapWithKeys(function($item , $key){
+		$come_late =  $go_early = Null;
+		$shift_hr = json_decode($item->shift_hours);
+		$punch_in_out = json_decode($item->punch_in_out);
+		if($shift_hr[0] < $punch_in_out[0]){
+			$come_late = difference_secs($shift_hr[0] , $punch_in_out[0]);
+		}
+		// if(!empty($punch_in_out[2]) && ($shift_hr[2] > $punch_in_out[2])){
+		// 	$go_late = difference_secs($shift_hr[2] , $punch_in_out[2]);
+		// }
+		return[$key=>['come_late'=>$come_late , 'go_early'=>$go_early]];
+	});
+	// dump($shift);
 	    $working_days_in_month = $attendanceVal->whereNotIn('shift_hours',[null])->count();
 	    $loss_of_pay_days = $attendanceVal->whereIn('attendance_status',['lop','absent'])->whereNotIn('shift_hours',[null])->count();
 	    $absent = $attendanceVal->whereIn('attendance_status',['absent'])->whereNotIn('shift_hours',[null])->count();

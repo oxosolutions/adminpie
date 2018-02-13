@@ -162,14 +162,14 @@
 									 ?>
 										<?php if(!empty($holiday_data[$d])): ?>
 											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
-												<div class="attendance-sheet column present-bg-color">H</div>
+												<div class="attendance-sheet column present-bg-color-holiday">H</div>
 
 											<?php else: ?>
 											<div class="attendance-sheet column ">H</div>
 											<?php endif; ?>
 										<?php elseif(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours'])): ?>
 											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
-												<div class="attendance-sheet column present-bg-color">O</div>
+												<div class="attendance-sheet column present-bg-color-holiday">O</div>
 											<?php else: ?>
 												<div class="attendance-sheet column">O</div>
 											<?php endif; ?>
@@ -187,7 +187,7 @@
 											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
 												<div class="attendance-sheet column sunday present-bg-color">L</div>
 											<?php else: ?>
-												<div class="attendance-sheet column sunday">L</div>
+												<div class="attendance-sheet column  leave-bg-color">L</div>
 											<?php endif; ?>
 										<?php else: ?>
 											<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
@@ -220,6 +220,19 @@
 <style type="text/css">
 	.attendance-details{
 		display: none;
+	}
+	.present-bg-color{
+		background-color: #6aa84f;
+	}
+	.present-bg-color-holiday{
+		background-color: #274e13;
+		color: white
+	}
+	.absent-bg-color{
+		background-color: #c53929 !important;
+	}
+	.leave-bg-color{
+		background-color: #f1c232
 	}
 </style>
 <script type="text/javascript">

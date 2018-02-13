@@ -32,7 +32,6 @@ use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 
 function convert_sec_to_hour($sec, $format = '%02d:%02d') {
-  
     if ($sec < 1) {
        return;
     }
@@ -41,6 +40,14 @@ function convert_sec_to_hour($sec, $format = '%02d:%02d') {
     $minutes = ($time % 60);
     return sprintf($format, $hours, $minutes);
 }
+
+function difference_secs($time_1 , $time_2){
+		$start_shift = new Carbon\Carbon($time_1);
+			$come_at = new Carbon\Carbon($time_2);
+			$diff = $start_shift->diffInSeconds($come_at);
+			$secs = convert_sec_to_hour($diff);
+		return $secs;
+	}
 /************************************************************
 *   @function get_user_id_from_employee_id
 *   @access public

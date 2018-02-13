@@ -302,7 +302,7 @@ if(empty($user_meta['employee_id'])){
 	    margin-bottom: 10px;
 	}
 	.present-bg-color{
-		background: #8BC34A;
+		background: #6aa84f;
 	    color: #fff;
 	}
 	.absent-bg-color{
