@@ -18,9 +18,14 @@
         }
         $user_role_classes = implode(" ",$user_role_classes);
 
+
      ?>
     <style type="text/css">
         <?php echo @$custom_css; ?>
+
+    </style>
+    <style type="text/css">
+        <?php echo @get_module_css(); ?>
 
     </style>
 </head>
@@ -58,6 +63,10 @@
     <?php echo $__env->make('components._footerscripts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <script type="text/javascript">
         <?php echo @$custom_js; ?>
+
+    </script> 
+    <script type="text/javascript">
+        <?php echo @get_module_js(); ?>
 
     </script> 
 </body>

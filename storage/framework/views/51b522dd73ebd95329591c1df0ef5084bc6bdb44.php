@@ -38,51 +38,44 @@
 			
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">working days</div>
-				<div><?php echo e($working_days_in_month); ?> </div>
+					<div class="bg-grey bg-lighten-3">working days</div>
+					<div><?php echo e($working_days_in_month); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Loss of Pay days</div>
-				<div><?php echo e($loss_of_pay_days); ?> </div>
+					<div class="bg-grey bg-lighten-3">Loss of Pay days</div>
+					<div><?php echo e($loss_of_pay_days); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Leave</div>
-				<div><?php echo e($leaves_in_month); ?> </div>
+					<div class="bg-grey bg-lighten-3">Total Leave</div>
+					<div><?php echo e($leaves_in_month); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Absent</div>
-				<div><?php echo e($absent); ?> </div>
+					<div class="bg-grey bg-lighten-3">Total Absent</div>
+					<div><?php echo e($absent); ?> </div>
 				</div>
 			</div>
 			<div class="ac l16 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Un Paid Leave </div>
-				<div><?php echo e($un_paid); ?> </div>
+					<div class="bg-grey bg-lighten-3">Total Un Paid Leave </div>
+					<div><?php echo e($un_paid); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Due Time</div>
-				<div><?php echo e(convert_sec_to_hour(abs($due_time))); ?> </div>
+					<div class="bg-grey bg-lighten-3">Total Due Time</div>
+					<div><?php echo e(convert_sec_to_hour(abs($due_time))); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Extra Time</div>
-				<div><?php echo e(convert_sec_to_hour($extra_time)); ?> </div>
+					<div class="bg-grey bg-lighten-3">Total Extra Time</div>
+					<div><?php echo e(convert_sec_to_hour($extra_time)); ?> </div>
 				</div>
 			</div>
 	

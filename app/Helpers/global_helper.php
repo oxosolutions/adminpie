@@ -43,20 +43,53 @@ use App\Model\Admin\GlobalSubModule;
 *	@perm timestamp		[true/false	optional	default	true]
 *	@return filename [string]
 ************************************************************/
-function get_module($id = null, $name = null){	
+function get_module($route = null){	
 
-	$module = null;
-	if(!empty($id)){
-		$module = GlobalModule::where('id',$id)->first();
-	} elseif(!empty($name)){
-		$module = GlobalModule::where('name',$name)->first();
+	$module = null; 
+	if(!empty($route)){
+		$module = GlobalSubModule::where('sub_module_route',$route)->first();
+	} else{
+		$route = Request::route();
+        $route = $route->uri;
+        $module = GlobalSubModule::where('sub_module_route',$route)->first();
 	}
 	
 	//Return module
 	return $module;
 }
 
+/************************************************************
+*	@function get_module_css
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return module_css [string]
+************************************************************/
+function get_module_css(){	
 
+	$module = get_module();
+	$module_css = $module->css_code;
+	
+	//Return module_css
+	return $module_css;
+}
+
+
+/************************************************************
+*	@function get_module_js
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@return module_js [string]
+************************************************************/
+function get_module_js(){	
+
+	$module = get_module();
+	$module_js = $module->js_code;
+	
+	//Return module_js
+	return $module_js;
+}
 
 function convert_sec_to_hour($sec, $format = '%02d:%02d') {
     if ($sec < 1) {

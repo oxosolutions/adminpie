@@ -230,7 +230,7 @@ protected function set_leave_available_category($assigned_categories){
 			unset($valid_fields['to']);
 		}
 		$this->validate($request, $valid_fields);
-		dd($request->all());
+
 		$leave_category_id = $request['leave_category_id'];
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');
@@ -238,6 +238,7 @@ protected function set_leave_available_category($assigned_categories){
 		$date_of_joining = get_current_user_meta('date_of_joining');
 		if($request->isMethod('post'))
 		{
+		if($request->choose_day == 'multi'){
 			$current = Carbon::parse(date('Y-m-d'));
 			$from = Carbon::parse($request->from);
 			$before = $current->diffInDays($from);
@@ -293,6 +294,10 @@ protected function set_leave_available_category($assigned_categories){
 				$error['not_assigned_leave_category'] = "Not assigned leave category.";
 				return redirect()->route('account.leaves')->with('errorss',$error);
 			}
+		}else{
+			$request['total_days'] = $request['choose_day'];
+			unset($request['to']); 
+		}
 /* Total day check */
 			if(empty($error)) {
 				$leave = new EMP_LEV();	

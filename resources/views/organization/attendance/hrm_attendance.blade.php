@@ -143,14 +143,21 @@ if(empty($user_meta['employee_id'])){
 				<td>
 				 @if(!empty($punch_in_out) )
 					@foreach($punch_in_out as $key =>$val)
-						<div>
-							{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' =>'remove_punch'.$emp_id,'id'=>$key.'punch_in_out'.$emp_id]) !!} 	 <a emp_id="{{$emp_id}}"  class="del_check">del </a> 
+						<div class="field-wrapper ">
+							<div class="field field-type-text">
+							{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' =>'remove_punch'.$emp_id,'id'=>$key.'punch_in_out'.$emp_id]) !!} 	 <a emp_id="{{$emp_id}}"  class="del_check">del </a>	
+							</div>
+							 
 						</div>
 					@endforeach
 						<span class="{{$emp_id}}"> </span>
 						<a emp_id="{{$emp_id}}" class="add_more_punch">Add</a>
 					@else
-					{!! Form::text($emp_id."[punch_in_out][]",null,['class' => 'remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]) !!}
+					<div class="field-wrapper ">
+						<div class="field field-type-text">
+							{!! Form::text($emp_id."[punch_in_out][]",null,['class' => 'remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]) !!}
+						</div>
+					</div>
 					<span class="{{$emp_id}}"> </span>
 					 <a emp_id="{{$emp_id}}" class="add_more_punch">Add</a>
 					@endif
@@ -161,25 +168,24 @@ if(empty($user_meta['employee_id'])){
 						@if(!empty($in_out_data))
 						 @foreach($in_out_data as $key =>$val)
 						 <div>
+						 	<div class="field-wrapper ">
+							<div class="field field-type-text">
 							 {!! Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
-							 
-					 
-						</div>
-						
-							{{-- {{$loop->iteration}}
-							@foreach($val as $ip =>$times)
-							<div>
-							 {!! Form::text($emp_id."[in_out_data][]",($times == null) ? '--' : $times,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  <a class="del_check">del </a>
 							</div>
-							@endforeach --}}
+						</div>
+						</div>
 						@endforeach
 						<span class="in_out{{$emp_id}}"> </span>
 						<a emp_id="{{$emp_id}}" class="add_more_in_out">Add</a> 
 						@else
-						<div>
+						<div><div class="field-wrapper ">
+							<div class="field field-type-text">
 							 {!! Form::text($emp_id."[in_out_data][]",null,['class' => '', 'id'=>'in_out_data'.$emp_id]) !!} 
 							 <span class="in_out{{$emp_id}}"> </span>
 							</div>
+						</div>
+						
+						</div>
 
 						<a emp_id="{{$emp_id}}" class="add_more_in_out">Add</a> 
 
@@ -251,7 +257,7 @@ if(empty($user_meta['employee_id'])){
 @include('common.pagecontentend')
 <style type="text/css">
 
-	body{
+/*	body{
 		background-color: #ffffff;
 	}
 	.main-container{
@@ -321,7 +327,7 @@ if(empty($user_meta['employee_id'])){
 		content: "\f073";
 		font-family: 'font-awesome';
 	}
-
+*/
 	
 </style>
 	<script type="text/javascript">

@@ -38,51 +38,44 @@
 			
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">working days</div>
-				<div>{{ $working_days_in_month }} </div>
+					<div class="bg-grey bg-lighten-3">working days</div>
+					<div>{{ $working_days_in_month }} </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Loss of Pay days</div>
-				<div>{{ $loss_of_pay_days }} </div>
+					<div class="bg-grey bg-lighten-3">Loss of Pay days</div>
+					<div>{{ $loss_of_pay_days }} </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Leave</div>
-				<div>{{ $leaves_in_month }} </div>
+					<div class="bg-grey bg-lighten-3">Total Leave</div>
+					<div>{{ $leaves_in_month }} </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Absent</div>
-				<div>{{ $absent }} </div>
+					<div class="bg-grey bg-lighten-3">Total Absent</div>
+					<div>{{ $absent }} </div>
 				</div>
 			</div>
 			<div class="ac l16 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Un Paid Leave </div>
-				<div>{{ $un_paid }} </div>
+					<div class="bg-grey bg-lighten-3">Total Un Paid Leave </div>
+					<div>{{ $un_paid }} </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Due Time</div>
-				<div>{{ convert_sec_to_hour(abs($due_time))	 }} </div>
+					<div class="bg-grey bg-lighten-3">Total Due Time</div>
+					<div>{{ convert_sec_to_hour(abs($due_time))	 }} </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
-					
-				<div class="bg-grey bg-lighten-3">Total Extra Time</div>
-				<div>{{ convert_sec_to_hour($extra_time)	 }} </div>
+					<div class="bg-grey bg-lighten-3">Total Extra Time</div>
+					<div>{{ convert_sec_to_hour($extra_time)	 }} </div>
 				</div>
 			</div>
 	

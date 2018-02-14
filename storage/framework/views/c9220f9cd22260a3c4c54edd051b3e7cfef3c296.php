@@ -41,7 +41,7 @@
                    $url = $_SERVER['REQUEST_URI'];
                    $string = explode('/',$url);
 
-                   //dd(request()->segments());
+                   //dd(request());
 				   
                    foreach(request()->segments() as $key => $segment){
                       if(substr($segment, -1) == 's'){

@@ -69,10 +69,6 @@
 	 					return [$item['key'] => $item['value'] ];
 						 }); 
 					
-					// if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year) ){
-					// 				continue;
-					// 			}
-					// 			
 					if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year)) {
 									continue;
 								}
@@ -91,13 +87,7 @@
 								}
  							}
 							if(!empty($fweek_no)){
-								// dump($fweek_no, date('m', strtotime($user_meta['date_of_joining'])), $current_month);
-								// if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year) ){
-								// 	continue;
-								// }
-								// if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year ){
-								// 	continue;
-								// }
+								
 								if(date('Y', strtotime($user_meta['date_of_joining'])) == $current_year &&date('m', strtotime($user_meta['date_of_joining'])) ==  $current_month){
 									$joining_week = Carbon\Carbon::parse($user_meta['date_of_joining'])->weekOfMonth;
 									if($fweek_no < $joining_week)
@@ -110,12 +100,7 @@
 									}
 							}
 						}else{	
-								// if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year)) {
-								// 	continue;
-								// }
-								// if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year && date('m', strtotime($user_meta['date_of_leaving'])) <  $current_month  )) {
-								// 	continue;
-								// }
+							
  						}
 
 
@@ -217,36 +202,7 @@
 		</div>
 	</div>
 </div>
-<style type="text/css">
-	.attendance-details{
-		display: none;
-		float: left;
-		width: 100%
-	}
-	.present-bg-color{
-		background-color: #6aa84f;
-	}
-	.present-bg-color-holiday{
-		background-color: #274e13;
-		color: white
-	}
-	.absent-bg-color{
-		background-color: #c53929 !important;
-	}
-	.leave-bg-color{
-		background-color: #f1c232
-	}
-	.second-half-leave{
-		background: #9c9e9f !important; /* Old browsers */
-    	background: linear-gradient(to right,  #6aa84f 0%,#6aa84f 50%,#f1c232 50%,#f1c232 100%) !important; 
-		color: white !important	
-	}
-	.first-half-leave{
-		background: #9c9e9f !important; /* Old browsers */
-    	background: linear-gradient(to right,  #f1c232 0%,#f1c232 50%,#6aa84f 50%,#6aa84f 100%) !important; 
-		color: white !important	
-	}
-</style>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(document).on('click','.show-details',function(e){

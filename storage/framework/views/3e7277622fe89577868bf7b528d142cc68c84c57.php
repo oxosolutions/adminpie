@@ -103,34 +103,30 @@ $number = 1;
 
 	 ?>
 
-	<?php if($total_days==28): ?>
-	<style type="text/css"> 
-		.column
-		{
-			width: 2.70% !important;
-		}
-	</style>
-<?php endif; ?>
-<?php if($total_days==31): ?>
-	<style type="text/css"> 
-		.column
-		{
-			width: 2.43% !important;
-		}
-	</style>
 
-<?php endif; ?>
-
-<div class="aione-border mb-15">
-		
+<div class="aione-border mb-10">
 	<div class="p-10 aione-align-right">
-		<ul class="">
-		    <li class=" monthly" ><a href="#" onclick="attendance_filter(null, null, <?php echo e($current_month); ?> , <?php echo e($current_year); ?> )" class="hrm-attendance-monthly" id="monthly">Monthly</a></li>
-		    <li class=" weekly "><a href="#" onclick="attendance_filter(null, 1, <?php echo e($current_month); ?> , <?php echo e($current_year); ?> )" class="hrm-attendance-weekly" id="weekly">Weekly</a></li>
-		    <li class=" daily"><a href="#" onclick="attendance_filter(1, null, <?php echo e($current_month); ?> , <?php echo e($current_year); ?> )" class="hrm-attendance-daily" id="daily">Daily</a></li>
+		<ul class="hrm-attendance-view-switch">
+		    <li class="active"><a href="#" onclick="attendance_filter(null, null, <?php echo e($current_month); ?> , <?php echo e($current_year); ?> )" class="hrm-attendance-monthly" id="monthly">Monthly</a></li>
+		    <li><a href="#" onclick="attendance_filter(null, 1, <?php echo e($current_month); ?> , <?php echo e($current_year); ?> )" class="hrm-attendance-weekly" id="weekly">Weekly</a></li>
+		    <li><a href="#" onclick="attendance_filter(1, null, <?php echo e($current_month); ?> , <?php echo e($current_year); ?> )" class="hrm-attendance-daily" id="daily">Daily</a></li>
 		</ul>		
 	</div>
 </div>
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$('body').on('click','.hrm-attendance-view-switch li',function(e){
+		e.preventDefault();
+		$(this).addClass('active').siblings().removeClass('active');
+	});
+	
+
+});    
+</script>
 
 
 
@@ -288,3 +284,6 @@ $number = 1;
 	</div>
 </div>
 <?php echo $__env->make('organization.attendance.attendance_data_display', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<style type="text/css">
+
+</style>

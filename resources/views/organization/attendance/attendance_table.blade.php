@@ -103,34 +103,30 @@ $number = 1;
 
 	@endphp
 
-	@if($total_days==28)
-	<style type="text/css"> 
-		.column
-		{
-			width: 2.70% !important;
-		}
-	</style>
-@endif
-@if($total_days==31)
-	<style type="text/css"> 
-		.column
-		{
-			width: 2.43% !important;
-		}
-	</style>
 
-@endif
-
-<div class="aione-border mb-15">
-		
+<div class="aione-border mb-10">
 	<div class="p-10 aione-align-right">
-		<ul class="">
-		    <li class=" monthly" ><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-monthly" id="monthly">Monthly</a></li>
-		    <li class=" weekly "><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-weekly" id="weekly">Weekly</a></li>
-		    <li class=" daily"><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-daily" id="daily">Daily</a></li>
+		<ul class="hrm-attendance-view-switch">
+		    <li class="active"><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-monthly" id="monthly">Monthly</a></li>
+		    <li><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-weekly" id="weekly">Weekly</a></li>
+		    <li><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-daily" id="daily">Daily</a></li>
 		</ul>		
 	</div>
 </div>
+<style type="text/css">
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$('body').on('click','.hrm-attendance-view-switch li',function(e){
+		e.preventDefault();
+		$(this).addClass('active').siblings().removeClass('active');
+	});
+	
+
+});    
+</script>
 
 
 
@@ -291,110 +287,6 @@ $number = 1;
 	</div>
 </div>
 @include('organization.attendance.attendance_data_display')
-{{-- <style type="text/css">
-	 .aione-tooltip:before{
-	 	content: attr(data-title);
-        width: auto ;
-        white-space: pre ;
-    }
-    .attendance-tardy:after{
-    	content: '';
-    	position: absolute;
-    	height: 4px;
-    	width: 4px;
-    	border-radius:50%;
-    	background-color: red;
-    	bottom: 4px;
-    	right: 4px;
-    }
-  
-   .aione-active a{
-      color: white !important;
-      font-weight: 800;
-      background-color: #a2a2a2 !important;
-   }
+<style type="text/css">
 
-
-	.aione-navigation-1 a{
-		    display: inline-block;
-		    text-align: center;
-		    width: 30px;
-		    line-height: 30px;
-	}
-	.aione-navigation-1 a:hover{
-		    background-color: #039BE5;
-		    color: white;
-	}
-
-	.nav-past{
-		    cursor: pointer;
-			display: inline-block;
-			position: relative;
-	}
-	.nav-past:before{
-		    content: "";
-		    position: absolute;
-		    top: 5px;
-		    left: -10px;
-		    border-top: 1px solid #d2d2d2;
-		    border-right: 1px solid #d2d2d2;
-		    width: 10px;
-		    height: 10px;
-		    -webkit-transform: rotate(225deg);
-		    -moz-transform: rotate(225deg);
-		    transform: rotate(225deg);
-		    -webkit-transition: all 150ms ease-out;
-		    -moz-transition: all 150ms ease-out;
-		    -o-transition: all 150ms ease-out;
-		    transition: all 150ms ease-out;
-	}
-
-		.select-dropdown{
-			margin-bottom: 0px !important;
-		    border: 1px solid #a8a8a8 !important;
-		    
-		}
-		.select-wrapper input.select-dropdown{
-			height: 30px;
-	    	line-height: 30px;
-	    	text-align: center;
-			
-			
-			background-color: white !important;
-		}
-		
-		.select-wrapper span.caret{
-			   
-			    z-index: 9 !important;
-		}
-		.dropdown-content{
-			background-color: white;
-			
-		}
-		.dropdown-content li>a, .dropdown-content li>span{
-			color: #0288D1 !important
-		}
-
-		.nav-future{
-			    cursor: pointer;
-				display: inline-block;
-				position: relative;
-		}
-		.nav-future:after{
-			    content: "";
-			    position: absolute;
-			    top: 5px;
-			    right: -10px;
-			    border-top: 1px solid #d2d2d2;
-			    border-right: 1px solid #d2d2d2;
-			    width: 10px;
-			    height: 10px;
-			    -webkit-transform: rotate(45deg);
-			    -moz-transform: rotate(45deg);
-			    transform: rotate(45deg);
-			    -webkit-transition: all 150ms ease-out;
-			    -moz-transition: all 150ms ease-out;
-			    -o-transition: all 150ms ease-out;
-			    transition: all 150ms ease-out;
-		}
-</style> --}}
+</style>

@@ -18,9 +18,13 @@
         }
         $user_role_classes = implode(" ",$user_role_classes);
 
+
     @endphp
     <style type="text/css">
         {!!@$custom_css!!}
+    </style>
+    <style type="text/css">
+        {!! @get_module_css() !!}
     </style>
 </head>
 <body class="{{@$user_role_classes}}">
@@ -57,6 +61,9 @@
     @include('components._footerscripts')
     <script type="text/javascript">
         {!!@$custom_js!!}
+    </script> 
+    <script type="text/javascript">
+        {!! @get_module_js() !!}
     </script> 
 </body>
 </html>
