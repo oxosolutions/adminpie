@@ -226,7 +226,11 @@ protected function set_leave_available_category($assigned_categories){
 			}
 		}
 		$valid_fields = ['reason_of_leave'=>'required', 'from'=>'required', 'to'=>'required','leave_category_id'=>'required'];
+		if($request->choose_day <= 1){
+			unset($valid_fields['to']);
+		}
 		$this->validate($request, $valid_fields);
+		dd($request->all());
 		$leave_category_id = $request['leave_category_id'];
 		$user = user_info()->toArray();	
 		$designation_id =  get_current_user_meta('designation');

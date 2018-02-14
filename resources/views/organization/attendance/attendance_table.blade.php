@@ -122,14 +122,12 @@ $number = 1;
 @endif
 
 <div class="aione-border mb-15">
-	<div class="aione-border-bottom bg-grey bg-lighten-3 p-10 font-size-18">
-		Filters
-	</div>
-	<div class="p-10">
+		
+	<div class="p-10 aione-align-right">
 		<ul class="">
-		    <li class=" monthly" ><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="" id="monthly">Monthly</a></li>
-		    <li class=" weekly "><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class=" " id="weekly">Weekly</a></li>
-		    <li class=" daily"><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class=" " id="daily">Daily</a></li>
+		    <li class=" monthly" ><a href="#" onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-monthly" id="monthly">Monthly</a></li>
+		    <li class=" weekly "><a href="#" onclick="attendance_filter(null, 1, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-weekly" id="weekly">Weekly</a></li>
+		    <li class=" daily"><a href="#" onclick="attendance_filter(1, null, {{$current_month}} , {{$current_year}} )" class="hrm-attendance-daily" id="daily">Daily</a></li>
 		</ul>		
 	</div>
 </div>
@@ -293,7 +291,7 @@ $number = 1;
 	</div>
 </div>
 @include('organization.attendance.attendance_data_display')
-<style type="text/css">
+{{-- <style type="text/css">
 	 .aione-tooltip:before{
 	 	content: attr(data-title);
         width: auto ;
@@ -309,31 +307,11 @@ $number = 1;
     	bottom: 4px;
     	right: 4px;
     }
-   .aione-tabs{
-      border-bottom: 1px solid #e8e8e8;
-      padding-bottom: 4px;
-      padding: 0px;
-      margin: 0px;
-   }
-   .aione-tabs > .tab{
-     
-    display: inline-block;
-   }
-   .aione-tabs > .tab:hover{
-      background-color: #e8e8e8;
-          border-bottom: 1px solid #EEE;
-   }
-   .aione-tabs > .tab > a{
-    padding: 0px 12px  !important; 
-    line-height: 40px;
-    display: inline-block; 
-    color: #0073aa;
-   }
-   
+  
    .aione-active a{
       color: white !important;
-      font-weight: 500;
-      background-color: rgb(243, 129, 115) !important;
+      font-weight: 800;
+      background-color: #a2a2a2 !important;
    }
 
 
@@ -371,7 +349,7 @@ $number = 1;
 		    transition: all 150ms ease-out;
 	}
 
-	.select-dropdown{
+		.select-dropdown{
 			margin-bottom: 0px !important;
 		    border: 1px solid #a8a8a8 !important;
 		    
@@ -397,26 +375,26 @@ $number = 1;
 			color: #0288D1 !important
 		}
 
-	.nav-future{
-		    cursor: pointer;
-			display: inline-block;
-			position: relative;
-	}
-	.nav-future:after{
-		    content: "";
-		    position: absolute;
-		    top: 5px;
-		    right: -10px;
-		    border-top: 1px solid #d2d2d2;
-		    border-right: 1px solid #d2d2d2;
-		    width: 10px;
-		    height: 10px;
-		    -webkit-transform: rotate(45deg);
-		    -moz-transform: rotate(45deg);
-		    transform: rotate(45deg);
-		    -webkit-transition: all 150ms ease-out;
-		    -moz-transition: all 150ms ease-out;
-		    -o-transition: all 150ms ease-out;
-		    transition: all 150ms ease-out;
-	}
-</style>
+		.nav-future{
+			    cursor: pointer;
+				display: inline-block;
+				position: relative;
+		}
+		.nav-future:after{
+			    content: "";
+			    position: absolute;
+			    top: 5px;
+			    right: -10px;
+			    border-top: 1px solid #d2d2d2;
+			    border-right: 1px solid #d2d2d2;
+			    width: 10px;
+			    height: 10px;
+			    -webkit-transform: rotate(45deg);
+			    -moz-transform: rotate(45deg);
+			    transform: rotate(45deg);
+			    -webkit-transition: all 150ms ease-out;
+			    -moz-transition: all 150ms ease-out;
+			    -o-transition: all 150ms ease-out;
+			    transition: all 150ms ease-out;
+		}
+</style> --}}

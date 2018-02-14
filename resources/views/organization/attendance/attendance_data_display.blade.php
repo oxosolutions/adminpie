@@ -162,35 +162,35 @@
 									@endphp
 										@if(!empty($holiday_data[$d]))
 											@if(!empty($attendanceVal[$d]['punch_in_out']))
-												<div class="attendance-sheet column present-bg-color-holiday">H</div>
+												<div class="attendance-sheet column attendance-status-holiday attendance-status-present">H</div>
 
 											@else
-											<div class="attendance-sheet column ">H</div>
+											<div class="attendance-sheet column attendance-status-holiday">H</div>
 											@endif
 										@elseif(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours']))
 											@if(!empty($attendanceVal[$d]['punch_in_out']))
-												<div class="attendance-sheet column present-bg-color-holiday">O</div>
+												<div class="attendance-sheet column attendance-status-holiday attendance-status-present">O</div>
 											@else
-												<div class="attendance-sheet column">O</div>
+												<div class="attendance-sheet column attendance-status-holiday">O</div>
 											@endif
 										@elseif(@$attendanceVal[$d]['attendance_status']=='present')
-												<div class="attendance-sheet column present-bg-color aione-tooltip attendance-tardy" data-title="9:00 - 5:00">P</div>
+												<div class="attendance-sheet column attendance-status-present aione-tooltip attendance-status-tardy" data-title="9:00 - 5:00">P</div>
 										@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
-											<div class="attendance-sheet column absent-bg-color">A</div>
+											<div class="attendance-sheet column attendance-status-absent">A</div>
 										@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')
 											@if(!empty($attendanceVal[$d]['punch_in_out']))
-												<div class="attendance-sheet column sunday present-bg-color">O</div>
+												<div class="attendance-sheet column sunday attendance-status-holiday attendance-status-present">O</div>
 											@else
-												<div class="attendance-sheet column sunday">O</div>
+												<div class="attendance-sheet column sunday attendance-status-holiday">O</div>
 											@endif
 										@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
 											@if(!empty($attendanceVal[$d]['punch_in_out']))
-												<div class="attendance-sheet column sunday present-bg-color">L</div>
+												<div class="attendance-sheet column sunday attendance-status-leave ">L</div>
 											@else
-												<div class="attendance-sheet column  leave-bg-color">L</div>
+												<div class="attendance-sheet column attendance-status-leave">L</div>
 											@endif
 										@else
-											<div class="attendance-sheet column bg-grey bg-lighten-3">-</div>
+											<div class="attendance-sheet column attendance-status-null">-</div>
 										@endif
 									@php
 									}else{
@@ -220,6 +220,8 @@
 <style type="text/css">
 	.attendance-details{
 		display: none;
+		float: left;
+		width: 100%
 	}
 	.present-bg-color{
 		background-color: #6aa84f;
@@ -233,6 +235,16 @@
 	}
 	.leave-bg-color{
 		background-color: #f1c232
+	}
+	.second-half-leave{
+		background: #9c9e9f !important; /* Old browsers */
+    	background: linear-gradient(to right,  #6aa84f 0%,#6aa84f 50%,#f1c232 50%,#f1c232 100%) !important; 
+		color: white !important	
+	}
+	.first-half-leave{
+		background: #9c9e9f !important; /* Old browsers */
+    	background: linear-gradient(to right,  #f1c232 0%,#f1c232 50%,#6aa84f 50%,#6aa84f 100%) !important; 
+		color: white !important	
 	}
 </style>
 <script type="text/javascript">

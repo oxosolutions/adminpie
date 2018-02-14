@@ -157,7 +157,7 @@ if(!empty($error)){
                         <tbody>
                            <tr>
                               <td>Assigend</td>
-                              <td> @if($val['valid_for']=='monthly')
+                              <td> @if(!empty($val['valid_for']) && $val['valid_for']=='monthly')
                               {{12*$val['number_of_day']}}
                               @else
                               {{@$val['number_of_day']}}
@@ -169,7 +169,7 @@ if(!empty($error)){
                            </tr>
                            <tr>
                               <td>Left</td>
-                              <td>@if($val['valid_for']=='monthly')
+                              <td>@if(!empty($val['valid_for']) && $val['valid_for']=='monthly')
                               {{12*$val['number_of_day'] - $val['used_leave']}}
                               @else
                               {{$val['number_of_day'] - $val['used_leave']}}
@@ -177,7 +177,7 @@ if(!empty($error)){
                            </tr>
                            <tr>
                               <td>Valid for</td>
-                              <td>{{$val['valid_for']}}</td>
+                              <td>{{@$val['valid_for']}}</td>
                            </tr>
                            <tr>
                               <td>Apply Before</td>

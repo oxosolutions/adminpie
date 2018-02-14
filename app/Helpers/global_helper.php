@@ -30,6 +30,33 @@ use App\Model\Admin\GlobalOrganization;
 use App\Model\Admin\GlobalWidget;
 use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
+use App\Model\Admin\GlobalModule;
+use App\Model\Admin\GlobalSubModule;
+
+
+/************************************************************
+*	@function get_module
+*	@access	public
+*	@since	1.0.0.0
+*	@author	SGS Sandhu(sgssandhu.com)
+*	@perm length		[integer	optional	default	40]
+*	@perm timestamp		[true/false	optional	default	true]
+*	@return filename [string]
+************************************************************/
+function get_module($id = null, $name = null){	
+
+	$module = null;
+	if(!empty($id)){
+		$module = GlobalModule::where('id',$id)->first();
+	} elseif(!empty($name)){
+		$module = GlobalModule::where('name',$name)->first();
+	}
+	
+	//Return module
+	return $module;
+}
+
+
 
 function convert_sec_to_hour($sec, $format = '%02d:%02d') {
     if ($sec < 1) {

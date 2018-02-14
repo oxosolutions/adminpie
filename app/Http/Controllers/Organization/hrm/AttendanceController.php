@@ -545,7 +545,7 @@ class AttendanceController extends Controller
 			return [$holiday_date=> $data['title']];
 		});
 		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
-		$attendance = Attendance::select('employee_id','punch_in_out','shift_hours','day','date' ,'total_hour', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
+		$attendance = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 		 //http_response_code(500);
 		
 		

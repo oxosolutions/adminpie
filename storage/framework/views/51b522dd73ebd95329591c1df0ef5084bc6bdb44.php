@@ -1,6 +1,6 @@
 
 <?php if(!empty($attendanceVal)): ?>
-<h3> Attendance stats </h3>
+
 	<?php 
 	// function difference_secs($time_1 , $time_2){
 	// 	$start_shift = new Carbon\Carbon($time_1);
@@ -32,35 +32,88 @@
 	    $extra_time = $attendanceVal->where('over_time' ,'>', 0)->sum('over_time');
 	    $all_stats = $attendanceVal->whereNotIn('over_time' ,[null]);
 	 ?>
-	<div class="left-hand">
-		<h5> Holidays days <?php echo e($holiday_data->count()); ?> </h5>
-		<h5> working days <?php echo e($working_days_in_month); ?> </h5>
-		<h5> Loss of Pay days <?php echo e($loss_of_pay_days); ?> </h5>
-		<h5> Total Leave <?php echo e($leaves_in_month); ?> </h5>
-		<h5> Total Absent <?php echo e($absent); ?> </h5>
-		<h5> Total Un Paid Leave <?php echo e($un_paid); ?> </h5>
-		<h5> Total Due Time  <?php echo e(convert_sec_to_hour(abs($due_time))); ?> </h5>
-		<h5> Total Extra Time<?php echo e(convert_sec_to_hour($extra_time)); ?> </h5>
+	<div class="">
+		<div class="ar aione-align-center">
+	
+			
+			<div class="ac l14 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">working days</div>
+				<div><?php echo e($working_days_in_month); ?> </div>
+				</div>
+			</div>
+			<div class="ac l14 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">Loss of Pay days</div>
+				<div><?php echo e($loss_of_pay_days); ?> </div>
+				</div>
+			</div>
+			<div class="ac l14 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">Total Leave</div>
+				<div><?php echo e($leaves_in_month); ?> </div>
+				</div>
+			</div>
+			<div class="ac l14 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">Total Absent</div>
+				<div><?php echo e($absent); ?> </div>
+				</div>
+			</div>
+			<div class="ac l16 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">Total Un Paid Leave </div>
+				<div><?php echo e($un_paid); ?> </div>
+				</div>
+			</div>
+			<div class="ac l14 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">Total Due Time</div>
+				<div><?php echo e(convert_sec_to_hour(abs($due_time))); ?> </div>
+				</div>
+			</div>
+			<div class="ac l14 p-0">
+				<div class="aione-border">
+					
+				<div class="bg-grey bg-lighten-3">Total Extra Time</div>
+				<div><?php echo e(convert_sec_to_hour($extra_time)); ?> </div>
+				</div>
+			</div>
+	
+		</div>
 	</div>
+	
 	<div class="right-hand">
-		<table>
-			<tr>
-				<?php $__currentLoopData = $all_stats->keys(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $head): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<th><?php echo e($head); ?> </th>
-				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			</tr>
-			<tr>
-			<?php $__currentLoopData = $all_stats->keys(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<?php if($all_stats[$key]['over_time'] < 0): ?>
-				<td>-<?php echo e(convert_sec_to_hour(abs($all_stats[$key]['over_time']))); ?></td>
-				<?php else: ?>
-					<td><?php echo e(convert_sec_to_hour($all_stats[$key]['over_time'])); ?></td>
-				<?php endif; ?>
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			</tr>
-		</table>
+		<?php echo e(dump(count($all_stats))); ?>
+
+	<?php $__currentLoopData = $all_stats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+		<?php if($all_stats[$key]['over_time'] > 0): ?>
+			<div class="display-inline-block aione-align-center p-5 aione-border line-height-20">
+				<span class="font-weight-700"><?php echo e($loop->count); ?> <?php echo e($key); ?></span>
+				<br>
+				<span class="green darken-2"><?php echo e(convert_sec_to_hour($val['over_time'])); ?></span>
+			</div>
+		<?php else: ?>
+			<div class="display-inline-block aione-align-center p-5 aione-border line-height-20">
+				<span class="font-weight-700"><?php echo e($key); ?></span>
+				<br>
+				<span class="red darken-2"><?php echo e(convert_sec_to_hour(abs($val['over_time']))); ?></span>
+			</div>
+		<?php endif; ?>
+	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+		
 	</div>
 <?php else: ?>
-<h3> No Attendance stats </h3>
+<div class="aione-message error ">
+	No Attendance stats
+</div>
+
 
 <?php endif; ?>

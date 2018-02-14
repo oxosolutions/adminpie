@@ -25,7 +25,7 @@
 
 	<?php echo $__env->make('organization.attendance._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-	<div id="att_data" >
+	<div id="hrm_attendance" class="hrm-attendance">
 		<input id="token" type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>" >
 		<input id="years" type="hidden" value="<?php echo e($data['year']); ?>" >
 		<input id="months" type="hidden"  value="<?php echo e($data['month']); ?>" >
@@ -57,20 +57,20 @@
 
 }
 
-#att_data li:first-child > a{
+/*#att_data li:first-child > a{
 	border-radius: 10px 0 0 10px
 
 }
 #att_data li:last-child > a{
 	border-radius: 0 10px 10px 0;
-}
+}*/
 #att_data li>a{
 	padding:10px;
 	display: inline-block;
 	margin-right: -5px;
 	border: 1px solid #e8e8e8;
-	background-color: rgb(50, 136, 184);
-	color: white;
+	background-color: #d2d2d2;
+	color: #676767;
 	width: 100px;
 	text-align: center;
 
