@@ -113,20 +113,6 @@ $number = 1;
 		</ul>		
 	</div>
 </div>
-<style type="text/css">
-
-</style>
-<script type="text/javascript">
-$(document).ready(function(){
-
-	$('body').on('click','.hrm-attendance-view-switch li',function(e){
-		e.preventDefault();
-		$(this).addClass('active').siblings().removeClass('active');
-	});
-	
-
-});    
-</script>
 
 
 
@@ -284,6 +270,3 @@ $(document).ready(function(){
 	</div>
 </div>
 <?php echo $__env->make('organization.attendance.attendance_data_display', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-<style type="text/css">
-
-</style>

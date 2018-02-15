@@ -35,7 +35,7 @@ class SalaryController extends Controller
       Session::flash('error',"Salary not exist's.");
       return back();
     }
-    return view('organization.salary.edit',compact('data'));
+    return view('organization.hrm.salary.edit',compact('data'));
   }
   public function update(Request $request){
     Salary::where('id',$request['id'])->update($request->except('_token'));
@@ -43,7 +43,7 @@ class SalaryController extends Controller
   }
   public function drop_downs()
   {
-    return view('organization.salary.drop_down');
+    return view('organization.hrm.salary.drop_down');
   }
 	public function index(Request $request )
 	{
@@ -85,7 +85,7 @@ class SalaryController extends Controller
     // if(!empty($id) || $id != null || $id != ''){
     //   $data['data'] = DES::where('id',$id)->first();
     // }
-      return view('organization.designation.list_designation',$datalist)->with(['data' => $data]);
+      return view('organization.hrm.designation.designations',$datalist)->with(['data' => $data]);
 
 		$data = UsersMeta::with(['user','payscale'])->where('key','pay_scale')->get();
 		return view('organization.profile.salary', compact('data'));
@@ -113,7 +113,7 @@ class SalaryController extends Controller
       }else{
         Session::flash('error','Not Valid ID.');
       }
-			return view('organization.salary.generate_salary_slip',compact('salary','designation_name'));
+			return view('organization.hrm.salary.generate_salary_slip',compact('salary','designation_name'));
 	}
 	public function salary_download_pdf($id){
 		$salary = Salary::with(['user_detail:id,name,email'])->where([ 'id'=>$id ]);
@@ -162,7 +162,7 @@ class SalaryController extends Controller
                          }] )->whereHas('organization_employee_user')->orWhereHas('metas', function ($query)use($year, $month) {
                                 $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
                          })->get();
-	   	return view('organization.salary.generate_salary_slip_view', compact('data'));
+	   	return view('organization.hrm.salary.generate_salary_slip_view', compact('data'));
 	}
 
   public function generate_salary_slip($year , $month, $user_select){
@@ -438,7 +438,7 @@ protected function set_parm_for_insert_salary($attendance_data, $userKey, $meta,
                   ];
     // return view('organization.salary.listing',$datalist)->with(['data' => $data]);
 
-      return view('organization.salary.listing',compact('salary_data'));
+      return view('organization.hrm.salary.listing',compact('salary_data'));
 	}
 
 }

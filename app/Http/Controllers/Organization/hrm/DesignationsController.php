@@ -53,7 +53,7 @@ class DesignationsController extends Controller
     if(!empty($id) || $id != null || $id != ''){
       $data['data'] = DES::where('id',$id)->first();
     }
-      return view('organization.designation.list_designation',$datalist)->with(['data' => $data]);
+      return view('organization.hrm.designation.designations',$datalist)->with(['data' => $data]);
 
    }
   
@@ -90,7 +90,7 @@ class DesignationsController extends Controller
    // } 
      protected function getDesignationById($id){
         $getData = DES::where('id',$id)->first();
-        return view('organization.designation.list_designation',$getData);
+        return view('organization.hrm.designation.designations',$getData);
      }
     public function editUserDesignation(Request $request){
       $getData = DES::where('id',$request->id)->first();

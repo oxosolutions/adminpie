@@ -57,7 +57,7 @@ class PayscaleController extends Controller
 	    if(!empty($id) || $id != null || $id != ''){
 	      $data['data'] = Payscale::where('id',$id)->first();
 	    }
-      return view('organization.payscale.list_payscale',$datalist)->with(['data' => $data]);
+      return view('organization.hrm.pay-scale.pay-scales',$datalist)->with(['data' => $data]);
     }
 
     public function delete($id){

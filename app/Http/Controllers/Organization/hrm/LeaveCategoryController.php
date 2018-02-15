@@ -36,7 +36,7 @@ class LeaveCategoryController extends Controller
      */
     public function index(Request $request){
         $data =  $this->catRepo->list_category("leave", $request);
-      	return view('organization.leave_category.list_category',$data );
+      	return view('organization.hrm.leave-category.list_category',$data );
      }
      /**
       * [save category]
@@ -127,7 +127,7 @@ class LeaveCategoryController extends Controller
         // $designationData['designationData'] = $data['designationData'] = DES::where('status',1)->pluck('name','id');
         // $data['roles'] = Role::where('status',1)->pluck('name','id');
         // $merge = array_merge($merge, $designationData);
-        return view('organization.leave_category.leave_rule',['data'=>$merge ,'select'=>$select]);
+        return view('organization.hrm.leave-category.leave_rule',['data'=>$merge ,'select'=>$select]);
      }
 
     public function delete($id){
@@ -196,12 +196,12 @@ class LeaveCategoryController extends Controller
         //   $query->where('key','designation')->whereNotIn('value',$designation_id);
         //   })->where('user_type','employee')->pluck('name','id');
 
-         return view('organization.leave_category.user_drop_down',compact('user_exclude','user_include'));
+         return view('organization.hrm.leave-category.user_drop_down',compact('user_exclude','user_include'));
     }
 
     public function create()
     {
-        return view('organization.leave_category.add');
+        return view('organization.hrm.leave-category.add');
     }
 
 }

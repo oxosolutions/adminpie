@@ -152,24 +152,26 @@ if(empty($user_meta['employee_id'])){
 				<td>
 				 <?php if(!empty($punch_in_out) ): ?>
 					<?php $__currentLoopData = $punch_in_out; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-						<div class="field-wrapper ">
+						<div class="field-wrapper position-relative" style="position: relative;">
 							<div class="field field-type-text">
-							<?php echo Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' =>'remove_punch'.$emp_id,'id'=>$key.'punch_in_out'.$emp_id]); ?> 	 <a emp_id="<?php echo e($emp_id); ?>"  class="del_check">del </a>	
+							<?php echo Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' =>'remove_punch aione-float-left'.$emp_id,'id'=>$key.'punch_in_out'.$emp_id]); ?> 	 
+								<a emp_id="<?php echo e($emp_id); ?>"  class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
+								right: 10px;"><i class="fa fa-trash"></i> </a>	
 							</div>
 							 
 						</div>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 						<span class="<?php echo e($emp_id); ?>"> </span>
-						<a emp_id="<?php echo e($emp_id); ?>" class="add_more_punch">Add</a>
+							<a emp_id="<?php echo e($emp_id); ?>" class="add_more_punch aione-button m-0" style="width: 100%">+ Add</a>
 					<?php else: ?>
-					<div class="field-wrapper ">
+					<div class="field-wrapper " style="position: relative;">
 						<div class="field field-type-text">
 							<?php echo Form::text($emp_id."[punch_in_out][]",null,['class' => 'remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]); ?>
 
 						</div>
 					</div>
 					<span class="<?php echo e($emp_id); ?>"> </span>
-					 <a emp_id="<?php echo e($emp_id); ?>" class="add_more_punch">Add</a>
+					<a emp_id="<?php echo e($emp_id); ?>" class="add_more_punch aione-button m-0" style="width: 100%">+ Add</a>
 					<?php endif; ?>
 				</td>
 			<?php endif; ?>
@@ -180,7 +182,9 @@ if(empty($user_meta['employee_id'])){
 						 <div>
 						 	<div class="field-wrapper ">
 							<div class="field field-type-text">
-							 <?php echo Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'in_out_data'.$emp_id]); ?>  <a class="del_check">del </a>
+							 <?php echo Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'in_out_data'.$emp_id]); ?>  
+							 <a class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
+								right: 10px;"><i class="fa fa-trash"></i> </a>
 							</div>
 						</div>
 						</div>
@@ -194,7 +198,7 @@ if(empty($user_meta['employee_id'])){
 							 <span class="in_out<?php echo e($emp_id); ?>"> </span>
 							</div>
 						</div>
-						
+
 						</div>
 
 						<a emp_id="<?php echo e($emp_id); ?>" class="add_more_in_out">Add</a> 

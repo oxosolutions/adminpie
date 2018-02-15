@@ -304,7 +304,7 @@
 						
 						
 						// Route::get('leave-categories',			['as'=> 'leave.categories' , 'uses' =>'LeaveCategoryController@index']);
-						// Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
+						// Route::get('/attendance',				['as'=> 'list.attendance' , 'uses' => 'AttendanceController@hrm_attendance_view']);
 						
 						Route::get('/holidays/{id?}',			['as'=> 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
 						
@@ -322,7 +322,7 @@
                     Route::get('/leaves-category/add',		['as'=> 'leave.category.add','uses'=>'LeaveCategoryController@create']);
 					Route::match(['get','post'],'/attendance/form-import/{year?}/{month?}',['as' => 'import.form.attendance' , 'uses' =>'AttendanceController@import_form']);
 					Route::match(['get', 'post'],'/attendance/list',			['as'=> 'lists.attendance' , 'uses' => 'AttendanceController@attendanceList']);
-					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@list_attendance']);
+					Route::match(['get','post'],'/attendance', ['as'=> 'list.attendance' , 'uses' => 'AttendanceController@hrm_attendance_view']);
 					Route::get('leave/add',              ['as'=> 'leave.add' , 'uses' =>'LeavesController@addLeaves']);
 					Route::get('leave/edit/{id?}',			['as'=> 'edit.leave' , 'uses' =>'LeavesController@editLeave']);
 					Route::get('employee/add', 				['as'=> 'add.employee' , 'uses' => 'EmployeeController@addEmployee']);
@@ -424,7 +424,7 @@
 							Route::match(['get','post'],'attendance/edit', ['as'=>'hr.attendance', 'uses' => 'AttendanceController@attendance_by_hr']);
 							Route::post('attendance/hr_fill',		[ 'as'=>'hr_store.attendance', 'uses' => 'AttendanceController@attendance_fill_hr']);
 							Route::post('attendance/check_in_out',	['as' => 'checkinout.attendance' , 'uses' => 'AttendanceController@check_in_out']);
-							Route::post('/attendance',		['as' => 'filter' , 'uses' => 'AttendanceController@list_attendance']);
+							Route::post('/attendance',		['as' => 'filter' , 'uses' => 'AttendanceController@hrm_attendance_view']);
 							
 
 						//holidays

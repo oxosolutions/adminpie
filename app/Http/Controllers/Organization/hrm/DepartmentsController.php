@@ -51,7 +51,7 @@ class DepartmentsController extends Controller
           }else{
             $dataDep = "";
           }
-      return view('organization.department.list_department',$datalist)->with(['data' => $dataDep]);
+      return view('organization.hrm.department.departments',$datalist)->with(['data' => $dataDep]);
    }
   
    public function save(Request $request)

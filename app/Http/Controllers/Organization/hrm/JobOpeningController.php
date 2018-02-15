@@ -19,7 +19,7 @@ class JobOpeningController extends Controller
      */
     public function public_view_jobs(){
       $jobs = JobOpening::with('opening_meta')->get()->toArray();
-      return view('organization.jobopening.public_jobs',compact('jobs'));
+      return view('organization.hrm.job-opening.public_jobs',compact('jobs'));
     }
     public function index(Request $request)
     {
@@ -60,7 +60,7 @@ class JobOpeningController extends Controller
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                   ];
-        return view('organization.jobopening.list',$datalist);
+        return view('organization.hrm.job-opening.list',$datalist);
 
     }
     /**
@@ -134,7 +134,7 @@ class JobOpeningController extends Controller
             }
             return redirect()->route('list.opening');
         }
-        return view('organization.jobopening.create');
+        return view('organization.hrm.job-opening.create');
     }
 
 
@@ -180,7 +180,7 @@ class JobOpeningController extends Controller
         });
         $col  = collect([$model->toArray(), $data->toArray()]);
         $model = $col->collapse();
-        return view('organization.jobopening.edit', compact('model'));
+        return view('organization.hrm.job-opening.edit', compact('model'));
     }
 
     /**

@@ -58,14 +58,14 @@ class ApplicationController extends Controller
                         'css'=> ['custom'=>['list-designation']]
                     ];
     	
-        return view('organization.application.application',$datalist);
+        return view('organization.hrm.application.application',$datalist);
     } 
 
     public function application_view($id){
         $application = GroupUsers::with(['applications'=>function($query){
             $query->with(['application_meta']);
         }])->whereHas('applications')->first();
-		return view('organization.application.application_view',compact('application'));
+		return view('organization.hrm.application.application_view',compact('application'));
 	}
 	public function delete($id){
 		Application::where('id',$id)->delete();

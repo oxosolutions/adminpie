@@ -53,7 +53,7 @@ class ShiftsController extends Controller
                                     'delete'=>['title'=>'Delete','route'=>'delete.shifts']
                                  ]
                 ];
-   	return view('organization.shifts.list_shifts',$datalist)->with(['data' => $data]);
+   	return view('organization.hrm.shift.shifts',$datalist)->with(['data' => $data]);
    }
   
    public function save(Request $request)

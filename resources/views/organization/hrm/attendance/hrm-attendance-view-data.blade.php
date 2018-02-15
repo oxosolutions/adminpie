@@ -8,7 +8,7 @@
 				<div class="attendanc-sheet content">Name</div>
 			</div>
 			<div>
-					<?php 
+					@php
 					$number=1;
 					if(!empty($fweek_no)){
 						if($fweek_no==5){
@@ -22,9 +22,9 @@
 							$getDay = Carbon\Carbon::create($year, $month, $d, 0);
 						}
 					}
-					 ?>
-					<?php if(!empty($fdate)): ?>
-						<?php 
+					@endphp
+					@if(!empty($fdate))
+						@php
 							$number = $total_days = $fdate;
 							$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
 							if($getDay->format('l')=="Sunday")
@@ -35,13 +35,13 @@
 							$td .="<div class='attendance-sheet column bg-grey bg-lighten-3'></div>";
 						}
 						$fdate;
-						 ?>
-						<div class="attendance-sheet column"><?php echo e($fdate); ?><br> 
-							<?php echo e(substr($getDay->format('l'),0,1)); ?> 
+						@endphp
+						<div class="attendance-sheet column">{{$fdate}}<br> 
+							{{substr($getDay->format('l'),0,1)}} 
 							</div>
-					<?php else: ?>
-						<?php for($d=$number; $d<=$total_days; $d++): ?>
-						<?php  
+					@else
+						@for($d=$number; $d<=$total_days; $d++)
+						@php 
 						$getDay = Carbon\Carbon::create($year, $month, $d, 0);
 						if($getDay->format('l')=="Sunday")
 						{
@@ -50,21 +50,21 @@
 						{
 							$td .="<div class='attendance-sheet column bg-grey bg-lighten-3'></div>";
 						}
-						 ?>
-							<div class="attendance-sheet column"><?php echo e($d); ?><br> 
-							<?php echo e(substr($getDay->format('l'),0,1)); ?> 
+						@endphp
+							<div class="attendance-sheet column">{{$d}}<br> 
+							{{substr($getDay->format('l'),0,1)}} 
 							</div>
-						<?php endfor; ?>
-					<?php endif; ?>
+						@endfor
+					@endif
  			</div>
 			<div style="clear:both;"> </div>
 
 		
-			
+			{{-- {{dd($attendance_data)}} --}}
 
-			<?php $__currentLoopData = $user_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $userKey => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+			@foreach($user_data as $userKey => $value)
 
-				<?php 
+				@php
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
 						 }); 
@@ -107,15 +107,15 @@
 							echo '<div class="attendance-sheet">';
 								if(strlen($user_meta['employee_id']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($user_meta['employee_id'], 0,10).'.. </div>';
-									 ?>
-									<div class="attendanc-sheet content"><a href="<?php echo e(route('account.attandance',['id'=>$value['id']])); ?>"><?php echo e(substr($user_meta['employee_id'], 0,10)); ?>.. </a></div>
-						 			<?php 
+									@endphp
+									<div class="attendanc-sheet content"><a href="{{route('account.attandance',['id'=>$value['id']])}}">{{substr($user_meta['employee_id'], 0,10)}}.. </a></div>
+						 			@php
 								}else{
 									// echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].' </div>';
-									 ?>
-									<div class="attendanc-sheet content"><a href="<?php echo e(route('account.attandance',['id'=>$value['id']])); ?>"><?php echo e($user_meta['employee_id']); ?> </a>
+									@endphp
+									<div class="attendanc-sheet content"><a href="{{route('account.attandance',['id'=>$value['id']])}}">{{$user_meta['employee_id']}} </a>
 									</div>
-						 			<?php 
+						 			@php
 								}
 								if(strlen($value['name']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($value['name'], 0,10).'.. <a href="#" class="grey aione-float-right ph-10 show-details"><i class="fa fa-ellipsis-v"></i></a></div>';
@@ -144,40 +144,40 @@
 									// continue;
 									if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 									{
-									 ?>
-										<?php if(!empty($holiday_data[$d])): ?>
-											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+									@endphp
+										@if(!empty($holiday_data[$d]))
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
 												<div class="attendance-sheet column attendance-status-holiday attendance-status-present">H</div>
 
-											<?php else: ?>
+											@else
 											<div class="attendance-sheet column attendance-status-holiday">H</div>
-											<?php endif; ?>
-										<?php elseif(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours'])): ?>
-											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+											@endif
+										@elseif(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours']))
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
 												<div class="attendance-sheet column attendance-status-holiday attendance-status-present">O</div>
-											<?php else: ?>
+											@else
 												<div class="attendance-sheet column attendance-status-holiday">O</div>
-											<?php endif; ?>
-										<?php elseif(@$attendanceVal[$d]['attendance_status']=='present'): ?>
+											@endif
+										@elseif(@$attendanceVal[$d]['attendance_status']=='present')
 												<div class="attendance-sheet column attendance-status-present aione-tooltip attendance-status-tardy" data-title="9:00 - 5:00">P</div>
-										<?php elseif(@$attendanceVal[$d]['attendance_status']=='absent'): ?>
+										@elseif(@$attendanceVal[$d]['attendance_status']=='absent')
 											<div class="attendance-sheet column attendance-status-absent">A</div>
-										<?php elseif(@$attendanceVal[$d]['attendance_status']=='Sunday'): ?>
-											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+										@elseif(@$attendanceVal[$d]['attendance_status']=='Sunday')
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
 												<div class="attendance-sheet column sunday attendance-status-holiday attendance-status-present">O</div>
-											<?php else: ?>
+											@else
 												<div class="attendance-sheet column sunday attendance-status-holiday">O</div>
-											<?php endif; ?>
-										<?php elseif(@$attendanceVal[$d]['attendance_status']=='leave'): ?>
-											<?php if(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+											@endif
+										@elseif(@$attendanceVal[$d]['attendance_status']=='leave')
+											@if(!empty($attendanceVal[$d]['punch_in_out']))
 												<div class="attendance-sheet column sunday attendance-status-leave ">L</div>
-											<?php else: ?>
+											@else
 												<div class="attendance-sheet column attendance-status-leave">L</div>
-											<?php endif; ?>
-										<?php else: ?>
+											@endif
+										@else
 											<div class="attendance-sheet column attendance-status-null">-</div>
-										<?php endif; ?>
-									<?php 
+										@endif
+									@php
 									}else{
 										if(!empty($holiday_data[$d])){
 											echo '<div class="attendance-sheet column present-bg-color">H</div>';
@@ -187,16 +187,16 @@
 									}	
 								}
 							}
-							 ?>
+							@endphp
 								<div class='attendance-details'> 
-									<?php echo $__env->make('organization.attendance.attendance_stats', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+									@include('organization.attendance.attendance_stats')
  									
  								</div>
-							<?php 
+							@php
 					}
-				 ?>
+				@endphp
 				<br>
-			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+			@endforeach
 			<div style="clear: both;"></div>
 			
 		</div>

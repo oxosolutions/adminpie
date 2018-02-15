@@ -203,16 +203,6 @@
 	</div>
 </div>
 
-<script type="text/javascript">
-	$(document).ready(function(){
-		$(document).on('click','.show-details',function(e){
-			e.preventDefault();
-			$('.attendance-details').hide();
-			$(this).parents('.attendance-sheet').nextAll('.attendance-details:first').toggle();
-		})
-	})
-</script>
-
 
 
 

@@ -62,7 +62,7 @@ class ApplicantController extends Controller
             Session::flash('sucess','successfully applied Job');
         return redirect()->route('openingss');
       }
-         return view('organization.applicant.apply',compact('id'));
+         return view('organization.hrm.applicant.apply',compact('id'));
     }
     /**
      * Display a listing of the resource.
@@ -113,7 +113,7 @@ class ApplicantController extends Controller
                         'js'    =>  ['custom'=>['list-designation']],
                         'css'   =>  ['custom'=>['list-designation']]
                     ];
-        return view('organization.applicant.list',$datalist);
+        return view('organization.hrm.applicant.list',$datalist);
     }
 
 
@@ -227,11 +227,11 @@ class ApplicantController extends Controller
     }
 
     public function createApplicant(){
-        return view('organization.applicant.create');
+        return view('organization.hrm.applicant.create');
     }
 
     public function edit($id){
         $model = GroupUsers::with(['organization_user'])->whereHas('organization_user')->where('id',$id)->first();
-        return view('organization.applicant.edit',['model'=>$model]);
+        return view('organization.hrm.applicant.edit',['model'=>$model]);
     }
 }

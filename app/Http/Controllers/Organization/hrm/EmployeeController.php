@@ -297,7 +297,7 @@ class EmployeeController extends Controller
       if(!empty($id) || $id != null || $id != ''){
         $data['data'] = EMP::where('id',$id)->first();
       }
-        return view('organization.employee.list',$datalist)->with(['data' => $data]);
+        return view('organization.hrm.employee.list',$datalist)->with(['data' => $data]);
     }
 
     protected function getQueryResult($request, $sortedBy, $items){
@@ -435,17 +435,18 @@ class EmployeeController extends Controller
         //     }
         // })
         ->editColumn('status', function($model){
-            return view('organization.employee.status',['model'=>$model])->render();
+            return view('organization.hrm.employee.status',['model'=>$model])->render();
         })
         ->editColumn('created_at', function($model){
             return $model->created_at->diffForHumans();
         })
         ->editColumn('name', function($model){
-            return view('organization.employee.actions',['model'=>$model])->render();
+            return view('organization.hrm.employee.actions',['model'=>$model])->render();
         })
         ->rawColumns(['status','name','user'])
         ->make(true);
     }
+
     protected function saveSearch($request){
         $search = $request->except(['page']);
         $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();
@@ -1064,10 +1065,10 @@ Add user meta use in add metas
     
     public function import()
     {
-        return view('organization.employee.import-employees');
+        return view('organization.hrm.employee.import-employees');
     }
 
     public function addEmployee(){
-        return view('organization.employee.add');
+        return view('organization.hrm.employee.add');
     }
 }

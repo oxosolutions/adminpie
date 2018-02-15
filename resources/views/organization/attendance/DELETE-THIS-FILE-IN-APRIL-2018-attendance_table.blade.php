@@ -113,27 +113,10 @@ $number = 1;
 		</ul>		
 	</div>
 </div>
-<style type="text/css">
-
-</style>
-<script type="text/javascript">
-$(document).ready(function(){
-
-	$('body').on('click','.hrm-attendance-view-switch li',function(e){
-		e.preventDefault();
-		$(this).addClass('active').siblings().removeClass('active');
-	});
-	
-
-});    
-</script>
 
 
 
-{{-- 
-<div class="row">
-	<h5 class="text-center"></h5>
-</div> --}}
+
 
 {{-- Month trey  --}}
 <div id="month">
@@ -287,6 +270,3 @@ $(document).ready(function(){
 	</div>
 </div>
 @include('organization.attendance.attendance_data_display')
-<style type="text/css">
-
-</style>

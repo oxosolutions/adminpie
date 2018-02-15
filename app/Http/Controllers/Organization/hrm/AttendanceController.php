@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
     |	Method use To display attendance list below:-
     |		1. 	list_attendance : Return on view (organization/attendance/attendance.blade.php) then Ajax request goes to AttendanceController@ajax method 
     |							  & get attendance data by default previous month from current month.
+    			UPDATE 14th February 2018 (@SGS Sandhu): Method renamed to hrm_attendance_view
     |       2.  Ajax : This method use for Ajax Request to get attendance & also handle filter attendance by- Monthly, weekly, Daily. 
     |				   Return on view (organization/attendance/attendance_table.blade.php) deal in monthly, weekly, daily tray.
     |				   attendance_data_disply.blade.php deal in employee list & attendance data display in this file.
@@ -496,25 +497,29 @@ class AttendanceController extends Controller
 		}
 		return $where;
 	}
-	/**
-     * list_attendance all attendane display here.
-     * @param -
-     * @return view list of fille
-     * @author  paljinder Singh
-     */
-	public function list_attendance(Request $request, $year=null, $month=null)
-	{
+	
+
+	/************************************************************
+	*	@function hrm_attendance_view
+	*	@description Generates the attendance view in HRM
+	*	@access	public
+	*	@since	1.0.0.0
+	*	@author	SGS Sandhu(sgssandhu.com)
+	*	@perm request		[collection	optional	default	collection]
+	*	@perm year		[string	optional	default	null]
+	*	@perm month		[string	optional	default	null]
+	*	@return view
+	************************************************************/
+	public function hrm_attendance_view(Request $request, $year=null, $month=null){
 		$data['year'] = $data['month'] = null;
 		if($request->isMethod('post')){
 			$data['year'] = $request['year'];
 			$data['month'] = $request['month'];
 		}
-			$plugins = [
-				'js' => ['custom'=>['attendance']],
-				'css' => ['custom'=>['attendance']]
-			];		
- 		return view('organization.attendance.attendance',['plugins'=>$plugins, 'data'=>$data]);
+
+ 		return view('organization.hrm.attendance.hrm-attendance-view',['data'=>$data]);
 	}
+
 	/**
      * ajax use for attendance display & filter attendance 
      * @param -$request
@@ -550,7 +555,7 @@ class AttendanceController extends Controller
 		
 		
 
-		return view('organization.attendance.attendance_table', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
+		return view('organization.hrm.attendance.hrm-attendance-view-display', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
 	}
 /*it should be delete*/
 	protected function employee_data($dates){

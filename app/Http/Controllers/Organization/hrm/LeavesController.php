@@ -129,7 +129,7 @@ class LeavesController extends Controller
         }else{
             $data = "";
         }      
-        return view('organization.leave.list_leave',$datalist)->with(['data'=>$data]);
+        return view('organization.hrm.leave.list_leave',$datalist)->with(['data'=>$data]);
     }
     public function save(Request $request)
     {
@@ -224,7 +224,7 @@ class LeavesController extends Controller
         $model = LV::where('id',$id)->first();
         $userMeta = UsersMeta::where(['key'=>'employee_id','value'=>$model->employee_id])->first();
         $model['employee_id'] = $userMeta->user_id;
-        return view('organization.leave.edit',['model'=>$model]);
+        return view('organization.hrm.leave.edit',['model'=>$model]);
     }
     protected function leave_insertion($start_to_date , $up_to_date , $year_month , $emp_id, $status){
         $start_to_date = str_replace('0', '', $start_to_date);
@@ -433,6 +433,6 @@ class LeavesController extends Controller
     }
     public function addLeaves()
     {
-        return view('organization.leave.add-leave');
+        return view('organization.hrm.leave.add-leave');
     }
 }
