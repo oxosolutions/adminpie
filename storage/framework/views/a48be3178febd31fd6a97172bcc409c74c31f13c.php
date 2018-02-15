@@ -1,6 +1,20 @@
 
 <?php  
 
+// $date  = Carbon\Carbon::create($year, $month, $postDate, 00); // create date
+// $daysInMonth  = $date->daysInMonth; // total number of days in that month
+// $previous_month = $month->copy()->subMonth(); // previous month
+// $next_month = $month->copy()->addMonth(); // next month
+// $previous_year = $year->copy()->subYear(); // previous year
+// $next_year = $year->copy()->addYear(); // next year
+// $current_week = $date->weekOfMonth; // current week of month
+
+
+
+
+
+
+
 		$postDate = 01;
 		if(!empty(Session::get('date')))
 		{

@@ -25,13 +25,12 @@ class draw_sidebar{
         }])->first();
         return $model;
     }
-    static function replace_route($route)
-    {
+    static function replace_route($route){
         $uri =str_replace('/{id}','',$route); 
         return $current_uri = str_replace('/{id?}','',$uri);
     }
-    static function widget_permisson()
-    {
+    
+    static function widget_permisson(){
           return  role_id();  
     }
 

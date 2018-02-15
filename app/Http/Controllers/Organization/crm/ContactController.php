@@ -102,4 +102,9 @@ class ContactController extends Controller
     	ContactMeta::where('contact_id',$id)->delete();
     	return redirect()->route('contact.list');
     }
+
+    public function add()
+    {
+      return view('organization.crm.contact.add');
+    }
 }

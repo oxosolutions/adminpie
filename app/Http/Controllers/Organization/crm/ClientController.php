@@ -16,7 +16,6 @@ use App\Model\Organization\UsersRole;
 use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\UsersMeta;
 
-
 class ClientController extends Controller
 {
 	protected  $user;
@@ -27,7 +26,7 @@ class ClientController extends Controller
 		$this->client = $client;
 	}
     public function create(){
-    	return view('organization.client.create');
+    	return view('organization.crm.client.create');
     }
 
     /**
@@ -153,7 +152,7 @@ class ClientController extends Controller
                       ];
           // $data['data'] = Client::all();
        
-        return view('organization.client.list',$datalist)->with(['data' => $data]);
+        return view('organization.crm.client.list',$datalist)->with(['data' => $data]);
     }
 
 
@@ -175,7 +174,7 @@ class ClientController extends Controller
                 $model[$meta->key] = $meta->value;
             }
         }
-    	return view('organization.client.edit',['model'=>$model]); 	
+    	return view('organization.crm.client.edit',['model'=>$model]); 	
     }
 
 
@@ -193,7 +192,7 @@ class ClientController extends Controller
                 $model[$meta->key] = $meta->value;
             }
         }
-        return view('organization.client.view')->with('detail',$model);
+        return view('organization.crm.client.view')->with('detail',$model);
     }
 
     protected function validateUpdateClientRequest($request){

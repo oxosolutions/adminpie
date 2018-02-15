@@ -26,8 +26,8 @@ class ModuleController extends Controller
         }
         $table_list = DB::select(" SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='oxo_adminpi' and TABLE_NAME like 'ocrm_175%' "); 
 
-      $tables =  collect(json_decode(json_encode($table_list),true))->pluck('TABLE_NAME')->all();
-     $tables =  array_combine($tables, $tables);
+        $tables =  collect(json_decode(json_encode($table_list),true))->pluck('TABLE_NAME')->all();
+        $tables =  array_combine($tables, $tables);
     
     	return view('admin.module.index',['listModule'=>$model,'moduleData'=>$moduleData,'subModuleData' => $subModuleData, 'tables'=>$tables]);
     }
@@ -332,18 +332,14 @@ class ModuleController extends Controller
         }
         return back();
     }
-    public function style($id)
-    {
+
+    public function style($id){
         $model = GlobalSubModule::where('id',$id)->first();
         return view('admin.module.index',compact('subModulemodel'));
     }
-    // public function style($id)
-    // {
-    //     $model = GlobalSubModule::where('id',$id)->first();
-    //     return view('admin.module.style',compact('model'));
-    // }
-    public function getSubmodules($id)
-    {
+   
+
+    public function getSubmodules($id){
         $model = GlobalSubModule::where('module_id',$id)->get();
         return view('admin.module.getSubModule',compact('model'));
     }
@@ -354,10 +350,3 @@ class ModuleController extends Controller
     }
 
 }
-// $keyBy = Module::select('id')->get()->keyBy('id')->toArray();
-        // $mids = collect($keyBy)->flatten()->toArray();
-        // GlobalSubModule::whereNotIn('module_id',$mids)->delete();
-
-        // $subkeyBy = GlobalSubModule::select('id')->get()->keyBy('id')->toArray();
-        // $submids = collect($subkeyBy)->flatten()->toArray();
-        // Route::whereNotIn('sub_module_id',$submids)->delete();

@@ -513,6 +513,33 @@ class AttendanceController extends Controller
  		return view('organization.hrm.attendance.hrm-attendance-view',['data'=>$data]);
 	}
 
+	function previous_next($carbon = null, $current_date=null, $current_week=null){
+	if(!empty($current_date)){
+		$previous_day = $carbon->copy()->subDay();
+		$next_day = $carbon->copy()->addDay()->day;
+	}
+	if(!empty($carbon)){
+		$previous = $carbon->copy()->subMonth();
+		$previous_month = $previous->month;
+		$previous_year  =  $previous->year;
+
+		$next = $carbon->copy()->addMonth();
+		$next_month = $next->month;
+		$next_year = $next->year;
+	return compact('previous_year', 'previous_month', 'next_month', 'next_year','current_date','previous_day','next_day','current_week');
+	}
+	return null;
+}
+function monthly($year, $month){
+	$postDate = 01;
+	$carbon  = Carbon\Carbon::create($year, $month, $postDate, 00);
+	$prev_next = previous_next($carbon);
+	if(!empty($prev_next)){
+		extract($prev_next);
+		return compact('year','month','previous_year','previous_month','next_year','next_month');
+	}
+}
+
 	/**
      * ajax use for attendance display & filter attendance 
      * @param -$request
@@ -522,15 +549,16 @@ class AttendanceController extends Controller
 	protected function set_dates_attendance($request){
 		extract($request->all());
 		return $years;
-		if(empty($request->date ) && empty($request->week) ){
-			$data['current_year'] = $request->years;
-			$data['current_month'] = $request->month;
+		return $request->all();
+		if(empty($date ) && empty($week) ){
+			$data['current_year'] = $years;
+			$data['current_month'] = $month;
+			
 			return $request->all();
 		}
 	}
 	public function ajax(Request $request){
 		http_response_code(500);
-		
 		$leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 		$now = Carbon::now();
 		$where['month'] = $month = $now->subMonth()->month;

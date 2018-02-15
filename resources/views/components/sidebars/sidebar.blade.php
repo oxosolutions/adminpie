@@ -5,7 +5,6 @@
   
     $permisson = drawSidebar::checkPermisson();
     
-   
     @endphp
         @foreach(drawSidebar::drawSidebar() as $key => $sidebar)
        

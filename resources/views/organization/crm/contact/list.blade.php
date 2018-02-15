@@ -6,7 +6,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Contacts',
-	'add_new' => '+ Add Contact'
+	'add_new' => '+ Add Contact',
+	'route' => 'contact.add'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
@@ -16,9 +17,9 @@ $page_title_data = array(
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 
-	{!! Form::open(['route'=>'contact.save' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+	{{-- {!! Form::open(['route'=>'contact.save' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 				@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add client','button_title'=>'Save Client','section'=>'consec1']])
-	{!!Form::close()!!}
+	{!!Form::close()!!} --}}
 	
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
