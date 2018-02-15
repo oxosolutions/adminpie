@@ -88,9 +88,9 @@ $(document).ready(function(){
 					
 					$(".hrm-attendance-wrapper").html(res);
 					console.log('data sent successfull code 101');
-					//$(".monthly").addClass("aione-active");
-					//$("#week ,#days").hide();
-					//$('select').material_select();
+					$(".monthly").addClass("aione-active");
+					// $("#week ,#days").hide();
+					$('select').material_select();
 				}
 			});
 	}
@@ -111,22 +111,22 @@ $(document).ready(function(){
 				success: function(res){
 
 					$(".hrm-attendance-wrapper").html(res);
-					//$("#month , #week ,#days").hide();
+					// $("#month , #week ,#days").hide();
 
 					if(date)
 					{
-						//$("#days").show();
+						// $("#days").show();
 						console.log('day');
-						//$(".daily").addClass("aione-active");
+						// $(".daily").addClass("aione-active");
 
 					}else if(week){
-						//$("#week").show();
+						// $("#week").show();
 						console.log('week');
-						//$(".weekly").addClass("aione-active");
+						// $(".weekly").addClass("aione-active");
 					}else{
-						//$("#month").show();
+						// $("#month").show();
 						console.log('month');
-						//$(".monthly").addClass("aione-active");
+						// $(".monthly").addClass("aione-active");
 					}
 					//$('select').material_select();
 				

@@ -1,27 +1,26 @@
 
 @php 
-$number = 1;
-	
+
 		$postDate = 01;
-		 if(!empty(Session::get('date')))
-		 {
+		if(!empty(Session::get('date')))
+		{
 		 	$fdate = $postDate = Session::get('date');
-		 }
+		}
 			$month_wise = $dat  = Carbon\Carbon::create($year, $month, $postDate, 00);
 			$mo =	$dat->month; // use for week filter
 
-		 if(!empty($fill_attendance_days)) 
-		 {
-		 	if(!empty($fweek_no) || !empty($fdate))
-		 	{
-		 		$total_days = $daysInMonth  =$dat->daysInMonth;
-		 	}
-		 	else{
-		 			$total_days = $daysInMonth  =$dat->daysInMonth;
-		 	}
-		 }else{
+		 // if(!empty($fill_attendance_days)) 
+		 // {
+		 // 	if(!empty($fweek_no) || !empty($fdate))
+		 // 	{
+		 // 		$total_days = $daysInMonth  =$dat->daysInMonth;
+		 // 	}
+		 // 	else{
+		 // 		$total_days = $daysInMonth  =$dat->daysInMonth;
+		 // 	}
+		 // }else{
 		 $total_days = $daysInMonth  =$dat->daysInMonth;
-		}
+		// }
 		 $current_month =	$dat->month;
 		 $current_year =	$dat->year;
 		 $current_days = $dat->daysInMonth;
@@ -92,10 +91,10 @@ $number = 1;
 		{
 			$week =5;
 		} 
-		for($j=1; $j<=$week; $j++ )
-		{
-			$week_option[$j] = "$j Week"; 
-		}
+		// for($j=1; $j<=$week; $j++ )
+		// {
+		// 	$week_option[$j] = "$j Week"; 
+		// }
 		$sunday_count =0;
 		$td="";
 		$MO_data = ['01'=>'JAN', '02'=>'FEB', '03'=>'MAR', '04'=>'APR' ,'05'=>'MAY', '06'=>'JUN','07'=>'JUL', '08'=>'AUG','09'=>'SEP', '10'=>'OCT','11'=>'NOV', '12'=>'DEC'];
@@ -156,7 +155,6 @@ $number = 1;
 						<input id="year" type="hidden" value="{{$current_year}}">
 					</div>
 				</div>
-				
 				
 					
 

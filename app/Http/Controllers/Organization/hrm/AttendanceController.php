@@ -462,36 +462,29 @@ class AttendanceController extends Controller
      * @return array where
      * @author  paljinder Singh
      */
-	protected function filter($request)
+	protected function set_filter_for_attendance($request)
 	{
 		$where['month_week_no'] = null;
 		$where['date'] = null;
-		if ($request->isMethod('post'))
-		{
+		if ($request->isMethod('post')) {
 			unset($where);
 			$where = [];
-			if(!empty($request['date']))
-			{
+			if(!empty($request['date'])) {
 				$fdate = $where['date']= $request['date'];
 				Session::put('date',$fdate);
 			}else{
 				Session::forget('date');
 			}
-			if(!empty($request['week']))
-			{
+			if(!empty($request['week'])) {
 				 $fweek_no = $where['month_week_no'] = $request['week'];
 			}
 			 	$month  = $where['month'] =   $request['month'];
 				$where['year']  = 	$request['years'];
-			if(strlen($month)==1)
-			{
+			if(strlen($month)==1) {
 				$where['month'] = '0'.$month;
 			}
-		
-		 	
 		}else{
-			if(Session::has('date'))
-			{
+			if(Session::has('date')) {
 				Session::forget('date');
 			}
 		}
@@ -526,7 +519,18 @@ class AttendanceController extends Controller
      * @return view (organization/attendance/attendance_table.blade.php +include attendance_data_display.blade.php  ) 
      * @author  paljinder Singh
      */
+	protected function set_dates_attendance($request){
+		extract($request->all());
+		return $years;
+		if(empty($request->date ) && empty($request->week) ){
+			$data['current_year'] = $request->years;
+			$data['current_month'] = $request->month;
+			return $request->all();
+		}
+	}
 	public function ajax(Request $request){
+		http_response_code(500);
+		
 		$leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 		$now = Carbon::now();
 		$where['month'] = $month = $now->subMonth()->month;
@@ -535,7 +539,9 @@ class AttendanceController extends Controller
 		$dt = Carbon::parse($years.'-'.$month);
 		$year_month  = "$years-$month";
 		if($request->isMethod('post')){
-			$where = $this->filter($request);
+			$where = $this->set_filter_for_attendance($request);
+			$dates = $this->set_dates_attendance($request);
+			dd($dates);
 			if(!empty($where['month_week_no'])){
 				$fweek_no = $where['month_week_no'];
 			}
@@ -551,11 +557,8 @@ class AttendanceController extends Controller
 		});
 		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
-		 //http_response_code(500);
-		
-		
-
-		return view('organization.hrm.attendance.hrm-attendance-view-display', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years, 'attendance_count'=>$attendance_count ,'user_data'=>$user_data , 'holiday_data' => $holiday_data ,'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,'total_over_time'=>$total_over_time , 'attendance_by_self'=>$attendance_by_self,'fweek_no'=>$fweek_no, 'fdate' => $fdate, 'lock_status'=>$lock_status]);
+		 //http_response_code(500); 'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,  'attendance_by_self'=>$attendance_by_self, , 'lock_status'=>$lock_status
+		return view('organization.hrm.attendance.hrm-attendance-view-display', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years,'user_data'=>$user_data , 'holiday_data' => $holiday_data  ,'fweek_no'=>$fweek_no]);
 	}
 /*it should be delete*/
 	protected function employee_data($dates){
