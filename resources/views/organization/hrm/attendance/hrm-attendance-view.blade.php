@@ -323,7 +323,7 @@ HRM Attendance View Switch
 } 
 #hrm_attendance .column
 {
-	width: 2.50%;
+	width: 2.20%;
     float: left;
     border-top:0.1px solid #e8e8e8;
     border-left:0.1px solid #e8e8e8;
