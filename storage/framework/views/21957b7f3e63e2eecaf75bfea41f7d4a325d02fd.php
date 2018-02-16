@@ -5,7 +5,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Add Contact',
-	'add_new' => 'list Contacts'
+	'add_new' => 'list Contacts',
+	'route' => 'contact.list'
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -14,7 +15,7 @@ $page_title_data = array(
 	<?php echo Form::open(['route'=>'contact.save' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 		
-		<?php echo FormGenerator::GenerateSection('consec1'); ?>
+		<?php echo FormGenerator::GenerateForm('organization_crm_contact_form'); ?>
 
 	<?php echo Form::close(); ?>
 

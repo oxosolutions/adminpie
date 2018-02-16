@@ -13,8 +13,7 @@ $page_title_data = array(
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
 	 <?php echo Form::model($model, ['route'=>['contact.update',$model->id ], 'class'=> 'form-horizontal','method' => 'post']); ?>
-		{!!FormGenerator::GenerateSection('consec1',['type' => 'inset'])!!}
-		<button type="submit" class="btn blue " style="float: right">Submit form <i class="icon-arrow-right14 position-right"></i></button>
+		{!!FormGenerator::GenerateForm('organization_crm_contact_form')!!}
 	{!!Form::close()!!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')

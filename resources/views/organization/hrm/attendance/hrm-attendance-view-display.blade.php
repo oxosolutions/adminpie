@@ -1,5 +1,15 @@
-
-@php 
+@php
+if(!empty($date_handling)){
+extract($date_handling);
+//dump($current_year , $all_dates); 
+	
+}
+// "current_year" => "2018"
+//   "current_month" => "4"
+//   "previous_year" => 2018
+//   "previous_month" => 3
+//   "next_month" => 5
+//   "next_year" => 2018
 
 // $date  = Carbon\Carbon::create($year, $month, $postDate, 00); // create date
 // $daysInMonth  = $date->daysInMonth; // total number of days in that month
@@ -119,7 +129,12 @@
 
 {{-- Month trey  --}}
 <div id="month">
-
+{{-- "current_year" => "2018"
+//   "current_month" => "4"
+//   "previous_year" => 2018
+//   "previous_month" => 3
+//   "next_month" => 5
+//   "next_year" => 2018 --}}
 					
 	<div class="row design-bg valign-wrapper p-10 bg-grey bg-lighten-3">
 		<div class=" col s2">
@@ -128,7 +143,7 @@
 			// 		$ym = date('Y-m', strtotime($dt));
 			 ?>
 			 	<div class="left-align">
-					<a class="nav left-align nav-past" onclick="attendance_filter(null, null, {{$previousMonth}} , {{$previousYear}} )">Previous Month</a>
+					<a class="nav left-align nav-past" onclick="attendance_filter(null, null, {{$previous_month}} , {{$previous_year}} )">Previous Month</a>
 				</div>
 		</div>
 		
@@ -179,7 +194,7 @@
 		
 		<div class=" col s2" style="text-align: right;">
 			<div class="right-align">
-				<a onclick="attendance_filter(null, null, {{$nextMonth}} , {{$nextYear}} )" style="cursor:pointer;" class="nav right-align nav-future">Next Month</a>
+				<a onclick="attendance_filter(null, null, {{$current_month}} , {{$current_year}} )" style="cursor:pointer;" class="nav right-align nav-future">Next Month</a>
 				
 			</div>	 
 		</div>

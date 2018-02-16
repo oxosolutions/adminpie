@@ -546,30 +546,45 @@ function monthly($year, $month){
      * @return view (organization/attendance/attendance_table.blade.php +include attendance_data_display.blade.php  ) 
      * @author  paljinder Singh
      */
-	protected function set_dates_attendance($request){
-		extract($request->all());
-		return $years;
-		return $request->all();
-		if(empty($date ) && empty($week) ){
-			$data['current_year'] = $years;
-			$data['current_month'] = $month;
-			
-			return $request->all();
+	protected function monthly_previous_next($carbon){
+		
+		if(!empty($carbon)){
+			$previous = $carbon->copy()->subMonth();
+			$previous_month = $previous->month;
+			$previous_year  =  $previous->year;
+
+			$next = $carbon->copy()->addMonth();
+			$next_month = $next->month;
+			$next_year = $next->year;
+		return compact('previous_year', 'previous_month', 'next_month', 'next_year','current_date','previous_day','next_day','current_week');
 		}
+		return null;
+	}
+	protected function date_handling($request){
+		extract($request);
+		// if(empty($date ) && empty($week) ){
+			$data['current_year'] = $year;
+			$data['current_month'] = $month;
+			$carbon = Carbon::parse($year.'-'.$month.'-'.'01');
+			$data = array_merge($data, $this->monthly_previous_next($carbon));
+			return $data;
+		// }
 	}
 	public function ajax(Request $request){
 		http_response_code(500);
-		$leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
+		$all_dates = $leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
 		$now = Carbon::now();
 		$where['month'] = $month = $now->subMonth()->month;
 		$where['year']  = $years = $now->year;	
+		$date_handling = $this->date_handling($where);
+		dump($date_handling);
 		$fweek_no =  $fdate = null;
 		$dt = Carbon::parse($years.'-'.$month);
 		$year_month  = "$years-$month";
 		if($request->isMethod('post')){
 			$where = $this->set_filter_for_attendance($request);
-			$dates = $this->set_dates_attendance($request);
-			dd($dates);
+			$date_handling = $this->date_handling($request->all());
+			
 			if(!empty($where['month_week_no'])){
 				$fweek_no = $where['month_week_no'];
 			}
@@ -586,7 +601,7 @@ function monthly($year, $month){
 		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 		 //http_response_code(500); 'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,  'attendance_by_self'=>$attendance_by_self, , 'lock_status'=>$lock_status
-		return view('organization.hrm.attendance.hrm-attendance-view-display', ['attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years,'user_data'=>$user_data , 'holiday_data' => $holiday_data  ,'fweek_no'=>$fweek_no]);
+		return view('organization.hrm.attendance.hrm-attendance-view-display', ['date_handling'=>$date_handling, 'attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years,'user_data'=>$user_data , 'holiday_data' => $holiday_data  ,'fweek_no'=>$fweek_no]);
 	}
 /*it should be delete*/
 	protected function employee_data($dates){

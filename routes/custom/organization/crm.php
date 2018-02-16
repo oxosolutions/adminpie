@@ -15,17 +15,18 @@
     Route::post('client/update/{id}',   ['as'=>'update.client', 'uses'=>'ClientController@update']);
     Route::get('client/delete/{id}',    ['as'=>'delete.client', 'uses'=>'ClientController@delete']);
     
-    Route::get('contacts',              ['as'=>'contact.list','uses'=>'ContactController@index']);
-    Route::get('contact/add',           ['as'=>'contact.add','uses'=>'ContactController@add']);
-    Route::post('contacts/save',        ['as'=>'contact.save','uses'=>'ContactController@saveContact']);
-    Route::get('contact/edit/{id}',     ['as'=>'contact.edit','uses'=>'ContactController@edit']);
-    Route::post('contact/update/{id}',  ['as'=>'contact.update','uses'=>'ContactController@update']);
-    Route::get('contact/delete/{id}',   ['as'=>'delete.contact','uses'=>'ContactController@delete']);
+    Route::get('contacts',              ['as'=>'contact.list',      'uses'=>'ContactController@index']);
+    Route::get('contact/add',           ['as'=>'contact.add',       'uses'=>'ContactController@add']);
+    Route::post('contacts/save',        ['as'=>'contact.save',      'uses'=>'ContactController@saveContact']);
+    Route::get('contact/edit/{id}',     ['as'=>'contact.edit',      'uses'=>'ContactController@edit']);
+    Route::post('contact/update/{id}',  ['as'=>'contact.update',    'uses'=>'ContactController@update']);
+    Route::get('contact/delete/{id}',   ['as'=>'delete.contact',    'uses'=>'ContactController@delete']);
     
     //Services
-    Route::get('/services',['as'=>'list.services','uses'=>'ServicesController@index']);
-    Route::match(['get','post'],'/service/save',['as'=>'save.service','uses'=>'ServicesController@create']);
-    Route::get('/service/delete/{id}',['as'=>'delete.service','uses'=>'ServicesController@delete']);
+    Route::get('/services',             ['as'=>'list.services',         'uses'=>'ServicesController@index']);
+    Route::get('/service/add',          ['as'=>'add.service',           'uses'=>'ServicesController@add']);
+    Route::match(['get','post'],'/service/save',['as'=>'save.service',  'uses'=>'ServicesController@create']);
+    Route::get('/service/delete/{id}',['as'=>'delete.service',          'uses'=>'ServicesController@delete']);
 
     Route::match(['get','post'],'/service/price/{id?}',['as'=>'price.service','uses'=>'ServicesController@prices']);
     Route::get('delete/service/price/{id?}',['as'=>'delete.price.service','uses'=>'ServicesController@delete_pricing']);

@@ -103,7 +103,7 @@ $(document).ready(function(){
 		postData['date'] = date;
 		postData['week'] = week;
 		postData['month'] = mo;
-		postData['years'] = yr;
+		postData['year'] = yr;
 		postData['_token'] = $("#token").val();
 		$.ajax({
 				url:route()+'/attendance/list/ajax',
