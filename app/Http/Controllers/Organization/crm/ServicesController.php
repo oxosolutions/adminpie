@@ -123,6 +123,6 @@ class ServicesController extends Controller
 
     public function add()
     {
-      // return view('organization.');
+      return view('organization.crm.service.add');
     }
 }

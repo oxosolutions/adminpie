@@ -479,7 +479,7 @@ class AttendanceController extends Controller
 				 $fweek_no = $where['month_week_no'] = $request['week'];
 			}
 			 	$month  = $where['month'] =   $request['month'];
-				$where['year']  = 	$request['years'];
+				$where['year']  = 	$request['year'];
 			if(strlen($month)==1) {
 				$where['month'] = '0'.$month;
 			}
@@ -547,61 +547,90 @@ function monthly($year, $month){
      * @author  paljinder Singh
      */
 	protected function monthly_previous_next($carbon){
-		
 		if(!empty($carbon)){
+			$preivous_day = $carbon->copy()->subDay();
+			$data['daily_previous_date'] = $preivous_day->day;
+			$data['daily_previous_month'] = $preivous_day->month;
+			$data['daily_previous_year'] = $preivous_day->year;
+
+			$next_day = $carbon->copy()->addDay();
+			$data['daily_next_date'] = $next_day->day;
+			$data['daily_next_month'] = $next_day->month;
+			$data['daily_next_year'] = $next_day->year;
+
+			$data['current_week_of_month'] = $carbon->weekOfMonth;
+
+			$previous_week = $carbon->copy()->subWeek();
+
+			$data['previous_week']			= $previous_week->weekOfMonth;
+			$data['previous_week_year']		= $previous_week->year;
+			$data['previous_week_month']	= $previous_week->month;
+
+
+			$next_week = $carbon->copy()->addWeek();
+			$data['next_week']			= $next_week->weekOfMonth;
+			$data['next_week_year']		= $next_week->year;
+			$data['next_week_month']	= $next_week->month;
+			
+			// if($data['current_week_of_month'] ==1 && $data['next_week'] == 2 && $previous_week->daysInMonth >28){
+			// 	$data['previous_week'] =5;
+			// } 
+
 			$previous = $carbon->copy()->subMonth();
-			$previous_month = $previous->month;
-			$previous_year  =  $previous->year;
+			$data['previous_month'] = $previous->month;
+			$data['previous_year']  =  $previous->year;
 
 			$next = $carbon->copy()->addMonth();
-			$next_month = $next->month;
-			$next_year = $next->year;
-		return compact('previous_year', 'previous_month', 'next_month', 'next_year','current_date','previous_day','next_day','current_week');
+			$data['next_month'] = $next->month;
+			$data['next_year'] = $next->year;
+
+		return $data;
 		}
 		return null;
 	}
 	protected function date_handling($request){
-		extract($request);
-		// if(empty($date ) && empty($week) ){
+			extract($request);
 			$data['current_year'] = $year;
 			$data['current_month'] = $month;
-			$carbon = Carbon::parse($year.'-'.$month.'-'.'01');
-			$data = array_merge($data, $this->monthly_previous_next($carbon));
-			return $data;
-		// }
-	}
-	public function ajax(Request $request){
-		http_response_code(500);
-		$all_dates = $leave_data = $total_over_time = $lock_status = $attendance_by_self = $total_hour = $attendance_count = $total_days = null;
-		$now = Carbon::now();
-		$where['month'] = $month = $now->subMonth()->month;
-		$where['year']  = $years = $now->year;	
-		$date_handling = $this->date_handling($where);
-		dump($date_handling);
-		$fweek_no =  $fdate = null;
-		$dt = Carbon::parse($years.'-'.$month);
-		$year_month  = "$years-$month";
-		if($request->isMethod('post')){
-			$where = $this->set_filter_for_attendance($request);
-			$date_handling = $this->date_handling($request->all());
 			
-			if(!empty($where['month_week_no'])){
-				$fweek_no = $where['month_week_no'];
-			}
-			$month = $where['month']; 
-			$years = $where['year']; 
-			$year_month  = "$years-$month"; 			
-	 		$dt = Carbon::parse($year_month);	
+		if(empty($date)){
+			$carbon = Carbon::parse($year.'-'.$month.'-'.'01');
+		 }elseif(!empty($date)) {
+		 	$carbon = Carbon::parse($year.'-'.$month.'-'.$date);
 		}
-		$holidays = Holiday::whereYear('date_of_holiday',$years)->whereMonth('date_of_holiday',$month)->get();
+			$data['total_days'] = $carbon->daysInMonth;
+			$data = array_merge($data, $this->monthly_previous_next($carbon));
+		return $data;
+	}
+	
+	protected function holidays($year, $month){
+		$holidays = Holiday::whereYear('date_of_holiday',$year)->whereMonth('date_of_holiday',$month)->get();
 		$holiday_data = $holidays->mapWithKeys(function($data){
 			$holiday_date = str_replace('0','',date('d', strtotime($data['date_of_holiday'])));
 			return [$holiday_date=> $data['title']];
 		});
+		return $holidays;
+	}
+	public function ajax(Request $request){
+		http_response_code(500);
+		$fweek_no = $total_days = null;
+		if($request->isMethod('post')){
+			$where = $this->set_filter_for_attendance($request);
+			$date_handling = $this->date_handling($request->all());
+			if(!empty($where['month_week_no'])){
+				$fweek_no = $where['month_week_no'];
+			}
+		}else{
+			Session::forget('date');
+			$now = Carbon::now();
+			$where['month'] =  $now->subMonth()->month;
+			$where['year']  =  $now->year;	
+			$date_handling = $this->date_handling($where);
+		}
+		$holidays = $this->holidays($date_handling['current_year'], $date_handling['current_month']);
 		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
-		 //http_response_code(500); 'leave_data'=>$leave_data, 'total_hour'=>$total_hour ,  'attendance_by_self'=>$attendance_by_self, , 'lock_status'=>$lock_status
-		return view('organization.hrm.attendance.hrm-attendance-view-display', ['date_handling'=>$date_handling, 'attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days, 'month'=> $month , 'year'=> $years,'user_data'=>$user_data , 'holiday_data' => $holiday_data  ,'fweek_no'=>$fweek_no]);
+	return view('organization.hrm.attendance.hrm-attendance-view-display', ['condition'=>$where , 'date_handling'=>$date_handling, 'attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days,'user_data'=>$user_data , 'holiday_data' => $holidays,'fweek_no'=>$fweek_no]);
 	}
 /*it should be delete*/
 	protected function employee_data($dates){

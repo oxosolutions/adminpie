@@ -136,4 +136,9 @@ return $model;
       $product->save();
       return redirect()->route('edit.product',$id);
     }
+
+    public function product_category_add()
+    {
+      return view('organization.crm.category.add-product-category');
+    }
 }

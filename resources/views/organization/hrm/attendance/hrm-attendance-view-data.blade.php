@@ -9,6 +9,8 @@
 			</div>
 			<div>
 					@php
+					// $sunday_count =0;
+		 			$td="";
 					$number=1;
 					if(!empty($fweek_no)){
 						if($fweek_no==5){
@@ -19,14 +21,14 @@
 							$number = $start_week_day = $end_week_day -6;
 						}
 						for($d=$start_week_day; $d<=$end_week_day; $d++){
-							$getDay = Carbon\Carbon::create($year, $month, $d, 0);
+							$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 						}
 					}
 					@endphp
 					@if(!empty($fdate))
 						@php
 							$number = $total_days = $fdate;
-							$getDay = Carbon\Carbon::create($year, $month, $fdate, 0);
+							$getDay = Carbon\Carbon::create($current_year, $current_month, $fdate, 0);
 							if($getDay->format('l')=="Sunday")
 						{
 							$td .="<div class='attendance-sheet column sunday'>S</div>";
@@ -42,7 +44,7 @@
 					@else
 						@for($d=$number; $d<=$total_days; $d++)
 						@php 
-						$getDay = Carbon\Carbon::create($year, $month, $d, 0);
+						$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 						if($getDay->format('l')=="Sunday")
 						{
 							$td .="<div class='attendance-sheet column sunday'>S</div>";
@@ -133,7 +135,7 @@
 
 							for($d=$number; $d<=$total_days; $d++)
 							{
-								$getDay = Carbon\Carbon::create($year, $month, $d, 0);
+								$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 								if($getDay->format('l')=="Sunday")
 								{
 									echo "<div class='attendance-sheet column sunday'>O</div>";

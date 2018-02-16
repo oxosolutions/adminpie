@@ -6,7 +6,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Product Categories',
-	'add_new' => '+ Add Product Category'
+	'add_new' => '+ Add Product Category',
+	'route'=> 'add.product.category'
 ); 
 @endphp
 @include('common.pageheader',$page_title_data)
@@ -16,7 +17,7 @@ $page_title_data = array(
 	@include('common.page_content_primary_end')
 	@include('common.page_content_secondry_start')
 
-	{!! Form::open(['route'=>'save.crm.category' , 'class'=> 'form-horizontal','method' => 'post'])!!}
+{{-- 	{!! Form::open(['route'=>'save.crm.category' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 			<div>
 			<input type="hidden" name="type" value="product">
 				<ul>
@@ -25,9 +26,9 @@ $page_title_data = array(
 					<li><input type="submit" value="save Category"></li>
 				</ul>
 			</div>
-				{{-- @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add client','button_title'=>'Save Client','section'=>'clisec1']]) --}}
+				
 			{!!Form::close()!!}
-	
+ --}}	
 	@include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 

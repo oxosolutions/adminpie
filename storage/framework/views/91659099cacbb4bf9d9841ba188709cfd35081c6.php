@@ -6,7 +6,8 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Payment methods		',
-	'add_new' => '+ Add Payment Method'
+	'add_new' => '+ Add Payment Method',
+	'route' => 'payment-method.add'
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -16,18 +17,6 @@ $page_title_data = array(
 	<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
-	<?php echo Form::open(['route'=>'save.payment.method' , 'class'=> 'form-horizontal','method' => 'post']); ?>
-
-				<div >
-					<ul>
-						<li><label for="">Payment Method Name</label> <input name="name" type="text"></li>
- 						<li><input type="submit" value="Save"></li>
-
-					</ul>
-
-				</div>
-				
-			<?php echo Form::close(); ?>
 
 	
 	<?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -92,4 +92,13 @@ public function service_category_listing(Request $request){
     {
  		   
     }  //
+
+    public function service_category_add()
+    {
+      return view('organization.crm.category.add-service-category');
+    }
+    public function product_category_add()
+    {
+      return view('organization.crm.category.add-product-category');
+    }
 }

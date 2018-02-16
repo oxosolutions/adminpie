@@ -43,11 +43,13 @@
     Route::match(['get','post'],'/product/price/{id?}',['as'=>'price.products','uses'=>'ProductsController@prices']);
     Route::get('delete/product/price/{id?}',['as'=>'delete.price.products','uses'=>'ProductsController@delete_pricing']);
     //Category price.products
-    Route::get('product/category',['as'=>'list.product.category','uses'=>'CategoryController@product_category_listing']);
+    Route::get('product/category',      ['as'=>'list.product.category','uses'=>'CategoryController@product_category_listing']);
+    Route::get('product/category/add',  ['as'=>'add.product.category','uses'=>'CategoryController@product_category_add']);
     Route::post('/category/save',['as'=>'save.crm.category','uses'=>'CategoryController@save_category']);
     Route::get('/category/delete/{id}',['as'=>'delete.crm.category','uses'=>'CategoryController@delete']);
     //service category
-    Route::get('/service/category',['as'=>'list.service.category','uses'=>'CategoryController@service_category_listing']);
+    Route::get('/service/category',     ['as'=>'list.service.category',     'uses'=>'CategoryController@service_category_listing']);
+    Route::get('/service/category/add', ['as'=>'add.service.category',      'uses'=>'CategoryController@service_category_add']);
 
 
     //Leads
@@ -57,7 +59,8 @@
     //pricing
     Route::get('/pricing',['as'=>'pricing','uses'=>'BillingController@pricing']);
     //pricing
-    Route::get('/payment-methods',['as'=>'payment-methods','uses'=>'PaymentMethodController@index']);
-    Route::post('/payment-method/save',['as'=>'save.payment.method','uses'=>'PaymentMethodController@create']);
+    Route::get('/payment-methods',      ['as'=>'payment-methods',   'uses'=>'PaymentMethodController@index']);
+    Route::get('/payment-method/add',   ['as'=>'payment-method.add','uses'=>'PaymentMethodController@add']);
+    Route::post('/payment-method/save', ['as'=>'save.payment.method','uses'=>'PaymentMethodController@create']);
     Route::get('/payment-method/delete/{id}',['as'=>'delete.payment.method','uses'=>'PaymentMethodController@delete']);
 ?>

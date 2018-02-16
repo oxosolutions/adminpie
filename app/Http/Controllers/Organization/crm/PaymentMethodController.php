@@ -63,6 +63,10 @@ class PaymentMethodController extends Controller
     	PaymentMethod::where('id',$id)->delete();
     	return back();
     }
+    public function add()
+    {
+      return view('organization.crm.payments-method.add');
+    }
 
     
 }

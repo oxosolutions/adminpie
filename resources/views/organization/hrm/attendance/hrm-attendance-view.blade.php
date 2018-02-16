@@ -9,11 +9,7 @@
 		'add_new' => 'List attendance',
 		'route' => 'lists.attendance'
 	);
-	$init_date = array();
-	$init_date['year'] = date("Y");
-	$init_date['month'] = date("n");
-	$init_date['date'] = date("j");
-	$init_date['week'] = date("W");
+
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
@@ -24,23 +20,10 @@
 		<input type="hidden" id="token" name="_token" value="{{csrf_token()}}" >
 		<input type="hidden" id="years" value="{{$data['year']}}" >
 		<input type="hidden" id="months" value="{{$data['month']}}" >
-
-		<input type="text" id="attendance_year" value="{{$init_date['year']}}" >
-		<input type="text" id="attendance_month" value="{{$init_date['month']}}" >
-		<input type="text" id="attendance_date" value="{{$init_date['date']}}" >
-		<input type="text" id="attendance_week" value="{{$init_date['week']}}" >
-
-
-		<div class="aione-border mb-10">
-			<div class="p-10 aione-align-right">
-				<ul class="hrm-attendance-view-switch">
-				    <li class="active"><a href="#" data-target="hrm_attendance_view_monthly">Monthly</a></li>
-				    <li><a href="#" class="hrm_attendance_view_weekly">Weekly</a></li>
-				    <li><a href="#" class="hrm_attendance_view_daily">Daily</a></li>
-				</ul>		
-			</div>
-		</div>
-	
+		{{-- <input type="text" id="attendance_year" value="{{$current_year}}" > --}}
+		{{-- <input type="text" id="attendance_month" value="{{$current_month}}" > --}}
+		{{-- <input type="text" id="attendance_date" value="{{$init_date['date']}}" >
+		<input type="text" id="attendance_week" value="{{$init_date['week']}}" > --}}
 		<div id="main" class="hrm-attendance-wrapper"></div>
 	</div>
 
@@ -61,9 +44,6 @@ $(document).ready(function(){
 		$('.attendance-details').hide();
 		$(this).parents('.attendance-sheet').nextAll('.attendance-details:first').toggle();
 	})
-
-    
-    
     
     
 		year = $("#years").val();
@@ -90,7 +70,7 @@ $(document).ready(function(){
 					$(".hrm-attendance-wrapper").html(res);
 					console.log('data sent successfull code 101');
 					$(".monthly").addClass("aione-active");
-					// $("#week ,#days").hide();
+					 $("#week ,#days").hide();
 					$('select').material_select();
 				}
 			});
@@ -112,22 +92,22 @@ $(document).ready(function(){
 				success: function(res){
 
 					$(".hrm-attendance-wrapper").html(res);
-					// $("#month , #week ,#days").hide();
+					$("#month , #week ,#days").hide();
 
 					if(date)
 					{
-						// $("#days").show();
+						$("#days").show();
 						console.log('day');
-						// $(".daily").addClass("aione-active");
+						$(".daily").addClass("aione-active");
 
 					}else if(week){
-						// $("#week").show();
+						 $("#week").show();
 						console.log('week');
-						// $(".weekly").addClass("aione-active");
+						 $(".weekly").addClass("aione-active");
 					}else{
-						// $("#month").show();
+						 $("#month").show();
 						console.log('month');
-						// $(".monthly").addClass("aione-active");
+						$(".monthly").addClass("aione-active");
 					}
 					//$('select').material_select();
 				
