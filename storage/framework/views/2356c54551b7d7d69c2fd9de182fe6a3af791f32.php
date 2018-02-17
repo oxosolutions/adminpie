@@ -8,7 +8,9 @@
 				<div class="attendanc-sheet content">Name</div>
 			</div>
 			<div>
-					<?php 
+			<?php echo $__env->make('organization.hrm.attendance.data-display.check-condition', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
+				<?php 
 		 			$td="";
 					$number=1;
 					if(!empty($fweek_no)){
@@ -23,7 +25,7 @@
 							$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 						}
 					}
-					 ?>
+				 ?>
 					<?php if(!empty($fdate)): ?>
 						<?php 
 							$number = $total_days = $fdate;
@@ -39,10 +41,11 @@
 						 ?>
 						<div class="attendance-sheet column"><?php echo e($fdate); ?><br> 
 							<?php echo e(substr($getDay->format('l'),0,1)); ?> 
-							</div>
+						</div> <div class="attendance-sheet column"> Shift Hours </div><div class="attendance-sheet column">In out Time </div>
 					<?php else: ?>
 						<?php for($d=$number; $d<=$total_days; $d++): ?>
-						<?php  
+						<?php 
+
 						$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 						if($getDay->format('l')=="Sunday")
 						{
@@ -64,35 +67,28 @@
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
 						 });
-					if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year)) {
-									continue;
-								}
-					if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year && date('m', strtotime($user_meta['date_of_leaving'])) <  $current_month  )) {
+				 ?>
+				<?php 
+					$check = check_joining_leaving_employee($user_meta , $current_year,  $current_month);
+					if($check==false){
 						continue;
 					}
-					if(!empty($user_meta['employee_id']) && !empty($user_meta['user_shift']) && !empty($user_meta['date_of_joining']))
-					{
- 						if(!empty($fweek_no) || !empty($fdate)){
-							echo "<br>";
-							if(!empty($fdate))
-							{	
-								if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate")) || (!empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d' ,strtotime("$current_year-$current_month-$fdate"))) ) {
-									continue;
-								}
- 							}
-							if(!empty($fweek_no)){
-								if(date('Y', strtotime($user_meta['date_of_joining'])) == $current_year &&date('m', strtotime($user_meta['date_of_joining'])) ==  $current_month){
-									$joining_week = Carbon\Carbon::parse($user_meta['date_of_joining'])->weekOfMonth;
-									if($fweek_no < $joining_week)
-										continue;
-									}
-									if(!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year &&date('m', strtotime($user_meta['date_of_leaving'])) ==  $current_month){
-									$leaving_week = Carbon\Carbon::parse($user_meta['date_of_leaving'])->weekOfMonth;
-									if($fweek_no > $leaving_week)
-										continue;
-									}
+ 					if(!empty($fweek_no) || !empty($fdate)){
+						
+						if(!empty($fdate)) {
+							$joining_date =	check_joining_date($user_meta, $current_year, $current_month, $fdate);
+							if($joining_date==false){
+								continue;
+							}
+ 						}
+						if(!empty($fweek_no)){
+							$check_joining_week = check_joining_week($user_meta , $current_year , $current_month , $fweek_no );
+							if($check_joining_week==false){
+								continue;
 							}
 						}
+						echo "<br>";
+					}
 						echo '<div class="attendance-sheet">';
 								if(strlen($user_meta['employee_id']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($user_meta['employee_id'], 0,10).'.. </div>';
@@ -100,7 +96,6 @@
 									<div class="attendanc-sheet content"><a href="<?php echo e(route('account.attandance',['id'=>$value['id']])); ?>"><?php echo e(substr($user_meta['employee_id'], 0,10)); ?>.. </a></div>
 						 			<?php 
 								}else{
-									// echo '<div class="attendanc-sheet content">'.$user_meta['employee_id'].' </div>';
 									 ?>
 									<div class="attendanc-sheet content"><a href="<?php echo e(route('account.attandance',['id'=>$value['id']])); ?>"><?php echo e($user_meta['employee_id']); ?> </a>
 									</div>
@@ -172,23 +167,17 @@
 								}
 							}
 							 ?>
-							<br>
+							
 								<div class='attendance-details'> 
-									<?php echo $__env->make('organization.attendance.attendance_stats', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+									<?php echo $__env->make('organization.hrm.attendance.attendance_stats', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
  									
  								</div>
-							<?php 
-					}
-				 ?>
-				<br>
+ 								<br>
+							
+				
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 			<div style="clear: both;"></div>
 			
 		</div>
 	</div>
 </div>
-
-
-
-
-

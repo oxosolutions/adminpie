@@ -1,7 +1,7 @@
 
-@if(!empty($attendanceVal))
-{{-- <h3> Attendance stats </h3> --}}
-	@php
+<?php if(!empty($attendanceVal)): ?>
+
+	<?php 
 	// function difference_secs($time_1 , $time_2){
 	// 	$start_shift = new Carbon\Carbon($time_1);
 	// 		$come_at = new Carbon\Carbon($time_2);
@@ -31,7 +31,7 @@
 	    $due_time = $attendanceVal->where('over_time' ,'<', 0)->sum('over_time');
 	    $extra_time = $attendanceVal->where('over_time' ,'>', 0)->sum('over_time');
 	    $all_stats = $attendanceVal->whereNotIn('over_time' ,[null]);
-	@endphp
+	 ?>
 	<div class="">
 		<div class="ar aione-align-center">
 	
@@ -39,88 +39,79 @@
 			<div class="ac l14 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">working days</div>
-					<div>{{ $working_days_in_month }} </div>
+					<div><?php echo e($working_days_in_month); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">Loss of Pay days</div>
-					<div>{{ $loss_of_pay_days }} </div>
+					<div><?php echo e($loss_of_pay_days); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">Total Leave</div>
-					<div>{{ $leaves_in_month }} </div>
+					<div><?php echo e($leaves_in_month); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">Total Absent</div>
-					<div>{{ $absent }} </div>
+					<div><?php echo e($absent); ?> </div>
 				</div>
 			</div>
 			<div class="ac l16 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">Total Un Paid Leave </div>
-					<div>{{ $un_paid }} </div>
+					<div><?php echo e($un_paid); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">Total Due Time</div>
-					<div>{{ convert_sec_to_hour(abs($due_time))	 }} </div>
+					<div><?php echo e(convert_sec_to_hour(abs($due_time))); ?> </div>
 				</div>
 			</div>
 			<div class="ac l14 p-0">
 				<div class="aione-border">
 					<div class="bg-grey bg-lighten-3">Total Extra Time</div>
-					<div>{{ convert_sec_to_hour($extra_time)	 }} </div>
+					<div><?php echo e(convert_sec_to_hour($extra_time)); ?> </div>
 				</div>
 			</div>
 	
 		</div>
 	</div>
-	{{-- <div class="left-hand">
-		<h5> Holidays days {{ $holiday_data->count() }} </h5>
-		<h5> working days {{ $working_days_in_month }} </h5>
-		<h5> Loss of Pay days {{ $loss_of_pay_days }} </h5>
-		<h5> Total Leave {{ $leaves_in_month }} </h5>
-		<h5> Total Absent {{ $absent }} </h5>
-		<h5> Total Un Paid Leave {{ $un_paid }} </h5>
-		<h5> Total Due Time  {{ convert_sec_to_hour(abs($due_time))	 }} </h5>
-		<h5> Total Extra Time{{ convert_sec_to_hour($extra_time)	 }} </h5>
-	</div> --}}
+	
 	<div class="right-hand">
-		{{-- {{ dump(count($all_stats)) }} --}}
+		
 		<div class="display-inline-block aione-align-center p-5 aione-border line-height-20">
 				<span class="font-weight-700">DAY</span>
 				<br>
 				<span class="green darken-2">Over</span>/<span class="red darken-2">Due</span> Time
 			</div>
-	@foreach($all_stats as $key =>$val)
+	<?php $__currentLoopData = $all_stats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 
-		@if($all_stats[$key]['over_time'] > 0)
+		<?php if($all_stats[$key]['over_time'] > 0): ?>
 
 			<div class="display-inline-block aione-align-center p-5 aione-border line-height-20">
-				<span class="font-weight-700"> {{$key}}</span>
+				<span class="font-weight-700"> <?php echo e($key); ?></span>
 				<br>
-				<span class="green darken-2">{{ convert_sec_to_hour($val['over_time']) }}</span>
+				<span class="green darken-2"><?php echo e(convert_sec_to_hour($val['over_time'])); ?></span>
 			</div>
-		@else
+		<?php else: ?>
 			<div class="display-inline-block aione-align-center p-5 aione-border line-height-20">
-				<span class="font-weight-700">{{$key}}</span>
+				<span class="font-weight-700"><?php echo e($key); ?></span>
 				<br>
-				<span class="red darken-2">{{convert_sec_to_hour(abs($val['over_time'])) }}</span>
+				<span class="red darken-2"><?php echo e(convert_sec_to_hour(abs($val['over_time']))); ?></span>
 			</div>
-		@endif
-	@endforeach
+		<?php endif; ?>
+	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 		
 	</div>
-@else
+<?php else: ?>
 <div class="aione-message error ">
 	No Attendance stats
 </div>
 
 
-@endif
+<?php endif; ?>

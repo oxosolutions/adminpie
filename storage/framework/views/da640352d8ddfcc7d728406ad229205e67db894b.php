@@ -1,11 +1,9 @@
 <?php 
-		if(!empty($fweek_no) )
-		{
+		if(!empty($fweek_no) ) {
 			$weekDate = Carbon\Carbon::create($current_year, $current_month, 1, 00);
 			$mo =	$weekDate->month;
 			$current_week = $weekDate->weekOfMonth;
-			if($fweek_no==1)
-			{
+			if($fweek_no==1) {
 				$weekDate->addWeek(); 
 			}
 			else{
@@ -25,14 +23,12 @@
 					 	$prev_week = $prev_week +1;
 					 }
 				}
-				
 			}
 			$prev_week_month =	$weekDate->month;
 		 	$prev_week_year =	$weekDate->year;
 		}
 		$week =4;
-		if($total_days >28)
-		{
+		if($total_days >28) {
 			$week =5;
 		}
  ?>
@@ -73,5 +69,5 @@
 		<?php endfor; ?>
 	</div> 
 <script type="text/javascript">
-		$('.week-tab').addClass('active').siblings().removeClass('active');
+	$('.week-tab').addClass('active').siblings().removeClass('active');
 </script>
