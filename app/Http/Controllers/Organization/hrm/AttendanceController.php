@@ -464,28 +464,22 @@ class AttendanceController extends Controller
      */
 	protected function set_filter_for_attendance($request)
 	{
-		$where['month_week_no'] = null;
-		$where['date'] = null;
 		if ($request->isMethod('post')) {
 			unset($where);
 			$where = [];
 			if(!empty($request['date'])) {
-				$fdate = $where['date']= $request['date'];
-				Session::put('date',$fdate);
+				 $where['date']= $request['date'];
+				Session::put('date',$request['date']);
 			}else{
 				Session::forget('date');
 			}
 			if(!empty($request['week'])) {
-				 $fweek_no = $where['month_week_no'] = $request['week'];
+				$where['month_week_no'] = $request['week'];
 			}
 			 	$month  = $where['month'] =   $request['month'];
 				$where['year']  = 	$request['year'];
 			if(strlen($month)==1) {
 				$where['month'] = '0'.$month;
-			}
-		}else{
-			if(Session::has('date')) {
-				Session::forget('date');
 			}
 		}
 		return $where;
@@ -513,32 +507,7 @@ class AttendanceController extends Controller
  		return view('organization.hrm.attendance.hrm-attendance-view',['data'=>$data]);
 	}
 
-	function previous_next($carbon = null, $current_date=null, $current_week=null){
-	if(!empty($current_date)){
-		$previous_day = $carbon->copy()->subDay();
-		$next_day = $carbon->copy()->addDay()->day;
-	}
-	if(!empty($carbon)){
-		$previous = $carbon->copy()->subMonth();
-		$previous_month = $previous->month;
-		$previous_year  =  $previous->year;
-
-		$next = $carbon->copy()->addMonth();
-		$next_month = $next->month;
-		$next_year = $next->year;
-	return compact('previous_year', 'previous_month', 'next_month', 'next_year','current_date','previous_day','next_day','current_week');
-	}
-	return null;
-}
-function monthly($year, $month){
-	$postDate = 01;
-	$carbon  = Carbon\Carbon::create($year, $month, $postDate, 00);
-	$prev_next = previous_next($carbon);
-	if(!empty($prev_next)){
-		extract($prev_next);
-		return compact('year','month','previous_year','previous_month','next_year','next_month');
-	}
-}
+	
 
 	/**
      * ajax use for attendance display & filter attendance 
@@ -597,7 +566,8 @@ function monthly($year, $month){
 			$carbon = Carbon::parse($year.'-'.$month.'-'.'01');
 		 }elseif(!empty($date)) {
 		 	$carbon = Carbon::parse($year.'-'.$month.'-'.$date);
-		}
+		}	
+			$data['condition'] = $request;
 			$data['total_days'] = $carbon->daysInMonth;
 			$data = array_merge($data, $this->monthly_previous_next($carbon));
 		return $data;
@@ -613,24 +583,25 @@ function monthly($year, $month){
 	}
 	public function ajax(Request $request){
 		http_response_code(500);
-		$fweek_no = $total_days = null;
+		$data['fweek_no'] = null;
 		if($request->isMethod('post')){
 			$where = $this->set_filter_for_attendance($request);
-			$date_handling = $this->date_handling($request->all());
+			$data['date_handling'] = $this->date_handling($request->all());
 			if(!empty($where['month_week_no'])){
-				$fweek_no = $where['month_week_no'];
+				$data['fweek_no'] = $where['month_week_no'];
 			}
 		}else{
 			Session::forget('date');
 			$now = Carbon::now();
 			$where['month'] =  $now->subMonth()->month;
 			$where['year']  =  $now->year;	
-			$date_handling = $this->date_handling($where);
+			$data['date_handling'] = $this->date_handling($where);
 		}
-		$holidays = $this->holidays($date_handling['current_year'], $date_handling['current_month']);
-		$user_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
-		$attendance = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
-	return view('organization.hrm.attendance.hrm-attendance-view-display', ['condition'=>$where , 'date_handling'=>$date_handling, 'attendance_data'=>$attendance, 'fill_attendance_days'=>$total_days,'user_data'=>$user_data , 'holiday_data' => $holidays,'fweek_no'=>$fweek_no]);
+		$data['holiday_data'] = $this->holidays($data['date_handling']['current_year'], $data['date_handling']['current_month']);
+		$data['user_data'] = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
+		$data['attendance_data'] = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
+	
+	return view('organization.hrm.attendance.hrm-attendance-view-display',$data);
 	}
 /*it should be delete*/
 	protected function employee_data($dates){

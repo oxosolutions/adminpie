@@ -1,11 +1,8 @@
 <?php 
-
 if(!empty($date_handling)){
 	extract($date_handling);
-//dump($current_year , $all_dates); 
-	// dump($date_handling);
-	// dump($condition);
-	// Carbon::pa
+dump($condition); 
+	
 }
 
 		$postDate = 01;
