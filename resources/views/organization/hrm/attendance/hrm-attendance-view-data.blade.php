@@ -9,7 +9,6 @@
 			</div>
 			<div>
 					@php
-					// $sunday_count =0;
 		 			$td="";
 					$number=1;
 					if(!empty($fweek_no)){
@@ -60,24 +59,17 @@
 					@endif
  			</div>
 			<div style="clear:both;"> </div>
-
-		
-			{{-- {{dd($attendance_data)}} --}}
-
 			@foreach($user_data as $userKey => $value)
-
 				@php
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
-						 }); 
-					
+						 });
 					if(date('Y', strtotime($user_meta['date_of_joining'])) > $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) < $current_year)) {
 									continue;
 								}
-								if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year && date('m', strtotime($user_meta['date_of_leaving'])) <  $current_month  )) {
-									continue;
-								}
-								
+					if(date('m', strtotime($user_meta['date_of_joining'])) >  $current_month && date('Y', strtotime($user_meta['date_of_joining'])) >= $current_year || (!empty($user_meta['date_of_leaving']) && date('Y', strtotime($user_meta['date_of_leaving'])) == $current_year && date('m', strtotime($user_meta['date_of_leaving'])) <  $current_month  )) {
+						continue;
+					}
 					if(!empty($user_meta['employee_id']) && !empty($user_meta['user_shift']) && !empty($user_meta['date_of_joining']))
 					{
  						if(!empty($fweek_no) || !empty($fdate)){
@@ -89,7 +81,6 @@
 								}
  							}
 							if(!empty($fweek_no)){
-								
 								if(date('Y', strtotime($user_meta['date_of_joining'])) == $current_year &&date('m', strtotime($user_meta['date_of_joining'])) ==  $current_month){
 									$joining_week = Carbon\Carbon::parse($user_meta['date_of_joining'])->weekOfMonth;
 									if($fweek_no < $joining_week)
@@ -101,12 +92,8 @@
 										continue;
 									}
 							}
-						}else{	
-							
- 						}
-
-
-							echo '<div class="attendance-sheet">';
+						}
+						echo '<div class="attendance-sheet">';
 								if(strlen($user_meta['employee_id']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($user_meta['employee_id'], 0,10).'.. </div>';
 									@endphp
@@ -132,18 +119,13 @@
  						}else{
  							$attendanceVal = [];
  						}
-
-							for($d=$number; $d<=$total_days; $d++)
-							{
+						for($d=$number; $d<=$total_days; $d++) {
 								$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 								if($getDay->format('l')=="Sunday")
 								{
 									echo "<div class='attendance-sheet column sunday'>O</div>";
 								}else
 								{
-									// http_response_code(500);
-									// dump($attendance_data);
-									// continue;
 									if(isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 									{
 									@endphp
@@ -190,6 +172,7 @@
 								}
 							}
 							@endphp
+							<br>
 								<div class='attendance-details'> 
 									@include('organization.attendance.attendance_stats')
  									

@@ -540,10 +540,6 @@ class AttendanceController extends Controller
 			$data['next_week']			= $next_week->weekOfMonth;
 			$data['next_week_year']		= $next_week->year;
 			$data['next_week_month']	= $next_week->month;
-			
-			// if($data['current_week_of_month'] ==1 && $data['next_week'] == 2 && $previous_week->daysInMonth >28){
-			// 	$data['previous_week'] =5;
-			// } 
 
 			$previous = $carbon->copy()->subMonth();
 			$data['previous_month'] = $previous->month;
@@ -558,10 +554,9 @@ class AttendanceController extends Controller
 		return null;
 	}
 	protected function date_handling($request){
-			extract($request);
-			$data['current_year'] = $year;
-			$data['current_month'] = $month;
-			
+		extract($request);
+		$data['current_year'] = $year;
+		$data['current_month'] = $month;
 		if(empty($date)){
 			$carbon = Carbon::parse($year.'-'.$month.'-'.'01');
 		 }elseif(!empty($date)) {
@@ -599,7 +594,7 @@ class AttendanceController extends Controller
 		}
 		$data['holiday_data'] = $this->holidays($data['date_handling']['current_year'], $data['date_handling']['current_month']);
 		$data['user_data'] = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
-		$data['attendance_data'] = Attendance::select('employee_id','punch_in_out','shift_hours','day','date', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
+		$data['attendance_data'] = Attendance::select('employee_id','punch_in_out','shift_hours','day','date','year','month','month_week_no', 'over_time','attendance_status','lock_status')->where($where)->get()->groupBy('employee_id');
 	
 	return view('organization.hrm.attendance.hrm-attendance-view-display',$data);
 	}

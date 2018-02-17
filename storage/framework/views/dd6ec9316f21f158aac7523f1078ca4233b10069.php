@@ -19,38 +19,22 @@
 		<input type="hidden" id="token" name="_token" value="<?php echo e(csrf_token()); ?>" >
 		<input type="hidden" id="years" value="<?php echo e($data['year']); ?>" >
 		<input type="hidden" id="months" value="<?php echo e($data['month']); ?>" >
-		
-		
-		
 		<div id="main" class="hrm-attendance-wrapper"></div>
 	</div>
-
-
-<script type="text/javascript">  
-
+<script type="text/javascript">
 $(document).ready(function(){
-    $('body').on('click','.hrm-attendance-view-switch li',function(e){
-		e.preventDefault();
-		$(this).addClass('active').siblings().removeClass('active');
-	});
-    
-    
-    
-
     $(document).on('click','.show-details',function(e){
 		e.preventDefault();
 		$('.attendance-details').hide();
 		$(this).parents('.attendance-sheet').nextAll('.attendance-details:first').toggle();
 	})
-    
-    
 		year = $("#years").val();
 		month = $("#months").val();
 		if(month  && year){
 			attendance_filter(null, null, month, year)
 		}
 		else{
-		attendance_list();
+			attendance_list();
 		}
 	});
 	function showHide(show)
@@ -64,19 +48,13 @@ $(document).ready(function(){
 				url:route()+'/attendance/list/ajax',
 				type:'Get',
 				success: function(res){
-					
 					$(".hrm-attendance-wrapper").html(res);
-					console.log('data sent successfull code 101');
-					$(".monthly").addClass("aione-active");
-					 $("#week ,#days").hide();
-					$('select').material_select();
 				}
 			});
 	}
 
 	function attendance_filter(date, week, mo, yr)
 	{
-		console.log(date, week, mo, yr);
 		var postData = {};
 		postData['date'] = date;
 		postData['week'] = week;
@@ -88,86 +66,11 @@ $(document).ready(function(){
 				type:'POST',
 				data:postData,
 				success: function(res){
-
 					$(".hrm-attendance-wrapper").html(res);
-					$("#month , #week ,#days").hide();
-
-					if(date)
-					{
-						$("#days").show();
-						console.log('day');
-						$(".daily").addClass("aione-active");
-
-					}else if(week){
-						 $("#week").show();
-						console.log('week');
-						 $(".weekly").addClass("aione-active");
-					}else{
-						 $("#month").show();
-						console.log('month');
-						$(".monthly").addClass("aione-active");
-					}
-					//$('select').material_select();
-				
-					console.log('data sent successfull  code 102');
 				}
 			});
-		}
-		
-		function lock(month, year)
-		{
-			var datas ={};
-			datas['month'] =month;
-			datas['year'] =year;
-			datas['_token'] = $("#token").val();
-
-			$.ajax({
-				url:route()+'/attendance/lock',
-				type:'POST',
-				data:datas,
-				success: function(res){
-					console.log(res);
-				}
-			})
-		}
-
-		$(document).on('change', '.switch > label > input',function(e){
-			var postedData = {};
-			postedData['month']	= $("#current_month").val();
-			postedData['year']	= $("#year").val();
-			postedData['lock_status'] 			= $(this).prop('checked');
-			postedData['_token'] 			= $("#token").val();
-
-			$.ajax({
-				url:route()+'/attendance/lock',
-				type:'POST',
-				data:postedData,
-				success: function(res){
-					console.log('data sent successfull  code 103');
-				}
-			});
-			$('.editable h5 ,.editable p').removeClass('edit-fields');
-		});
-
-	function unlock(month, year)
-		{
-			var datas ={};
-			datas['month'] =month;
-			datas['year'] =year;
-			datas['_token'] = $("#token").val();
-
-			$.ajax({
-				url:route()+'/attendance/lock',
-				type:'POST',
-				data:datas,
-				success: function(res){
-					console.log(res);
-				}
-			})
 		}
 </script>
-
-
 <style type="text/css">
 .attendance-status-present{ 
     background-color: #9dcb64;
@@ -457,6 +360,5 @@ HRM Attendance View Switch
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

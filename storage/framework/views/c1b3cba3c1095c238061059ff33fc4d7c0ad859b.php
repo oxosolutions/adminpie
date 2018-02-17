@@ -54,3 +54,6 @@
 	<div style="clear:both;">
 	</div>
 </div>
+<script type="text/javascript">
+	$('.month-tab').addClass('active').siblings().removeClass('active');
+</script>
