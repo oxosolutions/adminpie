@@ -1,3 +1,4 @@
+@include('organization.hrm.attendance.data-display.check-condition')
 <div id="attendance_sheet_container" class="table-responsive">
 	<div class="attendance-sheet line-height-30">
 		<div class="attendance-sheet">
@@ -7,9 +8,8 @@
 			<div class="attendanc-sheet content">
 				<div class="attendanc-sheet content">Name</div>
 			</div>
+			
 			<div>
-			@include('organization.hrm.attendance.data-display.check-condition')
-
 				@php
 		 			$td="";
 					$number=1;
@@ -77,6 +77,7 @@
 						
 						if(!empty($fdate)) {
 							$joining_date =	check_joining_date($user_meta, $current_year, $current_month, $fdate);
+
 							if($joining_date==false){
 								continue;
 							}

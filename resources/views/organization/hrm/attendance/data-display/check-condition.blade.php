@@ -1,6 +1,7 @@
 @php
 
 function check_joining_leaving_employee($user_meta , $current_year , $current_month=null ){
+	
 	if(!isset($user_meta['employee_id']) || empty($user_meta['employee_id']) || empty($user_meta['user_shift']) || empty($user_meta['date_of_joining'])) {
 		return false;
 	}

@@ -13,7 +13,9 @@
 		$shift = $data->mapWithKeys(function($item , $key){
 		$come_late =  $go_early = Null;
 		$shift_hr = json_decode($item->shift_hours);
+		dump('shift_hr', $shift_hr);
 		$punch_in_out = json_decode($item->punch_in_out);
+		dump('shift_hr', $punch_in_out);
 		if($shift_hr[0] < $punch_in_out[0]){
 			$come_late = difference_secs($shift_hr[0] , $punch_in_out[0]);
 		}
