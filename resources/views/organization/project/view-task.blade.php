@@ -60,15 +60,23 @@
                             <tr>
                                 <td>Status</td>
                                 <td>
-                                    <span class=" mr-5 bg-light-blue bg-darken-2 white p-2 ph-10 posi" style="border-radius: 4px">
-                                    {{ call_model('Tasks','getStatus',$task->status) }}
+                                  
+                                    <span class="dropdown">
+                                      <button id="status_button">{{ call_model('Tasks','getStatus',$task->status) }}</button>
+                                      <label>
+                                        <input type="checkbox">
+                                        <ul>
+                                          <li onclick="updateStatus(0,{{ $task->id }})">Pending</li>
+                                          <li onclick="updateStatus(1,{{ $task->id }})">In progress</li>
+                                          <li onclick="updateStatus(2,{{ $task->id }})">Completed</li>
+                                        </ul>
+                                      </label>
+                                    </span>
 
-                                    </span>
-                                    <span class="aione-float-right">
-                                        <a href="">
-                                            Change    
-                                        </a>
-                                    </span>
+                                    {{-- <span class=" mr-5 bg-light-blue bg-darken-2 white p-2 ph-10 posi" style="border-radius: 4px">
+                                        {{ call_model('Tasks','getStatus',$task->status) }}
+                                    </span> --}}
+                                   
                                 </td>
                             </tr>
                         </tbody>
@@ -82,56 +90,37 @@
                      Comments 
                 </div>
                 <div class="p-10">
-                    <div class="aione-border-bottom pt-10">
-                        <div class="ar ">
-                            <div class="ac l50 font-weight-700 font-size-16">
-                                Rahul Sharma
+                    @if($task['comments'] != null && !$task['comments']->isEmpty())
+                        @foreach($task['comments'] as $key => $comment)
+                            <div class="aione-border-bottom pt-10">
+                                <div class="ar ">
+                                    <div class="ac l50 font-weight-700 font-size-16">
+                                        {{ user_id_to_name($comment->user_id) }}
+                                    </div>
+                                    <div class="ac l50 aione-align-right font-size-13">
+                                        {{ $comment->created_at->diffForHumans() }}
+                                    </div>
+                                </div>    
+                                <div class="p-10 grey">
+                                    {{ $comment->comment }}
+                                </div>
                             </div>
-                            <div class="ac l50 aione-align-right font-size-13">
-                                10 min ago
-                            </div>
-                        </div>    
-                        <div class="p-10 grey">
-                            Sandeep Please complete this task
-                        </div>
-                    </div>
-
-                    <div class="aione-border-bottom pt-10" >
-                        <div class="ar ">
-                            <div class="ac l50 font-weight-700 font-size-16">
-                                Sandeep Singh
-                            </div>
-                            <div class="ac l50 aione-align-right font-size-13">
-                                10 min ago
-                            </div>
-                        </div>    
-                        <div class="p-10 grey">
-                            I m busy
-                        </div>
-                    </div>
-
-                    <div class="aione-border-bottom pt-10">
-                        <div class="ar ">
-                            <div class="ac l50 font-weight-700 font-size-16">
-                                Ashish Kumar
-                            </div>
-                            <div class="ac l50 aione-align-right font-size-13">
-                                10 min ago
-                            </div>
-                        </div>    
-                        <div class="p-10 grey">
-                            I m free
-                        </div>
-                    </div>
-                    <div class="aione-align-center pv-20">
+                        @endforeach
+                    @endif
+                    {{-- <div class="aione-align-center pv-20">
                         <a href="">
                             10 more previous comments                        
                         </a>
-                    </div>
-                    <div>
-                        <textarea placeholder="Write Your Comment" rows="5"></textarea>
-                        <button class="mt-10 aione-float-right">Post Comment</button>
-                    </div>
+                    </div> --}}
+                    {!! Form::open(['route'=>'post.comment']) !!}
+                        <div>
+                            {!! Form::textarea('comment',null,['rows'=>'5']) !!}
+                            {!! Form::hidden('type','task') !!}
+                            {!! Form::hidden('target_id',request()->id) !!}
+                            {!! Form::hidden('user_id',get_user()->id) !!}
+                            {!! Form::submit('Post Comment',['class'=>'mt-10 aione-float-right']) !!}
+                        </div>
+                    {!! Form::close() !!}
                 </div>
                     
             </div>
@@ -233,7 +222,130 @@
     .image-wrapper:hover .fa-download{
         display: block;
     }
+
+    /****************************************************************/
+    /**                     Drop Down Button                      ***/
+    /****************************************************************/
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+    }
+
+    .dropdown > a, .dropdown > button {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 6px 20px 6px 10px;
+      border-radius: 4px;
+      display: inline-block;
+      color: black;
+      text-decoration: none;
+    }
+
+    .dropdown > a:before, .dropdown > button:before {
+      position: absolute;
+      right: 7px;
+      top: 17px;
+      content: ' ';
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid black;
+    }
+
+    .dropdown input[type=checkbox] {
+      position: absolute;
+      display: block;
+      top: 0px;
+      left: 0px;
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+      opacity: 0;
+    }
+
+    .dropdown input[type=checkbox]:checked {
+      position: fixed;
+      z-index:+0;
+      top: 0px; left: 0px; 
+      right: 0px; bottom: 0px;
+    }
+
+    .dropdown ul {
+      position: absolute;
+      top: 18px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      left: 0px;
+      list-style: none;
+      padding: 4px 0px;
+      display: none;
+      background-color: white;
+      box-shadow: 0 3px 6px rgba(0,0,0,.175);
+    }
+
+    .dropdown input[type=checkbox]:checked + ul {
+      display: block;
+    }
+
+    .dropdown ul li {
+      display: block;
+      padding: 6px 20px;
+      white-space: nowrap;
+      min-width: 100px;
+    }
+
+    .dropdown ul li:hover {
+      background-color: #F5F5F5;
+      cursor: pointer;
+    }
+
+    .dropdown ul li a {
+      text-decoration: none;
+      display: block;
+      color: black
+    }
+
+    .dropdown .divider {
+      height: 1px;
+      margin: 9px 0;
+      overflow: hidden;
+      background-color: #e5e5e5;
+      font-size: 1px;
+      padding: 0;
+
+    }
+
+
 </style>
+<script type="text/javascript">
+    let status,task_id;
+    function updateStatus(status,task_id){
+        console.log(status+task_id);
+        $.ajax({
+           type:'POST',
+           url:route()+'/task/status/update',
+           data: {_token: '{{ csrf_token() }}',task_id: task_id, status: status},
+           success: function(result){
+                console.log(result);
+                if (status == 0) {
+                    $('#status_button').text('Pending');    
+                } 
+                if (status == 1) {
+                    $('#status_button').text('In progress');
+                } 
+                if (status == 2) {
+                    $('#status_button').text('Completed');
+                }
+                 Materialize.toast('Successfully Updated', 3000)
+                
+           } 
+        });
+    }
+</script>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 @endsection

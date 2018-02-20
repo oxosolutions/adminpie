@@ -84,7 +84,12 @@ protected function leave_category_detail($category_id, $year, $month=null){
 		$temp_add =  $year +1; 
 		$date_of_joining = get_current_user_meta('date_of_joining');
 		$data = catMeta::whereIn('key',['number_of_day','valid_for', 'apply_before', 'maximum_saction_leave','minimum_saction_leave','carry_farward'])->where('category_id', $category_id)->get()->pluck('value','key')->put('category_id',$category_id)->toArray();
+
+		if(empty($data['number_of_day'])){
+			$data['number_of_day'] =0;
+		}
 		$assigned_leave = $data['number_of_day'];
+		
 	 	$time  = strtotime($date_of_joining);
         $joining_month = date('m', $time);
         $joining_year  = date('Y', $time);

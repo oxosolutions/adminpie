@@ -8,6 +8,8 @@ use Session;
 class Comment extends Model
 {
  
+    protected $fillable = ['target_id','user_id','reply_id','comment','type','status'];
+
  public function __construct(){
  	if(!empty(Session::get('organization_id')))
    		{

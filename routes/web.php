@@ -128,6 +128,9 @@
 
 		Route::group(['namespace'=>'Organization'], function(){
 
+            //Comments Routes
+            include_once 'custom/organization/comments.php';
+
             //Organization Public Routes
 			include_once 'custom/organization/public-routes.php';
 	
@@ -168,7 +171,7 @@
 
                     Route::any('/account/leaves/{id?}',['middleware'=>'role', 'as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@leave_listing']);
                     Route::get('account/todo/{id?}',    ['as'=>'account.todo','uses'=>'project\ProjectController@todo']);
-                    Route::get('account/tasks/{id?}',   ['as'=>'account.tasks','uses'=>'account\TasksController@index']);
+                    Route::get('account/tasks/{id?}',   ['as'=>'account.tasks','uses'=>'project\TasksController@index']);
                     
 				});
 
@@ -266,17 +269,7 @@
 					Route::post('/attandance_weekly',['as'=>'account.attendance_weekly','uses'=>'AttendanceController@attendance_weekly']);
 
 					//bookmarks
-					Route::get('/bookmarks',	['as'=>'design.bookmark' , 'uses'=> 'BookmarkController@index']);
-					Route::get('/bookmarks/create',	['as'=>'design.bookmark' , 'uses'=>function(){
-						return view('organization.bookmarks.create');
-					}]);
-					
-					Route::post('/bookmark/save',	['as'=>'save.bookmark' , 'uses'=>'BookmarkController@saveBookmark' ]);
-					Route::get('/bookmark/edit/{id}',	['as'=>'edit.bookmark' , 'uses'=>'BookmarkController@editBookmark' ]);
-					Route::post('/bookmark/delete',	['as'=>'delete.bookmark' , 'uses'=>'BookmarkController@deleteBookmark' ]);
-					Route::post('/bookmark/update/{id}',	['as'=>'update.bookmark' , 'uses'=>'BookmarkController@updateBookmark' ]);
-					Route::post('/add/category',	['as'=>'create.bookmark.category' , 'uses'=>'BookmarkController@addBookmarkCategories' ]);
-					Route::get('/delete/category/{id}',	['as'=>'delete.bookmark.category' , 'uses'=>'BookmarkController@delCategory' ]);
+					include_once 'custom/organization/bookmarks.php';
 
 				/********************************  Task Routes *********************************************/
 					
@@ -370,8 +363,6 @@
 						
 						Route::get('application/apply/{id}',['as'=>'application', 'uses'=>'JobOpeningController@application']);
 
-						//ROLE PERMISSON ROUTE
-						// Route::get('role/create',['as'=>'create.role', 'uses'=>'UserRoleController@create']);
 						
 						
 						//END ROLE PERMISSON ROUTE
@@ -429,33 +420,16 @@
 							
 
 						//holidays
-							Route::get('/holidays/{id?}',		['as' => 'list.holidays' , 'uses' => 'HolidayController@listHoliday']);
-							Route::post('/holiday_save',		['as' => 'store.holiday' , 'uses' => 'HolidayController@save']);
-							Route::get('/holidays/edit/{id}',	['as' => 'edit.holiday' , 'uses' => 'HolidayController@edit']);
-							Route::post('/holiday/update',		['as' => 'update.holiday' , 'uses' => 'HolidayController@update']);
-							Route::post('/holiday/edit',		['as' => 'edit.holiday' , 'uses' => 'HolidayController@editHoliday']);
-							Route::get('/holiday/delete/{id}',	['as' => 'delete.holiday' , 'uses' => 'HolidayController@deleteHoliday']);
-
-						//Application
-							// Route::get('/applications',		['as' => 'applications' , 'uses' => 'ApplicationController@index']);
+							include_once 'custom/organization/holiday.php';
 
 						//Mail
 							Route::get('/mails',		['as' => 'mails' , 'uses' => 'MailController@index']);
 
-						//Applicants
-							// Route::get('/applicants',		['as' => 'applicants' , 'uses' => 'ApplicantsController@index']);
-
 						//Designation
-							Route::post('/designation/save',			['as' => 'store.designation' , 'uses' => 'DesignationsController@save']);
-							Route::post('/designation/update',			['as' => 'update.designation' , 'uses' => 'DesignationsController@update']);
-							Route::post('edit/designation',			['as' => 'edit.designation','uses'=> 'DesignationsController@editUserDesignation']);
-							Route::get('delete/designation/{id}',		['as' => 'delete.designation','uses'=> 'DesignationsController@deleteUserDesignation']);
+							include_once 'custom/organization/designations.php';
 
 						//Department
-							Route::post('/department/save',		['as' => 'store.department' , 'uses' => 'DepartmentsController@save']);
-							Route::get('/department/update',	['as' => 'update.department' , 'uses' => 'DepartmentsController@update']);
-							Route::post('/department/edit',	['as' => 'edit.department' , 'uses' => 'DepartmentsController@editDepartment']);
-							Route::get('/department/delete/{id?}',	['as' => 'delete.department' , 'uses' => 'DepartmentsController@delete']);
+							include_once 'custom/organization/departments.php';
 
 
 						//Forms
@@ -476,14 +450,7 @@
 
 
 				//notes
-				Route::get('project/notes/list',	['as'=>'list.notes','uses'=>'project\NotesController@listNotes']);
-				Route::get('project/notes/{id}',	['as'=>'notes.project','uses'=>'project\NotesController@index']);
-				Route::post('project/notes/save',	['as'=>'save.notes','uses'=>'project\NotesController@createNotes']);
-				Route::post('project/notes/edit',	['as'=>'edit.notes','uses'=>'project\NotesController@edit']);
-				Route::post('project/notes/delete',	['as'=>'delete.account.notes','uses'=>'project\NotesController@delete']);
-				// end notes
-
-
+				include_once 'custom/organization/project_note.php';
 				
 				//Project Routes
 					include 'custom/organization/project.php';
@@ -491,13 +458,8 @@
                 //Tasks
                     include 'custom/organization/tasks.php';
 
-				Route::get('/project/todo/list/{id?}',	['as'=>'list.todo','uses'=>'project\TodoController@listTodo']);
-				Route::get('project/todo/{id?}',	['as'=>'todo.project','uses'=>'project\ProjectController@todo']);
-				Route::post('/project/todo/create',	['as'=>'create.todo','uses'=>'project\TodoController@create']);
-				
-				Route::POST('/project/todo/edit',	['as'=>'edit.todo','uses'=>'project\TodoController@edit']);
-				Route::POST('/project/todo/delete',	['as'=>'delete.todo','uses'=>'project\TodoController@delete']);
-				Route::POST('/project/todo/filter',	['as'=>'filter.todo','uses'=>'project\TodoController@filterData']);				
+				//Project Todo
+                include_once 'custom/organization/todo.php';			
 				
 
 				Route::group(['namespace' => 'dataset'],function(){
@@ -517,7 +479,6 @@
 					Route::group(['middleware' => 'role'],function(){
 						Route::get('/categories/{id?}',['as'=>'categories','uses'=>'categoriesController@listdata']);
 						Route::get('/posts',['as'=>'list.posts' , 'uses'=>'PagesController@listposts']);
-
 						Route::match(['get','post'],'/design-settings',		['as'=>'design.settings' , 'uses'=>'PagesController@designSettings']);
 					});
 					
@@ -527,48 +488,19 @@
 					// posts
 					include_once 'custom/organization/posts.php';
 
-					Route::post('/save/categories',['as' => 'category.save' , 'uses' => 'categoriesController@save']);
-					Route::get('/delete/categories/{id}',['as' => 'category.delete' , 'uses' => 'categoriesController@delete']);
-					Route::get('/edit/categories/{id}',['as' => 'category.edit' , 'uses' => 'categoriesController@getDataById']);
-					Route::post('/update/categories/{id}',['as' => 'category.update' , 'uses' => 'categoriesController@updateCategory']);
+					//Category Routes
+                    include_once 'custom/organization/category.php';
 
-					Route::get('/media',['as'=>'media','uses'=>'MediaController@index']);
-					Route::get('/gallery',['as'=>'gallery','uses'=>'MediaController@gallery']);
-					Route::post('/gallery-item',['as'=>'get.gallery.item','uses'=>'MediaController@getGalleryItem']);
-					Route::post('/gallery/save',['as'=>'save.gallery.item','uses'=>'MediaController@saveGalleryItem']);
-					Route::post('/update/media/info',['as'=>'media.info.update','uses'=>'MediaController@updateGalleryInfo']);
-
-
-					Route::match(['get','post'],'/media/create',['as'=>'create.media','uses'=>'MediaController@create']);
+					// Media Routes
+                    include_once 'custom/organization/media.php';
 
 					//sliders
-					Route::get('sliders'			,['as' => 'list.sliders' , 'uses' => 'SliderController@index']);
-					Route::get('slider/create' 		,['as' => 'create.slider' , 'uses' => 'SliderController@addSlide']);
-					Route::post('slider/save' 		,['as' => 'save.slider' , 'uses' => 'SliderController@saveSlider']);
-					Route::get('slider/delete/{id}' ,['as' => 'delete.slider' , 'uses' => 'SliderController@deleteSlider']);
-					Route::get('slider/options/{id}',['as' => 'options.slider' , 'uses' => 'SliderController@sliderOptions']);
-					Route::get('slider/edit/{id}'	,['as' => 'slider.edit' , 'uses' => 'SliderController@sliderEdit']);
-					Route::post('slider/update'	,['as' => 'slider.update' , 'uses' => 'SliderController@sliderUpdate']);
-					Route::post('save/options'		,['as' => 'options.save' , 'uses' => 'SliderController@saveSliderOptions']);
-					Route::get('slider/settings/{id}',['as' => 'settings.slider' , 'uses' => 'SliderController@sliderSettings']);
-					Route::post('save/settings'		,['as' => 'settings.save' , 'uses' => 'SliderController@saveSliderSettings']);
+					include_once 'custom/organization/sliders.php';
 					
 				});
-				//Route::get('page/{slug}',	['as'=>'view.pages' , 'uses'=>'cms\PagesController@viewPage' ]);
 
 				Route::group(['prefix'=>'support','namespace' => 'support'],function(){
-					//include_once Auther: Ashish kumar
 					include_once 'custom/organization/support.php';	
-					Route::get('tickets',	['as'=>'support.tickets','uses'=>'SupportsController@index']);
-					Route::get('categories',		['as'=>'support.categories','uses'=>'SupportsController@Categories']);
-					Route::get('knowledge-base',	['as'=>'knowledge-base','uses'=>'SupportsController@knowledgeBase']);
-					Route::get('faq',	['as'=>'faq','uses'=>'SupportsController@FAndQ']);
-					Route::post('create/feedback',['as' => 'create.feedback' , 'uses' => 'FeedbackController@create']);
-					Route::get('feedbacks',['as' => 'list.feedback' , 'uses' => 'FeedbackController@listFeedbacks']);
-					Route::get('feedback/create',['as' => 'add.feedback' , 'uses' => 'FeedbackController@createFeedback']);
-					Route::get('edit/feedback/{id}',['as' => 'edit.feedback' , 'uses' => 'FeedbackController@editFeedback']);
-					Route::get('delete/feedback/{id}',['as' => 'delete.feedback' , 'uses' => 'FeedbackController@delete']);
-					Route::post('update/feedback',['as' => 'update.feedback' , 'uses' => 'FeedbackController@update']);
 				});
 
 				Route::group(['namespace'=>'users'],function(){
@@ -579,47 +511,39 @@
 
             
 		});
-					//custom maps
-					Route::get('/maps/{type?}', 		['as'=>'org.custom.maps','uses'=>'Admin\CustomMapsController@index']);
-					Route::post('/map/save',			['as'=>'org.save.custom.map','uses'=>'Admin\CustomMapsController@saveMap']);
-					Route::get('/map/delete/{id}',		['as'=>'org.delete.custom.map','uses'=>'Admin\CustomMapsController@DeleteUserMap']);
-					Route::get('/map/edit/{id}',		['as'=>'org.getData.custom.map','uses'=>'Admin\CustomMapsController@getDataById']);
-					Route::post('/map/update/{id}',		['as'=>'org.update.custom.map','uses'=>'Admin\CustomMapsController@updateMap']);
-					Route::get('/map/views/{id}',		['as'=>'org.global.view.map','uses'=>'Admin\CustomMapsController@viewMapUsers']);
-					Route::get('/map/view/{id}',		['as'=>'org.view.map','uses'=>'Admin\CustomMapsController@viewUserMap']);
-					Route::post('/map/export',			['as'=>'org.export.map','uses'=>'CustomMapsController@processExcelFile']);
+        //custom maps
+        include_once 'custom/organization/custom_maps.php';
 
-					//forms
-					include_once 'custom/organization/forms.php';
+		//forms
+		include_once 'custom/organization/forms.php';
     //});
 
 
-Route::get('access_denied',['as' => 'access.denied','uses' => function(){
-	return View::make('errors.accessdenied');
-}]);
-Route::get('email-template',['as' => 'email.template','uses' => function(){
-	return View::make('organization.login.reset-email-template');
-}]);
+        Route::get('access_denied',['as' => 'access.denied','uses' => function(){
+        	return View::make('errors.accessdenied');
+        }]);
+        Route::get('email-template',['as' => 'email.template','uses' => function(){
+        	return View::make('organization.login.reset-email-template');
+        }]);
 	
 	/****************************************** All Routes For Organization *************************************************/
 	
 	/****************************************** Pages for experiments *************************************************/
  
-Route::get('docs',['as' => 'new.layout','uses' => function(){
-	return View::make('organization.demo.NewLayout');
-}]);
-Route::group(['prefix'=>'front'], function(){	 
-	Route::get('clients',['as' => '.create.clients','uses' => function(){
-		return View::make('front.clients.index');
-	}]);
+    // Commented for delete
+    /*Route::get('docs',['as' => 'new.layout','uses' => function(){
+    	return View::make('organization.demo.NewLayout');
+    }]);
+    Route::group(['prefix'=>'front'], function(){	 
+    	Route::get('clients',['as' => '.create.clients','uses' => function(){
+    		return View::make('front.clients.index');
+    	}]);
 
-});
+    });*/
 
 	/***************************************** Public Route for Shared Survey ******************************************/
 	Route::get('/survey/{token}',['middleware'=>'survey.auth','as'=>'embed.survey','uses'=>'Organization\survey\SurveyController@embededSurvey']);
 
-
-	
 
 	/***************************************** Public Route for Share Data ******************************************/
 

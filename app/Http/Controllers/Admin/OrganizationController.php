@@ -348,6 +348,12 @@ try{
 
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
+                                'name'=>'create_'.$org_id.'_comments',
+                                '--schema'=>'target_id:integer, user_id:integer, reply_id:integer, comment:text:nullable, type:string:nullable, status:integer:default(1)'
+                            ]);
+
+        Artisan::call('make:migration:schema',[
+                                '--model'=>false,
                                 'name'=>'create_'.$org_id.'_log_systems',
                                 '--schema'=>'user_id:integer:nullable, type:string:nullable, route_name:string:nullable, text:text:nullable, ip_address:string:nullable'
                             ]);

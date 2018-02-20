@@ -8,6 +8,8 @@ use App\Model\Organization\Tasks;
 use Session;
 use Auth;
 use Carbon\Carbon;
+use App\Model\Organization\User;
+use App\Model\Organization\Comment;
 class TasksController extends Controller{
 
     /**
@@ -15,9 +17,18 @@ class TasksController extends Controller{
      * @return [type] return tasks view
      * @author Rahul
      */
-    public function index(){
-        $model = Tasks::get();
-        return view('organization.project.tasks',['tasks'=>$model]);
+    public function index(Request $request){
+           
+        $module = explode('/',$request->route()->uri);
+        if($module[0] == 'account'){ 
+            $model = Tasks::HavingCurrentUser();
+            return view('organization.profile.tasks',['tasks'=>$model]); 
+        }else{
+            $model = Tasks::get();
+            return view('organization.project.tasks',['tasks'=>$model]); 
+        }
+        
+        
     }
 
     /**
@@ -34,6 +45,7 @@ class TasksController extends Controller{
         $model['due_date'] = Carbon::parse($model->end_date)->format('Y-m-d');
         $model['attachment'] = ($model->attachment != '')?json_decode($model->attachment,true):[];
         $model['project'] = $model->project_id;
+        $model['comments'] = Comment::where(['target_id'=>$id,'type'=>'task'])->get();
        
         return view('organization.project.view-task',['task'=>$model]);
     }

@@ -74,9 +74,11 @@ $(document).ready(function(){
 <style type="text/css">
 .attendance-status-present{ 
     background-color: #9dcb64;
+    color: white
 }
 .attendance-status-absent{ 
     background-color: #e85d52;
+    color: white
 }
 .attendance-status-leave{ 
     background-color: #29c8f8;
@@ -86,6 +88,14 @@ $(document).ready(function(){
 }
 .attendance-status-tardy:after{ 
     background-color: #e85d52;
+}
+.attendance-status-holiday{
+	background-color:#81c3d8;
+	color: white
+}
+.attendance-status-holiday.attendance-status-present,
+.attendance-status-off.attendance-status-present{
+	background-color:#80a750;
 }
 /* 
 #a5887f
@@ -204,7 +214,7 @@ HRM Attendance View Switch
 } 
 #hrm_attendance .column
 {
-	width: 2.20%;
+	width: 2.3%;
     float: left;
     border-top:0.1px solid #e8e8e8;
     border-left:0.1px solid #e8e8e8;
@@ -355,6 +365,15 @@ HRM Attendance View Switch
     	background: linear-gradient(to right,  #f1c232 0%,#f1c232 50%,#6aa84f 50%,#6aa84f 100%) !important; 
 		color: white !important	
 	}
+	/*nirmal css on laravel*/
+	.attendance-details{
+		border: 1px solid #e8e8e8;
+	    padding: 10px;
+	    margin-top: 12px;
+	    margin-bottom: 12px;
+	    box-shadow: 1px 1px 11px 2px #e8e8e8;
+	    
+	}	
 </style>
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

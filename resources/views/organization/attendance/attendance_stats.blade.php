@@ -2,6 +2,7 @@
 @if(!empty($attendanceVal))
 {{-- <h3> Attendance stats </h3> --}}
 	@php
+	dump(1232);
 	// function difference_secs($time_1 , $time_2){
 	// 	$start_shift = new Carbon\Carbon($time_1);
 	// 		$come_at = new Carbon\Carbon($time_2);
@@ -31,6 +32,7 @@
 	    $due_time = $attendanceVal->where('over_time' ,'<', 0)->sum('over_time');
 	    $extra_time = $attendanceVal->where('over_time' ,'>', 0)->sum('over_time');
 	    $all_stats = $attendanceVal->whereNotIn('over_time' ,[null]);
+	    dump($all_stats);
 	@endphp
 	<div class="">
 		<div class="ar aione-align-center">

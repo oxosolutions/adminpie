@@ -63,4 +63,21 @@ class Tasks extends Model
         }
     }
 
+    public static function HavingCurrentUser(){
+        $current_user = get_user()->id;
+        $tasks = self::get();
+        $taskModel = [];
+        if(!$tasks->isEmpty()){
+            foreach ($tasks as $key => $task) {
+                $assign_to = json_decode($task->assign_to,true);
+                if(array_key_exists('user', $assign_to)){
+                    if(in_array($current_user,$assign_to['user'])){
+                        $taskModel[] = $task;
+                    }
+                }
+            }
+        }
+        return collect($taskModel);
+    }
+
 }

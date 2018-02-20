@@ -310,22 +310,28 @@ class AttendanceController extends Controller
 						$where =['employee_id'=>$employee_id, 'year'=>$year,'month'=>$month, 'date'=>$dates];
 						$attendance_query = Attendance::where($where);
 						if($attendance_query->count() >0){
-							$shift_hours_overtime = $this->shift_hours_overtime($attendance_query, $day, $employee_id, $employee_ids,  $pushinout);
-							if(!empty($shift_hours_overtime)){
-								$data_for_insertion = array_merge($data_for_insertion, $shift_hours_overtime);
+							if(!empty($data_for_insertion['punch_in_out'])) {
+								$shift_hours_overtime = $this->shift_hours_overtime($attendance_query, $day, $employee_id, $employee_ids,  $pushinout);
+
+								if(!empty($shift_hours_overtime)){
+									$data_for_insertion = array_merge($data_for_insertion, $shift_hours_overtime);
+								}
 							}
 						$attendance_query->update($data_for_insertion);
 						}else{
 							$shift_data = $this->get_shift_hours($employee_id, $employee_ids);
-								if(!empty($shift_data)){
-									if(in_array(strtolower($day), $shift_data['working_days'])){
-										$data_for_insertion['shift_hours'] = json_encode($shift_data['shift_hours']);
-										$over_times = $this->calculate_over_time($shift_data['shift_hours'] , $pushinout);
-										if(!empty($over_times)){
-											$data_for_insertion['over_time'] = $over_times;
-										}
+							if(!empty($shift_data)){
+								if(in_array(strtolower($day), $shift_data['working_days'])){
+									$data_for_insertion['shift_hours'] = json_encode($shift_data['shift_hours']);
 									}
-								}
+							}
+							if(!empty($data_for_insertion['punch_in_out'])) {
+									$over_times = $this->calculate_over_time($shift_data['shift_hours'] , $pushinout);
+									if(!empty($over_times)){
+										$data_for_insertion['over_time'] = $over_times;
+									}
+							}
+							$data_for_insertion;
 							$attendance = new Attendance();
 							$attendance->fill($data_for_insertion);
 							$attendance->save();
@@ -336,7 +342,7 @@ class AttendanceController extends Controller
 				 }
 			return $employee;
 	}
-	protected function shift_hours_overtime($attendance_query, $day, $employee_id, $employee_ids,$pushinout){
+	protected function shift_hours_overtime($attendance_query, $day, $employee_id, $employee_ids,$pushinout=null){
 		$data_for_insertion =null;
 		$shift_hours = $attendance_query->first()->shift_hours;
 		if(empty($shift_hours)){
@@ -574,7 +580,7 @@ class AttendanceController extends Controller
 			$holiday_date = str_replace('0','',date('d', strtotime($data['date_of_holiday'])));
 			return [$holiday_date=> $data['title']];
 		});
-		return $holidays;
+		return $holiday_data;
 	}
 	public function ajax(Request $request){
 		http_response_code(500);
