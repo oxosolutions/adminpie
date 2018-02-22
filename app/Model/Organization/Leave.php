@@ -18,7 +18,7 @@ class Leave extends Model
 					//$this->table = '32_holidays';
 	}
 	//use SoftDeletes;
-    protected $fillable = [ 'name', 'employee_id', 'reason_of_leave', 'leave_category_id', 'from', 'to','from_leave_count', 'to_leave_count', 'description', 'total_days', 'apply_by', 'approved_by', 'status'];
+    protected $fillable = [ 'name', 'type', 'employee_id', 'reason_of_leave', 'leave_category_id', 'from', 'to','from_leave_count', 'to_leave_count', 'description', 'total_days', 'apply_by', 'approved_by', 'status'];
 
     public function employees(){
         $user_list = User::where('user_type','[2]')->pluck('name','id');

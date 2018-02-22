@@ -109,11 +109,15 @@
 						if(!empty($attendance_data) && isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']]))
 						{
  							$attendanceVal = collect($attendance_data[$user_meta['employee_id']])->keyBy('date');
+ 						// dd($attendanceVal->toArray() );
  						}else{
  							$attendanceVal = [];
  						}
+
+ 						//$total_days=20;
  					@endphp
 						@for($d=$number; $d<=$total_days; $d++) 
+							
 							@php
 								$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 							@endphp

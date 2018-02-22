@@ -8,9 +8,11 @@ class CategoryRepository implements CategoryRepositoryContract
 {
 	public function create($data=null)
 	{
-		$cat = new Category();
-		$cat->fill($data->all());
-		$cat->save();
+    $cat = new Category();
+    $cat->fill($data->all());
+    $cat->save();
+    $data->request->add(['id' => $cat->id]);
+    $this->category_meta_save($data);
 	}
 	public function list_category($type,$request = null)
 	{
@@ -63,7 +65,6 @@ class CategoryRepository implements CategoryRepositoryContract
 	public function category_meta_save($request){
     $checkKey = ['role_include'=>'role_include' ,'roles_exclude'=>'roles_exclude' , 'include_designation'=>'include_designation', 'exclude_designation'=>'exclude_designation', 'user_include'=>'user_include',  'user_exclude'=>'user_exclude','carry_farward'=>'carry_farward','carry_farward_cashout'=>'carry_farward_cashout'];
     $cat_id = $request['id'];
-     // CM::where(['category_id'=>$cat_id])->delete();
 		$cat = Category::find($cat_id);
 		$cat->fill($request->all());
 		$cat->save();

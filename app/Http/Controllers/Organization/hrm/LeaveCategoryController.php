@@ -43,18 +43,14 @@ class LeaveCategoryController extends Controller
       * @param  Request $request [all form data]
       * @return [type]           [back category list]
       */
-    public function save(Request $request)
-    {
-      //$request['name'] = $request['addleavecat'];
+    public function save(Request $request) {
       $tbl = Session::get('organization_id');
-      $valid_fields = [
-                          'name'          => 'required|unique:'.$tbl.'_categories'
-                      ];
+      $valid_fields = ['name'          => 'required|unique:'.$tbl.'_categories'];
       $this->validate($request , $valid_fields);
-        $request->request->add(['type' => 'leave']);
-        $this->catRepo->create($request);
-        return redirect()->route('leave.categories');
-     }
+      $request->request->add(['type' => 'leave']);
+      $this->catRepo->create($request);
+      return redirect()->route('leave.categories');
+    }
      /**
       * [manage_status change enable disable]
       * @param  Request $request [request data]
@@ -69,8 +65,7 @@ class LeaveCategoryController extends Controller
       * @param  [type]  $id      [description]
       * @return [type]           [description]
       */
-    public function categoryMeta(Request $request , $cat_id=null)
-     {
+    public function categoryMeta(Request $request , $cat_id=null) {
         if(Auth::guard('org')->check()){
           $id = Auth::guard('org')->user()['id'];
         }else{
@@ -86,52 +81,13 @@ class LeaveCategoryController extends Controller
         $cm = CM::where('category_id',$cat_id)->get(); /*This get all data like user include , exclude , designation etc only*/
         $data['data'] = $cm->pluck('value','key')->toArray();
         $merge = array_merge($data['cat'] , $data['data']);
-        //dd($merge);
-        // if(!empty($merge['user_exclude'])){
-        //   $select['user_exclude'] = json_decode($merge['user_exclude'],true);
-        // }
-        // if(!empty($merge['user_include'])){
-        //   $select['user_include'] = json_decode($merge['user_include'],true);
-        // }
-        // if(!empty($data['data']['include_designation']))
-        // {
-        //   $include_designation = array_map('intval',json_decode($data['data']['include_designation']));
-        //   $user_data = $this->user_by_designation($include_designation);
-        //  $include['user_include'] = $data['user_include'] = $user_data['user_include'];  
-        //  $exclude['user_exclude'] = $data['user_exclude'] = $user_data['user_exclude']; 
-        
-        //  $merge = array_merge($merge , $include, $exclude);
-
-        // $data_include_designation['data_designation'] = $data['data']['include_designation'];
-        // $merge =  array_merge($merge ,$data_include_designation);
-
-        // }else{
-        //   $meta_shift = UsersMeta::with('group_user')->whereIn('key',['user_shift'])->get();//->keys();
-         
-        //   $user_pluck = $meta_shift->pluck('group_user.name','group_user.id')->toArray();
-          // $user = User::with('belong_group')->where('id','!=',$cat_id)->get();//->pluck('name','id');
-
-          // dd('meta', $meta_shift->toArray() , $user->toArray());
-          // $user_pluck =[];
-          // foreach ($user as $userKey => $userValue) {
-          //   if(!empty($userValue['belong_group'])){
-          //     // $user_pluck[] = [$userValue['id']=>$userValue['belong_group']['name']];  
-          //     $user_pluck[$userValue['id']]= $userValue['belong_group']['name'];  
-          //   }
-          // }
-          // unset($data);
-        //  $data['userData'] = $data['user_include'] = $data['user_exclude']= $user_pluck; //[['12'=>'user']];// User::where('id','!=',$cat_id)->
-        //  $merge = array_merge($merge ,  $data);
-        // }
         $data['id'] =$cat_id;
-        // $designationData['designationData'] = $data['designationData'] = DES::where('status',1)->pluck('name','id');
-        // $data['roles'] = Role::where('status',1)->pluck('name','id');
-        // $merge = array_merge($merge, $designationData);
         return view('organization.hrm.leave-category.leave_rule',['data'=>$merge ,'select'=>$select]);
      }
 
     public function delete($id){
         CAT::where('id',$id)->delete();
+        CM::where('category_id',$id)->delete(); 
         return back();
     }
 
@@ -189,18 +145,10 @@ class LeaveCategoryController extends Controller
         $data = $this->user_by_designation($designation_id);
         $user_exclude = $data['user_exclude'];
         $user_include = $data['user_include'];
-        // $user_exclude =  User::with('belong_group','metas')->whereHas('metas', function($query) use($designation_id) {
-        //   $query->where('key','designation')->whereIn('value',$designation_id);
-        //   })->where('user_type','employee')->pluck('name','id');
-        // $user_include =  User::with('metas')->whereHas('metas', function($query) use($designation_id) {
-        //   $query->where('key','designation')->whereNotIn('value',$designation_id);
-        //   })->where('user_type','employee')->pluck('name','id');
-
-         return view('organization.hrm.leave-category.user_drop_down',compact('user_exclude','user_include'));
+        return view('organization.hrm.leave-category.user_drop_down',compact('user_exclude','user_include'));
     }
 
-    public function create()
-    {
+    public function create() {
         return view('organization.hrm.leave-category.add');
     }
 

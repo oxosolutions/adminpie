@@ -156,7 +156,7 @@ class LeavesController extends Controller
             $request['from']= $this->date_format($request['from']);
             $request['to']= $this->date_format($request['to']);
             $sh->fill($request->all());
-            $sh->status = 1; 
+            $sh->status = 0; 
             $sh->apply_by ='hr';
             $sh->save();
         }
@@ -309,8 +309,9 @@ class LeavesController extends Controller
         return ['year'=>$set->year, 'month'=>$set->month, 'date'=>$set->day, 'day'=>$set->format('l'), 'month_week_no'=>$set->weekOfMonth, 'day_in_month'=>$set->daysInMonth];
     }
     public function approve_leave($id)
-    {   
+    {
         $attendance_status = 'leave';
+        $status = 'approve';
         $model = LV::find($id);
         $cat_data = CAT::with('meta')->where('id',$model->leave_category_id)->first();
         if(!empty( $leave_category_type =$cat_data->meta->where('key','leave_category_type')->first())) {
@@ -319,10 +320,17 @@ class LeavesController extends Controller
             }
         }
         if(!empty($model)){
-            $from =  $this->set_dates($model->from);
-            $to =  $this->set_dates($model->to);
             $emp_id = $model->employee_id;
-            $status = 'approve';
+            $from =  $this->set_dates($model->from);
+            // if($model->type = 'first_half'){
+            //     extract($from);
+            //     dd($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
+            //     dump($model->type);
+            //     $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
+
+            // }
+            // dd($from , $model);
+            $to =  $this->set_dates($model->to);
             if($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] == $to['date']){
                 extract($from);
                 $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);

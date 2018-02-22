@@ -157,7 +157,7 @@ if(empty($user_meta['employee_id'])){
 					@else
 					<div class="field-wrapper " style="position: relative;">
 						<div class="field field-type-text">
-							{!! Form::text($emp_id."[punch_in_out][]",null,['class' => 'remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]) !!}
+							{!! Form::time($emp_id."[punch_in_out][]",null,['class' => 'timepicker remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]) !!}
 						</div>
 					</div>
 					<span class="{{$emp_id}}"> </span>
@@ -184,7 +184,7 @@ if(empty($user_meta['employee_id'])){
 						@else
 						<div><div class="field-wrapper ">
 							<div class="field field-type-text">
-							 {!! Form::text($emp_id."[in_out_data][]",null,['class' => '', 'id'=>'in_out_data'.$emp_id]) !!} 
+							 {!! Form::time($emp_id."[in_out_data][]",null,['class' => 'timepicker', 'id'=>'in_out_data'.$emp_id]) !!} 
 							 <span class="in_out{{$emp_id}}"> </span>
 							</div>
 						</div>
@@ -343,11 +343,11 @@ if(empty($user_meta['employee_id'])){
 		
 
 		emp_id = $(this).attr('emp_id');
-		$('.'+emp_id).append('<input class="remove_punch'+emp_id+'"  name="'+emp_id +'[punch_in_out][]" type="text"> <a class="del_check del_punch'+emp_id+'"" emp_id="'+emp_id+'">del </a>')
+		$('.'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text"><input class="timepicker remove_punch'+emp_id+'"  name="'+emp_id +'[punch_in_out][]" type="time"> <a class="del_check del_punch'+emp_id+'"" emp_id="'+emp_id+'"><i class="fa fa-trash red></i>" </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
 	});
 	$(document).on('click','.add_more_in_out', function(){
 		emp_id = $(this).attr('emp_id');
-		$('.in_out'+emp_id).append('<input class="remove_in_out'+emp_id+'"  name="'+emp_id +'[in_out_data][]" type="text"><a class="del_check del_in_out'+emp_id+'" emp_id="'+emp_id+'">del </a>')
+		$('.in_out'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text"><input class="timepicker remove_in_out'+emp_id+'"  name="'+emp_id +'[in_out_data][]" type="time"><a class="del_check del_in_out'+emp_id+'" emp_id="'+emp_id+'">del </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
 	});
 
 	$(document).on('click','.show_punch_in_out',function(e){
@@ -362,6 +362,13 @@ if(empty($user_meta['employee_id'])){
 			$('.del_punch'+emp_id).remove();
 	});
 		$(document).ready(function(){
+			$('.timepicker').pickatime({
+			   default: 'now',
+			   twelvehour: false, // change to 12 hour AM/PM clock from 24 hour
+			   donetext: 'OK',
+				 autoclose: false,
+				 vibrate: true // vibrate the device when dragging clock hand
+			});
 			$('.datepicker').pickadate({
 			    selectMonths: true, // Creates a dropdown to control month
 			    selectYears: 15, // Creates a dropdown of 15 years to control year,
@@ -402,3 +409,5 @@ console.log('difference  '+hourDiff);
 		}
 	</script>
 @endsection()
+
+<script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true }); </script>

@@ -76,7 +76,7 @@ if(!empty($error)){
    @else
    {!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
                <input type="hidden" name="apply_by" value="employee">
-               @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','section'=>'accleasec1']])
+               @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','form'=>'account-leave-form']])
                {!!Form::close()!!}
    <div class="ar">
       <div class="ac l75">
@@ -423,6 +423,8 @@ if(!empty($error)){
    @endif
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
+   {{-- <button class="aione-tooltip" title="abcd">abc</button> --}}
+   {{-- {!! FormGenerator::GenerateForm('account-leave-form') !!} --}}
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
 <script type="text/javascript">
@@ -431,6 +433,34 @@ if(!empty($error)){
       selectYear:15,
       min: new Date(new Date().getFullYear(),new Date().getMonth(),new Date().getDate())
    });
+   $(document).ready(function(){
+      $('#field_3241').hide(); //from
+      $('#field_189').hide(); // to
+      $('#field_3238').hide();//half type
+      $('#field_3240').hide();// single date
+
+   })
+   $(document).on('change','#field_3232 select',function(){
+      console.log($(this).val());
+      if($(this).val() == 'half'){
+         $('#field_3241').show(); //from
+         $('#field_189').hide(); //189
+         $('#field_3238').show(); //half type
+         $('#field_3240').hide(); // single date
+      }
+      if($(this).val() == 'one_day_leave'){
+          $('#field_3241').show();
+         $('#field_189').hide();
+         $('#field_3238').hide();
+         // $('#field_3240').show();
+      }
+      if($(this).val() == 'multi'){
+         $('#field_3241').show();
+         $('#field_189').show();
+         $('#field_3238').hide();
+         // $('#field_3240').hide();
+      }
+   })
    
 </script>
 <style type="text/css">

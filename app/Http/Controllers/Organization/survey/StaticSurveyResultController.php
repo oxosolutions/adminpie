@@ -14,6 +14,8 @@ use Excel;
 class StaticSurveyResultController extends Controller
 {
         public function survey_static_result(Request $request ,$id){
+          dd(12376);
+
       //survey id -> 1 , 2 , 5
           $table_name = "235_survey_results_$id";
          if(!Schema::hasTable($table_name)){

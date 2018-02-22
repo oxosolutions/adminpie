@@ -140,7 +140,7 @@ protected function set_leave_available_category($assigned_categories){
 		}
 		$categories = get_current_user_meta('leave_category');
 		if($categories !=false){
-			$assigned_categories = $this->set_leave_available_category($categories);
+			$assigned_categories = $this->set_leave_available_category($categories); //Check leave category available in
 	 		if(date('m')<4){
 				$year = $year - 1;
 			}		
@@ -223,6 +223,8 @@ protected function set_leave_available_category($assigned_categories){
 	}
 
 	public function store(Request $request, $id=null){
+		dd($request->all());
+
 		$date_of_leaving = get_current_user_meta('date_of_leaving');
 		if($date_of_leaving != false){
 			if($request['from'] > $date_of_leaving || $request['to'] > $date_of_leaving ){
@@ -243,7 +245,7 @@ protected function set_leave_available_category($assigned_categories){
 		$date_of_joining = get_current_user_meta('date_of_joining');
 		if($request->isMethod('post'))
 		{
-		if($request->choose_day == 'multi'){
+		if($request->type == 'multi'){
 			$current = Carbon::parse(date('Y-m-d'));
 			$from = Carbon::parse($request->from);
 			$before = $current->diffInDays($from);
@@ -300,14 +302,21 @@ protected function set_leave_available_category($assigned_categories){
 				return redirect()->route('account.leaves')->with('errorss',$error);
 			}
 		}else{
-			$request['total_days'] = $request['choose_day'];
+			
+			if($request['type']=='half'){
+				$request['total_days'] = 0.5;
+				$request['type'] = 'first_half';
+			}elseif($request['type']=='one_day'){
+				$request['total_days'] = 1;
+			}
 			unset($request['to']); 
+			// dd($request->all());
 		}
 /* Total day check */
 			if(empty($error)) {
 				$leave = new EMP_LEV();	
 				$request['employee_id'] = $emp_id;  
-				$leave->fill($request->all());
+				$leave->fill(array_filter($request->all()));
 				$leave->save();
 				save_activity('apply_leave');
 				Session::flash('sucessful', 'Successfully Apply Leave ');
