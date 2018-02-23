@@ -322,6 +322,7 @@ class LeavesController extends Controller
         if(!empty($model)){
             $emp_id = $model->employee_id;
             $from =  $this->set_dates($model->from);
+            $to =  $this->set_dates($model->to);
             // if($model->type = 'first_half'){
             //     extract($from);
             //     dd($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
@@ -329,8 +330,7 @@ class LeavesController extends Controller
             //     $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
 
             // }
-            // dd($from , $model);
-            $to =  $this->set_dates($model->to);
+             dd($from , $model);
             if($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] == $to['date']){
                 extract($from);
                 $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
