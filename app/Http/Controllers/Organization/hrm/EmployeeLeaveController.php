@@ -224,8 +224,7 @@ protected function set_leave_available_category($assigned_categories){
 
 	public function store(Request $request, $id=null){
 		dd($request->all());
-
-		$date_of_leaving = get_current_user_meta('date_of_leaving');
+ 		$date_of_leaving = get_current_user_meta('date_of_leaving');
 		if($date_of_leaving != false){
 			if($request['from'] > $date_of_leaving || $request['to'] > $date_of_leaving ){
 				$error['from_greater_than_to'] = 'You are leaving the organization.';
@@ -305,7 +304,7 @@ protected function set_leave_available_category($assigned_categories){
 			
 			if($request['type']=='half'){
 				$request['total_days'] = 0.5;
-				$request['type'] = 'first_half';
+				$request['half_type'] = 'first_half';
 			}elseif($request['type']=='one_day'){
 				$request['total_days'] = 1;
 			}
