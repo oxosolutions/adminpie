@@ -6,23 +6,29 @@ $page_title_data = array(
 'show_add_new_button' => 'yes',
 'show_navigation' => 'yes',
 'page_title' => 'Leaves',
-'add_new' => '+ Apply leave'
+'add_new' => '+ Apply leave',
+// 'route' => 'leave.apply'
 ); 
-
+ 
+ if(!empty($id) && get_user_id() != $id){
+   //unset($page_title_data['add_new']); 
+}
+$start_year = 1970;
 $till_year = date('Y') +2;
 $today = date('Y-m-d');
-
-$leaving_date = get_current_user_meta('date_of_leaving');
+if($joining_date!=false){
+   $start_year    =  date('Y', strtotime($joining_date));
+   if(date('m', strtotime($joining_date)) <4){
+       $start_year = $start_year - 1;
+   }
+}  
 if($leaving_date!=false){
    if(date('Y-m-d',strtotime($leaving_date)) < $today){
       unset($page_title_data['add_new']);
    }
    $till_year = date('Y',strtotime($leaving_date));
 }
-
-//dd($data, $current_used_leave);
-
-$range = range(1970, $till_year);
+$range = range($start_year, $till_year);
 $value = array_map( function($a){
    $next_year = $a + 1;
    return 'April '.$a.' to March '.$next_year; 
@@ -75,9 +81,15 @@ if(!empty($error)){
    
    @else
    {!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-               <input type="hidden" name="apply_by" value="employee">
-               @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','form'=>'account-leave-form']])
-               {!!Form::close()!!}
+         <input type="hidden" name="apply_by" value="employee">
+         @if(!empty($id) && get_user_id() != $id)
+         <input type="text" name="employee" value="{{$id}}">
+         <input type="text" name="route" value="account.leaves">
+
+         @endif
+  
+         @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','form'=>'account-leave-form']])
+   {!!Form::close()!!}
    <div class="ar">
       <div class="ac l75">
          <div class="aione-border mb-25">
@@ -89,6 +101,7 @@ if(!empty($error)){
                   <table>
                      <thead>
                         <tr>
+                           <th>Leave Category</th>
                            <th>Leave Reason</th>
                            <th>No. of days</th>
                            <th>Period</th>
@@ -100,6 +113,7 @@ if(!empty($error)){
                         @if(!empty($data->toArray()))
                            @foreach($data as $key => $val)
                               <tr>
+                                 <td> {{$val->categories_rel->name}}</td>
                                  <td>{{$val->reason_of_leave}}</td>
                                  <td>
                                     @if($total = collect([$val->from_leave_count,$val->to_leave_count])->sum())
@@ -108,7 +122,11 @@ if(!empty($error)){
                                     {{$val->total_days}} Days
                                     @endif
                                  </td>
-                                 <td>{{$val->from}} to {{$val->to}} </td>
+                                 <td>{{$val->from}} 
+                                    @if($val->to !='0000-00-00')
+                                       to {{$val->to}}
+                                    @endif
+                                 </td>
                                  <td>
                                     @if($val->status ==1)
                                        <span class="green">Approved</span>
@@ -133,7 +151,7 @@ if(!empty($error)){
                Session   
             </div>
             <div class="p-10">
-              {!! Form::open(['route'=>'account.leaves']) !!}
+              {!! Form::open(['route'=>['account.leaves', $id]]) !!}
                   {!! Form::select('year',$years,$filter_year,['class'=>'browser-default mb-10'])!!}
                   {!! Form::submit('Search',['style'=>'width:100%']) !!}
                   {!! Form::close()!!}
@@ -160,7 +178,7 @@ if(!empty($error)){
                               <td> @if(!empty($val['valid_for']) && $val['valid_for']=='monthly')
                               {{12*$val['number_of_day']}}
                               @else
-                              {{@$val['number_of_day']}}
+                                {{ exact_float(@$val['number_of_day']) }}
                               @endif</td>
                            </tr>
                            <tr>
@@ -172,7 +190,7 @@ if(!empty($error)){
                               <td>@if(!empty($val['valid_for']) && $val['valid_for']=='monthly')
                               {{12*$val['number_of_day'] - $val['used_leave']}}
                               @else
-                              {{$val['number_of_day'] - $val['used_leave']}}
+                              {{exact_float($val['number_of_day'] - $val['used_leave'])}}
                               @endif</td>
                            </tr>
                            <tr>
@@ -203,12 +221,6 @@ if(!empty($error)){
                            
                      </table>
                   </div>
-                 
-                   
-                  
-                    
-                
-              
                @endforeach
                @endif
             </div>

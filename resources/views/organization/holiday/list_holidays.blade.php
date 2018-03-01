@@ -40,7 +40,7 @@
 	@include('common.page_content_secondry_start')
 
 		{!! Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post'])!!}
-			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','section'=>'holidayadd']])
+			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','form'=>'holiday-add-edit']])
 		{!!Form::close()!!}
 		@if(@$data)
 			{!! Form::model($model , ['route'=>'edit.holiday' , 'class'=> 'form-horizontal','method' => 'post'])!!}

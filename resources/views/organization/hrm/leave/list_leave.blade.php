@@ -12,6 +12,41 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
+@if(Session::has('sucessful'))
+	 <div class="aione-message success">
+      {{Session::get('sucessful')}}   
+   </div>
+@endif
+
+@if(!empty($error))
+   <div class="aione-message warning">
+      {{$error}}   
+   </div>
+   @endif
+@if(Session::has('errorss'))
+   @php
+      $errorss = Session::get('errorss');
+   @endphp
+   @if(empty($errorss['from']) &&  empty($errorss['to']))
+      @foreach($errorss as $key => $value)
+            <div class="aione-message error" >  {{e($value)}} 
+            </div>
+      @endforeach
+     {{--  {{dd($error)}} --}}
+   @endif
+   @if(!empty($errorss['from']))
+      @foreach($errorss['from'] as $key => $value)
+            <div class="aione-message error" >   {{e($value)}}
+            </div>
+      @endforeach
+   @endif
+   @if(!empty($errorss['to']))
+      @foreach($errorss['to'] as $key => $value)
+            <div class="aione-message error" >   {{e($value)}}
+            </div>
+      @endforeach
+   @endif
+@endif
 @if($data)
 {{-- {{dd($data['employee_id'])}}
  --}}	{{-- @foreach(@$data->toArray() as $key => $value) --}}

@@ -8,6 +8,7 @@ USE App\Model\Organization\Leave as EMP_LEV;
 USE App\Model\Organization\Category as cat;
 USE App\Model\Organization\Employee as EMP;
 USE App\Model\Organization\CategoryMeta as catMeta;
+use App\Model\Organization\User;
 use Auth;
 use Carbon\Carbon;
 use Session;
@@ -66,10 +67,13 @@ class EmployeeLeaveController extends Controller
 	}
 
 /*The Usesd_leave method use in leave_category detail to calculate used leave by user*/
-protected function used_leave($leave_category_id, $year){
+protected function used_leave($leave_category_id, $year, $emp_id=null){
 	$next_year = $year + 1;
 	// dump($year ,$next_year);
-	$emp_id = get_current_user_meta('employee_id');
+
+	if(empty($emp_id)){
+		$emp_id = get_current_user_meta('employee_id');
+	}
 	$fromLeavesData = EMP_LEV::where(['leave_category_id'=>$leave_category_id, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('from',[$year.'-04-01',$next_year.'-03-31'] )->get();//->toArray();
 	$exist_id = array_pluck($fromLeavesData,'id');
 	$toLeavesData =EMP_LEV::where(['leave_category_id'=>$leave_category_id, 'employee_id'=>$emp_id, 'status'=>1])->whereBetween('to',[$year.'-04-01',$next_year.'-03-31'] )->get();
@@ -80,9 +84,11 @@ protected function used_leave($leave_category_id, $year){
 	return $all_leave;
 }
 /*The leave category detail  use in leave listing method */
-protected function leave_category_detail($category_id, $year, $month=null){
+protected function leave_category_detail($category_id, $year, $month=null, $date_of_joining=null ,  $emp_id=null){
 		$temp_add =  $year +1; 
-		$date_of_joining = get_current_user_meta('date_of_joining');
+		if(empty($date_of_joining)){
+			$date_of_joining = get_current_user_meta('date_of_joining');
+		}
 		$data = catMeta::whereIn('key',['number_of_day','valid_for', 'apply_before', 'maximum_saction_leave','minimum_saction_leave','carry_farward'])->where('category_id', $category_id)->get()->pluck('value','key')->put('category_id',$category_id)->toArray();
 
 		if(empty($data['number_of_day'])){
@@ -116,7 +122,7 @@ protected function leave_category_detail($category_id, $year, $month=null){
        	}elseif(!empty($month) && $month < 4){
        		$year = - 1;
        	}
-        $data['used_leave'] = $this->used_leave($category_id, $year);
+        $data['used_leave'] = $this->used_leave($category_id, $year, $emp_id);
         $data['name'] = cat::where('id',$category_id)->first()->name;
  	return $data;
 }
@@ -131,27 +137,41 @@ protected function set_leave_available_category($assigned_categories){
 	}
 	return $array;
 }
-	public function leave_listing(Request $request){
-    
-		$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error =null;
+public function leave_listing(Request $request , $id=null) {
+		$current_used_leave = $leave_count_by_cat = $leave_rule = $leavesData = $error = null;
+		$leaving_date = $joining_date = $date_of_joining =false;
 		$year = date('Y');
-		if(in_array(1, role_id())){
-				$error = "You can not view leave.";
+		if(!empty($id)){
+			if(is_numeric($id) && User::where('user_id', $id)->exists() ){
+				$categories = get_user_meta($id, 'leave_category');
+				$emp_id 	= get_user_meta($id, 'employee_id');
+				$joining_date = $date_of_joining = get_user_meta($id, 'date_of_joining');
+				$leaving_date = $date_of_joining = get_user_meta($id, 'date_of_leaving');
+			}else{
+				$error = "This is not existing.";
+				return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error , 'joining_date'=>$joining_date, 'leaving_date'=>$leaving_date ,  'id'=>$id]);
+			}
+		}else{
+			if(in_array(1, role_id())){
+			$error = "You can not view leave.";
+			}
+			$categories = get_current_user_meta('leave_category');
+			$emp_id = get_current_user_meta('employee_id');
+			$joining_date = get_current_user_meta('date_of_joining');
+			$leaving_date  =  get_current_user_meta('date_of_leaving');
 		}
-		$categories = get_current_user_meta('leave_category');
 		if($categories !=false){
-			$assigned_categories = $this->set_leave_available_category($categories); //Check leave category available in
+			$assigned_categories = $this->set_leave_available_category($categories); //Check leave category 
 	 		if(date('m')<4){
 				$year = $year - 1;
 			}		
 			if($request->isMethod('post')){
 				$year = $request->year;
 			}
-			$emp_id = get_current_user_meta('employee_id');
 /*assigned_categories method get all Assigned categories */
 			if(!empty($assigned_categories)){
 				foreach($assigned_categories as $key => $value) {
-					$current_used_leave[$value] =  $this->leave_category_detail($value, $year);
+					$current_used_leave[$value] =  $this->leave_category_detail($value, $year,null,$date_of_joining, $emp_id);
 				}
 				$next_year = $year + 1;
 				$leavesData = EMP_LEV::with('categories_rel')->where(function($query)use($year, $next_year){
@@ -163,7 +183,8 @@ protected function set_leave_available_category($assigned_categories){
 		}else{
 			$error = "Not assign leave category";
 		}
-		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error]);
+		//dd($joining_date);
+		return view('organization.profile.leaves',['data'=>$leavesData, 'leave_rule'=>$leave_rule , 'leave_count_by_cat'=>$leave_count_by_cat, 'current_used_leave'=>$current_used_leave , 'filter_year'=>$year, 'error'=>$error , 'joining_date'=>$joining_date, 'leaving_date'=>$leaving_date ,  'id'=>$id]);
 }
 /**
  * The store method work for apply leave's with various leave rule's. Coditions check before Applying. 
@@ -172,29 +193,34 @@ protected function set_leave_available_category($assigned_categories){
  * 	what ever status & return back with error message if true.
  * 	3. 
  * 
- * 
  */
-	protected function apply_leave_dates_lies_in_taken_leave($request, $emp_id){
+	protected function apply_leave_dates_lies_in_taken_leave($request, $emp_id,  $leave_type){
 		$error = null;
-		$data =	EMP_LEV::where(function($query)use($request){
+		if($leave_type == 'multi'){
+			$data =	EMP_LEV::where(function($query)use($request){
 				$query->whereBetween('from', [$request['from'], $request['to'] ])->orWhereBetween('to',[$request['from'], $request['to']]);
 			})->where('employee_id',$emp_id);
-			if($data->exists()){
-				$leave = $data->first();
-				if($leave->status ==1){
-					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
- 				}elseif($leave->status ==3){
-					$error['already_taken_leave_between_from_and_to_date'] = 'Already Reject leave between from and to date choose another  dates.';
- 				}elseif($leave->status ==0){
-					$error['already_taken_leave_between_from_and_to_date'] = 'Already apply not approved leave between from and to date choose another  dates.';
- 				}
-			}
+		}elseif($leave_type == 'half' || $leave_type == 'one_day'){
+			$data =	EMP_LEV::where(function($query)use($request){
+				$query->whereBetween('from', [$request['from'], $request['from']])->orWhereBetween('to',[$request['from'], $request['from']]);
+			})->where('employee_id', $emp_id);
+		
+		}
+		if($data->exists()){
+			$leave = $data->first();
+			if($leave->status ==1){
+				$error['already_taken_leave_between_from_and_to_date'] = 'Already apply leave between from and to date Correct the dates.';
+				}elseif($leave->status ==3){
+				$error['already_taken_leave_between_from_and_to_date'] = 'Already Reject leave between from and to date choose another  dates.';
+				}elseif($leave->status ==0){
+				$error['already_taken_leave_between_from_and_to_date'] = 'Already apply not approved leave between from and to date choose another  dates.';
+				}
+		}
 		return $error;
 	}
 
 	protected function leave_rule_check($rules , $number_of_applied_leave, $before, $current , $from){
-		
-		$error = null;
+ 		$error = null;
 		if(!empty($rules['maximum_saction_leave']) && intval($rules['maximum_saction_leave']) < $number_of_applied_leave ){
 			$error['maximum_saction_leave'] = "exceed maximum saction limit.";
 		}
@@ -209,7 +235,11 @@ protected function set_leave_available_category($assigned_categories){
 		{
 			$error['not_apply_past_date_this_category'] = 'Apply leave after'.$rules['apply_after']['value'];
 		}
-		if(!empty($rules['apply_before']) && $rules['apply_before'] > $before) {
+
+		if(empty($rules['apply_before']) && $current->toDateString() > $from) {
+			$error['apply_before'] = "Don't Apply leave For Past Date's"; 
+			
+		} elseif(!empty($rules['apply_before']) && $rules['apply_before'] > $before) {
 			$error['apply_before'] = "Apply leave After ".$rules['apply_before']; 
 		}
 		if($rules['used_leave'] == $rules['number_of_day']){
@@ -222,52 +252,81 @@ protected function set_leave_available_category($assigned_categories){
 		return $error;
 	}
 
-	public function store(Request $request, $id=null){
-		dd($request->all());
- 		$date_of_leaving = get_current_user_meta('date_of_leaving');
+	public function store(Request $request, $id=null ){
+		
+		if(!empty($request['employee'])) {
+			if(!empty($request['route'])) {
+				$user_id = ['id'=>$request['employee']];
+				
+			}else{
+				$route = 'leaves';
+			}
+			$user_meta = get_user_meta($request['employee']);
+			if( !empty($user_meta['employee_id'])){
+				$emp_id = $user_meta['employee_id'];
+			}
+			if(!empty($user_meta['date_of_joining'])){
+				$date_of_joining = $user_meta['date_of_joining'];
+			}
+			$assigned_leave = $date_of_leaving =false;
+			if(!empty($user_meta['date_of_leaving'])){
+				$date_of_leaving = $user_meta['date_of_leaving'];
+			}
+			if(!empty($user_meta['leave_category'])){
+				$assigned_leave = $user_meta['leave_category'];
+			}
+			
+
+    	}else{
+    		$route = 'account.leaves';
+     		$date_of_leaving = get_current_user_meta('date_of_leaving');
+     		$user = user_info()->toArray();	
+    		$designation_id =  get_current_user_meta('designation');
+    		$emp_id = get_current_user_meta('employee_id');
+    		$date_of_joining = get_current_user_meta('date_of_joining');
+    		$assigned_leave  = get_current_user_meta('leave_category');
+
+     	}
 		if($date_of_leaving != false){
 			if($request['from'] > $date_of_leaving || $request['to'] > $date_of_leaving ){
 				$error['from_greater_than_to'] = 'You are leaving the organization.';
-				return redirect()->route('account.leaves')->with('errorss',$error);
+				return redirect()->route($route)->with('errorss',$error);
 			}
 		}
-		$valid_fields = ['reason_of_leave'=>'required', 'from'=>'required', 'to'=>'required','leave_category_id'=>'required'];
+		$valid_fields = ['reason_of_leave'=>'required','from'=>'required','to'=>'required','leave_category_id'=>'required'];
 		if($request->choose_day <= 1){
 			unset($valid_fields['to']);
 		}
 		$this->validate($request, $valid_fields);
-
 		$leave_category_id = $request['leave_category_id'];
-		$user = user_info()->toArray();	
-		$designation_id =  get_current_user_meta('designation');
-		$emp_id = get_current_user_meta('employee_id');
-		$date_of_joining = get_current_user_meta('date_of_joining');
 		if($request->isMethod('post'))
 		{
-		if($request->type == 'multi'){
 			$current = Carbon::parse(date('Y-m-d'));
 			$from = Carbon::parse($request->from);
 			$before = $current->diffInDays($from);
+			if(strtotime($request['from']) < strtotime($date_of_joining)){
+				$error['joining_date_before'] = "You can't apply leave before joining";
+				return redirect()->route($route)->with('errorss',$error);
+			}
+		
+			$request['from'] 	=	$from->toDateString();
+		if($request->type == 'multi'){
 			$to = Carbon::parse($request->to);
 /*check from < to date for applying leave.*/
-			$request['from'] 	=	$from->toDateString();
 			$request['to'] 		=   $to->toDateString();
 			if(strtotime($request['from']) > strtotime($request['to'])){
 				$error['from_greater_than_to'] = 'From date must be less than to.';
-				return redirect()->route('account.leaves')->with('errorss',$error);
-			}
-			if(strtotime($request['from']) < strtotime($date_of_joining)){
-				$error['joining_date_before'] = "You can't apply leave before joining";
-				return redirect()->route('account.leaves')->with('errorss',$error);
+				return redirect()->route($route)->with('errorss',$error);
 			}
 /* Check leaves applying dates already exist then notify employee to correct leave dates Accordinly*/
-			$result = $this->apply_leave_dates_lies_in_taken_leave($request , $emp_id);
+			$result = $this->apply_leave_dates_lies_in_taken_leave($request , $emp_id , $request->type);
 			if(!empty($result)){
-				$error = $result;
-				return redirect()->route('account.leaves')->with('errorss',$error);
+				// $error = $result;
+				return redirect()->route($route)->with('errorss', $result);
 			}
 /*check Assigned cat & rules list get from category meta table */
-			$assigned_leave  = get_current_user_meta('leave_category');//$this->assigned_categories();
+
+			//$this->assigned_categories();
 			if($assigned_leave !=false && !empty($assigned_leave = json_decode($assigned_leave))) {
 				if(in_array($leave_category_id, $assigned_leave)){
 					if($from->month !=  $to->month){
@@ -278,8 +337,10 @@ protected function set_leave_available_category($assigned_categories){
 						$to_leave_count = $to_end_date_of_month->diffInDays($to) + 1;
 						$request['to_leave_count'] = $to_leave_count;
 						$applying_total_days =	$from_leave_count + $to_leave_count;
-						
 					}else{
+                        // for($single_date = $from; $single_date->lte($to); $single_date->addDay()) {
+                        //     dump(strtolower($single_date->format('l')));
+                        // }
 						$applying_total_days = $request['total_days'] = $from->diffInDays($to) + 1;
 					}
 						$leave_rules = $this->leave_category_detail($leave_category_id, $from->year, $from->month);
@@ -294,22 +355,20 @@ protected function set_leave_available_category($assigned_categories){
 						}
 				}else{
 					$error['not_assigned_leave_this_category'] = "Not assigned this leave category.";
-					return redirect()->route('account.leaves')->with('errorss',$error);
+					return redirect()->route($route)->with('errorss',$error);
 				}
 			}else{
 				$error['not_assigned_leave_category'] = "Not assigned leave category.";
-				return redirect()->route('account.leaves')->with('errorss',$error);
+				return redirect()->route($route)->with('errorss',$error);
 			}
-		}else{
-			
-			if($request['type']=='half'){
-				$request['total_days'] = 0.5;
-				$request['half_type'] = 'first_half';
-			}elseif($request['type']=='one_day'){
-				$request['total_days'] = 1;
-			}
-			unset($request['to']); 
-			// dd($request->all());
+// Half day & 
+		}elseif($request['type']=='half' || $request['type']=='one_day' ){
+			 $request = $this->apply_half_one_day_leave($request, $emp_id , $from);
+
+			 if(!empty($request['errors'])){
+			 	Session::flash('errorss',$request['errors']);
+			 	return redirect()->route($route);//->with('errorss', $request['errors']);
+			 }
 		}
 /* Total day check */
 			if(empty($error)) {
@@ -323,8 +382,49 @@ protected function set_leave_available_category($assigned_categories){
 				Session::flash('errorss', $error);
 			}
 		 }
- 	return redirect()->route('account.leaves');
+		 if(!empty($request['route'])){
+
+		 	return redirect()->route($route,['id'=>$request['employee']]);
+		 }
+ 	return redirect()->route($route);
+}
+
+protected function apply_half_one_day_leave($request, $emp_id, $from){
+	extract($request->all());
+	$current = Carbon::parse(date('Y-m-d'));
+	$from = Carbon::parse($request->from);
+	$before = $current->diffInDays($from);
+	$result = $this->apply_leave_dates_lies_in_taken_leave($request , $emp_id , $type);
+	if(!empty($result)){
+		return ['errors'=>$result];
 	}
+// Check Assigned Category
+	$assigned_leave  = get_current_user_meta('leave_category');
+		if($assigned_leave !=false && !empty($assigned_leave = json_decode($assigned_leave))) {
+			if(!in_array($leave_category_id, $assigned_leave)){
+				$error['not_assigned_leave_this_category'] = "Not assigned this leave category.";
+				return ['errors'=>$error];
+			}
+		}
+	$leave_rules = $this->leave_category_detail($leave_category_id, $from->year, $from->month);
+	if($type=='half'){
+		$request['total_days'] = 0.5;
+		if($half_type== 'f'){
+			$request['type'] = 'first_half';
+		}elseif($half_type== 's'){
+			$request['type'] = 'second_half';
+		}
+	}elseif($type=='one_day'){
+		$request['total_days'] = 1;
+	}
+	$leave_rule_check = $this->leave_rule_check($leave_rules , $request['total_days'], $before , $current , $request['from']);
+	if(!empty($leave_rule_check)){
+								return ['errors'=>$leave_rule_check];
+							}
+	unset($request['to']); 
+	return $request;
+}
+
 	protected function different_session_year($from_leave_rules ,$leave_category_id, $from, $to, $request, $from_leave_count, $to_leave_count, $before, $current  ){
 		$error = null;
 		$from_leave_rule_check = $this->leave_rule_check($from_leave_rules, $from_leave_count, $before , $current , $request['from']);
@@ -557,6 +657,10 @@ protected function set_leave_available_category($assigned_categories){
 	protected function get_carry_forward_leave($emp_id, $leave_cat_id,  $year, $month=null){
 		$data = EMP_LEV::where(['employee_id'=>$emp_id ,'leave_category_id'=>$leave_cat_id, 'status'=>1 ])->get();
 		dd($data->toArray());
+	}
+	public function applyLeave()
+	{
+		return view('organization.profile.apply-leave');
 	}
 }
 

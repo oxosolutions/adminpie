@@ -158,7 +158,7 @@
 							<div class="row">
 								<div class="">
 									<label>{{ucfirst($value['column_name'])}}</label>
-									<select name='dropdown[{{$singledrop}}][{{$key}}][]'>
+									<select name='dropdown[{{$singledrop}}][{{$key}}][]' class="browser-default">
 										<option value="">All</option>
 										@foreach($value['column_data'] as $option)
 											<option value="{{$option}}" 

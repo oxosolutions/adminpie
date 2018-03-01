@@ -40,7 +40,7 @@
 
 		<?php echo Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','form'=>'holiday-add-edit']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo Form::close(); ?>
 
 		<?php if(@$data): ?>

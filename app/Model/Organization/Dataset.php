@@ -22,7 +22,6 @@ class Dataset extends Model
     }
 
     public static function datasetTableList(){
-
     	return self::orderBy('id')->pluck('dataset_name','dataset_table');
     }
 

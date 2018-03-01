@@ -32,8 +32,6 @@ use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalSubModule;
-
-
 /************************************************************
 *	@function get_module
 *	@access	public
@@ -43,8 +41,7 @@ use App\Model\Admin\GlobalSubModule;
 *	@perm timestamp		[true/false	optional	default	true]
 *	@return filename [string]
 ************************************************************/
-function get_module($route = null){	
-
+function get_module($route = null){
 	$module = null; 
 	if(!empty($route)){
 		$module = GlobalSubModule::where('sub_module_route',$route)->first();
@@ -53,8 +50,6 @@ function get_module($route = null){
         $route = $route->uri;
         $module = GlobalSubModule::where('sub_module_route',$route)->first();
 	}
-	
-	//Return module
 	return $module;
 }
 
@@ -65,11 +60,9 @@ function get_module($route = null){
 *	@author	SGS Sandhu(sgssandhu.com)
 *	@return module_css [string]
 ************************************************************/
-function get_module_css(){	
-
+function get_module_css(){
 	$module = get_module();
 	$module_css = $module->css_code;
-	
 	//Return module_css
 	return $module_css;
 }
@@ -1418,6 +1411,33 @@ function aione_message($messages = null, $type = '', $align = 'center'){
 	$html .= '</div>';
 	
 	return $html;
+}
+
+/************************************************************
+*   @function exact_float
+*   @access public
+*   @since  1.0.0.0
+*   @author SGS Sandhu(sgssandhu.com)
+*   @perm array         [array  optional    default null]
+*   @perm global        [true/false optional    default false]
+*   @return posts [object]
+************************************************************/
+function exact_float($value = null){    
+    if($value == null){
+        return null;
+    }else{
+        if(is_float($value)){
+            $explodedLeavs = explode('.',$value);
+            if(@$explodedLeavs[1] != null && $explodedLeavs[1] > 5){
+                $explodedLeavs[1] = 5;
+            }elseif(@$explodedLeavs[1] != null && $explodedLeavs[1] < 5){
+                $explodedLeavs[1] = 0;
+            }
+            return implode('.',$explodedLeavs);
+        }else{
+            return @$value;
+        }
+    }
 }
 
 /************************************************************

@@ -11,6 +11,43 @@
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+<?php if(Session::has('sucessful')): ?>
+	 <div class="aione-message success">
+      <?php echo e(Session::get('sucessful')); ?>   
+   </div>
+<?php endif; ?>
+
+<?php if(!empty($error)): ?>
+   <div class="aione-message warning">
+      <?php echo e($error); ?>   
+   </div>
+   <?php endif; ?>
+<?php if(Session::has('errorss')): ?>
+   <?php 
+      $errorss = Session::get('errorss');
+    ?>
+   <?php if(empty($errorss['from']) &&  empty($errorss['to'])): ?>
+      <?php $__currentLoopData = $errorss; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="aione-message error" >  <?php echo e(e($value)); ?> 
+            </div>
+      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+     
+   <?php endif; ?>
+   <?php if(!empty($errorss['from'])): ?>
+      <?php $__currentLoopData = $errorss['from']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="aione-message error" >   <?php echo e(e($value)); ?>
+
+            </div>
+      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+   <?php endif; ?>
+   <?php if(!empty($errorss['to'])): ?>
+      <?php $__currentLoopData = $errorss['to']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <div class="aione-message error" >   <?php echo e(e($value)); ?>
+
+            </div>
+      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+   <?php endif; ?>
+<?php endif; ?>
 <?php if($data): ?>
 	
 		<?php 

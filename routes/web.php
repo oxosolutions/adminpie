@@ -160,6 +160,7 @@
 
 				
 				Route::group(['middleware'=>'role'],function(){
+
 					Route::get('settings/department', ['as' => 'department.settings' , 'uses' => 'hrm\SettingController@departmentSetting']);
 					Route::get('settings/organization' , ['as'=>'setting.org' , 'uses' => 'hrm\SettingController@orgSetting']);
 					//Deleted employees
@@ -168,12 +169,14 @@
 					Route::get('/tools',['as'=>'tools','uses'=>'tools\ToolsController@tools']);
 
                     Route::get('/holiday/list/{id?}',['as'=>'holiday.list','uses'=>'hrm\HolidayController@holidayList']);
-
+                     Route::get('/account/leaves/apply',['as'=>'leave.apply','uses'=>'hrm\EmployeeLeaveController@applyLeave']);
                     Route::any('/account/leaves/{id?}',['middleware'=>'role', 'as'=>'account.leaves','uses'=>'hrm\EmployeeLeaveController@leave_listing']);
+
                     Route::get('account/todo/{id?}',    ['as'=>'account.todo','uses'=>'project\ProjectController@todo']);
                     Route::get('account/tasks/{id?}',   ['as'=>'account.tasks','uses'=>'project\TasksController@index']);
                     
 				});
+
 
                 
                 Route::post('/tools/website-rank',['as'=>'website.rank','uses'=>'tools\ToolsController@websiteRank']);
@@ -368,7 +371,8 @@
 						//END ROLE PERMISSON ROUTE
 						//employee
 							Route::post('employee/save', 			[  'as' => 'store.employee' , 'uses' => 'EmployeeController@save']);
-							Route::post('employee/edit', 			['as' => 'edit.employee' , 'uses' => 'EmployeeController@editEmployee']);
+							Route::get('employee/edit', ['as' => 'edit.employee' , 'uses' =>'EmployeeController@editEmployee']);
+
 							Route::post('employee/update/name',		['as' => 'update.employee.name', 'uses'=> 'EmployeeController@updateEmployeeName']);
 							
 

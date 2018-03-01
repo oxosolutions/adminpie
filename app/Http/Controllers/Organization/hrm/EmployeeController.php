@@ -283,6 +283,7 @@ class EmployeeController extends Controller
                       'showColumns' => ['employee_id'=>'Employee ID','name'=>'Name','department'=>'Department','designation'=>'Designation','email'=>'Email ID','created_at'=>'Created','status'=>'Status'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'] , 'class' => 'edit'],
+                                      'view' => ['title'=>'Edit','route'=>['route'=>'account.profile','id'] , 'class' => 'edit'],
                                       'delete'=>['title'=>'Delete','route'=>['route'=>'delete.employee','id'=>'id'] , 'class' => 'delete confirm-delete']
                                    ],
                       'js'  =>  ['custom'=>['list-designation']],
@@ -324,6 +325,7 @@ class EmployeeController extends Controller
     // }
     
     public function employeeListDatatable(){
+
         // Get employee list on the behalf of role
         /*$model = User::with(['metas','user_role_rel'])->whereHas('user_role_rel', function($query){
             $query->with(['roles'])->whereHas('roles', function($query){
@@ -1063,12 +1065,13 @@ Add user meta use in add metas
             
     // }
     
-    public function import()
-    {
+    public function import() {
         return view('organization.hrm.employee.import-employees');
     }
-
-    public function addEmployee(){
+    public function editEmployee(){
+        dd('edit-emp');
+    }
+    public function addEmployee() {
         return view('organization.hrm.employee.add');
     }
 }

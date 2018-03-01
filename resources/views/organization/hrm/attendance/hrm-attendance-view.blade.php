@@ -73,6 +73,16 @@ $(document).ready(function(){
 		}
 </script>
 <style type="text/css">
+.first-half{
+	/*background: linear-gradient(to bottom, #ff7b51 50%, #9dcb63 50%);*/
+	background: linear-gradient(to right, #ff7b51 50%, #f2f2f2 50%);
+	color: white
+}
+.second-half{
+	/*background: linear-gradient(to bottom,  #9dcb63 50%, #ff7b51 50%);*/
+	background: linear-gradient(to right, #f2f2f2 50%, #ff7b51  50%);
+	color: white
+}
 .attendance-status-present{ 
     background-color: #9dcb64;
     color: white
@@ -83,6 +93,7 @@ $(document).ready(function(){
 }
 .attendance-status-leave{ 
     background-color: #29c8f8;
+    color: white
 }
 .attendance-status-leave{ 
     background-color: #f88662;
@@ -209,7 +220,7 @@ HRM Attendance View Switch
 }
 #hrm_attendance .content
 {
-	width:12%;
+	width:13%;
 	float:left;
 	background-color: white;
 } 

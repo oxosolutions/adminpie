@@ -107,7 +107,17 @@ if(empty($user_meta['employee_id'])){
 		if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat)) || ( !empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d', strtotime($dateformat)))) {
 				continue;
 		}
-		$shifts =	EmployeeHelper::get_shift($user_meta['user_shift']);
+		if(!empty($user_meta['user_shift'])){
+			$shifts =	EmployeeHelper::get_shift($user_meta['user_shift']);
+			
+			if(empty($shifts["from"])  || empty($shifts["to"]) || empty($shifts["working_days"])){
+				$warning =  "Invalid Shift";
+			}
+
+		}else{
+			$warning =  "Invalid Shift";
+		}
+		
 		if(empty($shifts)){
 			 $warning = "Invalid Shift";
 		}
@@ -144,9 +154,7 @@ if(empty($user_meta['employee_id'])){
 			<?php if($attendance_mode_manual): ?>
 				<td> <?php echo Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']); ?>
 
-					 <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' , 'leave'=>'Leave','LP'=>'Loss of pay'],@$attendance_status	,['class' => 'browser-default', ]); ?>
-
-				</td>
+					 <?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' ],@$attendance_status	,['class' => 'browser-default', ]); ?> </td>
 			<?php endif; ?>
 			<?php if($attendance_mode_machine): ?>
 				<td>

@@ -5,23 +5,29 @@ $page_title_data = array(
 'show_add_new_button' => 'yes',
 'show_navigation' => 'yes',
 'page_title' => 'Leaves',
-'add_new' => '+ Apply leave'
+'add_new' => '+ Apply leave',
+// 'route' => 'leave.apply'
 ); 
-
+ 
+ if(!empty($id) && get_user_id() != $id){
+   //unset($page_title_data['add_new']); 
+}
+$start_year = 1970;
 $till_year = date('Y') +2;
 $today = date('Y-m-d');
-
-$leaving_date = get_current_user_meta('date_of_leaving');
+if($joining_date!=false){
+   $start_year    =  date('Y', strtotime($joining_date));
+   if(date('m', strtotime($joining_date)) <4){
+       $start_year = $start_year - 1;
+   }
+}  
 if($leaving_date!=false){
    if(date('Y-m-d',strtotime($leaving_date)) < $today){
       unset($page_title_data['add_new']);
    }
    $till_year = date('Y',strtotime($leaving_date));
 }
-
-//dd($data, $current_used_leave);
-
-$range = range(1970, $till_year);
+$range = range($start_year, $till_year);
 $value = array_map( function($a){
    $next_year = $a + 1;
    return 'April '.$a.' to March '.$next_year; 
@@ -77,9 +83,15 @@ if(!empty($error)){
    <?php else: ?>
    <?php echo Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-               <input type="hidden" name="apply_by" value="employee">
-               <?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','form'=>'account-leave-form']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-               <?php echo Form::close(); ?>
+         <input type="hidden" name="apply_by" value="employee">
+         <?php if(!empty($id) && get_user_id() != $id): ?>
+         <input type="text" name="employee" value="<?php echo e($id); ?>">
+         <input type="text" name="route" value="account.leaves">
+
+         <?php endif; ?>
+  
+         <?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Apply Leave','button_title'=>'Save leave','form'=>'account-leave-form']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+   <?php echo Form::close(); ?>
 
    <div class="ar">
       <div class="ac l75">
@@ -92,6 +104,7 @@ if(!empty($error)){
                   <table>
                      <thead>
                         <tr>
+                           <th>Leave Category</th>
                            <th>Leave Reason</th>
                            <th>No. of days</th>
                            <th>Period</th>
@@ -103,6 +116,7 @@ if(!empty($error)){
                         <?php if(!empty($data->toArray())): ?>
                            <?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                               <tr>
+                                 <td> <?php echo e($val->categories_rel->name); ?></td>
                                  <td><?php echo e($val->reason_of_leave); ?></td>
                                  <td>
                                     <?php if($total = collect([$val->from_leave_count,$val->to_leave_count])->sum()): ?>
@@ -111,7 +125,12 @@ if(!empty($error)){
                                     <?php echo e($val->total_days); ?> Days
                                     <?php endif; ?>
                                  </td>
-                                 <td><?php echo e($val->from); ?> to <?php echo e($val->to); ?> </td>
+                                 <td><?php echo e($val->from); ?> 
+                                    <?php if($val->to !='0000-00-00'): ?>
+                                       to <?php echo e($val->to); ?>
+
+                                    <?php endif; ?>
+                                 </td>
                                  <td>
                                     <?php if($val->status ==1): ?>
                                        <span class="green">Approved</span>
@@ -136,7 +155,7 @@ if(!empty($error)){
                Session   
             </div>
             <div class="p-10">
-              <?php echo Form::open(['route'=>'account.leaves']); ?>
+              <?php echo Form::open(['route'=>['account.leaves', $id]]); ?>
 
                   <?php echo Form::select('year',$years,$filter_year,['class'=>'browser-default mb-10']); ?>
 
@@ -168,7 +187,7 @@ if(!empty($error)){
                               <?php echo e(12*$val['number_of_day']); ?>
 
                               <?php else: ?>
-                              <?php echo e(@$val['number_of_day']); ?>
+                                <?php echo e(exact_float(@$val['number_of_day'])); ?>
 
                               <?php endif; ?></td>
                            </tr>
@@ -182,7 +201,7 @@ if(!empty($error)){
                               <?php echo e(12*$val['number_of_day'] - $val['used_leave']); ?>
 
                               <?php else: ?>
-                              <?php echo e($val['number_of_day'] - $val['used_leave']); ?>
+                              <?php echo e(exact_float($val['number_of_day'] - $val['used_leave'])); ?>
 
                               <?php endif; ?></td>
                            </tr>
@@ -214,12 +233,6 @@ if(!empty($error)){
                            
                      </table>
                   </div>
-                 
-                   
-                  
-                    
-                
-              
                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                <?php endif; ?>
             </div>

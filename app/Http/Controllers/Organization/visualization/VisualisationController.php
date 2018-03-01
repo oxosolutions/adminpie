@@ -646,7 +646,9 @@ class VisualisationController extends Controller
     	$db = DB::table($dataset_table);
     	foreach($filterColumns as $columnName => $columnsData){
     		if(!empty($columnsData)){ // if $columnData array is empty that means user selected "All" in this filter, so we do not need to add in "whereIn" clause
-    			$db->whereIn($columnName, $columnsData); // will create multiple "where in" clause in query 
+                $db->where(function($db) use ($columnName, $columnsData){
+                    $db->whereIn($columnName, $columnsData)->orWhere('id',1);
+                });// will create multiple "where in" clause in query 
     			$with_whereIn = true; // set status true if query have where in clause
     		}
     	}
@@ -655,9 +657,9 @@ class VisualisationController extends Controller
     			$db->whereBetween($column, $values);
     		}
     	}
-    	if($with_whereIn == true){ // if there is whereIn clause then we need to get the id row also, otherwise select all data from table 
+    	/*if($with_whereIn == true){ // if there is whereIn clause then we need to get the id row also, otherwise select all data from table 
     		$db->orWhere('id',1); // for also get the columns header we need to get first record from datatable
-    	}
+    	}*/
 
     	// Finaly it will generate query: "select * from `126_data_table_1495705270` where `column_3` in (?) and `column_4` in (?, ?) or `id` = ?"
     	return $db->select($columns)->whereIn('status',['status',1])->whereIn('parent',['parent',0])->get()->toArray(); // return final query result in the form or array
@@ -770,7 +772,10 @@ class VisualisationController extends Controller
 	    					$settings_array[$key] = (array)$value;
 	    				}elseif($key == 'isStacked'){
 	    					$settings_array[$key] = ($value == 'true')?true:false;
-	    				}else{
+	    				}elseif($key == 'width'){
+                            $value = $this->clean($value);
+                            $settings_array[$key] = (int)$value;
+                        }else{
 	    					$settings_array[$key] = ($value != '')?$value:0;
 	    				}
 	    			}
@@ -780,6 +785,12 @@ class VisualisationController extends Controller
     	}else{
     		return [];
     	}
+    }
+
+    private function clean($string) {
+       $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+
+       return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
 
 	public function embedVisualization(Request $request, $withLayout = true){

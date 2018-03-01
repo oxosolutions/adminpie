@@ -4,7 +4,7 @@
 		'show_page_title' => 'yes',
 		'show_add_new_button' => 'no',
 		'show_navigation' => 'yes',
-		'page_title' => 'Attendance',
+		'page_title' => 'Attendance1111',
 		'add_new' => '+ Add Task'
 	);
 
@@ -105,13 +105,13 @@
 							
 							<?php if(!empty($data[$j]['attendance_status'])): ?>
 								<?php if($data[$j]['attendance_status']=='present'): ?>
-									<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-present display-inline-block box ml-2 mt-2"></div>
 								<?php elseif($data[$j]['attendance_status']=='absent'): ?>
-									<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-absent display-inline-block box ml-2 mt-2"></div>
 								<?php elseif($data[$j]['attendance_status']=='Sunday'): ?>
 									<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
 								<?php elseif($data[$j]['attendance_status']=='leave'): ?>
-									<div class="light-green display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-leave display-inline-block box ml-2 mt-2"></div>
 								<?php else: ?>
 									<div class="light-green display-inline-block box ml-2 mt-2"></div>
 								<?php endif; ?>
@@ -357,6 +357,32 @@
 
 
 	<style>
+	.attendance-status-present{ 
+	    background-color: #9dcb64;
+	    color: white
+	}
+	.attendance-status-absent{ 
+	    background-color: #e85d52;
+	    color: white
+	}
+	.attendance-status-leave{ 
+	    background-color: #29c8f8;
+	    
+	}
+	.attendance-status-leave{ 
+	    background-color: #f88662;
+	}
+	.attendance-status-tardy:after{ 
+	    background-color: #e85d52;
+	}
+	.attendance-status-holiday{
+		background-color:#81c3d8;
+		color: white
+	}
+	.attendance-status-holiday.attendance-status-present,
+	.attendance-status-off.attendance-status-present{
+		background-color:#80a750;
+	}
 		.line{
 			width: 100%;
 			display: flex;

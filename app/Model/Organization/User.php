@@ -167,7 +167,6 @@ class User extends Authenticatable
         }
       }
       return $processEmployee;
-
     }
     public static function getEmployeeList()
     {

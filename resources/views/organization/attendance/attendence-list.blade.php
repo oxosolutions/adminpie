@@ -43,15 +43,25 @@ $page_title_data = array(
                     {!! Form::open(['route'=>'lists.attendance']) !!}
                         <div class="ar">
                             <div class="ac l80">
-                                {!! Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default']) !!}        
+                                {!! Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default select-year']) !!}        
                             </div>
-                            <div class="ac l20">
+                            <div class="loading display-none line-height-40 font-weight-800 font-size-18">
+                                Loading...
+                            </div>
+                          {{--   <div class="ac l20">
                                 {!! Form::submit('Submit',['style'=>'width:100%']) !!}        
-                            </div>
+                            </div> --}}
                         </div>
                         
                         
                     {!! Form::close() !!}
+                    <script type="text/javascript">
+                        $(document).on('change','.select-year',function(){
+                            $('.loading').show();
+                            this.form.submit();
+
+                        })
+                    </script>
                 </div>
             
             </div>
@@ -92,7 +102,7 @@ $page_title_data = array(
                                         {!! Form::submit('Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']) !!}
 
                                     @else 
-                                        {!! Form::submit('Locked',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
+                                        {!! Form::submit('Lock',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
                                     @endif
                                     
                               {!! Form::close() !!}

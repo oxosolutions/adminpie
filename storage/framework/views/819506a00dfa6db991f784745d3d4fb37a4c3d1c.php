@@ -1,28 +1,5 @@
 <?php $__env->startSection('sidebar'); ?>
-<ul class="collapsible" data-collapsible="accordion">
-	<?php $__currentLoopData = $survey['section']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $surveyVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-	    <li>
-	      <div class="collapsible-header"><?php echo e($surveyVal['section_name']); ?></div>
-	      <?php if(!empty($surveyVal['fields'])): ?>
-	      	<?php $__currentLoopData = $surveyVal['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fields): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<?php 
-					$slug = str_replace('-', '_', $fields['field_slug']);
-				 ?>
-				<?php if(!empty($current_data)): ?>
-					<?php if(array_key_exists($slug , array_filter($current_data))): ?>
-	      				<div class="collapsible-body  fill_<?php echo e($slug); ?>" style="background-color: rgba(0, 128, 0, 0.2);"  ><span><?php echo e($fields['field_slug']); ?></span></div>
-	      			<?php else: ?>
-	      				 <div class="collapsible-body"><span><?php echo e($fields['field_slug']); ?></span></div>
-	      			<?php endif; ?>
-				<?php else: ?>
-					 <div class="collapsible-body"><span><?php echo e($fields['field_slug']); ?></span></div>	
-	      		<?php endif; ?>
 
-	      	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-	      <?php endif; ?>
-	    </li>
-	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-</ul>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
 <?php 
@@ -34,205 +11,187 @@
 			'add_new' => '+ Add Feedback'
 		);
  ?>
+<div class="bg-grey bg-lighten-3" >
+	<div class="aione-float-left p-10" style="width: 240px">
+		<div class="aione-shadow">
 
-
-	<?php if(Session::has('sucess')): ?>
-		<div class="aione-message success">
-			<ul class="aione-messages aione-align-center">
-				<li class="aione-align-center"><?php echo e(Session::get('sucess')); ?></li>
-			</ul>
-		</div>
-	<?php endif; ?>
-
-		<?php if(isset($survey_setting['survey_timer'])  && ($survey_setting['survey_timer']==true)): ?>
-			<?php if(isset($survey_setting['timer_type']) && ($survey_setting['timer_type']=="survey_expiry_time")): ?>
-				<h3>  <?php echo e($survey_setting['survey_time_lefts']); ?> Survey Expired</h3>
-		 	<?php endif; ?>
-		<?php endif; ?>
-		<?php if(!empty($error)): ?>
-				<?php if(is_array($error)): ?>
-					<div class="aione-message error">
-					    <ul class="aione-messages">
-					        <li><?php echo e(implode($error)); ?> </li>
-					    </ul>
-					</div>
-				<?php else: ?>
-					<div class="aione-message error">
-					    <ul class="aione-messages">
-					        <li><?php echo e($error); ?> </li>
-					    </ul>
-					</div>
-				<?php endif; ?>
-		<?php else: ?>
-		<div>
-			<?php if(!empty($survey)): ?>
-			<div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
-			<ul>
-				<?php $__currentLoopData = $survey['section']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $surveyVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-					<li><?php echo e($surveyVal['section_name']); ?></li>
-					<?php if(!empty($surveyVal['fields'])): ?>
-					<ul style="margin-left: 20px">
-					
-						<?php $__currentLoopData = $surveyVal['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fields): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-						<?php 
-								$slug = str_replace('-', '_', $fields['field_slug']);
-
-						 ?>
-							<?php if(!empty($current_data)): ?>
-								<?php if(array_key_exists($slug , array_filter($current_data))): ?>
-									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_<?php echo e($slug); ?>"><?php echo e($fields['field_title']); ?> <?php echo e($slug); ?></li>
-									<li style="background-color: rgba(0, 128, 0, 0.2);"  class="ans_<?php echo e($slug); ?>"> 
-											Answer: <?php echo e($current_data[$slug]); ?>
-
-									</li>
-								<?php else: ?>
-									<li  class="fill_<?php echo e($fields['field_slug']); ?>"> <?php echo e($fields['field_title']); ?> <?php echo e($fields['field_slug']); ?></li>
-									<li class="ans_<?php echo e($fields['field_slug']); ?>"> 
-											Answer: Not filled yet.
-									</li>
-								<?php endif; ?>
-							<?php else: ?>
-								<li  class="fill_<?php echo e($fields['field_slug']); ?>"> <?php echo e(substr($fields['field_title'], 0,40)); ?> </li>
-									<li class="ans_<?php echo e($fields['field_slug']); ?>"> 
-											Answer: Not filled yet.
-									</li>
-
-							<?php endif; ?>
-						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-					</ul>
-					<?php endif; ?>
-
-				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-			</ul>
-			</div> 
-			<?php endif; ?>
-
-		</div>
-
-			<div class="aione-progress-bar">
-				<div class="aione-progress-bg">
-					<div class="aione-progress-inside" >
-
-					</div>
-				</div>
+			<div class="p-10 bg-grey white bg-darken-1 mb-2">
+				Section: Basic Details
+				<i class="fa fa-chevron-circle-down aione-float-right"></i>
 			</div>
-			<input id="viewType" type="hidden" name="type" value="survey">
-				<?php echo Form::model($slug,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post']); ?>
+			<div class="bg-white p-10 aione-border-bottom " >
+				What is your name?
+				<i class="fa fa-check green aione-float-right"></i>
 
-					<input type="hidden" name="form_id" value="<?php echo e($form_id); ?>" >
-					<input type="hidden" name="ip_address" value="<?php echo e(Request::ip()); ?>" >
-					<input type="hidden" name="survey_submitted_from" value="web" >
+			</div>
+			<div class="bg-white p-10 aione-border-bottom">
+				What is your name?
+				<i class="fa fa-close red aione-float-right"></i>
 
-					<?php 
+			</div>
+			<div class="bg-white p-10 aione-border-bottom">
+				What is your name?
+			</div>
+			<div class="p-10 bg-grey white bg-darken-1 mb-2">
+				Section: Basic Details
+				<i class="fa fa-chevron-circle-right aione-float-right"></i>
+			</div>
+			<div class="p-10 bg-grey white bg-darken-1 mb-2">
+				Section: Basic Details
+				<i class="fa fa-chevron-circle-right aione-float-right"></i>
+			</div>
+			<div class="p-10 bg-grey white bg-darken-1 mb-2">
+				Section: Basic Details
+				<i class="fa fa-chevron-circle-right aione-float-right"></i>
+			</div>
+			<div class="p-10 bg-grey white bg-darken-1 mb-2">
+				Section: Basic Details
+				<i class="fa fa-chevron-circle-right aione-float-right"></i>
 
-					 if(Auth::guard('org')->check()){
-						echo "<input type='hidden' name='survey_submitted_by' value='".Auth::guard('org')->user()->id."' >";
-					 }
+			</div>
+			
+		</div>
+	</div>
+	<div class="aione-float-left p-10" style="width: calc( 100% - 240px )">
+		<div class="aione-shadow  bg-white">
+			<div id="aione_form_wrapper_1" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style- aione-form-border  aione-form-section-border">
+	<div class="aione-row">
+				<div id="aione_form_content" class="aione-form-content">
+			<div class="aione-row aione-">
+							
+								<div id="aione_form_section_1" class="aione-form-section non-repeater">
+	<div class="aione-row">
+	
+				<div id="aione_form_section_header" class="aione-form-section-header">
+			<div class="aione-row">
+									<h3 class="aione-form-section-title aione-align-left">Basic Details</h3>
+								
+							</div> <!-- .aione-row -->
+		</div> <!-- .aione-form-header -->
+				<div id="aione_form_section_content" class="aione-form-section-content">
+			<div class="aione-row ar">
 
-					// dump(Session::all());
-					if(Session::has('section')){
-						$section_array = Session::get('section');
-						$key = array_keys($section_array);
-						if(count($key)==1){
-							echo '<input type="hidden" name="survey_status" value="completed" >';
-						}else{
-							echo '<input type="hidden" name="survey_status" value="incompleted" >';
-						}
-						$section_id = array_shift($key);
-						$section_slug = $section_array[$section_id];
-					}
-					if(Session::has('field')){
-						$fields = Session::get('field');
-						$field_keys = array_keys($fields);
-						if(count($field_keys)==1){
-							echo '<input type="hidden" name="survey_status" value="completed" >';
-						}else{
-							echo '<input type="hidden" name="survey_status" value="incompleted" >';
-						}
- 						$first_field_key = array_shift($field_keys);
-					}
-					 ?>
-					<div style="display: inline-block; width: 900px; float: right; border:1px solid grey;">
-						<div class="survey-forms">
-							<?php if(Session::has('field')): ?>
-								<input type="hidden" name="field_id" value="<?php echo e($first_field_key); ?>" >
+													<div id="field_1" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-name field-wrapper-type-text ">
+						<div id="field_label_name" class="field-label">
 
-								<?php echo FormGenerator::GenerateField($fields[$first_field_key]['field_slug'],[],'','org'); ?>
+				<label for="input_name">
+											<h4 class="field-title" id="Name">Name</h4>
+														</label>
+
+			</div><!-- field label-->
+				
+
+	<div id="field_name" class="field field-type-text">
+	
+					<input class="input-name" id="input_name" placeholder="" data-validation="" name="name" type="text"> 
+
+
+							</div><!-- field -->
+            
+</div><!-- field wrapper -->
+													<div id="field_2" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-email field-wrapper-type-text ">
+						<div id="field_label_email" class="field-label">
+
+				<label for="input_email">
+											<h4 class="field-title" id="Email">Email</h4>
+														</label>
+
+			</div><!-- field label-->
+				
+
+	<div id="field_email" class="field field-type-text">
+	
+					<input class="input-email" id="input_email" placeholder="" data-validation="" name="email" type="text"> 
+
+
+							</div><!-- field -->
+            
+</div><!-- field wrapper -->
+													<div id="field_3" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-age field-wrapper-type-text ">
+						<div id="field_label_age" class="field-label">
+
+				<label for="input_age">
+											<h4 class="field-title" id="Age">Age</h4>
+														</label>
+
+			</div><!-- field label-->
+				
+
+	<div id="field_age" class="field field-type-text">
+	
+					<input class="input-age" id="input_age" placeholder="" data-validation="" name="age" type="text"> 
+
+
+							</div><!-- field -->
+            
+</div><!-- field wrapper -->
+			
+			</div> <!-- .aione-row -->
+		</div> <!-- .aione-form-content -->
+
+	</div> <!-- .aione-row -->
+</div> <!-- .aione-form-section -->
 
 							
-							<?php elseif(Session::has('section')): ?>
-								<input type="hidden" name="section_id" value="<?php echo e($section_id); ?>" >
-								<?php echo FormGenerator::GenerateSection($section_slug,[],'','org'); ?>
+								<div id="aione_form_section_2" class="aione-form-section non-repeater">
+	<div class="aione-row">
+	
+				<div id="aione_form_section_header" class="aione-form-section-header">
+			<div class="aione-row">
+									<h3 class="aione-form-section-title aione-align-left">Enquery questions</h3>
+								
+							</div> <!-- .aione-row -->
+		</div> <!-- .aione-form-header -->
+				<div id="aione_form_section_content" class="aione-form-section-content">
+			<div class="aione-row ar">
 
-							<?php else: ?>					
-								<?php echo FormGenerator::GenerateForm($survey_slug,[],'','org'); ?>
+													<div id="field_4" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-rate-us field-wrapper-type-text ">
+						<div id="field_label_rate-us" class="field-label">
 
-								<input type="hidden" name="survey_status" value="completed" >
+				<label for="input_rate-us">
+											<h4 class="field-title" id="Rate us (0 stands for low satisfaction and 5 stands for high satisfaction)">Rate us (0 stands for low satisfaction and 5 stands for high satisfaction)</h4>
+														</label>
 
-							<?php endif; ?>
-						</div>
-						<input type="hidden" name="form_slug" value="<?php echo e($slug); ?>" >
-						<input type="submit" value="<?php echo e(@$survey_setting['form_save_button_text']); ?>">
-					<?php echo Form::close(); ?>
+			</div><!-- field label-->
+				
 
-				</div>
-		<?php endif; ?>
-		<div id="append">
+	<div id="field_rate-us" class="field field-type-text">
+	
+					<input class="input-rate-us" id="input_rate-us" placeholder="" data-validation=" " name="rate-us" type="text"> 
+
+
+							</div><!-- field -->
+            
+</div><!-- field wrapper -->
 			
+			</div> <!-- .aione-row -->
+		</div> <!-- .aione-form-content -->
+
+	</div> <!-- .aione-row -->
+</div> <!-- .aione-form-section -->
+
+			
+			</div> <!-- .aione-row -->
+		</div> <!-- .aione-form-content -->
+
+				<div id="aione_form_footer" class="aione-form-footer">
+			<div class="aione-row">
+			
+							<input type="submit" class="aione-button" value="Submit">
+										
+			</div> <!-- .aione-row -->
+		</div> <!-- .aione-form-footer -->
+		
+	<textarea class="form_conditions" id="form_1" style="display: none;">{"4":{"field_slug":"rate-us","field_id":4,"field_title":"Rate us (0 stands for low satisfaction and 5 stands for high satisfaction)","field_conditions":[]}}</textarea>
+	</div> <!-- .aione-row -->
+</div>
 		</div>
-		<script>
-$(document).ready(function(){
-	$('input:checkbox').each(function(){
-		name = $(this).attr('name');
-		newone =  name.replace('[]', '');
-		$(this).addClass(newone);
-	});
+	</div>
+	<div class="clear">
+		
+	</div>
+</div>
 
-			$('.survey-form').on('change','select',function(){
-				slug = $(this).attr('name');
-				$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				ansVal = $(this).val();
-				$(".ans_"+slug).html('Answer:'+ansVal);
-
-			});
-
-			$('.survey-form').on('click','input:radio',function(){
-				slug = $(this).attr('name');
-				$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				ansVal = $(this).val();
-				$(".ans_"+slug).html('Answer:'+ansVal);
-
-			});
-
-			$('.survey-form').on('click','input:checkbox',function(){
-					slug = $(this).attr('name');
-					newone =  slug.replace('[]', '');
-					$(".fill_"+newone).css({'background':'rgba(0, 128, 0, 0.2)'});
-					classs = $(this).attr('class');
-					$(".ans_"+newone).html('');
-					$(".ans_"+newone).append('Answer :');
-					$('.'+classs+':checked').each(function(){
-						     opt_values = $(this).val();
-						     $(".ans_"+newone).append('<br>selected options:  '+opt_values);
-						}); 
-					$(".ans_"+newone).css({'background':'rgba(0, 128, 0, 0.2)'});
-			});
-
-		$('.survey-form').on('blur','input:text, textarea',function(){
-			
-				types = $(this).attr('type');
-				countQues =0;
-				slug = $(this).attr('name');
-				ansVal = $(this).val();
-				if(ansVal!=''){
-					$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-					$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-					$(".ans_"+slug).html('Answer: '+ansVal);
-				}
-			});
-});
-</script>
+	
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.front', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

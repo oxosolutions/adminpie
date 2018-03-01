@@ -13,14 +13,15 @@ use Auth;
 use Session;
 use App\Model\Group\GroupUsers;
 use App\Model\Organization\User;
+// use App\Http\Controllers\Organization\hrm\EmployeeLeaveController;// as EMP_CTRL;
 class LeavesController extends Controller
 {
     protected $user;
-    public function __construct(UserRepositoryContract $user)
-    {
+    public function __construct(UserRepositoryContract $user) {
         $this->user = $user;
     }
     public function index(Request $request , $id = null){
+
         // $search = $this->saveSearch($request);
         // if($search != false && is_array($search)){
         //     $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
@@ -106,9 +107,12 @@ class LeavesController extends Controller
                 $model = LV::paginate($perPage);
             }
         }
+        foreach($model as $key => $employee){
+            $model[$key]['name'] = user_id_to_name(get_user_id_from_employee_id($employee->employee_id));
+        }
         $datalist =  [
             'datalist'=>  $model,
-            'showColumns' => ['employee_id'=>'employee_id','from'=>'From','to'=>'To','created_at'=>'Created', 'status'=>'Status'],
+            'showColumns' => ['name'=>'Name','employee_id'=>'Employee ID','from'=>'From','to'=>'To','created_at'=>'Created', 'status'=>'Status'],
             'actions' => [
                 'edit' => ['title'=>'Edit','route'=>'edit.leave','class' => 'edit'],
                 'delete'=>['title'=>'Delete','route'=>'delete.leave'],
@@ -118,17 +122,17 @@ class LeavesController extends Controller
             'js'  =>  ['custom'=>['list-designation']],
             'css'=> ['custom'=>['list-designation']]
         ];
-        if(!empty($id) || $id != null || $id != ''){
-            $data = LV::where('id',$id)->first();
-            $meta =  UsersMeta::select('user_id')->where(['key'=>'employee_id', 'value'=>$data->employee_id])->first();
-            if(!empty($meta)){
-                $user_id = User::find($meta->user_id)->user_id;
-                $data = $data->toArray();
-                $data['employee_id'] = $user_id;
-            }
-        }else{
-            $data = "";
-        }      
+        // if(!empty($id) || $id != null || $id != ''){
+        //     $data = LV::where('id',$id)->first();
+        //     $meta =  UsersMeta::select('user_id')->where(['key'=>'employee_id', 'value'=>$data->employee_id])->first();
+        //     if(!empty($meta)){
+        //         $user_id = User::find($meta->user_id)->user_id;
+        //         $data = $data->toArray();
+        //         $data['employee_id'] = $user_id;
+        //     }
+        // }else{
+        //     $data = "";
+        // }      
         return view('organization.hrm.leave.list_leave',$datalist)->with(['data'=>$data]);
     }
     public function save(Request $request)
@@ -198,7 +202,6 @@ class LeavesController extends Controller
     }
     public function updateLeave(Request $request)
     {
-        // dd($request->all());
         $valid_fields = [
             'reason_of_leave'  => 'required',
             'from'             => 'required',
@@ -247,8 +250,35 @@ class LeavesController extends Controller
             }
         }
     }
+
+    protected function remove_leave_from_attendance($start_date, $end_date , $detail , $employee_id){
+       
+        $detail['employee_id'] = $employee_id;
+        unset($detail['date'], $detail['day'], $detail['month_week_no'], $detail['day_in_month']);
+        for ($i=$start_date; $i <= $end_date; $i++) {
+                $detail['date'] = $i;
+                Attendance::where($detail)->delete();
+             }  
+    }
     public function reject_leave($id){
         $model = LV::find($id);
+        if($model['status']==1){
+            if(in_array($model['type'], ['one_day', 'first_half', 'second_half']) ) {
+                  $where =  $this->set_dates($model['from']);
+                  $where = array_add($where, 'employee_id', $model['employee_id']);
+                  unset($where['date'], $where['day'], $where['month_week_no'], $where['day_in_month']);
+                Attendance::where($where)->delete();
+            }elseif($model['type']=='multi'){
+                 $from  =  $this->set_dates($model['from']);
+                 $to    =  $this->set_dates($model['to']);
+                 if($from['month'] == $to['month']){
+                    $this->remove_leave_from_attendance($from['date'], $to['date'], $from, $model['employee_id']);
+                 }elseif($from['month'] != $to['month']){
+                    $this->remove_leave_from_attendance($from['date'], $from['day_in_month'], $from, $model['employee_id']);
+                    $this->remove_leave_from_attendance(1, $to['day_in_month'], $to, $model['employee_id']);
+                 }
+            }
+        }
         if(!empty($model)){
             LV::where('id',$id)->update(['status'=> 3]);
             Session::flash('success','Successfully reject');
@@ -286,7 +316,7 @@ class LeavesController extends Controller
     //         }
     //     return back();
     // }
-    protected function leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status){
+    protected function leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status, $submited_by){
         $start_to_date = str_replace_first('0', '', $date);
         if(strlen($month)==1){
             $month = '0'.$month;
@@ -294,13 +324,13 @@ class LeavesController extends Controller
         $attendance_check = Attendance::where(['date'=>$date, 'month'=>$month, 'year'=>$year, 'employee_id'=>$emp_id]);
         if($attendance_check->exists()){
             if($status=='approve'){
-                $attendance_check->update(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month, 'day' =>$day, 'attendance_status'=>$attendance_status,'employee_id'=>$emp_id]); 
+                $attendance_check->update(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month, 'day' =>$day, 'attendance_status'=>$attendance_status, 'employee_id'=>$emp_id, 'submited_by'=>$submited_by]); 
             }elseif($status=='reject'){
                 $attendance_check->delete();
             }
         }elseif($status=='approve'){
             $attendance = new Attendance();
-            $attendance->fill(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month_week_no, 'day' =>$day, 'attendance_status'=>$attendance_status, 'employee_id'=>$emp_id]);
+            $attendance->fill(['date'=>$date, 'month'=>$month, 'year'=>$year, 'month_week_no'=>$month_week_no, 'day' =>$day, 'attendance_status'=>$attendance_status, 'employee_id'=>$emp_id, 'submited_by'=>$submited_by]);
             $attendance->save();
         }
     }
@@ -311,6 +341,7 @@ class LeavesController extends Controller
     public function approve_leave($id)
     {               
         $attendance_status = 'leave';
+        $submited_by = 'hr';
         $model = LV::find($id);
         $cat_data = CAT::with('meta')->where('id',$model->leave_category_id)->first();
         if(!empty( $leave_category_type =$cat_data->meta->where('key','leave_category_type')->first())) {
@@ -323,7 +354,7 @@ class LeavesController extends Controller
             $emp_id = $model->employee_id;
             $from =  $this->set_dates($model->from);
             if($model->to != "0000-00-00"){
-                $to =  $this->set_dates($model->to);
+                $to = $this->set_dates($model->to);
             }
             // if($model->type = 'first_half'){
             //     extract($from);
@@ -333,35 +364,42 @@ class LeavesController extends Controller
 
             // }
              // dd($from , $model);
-            if(!empty($model['type']) && $model['type'] =="one_day"){
+            if(!empty($model['type']) && $model['type'] == "first_half"){
+                 extract($from);
+                $attendance_status = 'first_half';
+                $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status, $submited_by);
+            }elseif(!empty($model['type']) && $model['type'] == "second_half"){
+                 extract($from);
+                $attendance_status = 'second_half';
+                $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status, $submited_by);
+            }elseif(!empty($model['type']) && $model['type'] =="one_day"){
                 extract($from);
-                $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
+                $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status, $submited_by);
             }elseif($from['year'] == $to['year'] && $from['month'] == $to['month'] && $from['date'] != $to['date']){
-                echo "more day leave in same month";
                 extract($from);
                 for ($i=$from['date']; $i <= $to['date']; $i++) { 
                     $date_details =  $this->set_dates("$year-$month-".$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status, $submited_by);
                 }
             }elseif ($from['year'] == $to['year'] && $from['month'] != $to['month']) {
                 extract($from);
                 for ($i=$from['date']; $i <= $from['day_in_month']; $i++) {
                     $date_details =  $this->set_dates("$year-$month-".$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status, $submited_by);
                 }
                 for ($i=1; $i <= $to['date']; $i++) { 
                     $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status, $submited_by);
                 }
             }elseif ($from['year'] != $to['year']) {
                 extract($from);
                 for ($i=$from['date']; $i <= $from['day_in_month']; $i++) {
                     $date_details =  $this->set_dates("$year-$month-".$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status, $submited_by);
                 }
                 for ($i=1; $i <= $to['date']; $i++) { 
                     $date_details =  $this->set_dates($to['year'].'-'.$to['month'].'-'.$i);
-                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status);
+                    $this->leave_insert($date_details['month_week_no'], $date_details['day'] , $date_details['date'] , $date_details['month'] , $date_details['year'] , $emp_id, $status, $attendance_status, $submited_by);
                 }
             }
             LV::where('id',$id)->update(['status'=> 1]);
@@ -443,6 +481,8 @@ class LeavesController extends Controller
     }
     public function addLeaves()
     {
-        return view('organization.hrm.leave.add-leave');
+       $user = new User();
+       $employee_list =  $user->employeeLeaveUsers();
+        return view('organization.hrm.leave.add-leave',compact('employee_list'));
     }
 }

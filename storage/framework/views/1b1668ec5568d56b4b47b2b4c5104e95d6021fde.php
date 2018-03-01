@@ -1,12 +1,14 @@
-
-
 <?php if(!empty($attendance_data) && isset($attendance_data[$user_meta['employee_id']]) && !empty($attendance_data[$user_meta['employee_id']])): ?>
 		<?php if(isset($attendanceVal[$d]) && empty($attendanceVal[$d]['shift_hours'])): ?>
-			<?php if($attendanceVal[$d]['attendance_status']=='leave'): ?>
+			<?php if($attendanceVal[$d]['attendance_status']=='first_half'): ?>
+				<div class="attendance-sheet column  attendance-status-leave first-half white">F</div>
+			<?php elseif($attendanceVal[$d]['attendance_status']=='second_half'): ?>
+				<div class="attendance-sheet column  attendance-status-leave second-half white">S</div>
+			<?php elseif($attendanceVal[$d]['attendance_status']=='leave'): ?>
 				<div class="attendance-sheet column  attendance-status-leave ">L</div>
 			<?php elseif($attendanceVal[$d]['attendance_status']=='lop'): ?>
 				<div class="attendance-sheet column attendance-status-leave">U</div>
-			<?php elseif(!empty($attendanceVal[$d]['punch_in_out'])): ?>
+			<?php elseif(!empty($attendanceVal[$d]['punch_in_out']) || !empty($attendanceVal[$d]['attendance_status']=='present') ): ?>
 				<div class="attendance-sheet column attendance-status-off attendance-status-present">O</div>
 			<?php else: ?>
 				<div class="attendance-sheet column attendance-status-off">O</div>
@@ -21,6 +23,10 @@
 					<div class="attendance-sheet column attendance-status-holiday">H</div>
 				<?php endif; ?>
 
+			<?php elseif($attendanceVal[$d]['attendance_status']=='first_half'): ?>
+				<div class="attendance-sheet column  attendance-status-leave">F</div>
+			<?php elseif($attendanceVal[$d]['attendance_status']=='second_half'): ?>
+				<div class="attendance-sheet column  attendance-status-leave">S</div>
 			<?php elseif(!empty($attendanceVal[$d]) && $attendanceVal[$d]['attendance_status']=='leave'): ?>
 				<?php if(!empty($attendanceVal[$d]) && !empty($attendanceVal[$d]['punch_in_out'])): ?>
 					<div class="attendance-sheet column  attendance-status-leave ">L</div>

@@ -43,16 +43,24 @@ $page_title_data = array(
 
                         <div class="ar">
                             <div class="ac l80">
-                                <?php echo Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default']); ?>        
+                                <?php echo Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default select-year']); ?>        
                             </div>
-                            <div class="ac l20">
-                                <?php echo Form::submit('Submit',['style'=>'width:100%']); ?>        
+                            <div class="loading display-none line-height-40 font-weight-800 font-size-18">
+                                Loading...
                             </div>
+                          
                         </div>
                         
                         
                     <?php echo Form::close(); ?>
 
+                    <script type="text/javascript">
+                        $(document).on('change','.select-year',function(){
+                            $('.loading').show();
+                            this.form.submit();
+
+                        })
+                    </script>
                 </div>
             
             </div>
@@ -95,7 +103,7 @@ $page_title_data = array(
 
 
                                     <?php else: ?> 
-                                        <?php echo Form::submit('Locked',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']); ?>
+                                        <?php echo Form::submit('Lock',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']); ?>
 
                                     <?php endif; ?>
                                     
