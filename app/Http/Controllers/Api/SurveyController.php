@@ -87,7 +87,7 @@ class SurveyController extends Controller
         {   
             if(!empty($value['formsMeta'])){
                 //$survey_metas = $value['formsMeta'];
-              dump($value['formsMeta']->toArray()); // extract($survey_meta);         
+             array_push($survey_meta , $value['formsMeta']->toArray()); // extract($survey_meta);         
 
             }
             continue;
@@ -199,6 +199,7 @@ class SurveyController extends Controller
             }
         }
         
+        dump($survey_meta);
             $data['questions']      = $question;
             $data['surveys']     = $surveys;  
             // $data['survey_meta'] = extract($survey_meta);         

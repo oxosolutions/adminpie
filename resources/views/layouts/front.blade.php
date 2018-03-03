@@ -61,7 +61,7 @@ if($is_visualization){
 @include('layouts.front._head')
 
 <body>
-	<div id="aione_wrapper" class="aione-wrapper 234234234 aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
 		<div class="aione-row">
 			@if(@$design_settings['show_header'] == 1)
 				@if(@$visual_settings['enable_header']  == 1)
