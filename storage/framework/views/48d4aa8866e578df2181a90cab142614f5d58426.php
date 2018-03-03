@@ -21,6 +21,7 @@ if($is_visualization){
 		foreach ($settings as $key => $value) {
 			$visual_settings[$value['key']] = $value['value'];
 		}
+		dd($visual_settings);
 	}
 	
 }
@@ -63,10 +64,12 @@ if($is_visualization){
 <body>
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-<?php echo e(@$design_settings['layout']); ?> aione-theme-arcane">
 		<div class="aione-row">
+
 			<?php if(@$design_settings['show_header'] == 1): ?>
-				<?php if(@$visual_settings['enable_header']  == 1): ?>
+
+				
 					<?php echo $__env->make('layouts.front._header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-				<?php endif; ?>
+				
 			<?php endif; ?>
 			<?php if(@$design_settings['show_slider'] == 1): ?>
 				<?php echo $__env->make('layouts.front._slider', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -90,14 +93,14 @@ if($is_visualization){
 
 
 			<?php if(@$design_settings['show_footer_widgets'] == 1): ?>
-				<?php if(@$visual_settings['show_footer'] == 1): ?>
+				
 					<?php echo $__env->make('layouts.front._footer', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-				<?php endif; ?>
+				
 			<?php endif; ?>
 			<?php if(@$design_settings['show_copyright'] == 1): ?>
-				<?php if(@$visual_settings['enable_copyright']): ?>
+				
 					<?php echo $__env->make('layouts.front._copyright', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-				<?php endif; ?>
+				
 			<?php endif; ?>
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->

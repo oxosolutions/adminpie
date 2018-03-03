@@ -21,6 +21,7 @@ if($is_visualization){
 		foreach ($settings as $key => $value) {
 			$visual_settings[$value['key']] = $value['value'];
 		}
+		dd($visual_settings);
 	}
 	
 }
@@ -63,10 +64,12 @@ if($is_visualization){
 <body>
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
 		<div class="aione-row">
+
 			@if(@$design_settings['show_header'] == 1)
-				@if(@$visual_settings['enable_header']  == 1)
+
+				{{-- @if(@$visual_settings['enable_header']  == 1) --}}
 					@include('layouts.front._header')
-				@endif
+				{{-- @endif --}}
 			@endif
 			@if(@$design_settings['show_slider'] == 1)
 				@include('layouts.front._slider')
@@ -90,14 +93,14 @@ if($is_visualization){
 
 
 			@if(@$design_settings['show_footer_widgets'] == 1)
-				@if(@$visual_settings['show_footer'] == 1)
+				{{-- @if(@$visual_settings['show_footer'] == 1) --}}
 					@include('layouts.front._footer')
-				@endif
+				{{-- @endif --}}
 			@endif
 			@if(@$design_settings['show_copyright'] == 1)
-				@if(@$visual_settings['enable_copyright'])
+				{{-- @if(@$visual_settings['enable_copyright']) --}}
 					@include('layouts.front._copyright')
-				@endif
+				{{-- @endif --}}
 			@endif
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->

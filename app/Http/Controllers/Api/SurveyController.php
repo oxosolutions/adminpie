@@ -82,16 +82,14 @@ class SurveyController extends Controller
         $groups =[];
         $repeater = [];
         $survey_meta = [];
-        // dd($form->toArray());
         foreach ($form as $key => $value) 
-        {   
-            if(!empty($value['formsMeta'])){
-                //$survey_metas = $value['formsMeta'];
-             array_push($survey_meta , $value['formsMeta']->toArray()); // extract($survey_meta);         
-
+        {
+            foreach ($value['formsMeta'] as $form_meta_key => $form_meta_value) {
+               // $form_meta_value['survey_id'] = $form_meta_value['form_id'];
+               // unset($form_meta_value['form_id']);
+                $survey_meta[] = $form_meta_value;
             }
-            continue;
-            //array_push($survey_meta, $survey_metas);
+            
 
             $form_id = $value['id']; 
             $temp_form = ["id"=>$value['id'], "survey_table"=>'', "name"=>$value['form_title'], "created_by"=>'', "description"=>$value['form_description'], "status"=>'',"created_by"=>$value['created_by'], "created_at"=>date('Y-m-d',strtotime($value->created_at)), "updated_at"=>date('Y-m-d',strtotime($value->updated_at)), "deleted_at"=>'']; 
@@ -199,10 +197,10 @@ class SurveyController extends Controller
             }
         }
         
-        dump($survey_meta);
+         // dump(array_collpase($survey_meta));
             $data['questions']      = $question;
             $data['surveys']     = $surveys;  
-            // $data['survey_meta'] = extract($survey_meta);         
+            $data['survey_meta'] = $survey_meta;         
             $data['groups']      = $groups;
             $data["users"]       = $users;//GroupUsers::all();
             $data['settings'] = OrganizationSetting::where('type','app')->pluck('value','key');
