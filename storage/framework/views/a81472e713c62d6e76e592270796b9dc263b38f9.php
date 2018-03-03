@@ -85,8 +85,8 @@ if(!empty($error)){
 
          <input type="hidden" name="apply_by" value="employee">
          <?php if(!empty($id) && get_user_id() != $id): ?>
-         <input type="text" name="employee" value="<?php echo e($id); ?>">
-         <input type="text" name="route" value="account.leaves">
+         <input type="hidden" name="employee" value="<?php echo e($id); ?>">
+         <input type="hidden" name="route" value="account.leaves">
 
          <?php endif; ?>
   

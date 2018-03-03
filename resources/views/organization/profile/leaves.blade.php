@@ -83,8 +83,8 @@ if(!empty($error)){
    {!! Form::open(['route'=>'store.employeeleave' , 'class'=> 'form-horizontal','method' => 'post'])!!}
          <input type="hidden" name="apply_by" value="employee">
          @if(!empty($id) && get_user_id() != $id)
-         <input type="text" name="employee" value="{{$id}}">
-         <input type="text" name="route" value="account.leaves">
+         <input type="hidden" name="employee" value="{{$id}}">
+         <input type="hidden" name="route" value="account.leaves">
 
          @endif
   

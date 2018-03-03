@@ -35,9 +35,9 @@
 			'add_new' => '+ Add Feedback'
 		);
 @endphp
-<div class="bg-grey bg-lighten-3" >
-	<div class="aione-float-left p-10" style="width: 240px">
-		<div class="aione-shadow">
+<div class="bg-grey bg-lighten-4" >
+	<div class="aione-float-left p-10	" style="width: 300px">
+		{{-- <div class="aione-shadow">
 
 			<div class="p-10 bg-grey white bg-darken-1 mb-2">
 				Section: Basic Details
@@ -74,10 +74,52 @@
 
 			</div>
 			
+		</div> --}}
+		<div>
+			{{-- <h5 class="light-blue darken-2">Sections</h4> --}}
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+				<div>
+					<figure class="chart-one animate">
+						<svg role="img" xmlns="http://www.w3.org/2000/svg">
+							<title>[title here]</title>
+							<desc>[long description here]</desc>
+							<circle class="circle-background"/>
+							<circle class="circle-foreground"/>
+						</svg>
+						<figcaption>25% of all males like donuts.</figcaption>
+					</figure>
+				</div>
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-light-blue bg-darken-2" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 white font-weight-600">Section Name</div>
+				<div class="font-size-13 line-height-20 white">24 Question</div>
+			</div>
 		</div>
 	</div>
-	<div class="aione-float-left p-10" style="width: calc( 100% - 240px )">
-		<div class="aione-shadow  bg-white">
+	<div class="aione-float-left " style="width: calc( 100% - 300px )">
+		<div class="  bg-white">
 			<div id="aione_form_wrapper_1" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style- aione-form-border  aione-form-section-border">
 	<div class="aione-row">
 				<div id="aione_form_content" class="aione-form-content">
