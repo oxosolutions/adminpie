@@ -11,42 +11,110 @@
 			'add_new' => '+ Add Feedback'
 		);
  ?>
+<style type="text/css">
+	.indicater-wrapper{
+		position: absolute;top: 25%;right: 5px;font-size: 9px
+	}
+	.indicater-wrapper .indicater{
+		width: 70px;height: 4px;position: relative;
+	}
+	.indicater-wrapper .percentage{
+		position: absolute;min-height: 4px;left: 0;width: 30%
+	}
+</style>
 <div class="bg-grey bg-lighten-4" >
-	<div class="aione-float-left p-10	" style="width: 300px">
+	<div class="aione-float-left p-10	" style="width: 360px">
 		
 		<div>
 			
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white " style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+				<div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information" style="width: 74%">Basic detail section for personal information</div>
+				<div class="font-size-13 line-height-20">24 Question</div>
+				<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20">30% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 30%">
+							
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
+								<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20">0% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 0%">
+							
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
+								<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20">0% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 0%">
+							
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
+					<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20">0% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 0%">
+							
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
+								<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20">0% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 0%">
+							
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
+								<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20">0% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 0%">
+							
+						</div>
+					</div>
+				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
-				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
-				<div class="font-size-13 line-height-20">24 Question</div>
-			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-light-blue bg-darken-2" style="box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-light-blue bg-darken-2" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
 				<div class="font-size-20 white font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20 white">24 Question</div>
+					<div class="indicater-wrapper" >
+					<div class="aione-align-center line-height-20 white">0% completed</div>
+					<div class="bg-light-blue bg-lighten-4 indicater">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width: 0%">
+							
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="aione-float-left " style="width: calc( 100% - 300px )">
+	<div class="aione-float-left " style="width: calc( 100% - 360px )">
 		<div class="  bg-white">
 			<div id="aione_form_wrapper_1" class="aione-form-wrapper aione-form-theme- aione-form-label-position- aione-form-style- aione-form-border  aione-form-section-border">
 	<div class="aione-row">
