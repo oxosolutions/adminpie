@@ -79,7 +79,7 @@
 			<?php if(!empty($survey)): ?>
 			<div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
 			<ul>
-				<?php $__currentLoopData = $sectionurvey['section']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $surveyVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+				<?php $__currentLoopData = $survey['section']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $surveyVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 					<li><?php echo e($surveyVal['section_name']); ?></li>
 					<?php if(!empty($surveyVal['fields'])): ?>
 					<ul style="margin-left: 20px">
@@ -245,8 +245,5 @@ $(document).ready(function(){
 			});
 });
 </script>
-
-
-
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.front', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

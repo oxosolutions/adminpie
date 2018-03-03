@@ -257,7 +257,7 @@ class SurveyController extends Controller
 
     protected function put_session_survey($option ,$form_id,  $data){
         if($option =='section'){
-            Session::put(['form_id'=> $form_id, 'section'=>$data ]);
+            Session::put(["form_id"=> $form_id, 'section'=>$data ]);
         }elseif($option =='question'){
             Session::put(['form_fiel_id'=> $form_id, 'field'=>$data ]);
         }
@@ -271,7 +271,8 @@ class SurveyController extends Controller
      * @author Paljinder,Rahul
      */
     public function embededSurvey($token, $from_status = false){
-
+Session::forget('form_id_156');
+dump(Session::all() );
         $current_data = [];
         $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
         if($form != null){
@@ -363,7 +364,7 @@ class SurveyController extends Controller
   
     protected function survey_error($setting , $survey_id) {
         // dump(12, empty($setting['enable_survey']), $setting['enable_survey']);
-
+//dd($setting);
          if(isset($setting['enable_survey']) && $setting['enable_survey']==0  ){
             
                 return ["survey_is_disabled"=>"Survey is disabled."];
@@ -375,7 +376,7 @@ class SurveyController extends Controller
                     }else{
     	               $user_id = Auth::guard('org')->user()->id;
                        $user_list = json_decode($setting['individual_list'],true);
-                       if(!in_array($user_id, $user_list)){
+                       if(empty($user_list) || !in_array($user_id, $user_list)){
                             return ["survey_un-authorization_user"=>"You do not have permissions to access the survey."];
                        }
                     }

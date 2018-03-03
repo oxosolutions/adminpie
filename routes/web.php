@@ -565,4 +565,8 @@
 Route::get('/myattendance',function(){
 	return view('organization.account.ash-attendance');
 });
+
+Route::get('survey-design',function(){
+	return view('organization.survey.survey-design');
+});
 	

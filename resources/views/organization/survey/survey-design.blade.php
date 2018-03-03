@@ -1,40 +1,5 @@
 @extends('layouts.front')
-@section('sidebar')
-{{-- <ul class="collapsible" data-collapsible="accordion">
-	@foreach($survey['section'] as $surveyVal)
-	    <li>
-	      <div class="collapsible-header">{{$surveyVal['section_name']}}</div>
-	      @if(!empty($surveyVal['fields']))
-	      	@foreach($surveyVal['fields'] as $fields)
-				@php
-					$slug = str_replace('-', '_', $fields['field_slug']);
-				@endphp
-				@if(!empty($current_data))
-					@if(array_key_exists($slug , array_filter($current_data)))
-	      				<div class="collapsible-body  fill_{{$slug}}" style="background-color: rgba(0, 128, 0, 0.2);"  ><span>{{$fields['field_slug']}}</span></div>
-	      			@else
-	      				 <div class="collapsible-body"><span>{{$fields['field_slug']}}</span></div>
-	      			@endif
-				@else
-					 <div class="collapsible-body"><span>{{$fields['field_slug']}}</span></div>	
-	      		@endif
-
-	      	@endforeach
-	      @endif
-	    </li>
-	@endforeach
-</ul> --}}
-@endsection
 @section('content')
-@php
-	$page_title_data = array(
-			'show_page_title' => 'yes',
-			'show_add_new_button' => 'no',
-			'show_navigation' => 'yes',
-			'page_title' => 'View Survey',
-			'add_new' => '+ Add Feedback'
-		);
-@endphp
 <style type="text/css">
 	.indicater-wrapper{
 		position: absolute;right: 0;bottom:0;left:0;font-size: 9px;cursor: pointer
@@ -53,7 +18,7 @@
 
 	.indicater-wrapper.active .percentage-text{
 		display: block;
-		color: #ccc
+		color: #676767
 	}
 	.indicater-wrapper.active .indicater{
 		height: 15px;margin-top: 10px
@@ -69,18 +34,18 @@
 		})
 	})
 </script>
-{{-- <div class=" p-10" style="max-width: 1120px;margin: 0 auto;">
-	<div class="aione-float-left pr-10	" style="width: 360px">
+<div class=" p-10" style="max-width: 1120px;margin: 0 auto;">
+	<div class="aione-float-left pr-15	" style="width: 360px">
 	
 		<div>
 		
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white " style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white " style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">Basic detail section for personal information</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
 				<div class="indicater-wrapper" >
 					
 					<div class="bg-light-blue bg-lighten-4 indicater">
-						<div class="bg-light-blue bg-darken-2 percentage" style="width:0%">
+						<div class="bg-light-blue bg-darken-2 percentage" style="width:50%">
 							
 							
 						</div>
@@ -89,7 +54,7 @@
 				</div>
 				
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
 					<div class="indicater-wrapper" >
@@ -102,7 +67,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
 					<div class="indicater-wrapper" >
@@ -115,7 +80,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
 					<div class="indicater-wrapper" >
@@ -128,7 +93,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
 					<div class="indicater-wrapper" >
@@ -141,7 +106,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>
 					<div class="indicater-wrapper" >
@@ -154,7 +119,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="pv-15 ph-10 aione-border mb-10 bg-light-blue bg-darken-2" style="position:relative;box-shadow: 0 0 3px rgba(0,0,0,.3)">
+			<div class="pv-15 ph-10 aione-border mb-10 bg-light-blue bg-darken-2" style="position:relative;">
 				<div class="font-size-20 white font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20 white">24 Question</div>
 					<div class="indicater-wrapper" >
@@ -307,198 +272,5 @@
 	<div class="clear">
 		
 	</div>
-</div> --}}
-{{-- @include('common.pageheader',$page_title_data)  --}}
-	@if(Session::has('sucess'))
-		<div class="aione-message success">
-			<ul class="aione-messages aione-align-center">
-				<li class="aione-align-center">{{Session::get('sucess')}}</li>
-			</ul>
-		</div>
-	@endif
-
-		@if(isset($survey_setting['survey_timer'])  && ($survey_setting['survey_timer']==true))
-			@if(isset($survey_setting['timer_type']) && ($survey_setting['timer_type']=="survey_expiry_time"))
-				<h3>  {{$survey_setting['survey_time_lefts']}} Survey Expired</h3>
-		 	@endif
-		@endif
-		@if(!empty($error))
-				@if(is_array($error))
-					<div class="aione-message error">
-					    <ul class="aione-messages">
-					        <li>{{implode($error)}} </li>
-					    </ul>
-					</div>
-				@else
-					<div class="aione-message error">
-					    <ul class="aione-messages">
-					        <li>{{$error}} </li>
-					    </ul>
-					</div>
-				@endif
-		@else
-		<div>
-			@if(!empty($survey))
-			<div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
-			<ul>
-				@foreach($survey['section'] as $surveyVal)
-					<li>{{$surveyVal['section_name']}}</li>
-					@if(!empty($surveyVal['fields']))
-					<ul style="margin-left: 20px">
-					
-						@foreach($surveyVal['fields'] as $fields)
-						@php
-								$slug = str_replace('-', '_', $fields['field_slug']);
-
-						@endphp
-							@if(!empty($current_data))
-								@if(array_key_exists($slug , array_filter($current_data)))
-									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_{{$slug}}">{{$fields['field_title']}} {{$slug}}</li>
-									<li style="background-color: rgba(0, 128, 0, 0.2);"  class="ans_{{$slug}}"> 
-											Answer: {{$current_data[$slug]}}
-									</li>
-								@else
-									<li  class="fill_{{$fields['field_slug']}}"> {{$fields['field_title']}} {{$fields['field_slug']}}</li>
-									<li class="ans_{{$fields['field_slug']}}"> 
-											Answer: Not filled yet.
-									</li>
-								@endif
-							@else
-								<li  class="fill_{{$fields['field_slug']}}"> {{substr($fields['field_title'], 0,40)}} </li>
-									<li class="ans_{{$fields['field_slug']}}"> 
-											Answer: Not filled yet.
-									</li>
-
-							@endif
-						@endforeach
-					</ul>
-					@endif
-
-				@endforeach
-			</ul>
-			</div> 
-			@endif
-
-		</div>
-
-			<div class="aione-progress-bar">
-				<div class="aione-progress-bg">
-					<div class="aione-progress-inside" >
-
-					</div>
-				</div>
-			</div>
-			<input id="viewType" type="hidden" name="type" value="survey">
-				{!! Form::model($slug,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post'])!!}
-					<input type="hidden" name="form_id" value="{{$form_id}}" >
-					<input type="hidden" name="ip_address" value="{{Request::ip()}}" >
-					<input type="hidden" name="survey_submitted_from" value="web" >
-
-					@php
-
-					 if(Auth::guard('org')->check()){
-						echo "<input type='hidden' name='survey_submitted_by' value='".Auth::guard('org')->user()->id."' >";
-					 }
-
-					// dump(Session::all());
-					if(Session::has('section')){
-						$section_array = Session::get('section');
-						$key = array_keys($section_array);
-						if(count($key)==1){
-							echo '<input type="hidden" name="survey_status" value="completed" >';
-						}else{
-							echo '<input type="hidden" name="survey_status" value="incompleted" >';
-						}
-						$section_id = array_shift($key);
-						$section_slug = $section_array[$section_id];
-					}
-					if(Session::has('field')){
-						$fields = Session::get('field');
-						$field_keys = array_keys($fields);
-						if(count($field_keys)==1){
-							echo '<input type="hidden" name="survey_status" value="completed" >';
-						}else{
-							echo '<input type="hidden" name="survey_status" value="incompleted" >';
-						}
- 						$first_field_key = array_shift($field_keys);
-					}
-					@endphp
-					<div style="display: inline-block; width: 900px; float: right; border:1px solid grey;">
-						<div class="survey-forms">
-							@if(Session::has('field'))
-								<input type="hidden" name="field_id" value="{{$first_field_key}}" >
-
-								{!! FormGenerator::GenerateField($fields[$first_field_key]['field_slug'],[],'','org') !!}
-							
-							@elseif(Session::has('section'))
-								<input type="hidden" name="section_id" value="{{$section_id}}" >
-								{!! FormGenerator::GenerateSection($section_slug,[],'','org') !!}
-							@else					
-								{!! FormGenerator::GenerateForm($survey_slug,[],'','org') !!}
-								<input type="hidden" name="survey_status" value="completed" >
-
-							@endif
-						</div>
-						<input type="hidden" name="form_slug" value="{{$slug}}" >
-						<input type="submit" value="{{@$survey_setting['form_save_button_text']}}">
-					{!! Form::close() !!}
-				</div>
-		@endif
-		<div id="append">
-			
-		</div>
-		<script>
-$(document).ready(function(){
-	$('input:checkbox').each(function(){
-		name = $(this).attr('name');
-		newone =  name.replace('[]', '');
-		$(this).addClass(newone);
-	});
-
-			$('.survey-form').on('change','select',function(){
-				slug = $(this).attr('name');
-				$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				ansVal = $(this).val();
-				$(".ans_"+slug).html('Answer:'+ansVal);
-
-			});
-
-			$('.survey-form').on('click','input:radio',function(){
-				slug = $(this).attr('name');
-				$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-				ansVal = $(this).val();
-				$(".ans_"+slug).html('Answer:'+ansVal);
-
-			});
-
-			$('.survey-form').on('click','input:checkbox',function(){
-					slug = $(this).attr('name');
-					newone =  slug.replace('[]', '');
-					$(".fill_"+newone).css({'background':'rgba(0, 128, 0, 0.2)'});
-					classs = $(this).attr('class');
-					$(".ans_"+newone).html('');
-					$(".ans_"+newone).append('Answer :');
-					$('.'+classs+':checked').each(function(){
-						     opt_values = $(this).val();
-						     $(".ans_"+newone).append('<br>selected options:  '+opt_values);
-						}); 
-					$(".ans_"+newone).css({'background':'rgba(0, 128, 0, 0.2)'});
-			});
-
-		$('.survey-form').on('blur','input:text, textarea',function(){
-			
-				types = $(this).attr('type');
-				countQues =0;
-				slug = $(this).attr('name');
-				ansVal = $(this).val();
-				if(ansVal!=''){
-					$(".fill_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-					$(".ans_"+slug).css({'background':'rgba(0, 128, 0, 0.2)'});
-					$(".ans_"+slug).html('Answer: '+ansVal);
-				}
-			});
-});
-</script>
+</div>
 @endsection

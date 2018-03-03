@@ -1,5 +1,6 @@
 <?php $__env->startSection('content'); ?>
 <?php 
+
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
