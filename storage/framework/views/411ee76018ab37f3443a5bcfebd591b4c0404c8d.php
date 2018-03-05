@@ -83,9 +83,11 @@
 								<?php endif; ?>
 
 							<?php elseif(Session::has('section')): ?>
-								<input type="hidden" name="section_id" value="<?php echo e($section_id); ?>" >
-								<?php echo FormGenerator::GenerateSection($section_slug,[],'','org'); ?>
+								<input id="sec_id"  type="hidden" name="section_id" value="<?php echo e($section_id); ?>" >
+								<div class="sec">
+									<?php echo FormGenerator::GenerateSection($section_slug,[],'','org'); ?>
 
+								</div>
 							<?php else: ?>					
 								<?php echo FormGenerator::GenerateForm($survey_slug,[],'','org'); ?>
 
@@ -102,5 +104,24 @@
 	</div>
 <?php endif; ?>
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+			
+		$('.survey-form').on('blur','input:text, textarea',function(){
+			$inputFields =  $("div.sec input, textarea");
+			var items = 0;
+    		$.each($inputFields, function($field) {
+      			if($inputFields[$field].value.length > 0) { ++items; }
+   			 });
+    		sec_id = $("#sec_id").val();
+    		sec_count =  $("#sec_que_count_"+sec_id).text();
+    		percent = items/sec_count*100;
+    		$("#"+sec_id).text(items);
+    		$(".progress_bar_"+sec_id).css('width',percent+'%');
+    		$(".progress_val_"+sec_id).text(percent+'% Completed');
+    		
+			});
+});
+</script>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.front', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

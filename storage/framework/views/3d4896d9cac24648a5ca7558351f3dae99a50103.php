@@ -37,22 +37,38 @@
 	<div class="aione-float-left pr-15	" style="width: 360px">
 	
 		<div>
-		
-			<div class="pv-15 ph-10 aione-border mb-10 bg-white " style="position:relative;">
-				<div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">Basic detail section for personal information</div>
-				<div class="font-size-13 line-height-20">24 Question</div>
-				<div class="indicater-wrapper" >
-					
-					<div class="bg-light-blue bg-lighten-4 indicater">
-						<div class="bg-light-blue bg-darken-2 percentage" style="width:50%">
-							
-							
+			<div class="mb-10">
+				<div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
+					<div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">Basic detail section for personal information</div>
+					<div class="font-size-13 line-height-20">24 Question</div>
+					<div class="indicater-wrapper" >
+						
+						<div class="bg-light-blue bg-lighten-4 indicater">
+							<div class="bg-light-blue bg-darken-2 percentage" style="width:50%">
+								
+								
+							</div>
+							<div class="grey aione-align-center line-height-15 percentage-text">30% completed</div>
 						</div>
-						<div class="grey aione-align-center line-height-15 percentage-text">30% completed</div>
 					</div>
+					
 				</div>
-				
+				<div class="aione-border">
+					<div class="aione-border-bottom p-10">
+						<div class="font-size-16 line-height-26">
+							This is question 1	
+						</div>
+						<div class="grey font-size-13">
+							this is the description of the question
+						</div>
+						
+
+					</div>
+					
+				</div>
 			</div>
+				
+				
 			<div class="pv-15 ph-10 aione-border mb-10 bg-white" style="position:relative;">
 				<div class="font-size-20 light-blue darken-2 font-weight-600">Section Name</div>
 				<div class="font-size-13 line-height-20">24 Question</div>

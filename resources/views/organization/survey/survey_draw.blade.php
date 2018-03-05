@@ -81,8 +81,10 @@
 								@endif
 
 							@elseif(Session::has('section'))
-								<input type="hidden" name="section_id" value="{{$section_id}}" >
-								{!! FormGenerator::GenerateSection($section_slug,[],'','org') !!}
+								<input id="sec_id"  type="hidden" name="section_id" value="{{$section_id}}" >
+								<div class="sec">
+									{!! FormGenerator::GenerateSection($section_slug,[],'','org') !!}
+								</div>
 							@else					
 								{!! FormGenerator::GenerateForm($survey_slug,[],'','org') !!}
 								<input type="hidden" name="survey_status" value="completed" >
@@ -97,4 +99,23 @@
 	</div>
 @endif
 </div>
+<script type="text/javascript">
+$(document).ready(function(){
+			
+		$('.survey-form').on('blur','input:text, textarea',function(){
+			$inputFields =  $("div.sec input, textarea");
+			var items = 0;
+    		$.each($inputFields, function($field) {
+      			if($inputFields[$field].value.length > 0) { ++items; }
+   			 });
+    		sec_id = $("#sec_id").val();
+    		sec_count =  $("#sec_que_count_"+sec_id).text();
+    		percent = items/sec_count*100;
+    		$("#"+sec_id).text(items);
+    		$(".progress_bar_"+sec_id).css('width',percent+'%');
+    		$(".progress_val_"+sec_id).text(percent+'% Completed');
+    		
+			});
+});
+</script>
 @endsection

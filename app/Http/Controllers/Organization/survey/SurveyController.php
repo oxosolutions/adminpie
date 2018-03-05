@@ -154,6 +154,7 @@ public function set_survey($id , $slug, $type){
     return back();
 }
     public function survey_filled_data_save(Request $request){
+        // dd($request->all() , count(array_filter( array_slice($request->all(), 7) )) ) ;
 
         $form_id    =   $request['form_id'];
         if(isset($request['section_id'])){
