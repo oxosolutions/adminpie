@@ -53,8 +53,8 @@
 				<li class="aione-align-center"><?php echo e(Session::get('sucess')); ?></li>
 			</ul>
 		</div>
-	<?php endif; ?>
-
+	<?php endif; ?> 
+ 
 		<?php if(isset($survey_setting['survey_timer'])  && ($survey_setting['survey_timer']==true)): ?>
 			<?php if(isset($survey_setting['timer_type']) && ($survey_setting['timer_type']=="survey_expiry_time")): ?>
 				<h3>  <?php echo e($survey_setting['survey_time_lefts']); ?> Survey Expired</h3>
@@ -74,40 +74,60 @@
 					    </ul>
 					</div>
 				<?php endif; ?>
-		<?php else: ?>
+				<?php if(!empty($error['survey_authorization_required'])): ?>
+		<a href="<?php echo e(route('org.login')); ?>"> Login </a>
+				<?php endif; ?>
+
+<?php else: ?> 
 		<div>
 			<?php if(!empty($survey)): ?>
 			<div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
 			<ul>
+
 				<?php $__currentLoopData = $survey['section']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $surveyVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-					<li><?php echo e($surveyVal['section_name']); ?></li>
+
+				<?php if(Session::has('section')): ?>
+					<li>  <a href="<?php echo e(route('set.survey',['id'=>$surveyVal['id'], 'slug'=>$surveyVal['section_slug'], 'type'=>'section' ])); ?>">  <?php echo e($surveyVal['section_name']); ?> </a></li>
+				<?php else: ?>
+					<li>    <?php echo e($surveyVal['section_name']); ?> </li>
+				<?php endif; ?>
 					<?php if(!empty($surveyVal['fields'])): ?>
 					<ul style="margin-left: 20px">
 					
 						<?php $__currentLoopData = $surveyVal['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fields): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 						<?php 
 								$slug = str_replace('-', '_', $fields['field_slug']);
-
 						 ?>
 							<?php if(!empty($current_data)): ?>
 								<?php if(array_key_exists($slug , array_filter($current_data))): ?>
-									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_<?php echo e($slug); ?>"><?php echo e($fields['field_title']); ?> <?php echo e($slug); ?></li>
+									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_<?php echo e($slug); ?>">
+								<a href="<?php echo e(route('set.survey',['id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ])); ?>">
+									<?php echo e($fields['field_title']); ?> 
+								</a>
+								</li>
 									<li style="background-color: rgba(0, 128, 0, 0.2);"  class="ans_<?php echo e($slug); ?>"> 
 											Answer: <?php echo e($current_data[$slug]); ?>
 
 									</li>
 								<?php else: ?>
-									<li  class="fill_<?php echo e($fields['field_slug']); ?>"> <?php echo e($fields['field_title']); ?> <?php echo e($fields['field_slug']); ?></li>
+									<li  class="fill_<?php echo e($fields['field_slug']); ?>"> 
+										<a href="<?php echo e(route('set.survey',['id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ])); ?>">
+											<?php echo e($fields['field_title']); ?> 
+										</a>
+
+									</li>
 									<li class="ans_<?php echo e($fields['field_slug']); ?>"> 
 											Answer: Not filled yet.
 									</li>
 								<?php endif; ?>
 							<?php else: ?>
-								<li  class="fill_<?php echo e($fields['field_slug']); ?>"> <?php echo e(substr($fields['field_title'], 0,40)); ?> </li>
+								<li  class="fill_<?php echo e($fields['field_slug']); ?>">
+									<a href="<?php echo e(route('set.survey',['id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ])); ?>"> <?php echo e(substr($fields['field_title'], 0,40)); ?> 
+									</a> 
+								</li>
 									<li class="ans_<?php echo e($fields['field_slug']); ?>"> 
 											Answer: Not filled yet.
 									</li>
-
 							<?php endif; ?>
 						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 					</ul>
@@ -128,19 +148,17 @@
 				</div>
 			</div>
 			<input id="viewType" type="hidden" name="type" value="survey">
+			<?php echo e(dump($slug)); ?>
+
 				<?php echo Form::model($slug,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post']); ?>
 
 					<input type="hidden" name="form_id" value="<?php echo e($form_id); ?>" >
 					<input type="hidden" name="ip_address" value="<?php echo e(Request::ip()); ?>" >
 					<input type="hidden" name="survey_submitted_from" value="web" >
-
 					<?php 
-
 					 if(Auth::guard('org')->check()){
 						echo "<input type='hidden' name='survey_submitted_by' value='".Auth::guard('org')->user()->id."' >";
 					 }
-
-					// dump(Session::all());
 					if(Session::has('section')){
 						$section_array = Session::get('section');
 						$key = array_keys($section_array);
@@ -160,17 +178,26 @@
 						}else{
 							echo '<input type="hidden" name="survey_status" value="incompleted" >';
 						}
- 						$first_field_key = array_shift($field_keys);
-					}
+ 						//$first_field_key = array_shift($field_keys);
+ 						$get_field_id = array_shift($field_keys);
+ 					}
+
 					 ?>
 					<div style="display: inline-block; width: 900px; float: right; border:1px solid grey;">
 						<div class="survey-forms">
 							<?php if(Session::has('field')): ?>
-								<input type="hidden" name="field_id" value="<?php echo e($first_field_key); ?>" >
+								<input type="hidden" name="field_id" value="<?php echo e($get_field_id); ?>" >
+								<?php if(!empty($current_data)): ?>
+								
+								<?php echo FormGenerator::GenerateField($fields[$get_field_id],$current_data,'','org'); ?>
 
-								<?php echo FormGenerator::GenerateField($fields[$first_field_key]['field_slug'],[],'','org'); ?>
 
-							
+								<?php else: ?>
+								<?php echo FormGenerator::GenerateField($fields[$get_field_id],[],'','org'); ?>
+
+
+								<?php endif; ?>
+
 							<?php elseif(Session::has('section')): ?>
 								<input type="hidden" name="section_id" value="<?php echo e($section_id); ?>" >
 								<?php echo FormGenerator::GenerateSection($section_slug,[],'','org'); ?>
@@ -179,14 +206,16 @@
 								<?php echo FormGenerator::GenerateForm($survey_slug,[],'','org'); ?>
 
 								<input type="hidden" name="survey_status" value="completed" >
-
 							<?php endif; ?>
 						</div>
+						<?php echo e(dump($slug)); ?>
+
 						<input type="hidden" name="form_slug" value="<?php echo e($slug); ?>" >
 						<input type="submit" value="<?php echo e(@$survey_setting['form_save_button_text']); ?>">
 					<?php echo Form::close(); ?>
 
 				</div>
+
 		<?php endif; ?>
 		<div id="append">
 			

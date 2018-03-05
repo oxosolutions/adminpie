@@ -136,12 +136,25 @@ class SurveyController extends Controller
         }
             $form_id    =   $request['form_id'];
             unset($request['_token'],$request['form_id'],$request['form_slug'],$request['form_title'],  $request['section_id'], $request['section_slug']);
+
             $this->apisurvey->create_alter_insert_survey_table(get_organization_id(), $form_id,$request->all());
             Session::flash('success','Survey filled successfully.');
             return back();
     }
 
+public function set_survey($id , $slug, $type){
+    $all = Session::get($type);
+    if($type=='section'){
+        $prepend = array_prepend($all, $slug, $id);
+        Session::put('section',$prepend);
+    }elseif($type=='field'){
+        $prepend = array_prepend($all, $slug, $id);
+        Session::put('field',$prepend);
+    }
+    return back();
+}
     public function survey_filled_data_save(Request $request){
+
         $form_id    =   $request['form_id'];
         if(isset($request['section_id'])){
             $section_id  =   $request['section_id'];
@@ -156,6 +169,7 @@ class SurveyController extends Controller
         if(Session::has('section')){
                 $all_sec = Session::get('section');
                 Session::forget('section');
+                Session::put('previous_section_'.$form_id, $section_id);
                 unset($all_sec[$section_id]);
                 if(empty($all_sec)){
                     $this->forget_session_survey('section');
@@ -257,7 +271,7 @@ class SurveyController extends Controller
 
     protected function put_session_survey($option ,$form_id,  $data){
         if($option =='section'){
-            Session::put(["form_id"=> $form_id, 'section'=>$data ]);
+            Session::put(['form_id'=> $form_id, 'section'=>$data ]);
         }elseif($option =='question'){
             Session::put(['form_fiel_id'=> $form_id, 'field'=>$data ]);
         }
@@ -271,8 +285,6 @@ class SurveyController extends Controller
      * @author Paljinder,Rahul
      */
     public function embededSurvey($token, $from_status = false){
-Session::forget('form_id_156');
-dump(Session::all() );
         $current_data = [];
         $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
         if($form != null){
@@ -306,12 +318,17 @@ dump(Session::all() );
                     }
                 }else{
                     foreach ($form->section as $key => $value) {
-                        $field[] = $value['fields'];
+                       // $field[] = $value['fields'];
+                        foreach ($value['fields'] as $field_key => $field_value) {
+                           $field[$field_value['id']] = $field_value['field_slug'];
+                        }
+                        // $f_slug = $value->fields->pluck('field_slug','id');
                     }
-                    $collapse  =  collect($field)->collapse();
-                    $all_field = json_decode( json_encode($collapse), true);
+                        
+                    // $collapse  =  collect($field)->collapse();
+                    // $all_field = json_decode( json_encode($collapse), true);
                     Session::put('form_fiel_id', $form_id);
-                    Session::put('field',$all_field);
+                    Session::put('field',$field);
                 }
             }else{
                     $this->forget_session_survey('question');
@@ -357,7 +374,8 @@ dump(Session::all() );
         if($from_status){
             return view('organization.survey.shared_survey_without_layout',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'))->render();
         }else{
-            return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
+            // return view('organization.survey.shared_survey',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
+            return view('organization.survey.survey_draw',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'));
         }
     }
 

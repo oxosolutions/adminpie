@@ -315,8 +315,8 @@
 				<li class="aione-align-center">{{Session::get('sucess')}}</li>
 			</ul>
 		</div>
-	@endif
-
+	@endif 
+ 
 		@if(isset($survey_setting['survey_timer'])  && ($survey_setting['survey_timer']==true))
 			@if(isset($survey_setting['timer_type']) && ($survey_setting['timer_type']=="survey_expiry_time"))
 				<h3>  {{$survey_setting['survey_time_lefts']}} Survey Expired</h3>
@@ -336,39 +336,59 @@
 					    </ul>
 					</div>
 				@endif
-		@else
+				@if(!empty($error['survey_authorization_required']))
+{{--login button--}}		<a href="{{route('org.login')}}"> Login </a>
+				@endif
+
+{{--1--}}@else 
 		<div>
 			@if(!empty($survey))
 			<div class="na" style="display: inline-block; width:300px; float: left; border:1px solid grey;">
 			<ul>
+
 				@foreach($survey['section'] as $surveyVal)
-					<li>{{$surveyVal['section_name']}}</li>
+
+				@if(Session::has('section'))
+					<li>  <a href="{{route('set.survey',['id'=>$surveyVal['id'], 'slug'=>$surveyVal['section_slug'], 'type'=>'section' ]) }}">  {{$surveyVal['section_name']}} </a></li>
+				@else
+					<li>    {{$surveyVal['section_name']}} </li>
+				@endif
 					@if(!empty($surveyVal['fields']))
 					<ul style="margin-left: 20px">
 					
 						@foreach($surveyVal['fields'] as $fields)
 						@php
 								$slug = str_replace('-', '_', $fields['field_slug']);
-
 						@endphp
 							@if(!empty($current_data))
 								@if(array_key_exists($slug , array_filter($current_data)))
-									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_{{$slug}}">{{$fields['field_title']}} {{$slug}}</li>
+									<li style="background-color: rgba(0, 128, 0, 0.2);" class="fill_{{$slug}}">
+								<a href="{{route('set.survey',['id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ]) }}">
+									{{$fields['field_title']}} 
+								</a>
+								</li>
 									<li style="background-color: rgba(0, 128, 0, 0.2);"  class="ans_{{$slug}}"> 
 											Answer: {{$current_data[$slug]}}
 									</li>
 								@else
-									<li  class="fill_{{$fields['field_slug']}}"> {{$fields['field_title']}} {{$fields['field_slug']}}</li>
+									<li  class="fill_{{$fields['field_slug']}}"> 
+										<a href="{{route('set.survey',['id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ]) }}">
+											{{$fields['field_title']}} 
+										</a>
+
+									</li>
 									<li class="ans_{{$fields['field_slug']}}"> 
 											Answer: Not filled yet.
 									</li>
 								@endif
 							@else
-								<li  class="fill_{{$fields['field_slug']}}"> {{substr($fields['field_title'], 0,40)}} </li>
+								<li  class="fill_{{$fields['field_slug']}}">
+									<a href="{{route('set.survey',['id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ]) }}"> {{substr($fields['field_title'], 0,40)}} 
+									</a> 
+								</li>
 									<li class="ans_{{$fields['field_slug']}}"> 
 											Answer: Not filled yet.
 									</li>
-
 							@endif
 						@endforeach
 					</ul>
@@ -389,18 +409,15 @@
 				</div>
 			</div>
 			<input id="viewType" type="hidden" name="type" value="survey">
+			{{dump($slug)}}
 				{!! Form::model($slug,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post'])!!}
 					<input type="hidden" name="form_id" value="{{$form_id}}" >
 					<input type="hidden" name="ip_address" value="{{Request::ip()}}" >
 					<input type="hidden" name="survey_submitted_from" value="web" >
-
 					@php
-
 					 if(Auth::guard('org')->check()){
 						echo "<input type='hidden' name='survey_submitted_by' value='".Auth::guard('org')->user()->id."' >";
 					 }
-
-					// dump(Session::all());
 					if(Session::has('section')){
 						$section_array = Session::get('section');
 						$key = array_keys($section_array);
@@ -420,29 +437,38 @@
 						}else{
 							echo '<input type="hidden" name="survey_status" value="incompleted" >';
 						}
- 						$first_field_key = array_shift($field_keys);
-					}
+ 						//$first_field_key = array_shift($field_keys);
+ 						$get_field_id = array_shift($field_keys);
+ 					}
+
 					@endphp
 					<div style="display: inline-block; width: 900px; float: right; border:1px solid grey;">
 						<div class="survey-forms">
 							@if(Session::has('field'))
-								<input type="hidden" name="field_id" value="{{$first_field_key}}" >
+								<input type="hidden" name="field_id" value="{{$get_field_id}}" >
+								@if(!empty($current_data))
+								{{-- {{dd($current_data)}} --}}
+								{!! FormGenerator::GenerateField($fields[$get_field_id],$current_data,'','org') !!}
 
-								{!! FormGenerator::GenerateField($fields[$first_field_key]['field_slug'],[],'','org') !!}
-							
+								@else
+								{!! FormGenerator::GenerateField($fields[$get_field_id],[],'','org') !!}
+
+								@endif
+
 							@elseif(Session::has('section'))
 								<input type="hidden" name="section_id" value="{{$section_id}}" >
 								{!! FormGenerator::GenerateSection($section_slug,[],'','org') !!}
 							@else					
 								{!! FormGenerator::GenerateForm($survey_slug,[],'','org') !!}
 								<input type="hidden" name="survey_status" value="completed" >
-
 							@endif
 						</div>
+						{{dump($slug)}}
 						<input type="hidden" name="form_slug" value="{{$slug}}" >
 						<input type="submit" value="{{@$survey_setting['form_save_button_text']}}">
 					{!! Form::close() !!}
 				</div>
+
 		@endif
 		<div id="append">
 			

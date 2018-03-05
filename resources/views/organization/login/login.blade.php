@@ -27,11 +27,11 @@
     				<a class="aione-login-reset-password-link display-block bold" href="{{ route('forgot.password') }}">Reset your password</a>
     			</div>
             @endif
-            <div style="width:100%; text-align: center;">
+            {{-- <div style="width:100%; text-align: center;">
                 <a href="{{ route('social.login','github') }}"><img src="https://assets-cdn.github.com/images/modules/logos_page/Octocat.png" style="width: 9.5%;" /></a>
                 <a href="{{ route('social.login','facebook') }}"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/F_icon.svg/2000px-F_icon.svg.png" style="width: 9%;" /></a>
                 <a href="{{ route('social.login','twitter') }}"><img src="https://hivedigitalstrategy.com/wp-content/uploads/2014/05/twitter-logo-transparent.png" style="width: 9%;" /></a>
-            </div>
+            </div> --}}
 			@if(@$userRegStatus != 'no')
 				<div class="aione-align-center">
 					If you do not have a user account?

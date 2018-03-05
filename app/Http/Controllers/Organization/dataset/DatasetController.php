@@ -947,7 +947,13 @@ class DatasetController extends Controller
 
     }
 
-
+    /**
+     * Insert new dataset record in dataset table
+     * @param  [type] $request  having all the posted data
+     * @param  [type] $filepath havinf uploaded dataset path
+     * @param  [type] $filename having filename
+     * @return [type]           will return record id
+     */
     protected function insertNewDatasetRecord($request,$filepath,$filename){
 
         $model = new Dataset;
