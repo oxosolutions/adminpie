@@ -85,8 +85,9 @@ class SurveyController extends Controller
         foreach ($form as $key => $value) 
         {
             foreach ($value['formsMeta'] as $form_meta_key => $form_meta_value) {
-               // $form_meta_value['survey_id'] = $form_meta_value['form_id'];
-               // unset($form_meta_value['form_id']);
+                if($form_meta_value['value']==null){
+                        $form_meta_value['value'] ="";
+                }
                 $survey_meta[] = $form_meta_value;
             }
             
@@ -456,14 +457,38 @@ class SurveyController extends Controller
                 }
             }else{
                 $values = array_merge($values, ['created_at'=> date('Y-m-d')]);
-                if(Session::has('inserted_id')){
-                    $insert_id =  Session::get('inserted_id');
+                if(Session::has('inserted_id'.$form_id)){
+                    $insert_id =  Session::get('inserted_id'.$form_id);
                     DB::table($newTableName)->where('id',$insert_id)->update($values);
                     return true;
                 }
                  $id = DB::table($newTableName)->insertGetId($values);
-                 Session::put('inserted_id', $id);
+                 Session::put('inserted_id'.$form_id, $id);
                  return true;
             }
+    }
+
+
+    public function listAllSurveys(Request $request){
+        $response = [];
+        $organizationWithActivation = GO::where('active_code',$request['activation_key']);
+        if(!$organizationWithActivation->exists()){
+            return ['status'=>'error', 'message'=>'wrong activation code!'];
+        }
+        $org_id = $organizationWithActivation->first()->id;
+        $group_id = $organizationWithActivation->first()->group_id;
+        Session::put('organization_id',$org_id);
+        Session::put('group_id',$group_id);
+        $response['users'] = $this->getUsersList();
+    }
+
+    protected function getUsersList(){
+        $users = GroupUsers::with('organization_user.user_role_rel.roles')->has('organization_user')->get()->toArray();
+        dd($users);
+        /*foreach ($users as $key => $value) {
+           $users[$key]['org_id'] = $org_id; 
+           $users[$key]['user_roles'] =  array_column(array_column($users[$key]['organization_user']['user_role_rel'], 'roles'), 'slug');
+           unset($users[$key]['organization_user']); 
+        }*/
     }
 }

@@ -180,7 +180,6 @@ class PagesController extends Controller
      * @author Rahul
      */
     public function viewPageById($id){
-
         $pageData = Page::where('id',$id)->first();
         $route = 'admin.page.slug';
         return redirect()->route($route,$pageData->slug);

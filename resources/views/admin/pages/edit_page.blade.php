@@ -76,7 +76,7 @@
 						{!! FormGenerator::GenerateField('select_status') !!}	
 					</div> --}}
 
-					<a href="{{ route('admin.page.view' ,$page->slug ) }}" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" style="line-height: 40px">Preview</a>
+					<a href="{{ route('admin.page.view' ,$page->id ) }}" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" style="line-height: 40px">Preview</a>
 					<button type="submit" style="display: inline-block;line-height: 18px;margin-left: 10px">Update</button>
 				</div>
 				<div class="l6" style="width: 75%;float: left;padding-right:15px ">

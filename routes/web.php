@@ -151,7 +151,7 @@
 				include_once 'custom/organization/roles.php';
 
 				Route::get('/survey', ['as'=>'display.survey', 'uses'=>'survey\SurveyController@display_survey']);
-				Route::get('/set_survey/{id}/{slug}/{type}', ['as'=>'set.survey', 'uses'=>'survey\SurveyController@set_survey']);
+				Route::get('/set_survey/{form_id}/{id}/{slug}/{type}', ['as'=>'set.survey', 'uses'=>'survey\SurveyController@set_survey']);
 				Route::post('/survey/save', ['as'=>'filled.survey', 'uses'=>'survey\SurveyController@survey_filled_data_save']);
 				Route::get('/survey/delete/table/{table_name}', ['as'=>'delete.table', 'uses'=>'survey\SurveyController@delete_survey_table']);
 

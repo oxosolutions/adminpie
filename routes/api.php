@@ -29,3 +29,6 @@ Route::match(['get','post'],'ajax/handle' , ['uses'=>'Api\AjaxController@handle'
 Route::post('/send_complaint' , [ 'uses' =>'Api\FeedbackController@complaintAppResponce'] );
 Route::get('/dataset/{active_code}/{token}' , [ 'uses' =>'Organization\dataset\DatasetController@api_response'] );
 
+Route::group(['prefix'=>'v2'], function(){
+    Route::post('/survey_api',['uses'=>'Api\SurveyController@listAllSurveys']); 
+});
