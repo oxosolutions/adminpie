@@ -19,6 +19,11 @@ use Carbon\Carbon;
 * Paljinder singh only work  on following Method
 *     survey_filled_data_save
 *     embededSurvey
+*     set_survey
+*     check_field_type
+*     go_to_next
+*     question_condition
+*     check_field_conditions
 */
 class SurveyController extends Controller
 {   
@@ -159,7 +164,8 @@ class SurveyController extends Controller
 
 
 
-    public function survey_filled_data_save(Request $request){
+    public function survey_filled_data_save(Request $request) {
+       $this->forget_session_survey('section', 166);
         $form_id    =   $request['form_id'];
         if(isset($request['section_id'])){
             $section_id  =   $request['section_id'];
@@ -173,36 +179,43 @@ class SurveyController extends Controller
             unset($all_sec[$section_id]);
             if(empty($all_sec)){
                 $this->forget_session_survey('section', $form_id);
-                Session::flash('sucess', 'Successfull filled survey.');
+                Session::flash('sucess', 'Successfull Complete survey.');
             }else{
                 Session::put('section'.$form_id, $all_sec);
             }
         }
         if(Session::has('field'.$form_id)){
+            
             $field_check = $fields = Session::get('field'.$form_id);
             Session::forget('field'.$form_id);
             unset($fields[$request->field_id]);
+            $this->set_filled_question($request->field_id, $form_id);
+            
             if(empty($fields)){
                 $this->forget_session_survey('question', $form_id);
-                Session::flash('sucess', 'Successfull filled survey.');
+                Session::flash('sucess', 'Successfull Complete survey.');
             }else{
                 $next_field =  $this->array_first_row($fields); //current(array_keys($fields));
                 $preserve = Session::get('preserve_field'.$form_id);
                 $slugg = $preserve[$request['field_id']];
 
                 $keys = array_keys($preserve);
-                $next_fields =  $keys[array_search($request['field_id'], $keys)+1];
-    //             $keys = array_keys($arr);
-    // print $keys[array_search("gsda",$keys)+1]
-
-
-                // $next_fields = $request['field_id'] +1;
+            
+                $key = array_search($request['field_id'], $keys);
+                if(isset($keys[$key+1])){
+                    $next_fields = $keys[$key+1];
+                }
 // check field type for radio & checkbox                
                 $field_type = $this->check_field_type($request['field_id']);
                if($field_type){
                     $check_fields =  $this->go_to_next($request['field_id'], $request[$slugg], $preserve , $fields);
                     if($check_fields!=1){
                         $fields = $check_fields;
+                        if(empty($fields)){
+                            Session::flash('sucess', 'Successfull filled survey.');
+                             $this->forget_session_survey('question', $form_id);
+                             back();
+                        }    
                     }
 // check condition and get there value 
                 $questions = $this->question_condition($next_fields); /// $next_field['key']
@@ -226,6 +239,18 @@ class SurveyController extends Controller
         return back();
     }
 
+    protected function set_filled_question($field_id, $form_id){
+        $section_field = Session::get('all'.$form_id);
+        $keys  =  array_keys($section_field);
+        foreach ($keys as $key => $value) {
+            // dump($value.$field_id);
+            if(array_has($section_field , $value.'.'.$field_id)){
+                data_set($section_field, $value.'.'.$field_id,'filled');                
+            } 
+        }
+        Session::put('all'.$form_id, $section_field);
+    }
+
     protected function check_field_type($field_id) {
         $field =  FormBuilder::where('id', $field_id)->whereIn('field_type',['radio','checkbox']);
         return $field->exists();
@@ -245,13 +270,11 @@ class SurveyController extends Controller
             // $all_field = Session::get('field'.$field_meta->form_id);
            foreach ($option_array as $key => $value) {
                 if(!empty($value['go_to_question'])){
-                  $Qid = str_after($value['go_to_question'], 'QID'); 
-                  
-                if($value['key']==$option_val){
-                    $this->set_survey($field_meta->form_id, $Qid , $preserve[$Qid], 'field');
-                }else{
-                     unset($fields[$Qid]);
-                 }
+                    $Qid = str_after($value['go_to_question'], 'QID'); 
+                    unset($fields[$Qid]);
+                    if($value['key']==$option_val){
+                        $this->set_survey($field_meta->form_id, $Qid , $preserve[$Qid], 'field');
+                    }
                 }
             }
 
@@ -364,7 +387,8 @@ class SurveyController extends Controller
             Session::forget('preserve_field'.$form_id);
             Session::forget('form_fiel_id'.$form_id);
             Session::forget('field'.$form_id);
-            Session::forget(['inserted_id'.$form_id]);
+            Session::forget('inserted_id'.$form_id);
+            Session::forget('all'.$form_id);
         }
         return true;
     }
@@ -396,6 +420,7 @@ class SurveyController extends Controller
             $survey_slug = $form->form_slug;
 
             $form_id = $form['id'];
+//$this->forget_session_survey('question', $form_id);
             $survey_setting = $form['formsMeta']->pluck('value','key')->toArray();
             if(!empty($survey_setting['save_survey']) && ($survey_setting['save_survey']=='section') ){
                 if(Session::has('form_fiel_id'.$form_id)){
@@ -408,7 +433,6 @@ class SurveyController extends Controller
                  if(!Session::has('section'.$form_id)){
                     $this->put_session_survey('section', $form_id, $sections['section']);
                  }
-                
             }elseif(!empty($survey_setting['save_survey']) && ($survey_setting['save_survey']=='question')){
               //  Session::forget('form_fiel_id'.$form_id);
                 if(Session::has('form_id'.$form_id)){
@@ -416,17 +440,20 @@ class SurveyController extends Controller
                 }
                 if(Session::has('form_fiel_id'.$form_id)){
                     if(Session::get('form_fiel_id'.$form_id)!=$form_id){
-                        $this->forget_session_survey('question', $form_id);
+                        //$this->forget_session_survey('question', $form_id);
                     }
                 }else{
                     foreach ($form->section as $key => $value) {
                         foreach ($value['fields'] as $field_key => $field_value) {
+                            $total[$value['id']][$field_value['id']] = null;
                             $field[$field_value['id']] = $field_value['field_slug'];
                         }
                     }
+                    Session::put('all'.$form_id, $total);
                     Session::put('form_fiel_id'.$form_id, $form_id);
                     Session::put('field'.$form_id, $field);
                     Session::put('preserve_field'.$form_id, $field);
+                    
                 }
             }else{
                 $this->forget_session_survey('question', $form_id);
@@ -466,7 +493,7 @@ class SurveyController extends Controller
             }
 
         }
-        // dump(Session::all());
+         dump(Session::all());
         if($from_status){
             return view('organization.survey.shared_survey_without_layout',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'))->render();
         }else{
