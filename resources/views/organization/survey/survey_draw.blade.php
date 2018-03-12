@@ -76,6 +76,9 @@
         		@endphp
     			@if(Session::has('field'.$form_id))
         			@if(Session::has('wild_field'.$form_id))
+                    <script type="text/javascript">
+                        $(".codition-{{Session::get('wild_field'.$form_id)['field_id'.$form_id]}}").show(); 
+                    </script>
         				
         			<input id="field_id" type="hidden" name="field_id" value="{{Session::get('wild_field'.$form_id)['field_id'.$form_id]}}" >
         			{!! FormGenerator::GenerateField(Session::get('wild_field'.$form_id)['field_slug'.$form_id],[],'','org') !!}

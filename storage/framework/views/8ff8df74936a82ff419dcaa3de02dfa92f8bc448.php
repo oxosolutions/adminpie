@@ -1,4 +1,6 @@
 <?php 
+
+use App\Http\Controllers\Organization\survey\SurveyController;
 	$all = Session::get('all'.$form_id);
 	// dd($all);
  ?>
@@ -37,19 +39,35 @@
 				</div>
 				<?php if(Session::has('field'.$form_id) && !empty($surveyVal['fields'])): ?>
 					<?php $__currentLoopData = $surveyVal['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fields): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-						<?php 
+						<?php  
+						// $sur =	new SurveyController();
+						$result = SurveyController::check_field_conditions($fields['id']);
+
 							$slug = str_replace('-', '_', $fields['field_slug']);
-						 ?>	
-					<div class="aione-border">
-						<div class="aione-border-bottom p-10">
-							<div class="font-size-16 line-height-26">
-								<a href="<?php echo e(route('set.survey',['form_id'=>$form_id ,'id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ])); ?>"><?php echo e($fields['field_title']); ?></a>
-							</div>
-							<div class="grey font-size-13">
-								this is the description of the question
+						 ?>
+					<?php if(empty($result)): ?>	
+						<div class="aione-border">
+							<div class="aione-border-bottom p-10">
+								<div class="font-size-16 line-height-26">
+									<a href="<?php echo e(route('set.survey',['form_id'=>$form_id ,'id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ])); ?>"><?php echo e($fields['field_title']); ?></a>
+								</div>
+								<div class="grey font-size-13">
+									this is the description of the question
+								</div>
 							</div>
 						</div>
-					</div>
+					<?php else: ?>
+						<div class="aione-border codition-<?php echo e($fields['id']); ?> ">
+							<div class="aione-border-bottom p-10">
+								<div class="font-size-16 line-height-26">
+									<a href="<?php echo e(route('set.survey',['form_id'=>$form_id ,'id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ])); ?>"><?php echo e($fields['field_title']); ?></a>
+								</div>
+								<div class="grey font-size-13">
+									this is the description of the question
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
 					<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				<?php endif; ?>
 			</div>

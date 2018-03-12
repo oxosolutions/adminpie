@@ -22,7 +22,7 @@ class section extends Model
     }
     function fields()
     {
-    	return $this->hasMany('App\Model\Organization\FormBuilder','section_id','id');
+    	return $this->hasMany('App\Model\Organization\FormBuilder','section_id','id')->orderBy('order','ASC');
     }
 
     public function sectionMeta(){

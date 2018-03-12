@@ -1,4 +1,6 @@
 @php
+
+use App\Http\Controllers\Organization\survey\SurveyController;
 	$all = Session::get('all'.$form_id);
 	// dd($all);
 @endphp
@@ -36,19 +38,35 @@
 				</div>
 				@if(Session::has('field'.$form_id) && !empty($surveyVal['fields']))
 					@foreach($surveyVal['fields'] as $fields)
-						@php
+						@php 
+						// $sur =	new SurveyController();
+						$result = SurveyController::check_field_conditions($fields['id']);
+
 							$slug = str_replace('-', '_', $fields['field_slug']);
-						@endphp	
-					<div class="aione-border">
-						<div class="aione-border-bottom p-10">
-							<div class="font-size-16 line-height-26">
-								<a href="{{route('set.survey',['form_id'=>$form_id ,'id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ]) }}">{{$fields['field_title']}}</a>
-							</div>
-							<div class="grey font-size-13">
-								this is the description of the question
+						@endphp
+					@if(empty($result))	
+						<div class="aione-border">
+							<div class="aione-border-bottom p-10">
+								<div class="font-size-16 line-height-26">
+									<a href="{{route('set.survey',['form_id'=>$form_id ,'id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ]) }}">{{$fields['field_title']}}</a>
+								</div>
+								<div class="grey font-size-13">
+									this is the description of the question
+								</div>
 							</div>
 						</div>
-					</div>
+					@else
+						<div class="aione-border codition-{{$fields['id']}} ">
+							<div class="aione-border-bottom p-10">
+								<div class="font-size-16 line-height-26">
+									<a href="{{route('set.survey',['form_id'=>$form_id ,'id'=>$fields['id'], 'slug'=>$fields['field_slug'], 'type'=>'field' ]) }}">{{$fields['field_title']}}</a>
+								</div>
+								<div class="grey font-size-13">
+									this is the description of the question
+								</div>
+							</div>
+						</div>
+					@endif
 					@endforeach
 				@endif
 			</div>
