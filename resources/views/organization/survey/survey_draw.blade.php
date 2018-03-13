@@ -114,13 +114,23 @@
 
 $(document).ready(function(){
 
-    $("[type='checkbox'][value='none']").on('click', function(e){
+    $("[type='checkbox'][value='996'], [type='checkbox'][value='998'] ").on('click', function(e){
         none = $(this).val();
-        if(none=='none'){
-            //$(this).parent('.field-option').siblings('.field-option').children("[type='checkbox']").attr('checked','');
-        }
+         $(this).parent().siblings('.field-option').children("[type='checkbox']").prop('checked', false);
+        console.log(1123);
 
     });
+
+    $("[type='checkbox']").on('click', function(e){
+
+         $(this).parent().siblings('.field-option').find("[type='checkbox'][value='996'], [type='checkbox'][value='998']").prop('checked', false);
+    });
+
+    // $("[type='checkbox'][value='998']").on('click', function(e){
+    //     none = $(this).val();
+    //     alert(none);
+
+    // });
     field_id = $("#field_id").val();
     setTimeout(function(){ 
     $("#field_"+field_id).show(); 

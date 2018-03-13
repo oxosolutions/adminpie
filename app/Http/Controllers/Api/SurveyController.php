@@ -417,7 +417,7 @@ class SurveyController extends Controller
            
             if(!empty($new_columns)){
                 foreach ($new_columns as $key => $value) {
-
+                   
 
                     if(!in_array($value, $table_column)){
                      DB::select("ALTER TABLE `{$table_name}` ADD `{$value}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");

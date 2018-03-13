@@ -25,6 +25,26 @@ use Carbon\Carbon;
 *     question_condition
 *     check_field_conditions
 */
+/*
+    |--------------------------------------------------------------------------
+    | Survey draw & for Navigation question , Questions conditions by Used method and their brief description
+    |--------------------------------------------------------------------------
+    |   @Method list   
+    |    @ embededSurvey
+    |    @ forget_session_survey
+    |    @ put_session_survey
+    |    @ survey_filled_data_save 
+    |  Following Method used inside survey_filled_data_save Method
+    |    @ create_alter_insert_survey_table  Dependency Method 
+    |    @ set_survey
+    |    @ check_field_type
+    |    @ go_to_next
+    |    @ question_condition
+    |    @ check_field_conditions
+    |    @ set_filled_question
+    |    @ max_val_in_array
+    |    @ array_first_row
+    */
 class SurveyController extends Controller
 {   
     protected $apisurvey;
@@ -36,6 +56,8 @@ class SurveyController extends Controller
     {
         $this->apisurvey = $apisurvey;
     }
+
+
     public function listSurvey(Request $request)
     {
         $sortedBy = @$request->orderby;
@@ -85,10 +107,12 @@ class SurveyController extends Controller
     }
 
 
+
     public function createSurvey(){
 
         return view('organization.survey.create',['type'=>'survey']);
     }
+
 
 
     public function storeSurvey(Request $request){
@@ -105,6 +129,7 @@ class SurveyController extends Controller
     }
 
 
+
     public function surveySettings($survey_id){
         $permission = $this->collaboratorAccesses($survey_id,'settings');
         $model = FormsMeta::where(['form_id'=>$survey_id]);
@@ -117,9 +142,11 @@ class SurveyController extends Controller
     }
 
 
+
     public function display_survey(){
         return view('organization.survey.display_survey');
     }
+
 
 
     public function sectionsList($form_id){
@@ -139,6 +166,7 @@ class SurveyController extends Controller
     }
 
 
+
     public function survey_filled_by_view(Request $request){
         if(Session::has('inserted_id')){
             Session::forget('inserted_id');
@@ -149,6 +177,7 @@ class SurveyController extends Controller
         Session::flash('success','Survey filled successfully.');
         return back();
     }
+
 
 
     public function set_survey($form_id, $id , $slug, $type){
@@ -162,13 +191,7 @@ class SurveyController extends Controller
 
 
 
- // public static function field_codition_check($field_id) {
-
- // }
-
     public function survey_filled_data_save(Request $request) {
-       // dd($request->all());
-       // $this->forget_session_survey('section', 166);
         $form_id    =   $request['form_id'];
         if(isset($request['section_id'])){
             $section_id  =   $request['section_id'];
@@ -191,7 +214,6 @@ class SurveyController extends Controller
             $field_check = $fields = Session::get('field'.$form_id);
             Session::forget('field'.$form_id);
             unset($fields[$request->field_id]);
-            
             if(empty($fields) && !Session::has('wild_field'.$form_id)){
                 $this->forget_session_survey('question', $form_id);
                 Session::flash('sucess', 'Successfull Complete survey.');
@@ -202,7 +224,6 @@ class SurveyController extends Controller
                 $slugg = $preserve[$request['field_id']];
 
                 $keys = array_keys($preserve);
-            
                 $key = array_search($request['field_id'], $keys);
                 if(isset($keys[$key+1])){
                     $next_fields = $keys[$key+1];
@@ -210,7 +231,6 @@ class SurveyController extends Controller
 // check field type for radio & checkbox                
                 $field_type = $this->check_field_type($request['field_id']);
                if($field_type){
-                
                     $check_fields =  $this->go_to_next($request['field_id'], $request[$slugg], $preserve , $fields);
                     if($check_fields!=1){
                         $fields = $check_fields;
@@ -222,17 +242,13 @@ class SurveyController extends Controller
                     }
 //check condition and get there value 
                 $questions = $this->question_condition($next_fields); /// $next_field['key']
-                //dd($questions);
                 if(!empty($questions)){
                    if($request['field_id'] == $questions[0]['condition_column']  )
                    {
-
                     if($field_type=="checkbox"){
                         if(in_array($questions[0]['condition_value'], $request[$slugg])){
                              $this->set_survey($form_id, $next_fields , $preserve[$next_fields], 'field');
                         }
-                        // dd($request[$slugg]);
-
                     }elseif($questions[0]['condition_operator'] == "=="){
                         
                         if($request[$slugg]  ==  $questions[0]['condition_value']){
@@ -250,17 +266,20 @@ class SurveyController extends Controller
         return back();
     }
 
+
+
     protected function set_filled_question($field_id, $form_id){
         $section_field = Session::get('all'.$form_id);
         $keys  =  array_keys($section_field);
         foreach ($keys as $key => $value) {
-            // dump($value.$field_id);
             if(array_has($section_field , $value.'.'.$field_id)){
                 data_set($section_field, $value.'.'.$field_id,'filled');                
             } 
         }
         Session::put('all'.$form_id, $section_field);
     }
+
+
 
     protected function check_field_type($field_id) {
         $field =  FormBuilder::where('id', $field_id)->whereIn('field_type',['radio','checkbox','select']);
@@ -269,6 +288,7 @@ class SurveyController extends Controller
         }
         return;
     }
+
 
 
     protected function max_val_in_array($array){
@@ -283,6 +303,7 @@ class SurveyController extends Controller
     }
 
 
+
     protected function go_to_next($field_id , $option_val , $preserve, $fields) {
       $field_options = FieldMeta::where(['field_id'=>$field_id , 'key'=>'field_options']);
       if($field_options->exists()){
@@ -292,31 +313,29 @@ class SurveyController extends Controller
             if(empty($option) || empty($option[$option_val])) {
                 return 1;
             }
-           // if(!isset(var)($option[$option_val]
-            // dd($option, str_after($option[$option_val], 'QID'), $field_meta->form_id);
             $select_ans_que_id = str_after($option[$option_val], 'QID');
-            dd($select_ans_que_id, $preserve);
-             dd($field_meta->form_id, $select_ans_que_id , $preserve[$select_ans_que_id]);
             $this->set_survey($field_meta->form_id, $select_ans_que_id , $preserve[$select_ans_que_id], 'field');
-
             $max_ques_id = $this->max_val_in_array($option);
             for ($i=intval($field_id); $i <= intval($max_ques_id) ; $i++) { 
                 if($i < $select_ans_que_id){
                     unset($fields[$i]);
                 }else{
                     if(empty($fields[$i]) ) {
-                        $fields[$i] = $preserve[$i];
+                        array_prepend($fields, $preserve[$i], $i );
                     }
                 }
             }
         }
-        // dd($fields);
         return $fields;
     }
+
+
 
     protected function array_first_row($array){
         return ['key'=>current(array_keys($array)), 'value'=>current(array_values($array))]; 
     }
+
+
 
     protected function question_condition($field_id){
          $condition_value = $this->check_field_conditions($field_id);
@@ -329,6 +348,8 @@ class SurveyController extends Controller
         return;
     }
 
+
+
     public static function check_field_conditions($field_id){
         $meta = FieldMeta::where(['field_id'=>$field_id , 'key'=>'field_conditions'])->first();
         if(empty($meta->value)){
@@ -336,6 +357,7 @@ class SurveyController extends Controller
         }
         return json_decode($meta->value, true);
     }
+
 
 
     public function delete_survey_table($table_name){
@@ -347,6 +369,7 @@ class SurveyController extends Controller
         }
         return back();
     }
+
 
 
     public function survey_api() {
@@ -467,13 +490,11 @@ class SurveyController extends Controller
                 if(!Session::has('field'.$form_id)){
                     $this->forget_session_survey('question', $form_id);
                 }
-
                 if(Session::has('form_id'.$form_id)){
                     $this->forget_session_survey('section', $form_id);
                 }
                 if(!Session::has('form_fiel_id'.$form_id))
                     {
-                
                     foreach ($form->section as $key => $value) {
                         foreach ($value['fields'] as $field_key => $field_value) {
                             $total[$value['id']][$field_value['id']] = null;
@@ -484,7 +505,6 @@ class SurveyController extends Controller
                     Session::put('form_fiel_id'.$form_id, $form_id);
                     Session::put('field'.$form_id, $field);
                     Session::put('preserve_field'.$form_id, $field);
-                    
                 }
             }else{
                 $this->forget_session_survey('question', $form_id);
