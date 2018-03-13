@@ -61,7 +61,6 @@
     						echo '<input type="hidden" name="survey_status" value="incompleted" >';
     					}
     					$section_id = array_shift($key);
-    					//dd($section_id, $section_array);
     					$section_slug = $section_array[$section_id];
     				}
     				if(Session::has('field'.$form_id)){
@@ -73,8 +72,21 @@
     					}else{
     						echo '<input type="hidden" name="survey_status" value="incompleted" >';
     					}
-    						$get_field_id = array_shift($field_keys);
-    				}
+
+                        $get_field_id = array_shift($field_keys); //current ques key
+                        if(Session::has('wild_field'.$form_id)){
+                            $wild =  Session::get('wild_field'.$form_id);
+                            $get_field_id = $wild['field_id'.$form_id];
+                            // dd($get_field_id);
+                         }
+
+                        $keys = array_keys($filter_field);
+                        $key = array_search($get_field_id, $keys);
+                        if(isset($filter_field[$key+1])){
+                            $next_fields_id = $keys[$key+1];
+                        }
+
+                                         }
         		 ?>
     			<?php if(Session::has('field'.$form_id)): ?>
         			<?php if(Session::has('wild_field'.$form_id)): ?>
@@ -84,13 +96,18 @@
         			<input id="field_id" type="hidden" name="field_id" value="<?php echo e(Session::get('wild_field'.$form_id)['field_id'.$form_id]); ?>" >
         			<?php echo FormGenerator::GenerateField(Session::get('wild_field'.$form_id)['field_slug'.$form_id],[],'','org'); ?>
 
-
+                   
         			<?php else: ?>
         				<input id="field_id" type="hidden" name="field_id" value="<?php echo e($get_field_id); ?>" >
         				<?php echo FormGenerator::GenerateField($fields[$get_field_id],[],'','org'); ?>
 
 
                     <?php endif; ?>
+
+                     <div class="font-size-16 line-height-26">
+                            <a href="<?php echo e(route('set.survey',['form_id'=>$form_id ,'id'=>$next_fields_id, 'slug'=>$filter_field[$next_fields_id], 'type'=>'field' ])); ?>">Next</a>
+                    </div>
+
                         <script type="text/javascript"> $("#field_682").show();</script>
     			<?php elseif(Session::has('section'.$form_id)): ?>
     				<div class="sec">

@@ -45,6 +45,7 @@ use Carbon\Carbon;
     |    @ max_val_in_array
     |    @ array_first_row
     */
+
 class SurveyController extends Controller
 {   
     protected $apisurvey;
@@ -56,6 +57,7 @@ class SurveyController extends Controller
     {
         $this->apisurvey = $apisurvey;
     }
+
 
 
     public function listSurvey(Request $request)
@@ -179,7 +181,7 @@ class SurveyController extends Controller
     }
 
 
-
+// set_survey this is used for set priority to display Question/section 
     public function set_survey($form_id, $id , $slug, $type){
         if($type=='section'){
             Session::flash('wild_section'.$form_id, ['section_id'.$form_id=>$id, 'section_slug'.$form_id=> $slug]);
@@ -395,6 +397,7 @@ class SurveyController extends Controller
     }
 
 
+
     public function surveyPerview($form_id){
 
         $permission = $this->collaboratorAccesses($form_id,'preview');
@@ -409,9 +412,12 @@ class SurveyController extends Controller
     }
 
 
+
     public function resultSurvey(){
         return view('organization.survey.survey_result');
     }
+
+
 
     public function shareSurvey($id){   
         $permission = true;
@@ -431,6 +437,7 @@ class SurveyController extends Controller
     }
 
 
+
     protected function forget_session_survey($parm , $form_id){
         if($parm=='section'){
             Session::forget(['form_id'.$form_id]);
@@ -445,6 +452,7 @@ class SurveyController extends Controller
         }
         return true;
     }
+
 
 
     protected function put_session_survey($option , $form_id,  $data){
@@ -470,7 +478,6 @@ class SurveyController extends Controller
         if($form != null){
             $survey = $form = $form->first();
             $survey_slug = $form->form_slug;
-
             $form_id = $form['id'];
 
             $survey_setting = $form['formsMeta']->pluck('value','key')->toArray();
@@ -544,7 +551,7 @@ class SurveyController extends Controller
             }
 
         }
-       dump( Session::all());
+       //dump( Session::all());
         if($from_status){
             return view('organization.survey.shared_survey_without_layout',compact('survey_slug' , 'form_id', 'survey_setting', 'survey', 'current_data','error'))->render();
         }else{
@@ -644,6 +651,7 @@ class SurveyController extends Controller
     }
 
 
+
     public function changeShareStatus(Request $request){
         $meta = FormsMeta::firstOrNew(['type' => 'survey' ,'form_id' => $request['survey_id'],  'key' => 'share_type']);
         $meta->form_id = $request['survey_id'];
@@ -659,6 +667,7 @@ class SurveyController extends Controller
     }
 
 
+
     protected function validateShareTo($request){
         $rules = [
             'email_user_share' => 'required|email',
@@ -666,6 +675,7 @@ class SurveyController extends Controller
         ];
         $this->validate($request,$rules);
     }
+
 
 
     public function saveShareTo(Request $request, $id){
@@ -682,11 +692,13 @@ class SurveyController extends Controller
     }
 
 
+
     public function deleteShareTo($id){
         $model = Collaborator::find($id);
         $model->delete();
         return back();
     }
+
 
 
     protected function collaboratorAccesses($formId,$singleAccess){
@@ -701,8 +713,6 @@ class SurveyController extends Controller
         return $permission;
     }
 
-    public function survey_report(Request $request){
-    }
 
 
     public function custom($id){
@@ -717,6 +727,7 @@ class SurveyController extends Controller
         }
         return view('organization.survey.customize', compact('form'));
     }
+
 
 
     public function save_custom(Request $request){
