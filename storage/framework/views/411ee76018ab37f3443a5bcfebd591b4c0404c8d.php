@@ -66,7 +66,8 @@
     				}
     				if(Session::has('field'.$form_id)){
     					$fields = Session::get('field'.$form_id);
-    					$field_keys = array_keys($fields);
+                        $filter_field = array_filter($fields);
+    					$field_keys = array_keys($filter_field);
     					if(count($field_keys)==1){
     						echo '<input type="hidden" name="survey_status" value="completed" >';
     					}else{
@@ -80,14 +81,12 @@
                     <script type="text/javascript">
                         $(".codition-<?php echo e(Session::get('wild_field'.$form_id)['field_id'.$form_id]); ?>").show(); 
                     </script>
-        				
         			<input id="field_id" type="hidden" name="field_id" value="<?php echo e(Session::get('wild_field'.$form_id)['field_id'.$form_id]); ?>" >
         			<?php echo FormGenerator::GenerateField(Session::get('wild_field'.$form_id)['field_slug'.$form_id],[],'','org'); ?>
 
 
         			<?php else: ?>
         				<input id="field_id" type="hidden" name="field_id" value="<?php echo e($get_field_id); ?>" >
-        				
         				<?php echo FormGenerator::GenerateField($fields[$get_field_id],[],'','org'); ?>
 
 
@@ -122,6 +121,14 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+
+    $("[type='checkbox'][value='none']").on('click', function(e){
+        none = $(this).val();
+        if(none=='none'){
+            //$(this).parent('.field-option').siblings('.field-option').children("[type='checkbox']").attr('checked','');
+        }
+
+    });
     field_id = $("#field_id").val();
     setTimeout(function(){ 
     $("#field_"+field_id).show(); 
