@@ -9,6 +9,6 @@ return [
     'survey_question_miss'					=> "This survey doesn't contain any question.",
     'survey_no_warning'						=> "No Warning.",
     'survey_no_error'						=> "No error.",
-    'survey_with_no_permisson'						=> "don't have permission!.",
+    'survey_with_no_permisson'				=> "don't have permission!.",
 
 ];

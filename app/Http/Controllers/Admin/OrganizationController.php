@@ -85,7 +85,7 @@ class OrganizationController extends Controller
                       'js'  =>  ['custom'=>['list-designation']],
                       'css'=> ['custom'=>['list-designation']]
                   ];
-                  
+                
         return view('admin.organization.list',$datalist);
 	}
 	
@@ -132,11 +132,11 @@ class OrganizationController extends Controller
               }
                       DB::commit();
 
-        Session::flash('success','Successfully deleted!');
+        Session::flash('success',lang('admin.organization_delete_success'));
         }catch(\Exception $e){
           // throw $e;
             DB::rollback();
-            Session::flash('error','Somthing goes wrong Try again.');
+            Session::flash('error',lang('admin.organization_delete_error'));
         }
         return redirect()->route('list.organizations');
 	}
@@ -177,7 +177,7 @@ class OrganizationController extends Controller
                 }   
                 
                 ORG::where('id',$id)->update($processData);
-                Session::flash('success','Updated successfully');
+                Session::flash('success',lang('admin.organization_update_success'));
                 return back();
             }
             $modules = GlobalModule::pluck('name','id');
@@ -273,16 +273,17 @@ try{
                 $userRoleMapping->fill(['user_id'=>$org_usr->id , 'role_id'=>1]);
                 $userRoleMapping->save();
             }
-        Session::flash('success', 'Organization create successfully');
+        Session::flash('success', lang('admin.organization_create_success'));
          });
         // return $org_id.' has beenn created';
     }catch (Exception $e) {
-        Session::flash('error', 'Something goes wrong try again');
+        Session::flash('error', lang('admin.organization_create_error'));
     }
  }
 
     public function cloneOrganization($id)
     {
+        try {
         $organization = ORG::where('id',$id)->first()->toArray();
         $organization['slug']= $organization['slug'].'-clone';
         $organization['name']= $organization['name'].' Clone';
@@ -295,7 +296,10 @@ try{
         $org->fill($organization);
         $org->save();
         $this->create_organization_database($id , $org->id);
-        Session::flash('success', 'Organization create successfully');
+            Session::flash('success', lang('admin.organization_clone_success'));
+        } catch (Exception $e) {
+            Session::flash('error', lang('admin.organization_clone_error'));
+        }
         return back();
     }
    
