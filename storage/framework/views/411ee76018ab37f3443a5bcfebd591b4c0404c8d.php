@@ -64,6 +64,7 @@
     					$section_slug = $section_array[$section_id];
     				}
     				if(Session::has('field'.$form_id)){
+                        $preserve = Session::get('preserve_field'.$form_id);
     					$fields = Session::get('field'.$form_id);
                         $filter_field = array_filter($fields);
     					$field_keys = array_keys($filter_field);
@@ -76,17 +77,24 @@
                         $get_field_id = array_shift($field_keys); //current ques key
                         if(Session::has('wild_field'.$form_id)){
                             $wild =  Session::get('wild_field'.$form_id);
-                            $get_field_id = $wild['field_id'.$form_id];
-                            // dd($get_field_id);
+                            $field_idss = $wild['field_id'.$form_id];
+
+                            $keys = array_keys($preserve);
+                            $key = array_search($field_idss, $keys);
+                            if(isset($preserve[$key+1])){
+                                $next_fields_id = $keys[$key+1];
+                            }
+                         }else{
+                             $keys = array_keys($filter_field);
+                            $key = array_search($get_field_id, $keys);
+                            if(isset($filter_field[$key+1])){
+                                $next_fields_id = $keys[$key+1];
+                            }
                          }
 
-                        $keys = array_keys($filter_field);
-                        $key = array_search($get_field_id, $keys);
-                        if(isset($filter_field[$key+1])){
-                            $next_fields_id = $keys[$key+1];
-                        }
+                       
 
-                                         }
+                    }
         		 ?>
     			<?php if(Session::has('field'.$form_id)): ?>
         			<?php if(Session::has('wild_field'.$form_id)): ?>
