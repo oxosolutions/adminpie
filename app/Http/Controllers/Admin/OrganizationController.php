@@ -708,7 +708,7 @@ try{
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,
                                 'name'=>'create_'.$org_id.'_forms',
-                                '--schema'=>'form_title:string, form_slug:string, form_description:text, type:string, embed_token:text, form_order:integer, form_status:string, created_by:integer'
+                                '--schema'=>'form_title:string, form_slug:string, form_description:text:nullable, type:string, embed_token:text, form_order:integer, form_status:string, created_by:integer'
                             ]);
         Artisan::call('make:migration:schema',[
                                 '--model'=>false,

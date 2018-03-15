@@ -1032,7 +1032,8 @@ class DatasetController extends Controller
         }
         $viewRecord = [];
         $history = [];
-        $dataset = Dataset::find($id);
+        $dataset = Dataset::with(['dataset_meta'])->find($id);
+        $dataset_type = @get_meta_array($dataset->dataset_meta)['dataset_type'];
         $datasetTable = Dataset::find($id)->dataset_table;
         if(empty(Schema::hasTable($datasetTable))){
                 $data['error'] = "Dataset table not exist."; 
@@ -1065,7 +1066,7 @@ class DatasetController extends Controller
             $viewRecord = [];
             $history = [];
         }
-        return view('organization.dataset.view',['tableheaders'=>$tableHeader , 'dataset' => $dataset,'records'=>$records,'viewrecords'=>$viewRecord,'history'=>$history]);
+        return view('organization.dataset.view',['tableheaders'=>$tableHeader , 'dataset' => $dataset,'records'=>$records,'viewrecords'=>$viewRecord,'history'=>$history,'dataset_type'=>$dataset_type]);
     }
 
     public function createNewfunction(Request $request){

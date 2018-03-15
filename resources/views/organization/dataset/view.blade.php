@@ -78,9 +78,11 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Dataset View <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
-	'add_new' => 'Refresh List',
-    'route' => ['refresh.dataset',request()->id]
-	); 
+	);
+    if($dataset_type != null && $dataset_type == 'continues'){
+        $page_title_data['add_new'] = 'Refresh List';
+        $page_title_data['route'] = ['refresh.dataset',request()->id];
+    }
 @endphp
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
