@@ -39,15 +39,15 @@ class AttendanceController extends Controller
             $error = null;
             $where['employee_id'] = $empId;
             if($request->isMethod('post')){
-               if(!empty($request["month"])){
+                if(!empty($request["month"])){
                     $where['month'] = $request["month"];
-                 } 
-                 if(!empty($request["year"])){
+                } 
+                if(!empty($request["year"])){
                     $where['year'] = $request["year"];
-                 } 
-                 if(!empty($request["month_week_no"])){
+                } 
+                if(!empty($request["month_week_no"])){
                     $where['month_week_no'] = $request["month_week_no"];
-                 }
+                }
                 $attendance = Attendance::where($where)->select(['attendance_status','employee_id','date','month'])->get();
                 $attendance_data = $attendance->groupBy('month')->toArray();
                 return view('organization.account.ajaxmyattandance',['attendance_data'=>$attendance_data, 'filter'=>$where]);
@@ -56,10 +56,12 @@ class AttendanceController extends Controller
         $attendance_data = $attendance->groupBy('month')->toArray();
     }
 
-        return view('organization.account.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where, 'error'=>$error, 'user_id'=>$user_id, 'employee_name'=>$employee_name]);
+        return view('organization.account.myattandance',['attendance_data'=>$attendance_data ,'filter'=>$where, 'error'=>$error, 'user_id'=>$user_id, 'employee_id'=>$empId,  'employee_name'=>$employee_name]);
     }
 
     public function attendance_monthly(Request $request){
+        http_response_code(500);
+        // dd($request->all());
         $where['year'] = $request['year'];
         $where['month'] = $request['month'];
         if(strlen($request['month'])==1) {
@@ -68,6 +70,7 @@ class AttendanceController extends Controller
         $user_id = Auth::guard('org')->user()->id;
         if(!empty($request['employee_id'])){
             $where['employee_id'] = $request['employee_id'];
+
         }else{
             $where['employee_id'] = get_user_meta(get_user_id(), $key = 'employee_id', $array = false);//Employee::where('user_id',$user_id)->select('employee_id')->first()->employee_id;
         }

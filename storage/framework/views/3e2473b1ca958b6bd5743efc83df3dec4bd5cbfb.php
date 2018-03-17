@@ -261,7 +261,7 @@
 				postData ={};
 				postData['month'] = month;
 				postData['year']  = year;
-				postData['employee_id']  = <?php echo e($user_id); ?>;
+				postData['employee_id']  = <?php echo e($employee_id); ?>;
 
 				postData['_token'] = $("#token").val();
 				// alert(month+ ' '+year);

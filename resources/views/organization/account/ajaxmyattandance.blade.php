@@ -37,13 +37,13 @@
 						@for($j=1; $j<=$dayInMonth; $j++)
 							@if(!empty($data[$j]['attendance_status']))
 								@if($data[$j]['attendance_status']=='present')
-									<div class="dark-green display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-present display-inline-block box ml-2 mt-2"></div>
 								@elseif($data[$j]['attendance_status']=='absent')
-									<div class="pale-yellow display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-absent display-inline-block box ml-2 mt-2"></div>
 								@elseif($data[$j]['attendance_status']=='Sunday')
 									<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
 								@elseif($data[$j]['attendance_status']=='leave')
-									<div class="light-green display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-leave display-inline-block box ml-2 mt-2"></div>
 								@else
 									<div class="light-green display-inline-block box ml-2 mt-2"></div>
 								@endif

@@ -54,6 +54,7 @@
 		$arrayOptions = [];
 		$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
 		if(isset($optionValues['key'])){
+
 			$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
 		}else{
 			$collect = collect($optionValues);

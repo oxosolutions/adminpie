@@ -567,6 +567,6 @@ Route::get('/myattendance',function(){
 });
 
 Route::get('survey-design',function(){
-	return view('organization.survey.survey-design');
+	return view('organization.survey.survey-design-edit');
 });
 	

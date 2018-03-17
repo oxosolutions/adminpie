@@ -18,17 +18,17 @@
 @endphp
 <div class="aione-border">
 	<div class="bg-grey bg-lighten-3 p-10 font-size-20 aione-border-bottom mb-30">
-			Monthly Attendance View 
-			<div class="aione-float-right font-size-16	">
-				<button class="aione-button monthly" year="{{$previous_yr}}" month="{{$previous_mo}}" style="margin-top: -10px">
-					<i class="fa fa-chevron-left line-height-24 font-size-13"  ></i>
-				</button>
-				<span id="year_display"  class="aione-align-center display-inline-block" style="width: 200px">{{$current_mo}}, {{$current_yr}} </span>
-				<button class="aione-button monthly" style="margin-top: -10px" year="{{$nxt_yr}}" month="{{$nxt_mo}}">
-					<i class="fa fa-chevron-right line-height-24 font-size-13"  ></i>
-				</button>
-			</div>
+		Monthly Attendance View 
+		<div class="aione-float-right font-size-16	">
+			<button class="aione-button monthly" year="{{$previous_yr}}" month="{{$previous_mo}}" style="margin-top: -10px">
+				<i class="fa fa-chevron-left line-height-24 font-size-13"  ></i>
+			</button>
+			<span id="year_display"  class="aione-align-center display-inline-block" style="width: 200px">{{$current_mo}}, {{$current_yr}} </span>
+			<button class="aione-button monthly" style="margin-top: -10px" year="{{$nxt_yr}}" month="{{$nxt_mo}}">
+				<i class="fa fa-chevron-right line-height-24 font-size-13"  ></i>
+			</button>
 		</div>
+	</div>
 	<div class="font-size-16 font-weight-600 aione-align-center pv-20">
 		<div class="display-inline-block " style="width: calc( 14.28% - 5px);">Sunday</div>
 		<div class="display-inline-block " style="width: calc( 14.28% - 5px)">Monday</div>
@@ -45,16 +45,16 @@
 		@for($j=1; $j<=$dayInMonth; $j++ )
 		@if(!empty($attendance_data[$j]['attendance_status']))
 			@if($attendance_data[$j]['attendance_status']=='present')
-				<div class="dark-green display-inline-block bg-grey  aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}
+				<div class="attendance-status-present display-inline-block  aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}
 			</div>			
 			@elseif($attendance_data[$j]['attendance_status']=='absent')
-				<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>			
+				<div class="display-inline-block attendance-status-absent  aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>			
 			@elseif($attendance_data[$j]['attendance_status']=='Sunday')
 				<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>
 			@elseif($attendance_data[$j]['attendance_status']=='leave')
-				<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>			
+				<div class="display-inline-block attendance-status-leave aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>			
 			@else
-				<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>			@endif
+				<div class="display-inline-block light-green aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>			@endif
 		@else
 		<div class="display-inline-block bg-grey bg-lighten-3 aione-align-center mt-4 line-height-80 aione-border border-grey border border-lighten-1" style="width: calc( 14.28% - 4px);">{{$j}}</div>
 		@endif
