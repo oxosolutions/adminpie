@@ -133,6 +133,7 @@ class SurveyController extends Controller
 
 
     public function surveySettings($survey_id){
+
         $permission = $this->collaboratorAccesses($survey_id,'settings');
         $model = FormsMeta::where(['form_id'=>$survey_id]);
         $modelData = [];
@@ -140,8 +141,14 @@ class SurveyController extends Controller
             $modelData[$value->key] = $value->value;
         }
         $form = forms::find($survey_id);
+
         return view('organization.survey.survey_settings',['model'=>$modelData,'permission'=>$permission,'form' => $form]);
     }
+
+    // public function reset_setting($survey_id){
+
+    //     return $survey_id;
+    // }
 
 
 
@@ -380,14 +387,24 @@ class SurveyController extends Controller
 
 
     public function saveSurveySettings(Request $request, $survey_id){
-        // dd($request->all());
+        
         $requestedData = $request->except(['form_id','form_id','form_title']);
+        $reset = false;
+        if(isset($requestedData['reset'])){
+            $reset = true;
+        }
         foreach($requestedData as $key => $value){
+
             $meta = FormsMeta::firstOrNew(['form_id'=>$survey_id, 'key'=>$key, 'type'=>'survey']);
             $meta->form_id = $survey_id;
             $meta->key = $key;
+            if($reset){
+                $value = null;
+            }else{
             if (is_array($value)) {
                 $value = json_encode($value);
+            }
+                
             }
             $meta->value = $value;
             $meta->type = 'survey';

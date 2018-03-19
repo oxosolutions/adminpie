@@ -24,6 +24,14 @@ $route = 'org.save.form.settings';
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php echo $__env->make('organization.survey._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+	<style type="text/css">
+	
+.btn-reset{
+	position: relative;
+    left: 118px;
+    bottom: 95px;
+}
+	</style>
 		<?php if(!@$permission): ?>
 		<div class="aione-message warning">
             	<?php echo e(__('survey.survey_with_no_permisson')); ?>
@@ -37,6 +45,7 @@ $route = 'org.save.form.settings';
 
 							<?php echo FormGenerator::GenerateForm('Survey_Setting_Form'); ?>
 
+							<input type="submit" class='btn-reset' name="reset" value="Reset" >
 						<?php echo Form::close(); ?>		
 					</div>
 					<div class="ac l50 m50 s100"> 
@@ -44,6 +53,7 @@ $route = 'org.save.form.settings';
 
 							<?php echo FormGenerator::GenerateForm('form_setting_form',['type'=>'inset']); ?>
 
+							<input type="submit" class="btn-reset"  name="reset" value="Reset" >
 						<?php echo Form::close(); ?>
 
 					</div>

@@ -10,6 +10,7 @@
 	Route::get('/survey/create',							['as'=>'create.survey','uses'=>'survey\SurveyController@createSurvey']);
 	Route::POST('/survey/savet',							['as'=>'save.survey','uses'=>'survey\SurveyController@storeSurvey']);
 	Route::get('/survey/settings/{id}',					['as'=>'survey.settings','uses'=>'survey\SurveyController@surveySettings']);
+	Route::get('/survey/settings/{id}',					['as'=>'survey.settings','uses'=>'survey\SurveyController@surveySettings']);
 	Route::post('/survey/settings/save/{id}',			['as'=>'save.survey.settings','uses'=>'survey\SurveyController@saveSurveySettings']);
 	Route::get('/survey/perview/{form_id}',				['as'=>'survey.perview','uses'=>'survey\SurveyController@surveyPerview']);
 	Route::get('/survey/result',						['as'=>'result.survey','uses'=>'survey\SurveyController@resultSurvey']);

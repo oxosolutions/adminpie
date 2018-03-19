@@ -624,11 +624,20 @@ class FormBuilderController extends Controller
     }
 
     public function storeSettings(Request $request, $id){
+        $reset = false;
+        if(isset($request['reset'])){
+            $reset = true;
+        }
+
         $modelName = $this->assignModel('FormsMeta');
         foreach($request->except(['_token']) as $key => $value){
             $model = $modelName::firstOrNew(['key'=>$key,'form_id'=>$id]);
             $model->key = $key;
+            if($reset){
+                $value = null;
+            }
             $model->value = ($value == null)?'':$value;
+            
             $model->form_id = $id;
             $model->save();
         }

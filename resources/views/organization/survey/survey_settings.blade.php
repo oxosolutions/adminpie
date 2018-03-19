@@ -25,6 +25,14 @@ $route = 'org.save.form.settings';
 @include('common.pagecontentstart')
 	@include('organization.survey._tabs')
 	@include('common.page_content_primary_start')
+	<style type="text/css">
+	
+.btn-reset{
+	position: relative;
+    left: 118px;
+    bottom: 95px;
+}
+	</style>
 		@if(!@$permission)
 		<div class="aione-message warning">
             	{{ __('survey.survey_with_no_permisson') }}
@@ -35,11 +43,13 @@ $route = 'org.save.form.settings';
 					<div class="ac l50 m50 s100">
 						{!! Form::model($model,['route' => ['save.survey.settings',request()->route()->parameters()['id']], 'class'=> 'form-horizontal','method' => 'post'])!!}
 							{!! FormGenerator::GenerateForm('Survey_Setting_Form') !!}
+							<input type="submit" class='btn-reset' name="reset" value="Reset" >
 						{!! Form::close() !!}		
 					</div>
 					<div class="ac l50 m50 s100"> 
 						{!!Form::model(@$model,['route'=>[$route,request()->route()->parameters()['id']]])!!}
 							{!! FormGenerator::GenerateForm('form_setting_form',['type'=>'inset']) !!}
+							<input type="submit" class="btn-reset"  name="reset" value="Reset" >
 						{!!Form::close()!!}
 					</div>
 				</div>

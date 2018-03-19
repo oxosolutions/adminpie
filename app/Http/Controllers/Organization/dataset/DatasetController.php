@@ -594,6 +594,7 @@ class DatasetController extends Controller
                     $filename = $filename[count($filename)-1];
                     $newFilename = 'downloaded_dataset_'.time().'.'.File::extension($filename);
                     $fileExt = File::extension($filename);
+                    dump($dowunloadLink);
                     copy($dowunloadLink, $filePath.'/'.$newFilename);
                     switch($request->add_replace){
                         case'new':
