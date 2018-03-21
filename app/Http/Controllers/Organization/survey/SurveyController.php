@@ -578,13 +578,18 @@ class SurveyController extends Controller
 
             case'G':
                 $today =  Carbon::today();
-                dd($startDate);
-                if(Carbon::parse($startDate) < $today){
-                    dd('Days Pending', Carbon::parse($startDate)->diffInDays($today));
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                }else{
+                    dd('Days Pending', $today->diffInDays(Carbon::parse($startDate)));
                 }
-                if(Carbon::parse($expireDate) > $today){
-                    dd('Survey Expired bdefore days',$today->diffInDays(Carbon::parse($expireTime)));
+
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    dd('Survey Expired bdefore days',Carbon::parse($expireDate)->diffInDays($today));
                 }
+                
             break;
 
             case'H':
