@@ -19,7 +19,9 @@ $page_title_data = array(
 	'show_navigation' => 'yes',
 	'page_title' => $title,
 	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form',
-	'route' => ($title == 'Survey')?'create.survey':$route
+	'route' => ($title == 'Survey')?'create.survey':$route,
+	'second_button_title' => ($title == 'Survey')?'Import Survey':'Import Form',
+	'second_button_route' => 'import.survey'
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

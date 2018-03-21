@@ -11,7 +11,7 @@
 ); 
 @endphp
 @include('common.pageheader',$page_title_data) 
-	<div class="ar">
+	{{-- <div class="ar">
 		<div class="ac l25">
 			<div class="aione-border">
 				<div class="p-10 bg-grey bg-lighten-3">
@@ -69,5 +69,6 @@
 				{!! FormGenerator::GenerateForm('survey_generator_fields') !!}
 			</div>
 		</div>
-	</div>	
+	</div>	 --}}
+	{!! FormGenerator::GenerateForm('aione_form_fields_test',[]) !!}
 @endsection

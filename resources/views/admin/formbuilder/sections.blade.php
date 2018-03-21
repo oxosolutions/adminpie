@@ -26,10 +26,12 @@
 @php
 $page_title_data = array(
   'show_page_title' => 'yes',
-  'show_add_new_button' => 'no',
+  'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
   'page_title' => 'Form <span>'.@$title.'</span>',
-  'add_new' => '+ Apply leave'
+  'add_new' => 'Export survey',
+  'route' => ['export.survey',$form->id],
+ 
 ); 
 @endphp
 {{-- (Request::route()->action['as'] == 'survey.sections.list')?'Survey:':'Form:' --}}
@@ -60,6 +62,16 @@ $page_title_data = array(
     
 
         <div class="module-wrapper">
+            <div class=" mb-10">
+                  @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
+                        {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
+                            <input type="hidden" name="id" value="{{$form->id}}">
+                            {!! FormGenerator::GenerateForm('edit_form_form') !!}
+                        {!! Form::close() !!}
+
+                        
+                    @endif
+            </div>
             <div class="list-container">
                 <nav id="aione_nav" class="aione-nav light vertical">
                     <div class="aione-nav-background"></div>
@@ -148,18 +160,15 @@ $page_title_data = array(
                     @endif
 
                     @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
-                        {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
+                       {{--  {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
                             <input type="hidden" name="id" value="{{$form->id}}">
                             {!! FormGenerator::GenerateForm('edit_form_form') !!}
-                        {!! Form::close() !!}
+                        {!! Form::close() !!} --}}
 
                         {!! Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
                             <div class="add-section">
-                              {{--   <button class="btn blue" type="submit">Add Section</button>
-                                <span>
-                                    <input type="text" name="name">
-                                    <input type="hidden" name="module_id" value="">    
-                                </span> --}}
+                               
+
                                 {!! FormGenerator::GenerateForm('add_section_form') !!} 
                                 <div class="clear"></div>
                                 @if($errors->has('name'))

@@ -186,17 +186,17 @@ foreach($columns as $column){
     				<div class="aione-datalist-item-wrapper">
     					@foreach($showColumns as $k => $column)
     						@if($loop->index == 0)
-    							<div class="{{$column_classes}} {{$class_list[$loop->index]}}">
+    							<div class="{{$column_classes}} {{$class_list[$loop->index]}} truncate">
     								<div class="ar">
-    									<div class="ac s10">
-    										<div class="bg-orange bg-accent-2 white">
+    									<div class="ac " style="width: 50px;">
+    										<div class="bg-orange bg-accent-2 white line-height-30 aione-align-center font-size-20" style="width: 30px;">
     											{{ucfirst(($dataset->{$k} != '')?$dataset->{$k}[0]:'0')}}
     										</div>	
     									</div>
-    									<div class="ac s90">
-    										<div> {!! (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
+    									<div class="ac p-0" style="width: calc( 100% - 50px)">
+    										<div class="truncate"> {!! (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>' !!}</div>
     										@if(isset($actions))
-    											<div class="options" style=" display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">
+    											<div class="options" style="padding-top: 5px; display:{!! (@$dataset->{$k} == "Super Admin")?'none':''!!}">
     												@foreach($actions as $action_key => $action_value)
     													@if($action_key == 'download')
     														<a href="{{asset($action_value['destinationPath'].'/'.$dataset->file)}}" style="padding-right:10px" target="_blank" class="{{@$action_value['class']}} action-{{$action_key}}">{{$action_value['title']}}</a>
@@ -262,7 +262,7 @@ foreach($columns as $column){
     							</div>
 
     						@else
-    							<div  class="{{$column_classes}} {{$class_list[$loop->index]}}">
+    							<div  class="{{$column_classes}} {{$class_list[$loop->index]}} truncate">
     								@php
     									$relations = explode('.',$k);
     									$getRelations = $dataset;

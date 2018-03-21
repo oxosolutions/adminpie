@@ -573,7 +573,8 @@ class DatasetController extends Controller
                 case'from_api':
                     if($request->import_source == 'file_on_server'){
                         $filename = explode('/',$request->file_path);
-                        $dowunloadLink = $filename;
+                        //$dowunloadLink = $filename;
+                        $dowunloadLink = $request->file_path;
                     }elseif($request->import_source == 'google'){
                         $prepareGoogleSheetResult = $this->prepareCSVFromGoogleSpreadSheet($request,$filePath);
                         if(!$prepareGoogleSheetResult){
@@ -594,7 +595,6 @@ class DatasetController extends Controller
                     $filename = $filename[count($filename)-1];
                     $newFilename = 'downloaded_dataset_'.time().'.'.File::extension($filename);
                     $fileExt = File::extension($filename);
-                    dump($dowunloadLink);
                     copy($dowunloadLink, $filePath.'/'.$newFilename);
                     switch($request->add_replace){
                         case'new':

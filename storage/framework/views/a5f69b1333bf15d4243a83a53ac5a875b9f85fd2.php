@@ -26,10 +26,12 @@
 <?php 
 $page_title_data = array(
   'show_page_title' => 'yes',
-  'show_add_new_button' => 'no',
+  'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
   'page_title' => 'Form <span>'.@$title.'</span>',
-  'add_new' => '+ Apply leave'
+  'add_new' => 'Export survey',
+  'route' => ['export.survey',$form->id],
+ 
 ); 
  ?>
 
@@ -61,6 +63,19 @@ $page_title_data = array(
     
 
         <div class="module-wrapper">
+            <div class=" mb-10">
+                  <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
+                        <?php echo Form::model($form,['class' => 'form' ,'route' => 'org.update.form']); ?>
+
+                            <input type="hidden" name="id" value="<?php echo e($form->id); ?>">
+                            <?php echo FormGenerator::GenerateForm('edit_form_form'); ?>
+
+                        <?php echo Form::close(); ?>
+
+
+                        
+                    <?php endif; ?>
+            </div>
             <div class="list-container">
                 <nav id="aione_nav" class="aione-nav light vertical">
                     <div class="aione-nav-background"></div>
@@ -153,18 +168,13 @@ $page_title_data = array(
                     <?php endif; ?>
 
                     <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
-                        <?php echo Form::model($form,['class' => 'form' ,'route' => 'org.update.form']); ?>
-
-                            <input type="hidden" name="id" value="<?php echo e($form->id); ?>">
-                            <?php echo FormGenerator::GenerateForm('edit_form_form'); ?>
-
-                        <?php echo Form::close(); ?>
-
+                       
 
                         <?php echo Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
                             <div class="add-section">
-                              
+                               
+
                                 <?php echo FormGenerator::GenerateForm('add_section_form'); ?> 
                                 <div class="clear"></div>
                                 <?php if($errors->has('name')): ?>

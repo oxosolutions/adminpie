@@ -184,18 +184,18 @@ foreach($columns as $column){
     				<div class="aione-datalist-item-wrapper">
     					<?php $__currentLoopData = $showColumns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     						<?php if($loop->index == 0): ?>
-    							<div class="<?php echo e($column_classes); ?> <?php echo e($class_list[$loop->index]); ?>">
+    							<div class="<?php echo e($column_classes); ?> <?php echo e($class_list[$loop->index]); ?> truncate">
     								<div class="ar">
-    									<div class="ac s10">
-    										<div class="bg-orange bg-accent-2 white">
+    									<div class="ac " style="width: 50px;">
+    										<div class="bg-orange bg-accent-2 white line-height-30 aione-align-center font-size-20" style="width: 30px;">
     											<?php echo e(ucfirst(($dataset->{$k} != '')?$dataset->{$k}[0]:'0')); ?>
 
     										</div>	
     									</div>
-    									<div class="ac s90">
-    										<div> <?php echo (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>'; ?></div>
+    									<div class="ac p-0" style="width: calc( 100% - 50px)">
+    										<div class="truncate"> <?php echo (@$dataset->{$k} != '')?$dataset->{$k}:'<i>No data available</i>'; ?></div>
     										<?php if(isset($actions)): ?>
-    											<div class="options" style=" display:<?php echo (@$dataset->{$k} == "Super Admin")?'none':''; ?>">
+    											<div class="options" style="padding-top: 5px; display:<?php echo (@$dataset->{$k} == "Super Admin")?'none':''; ?>">
     												<?php $__currentLoopData = $actions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $action_key => $action_value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     													<?php if($action_key == 'download'): ?>
     														<a href="<?php echo e(asset($action_value['destinationPath'].'/'.$dataset->file)); ?>" style="padding-right:10px" target="_blank" class="<?php echo e(@$action_value['class']); ?> action-<?php echo e($action_key); ?>"><?php echo e($action_value['title']); ?></a>
@@ -261,7 +261,7 @@ foreach($columns as $column){
     							</div>
 
     						<?php else: ?>
-    							<div  class="<?php echo e($column_classes); ?> <?php echo e($class_list[$loop->index]); ?>">
+    							<div  class="<?php echo e($column_classes); ?> <?php echo e($class_list[$loop->index]); ?> truncate">
     								<?php 
     									$relations = explode('.',$k);
     									$getRelations = $dataset;

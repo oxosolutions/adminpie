@@ -14,7 +14,7 @@
 <?php echo Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]]); ?>
 
     <input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px;padding:0;margin: 0;line-height: 0;" multiple />
-	<?php echo FormGenerator::GenerateForm('survey_generator_fields',[],$model); ?>
+	<?php echo FormGenerator::GenerateForm('form_generator_fields',[],$model); ?>
 
 <?php echo Form::close(); ?>
 

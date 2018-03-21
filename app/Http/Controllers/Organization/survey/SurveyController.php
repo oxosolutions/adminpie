@@ -10,11 +10,14 @@ use App\Model\Organization\Collaborator;
 use App\Model\Organization\section;
 use App\Model\Organization\FieldMeta;
 use App\Model\Organization\FormBuilder;
+use App\Model\Organization\SectionMeta;
 use Auth;
 use DB;
 use App\Http\Controllers\Api\SurveyController as apisurvey;
 use Session;
 use Carbon\Carbon;
+use File;
+use Response;
 /**
 * Paljinder singh only work  on following Method
 *     survey_filled_data_save
@@ -481,15 +484,150 @@ class SurveyController extends Controller
     }
 
 
+    protected function validateSurveyConditions($metaArray){
+        $errorsArray = [];
+        //Check Survey Enabled
+        if(!@$metaArray['enable_survey'] == 1){
+            $errorsArray['enable_survey'] = 'Survey not enabled!';
+        }
+
+        //Check Schedule Enable
+        if(@$metaArray['survey_scheduling'] == 1){
+            $startDate = @$metaArray['start_date'];
+            $expireDate = @$metaArray['expire_date'];
+            $startTime = @$metaArray['survey_start_time'];
+            $expireTime = @$metaArray['survey_expire_time'];
+            $surveyStatus = $this->findScheduleCases($startDate, $expireDate, $startTime, $expireTime);
+        }
+        dd($metaArray);
+    }
+
+    protected function findScheduleCases($startDate, $expireDate, $startTime, $expireTime){
+
+        $scheduleCase = '';
+        if($startDate == "" && $expireDate != "" && $startTime == "" && $expireTime =="" ){
+            $scheduleCase = "A"; // only have expiredate;
+        }
+        if($startDate != "" && $expireDate != "" && $startTime == "" && $expireTime =="" ){
+            $scheduleCase = "B"; //have startdate and expiredate
+        }
+        if($startDate != "" && $expireDate == "" && $startTime == "" && $expireTime =="" ){
+            $scheduleCase = "C"; //have startdate
+        }   
+        if($startDate == "" && $expireDate == "" && $startTime != "" && $expireTime  != "" ){
+            $scheduleCase = "D"; //have starttime,expiretime
+        }
+        if($startDate == "" && $expireDate == "" && $startTime != "" && $expireTime  == "" ){
+            $scheduleCase = "E"; //have starttime;
+        }
+        if($startDate == "" && $expireDate == "" && $startTime == "" && $expireTime  !="" ){
+            $scheduleCase = "F"; // have expire time
+        }
+        if($startDate != "" && $expireDate != "" && $startTime != "" && $expireTime  != "" ){
+            
+            $scheduleCase = "G"; //have startdate, expiredate, starttime, endtime
+        }
+        if($startDate != "" && $expireDate != "" && $startTime != "" && $expireTime  == "" ){
+            $scheduleCase = "H";  //have startdate,expiredate,starttime
+        }
+        if($startDate != "" && $expireDate != "" && $startTime == "" && $expireTime  != "" ){
+            $scheduleCase = "I"; //startdate,expiredate,expiretime
+        }
+        if($startDate != "" && $expireDate == "" && $startTime != "" && $expireTime  != "" ){
+            $scheduleCase = "J"; //startdate,startime,expiretime
+        }
+        if($startDate == "" && $expireDate != "" && $startTime == "" && $expireTime  != "" ){
+            $scheduleCase = "K"; //expiredate,expiretime
+        }
+        if($startDate == "" && $expireDate != "" && $startTime != "" && $expireTime  == "" ){
+            $scheduleCase = "L"; //have expiredate,starttime 
+        }
+        if($startDate == "" && $expireDate == "" && $startTime == "" && $expireTime  == "" ){
+            $scheduleCase = "M";  //expiredate ,expiretime startdate starttime
+        }
+        if($startDate == "" && $expireDate != "" && $startTime != "" && $expireTime != "" ){
+            $scheduleCase = "N";  //expiredate ,starttime expiretime
+        }
+
+        return $this->validateSurveyDateTime($scheduleCase, $startDate, $expireDate, $startTime, $expireTime);
+    }
+
+    protected function validateSurveyDateTime($case, $startDate, $expireDate, $startTime, $expireTime){
+        switch($case){
+
+            case'A':
+
+            break;
+
+            case'B':
+
+            break;
+
+            case'C':
+
+            break;
+
+            case'D':
+            break;
+
+            case'E':
+            break;
+
+            case'F':
+            break;
+
+            case'G':
+                $today =  Carbon::today();
+                dd($startDate);
+                if(Carbon::parse($startDate) < $today){
+                    dd('Days Pending', Carbon::parse($startDate)->diffInDays($today));
+                }
+                if(Carbon::parse($expireDate) > $today){
+                    dd('Survey Expired bdefore days',$today->diffInDays(Carbon::parse($expireTime)));
+                }
+            break;
+
+            case'H':
+            break;
+
+            case'I':
+            break;
+
+            case'J':
+            break;
+
+            case'K':
+            break;
+
+            case'L':
+            break;
+
+            case'M':
+            break;
+
+            case'N':
+            break;
+        }
+    }
+
     /**
     * To preview survey for fill records
     * 
     * @param  [string] $token [Survey token to get survey details]
     * @return [view]        [will return view of HTML]
-    * @author Paljinder,Rahul
+    * @author Paljinder,Rahul ---> From 21 March 2018
     */
     public function embededSurvey($token, $from_status = false){
         
+        $surveyRecord = forms::select(['form_slug','id'])->with(['formsMeta','section.fields'])->where('embed_token',$token)->first();
+        if($surveyRecord != null){
+            $metaValues = get_meta_array($surveyRecord->formsMeta);
+            $errorStatus = $this->validateSurveyConditions($metaValues);
+        }
+
+
+
+
         $current_data = [];
         $form = forms::select(['form_slug', 'id'])->with(['formsMeta','section.fields'])->where('embed_token',$token);
         if($form != null){
@@ -789,4 +927,137 @@ class SurveyController extends Controller
             return '';
         }
     }
+
+    /**
+     * Export Survey Data in the form of json
+     * @param  [type] $id having survey id
+     * @return [type]     will return to download .json file
+     * @author Rahul
+     */
+    public function exportSurvey($id){
+        $model = forms::where(['type'=>'survey','id'=>$id])->with(['section'=>function($query){
+            $query->with(['fields'=>function($query){
+                $query->with(['fieldMeta']);
+            },'sectionMeta']);
+        },'formsMeta'])->first()->toArray();
+        $fileName = time() . '_form(survey)_'.$id.'.json';
+        File::put(public_path('/tmp/json/'.$fileName),json_encode($model));
+        return Response::download(public_path('/tmp/json/'.$fileName));
+    }
+
+
+    public function importSurvey(Request $request){
+        if($request->isMethod('post')){
+            $this->importJsonSurvey($request);
+        }
+        return view('admin.formbuilder.import');
+    }
+
+    protected function importJsonSurvey($request){
+        $fileType = $request->file('import_file')->getClientOriginalExtension();
+        if($fileType == 'json'){
+            $destination = public_path('/tmp/json/');
+            $fileName = $request->file('import_file')->getClientOriginalName();
+            $request->file('import_file')->move($destination,$fileName);
+            $jsonData = File::get(public_path('/tmp/json/'.$fileName));
+            $this->insertImportedJsonSurvey(json_decode($jsonData,true));
+        }
+    }
+
+    protected function insertImportedJsonSurvey(Array $arrayData){
+        $model = new forms;
+        $model->form_title = $arrayData['form_title'];
+        $model->form_slug = $arrayData['form_slug'];
+        $model->form_description = $arrayData['form_description'];
+        $model->type = $arrayData['type'];
+        $model->embed_token = $arrayData['embed_token'];
+        $model->form_order = $arrayData['form_order'];
+        $model->form_status = $arrayData['form_status'];
+        $model->created_by = (Auth::guard('org')->check())?Auth::guard('org')->user()->id:Auth::guard('admin')->user()->id;
+        $model->save();
+        if(!empty($arrayData['section'])){
+            foreach($arrayData['section'] as $key => $section){
+                $sectionModel = $this->putSections($model,$section);
+                if(!empty($section['fields'])){
+                    foreach($section['fields'] as $key => $field){
+                        $fieldsModel = $this->putFields($model,$sectionModel,$field);
+                        if(!empty($field['field_meta'])){
+                            foreach($field['field_meta'] as $key => $fieldMeta){
+                                $fieldMetaModel = $this->putFieldMeta($model,$sectionModel,$fieldsModel,$fieldMeta);
+                            }
+                        }
+                    }
+                }
+                if(!empty($section['section_meta'])){
+                    foreach($section['section_meta'] as $key => $sectionMeta){
+                        $sectionMetaModel = $this->putSectionMeta($sectionModel,$sectionMeta);
+                    }
+                }
+            }
+        }
+        if(!empty($arrayData['forms_meta'])){
+            foreach($arrayData['forms_meta'] as $key => $formMeta){
+                $formMetaModel = $this->putFormMeta($model,$formMeta);
+            }
+        }
+        Session::flash('success', 'Form/Survey Imported Successfully!');
+        return back();
+    }
+
+    protected function putSections($model, $section){
+        $sectionModel = new section;
+        $sectionModel->form_id = $model->id;
+        $sectionModel->section_name = $section['section_name'];
+        $sectionModel->section_slug = $section['section_slug'];
+        $sectionModel->section_description = $section['section_description'];
+        $sectionModel->order = $section['order'];
+        $sectionModel->status = $section['status'];
+        $sectionModel->save();
+        return $sectionModel;
+    }
+
+    protected function putFields($model, $sectionModel, $field){
+        $fieldsModel = new FormBuilder;
+        $fieldsModel->field_slug = $field['field_slug'];
+        $fieldsModel->form_id = $model->id;
+        $fieldsModel->section_id = $sectionModel->id;
+        $fieldsModel->field_title = $field['field_title'];
+        $fieldsModel->field_type = $field['field_type'];
+        $fieldsModel->field_description = $field['field_description'];
+        $fieldsModel->order = $field['order'];
+        $fieldsModel->status = $field['status'];
+        $fieldsModel->save();
+        return $fieldsModel;
+    }
+
+    protected function putFieldMeta($model, $sectionModel, $fieldsModel, $fieldMeta){
+        $fieldMetaModel = new FieldMeta;
+        $fieldMetaModel->form_id = $model->id;
+        $fieldMetaModel->section_id = $sectionModel->id;
+        $fieldMetaModel->field_id = $fieldsModel->id;
+        $fieldMetaModel->key = $fieldMeta['key'];
+        $fieldMetaModel->value = $fieldMeta['value'];
+        $fieldMetaModel->save();
+        return $fieldMetaModel;
+    }
+
+    protected function putSectionMeta($sectionModel, $sectionMeta){
+        $sectionMetaModel = new SectionMeta;
+        $sectionMetaModel->section_id = $sectionModel->id;
+        $sectionMetaModel->key = $sectionMeta['key'];
+        $sectionMetaModel->value = $sectionMeta['value'];
+        $sectionMetaModel->save();
+        return $sectionMetaModel;
+    }
+
+    protected function putFormMeta($model,$formMeta){
+        $formMetaModel = new FormsMeta;
+        $formMetaModel->form_id = $model->id;
+        $formMetaModel->key = $formMeta['key'];
+        $formMetaModel->value = $formMeta['value'];
+        $formMetaModel->type = $formMeta['type'];
+        $formMetaModel->save();
+        return $formMetaModel;
+    }
+
 }
