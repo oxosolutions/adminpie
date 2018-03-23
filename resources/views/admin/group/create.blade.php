@@ -6,7 +6,7 @@ $page_title_data = array(
   'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
   'page_title' => 'Create Group',
-  'add_new' => 'All Groups',
+  'add_new' => __('admin.all_groups_btn_text'),
   'route' => 'list.group'
 ); 
 @endphp

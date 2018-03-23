@@ -1318,7 +1318,15 @@ class DatasetController extends Controller
         }
         $dataset = Dataset::find($id);
         $dataset->dataset_description = $dataset->description;
-        return view('organization.dataset.edit',['dataset'=>$dataset]);
+        $datasetTable = Dataset::find($id)->dataset_table;
+        try{
+            $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+            $columns = collect($headers)->except(['id','status','parent']);
+        }catch(\Exception $e){
+            $columns = [];
+            $dataset = [];
+        }
+        return view('organization.dataset.edit',['columns'=>$columns,'dataset'=>$dataset]);
     }
      public function defineDataset(Request $request, $id){
      	if(!$this->validateUser($id)){
@@ -1792,6 +1800,11 @@ class DatasetController extends Controller
             Session::flash('warning','Dataset does not exist!');
             return back();
         }
+    }
+
+    public function datasetOperations()
+    {
+        return view('organization.dataset.operations');
     }
    
 }

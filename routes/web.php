@@ -546,7 +546,7 @@
     });*/
 
 	/***************************************** Public Route for Shared Survey ******************************************/
-	Route::get('/survey/{token}',['middleware'=>'survey.auth','as'=>'embed.survey','uses'=>'Organization\survey\SurveyController@embededSurvey']);
+	Route::match(['get','post'],'/survey/{token}',['middleware'=>'survey.auth','as'=>'embed.survey','uses'=>'Organization\survey\SurveyController@embededSurvey']);
 
 
 	/***************************************** Public Route for Share Data ******************************************/
@@ -567,6 +567,6 @@ Route::get('/myattendance',function(){
 });
 
 Route::get('survey-design',function(){
-	return view('organization.survey.survey-design-edit');
+	return view('organization.survey.survey-design');
 });
 	

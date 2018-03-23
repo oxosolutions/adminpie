@@ -45,7 +45,7 @@ class FormGenerator{
 	 * @param [string] $field_slug 
 	 */
 	public static function GenerateField($field_slug, Array $Options = [], $dataModel = null, $formFrom = 'admin'){
-
+        
 		$model = '';
 		if($formFrom == 'admin'){
 			$model = 'App\\Model\\Admin\\FormBuilder';

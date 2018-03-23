@@ -69,6 +69,6 @@
 				{!! FormGenerator::GenerateForm('survey_generator_fields') !!}
 			</div>
 		</div>
-	</div>	 --}}
-	{!! FormGenerator::GenerateForm('aione_form_fields_test',[]) !!}
+	</div> --}}	
+	{{-- {!! FormGenerator::GenerateForm('aione_form_fields_test',[]) !!} --}}
 @endsection

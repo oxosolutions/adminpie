@@ -7,7 +7,7 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
     'show_navigation' => 'yes',
-    'page_title' => 'Edit Group&nbsp;&nbsp;<span>'.$group_data->name.'</span>',
+    'page_title' => __('admin.edit_group_page_title').'&nbsp;&nbsp;<span>'.$group_data->name.'</span>',
     'add_new' => '+ Add User'
 ); 
  ?>

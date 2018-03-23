@@ -26,6 +26,65 @@
 	.indicater-wrapper.active .percentage{
 		min-height: 15px;
 	}
+    .sections-wrap > .item{
+        opacity: 0.5;
+    }
+    .sections-wrap > .item:hover{
+        opacity: 1;
+    }
+    .sections-wrap > .item.active{
+        opacity: 1;
+    }
+     body{
+            padding: 0;
+            margin: 0;
+            background-color: #f5f5f5;
+         }
+         .screen-wrapper{
+            height: 100vh;
+         } 
+         .screen-wrapper > .header{
+            right: 0;
+            left: 0;
+            top: 0;
+            background: #168dc5;
+            z-index: 999;
+         }
+         .screen-wrapper > .footer{
+            
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: #e4e4e4;
+         }
+         .screen-wrapper > .content{
+            top: 64px;
+            right: 0;
+            left: 280px;
+            background-color: #f5f5f5;
+            bottom: 50px;
+            overflow: auto;
+         }
+         .screen-wrapper > .content > .page{
+            background-color: white;
+            min-height: 100%;
+
+         }
+         .screen-wrapper > .content > .page > .answer{
+            min-height: 50vh
+         }
+         .survey-sidebar{
+            position: absolute;
+            top: 64px;
+            bottom: 48px;
+            left: 0;
+            width: 280px;
+            background-color: white;
+            z-index: 99;
+            min-height: 100px;
+            max-height: calc( 100vh - 100px );
+            overflow: scroll;
+         }
 </style>
 <script type="text/javascript">
 	$(document).ready(function(){
@@ -34,106 +93,235 @@
 		})
 	})
 </script>
-<div class=" p-10" style="max-width: 1120px;margin: 0 auto;">
-    @include('organization.survey.survey_draw.messages')
-    @if(!empty($survey) && empty($error))
-    	@include('organization.survey.survey_draw.sidebar')
-    	<div class="aione-float-left aione-border" style="width: calc( 100% - 360px )">
-    		@if(!empty($current_data))
-    			{!! Form::model($current_data,['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post'])!!}
-    		@else
-                {!! Form::open(['route' => 'filled.survey', 'class'=> 'survey-form form-horizontal','method' => 'post'])!!}
-    		@endif
-        		<input type="hidden" name="form_id" value="{{$form_id}}" >
-    			<input type="hidden" name="ip_address" value="{{Request::ip()}}" >
-    			<input type="hidden" name="survey_submitted_from" value="web" >
-        		@php
-    				if(Auth::guard('org')->check()){
-    					echo "<input type='hidden' name='survey_submitted_by' value='".Auth::guard('org')->user()->id."' >";
-    				}
-    				if(Session::has('section'.$form_id)){
-    					$section_array = Session::get('section'.$form_id);
-    					$key = array_keys($section_array);
-    					if(count($key)==1){
-    						echo '<input type="hidden" name="survey_status" value="completed" >';
-    					}else{
-    						echo '<input type="hidden" name="survey_status" value="incompleted" >';
-    					}
-    					$section_id = array_shift($key);
-    					$section_slug = $section_array[$section_id];
-    				}
-    				if(Session::has('field'.$form_id)){
-                        $preserve = Session::get('preserve_field'.$form_id);
-    					$fields = Session::get('field'.$form_id);
-                        $filter_field = array_filter($fields);
-    					$field_keys = array_keys($filter_field);
-    					if(count($field_keys)==1){
-    						echo '<input type="hidden" name="survey_status" value="completed" >';
-    					}else{
-    						echo '<input type="hidden" name="survey_status" value="incompleted" >';
-    					}
+@php
+    $route = route('embed.survey',['token'=>request()->token]);
+@endphp
+<div class="" style="max-width: 1120px;margin: 0 auto;">
 
-                        $get_field_id = array_shift($field_keys); //current ques key
-                        if(Session::has('wild_field'.$form_id)){
-                            $wild =  Session::get('wild_field'.$form_id);
-                            $field_idss = $wild['field_id'.$form_id];
+    @if($error['status'] == false)
+        <div class="aione-border aione-align-center border-width-3 p-50 font-size-30 grey lighten-2 mt-30" style="border-style: dashed;">
+            <i class="fa fa-exclamation-triangle mr-20"></i>{{ $error['message'] }}
+        </div>
+    @endif
 
-                            $keys = array_keys($preserve);
-                            $key = array_search($field_idss, $keys);
-                            if(isset($preserve[$key+1])){
-                                $next_fields_id = $keys[$key+1];
-                            }
-                         }else{
-                             $keys = array_keys($filter_field);
-                            $key = array_search($get_field_id, $keys);
-                            if(isset($filter_field[$key+1])){
-                                $next_fields_id = $keys[$key+1];
-                            }
-                         }
+    @if($data['displayBy'] == 'section' && $error['status'] == true)
+        @php
+            $sectionIndex = (request()->section)?request()->section:0;
+        @endphp
+        <div class=" p-10" style="max-width: 1120px;margin: 0 auto;">
+            <div class="aione-float-left pr-15  " style="width: 360px">
+                <div class="sections-wrap" style="position: fixed">
+                    <!-- Survey Section -->
+                    @foreach($data['sections'] as $key => $section)
+                        <div class="item mb-10 {{ ($sectionIndex == $key)?'active':'' }}" onclick="window.location.href='{{ route('embed.survey',['token'=>request()->token]).'?section='.$key }}'" style="cursor: pointer;">
+                            <div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
+                                <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">
+                                    {{ $section['title'] }}
+                                </div>
+                                <div class="font-size-13 line-height-20">
+                                    {{ $section['title'] }}
+                                </div>
+                                <div class="indicater-wrapper" >
+                                    <div class="bg-light-blue bg-lighten-4 indicater">
+                                        <div class="bg-light-blue bg-darken-2 percentage" style="width:50%">
+                                        </div>
+                                        <div class="grey aione-align-center line-height-15 percentage-text">
+                                            30% completed
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
 
-                       
+            @if(isset($data['sections'][$sectionIndex]))
+                <div class="aione-float-left " style="margin-left:380px;width: calc( 100% - 360px )">
+                    <div class="aione-border  bg-white mb-20">
+                        <div class="aione-border-bottom p-10 light-blue darken-2 font-size-18 bg-white">
+                            {{ @$data['sections'][$sectionIndex]['title'] }}
+                        </div>
+                        {!! Form::open() !!}
+                            @foreach($data['fields'] as $key => $fieldSlug)
+                                {!! FormGenerator::GenerateField($fieldSlug, [], null, 'org') !!}
+                                <div class="aione-border-top mv-10"></div>
+                            @endforeach
+                            {!! Form::submit('Submit',['class'=>'m-0 bg-light-blue bg-darken-3 ']) !!}
+                        {!! Form::close() !!}
+                    </div>
+                </div>
+            @endif
+            <div class="clear"></div>
+        </div>
 
-                    }
-        		@endphp
-    			@if(Session::has('field'.$form_id))
-        			@if(Session::has('wild_field'.$form_id))
-                    <script type="text/javascript">
-                        $(".codition-{{Session::get('wild_field'.$form_id)['field_id'.$form_id]}}").show(); 
-                    </script>
-        			<input id="field_id" type="hidden" name="field_id" value="{{Session::get('wild_field'.$form_id)['field_id'.$form_id]}}" >
-        			{!! FormGenerator::GenerateField(Session::get('wild_field'.$form_id)['field_slug'.$form_id],[],'','org') !!}
+    @endif
+    
+    @if($data['displayBy'] == 'survey' && $error['status'] == true)
+        <script type="text/javascript">
+            function UpdateTableHeaders() {
+               $(".persist-area").each(function() {
+               
+                   var el             = $(this),
+                       offset         = el.offset(),
+                       scrollTop      = $(window).scrollTop(),
+                       floatingHeader = $(".floatingHeader", this)
                    
-        			@else
-        				<input id="field_id" type="hidden" name="field_id" value="{{$get_field_id}}" >
-        				{!! FormGenerator::GenerateField($fields[$get_field_id],[],'','org') !!}
+                   if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
+                       floatingHeader.css({
+                        "visibility": "visible"
+                       });
+                   } else {
+                       floatingHeader.css({
+                        "visibility": "hidden"
+                       });      
+                   };
+               });
+            }
 
-                    @endif
+            // DOM Ready      
+            $(function() {
 
-                     <div class="font-size-16 line-height-26">
-                            <a href="{{route('set.survey',['form_id'=>$form_id ,'id'=>$next_fields_id, 'slug'=>$filter_field[$next_fields_id], 'type'=>'field' ]) }}">Next</a>
+               var clonedHeaderRow;
+
+               $(".persist-area").each(function() {
+                   clonedHeaderRow = $(".persist-header", this);
+                   clonedHeaderRow
+                     .before(clonedHeaderRow.clone())
+                     .css("width", clonedHeaderRow.width())
+                     .addClass("floatingHeader");
+                     
+               });
+               
+               $(window)
+                .scroll(UpdateTableHeaders)
+                .trigger("scroll");
+               
+            });
+        </script>
+        <style type="text/css">
+            .floatingHeader {
+              position: fixed;
+              top: 0;
+              visibility: hidden;
+                              width: 81%;
+                /*visibility: initial;*/
+                z-index: 9;
+                margin-left: -15px;
+                background: white;
+            }
+        </style>
+        <div class="m-20 aione-border p-15">
+            {!! Form::open() !!}
+            @foreach($data['sections'] as $key => $section)
+                <div class="mb-30 persist-area">
+                    <div class="p-10 font-size-20 light-blue darken-2 aione-border-bottom persist-header" >
+                        {{ $section['section_title'] }}
+                    </div>
+                    <div class="p-10">
+                        @foreach($section['fields'] as $field_key => $field)
+                            {!! FormGenerator::GenerateField($field, [], null, 'org') !!}
+
+                        @endforeach
                     </div>
 
-                        <script type="text/javascript"> $("#field_682").show();</script>
-    			@elseif(Session::has('section'.$form_id))
-    				<div class="sec">
-    					@if(Session::has('wild_section'.$form_id))
- 						<input id="sec_id"  type="hidden" name="section_id" value="{{Session::get('wild_section'.$form_id)['section_id'.$form_id]}}" >
-    					   {!! FormGenerator::GenerateSection(Session::get('wild_section'.$form_id)['section_slug'.$form_id], [],'','org') !!}
-    					@else
-    						{{$section_id}}
-    						<input id="sec_id"  type="hidden" name="section_id" value="{{$section_id}}" >
-    					   {!! FormGenerator::GenerateSection($section_slug, $current_data,'','org') !!}
-    					@endif
-    				</div>
-    			@else					
-    				{!! FormGenerator::GenerateForm($survey_slug,[],'','org') !!}
-    				<input type="hidden" name="survey_status" value="completed" >
-    			@endif
-        		{{-- <input type="hidden" name="form_slug" value="{{$slug}}" > --}}
-    			<input type="submit" value="{{@$survey_setting['form_save_button_text']}}">
-    		{!! Form::close() !!}
-    	</div>
+                </div> 
+            @endforeach
+            <div class="bg-white p-10 aione-border-top " style="position:fixed;bottom: 0;left:0;right:0">
+                {!! Form::submit('Submit',['style'=>'line-height:12px;margin-left:150px;','class'=>' m-0 bg-light-blue bg-darken-3 aione-button']) !!}
+                                
+            </div>
+            {!! Form::close() !!}
+        </div>
+        
     @endif
+
+</div>
+
+    @if($data['displayBy'] == 'question' && $error['status'] == true)
+        @php
+            $sectionIndex = (request()->section)?request()->section:0;
+        @endphp
+        <div class="screen-wrapper position-relative" style="position: relative;">
+            <div class="header position-absolute aione-align-center" style="position: absolute;">
+                <h3 class="white font-weight-300">Aioneframework Survey Collecter</h3>
+            </div>
+            <div class="survey-sidebar sections-wrap" >
+                @foreach($data['sections'] as $key => $section)
+                    <div class="item mb-10 {{ ($sectionIndex == $key)?'active':'' }}" onclick="" style="cursor: pointer;">
+                        <div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
+                            <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">
+                                {{ $section['title'] }}
+                            </div>
+                            <div class="font-size-13 line-height-20">
+                                {{ $section['description'] }}
+                            </div>
+                            <div class="indicater-wrapper" >
+                                <div class="bg-light-blue bg-lighten-4 indicater">
+                                    <div class="bg-light-blue bg-darken-2 percentage" style="width:50%">
+                                    </div>
+                                    <div class="grey aione-align-center line-height-15 percentage-text">
+                                        30% completed
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="content p-10 l-pv-10 l-ph-100 m-pv-10 m-ph-50 position-absolute" style="position: absolute;">
+                <div class="page aione-shadow p-20" style="position: relative;">
+                    @if(isset($data['field_record']['field']))
+                        @php
+                            $prev = $route.'?section='.$sectionIndex.'&question='.($data['field_record']['index']-1);
+                            $next = $route.'?section='.$sectionIndex.'&question='.($data['field_record']['index']+1);
+                            $totalFields = count($data['fields']) - 1;
+                            $nextSection = $route.'?section='.($sectionIndex+1);
+                            $prevSection = $route.'?section='.($sectionIndex-1);
+                            if($sectionIndex != 0){
+                                $prevSectionLastQuest  = count($data['sections'][$sectionIndex-1]['fields'])-1;
+                            }
+                        @endphp
+                        {!! FormGenerator::GenerateField($data['field_record']['field'], [], null, 'org') !!}
+                        <div class="actions" style="position: absolute;bottom: 0;left: 0;
+                        right: 0;padding: 0 5px;">
+                            @if($data['field_record']['index'] >= 1)
+                                <button class="aione-float-left" onclick="window.location.href='{{ $prev }}'">Previous</button>
+                            @elseif($sectionIndex != 0)
+                                <button class="aione-float-left" onclick="window.location.href='{{ $prevSection.'&question='.$prevSectionLastQuest }}'">Prev Section</button>
+                            @endif
+                            @if($data['field_record']['index'] != $totalFields)
+                                <button class="aione-float-right" onclick="window.location.href='{{ $next }}'">Next</button>
+                            @else
+                                <button class="aione-float-right" onclick="window.location.href='{{ $nextSection }}'">Next Section</button>
+                            @endif
+                            <div style="clear: both">
+                              
+                            </div>
+                        </div>
+                    @endif
+                 </div>
+            </div>
+            <div style="position: absolute;" class="footer font-size-18 aione-border-top position-absolute p-15 aione-align-center">
+             &copy; All rights reserved by OXO solutions
+            </div>
+        </div>
+    @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 </div>
 <script type="text/javascript">
 

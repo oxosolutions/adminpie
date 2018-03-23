@@ -94,7 +94,7 @@
             <div class="aione-nav-background"></div>
             <ul id="aione_menu" class="aione-menu custom-aione-menu">
                 
-            
+            {{-- 
                 <li class="aione-nav-item level0 bg-light-blue bg-darken-3 " style="margin-right: 15px"> 
                     <a class="white ph-50 export" style="width: 140px;color: white;text-align: center" >Export</a>
                     <ul class="side-bar-submenu">
@@ -108,7 +108,7 @@
                 </li>
                 <li class="aione-nav-item level0 bg-cyan bg-darken-1 "> 
                     <a class="white clone" style="width: 140px;color: white;text-align: center" onclick="window.location.href='{{route('clone.dataset',$dataset['id'])}}'">Clone</a>
-                </li>
+                </li> --}}
             </ul>
             <div class="aione-nav-toggle">
                 <a href="#" class="nav-toggle "></a>

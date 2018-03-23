@@ -94,20 +94,6 @@
             <ul id="aione_menu" class="aione-menu custom-aione-menu">
                 
             
-                <li class="aione-nav-item level0 bg-light-blue bg-darken-3 " style="margin-right: 15px"> 
-                    <a class="white ph-50 export" style="width: 140px;color: white;text-align: center" >Export</a>
-                    <ul class="side-bar-submenu">
-                        <li class="aione-nav-item level1 "> 
-                            <a onclick="window.location.href='<?php echo e(route('export.dataset',['id'=>$dataset['id'],'type'=>'xls'])); ?>'">Export as XLS</a>
-                        </li>
-                        <li class="aione-nav-item level1 "> 
-                            <a onclick="window.location.href='<?php echo e(route('export.dataset',['id'=>$dataset['id'],'type'=>'csv'])); ?>'">Export as CSV</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="aione-nav-item level0 bg-cyan bg-darken-1 "> 
-                    <a class="white clone" style="width: 140px;color: white;text-align: center" onclick="window.location.href='<?php echo e(route('clone.dataset',$dataset['id'])); ?>'">Clone</a>
-                </li>
             </ul>
             <div class="aione-nav-toggle">
                 <a href="#" class="nav-toggle "></a>

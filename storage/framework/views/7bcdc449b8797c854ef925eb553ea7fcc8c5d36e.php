@@ -11,8 +11,7 @@
 ); 
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+		
 	
-	<?php echo FormGenerator::GenerateForm('aione_form_fields_test',[]); ?>
-
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.main', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

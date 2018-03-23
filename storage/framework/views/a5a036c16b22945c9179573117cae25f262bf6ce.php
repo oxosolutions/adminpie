@@ -4,8 +4,8 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
-  'page_title' => 'Groups',
-  'add_new' => '+ Create Group',
+  'page_title' => __('admin.list_groups_page_title'),
+  'add_new' => __('admin.create_group_btn_text'),
   'route' => 'create.group'
 ); 
  ?>

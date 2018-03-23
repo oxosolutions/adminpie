@@ -499,7 +499,7 @@ class SurveyController extends Controller
             $expireTime = @$metaArray['survey_expire_time'];
             $surveyStatus = $this->findScheduleCases($startDate, $expireDate, $startTime, $expireTime);
         }
-        dd($metaArray);
+        return $surveyStatus;
     }
 
     protected function findScheduleCases($startDate, $expireDate, $startTime, $expireTime){
@@ -548,6 +548,9 @@ class SurveyController extends Controller
         if($startDate == "" && $expireDate != "" && $startTime != "" && $expireTime != "" ){
             $scheduleCase = "N";  //expiredate ,starttime expiretime
         }
+        if($startDate != "" && $expireDate == "" && $startTime != "" && $expireTime == "" ){
+            $scheduleCase = "O";  //expiredate ,starttime expiretime
+        }
 
         return $this->validateSurveyDateTime($scheduleCase, $startDate, $expireDate, $startTime, $expireTime);
     }
@@ -556,24 +559,74 @@ class SurveyController extends Controller
         switch($case){
 
             case'A':
-
+                $today =  Carbon::today();
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                    return ['status'=>true];
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
             break;
 
             case'B':
+                $today =  Carbon::today();
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                }else{
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
+                }
 
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
+                return ['status'=>true];
             break;
 
             case'C':
-
+                $today =  Carbon::today();
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                    return ['status'=>true];
+                }else{
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
+                }
             break;
 
             case'D':
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
             break;
 
             case'E':
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                return ['status'=>true];
             break;
 
             case'F':
+                $now = Carbon::now()->format('H:i:s');
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
             break;
 
             case'G':
@@ -581,38 +634,241 @@ class SurveyController extends Controller
                 if($today >= Carbon::parse($startDate)){
                     //Survey Started
                 }else{
-                    dd('Days Pending', $today->diffInDays(Carbon::parse($startDate)));
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
                 }
 
                 if($today <= Carbon::parse($expireDate)){
                     //Not yet expired
                 }else{
-                    dd('Survey Expired bdefore days',Carbon::parse($expireDate)->diffInDays($today));
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
                 }
-                
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
             break;
 
             case'H':
+                $today =  Carbon::today();
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                }else{
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
+                }
+
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                return ['status'=>true];
             break;
 
             case'I':
+                $today =  Carbon::today();
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                }else{
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
+                }
+
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
             break;
 
             case'J':
+                $today =  Carbon::today();
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                }else{
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
             break;
 
             case'K':
+                $today =  Carbon::today();
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
             break;
 
             case'L':
+                $today =  Carbon::today();
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                return ['status'=>true];
             break;
 
             case'M':
+                //Nothing set
+                return ['status'=>true];
             break;
 
             case'N':
+                $today =  Carbon::today();
+                if($today <= Carbon::parse($expireDate)){
+                    //Not yet expired
+                }else{
+                    return ['status'=>false,'message'=>'Survey Expired before '.Carbon::parse($expireDate)->diffInDays($today).' day\'s'];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                if($now <= Carbon::parse($expireTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Expired'];
+                }
+                return ['status'=>true];
+            break;
+
+            case'O':
+                $today =  Carbon::today();
+                if($today >= Carbon::parse($startDate)){
+                    //Survey Started
+                }else{
+                    return ['status'=>false,'message'=>'Days Pending '.$today->diffInDays(Carbon::parse($startDate))];
+                }
+                $now = Carbon::now()->format('H:i:s');
+                if($now >= Carbon::parse($startTime)->format('H:i:s')){
+                    //Start time ok
+                }else{
+                    return ['status'=>false,'message'=>'Survey Time Not Started Yet'];
+                }
+                return ['status'=>true];
             break;
         }
+    }
+
+    protected function reArrangeQuestionsBySection($surveyRecord, $request){
+        $sectionIndex = 0;
+        if($request->has('section')){
+            $sectionIndex = $request->section;
+        }
+        $sectionsList = [];
+        foreach($surveyRecord['section'] as $key => $section){
+            $sectionsList[$key] = ['title'=>$section->section_name,'description'=>$section->section_description];
+        }
+        $fieldsList = [];
+        if(isset($surveyRecord['section'][$sectionIndex])){
+            foreach($surveyRecord['section'][$sectionIndex]['fields'] as $key => $field){
+                $fieldsList[$key] = $field->field_slug;
+            }
+        }
+        return ['sections'=>$sectionsList,'fields'=>$fieldsList];
+    }
+
+    protected function reArrangeQuestionsBySurvey($surveyRecord, $request){
+        $sectionsList = [];
+        foreach($surveyRecord->section as $key => $section){
+            $tempArray = [
+                        'section_title' => $section->section_name,
+                        'section_description' => $section->section_description,
+            ];
+            $fieldsList = [];
+            foreach($section->fields->toArray() as $field_key => $field){
+                $fieldsList[] = $field['field_slug'];
+            }
+            $tempArray['fields'] = $fieldsList;
+            $sectionsList[] = $tempArray;
+        }
+        return ['sections'=>$sectionsList];
+    }
+
+    protected function reArrangeQuestionsByQuestion($surveyRecord, $request){
+        $sectionIndex = 0;
+        $field = '';
+        if($request->has('section')){
+            $sectionIndex = $request->section;
+        }
+        $questionIndex = 0;
+        if($request->has('question')){
+            $questionIndex = $request->question;
+        }
+        $sectionsList = [];
+        foreach($surveyRecord['section'] as $key => $section){
+            $tempArray = ['title'=>$section->section_name,'description'=>$section->section_description];
+            $fieldsList = [];
+            foreach($section->fields->toArray() as $field_key => $field){
+                $fieldsList[] = $field['field_slug'];
+            }
+            $tempArray['fields'] = $fieldsList;
+            $sectionsList[$key] = $tempArray;
+        }
+        if(isset($surveyRecord['section'][$sectionIndex])){
+            $fieldsList = [];
+            $fields = $surveyRecord['section'][$sectionIndex]['fields']->toArray();
+            foreach($fields as $field_key => $field){
+                $fieldsList[] = $field['field_slug'];
+            }
+            if(isset($surveyRecord['section'][$sectionIndex]['fields'][$questionIndex])){
+                $currentField = $surveyRecord['section'][$sectionIndex]['fields'][$questionIndex]->toArray();
+                $field = ['field'=>$currentField['field_slug'],'index'=>$questionIndex];
+            }
+        }
+        return ['sections'=>$sectionsList,'fields'=>$fieldsList,'field_record'=>$field];
+    }
+
+
+    protected function saveSurveyRecord($request){
+        dd($request->all());
     }
 
     /**
@@ -622,12 +878,37 @@ class SurveyController extends Controller
     * @return [view]        [will return view of HTML]
     * @author Paljinder,Rahul ---> From 21 March 2018
     */
-    public function embededSurvey($token, $from_status = false){
-        
+    public function embededSurvey(Request $request, $token, $from_status = false){
+        if($request->isMethod('post')){
+            $this->saveSurveyRecord($request);
+        }
+
         $surveyRecord = forms::select(['form_slug','id'])->with(['formsMeta','section.fields'])->where('embed_token',$token)->first();
         if($surveyRecord != null){
             $metaValues = get_meta_array($surveyRecord->formsMeta);
             $errorStatus = $this->validateSurveyConditions($metaValues);
+            $surveyDisplayBy = $metaValues['save_survey']; // Currently section
+            switch($surveyDisplayBy){
+                case'section':
+                    $questionsData = $this->reArrangeQuestionsBySection($surveyRecord, $request);
+                    $questionsData['displayBy'] = $surveyDisplayBy;
+                break;
+
+                case'survey':
+                    $questionsData = $this->reArrangeQuestionsBySurvey($surveyRecord, $request);
+                    $questionsData['displayBy'] = $surveyDisplayBy;
+                break;
+
+                case'question':
+                    $questionsData = $this->reArrangeQuestionsByQuestion($surveyRecord, $request);
+                    $questionsData['displayBy'] = $surveyDisplayBy;
+                break;
+            }
+        }
+        if($from_status){
+            return view('organization.survey.shared_survey_without_layout',['error'=>$errorStatus,'data'=>$questionsData])->render();
+        }else{
+            return view('organization.survey.survey_draw',['error'=>$errorStatus,'data'=>$questionsData]);
         }
 
 

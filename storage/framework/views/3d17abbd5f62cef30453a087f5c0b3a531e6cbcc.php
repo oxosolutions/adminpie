@@ -14,9 +14,7 @@
        <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'edit.dataset')?'nav-item-current':''); ?>">
         <a href="<?php echo e(route('edit.dataset',$id)); ?>"><span class="nav-item-text">Edit </span></a>
       </li>
-       <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'define.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('define.dataset',$id)); ?>"><span class="nav-item-text">Define</span></a>
-      </li>
+       
         <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'filter.dataset')?'nav-item-current':''); ?>">
         <a href="<?php echo e(route('filter.dataset',$id)); ?>"><span class="nav-item-text">Data Filter</span></a>
       </li>
@@ -26,8 +24,9 @@
         <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'validate.dataset')?'nav-item-current':''); ?>">
         <a href="<?php echo e(route('validate.dataset',$id)); ?>"><span class="nav-item-text">Validate</span></a>
       </li>
-        <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'visualize.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('visualize.dataset',$id)); ?>"><span class="nav-item-text">Visualizations</span></a>
+      
+      <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'options.dataset')?'nav-item-current':''); ?>">
+        <a href="<?php echo e(route('options.dataset',$id)); ?>"><span class="nav-item-text">Operations</span></a>
       </li>
       <?php 
             $dataset_user_id = '';
