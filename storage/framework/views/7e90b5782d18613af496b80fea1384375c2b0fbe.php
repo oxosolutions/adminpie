@@ -49,10 +49,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                
-
-
-                                <!--  Code BY : Amrit --> 
+                               
                                 <?php echo Form::select($key,
                                         [   "/^[\s\S]*$/" =>   'Text',
                                             "/^[a-zA-Z ]*$/" =>   'String(Only Alphabets)',

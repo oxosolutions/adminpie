@@ -333,6 +333,11 @@ class FormBuilderController extends Controller
         $request['field_slug'] = $output;
 
         $modelName = $this->assignModel('FormBuilder');
+        //validate field slug
+        $fieldSlugValidate = $modelName::where(['field_slug'=>$request->field_slug,'form_id'=>$form_id])->first();
+        if($fieldSlugValidate != null){
+            return back()->withErrors(['Slug '.$request->field_slug.' already exists!'])->withInput($request->all());
+        }
         // $this->validateUpdateFields($request);
 
         $lastOrder = $modelName::where(['form_id' => $form_id , 'section_id' => $section_id])->orderBy('order','DESC')->first();

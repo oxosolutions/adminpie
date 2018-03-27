@@ -546,7 +546,8 @@
     });*/
 
 	/***************************************** Public Route for Shared Survey ******************************************/
-	Route::match(['get','post'],'/survey/{token}',['middleware'=>'survey.auth','as'=>'embed.survey','uses'=>'Organization\survey\SurveyController@embededSurvey']);
+    Route::match(['get','post'],'/survey/{token}',['middleware'=>'survey.auth','as'=>'embed.survey','uses'=>'Organization\survey\SurveyController@embededSurvey']);
+    Route::get('completed/survey/{token?}',['middleware'=>'survey.auth','as'=>'survey.completed','uses'=>'Organization\survey\SurveyController@SurveyCompleted']);
 
 
 	/***************************************** Public Route for Share Data ******************************************/

@@ -86,6 +86,7 @@
             overflow: scroll;
          }
 </style>
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.indicater-wrapper').click(function(){
@@ -105,6 +106,7 @@
     @endif
 
     @if($data['displayBy'] == 'section' && $error['status'] == true)
+        
         @php
             $sectionIndex = (request()->section)?request()->section:0;
         @endphp
@@ -137,12 +139,14 @@
             </div>
 
             @if(isset($data['sections'][$sectionIndex]))
+                {{-- {{ Session::put('record_id',null) }} --}}
                 <div class="aione-float-left " style="margin-left:380px;width: calc( 100% - 360px )">
                     <div class="aione-border  bg-white mb-20">
                         <div class="aione-border-bottom p-10 light-blue darken-2 font-size-18 bg-white">
                             {{ @$data['sections'][$sectionIndex]['title'] }}
                         </div>
-                        {!! Form::open() !!}
+                        {!! Form::model(@$prefill) !!}
+                            {!! Form::hidden('section',request()->section) !!}
                             @foreach($data['fields'] as $key => $fieldSlug)
                                 {!! FormGenerator::GenerateField($fieldSlug, [], null, 'org') !!}
                                 <div class="aione-border-top mv-10"></div>
@@ -212,7 +216,7 @@
             }
         </style>
         <div class="m-20 aione-border p-15">
-            {!! Form::open() !!}
+            {!! Form::model(@$prefill) !!}
             @foreach($data['sections'] as $key => $section)
                 <div class="mb-30 persist-area">
                     <div class="p-10 font-size-20 light-blue darken-2 aione-border-bottom persist-header" >
@@ -241,6 +245,7 @@
     @if($data['displayBy'] == 'question' && $error['status'] == true)
         @php
             $sectionIndex = (request()->section)?request()->section:0;
+            $questionIndex = (request()->question)?request()->question:0;
         @endphp
         <div class="screen-wrapper position-relative" style="position: relative;">
             <div class="header position-absolute aione-align-center" style="position: absolute;">
@@ -282,24 +287,50 @@
                                 $prevSectionLastQuest  = count($data['sections'][$sectionIndex-1]['fields'])-1;
                             }
                         @endphp
-                        {!! FormGenerator::GenerateField($data['field_record']['field'], [], null, 'org') !!}
-                        <div class="actions" style="position: absolute;bottom: 0;left: 0;
-                        right: 0;padding: 0 5px;">
-                            @if($data['field_record']['index'] >= 1)
-                                <button class="aione-float-left" onclick="window.location.href='{{ $prev }}'">Previous</button>
-                            @elseif($sectionIndex != 0)
-                                <button class="aione-float-left" onclick="window.location.href='{{ $prevSection.'&question='.$prevSectionLastQuest }}'">Prev Section</button>
-                            @endif
-                            @if($data['field_record']['index'] != $totalFields)
-                                <button class="aione-float-right" onclick="window.location.href='{{ $next }}'">Next</button>
-                            @else
-                                <button class="aione-float-right" onclick="window.location.href='{{ $nextSection }}'">Next Section</button>
-                            @endif
-                            <div style="clear: both">
-                              
+                        {!! Form::model(@$prefill,['route'=>['embed.survey',request()->token,'section='.$sectionIndex,'question='.$questionIndex],'id'=>'question_form']) !!}
+                            {!! Form::hidden('prev_next_section',null,['class'=>'prev_next_section']) !!}
+                            {!! Form::hidden('prev_next_question',null,['class'=>'prev_next_question']) !!}
+                            {!! FormGenerator::GenerateField($data['field_record']['field'], [], null, 'org') !!}
+                            <div class="actions" style="position: absolute;bottom: 0;left: 0;
+                            right: 0;padding: 0 5px;">
+                                @if($data['field_record']['index'] >= 1)
+                                    <button class="aione-float-left prev" {{-- onclick="window.location.href='{{ $prev }}'" --}} data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']-1) }}">Previous</button>
+                                @elseif($sectionIndex != 0)
+                                    {!! Form::hidden('prev_next_section',($sectionIndex-1)) !!}
+                                    {!! Form::hidden('prev_next_question',$prevSectionLastQuest) !!}
+                                    <button class="aione-float-left" {{-- onclick="window.location.href='{{ $prevSection.'&question='.$prevSectionLastQuest }}'" --}}>Prev Section</button>
+                                @endif
+                                @if($data['field_record']['index'] != $totalFields)
+                                    <button class="aione-float-right next" {{-- onclick="window.location.href='{{ $next }}'" --}} data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']+1) }}">Next</button>
+                                @else
+                                    {!! Form::hidden('prev_next_section',$sectionIndex+1) !!}
+                                    {!! Form::hidden('prev_next_question',0) !!}  {{-- $nextSection --}}
+                                    <button class="aione-float-right" {{-- onclick="window.location.href='{{ $nextSection }}'" --}}>Next Section</button>
+                                @endif
+                                <div style="clear: both">
+                                  
+                                </div>
                             </div>
-                        </div>
+                        {!! Form::close() !!}
                     @endif
+                    <script type="text/javascript">
+                        $('.prev').click(function(e){
+                            e.preventDefault();
+                            var prev_next_section = $(this).data('section');
+                            var prev_next_question = $(this).data('question');
+                            $('.prev_next_section').val(prev_next_section);
+                            $('.prev_next_question').val(prev_next_question);
+                            $('#question_form').submit();
+                        });
+                        $('.next').click(function(e){
+                            e.preventDefault();
+                            var prev_next_section = $(this).data('section');
+                            var prev_next_question = $(this).data('question');
+                            $('.prev_next_section').val(prev_next_section);
+                            $('.prev_next_question').val(prev_next_question);
+                            $('#question_form').submit();
+                        });
+                    </script>
                  </div>
             </div>
             <div style="position: absolute;" class="footer font-size-18 aione-border-top position-absolute p-15 aione-align-center">
@@ -308,78 +339,6 @@
         </div>
     @endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 </div>
-<script type="text/javascript">
 
-$(document).ready(function(){
-
-    $("[type='checkbox'][value='996'], [type='checkbox'][value='998'] ").on('click', function(e){
-        none = $(this).val();
-         $(this).parent().siblings('.field-option').children("[type='checkbox']").prop('checked', false);
-        console.log(1123);
-
-    });
-
-    $("[type='checkbox']").on('click', function(e){
-
-         $(this).parent().siblings('.field-option').find("[type='checkbox'][value='996'], [type='checkbox'][value='998']").prop('checked', false);
-    });
-
-    // $("[type='checkbox'][value='998']").on('click', function(e){
-    //     none = $(this).val();
-    //     alert(none);
-
-    // });
-    field_id = $("#field_id").val();
-    setTimeout(function(){ 
-    $("#field_"+field_id).show(); 
-     }, 10);
-
-	$('div.sec').on('blur','input:text, textarea',function(){
-		$inputFields =  $("div.sec input, textarea , select");
-		var items = 0;
-		$.each($inputFields, function($field) {
-				if($inputFields[$field].value.length > 0) { ++items; }
-			//console.log('val '+ $inputFields[$field].value, 'count'+items);
-			 });
-		sec_id = $("#sec_id").val();
-		sec_count =  $("#sec_que_count_"+sec_id).text();
-		percent = items/sec_count*100;
-		$("#"+sec_id).text(items);
-		$(".progress_bar_"+sec_id).css('width',percent+'%');
-		$(".progress_val_"+sec_id).text(percent+'% Completed');
-	});
-
-		// $('div.sec').on('change','select', function(){
-			
-		// 	$inputFields =  $("div.sec select, input, textarea");
-		// 	var items = 0;
-  //   		$.each($inputFields, function($field) {
-  //   			console.log($field);
-  //     			if($inputFields[$field].value.length > 0) { ++items; }
-  //  			 });
-  //   		sec_id = $("#sec_id").val();
-  //   		sec_count =  $("#sec_que_count_"+sec_id).text();
-  //   		percent = items/sec_count*100;
-  //   		$("#"+sec_id).text(items);
-  //   		$(".progress_bar_"+sec_id).css('width',percent+'%');
-  //   		$(".progress_val_"+sec_id).text(percent+'% Completed');
-
-		// });
-});
-</script>
 @endsection
