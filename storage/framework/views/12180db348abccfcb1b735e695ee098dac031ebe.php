@@ -64,7 +64,7 @@
                         <button class="aione-button bg-light-blue bg-darken-2 white save_button display-none mb-20">Save Chart</button>
                     <?php echo Form::close(); ?>
 
-            </div> 
+            </div>
         </div> 
     </div>
 </div>
