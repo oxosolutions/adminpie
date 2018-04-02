@@ -27,4 +27,13 @@
         }
     }
 @endphp
-{!!Form::textarea($name,null,$fieldOptionsArray)!!}
+@if(isset($options['default_value']) && $options['default_value'] != '')
+    @php
+        $default_value = $options['default_value'];
+    @endphp
+@else
+    @php
+        $default_value = null;
+    @endphp
+@endif
+{!!Form::textarea($name,$default_value,$fieldOptionsArray)!!}

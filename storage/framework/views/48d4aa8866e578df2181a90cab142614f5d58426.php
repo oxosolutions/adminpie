@@ -21,7 +21,6 @@ if($is_visualization){
 		foreach ($settings as $key => $value) {
 			$visual_settings[$value['key']] = $value['value'];
 		}
-		dd($visual_settings);
 	}
 	
 }

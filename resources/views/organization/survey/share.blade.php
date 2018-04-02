@@ -38,6 +38,23 @@ $id = "";
 				</div>
 				<div class="clear"></div>
 			</div>
+            <div class="share-link">
+                <div class="title">
+                    Embed Code
+                </div>
+                <div class="body-wrapper">
+                    <div class="link-field">
+                        @php
+                            $iFrameCode = '<iframe src="'.route('embed.survey',$token).'" width="1024" height="780" scrolling="no"></iframe>';
+                        @endphp
+                        {!! FormGenerator::GenerateField('embed_code',['default_value'=>$iFrameCode]) !!}
+                    </div>
+                    <div class="copy-button">
+                        <button id="copy_code_button" onclick="copyToClipboard('#input_embed_code')"> Copy Code</button>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
 			<div class="share-user">
 				
 				<div class="title">
@@ -172,7 +189,11 @@ $id = "";
 	</style>
 	<script type="text/javascript">
 		document.getElementById("copy_button").addEventListener("click", function() {
-		    copyToClipboard(document.getElementById("input_shareable_link"));
+            copyToClipboard(document.getElementById("input_shareable_link"));
+           
+        });
+        document.getElementById("copy_code_button").addEventListener("click", function() {
+		    copyToClipboard(document.getElementById("input_embed_code"));
 		   
 		});
 		function copyToClipboard(elem) {

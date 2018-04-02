@@ -272,8 +272,8 @@ class DatasetController extends Controller
                             $res[$rKey][$col] = $d = $this->set_datas($rValue, $cValue, $data['columns'] , $children);
                            // dd($d);
                         }else{
-                            $child_col = $data['columns'][$cValue['id']];
-                           $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
+                            $child_col = @$data['columns'][$cValue['id']];
+                           $res[$rKey][$col][$child_col] = @$rValue[$cValue['id']];
                         }
                         // if($this->check_child($cValue)){
                         //     @$child_col = $data['columns'][$cValue['id']];
@@ -481,11 +481,13 @@ class DatasetController extends Controller
                         'actions' => [
                                         'view'=>['route'=>'view.dataset','title'=>'View'],
                                         'edit'=>['route'=>'edit.dataset','title'=>'Edit'],
-                                        'define'=>['route'=>'define.dataset','title'=>'Define'],
+                                        'structure'=>['route'=>'structure.dataset','title'=>'Structure'],
+                                        // 'define'=>['route'=>'define.dataset','title'=>'Define'],
                                         'filter'=>['route'=>'filter.dataset','title'=>'Filter'],
-                                        'api'=>['route'=>'api.dataset','title'=>'Api'],
+                                        'api'=>['route'=>'api.dataset','title'=>'API'],
                                         'validate'=>['route'=>'validate.dataset','title'=>'Validate'],
-                                        'visualize'=>['route'=>'visualize.dataset','title'=>'Visualization'],
+                                        // 'visualize'=>['route'=>'visualize.dataset','title'=>'Visualization'],
+                                        'operations'=>['route'=>'options.dataset','title'=>'Operations'],
                                         'collaborate'=>['route'=>'collaborate.dataset','title'=>'Collaborate'],
                                         'customize'=>['route'=>'customize.dataset','title'=>'Customize'],
                                         'delete'=>['route'=>'delete.dataset','title'=>'Delete','class'=>'red']
@@ -1170,7 +1172,8 @@ class DatasetController extends Controller
                 $this->putvalueByRefference($datasetTable, $compareDataset, $compareFrom_datasetTable, $compareWith_compareDataset, $fillValueWith_compareDataset, $columnName);
             }
             if($request->column_action == 'formula'){
-                $this->putValueWithFormula($datasetTable, $columnName, $request->formula);
+                // dd($request->all());
+                $this->putValueWithFormula($datasetTable, $columnName, $request->completed_formula);
             }
             if($ifRecordsExist != null){
                 DB::table(str_replace('ocrm_','',$datasetTable))->where('id',$ifRecordsExist->id)->update([$columnName=>$columnHeader]);
@@ -1659,6 +1662,10 @@ class DatasetController extends Controller
     }
 
     public function updateDetails(Request $request, $id){
+        $rules = [
+            'dataset_name' => 'required'
+        ];
+        $this->validate($request,$rules);
         $model = Dataset::find($id);
         $model->dataset_name = $request->dataset_name;
         $model->description = $request->dataset_description;
@@ -1805,6 +1812,24 @@ class DatasetController extends Controller
     public function datasetOperations()
     {
         return view('organization.dataset.operations');
+    }
+
+    public function structureDataset($id)
+    {
+        if(!$this->validateUser($id)){
+            return redirect()->route('list.dataset');
+        }
+        $dataset = Dataset::find($id);
+        $dataset->dataset_description = $dataset->description;
+        $datasetTable = Dataset::find($id)->dataset_table;
+        try{
+            $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
+            $columns = collect($headers)->except(['id','status','parent']);
+        }catch(\Exception $e){
+            $columns = [];
+            $dataset = [];
+        }
+        return view("organization.dataset.structure",['columns'=>$columns,'dataset'=>$dataset]);
     }
    
 }

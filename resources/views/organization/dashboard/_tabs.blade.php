@@ -11,14 +11,14 @@
 
  
 <nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal aione-dashboard-tabs"  >
-  <ul id="sortable" class="aione-tabs">
+  <ul id="sortable" class="aione-tabs ">
     @foreach(@$dashboards as $key => $tab)
-      <li class="aione-tab dashboard-tab
+      <li class="aione-tab aione-tooltip dashboard-tab
         @if($tab['slug'] == $current_dashboard)
         nav-item-current
         @endif
-        " dashboard-index="{{$tab['slug']}}" >
-        <a href="{{$key}}"><span class="nav-item-text">{{@$tab['title']}}</span></a>
+        " dashboard-index="{{$tab['slug']}}" title="{{@$tab['title']}}" >
+        <a href="{{$key}}"><span class="nav-item-icon white line-height-20 font-size-13 font-weight-700" style="background: #1c202c">{{@$tab['title'][0]}}</span><span class="nav-item-text">{{@$tab['title']}}</span></a>
       </li>
     @endforeach	
     <div class="clear"></div>
@@ -29,6 +29,19 @@
   @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_dashboard','heading'=>'Add Dashboard','button_title'=>'Save','section'=>'dashboard']])
 {{Form::close()}}
 
+<style type="text/css">
+  .aione-dashboard-tabs .nav-item-current .nav-item-icon{
+        background: #1c202c !important;
+        color: white !important;
+
+  }
+  .aione-dashboard-tabs .nav-item-icon{
+        background: #ffffff !important;
+        color: #1c202c !important;
+        margin-right: 8px !important;
+        
+  } 
+</style>
 
 <script type="text/javascript">
   $(document).ready(function(){

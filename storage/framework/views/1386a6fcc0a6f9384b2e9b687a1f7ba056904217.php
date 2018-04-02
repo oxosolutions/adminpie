@@ -11,7 +11,7 @@
 		</div>
 	<?php elseif($file->extension == 'jpg' || $file->extension == 'jpeg' || $file->extension == 'png'): ?>
 		<div gallery-item-id="<?php echo e($file->id); ?>" class="gallery-item">
-			<img src="<?php echo e(asset('media/'.$file->original_name)); ?>">
+			<img src="<?php echo e(asset(upload_path('media'))); ?>/<?php echo e($file->original_name); ?>">
 			<div class="desc">
 				<?php echo e($file->original_name); ?><br><span class="size">size: <?php echo e(number_format($file->size / 1024, 2) . ' KB'); ?></span>
 			</div>

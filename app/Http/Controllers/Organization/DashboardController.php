@@ -334,4 +334,27 @@ class DashboardController extends Controller
             return back();
         }
     }
+
+    public function saveChart(Request $request){
+        $existingWidgetsSettings = get_organization_meta('widget_settings');
+        if($existingWidgetsSettings == false){
+            $model = new OrganizationSetting;
+            $model->key = 'widget_settings';
+            $model->value = json_encode([$request->widget_id => ['selected_chart'=>['visualization'=>$request->visualization,'chart'=>$request->chart]]]);
+            $model->type = 'web';
+            $model->save();
+            Session::flash('success','Widget settings saved Successfully');
+            return back();
+        }else{
+            $oldSettings = json_decode($existingWidgetsSettings,true);
+            $anotherSettings = $oldSettings[$request->widget_id];
+            $anotherSettings['selected_chart'] = ['visualization'=>$request->visualization,'chart'=>$request->chart];
+            $oldSettings[$request->widget_id] = $anotherSettings;
+            $model = OrganizationSetting::where(['key'=>'widget_settings'])->first();
+            $model->value = json_encode($oldSettings);
+            $model->save();
+            Session::flash('success','Widget settings saved Successfully!');
+            return back();
+        }
+    }
 }

@@ -793,14 +793,26 @@ class VisualisationController extends Controller
        return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
     }
 
-	public function embedVisualization(Request $request, $withLayout = true){
+	public function embedVisualization(Request $request, $token = null, $withLayout = true, $chart_id = null){
+        
+        if($token != null){
+            $visualization = Visualization::where(['embed_token'=>$token])->orWhere(['id'=>$token])->first();
+            if($visualization != null){
+                $id = $visualization->id;
+            }else{
+                $id = null;
+            }
+        }else{
+            $id = $request->id;
+        }
+
 		$visualization = Visualization::with([
 
 		'dataset','charts'=>function($query){
 
 				$query->orderby('order','ASC')->with('meta');
 
-		},'meta'])->find($request->id); //getting dataset, visualization charts and meta from eloquent relations
+		},'meta'])->find($id); //getting dataset, visualization charts and meta from eloquent relations
 		if($visualization != null){
 
 			if($visualization->charts->isEmpty()){ //if there is not chart exist in generated visualization
@@ -881,7 +893,7 @@ class VisualisationController extends Controller
 						$records_array[] = array_values($record);
 					}
 					if(!empty($records_array)){ // if after filter or without filter there is no data in records list
-						if(!in_array($chart->chart_type, ['CustomMap','ListChart'])){
+						if(!in_array($chart->chart_type, ['CustomMap','ListChart','NumberChart'])){
 							$lavaschart->addRows($records_array); // lavachart add only indexed array of arrays (inserting multiple rows in to lavacharts datatable)
 							$visualization_settings = $this->getMetaValue($chart->meta,'chart_settings');
 
@@ -890,7 +902,11 @@ class VisualisationController extends Controller
 							}else{
 								$visualization_settings = [];
 							}
-							lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
+                            try{
+                                lava::{$chart->chart_type}('chart_'.$key,$lavaschart)->setOptions($visualization_settings);
+                            }catch(\Exception $e){
+                                $e->getMessage();
+                            }
 						}elseif($chart->chart_type == 'CustomMap'){
 							$drawer_array['visualizations']['chart_'.$key]['map'] = $this->getSVGMaps($chart->meta); // get svg maps global or local
 							$mapSettings = $this->getMetaValue($chart->meta,'chart_settings');
@@ -906,7 +922,13 @@ class VisualisationController extends Controller
 								$list_array[] = array_combine($headers, $inner_array);
 							}
 							$drawer_array['visualizations']['chart_'.$key]['list'] = $list_array;
-						}
+						}elseif($chart->chart_type == 'NumberChart'){
+                            $cardDetails = [];
+                            $cardHeader = ucwords(str_replace('_',' ',$headers[0]));
+                            $cardDetails['header'] = $cardHeader;
+                            $cardDetails['count'] = count($records_array);
+                            $drawer_array['visualizations']['chart_'.$key]['card'] = $cardDetails;
+                        }
 						/*
 						* Prepare data for draw visualization
 						* on front
@@ -977,7 +999,8 @@ class VisualisationController extends Controller
                                             'titles'=>$chartTitles, // contains all titles 
                                             'visualizations'=>$drawer_array, // data for draw all charts from lava charts
                                             'javascript'=>$javascript, //data for custom map popup details
-                                            'custom_map_data'=>[], //data for pop click event
+                                            'custom_map_data'=>[], //data for pop click event,
+                                            'chart_id' => $chart_id
                                         ]
                             );
             }
@@ -1154,6 +1177,21 @@ class VisualisationController extends Controller
     		VisualizationCharts::where('id', $v)->update(['order' => $k]);
     	}
     	return 'true';
+    }
+
+
+    /**
+     * Get all chart list by visualization id
+     * @param  Request $request having all posted data
+     * @return [json]        will return the json to api
+     */
+    public function getVisulizationCharts(Request $request){
+        if($request->has('visualization')){
+            $model = VisualizationCharts::where(['visualization_id'=>$request->visualization])->pluck('chart_title','id')->toArray();
+            return response()->json($model);
+        }else{
+            return response()->json([]);
+        }
     }
 
 }

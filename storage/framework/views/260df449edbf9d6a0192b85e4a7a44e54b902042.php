@@ -158,7 +158,7 @@ $page_title_data = array(
                                             <?php else: ?> 
                                                 <li class="dd-item" data-id="<?php echo e($mVal['id']); ?>">
                                             <?php endif; ?>
-                                                    <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_4" data-value="Designation"></i></a>
+                                                    <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="<?php echo e($mVal['id']); ?>" data-value="Designation"></i></a>
                                                     <div class="dd-handle">
                                                         <?php if(isset($data['columns'][$mVal['id']])): ?>
                                                             <?php echo e($data['columns'][$mVal['id']]); ?>
@@ -173,8 +173,8 @@ $page_title_data = array(
                                                         <?php $__currentLoopData = $mVal['children']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $nKey => $nValue): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                             <ol class="dd-list">
                                                                 <li class="dd-item" data-id="<?php echo e($nValue['id']); ?>">
-                                                                    <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="column_2" data-value="Employee Name"></i></a>
-                                                                    <div class="dd-handle"> <?php echo e($data['columns'][$nValue['id']]); ?>
+                                                                    <a href="javascript:;"><i class="fa fa-trash removeColumn" style="color:#757575;float:right;cursor:pointer;font-size:18px;padding-left:10px;line-height:42px;width:42px;" data-key="<?php echo e($nValue['id']); ?>" data-value="Employee Name"></i></a>
+                                                                    <div class="dd-handle"> <?php echo e(@$data['columns'][$nValue['id']]); ?>
 
                                             
                                                                         <span class="text-success pull-right fs11 fw600" style="font-size:10px;"><?php echo e($nValue['id']); ?></span>

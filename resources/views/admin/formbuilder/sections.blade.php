@@ -38,7 +38,87 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data)
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
+<style type="text/css">
+	.edit-form-detail,.edit-section-detail,.add-section,.add-field{
+		display: none;
+	}
+	.module-wrapper > .list-container{
+		display: none;
+	}
+	.module-wrapper.sidebar-active > .list-container{
+		display: block;
+	
+	}
+	.aione-breadcumb > div{
+		position: relative;
 
+	}
+	.aione-breadcumb > div > button{
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		display: none;
+
+	}
+	.aione-breadcumb > div:hover > button{
+		display: block;
+
+	}
+	.aione-breadcumb > div:after{
+		    content: '';
+    border-left: 15px solid #ffffff;
+    border-top: 21px solid transparent;
+    border-bottom: 21px solid transparent;
+    height: 0;
+    position: absolute;
+    width: 0;
+    padding: 0;
+    margin-left: 20px;
+        top: 0;
+    right: -15px;
+	}
+	.aione-breadcumb > div:before{
+		    content: '';
+   border-left: 15px solid transparent;
+    border-top: 21px solid #FFFFFF;
+    border-bottom: 21px solid #FFFFFF;
+    height: 0;
+    position: absolute;
+    width: 0;
+    padding: 0;
+    margin-left: -35px;
+    top: 0;
+    left: 20px;
+	}
+	.aione-breadcumb > div:first-child:before{
+		content: '';
+		border: none;
+	}
+	.aione-breadcumb > div:first-child{
+		padding-left: 20px;
+	}
+    .aione-tooltip:hover:before{
+        z-index: 9
+    }
+</style>
+<script type="text/javascript">
+	$('body').on('click','.edit-form-detail-button',function(){
+		$('.edit-form-detail').toggle();
+	});
+	$('body').on('click','.edit-section-detail-button',function(){
+		// console.log("edit");
+		$('.edit-section-detail').toggle();
+	});
+	$('body').on('click','.add-section-button',function(){
+		$('.add-section').toggle();
+	});
+	$('body').on('click','.add-field-button',function(){
+		$('.add-field').toggle();
+	});
+	$('body').on('click','.toggle-sidenav',function(){
+		$('.module-wrapper').toggleClass('sidebar-active');
+	});
+</script>
 @if(!empty($error))
  @include('organization.survey._tabs')
     <div class="aione-message warning">
@@ -57,20 +137,51 @@ $page_title_data = array(
     @else
         @include('admin.formbuilder._tabs')
     @endif
+    <div class="aione-border  mb-20 bg-grey bg-lighten-3 p-5">
+    	<div class="display-inline-block p-10 toggle-sidenav">
+    		<i class="fa fa-bars"></i>
+    	</div>
+    	<div class="display-inline-block aione-breadcumb">
+    		<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
+	    		<b>Form:</b><a href=""> {{@$title}} </a>
+	    		<button class="aione-button  edit-form-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+	    	</div>
+
+	    	@if(Request::has('sections'))
+    	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
+    	    		<b>Section:</b><a href=""> {{ $sections->where('id',request()->sections)->first()->section_name }} </a>
+    	    		<button class="aione-button edit-section-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+    	    	</div>
+            @endif
+            @if(Request::has('field'))
+                @php
+                    $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
+                @endphp
+    	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
+    	    		<b>Field:</b> {{ $sectionFields->where('id',request()->field)->first()->field_title }}  
+    	    		{{-- <button class="aione-button edit-section-detail-button" title="Edit Form Details"><i class="fa fa-pencil"></i></button> --}}
+    	    	</div>
+            @endif
+    	</div>
+	    	
+    	{{-- <div class="pv-10 display-inline-block ml-20">
+    		Field: basic details <button class="aione-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+    	</div> --}}
+    </div>
     <input type="hidden" name="_token" value="{{csrf_token() }}">
 
     
 
-        <div class="module-wrapper">
-            <div class=" mb-10">
-                  @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
+        <div class="module-wrapper ">
+            <div class=" mb-10 edit-form-detail">
+                  {{-- @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())) --}}
                         {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
                             <input type="hidden" name="id" value="{{$form->id}}">
                             {!! FormGenerator::GenerateForm('edit_form_form') !!}
                         {!! Form::close() !!}
 
                         
-                    @endif
+                    {{-- @endif --}}
             </div>
             <div class="list-container">
                 <nav id="aione_nav" class="aione-nav light vertical">
@@ -138,33 +249,36 @@ $page_title_data = array(
                         $data['section_description'] = $value->section_description;
                     @endphp
                 @endforeach
-              
+                
+
+                {!!Form::model($data,['route'=>[$route_slug.'section.update',request()->form_id]])!!}
+                    <input type="hidden" name="section_id" value="{{Request::input('sections')}}" />
+                    <div class="row no-margin-bottom edit-section-detail">
+                        
+                        {!! FormGenerator::GenerateForm('form_generator_section_edit') !!}
+                        @if(@$errors->has())
+                            @foreach($errors->all() as $kay => $err)
+                                <div style="color: red">{{$err}}</div>
+                            @endforeach
+                        @endif
+
+                      
+
+                    </div>
+                {!!Form::close()!!}
+
+
                 @if(!Request::has('field'))
 
-                    @if(Request::has('sections') && Request::input('sections') != 'all')
-                        {!!Form::model($data,['route'=>[$route_slug.'section.update',request()->form_id]])!!}
-                            <input type="hidden" name="section_id" value="{{Request::input('sections')}}" />
-                            <div class="row no-margin-bottom">
-                                
-                                {!! FormGenerator::GenerateForm('form_generator_section_edit') !!}
-                                @if(@$errors->has())
-                                    @foreach($errors->all() as $kay => $err)
-                                        <div style="color: red">{{$err}}</div>
-                                    @endforeach
-                                @endif
-
-                              
-
-                            </div>
-                        {!!Form::close()!!}
-                    @endif
+                    {{-- @if(Request::has('sections') && Request::input('sections') != 'all') --}}
+                        
+                    {{-- @endif --}}
 
                     @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
                        {{--  {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
                             <input type="hidden" name="id" value="{{$form->id}}">
                             {!! FormGenerator::GenerateForm('edit_form_form') !!}
                         {!! Form::close() !!} --}}
-
                         {!! Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
                             <div class="add-section">
                                
@@ -178,7 +292,7 @@ $page_title_data = array(
                         {!!Form::close()!!}
                     @endif
                     @if(Request::has('sections') && Request::input('sections') != 'all')
-                        {!!Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')],'class'=>'add-field-mini-form'])!!}
+                        {!!Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')],'class'=>'add-field-mini-form add-field'])!!}
                                 {!! FormGenerator::GenerateForm('add_field_from_section') !!}  
                                 {!!Form::hidden('type',$form->type)!!}
                         {!!Form::close()!!}
@@ -188,10 +302,13 @@ $page_title_data = array(
                         
                         @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
                             <div id="aione_form_section_header" class="aione-form-section-header">
-                                <div class="aione-row">
-                                    <h3 class="aione-form-section-title aione-align-center">Sections</h3>
-                                    <h4 class="aione-form-section-description aione-align-center">List of all sections in this form.</h4>
+                                <div class="aione-row aione-float-left">
+                                    <h3 class="aione-form-section-title aione-align-left">Sections</h3>
+                                    <h4 class="aione-form-section-description aione-align-left">List of all sections in this form.</h4>
+
                                 </div> <!-- .aione-row -->
+                        		<button class="add-section-button aione-float-right aione-button pv-10">+ Add New Section</button>
+                        		<div class="clear"></div>
                             </div>
                             @if($sections->count() > 0)
                                 @foreach($sections as $k => $section)
@@ -256,10 +373,12 @@ $page_title_data = array(
                         @endif
                         @if(Request::has('sections') && Request::input('sections') != 'all')
                             <div id="aione_form_section_header" class="aione-form-section-header">
-                                <div class="aione-row">
+                                <div class="aione-row aione-float-left">
                                     <h3 class="aione-form-section-title aione-align-left ">Fields</h3>
                                     <h4 class="aione-form-section-description aione-align-left">List of all fields in this section</h4>
                                 </div> <!-- .aione-row -->
+                                <button class="add-field-button aione-float-right aione-button pv-10">+ Add New Field</button>
+                        		<div class="clear"></div>
                             </div>
                             @php
                                 $fields = $sections->where('id',Request::input('sections'))->first()->fields;
@@ -436,10 +555,15 @@ $page_title_data = array(
         }
         .module-wrapper > .Detail-container{
             float: right;
-            width: 74%;
-            border: 1px solid #e8e8e8;
-            padding: 10px;
+            width: 100%;
+           /* border: 1px solid #e8e8e8;
+            padding: 10px;*/
            
+        }
+          .module-wrapper.sidebar-active > .Detail-container{
+            
+            width: 74%;
+                       
         }
         .list-modules > li > div,.list-sub-modules > li{
             border: 1px solid #e8e8e8;
@@ -505,7 +629,8 @@ $page_title_data = array(
         .Detail-container .collection{
             border: none;
                 padding: 15px;
-                border: 1px solid #e8e8e8
+                border: 1px solid #e8e8e8;
+                margin: 0;
         }
         .Detail-container .collection .collection-item{
             border: 1px solid #e8e8e8;

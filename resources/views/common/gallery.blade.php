@@ -11,7 +11,7 @@
 		</div>
 	@elseif($file->extension == 'jpg' || $file->extension == 'jpeg' || $file->extension == 'png')
 		<div gallery-item-id="{{ $file->id }}" class="gallery-item">
-			<img src="{{ asset('media/'.$file->original_name) }}">
+			<img src="{{ asset(upload_path('media'))}}/{{ $file->original_name }}">
 			<div class="desc">
 				{{ $file->original_name }}<br><span class="size">size: {{ number_format($file->size / 1024, 2) . ' KB' }}</span>
 			</div>

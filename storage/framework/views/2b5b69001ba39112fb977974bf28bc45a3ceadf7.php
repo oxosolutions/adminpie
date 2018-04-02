@@ -214,6 +214,10 @@
     opacity: 1;
     background-color: transparent;
 }
+.aione-tooltip:before{
+min-width: 220px;
+max-width: 400px;
+}
 </style>
 <!-- load emmet code and snippets compiled for browser -->
 <script src="https://cloud9ide.github.io/emmet-core/emmet.js"></script>
@@ -495,6 +499,9 @@
 		  theme: "aione",
 		  width: '100%'
 		});
+
+        $('.select2-structure-dataset').select2();
+
 		$('.non-repeater .field-type-multi_select select option[value=""]').remove();
 
 		$('.aione-form-multiselect-all').click(function(e){

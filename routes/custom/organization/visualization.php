@@ -19,6 +19,11 @@
 
 	Route::get('/chartsettings/',['as'=>'get.chart.settings','uses'=>'visualization\VisualisationController@getChartSettings']);
 	Route::post('visualization/chartssettings/save',['as'=>'save.chart.settings','uses'=>'visualization\VisualisationController@saveChartSettings']);
-	Route::get('/visualization/{embed_token}' ,['as'=>'public.view.visualization','uses'=>'visualization\VisualisationController@embedVisualization']);
-	Route::post('/visualization/chart_sort' ,['as'=>'visualization.chart.sort','uses'=>'visualization\VisualisationController@sortChart']);
+    Route::post('/visualization/chart_sort' ,['as'=>'visualization.chart.sort','uses'=>'visualization\VisualisationController@sortChart']);
+	Route::match(['get','post'],'/visualization/{embed_token}' ,['as'=>'public.view.visualization','uses'=>'visualization\VisualisationController@embedVisualization']);
+
+
+    //Ajax Routes
+    Route::get('/charts-list',['as'=>'get.visualization.charts','uses'=>'visualization\VisualisationController@getVisulizationCharts']);
+	
 ?>

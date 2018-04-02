@@ -47,6 +47,7 @@
 
 							<li><a class="btn-floating resizeWidget" href="javascript:;" data-target="size-adjust" data-widget="<?php echo e(@$widget_id); ?>" data-current_size="<?php echo e(@$widget_settings[@$widget_id]['size']); ?>" ><i  class="aione-icon material-icons">more_horiz</i></a>
 							</li>
+							<li><a class="btn-floating red  aione-tooltip" href="#" data-target="select-chart" title="Select a chart" data-widget="" data-slug=""><i class="fa fa-bars" style="transform: rotate(0deg);"></i></a></li>
 							<!--
 							<li><a class="btn-floating yellow darken-1 aione-widget-collapse  aione-tooltip"  title="Minimize Widget"><i class="aione-icon material-icons">launch</i></a></li>
 							<li><a class="btn-floating blue"  title="XYZ Widget"><i class="aione-icon material-icons  aione-tooltip">attach_file</i></a></li>

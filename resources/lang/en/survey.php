@@ -10,5 +10,16 @@ return [
     'survey_no_warning'						=> "No Warning.",
     'survey_no_error'						=> "No error.",
     'survey_with_no_permisson'				=> "don't have permission!.",
+    'survey_tab_edit_link'					=> "Edit",
+    'survey_tab_preview_link'				=> "Preview",
+	'survey_tab_settings_link'				=> "Settings",
+	'survey_tab_statistics_link'			=> "Statistics",
+	'survey_tab_structure_link'				=> "Structure",
+	'survey_tab_raw_data_link'				=> "Raw data",
+	'survey_tab_report_link'				=> "Report",
+	'survey_tab_custom_report_link'			=> "Custom Report",
+	'survey_tab_collaborate_link'			=> "Collaborate",
+	'survey_tab_customize_link'				=> "Customize",
+
 
 ];

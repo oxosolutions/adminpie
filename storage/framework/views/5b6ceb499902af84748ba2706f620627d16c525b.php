@@ -5,7 +5,22 @@
 	$field_validations = null;
 	$field_validation = "";
     $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
-	$field_validations = FormGenerator::GetMetaValue($collection->fieldMeta,'field_validations');
+    $field_validations = FormGenerator::GetMetaValue($collection->fieldMeta,'field_validations');
+	$field_tooltip = FormGenerator::GetMetaValue($collection->fieldMeta,'field_tooltip');
+    $requiredStatus = false;
+    $fieldTooltipStatus = false;
+    if(@$field_validations != '' && $field_validations != null){
+        $requiredValidate = json_decode($field_validations, true);
+        foreach ($requiredValidate as $key => $validate) {
+            if(@$validate['field_validation'] == 'required'){
+                $requiredStatus = true;
+            }
+        }
+    }
+
+    if(trim($field_tooltip) != ''){
+        $fieldTooltipStatus = true;
+    }
 
 	$field_conditions = FormGenerator::GetMetaValue($collection->fieldMeta,'field_conditions');
 
@@ -31,7 +46,18 @@
 
 				<label for="input_<?php echo e($collection->field_slug); ?>">
 					<?php if(!empty(@$collection->field_title) && @$settings['form_field_show_label']): ?>
-						<h4 class="field-title" id="<?php echo e($collection->field_title); ?>"><?php echo $collection->field_title; ?></h4>
+						<h4 class="field-title" id="<?php echo e($collection->field_title); ?>">
+						<?php echo $collection->field_title; ?>
+
+						<?php if($requiredStatus): ?>
+						  <span class="red">*</span>
+						<?php endif; ?>
+
+						<?php if($fieldTooltipStatus): ?>
+						  <span class="aione-tooltip field-tooltip" title="<?php echo @$field_tooltip; ?>"><i class="fa fa-question-circle"></i></span>
+						<?php endif; ?>
+
+						</h4>
 					<?php endif; ?>
 					<?php if(!empty(@$collection->field_description) && @$settings['form_field_show_description']): ?>
 						<p class="field-description"><?php echo $collection->field_description; ?></p>

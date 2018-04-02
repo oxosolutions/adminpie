@@ -34,7 +34,8 @@ class Visualization extends Model
             "LineChart"		=> 	"line Chart",
             "CustomMap" 	=> 	"Custom Map",
             "TableChart" 	=> 	"Table chart",
-            "ListChart" 	=> 	"List chart"
+            "ListChart" 	=> 	"List chart",
+            "NumberChart"   =>  "Number Chart"
    		];
    }
 
@@ -96,6 +97,10 @@ class Visualization extends Model
    public static function mapsList(){
       $maps = CustomMaps::get();
       return $maps;
+   }
+
+   public static function visualizationList(){
+        return self::pluck('name','id');
    }
 
 

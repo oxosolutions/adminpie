@@ -36,7 +36,7 @@ $page_title_data = array(
         </div>
         <div class="col l4 gallery-form" style="height: 100%;overflow: auto">
             <form id="gallery-form">
-                <img src="<?php echo e(asset('media/')); ?>" width="100%">
+                <img src="<?php echo e(upload_path('media')); ?>" width="100%">
                 
                 <?php echo FormGenerator::GenerateForm('survey_add_media_popup_form'); ?>
 
@@ -259,14 +259,12 @@ $page_title_data = array(
                url = 'gallery-item';
             }
 
-            console.log(route()+'/'+url);
-
+            var linkTo = $(this).find('img').attr('src');
             $.ajax({
                 type : 'POST',
                 url : route()+'/'+url,
                 data : { id : id , test : 'test'},
                 success : function(res){
-                    console.log(res);
                     $('#gallery-form > img').attr('src','');
                     var url = $('#gallery-form > img').attr('src');
                     $('#gallery-form > img').attr('src',url+'/media/'+res.original_name);
@@ -274,7 +272,7 @@ $page_title_data = array(
                     $('.gallery-form').find('input[name=caption]').val(res.caption);
                     $('.gallery-form').find('input[name=slug]').val(res.slug);
                     $('.gallery-form').find('textarea[name=description]').val(res.description);
-                    $('.gallery-form').find('input[name=link_to]').val(res.link_to);
+                    $('.gallery-form').find('input[name=link_to]').val(linkTo);
                     $('.gallery-form').find('input[name=title]').val(res.original_name);
                     $('.gallery-form').find('input[name=gallery-id]').val(res.id);
                         if(res.extension == "mp3"){

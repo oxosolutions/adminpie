@@ -41,7 +41,8 @@ $operators= [
         </ul>
     </div>
 @endif
-{!! Form::open(['route'=>['results.survey',$id],'method' => 'post' ]) !!}
+{!! Form::open(['route'=>['results.survey',$id],'method' => 'post', 'id'=>'filter_records']) !!}
+    {!! Form::hidden('page',null) !!}
 	<div  class="field-wrapper field-wrapper-SLUG field-wrapper-type-select ">
 		<div class="ar">
 			<div class="ac l50">
@@ -284,7 +285,23 @@ $('#more_condition').on('click',function(event){
 	childs = $("#child").html();
 	$("#append").append(childs);
 });
-
+$('.pagination li a').click(function(e){
+    e.preventDefault();
+    var page = getParameterByName('page',$(this).attr('href'));
+    console.log(page);
+    $('input[name=page]').val(page);
+    $('#filter_records').submit();
+    return false;
+});
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
 function remove_parent(event){
 	$(event).parent('div').remove();
 }

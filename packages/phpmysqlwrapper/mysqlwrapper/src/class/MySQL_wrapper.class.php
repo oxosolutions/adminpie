@@ -906,7 +906,6 @@ class MySQL_wrapper {
 			$line = fgets($f);
 			fclose($f);
 			$data = explode($delimiter, str_replace($enclosure, NULL, trim($line)));
-
 			$columns = array();
 			$i = 1;
 			

@@ -4,29 +4,40 @@
   }else{
     @$id = @request()->route()->parameters()['form_id'];
   }
-  // dump(Request::route()->action['as']);
+ 
  ?>
 <nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal"  >
   <ul id="sortable_tabs" class="aione-tabs">
-       <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'view.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('view.dataset',$id)); ?>"><span class="nav-item-text">View</span></a>
+       <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'view.dataset')?'nav-item-current':''); ?>" title="View">
+        <a href="<?php echo e(route('view.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-tv">
+                    </i></span><span class="nav-item-text">View</span></a>
       </li>
-       <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'edit.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('edit.dataset',$id)); ?>"><span class="nav-item-text">Edit </span></a>
+       <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'edit.dataset')?'nav-item-current':''); ?>" title="Edit">
+        <a href="<?php echo e(route('edit.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-edit">
+                    </i></span><span class="nav-item-text">Edit</span></a>
       </li>
-       
-        <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'filter.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('filter.dataset',$id)); ?>"><span class="nav-item-text">Data Filter</span></a>
+       <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'structure.dataset')?'nav-item-current':''); ?>" title="Edit">
+        <a href="<?php echo e(route('structure.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-table">
+                    </i></span><span class="nav-item-text">Structure</span></a>
       </li>
-      <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'api.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('api.dataset', $id)); ?>"><span class="nav-item-text">API</span></a>
+     
+     
+        <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'filter.dataset')?'nav-item-current':''); ?>" title="Data Filter">
+        <a href="<?php echo e(route('filter.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-filter">
+                    </i></span><span class="nav-item-text">Data Filter</span></a>
       </li>
-        <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'validate.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('validate.dataset',$id)); ?>"><span class="nav-item-text">Validate</span></a>
+      <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'api.dataset')?'nav-item-current':''); ?>" title="API">
+        <a href="<?php echo e(route('api.dataset', $id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-cloud">
+                    </i></span><span class="nav-item-text">API</span></a>
       </li>
-      
-      <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'options.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('options.dataset',$id)); ?>"><span class="nav-item-text">Operations</span></a>
+        <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'validate.dataset')?'nav-item-current':''); ?>" title="Validate">
+        <a href="<?php echo e(route('validate.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-check-circle">
+                    </i></span><span class="nav-item-text">Validate</span></a>
+      </li>
+    
+      <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'options.dataset')?'nav-item-current':''); ?>" title="Operations">
+        <a href="<?php echo e(route('options.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-asterisk">
+                    </i></span><span class="nav-item-text">Operations</span></a>
       </li>
       <?php 
             $dataset_user_id = '';
@@ -39,18 +50,26 @@
        ?>
 
       <?php if($dataset_user_id == $auth_user_id): ?>
-          <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'collaborate.dataset')?'nav-item-current':''); ?>">
-            <a href="<?php echo e(route('collaborate.dataset',$id)); ?>"><span class="nav-item-text">Collaborate</span></a>
+          <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'collaborate.dataset')?'nav-item-current':''); ?>" title="Collaborate">
+            <a href="<?php echo e(route('collaborate.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-share-square">
+                    </i></span><span class="nav-item-text">Collaborate</span></a>
           </li>
       <?php endif; ?>
-      <li class="aione-tab <?php echo e((Request::route()->action['as'] == 'customize.dataset')?'nav-item-current':''); ?>">
-        <a href="<?php echo e(route('customize.dataset',$id)); ?>"><span class="nav-item-text">Customize</span></a>
+      <li class="aione-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'customize.dataset')?'nav-item-current':''); ?>" title="Customize">
+        <a href="<?php echo e(route('customize.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="fa fa-wrench">
+                    </i></span><span class="nav-item-text">Customize</span></a>
       </li>
 
       
       <div class="clear"></div>
   </ul>
 </nav>
+<style type="text/css">
+  .aione-content{
+    overflow-x: hidden;
+  }
+</style>
+
 
 
 

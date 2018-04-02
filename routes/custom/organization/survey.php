@@ -7,9 +7,8 @@
 	Route::post('/survey/customize',					['as'=>'save.custom.survey','uses'=>'survey\SurveyController@save_custom']);
 	Route::get('/survey/structure/{id}',				['as'=>'structure.survey','uses'=>'survey\SurveyStatsController@survey_structure']);
 	Route::match(['get','post'],'/survey/reports/{id}', ['as'=>'survey.reports','uses'=>'survey\SurveyStatsController@reports']);
-	Route::get('/survey/create',						['as'=>'create.survey','uses'=>'survey\SurveyController@createSurvey']);
-	Route::POST('/survey/savet',						['as'=>'save.survey','uses'=>'survey\SurveyController@storeSurvey']);
-	Route::get('/survey/settings/{id}',					['as'=>'survey.settings','uses'=>'survey\SurveyController@surveySettings']);
+	Route::get('/survey/create',							['as'=>'create.survey','uses'=>'survey\SurveyController@createSurvey']);
+	Route::POST('/survey/savet',							['as'=>'save.survey','uses'=>'survey\SurveyController@storeSurvey']);
 	Route::get('/survey/settings/{id}',					['as'=>'survey.settings','uses'=>'survey\SurveyController@surveySettings']);
 	Route::post('/survey/settings/save/{id}',			['as'=>'save.survey.settings','uses'=>'survey\SurveyController@saveSurveySettings']);
 	Route::get('/survey/perview/{form_id}',				['as'=>'survey.perview','uses'=>'survey\SurveyController@surveyPerview']);
@@ -23,8 +22,7 @@
 	Route::get('/survey/convert/{id}', 					['as'=>'survey.convert','uses'=>'survey\SurveyController@convertToDataset']);
 
     Route::get('/survey/export/{id}',                   ['as'=>'export.survey','uses'=>'survey\SurveyController@exportSurvey']);
-    Route::match(['post','get'],'/survey/import',                        ['as'=>'import.survey','uses'=>'survey\SurveyController@importSurvey']);
-
+    Route::match(['post','get'],'/survey/import',       ['as'=>'import.survey','uses'=>'survey\SurveyController@importSurvey']);
 	//ajax
 	Route::get('/change/survey/status' , ['as' => 'change.share.status' , 'uses' => 'survey\SurveyController@changeShareStatus']);
     Route::get('/survey/columns', ['as'=>'list.survey.columns','uses'=>'survey\SurveyController@getSurveyColumns']);

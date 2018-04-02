@@ -28,7 +28,7 @@ class UsersRole extends Model
 
    public static function roles(){
 
-      return self::orderBy('id','asc')->pluck('name','id');
+      return self::orderBy('id','asc')->pluck('name','slug');
    }
    public function rolesList(){
 

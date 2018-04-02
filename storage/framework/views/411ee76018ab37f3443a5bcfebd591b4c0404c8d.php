@@ -27,6 +27,7 @@
 	}
     .sections-wrap > .item{
         opacity: 0.5;
+        width: 330px;
     }
     .sections-wrap > .item:hover{
         opacity: 1;
@@ -84,6 +85,28 @@
             max-height: calc( 100vh - 100px );
             overflow: scroll;
          }
+         .clock-wrap
+         {
+            right: 0px;
+            top: 0px;
+            padding-right:3px;
+            margin-top: 28px;
+            width: 131px;
+            height: 133px;
+           padding-left: 15px;
+           position: absolute;
+          position: fixed;
+         }
+         .time-wrap
+         {
+            position: absolute;
+            right: 0px;
+            top: 145px;
+            padding-right: 13px;
+            padding-top: 22px;
+            position: fixed;
+            font-size: 20px;
+         }
 </style>
 
 <script type="text/javascript">
@@ -116,7 +139,7 @@
                     <!-- Survey Section -->
                     <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?>" onclick="window.location.href='<?php echo e(route('embed.survey',['token'=>request()->token]).'?section='.$key); ?>'" style="cursor: pointer;">
-                            <div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
+                            <div class="pv-15 pl-16 pr-10 aione-border  bg-white " style="position:relative;">
                                 <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">
                                     <?php echo e($section['title']); ?>
 
@@ -153,7 +176,7 @@
                             <?php echo Form::hidden('section',request()->section); ?>
 
                             <?php $__currentLoopData = $data['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $fieldSlug): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php echo FormGenerator::GenerateField($fieldSlug, [], null, 'org'); ?>
+                                <?php echo FormGenerator::GenerateField($fieldSlug, ['form_id'=>$data['form_id']], null, 'org'); ?>
 
                                 <div class="aione-border-top mv-10"></div>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -186,10 +209,12 @@
                    } else {
                        floatingHeader.css({
                         "visibility": "hidden"
-                       });      
+                       });  
+
                    };
                });
             }
+
 
             // DOM Ready      
             $(function() {
@@ -210,6 +235,7 @@
                 .trigger("scroll");
                
             });
+
         </script>
         <style type="text/css">
             .floatingHeader {
@@ -234,8 +260,7 @@
                     </div>
                     <div class="p-10">
                         <?php $__currentLoopData = $section['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field_key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php echo FormGenerator::GenerateField($field, [], null, 'org'); ?>
-
+                            <?php echo FormGenerator::GenerateField($field, ['form_id'=>$data['form_id']], null, 'org'); ?>
 
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
@@ -252,6 +277,14 @@
         </div>
         
     <?php endif; ?>
+    <div class="wrap">
+        <div class="clock-wrap">
+            <img src="<?php echo e(asset('assets/images/aa.png')); ?>"/>
+        </div>
+        <div class="time-wrap">
+           <p>10:00 AM</p> 
+        </div>
+    </div>
 
 </div>
 
@@ -308,26 +341,18 @@
 
                             <?php echo Form::hidden('prev_next_question',null,['class'=>'prev_next_question']); ?>
 
-                            <?php echo FormGenerator::GenerateField($data['field_record']['field'], [], null, 'org'); ?>
+                            <?php echo FormGenerator::GenerateField($data['field_record']['field'], ['form_id'=>$data['form_id']], null, 'org'); ?>
 
-                            <div class="actions" style="position: absolute;bottom: 0;left: 0;
-                            right: 0;padding: 0 5px;">
+                            <div class="actions" style="position: absolute;bottom: 0;left: 0;right: 0;padding: 0 5px;">
                                 <?php if($data['field_record']['index'] >= 1): ?>
-                                    <button class="aione-float-left prev"  data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']-1)); ?>">Previous</button>
+                                    <button class="aione-float-left prev" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']-1)); ?>">Previous</button>
                                 <?php elseif($sectionIndex != 0): ?>
-                                    <?php echo Form::hidden('prev_next_section',($sectionIndex-1)); ?>
-
-                                    <?php echo Form::hidden('prev_next_question',$prevSectionLastQuest); ?>
-
-                                    <button class="aione-float-left" >Prev Section</button>
+                                    <button class="aione-float-left prev_section" data-section="<?php echo e(($sectionIndex-1)); ?>" data-question="<?php echo e($prevSectionLastQuest); ?>">Prev Section</button>
                                 <?php endif; ?>
                                 <?php if($data['field_record']['index'] != $totalFields): ?>
-                                    <button class="aione-float-right next"  data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']+1)); ?>">Next</button>
+                                    <button class="aione-float-right next" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']+1)); ?>">Next</button>
                                 <?php else: ?>
-                                    <?php echo Form::hidden('prev_next_section',$sectionIndex+1); ?>
-
-                                    <?php echo Form::hidden('prev_next_question',0); ?>  
-                                    <button class="aione-float-right" >Next Section</button>
+                                    <button class="aione-float-right next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
                                 <?php endif; ?>
                                 <div style="clear: both">
                                   
@@ -337,18 +362,11 @@
 
                     <?php endif; ?>
                     <script type="text/javascript">
-                        $('.prev').click(function(e){
+                        $('.prev, .next, .next_section, .prev_section').click(function(e){
                             e.preventDefault();
                             var prev_next_section = $(this).data('section');
                             var prev_next_question = $(this).data('question');
-                            $('.prev_next_section').val(prev_next_section);
-                            $('.prev_next_question').val(prev_next_question);
-                            $('#question_form').submit();
-                        });
-                        $('.next').click(function(e){
-                            e.preventDefault();
-                            var prev_next_section = $(this).data('section');
-                            var prev_next_question = $(this).data('question');
+                            console.log(prev_next_question,prev_next_section);
                             $('.prev_next_section').val(prev_next_section);
                             $('.prev_next_question').val(prev_next_question);
                             $('#question_form').submit();

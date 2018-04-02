@@ -27,5 +27,14 @@
         }
     }
  ?>
-<?php echo Form::textarea($name,null,$fieldOptionsArray); ?>
+<?php if(isset($options['default_value']) && $options['default_value'] != ''): ?>
+    <?php 
+        $default_value = $options['default_value'];
+     ?>
+<?php else: ?>
+    <?php 
+        $default_value = null;
+     ?>
+<?php endif; ?>
+<?php echo Form::textarea($name,$default_value,$fieldOptionsArray); ?>
 

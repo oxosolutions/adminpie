@@ -11,14 +11,14 @@
 
  
 <nav id="aione_account_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal aione-dashboard-tabs"  >
-  <ul id="sortable" class="aione-tabs">
+  <ul id="sortable" class="aione-tabs ">
     <?php $__currentLoopData = @$dashboards; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $tab): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <li class="aione-tab dashboard-tab
+      <li class="aione-tab aione-tooltip dashboard-tab
         <?php if($tab['slug'] == $current_dashboard): ?>
         nav-item-current
         <?php endif; ?>
-        " dashboard-index="<?php echo e($tab['slug']); ?>" >
-        <a href="<?php echo e($key); ?>"><span class="nav-item-text"><?php echo e(@$tab['title']); ?></span></a>
+        " dashboard-index="<?php echo e($tab['slug']); ?>" title="<?php echo e(@$tab['title']); ?>" >
+        <a href="<?php echo e($key); ?>"><span class="nav-item-icon white line-height-20 font-size-13 font-weight-700" style="background: #1c202c"><?php echo e(@$tab['title'][0]); ?></span><span class="nav-item-text"><?php echo e(@$tab['title']); ?></span></a>
       </li>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>	
     <div class="clear"></div>
@@ -31,6 +31,19 @@
 <?php echo e(Form::close()); ?>
 
 
+<style type="text/css">
+  .aione-dashboard-tabs .nav-item-current .nav-item-icon{
+        background: #1c202c !important;
+        color: white !important;
+
+  }
+  .aione-dashboard-tabs .nav-item-icon{
+        background: #ffffff !important;
+        color: #1c202c !important;
+        margin-right: 8px !important;
+        
+  } 
+</style>
 
 <script type="text/javascript">
   $(document).ready(function(){

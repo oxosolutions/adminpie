@@ -36,7 +36,7 @@ class MediaController extends Controller
             $size = $file->getSize();
             $mime_type = $file->getMimeType();
 
-              $destinationPath = public_path().'/media';
+              $destinationPath = upload_path('media');
               $file->move($destinationPath,$fileName);
 
             $model =  new $Associate;

@@ -334,6 +334,7 @@ class UsersController extends Controller
     public function updateUserDetails(Request $request, $id)
     {
         $emailValidate = [
+            // 'name'       => 'required',
             'email'      => 'required|email',
         ];
         $this->validate($request , $emailValidate);

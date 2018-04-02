@@ -38,7 +38,87 @@ $page_title_data = array(
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<style type="text/css">
+	.edit-form-detail,.edit-section-detail,.add-section,.add-field{
+		display: none;
+	}
+	.module-wrapper > .list-container{
+		display: none;
+	}
+	.module-wrapper.sidebar-active > .list-container{
+		display: block;
+	
+	}
+	.aione-breadcumb > div{
+		position: relative;
 
+	}
+	.aione-breadcumb > div > button{
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		display: none;
+
+	}
+	.aione-breadcumb > div:hover > button{
+		display: block;
+
+	}
+	.aione-breadcumb > div:after{
+		    content: '';
+    border-left: 15px solid #ffffff;
+    border-top: 21px solid transparent;
+    border-bottom: 21px solid transparent;
+    height: 0;
+    position: absolute;
+    width: 0;
+    padding: 0;
+    margin-left: 20px;
+        top: 0;
+    right: -15px;
+	}
+	.aione-breadcumb > div:before{
+		    content: '';
+   border-left: 15px solid transparent;
+    border-top: 21px solid #FFFFFF;
+    border-bottom: 21px solid #FFFFFF;
+    height: 0;
+    position: absolute;
+    width: 0;
+    padding: 0;
+    margin-left: -35px;
+    top: 0;
+    left: 20px;
+	}
+	.aione-breadcumb > div:first-child:before{
+		content: '';
+		border: none;
+	}
+	.aione-breadcumb > div:first-child{
+		padding-left: 20px;
+	}
+    .aione-tooltip:hover:before{
+        z-index: 9
+    }
+</style>
+<script type="text/javascript">
+	$('body').on('click','.edit-form-detail-button',function(){
+		$('.edit-form-detail').toggle();
+	});
+	$('body').on('click','.edit-section-detail-button',function(){
+		// console.log("edit");
+		$('.edit-section-detail').toggle();
+	});
+	$('body').on('click','.add-section-button',function(){
+		$('.add-section').toggle();
+	});
+	$('body').on('click','.add-field-button',function(){
+		$('.add-field').toggle();
+	});
+	$('body').on('click','.toggle-sidenav',function(){
+		$('.module-wrapper').toggleClass('sidebar-active');
+	});
+</script>
 <?php if(!empty($error)): ?>
  <?php echo $__env->make('organization.survey._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <div class="aione-message warning">
@@ -58,13 +138,42 @@ $page_title_data = array(
     <?php else: ?>
         <?php echo $__env->make('admin.formbuilder._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <?php endif; ?>
+    <div class="aione-border  mb-20 bg-grey bg-lighten-3 p-5">
+    	<div class="display-inline-block p-10 toggle-sidenav">
+    		<i class="fa fa-bars"></i>
+    	</div>
+    	<div class="display-inline-block aione-breadcumb">
+    		<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
+	    		<b>Form:</b><a href=""> <?php echo e(@$title); ?> </a>
+	    		<button class="aione-button  edit-form-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+	    	</div>
+
+	    	<?php if(Request::has('sections')): ?>
+    	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
+    	    		<b>Section:</b><a href=""> <?php echo e($sections->where('id',request()->sections)->first()->section_name); ?> </a>
+    	    		<button class="aione-button edit-section-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+    	    	</div>
+            <?php endif; ?>
+            <?php if(Request::has('field')): ?>
+                <?php 
+                    $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
+                 ?>
+    	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
+    	    		<b>Field:</b> <?php echo e($sectionFields->where('id',request()->field)->first()->field_title); ?>  
+    	    		
+    	    	</div>
+            <?php endif; ?>
+    	</div>
+	    	
+    	
+    </div>
     <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
 
     
 
-        <div class="module-wrapper">
-            <div class=" mb-10">
-                  <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
+        <div class="module-wrapper ">
+            <div class=" mb-10 edit-form-detail">
+                  
                         <?php echo Form::model($form,['class' => 'form' ,'route' => 'org.update.form']); ?>
 
                             <input type="hidden" name="id" value="<?php echo e($form->id); ?>">
@@ -74,7 +183,7 @@ $page_title_data = array(
 
 
                         
-                    <?php endif; ?>
+                    
             </div>
             <div class="list-container">
                 <nav id="aione_nav" class="aione-nav light vertical">
@@ -143,33 +252,36 @@ $page_title_data = array(
                         $data['section_description'] = $value->section_description;
                      ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-              
+                
+
+                <?php echo Form::model($data,['route'=>[$route_slug.'section.update',request()->form_id]]); ?>
+
+                    <input type="hidden" name="section_id" value="<?php echo e(Request::input('sections')); ?>" />
+                    <div class="row no-margin-bottom edit-section-detail">
+                        
+                        <?php echo FormGenerator::GenerateForm('form_generator_section_edit'); ?>
+
+                        <?php if(@$errors->has()): ?>
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kay => $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <div style="color: red"><?php echo e($err); ?></div>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
+
+                      
+
+                    </div>
+                <?php echo Form::close(); ?>
+
+
+
                 <?php if(!Request::has('field')): ?>
 
-                    <?php if(Request::has('sections') && Request::input('sections') != 'all'): ?>
-                        <?php echo Form::model($data,['route'=>[$route_slug.'section.update',request()->form_id]]); ?>
-
-                            <input type="hidden" name="section_id" value="<?php echo e(Request::input('sections')); ?>" />
-                            <div class="row no-margin-bottom">
-                                
-                                <?php echo FormGenerator::GenerateForm('form_generator_section_edit'); ?>
-
-                                <?php if(@$errors->has()): ?>
-                                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kay => $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <div style="color: red"><?php echo e($err); ?></div>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                <?php endif; ?>
-
-                              
-
-                            </div>
-                        <?php echo Form::close(); ?>
-
-                    <?php endif; ?>
+                    
+                        
+                    
 
                     <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
                        
-
                         <?php echo Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
                             <div class="add-section">
@@ -185,7 +297,7 @@ $page_title_data = array(
 
                     <?php endif; ?>
                     <?php if(Request::has('sections') && Request::input('sections') != 'all'): ?>
-                        <?php echo Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')],'class'=>'add-field-mini-form']); ?>
+                        <?php echo Form::open(['route'=>[$route_slug.'create.field',request()->form_id,Request::input('sections')],'class'=>'add-field-mini-form add-field']); ?>
 
                                 <?php echo FormGenerator::GenerateForm('add_field_from_section'); ?>  
                                 <?php echo Form::hidden('type',$form->type); ?>
@@ -198,10 +310,13 @@ $page_title_data = array(
                         
                         <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
                             <div id="aione_form_section_header" class="aione-form-section-header">
-                                <div class="aione-row">
-                                    <h3 class="aione-form-section-title aione-align-center">Sections</h3>
-                                    <h4 class="aione-form-section-description aione-align-center">List of all sections in this form.</h4>
+                                <div class="aione-row aione-float-left">
+                                    <h3 class="aione-form-section-title aione-align-left">Sections</h3>
+                                    <h4 class="aione-form-section-description aione-align-left">List of all sections in this form.</h4>
+
                                 </div> <!-- .aione-row -->
+                        		<button class="add-section-button aione-float-right aione-button pv-10">+ Add New Section</button>
+                        		<div class="clear"></div>
                             </div>
                             <?php if($sections->count() > 0): ?>
                                 <?php $__currentLoopData = $sections; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -270,10 +385,12 @@ $page_title_data = array(
                         <?php endif; ?>
                         <?php if(Request::has('sections') && Request::input('sections') != 'all'): ?>
                             <div id="aione_form_section_header" class="aione-form-section-header">
-                                <div class="aione-row">
+                                <div class="aione-row aione-float-left">
                                     <h3 class="aione-form-section-title aione-align-left ">Fields</h3>
                                     <h4 class="aione-form-section-description aione-align-left">List of all fields in this section</h4>
                                 </div> <!-- .aione-row -->
+                                <button class="add-field-button aione-float-right aione-button pv-10">+ Add New Field</button>
+                        		<div class="clear"></div>
                             </div>
                             <?php 
                                 $fields = $sections->where('id',Request::input('sections'))->first()->fields;
@@ -454,10 +571,15 @@ $page_title_data = array(
         }
         .module-wrapper > .Detail-container{
             float: right;
-            width: 74%;
-            border: 1px solid #e8e8e8;
-            padding: 10px;
+            width: 100%;
+           /* border: 1px solid #e8e8e8;
+            padding: 10px;*/
            
+        }
+          .module-wrapper.sidebar-active > .Detail-container{
+            
+            width: 74%;
+                       
         }
         .list-modules > li > div,.list-sub-modules > li{
             border: 1px solid #e8e8e8;
@@ -523,7 +645,8 @@ $page_title_data = array(
         .Detail-container .collection{
             border: none;
                 padding: 15px;
-                border: 1px solid #e8e8e8
+                border: 1px solid #e8e8e8;
+                margin: 0;
         }
         .Detail-container .collection .collection-item{
             border: 1px solid #e8e8e8;

@@ -25,7 +25,7 @@
 		<?php if(isset($meta['show_topbar']) && $meta['show_topbar'] == 1): ?>
 			<!--==============================-->
 			<div id="aione_topbar_<?php echo e($visualization_id); ?>" class="aione-border mb-10">
-				<div class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4">
+				<div class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4" style="background: #01579B;color: white">
 					Select Charts to Display
 				</div>
 				<div class="p-10">
@@ -50,7 +50,6 @@
 				<?php endif; ?>
 			</div> <!-- show_header -->
 		<?php endif; ?>
-
 			<!--==============================-->
 		<div id="aione_content_<?php echo e($visualization_id); ?>" class=" aione-content-<?php echo e($sidebar_class); ?>">
 			
@@ -59,7 +58,7 @@
 					<?php echo $__env->make('organization.visualization.filters', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 				<?php endif; ?>
 				<!--==============================-->
-				<div id="aione_content_main_<?php echo e($visualization_id); ?>" class="aione-border aione-content-main">		
+				<div id="aione_content_main_<?php echo e($visualization_id); ?>" class=" aione-content-main">		
 
 					<!--==============================-->
 					<div id="aione_charts_<?php echo e($visualization_id); ?>" class=" aione-charts">
@@ -94,13 +93,12 @@
 
 									
 								?>
-
 								<?php if($chart_enabled == 1): ?>
-									<div id="chart_wrapper_<?php echo e($chart_id); ?>" chart-id="<?php echo e($chart['chart_id']); ?>" class="aione-chart aione-chart-<?php echo e($chart_type); ?> chart-theme-<?php echo e(@$chart_settings['custom_map_theme']); ?> chart-width-<?php echo e($chart_width); ?> <?php echo e(@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''); ?>">
+									<div id="chart_wrapper_<?php echo e($chart_id); ?>" chart-id="<?php echo e($chart['chart_id']); ?>" class="aione-chart aione-chart-<?php echo e($chart_type); ?> chart-theme-<?php echo e(@$chart_settings['custom_map_theme']); ?> chart-width-<?php echo e($chart_width); ?> <?php echo e(@$meta['collapsible_chart_widgets']=='1'?'aione-accordion':''); ?>" <?php echo e(($chart_type != 'NumberChart')?'style=width:100%':''); ?>>
 										<div class="aione-item active">
 										
 											<?php if(isset($meta['enable_chart_title']) && $meta['enable_chart_title'] == 1): ?>
-											<div class="aione-section-header  aione-item-header">
+											<div class="aione-section-header  aione-item-header p-20">
 												<div class="">
 													<?php if(isset($meta['sortable_chart_widgets']) && $meta['sortable_chart_widgets'] == 1): ?>
 													<div class="aione-section-handle"></div>
@@ -192,7 +190,22 @@
 														<?php echo e(json_encode($javascript[$chart_key]['arranged_data']['popup_data'])); ?>
 
 													</div>
-													
+												
+                                                <?php elseif($chart_type == 'NumberChart'): ?>
+                                                    <div class="aione-border p-20  mb-15 mt-15" style="    box-shadow:0 1px 1px rgba(0,0,0,0.12), 0 1px 1px rgba(0,0,0,0.24)">
+                                                    	<div class="number-chart-title aione-align-center font-size-15 font-weight-600">
+                                                    		<?php echo e($chart['card']['header']); ?>
+
+                                                    	</div>
+                                                    	<div class="number-chart-value light-blue darken-3 font-size-46 aione-align-center line-height-80">
+                                                    		<?php echo e($chart['card']['count']); ?>
+
+                                                    	</div>
+                                                    	<div class="aione-align-center">
+                                                    		Count
+                                                    	</div>
+                                                    </div>
+
 												<?php elseif($chart_type == 'ListChart'): ?>
 													<div id="<?php echo e($chart_id); ?>" >
 														
@@ -239,7 +252,7 @@
 				<?php if(isset($meta['filter_position']) && $meta['filter_position'] == 'bottom'): ?>
 					<?php echo $__env->make('organization.visualization.filters', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 				<?php endif; ?>
-
+                
 			</div> <!-- wrapper-row -->
 		</div> <!-- aione_topbar -->
 	</div>
@@ -249,6 +262,7 @@
     </div>
 
 </div>
+
 
 <script src="<?php echo e(asset('/js/ion.rangeSlider.js')); ?>" type="text/javascript"></script>
 <script src="<?php echo e(asset('/js/classybrew.js')); ?>" type="text/javascript"></script>
@@ -541,6 +555,18 @@
 		max-height: 500px;
 		overflow: scroll;
 
+	
+	}
+	.aione-chart{
+		float: left;
+		border: 1px solid #e8e8e8;
+		margin-bottom: 15px;
+	}
+	.aione-charts:after{
+		content: '';
+		display: table;
+		height: 1px;
+		clear: both
 	}
 
 		/*label {

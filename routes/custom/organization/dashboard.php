@@ -10,4 +10,6 @@
 
     Route::post('widget/resize',                ['as'=>'widget.resize','uses'=>'DashboardController@resizeWidget']);
 
+    Route::post('chart/save',                   ['as'=>'save.chart','uses'=>'DashboardController@saveChart']);
+
 ?>

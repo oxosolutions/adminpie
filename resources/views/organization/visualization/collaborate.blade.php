@@ -224,6 +224,25 @@ $page_title_data = array(
         </div>
         <div class="clear"></div>
       </div>
+
+      <div class="share-link">
+            <div class="title">
+                Embed Code
+            </div>
+            <div class="body-wrapper">
+                <div class="link-field">
+                    @php
+                        $iFrameCode = '<iframe src="'.route('public.view.visualization',$model->embed_token).'" width="1024" height="780" scrolling="no"></iframe>';
+                    @endphp
+                    {!! FormGenerator::GenerateField('embed_code',['default_value'=>$iFrameCode]) !!}
+                </div>
+                <div class="copy-button">
+                    <button id="copy_code_button" onclick="copyToClipboard('#input_embed_code')"> Copy Code</button>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+
     <div class="share-user">
       
       <div class="title">
@@ -377,6 +396,10 @@ $page_title_data = array(
       copyToClipboard(document.getElementById("input_shareable_link"));
       Materialize.toast('Copied!',2000);
   });
+  document.getElementById("copy_code_button").addEventListener("click", function() {
+        copyToClipboard(document.getElementById("input_embed_code"));
+       
+    });
   function copyToClipboard(elem) {
     var targetId = "_hiddenCopyText_";
       var isInput = elem.tagName === "INPUT" || elem.tagName === "TEXTAREA";

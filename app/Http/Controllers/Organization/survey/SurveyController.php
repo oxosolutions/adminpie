@@ -87,7 +87,7 @@ class SurveyController extends Controller
         $sectionRoute = 'org.list.sections';
         $settingsRoute = 'org.form.settings';
         $cloneRoute = 'org.form.clone';
-        $datalist =  [
+        $datalist = [
             'datalist'=>$model,
             'showColumns' => ['form_title'=>'Survey Title','form_slug'=>'Survey ID','created_at'=>'Created'],
             'actions' => [
@@ -141,7 +141,11 @@ class SurveyController extends Controller
         $model = FormsMeta::where(['form_id'=>$survey_id]);
         $modelData = [];
         foreach($model->get() as $key => $value){
-            $modelData[$value->key] = $value->value;
+            if(in_array($value->key,['individual_list','role_list'])){
+                $modelData[$value->key] = json_decode($value->value,true);
+            }else{
+                $modelData[$value->key] = $value->value;
+            }
         }
         $form = forms::find($survey_id);
 
@@ -486,11 +490,46 @@ class SurveyController extends Controller
 
     protected function validateSurveyConditions($metaArray){
         $errorsArray = [];
+        $surveyStatus = ['status'=>true];
         //Check Survey Enabled
         if(!@$metaArray['enable_survey'] == 1){
-            $errorsArray['enable_survey'] = 'Survey not enabled!';
+            $surveyStatus = ['status'=>false,'message'=>'Survey not enabled!'];
+            return $surveyStatus;
         }
-        $surveyStatus = ['status'=>true];
+
+        //Check if Authentication Required
+        if(@$metaArray['authentication_required'] == 1){            
+            if(!Auth::guard('org')->check()){
+                $surveyStatus = ['status'=>false,'message'=>'You are not loggedin!'];
+                return $surveyStatus;
+            }else{
+                if(@$metaArray['authentication_type'] != null){
+                    if($metaArray['authentication_type'] == 'user'){
+                        $usersList = @$metaArray['individual_list'];
+                        if($usersList != '' && $usersList != null){
+                            $usersList = json_decode($metaArray['individual_list'], true);
+                            if(!in_array(Auth::guard('org')->user()->id, $usersList)){
+                                return ['status'=>false,'message'=>'Admin did not allow you to fill this survey!'];
+                            }
+                        }
+                    }elseif($metaArray['authentication_type'] == 'role'){
+                        $userRoles = get_user_roles();
+                        if(@$metaArray['role_list'] != null && @$metaArray['role_list'] != ''){
+                            $roleStatus = false;
+                            foreach($metaArray['role_list'] as $key => $role){
+                                if(in_array($role,$userRoles)){
+                                    $roleStatus = true;
+                                }
+                            }
+                            if($roleStatus == false){
+                                return ['status'=>false,'message'=>'Survey not allowed to your role!'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         //Check Schedule Enable
         if(@$metaArray['survey_scheduling'] == 1){
             $startDate = @$metaArray['start_date'];
@@ -876,11 +915,10 @@ class SurveyController extends Controller
         $organizationID = get_organization_id();
         $resultTable = $organizationID.'_survey_results_'.$surveyDetails->id;
         if(!Schema::hasTable($resultTable)){
-            $this->createSurveyResultsTable($fieldsSlugs, $prefix.$resultTable);
+            $this->createSurveyResultsTable($fieldsSlugs, $prefix.$resultTable, $surveyDetails);
         }else{
             $this->checkForAlterTable($fieldsSlugs, $resultTable, $prefix);
         }
-        // ocrm_526_survey_results_1
         switch($surveyType){
             case'section':
                 $result = $this->saveSurveyAccordingTo_SectionView($request, $resultTable, $prefix, $surveyDetails);
@@ -946,8 +984,10 @@ class SurveyController extends Controller
         }
         $nextSection = false;
         $nextQuestion = false;
-        $nextSection = $next_prev_sectionIndex;
-        $nextQuestion = $next_prev_questionIndex;        
+        if($next_prev_sectionIndex <= $surveyDetails->section->count()-1){
+            $nextSection = $next_prev_sectionIndex;
+            $nextQuestion = $next_prev_questionIndex;
+        }
         
         return ['status'=>true,'errors'=>[],'next_section'=>$nextSection,'next_question'=>$nextQuestion];
 
@@ -1022,6 +1062,7 @@ class SurveyController extends Controller
         if($request->has('section') && $request->section != null){
             $sectionIndex = (int)$request->section;
         }
+        $fieldsArray = [];
         foreach ($surveyDetails->section[$sectionIndex]->fields as $key => $field) {
             $validation = $field->fieldMeta->where('key','field_validations')->first();
             if($validation != null){
@@ -1144,7 +1185,7 @@ class SurveyController extends Controller
      * @return bolean will return true or false
      * @author Rahul
      */
-    protected function createSurveyResultsTable($fieldSlugs, $tableName){
+    protected function createSurveyResultsTable($fieldSlugs, $tableName, $surveyDetails){
 
         $prepearedColumnsForQuery = [];
         $extraFields = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status','survey_submitted_by','survey_submitted_from','mac_address','imei','device_detail','created_by', 'created_at', 'deleted_at'];
@@ -1155,6 +1196,11 @@ class SurveyController extends Controller
         $QueryForCreateTable = 'CREATE TABLE `'.$tableName.'` ( ' . implode(', ', $prepearedColumnsForQuery) . ' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
         DB::SELECT($QueryForCreateTable);
         DB::select("ALTER TABLE `{$tableName}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+        $model = FormsMeta::firstOrNew(['key'=>'survey_data_table','form_id'=>$surveyDetails->id]);
+        $model->value = $tableName;
+        $model->key = 'survey_data_table';
+        $model->form_id = $surveyDetails->id;
+        $model->save();
         return true;
     }
 
@@ -1174,9 +1220,13 @@ class SurveyController extends Controller
         $prefix = DB::getTablePrefix();
         if($record_id != null){
             $survey_result_table = get_organization_id().'_survey_results_'.$surveyDetails->id;
-            $Query = DB::table($survey_result_table)->where('id',$record_id)->first();
-            if($Query != null){
-                $recordDetails = (array)$Query;
+            try{
+                $Query = DB::table($survey_result_table)->where('id',$record_id)->first();
+                if($Query != null){
+                    $recordDetails = (array)$Query;
+                }
+            }catch(\Exception $e){
+                $recordDetails = [];
             }
         }
         // dd($recordDetails);
@@ -1205,13 +1255,12 @@ class SurveyController extends Controller
                     return redirect()->route('embed.survey',['token'=>$token,'section'=>$result['next_section'],'question'=>$result['next_question']]);
                 }elseif(array_key_exists('next_section',$result) && $result['next_section'] != false){
                     if($result['next_section'] == 'finish'){
-                        Session::put('record_id',null);
-                        dd('Finish Survey!');
+                        return redirect()->route('survey.completed',['token'=>$token]);
                     }else{
                         return redirect()->route('embed.survey',['token'=>$token,'section'=>$result['next_section']]);
                     }
                 }else{
-                    dd('Finish Survey!');
+                    return redirect()->route('survey.completed',['token'=>$token]);
                 }
             }
         }
@@ -1238,12 +1287,14 @@ class SurveyController extends Controller
                 break;
             }
         }
+        $questionsData['form_id'] = $surveyRecord['id'];
         $prefilled = $this->preFillSurveyAnswer($surveyRecord);
         if($from_status){
-            return view('organization.survey.shared_survey_without_layout',['error'=>$errorStatus,'data'=>$questionsData])->render();
+            $prefilled = array_merge($request->all(),$prefilled);
+            return view('organization.survey.public.shared_survey_without_layout',['error'=>$errorStatus,'data'=>$questionsData,'prefill'=>$prefilled])->render();
         }else{
             $prefilled = array_merge($request->all(),$prefilled);
-            return view('organization.survey.survey_draw',['error'=>$errorStatus,'data'=>$questionsData,'prefill'=>$prefilled]);
+            return view('organization.survey.public.survey_draw',['error'=>$errorStatus,'data'=>$questionsData,'prefill'=>$prefilled]);
         }
 
     }
@@ -1595,7 +1646,7 @@ class SurveyController extends Controller
 
     public function SurveyCompleted(){
         Session::put('record_id');
-        return view('organization.survey.survey1');
+        return view('organization.survey.survey_completed');
     }
 
 }

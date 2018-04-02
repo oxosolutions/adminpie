@@ -15,6 +15,7 @@ use Session;
 use Carbon\carbon;
 use Auth;
 use App\Model\Organization\section;
+use Illuminate\Pagination\Paginator;
 /**
  * @author [Paljinder Singh ] SurveyStatsController all work done by Paljnder Singh
  */
@@ -156,59 +157,65 @@ class SurveyStatsController extends Controller
         return view('organization.survey.survey_structure', compact('not_valid_id'));
        }
     }
-    public function survey_result(Request $request, $id)
-    {  
-       $condition_data =null;
-       $metaTable =  FormsMeta::where(['form_id'=>$id,'key'=>'survey_data_table']);
-       if($metaTable->exists()){
-          $table =   $metaTable->first()->value;
-          $table_name = str_replace('ocrm_', '', $table);
+    public function survey_result(Request $request, $id){ 
+        $condition_data =null;
+        $metaTable =  FormsMeta::where(['form_id'=>$id,'key'=>'survey_data_table']);
+        $prefix = DB::getTablePrefix();
+        $organization_id = get_organization_id();
+        if(Schema::hasTable($organization_id.'_survey_results_'.$id)){
+            $table =  $prefix.$organization_id.'_survey_results_'.$id;
+            $table_name = str_replace('ocrm_', '', $table);
+            $table_column = Schema::getColumnListing($table_name);
+            $columns = array_combine($table_column,$table_column);
+            if($request->isMethod('post')){
 
-          if(!Schema::hasTable($table_name)){
-            return view('organization.survey.survey_result');
-          }
-
-          $table_column = Schema::getColumnListing($table_name);
-          $columns = array_combine($table_column,$table_column);
-          if($request->isMethod('post')){
-
-            if(isset($request['condition_field']) && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value'])) ){
+                if($request->has('page')){
+                    Paginator::currentPageResolver(function() use ($request){
+                        return $request->page;
+                    });
+                }else{
+                    Paginator::currentPageResolver(function(){
+                        return 1;
+                    });
+                }
+                if(isset($request['condition_field']) && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value'])) ){
                     $filter_field['condition_field']        = $request['condition_field'];
                     $filter_field['condition_field_value']  = $request['condition_field_value'];
                     $filter_field['operator'] = $request['operator'];
-            }
-            $this->validations($request);
-              $data = $this->filter_on_suvey_result($request, $table_name, $columns);
-             if(!empty($request['export'])){ 
-                $condition = json_decode($data['filter_data']->get(), true);
-              }
-              if(!empty($condition['condition_data'])){
-                 $condition_data = $condition['condition_data'];
-                 unset($condition['condition_data']);
-              }
-             if(!empty($request['export'])){
-                 $survey_slug  = forms::select('form_slug')->where('id',$id)->first()->form_slug;
-                  $file_name = $survey_slug.'_'.generate_filename();
-                 Excel::create($file_name, function($excel) use($condition){
-                  $excel->sheet('mySheet', function($sheet) use($condition){
-                    $sheet->fromArray($condition);
-                  });
-                })->export('csv');
-                 
+                }
+                $this->validations($request);
+                $data = $this->filter_on_suvey_result($request, $table_name, $columns);
+                if(!empty($request['export'])){ 
+                    $condition = json_decode($data['filter_data']->get(), true);
+                }
+                if(!empty($condition['condition_data'])){
+                    $condition_data = $condition['condition_data'];
+                    unset($condition['condition_data']);
+                }
+                if(!empty($request['export'])){
+                    $survey_slug  = forms::select('form_slug')->where('id',$id)->first()->form_slug;
+                    $file_name = $survey_slug.'_'.generate_filename();
+                    Excel::create($file_name, function($excel) use($condition){
+                        $excel->sheet('mySheet', function($sheet) use($condition){
+                            $sheet->fromArray($condition);
+                        });
+                    })->export('csv');
                 }
                 $data = $data['filter_data']->paginate(100);
-          }else{
-              $data =  DB::table($table_name)->paginate(100);
-          }
-        
-          $formQuestion = FormBuilder::select('field_slug','field_title')->where('form_id',$id)->get()->mapWithKeys(function($items){
-            return [$items['field_slug'] =>$items['field_title']];
-          })->toArray(); 
+            }else{
+                $data =  DB::table($table_name)->paginate(100);
+            }
+            $formQuestion = FormBuilder::select('field_slug','field_title')->where('form_id',$id)->get()->mapWithKeys(function($items){
+                return [$items['field_slug'] =>$items['field_title']];
+            })->toArray(); 
         }else{
-             $formQuestion = $columns = $data = null;
+            $formQuestion = $columns = $data = null;
         }
-     return view('organization.survey.survey_result',compact('id','columns', 'data','formQuestion','condition_data','table','filter_field'));
+        return view('organization.survey.survey_result',compact('id','columns', 'data','formQuestion','condition_data','table','filter_field'));
     }
+
+
+
     protected function validations($req){
       $customMessages = [
     'fields.required' => 'Select atleast one field to view data.',
@@ -234,8 +241,16 @@ class SurveyStatsController extends Controller
                   }
               }
           }
+          
          if(!empty($where)){
-            $data = DB::table($table_name)->select($request['fields'])->where($where);//->get();
+            $data = DB::table($table_name)->select($request['fields']);
+            if(count($where)>1){
+                foreach($where as $key => $singleWhere){
+                    $data->orWhere($singleWhere[0],$singleWhere[1],$singleWhere[2]);
+                }
+            }else{
+                $data->where($where);//->get();
+            }
          }else{
             if(!empty($request['fields'])){
                 $select_field = array_filter($request['fields']);

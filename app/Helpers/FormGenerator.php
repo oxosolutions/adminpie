@@ -45,7 +45,6 @@ class FormGenerator{
 	 * @param [string] $field_slug 
 	 */
 	public static function GenerateField($field_slug, Array $Options = [], $dataModel = null, $formFrom = 'admin'){
-        
 		$model = '';
 		if($formFrom == 'admin'){
 			$model = 'App\\Model\\Admin\\FormBuilder';
@@ -56,7 +55,7 @@ class FormGenerator{
 		if(isset($Options['form_id'])){
 			$FieldsCollection->with(['section'=>function($query) use ($Options){
 				$query->where('form_id',$Options['form_id']);
-			}]);
+			}])->where('form_id',$Options['form_id']);
 		}else{
 			$FieldsCollection->with(['section']);
 		}
@@ -72,6 +71,7 @@ class FormGenerator{
 			$collection = $FieldsCollection->field_type;
 			$status = 'single';
 		}
+
 		
 		if(isset($FieldsCollection->fieldMeta)){
 			$conditions = self::GetMetaValue($FieldsCollection->fieldMeta, 'field_conditions');
@@ -84,6 +84,7 @@ class FormGenerator{
 										  ];
 			}
 		}
+
 
 		if($FieldsCollection != null){
 			$HTMLField = self::GetHTMLField($collection, $FieldsCollection, $Options, $dataModel,$status);
