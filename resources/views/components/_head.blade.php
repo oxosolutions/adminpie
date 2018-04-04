@@ -18,7 +18,8 @@
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
-    <script src="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></script>
+    {{-- <script src="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></script> --}}
+    <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.css">
 	
 	
 	{{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}

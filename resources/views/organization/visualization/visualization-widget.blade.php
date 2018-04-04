@@ -150,7 +150,7 @@
 												<div class="model-bg" >
 													<div class="model aione-border">
 														<div class="header bg-grey bg-lighten-3 aione-border-bottom p-10">
-															Chart Settings<i class="fa fa-close aione-float-right"></i>
+															{{__('visualization.chart_settings')}}<i class="fa fa-close aione-float-right"></i>
 														</div>
 														<div class="content" id="chart_{{$chart['chart_id']}}_setings">
 															Loading...

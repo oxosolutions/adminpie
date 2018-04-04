@@ -484,7 +484,7 @@ class DatasetController extends Controller
                                         'structure'=>['route'=>'structure.dataset','title'=>'Structure'],
                                         // 'define'=>['route'=>'define.dataset','title'=>'Define'],
                                         'filter'=>['route'=>'filter.dataset','title'=>'Filter'],
-                                        'api'=>['route'=>'api.dataset','title'=>'API'],
+                                        // 'api'=>['route'=>'api.dataset','title'=>'API'],
                                         'validate'=>['route'=>'validate.dataset','title'=>'Validate'],
                                         // 'visualize'=>['route'=>'visualize.dataset','title'=>'Visualization'],
                                         'operations'=>['route'=>'options.dataset','title'=>'Operations'],

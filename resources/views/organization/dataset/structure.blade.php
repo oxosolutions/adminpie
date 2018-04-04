@@ -6,7 +6,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset Edit <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => __('organization/datasets.dataset_structure_page_title_text').' <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -20,7 +20,7 @@
     	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
 			
-	            Create Column
+	           {{ __('organization/datasets.craete_column') }} 
 	        </div>
 	        <div class="aione-item-content">
 	            {!!Form::open(['route'=>['create.column',request()->route()->parameters()['id']]])!!}
@@ -37,7 +37,7 @@
                             </span>(<span class="repeater_div "></span>)
 	                	<a class="aione-button aione-float-right add_column" href="javascript:;">+</a>
 	                </div>
-	                <button>Create Column</button>
+	                <button>{{ __('organization/datasets.craete_column_button_text') }}</button>
 	            
 	            {!!Form::close()!!}      
 	        </div>
@@ -46,17 +46,17 @@
 		
 	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
-                Define Dataset
+                {{ __('organization/datasets.define_dataset') }}
             </div>
             <div class="">
                 <div class="aione-table">
                     <table class="compact">
                         <thead>
                             <tr>
-                                <td>Column name</td>
-                                <td>Edit header</td>
-                                <td>Column type</td>
-                                <td>Action</td>
+                                <td>{{ __('organization/datasets.column_name') }}</td>
+                                <td>{{ __('organization/datasets.edit_header') }}</td>
+                                <td>{{ __('organization/datasets.column_type') }}</td>
+                                <td>{{ __('organization/datasets.action') }}</td>
                                 
                             </tr>
                         </thead>
@@ -72,14 +72,16 @@
                                     <td>
                                    
                                     {!!Form::select($key,
-                                            [   "/^[\s\S]*$/" =>   'Text',
-                                                "/^[a-zA-Z ]*$/" =>   'String(Only Alphabets)',
-                                                '/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26]php)00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/' =>  'Date',
+                                            [   
+                                            "/^[\s\S]*$/" =>   'Text',
+                                            "/^[a-zA-Z ]*$/" =>   'String(Only Alphabets)',
+                                            '/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26]php)00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/' =>  'Date',
                                             '/^[0-9]*$/'                    =>  'Number',
                                             '/^[0-9]+(\.[0-9]{1,5})?$/'     =>  'Integer',
                                             '/^\d*[02468]$/'                =>  'Even Number',
                                             '/^\d*[13579]$/'                =>  'Odd Number',
                                             '/^\d{10}$/'                    =>  'Mobile Number(10 Digit Only)',
+                                            '/([A-Z0-9])/'                  =>  'AlphaNumeric'
                                             //'area_code'                    =>  'Area Code'
                                             ],null,['class'=>'browser-default'])!!}     
                                     <!--  Code BY : Amrit END-->    
@@ -87,7 +89,7 @@
                                     </td>
                                     <td>
                                     	<a href="{{ route('delete.column',[request()->route()->id ,$key]) }}"><i class="fa fa-trash" style="color: red"></i></a>
-                                    	<a href="#" class="go-to-form">Add column here</a>
+                                    	<a href="#" class="go-to-form">{{ __('organization/datasets.add_column_here') }}</a>
                                     </td>
                                 </tr>
                             @endforeach       
@@ -118,7 +120,19 @@
         	width: 10% !important
         }
         .column_span{
-            
+            position: relative;
+            /*margin-bottom: 20px;*/
+            padding: 20px 10px;
+        }
+        .column_span .delete-icon{
+            position: absolute;
+                top: 0px;
+    right: 10px;
+    display: none;
+    cursor: pointer;
+        }
+        .column_span:hover .delete-icon{
+            display: block
         }
  	</style>
 	<script type="text/javascript">
@@ -161,6 +175,7 @@
                                                 `+columnsOptions+`
                                             </select>
                                             <div class="comma display-inline"></div>
+                                            <span class="delete-icon"><i class="fa fa-trash"></i></span>
                                         </span>`;
             }
             $('.repeater_div').html(htmlContent);

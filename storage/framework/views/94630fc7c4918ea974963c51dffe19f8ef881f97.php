@@ -4,7 +4,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Change Password',
+	'page_title' =>  __('organization/profile.profile_change_password_page_title_text'),
 	'add_new' => ''
 ); 
  ?>

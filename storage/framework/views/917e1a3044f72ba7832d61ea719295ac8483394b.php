@@ -4,7 +4,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Edit Profile',
+	'page_title' =>  __('organization/profile.profile_edit_page_title_text'),
 	'add_new' => ''
 ); 
  ?>

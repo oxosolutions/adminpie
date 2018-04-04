@@ -5,7 +5,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Chart Settings  <span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
+  'page_title' => __('organization/visualization.visualization_edit_page_title_text').'<span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
   'add_new' => ''
 ); 
 @endphp
@@ -18,7 +18,7 @@ $page_title_data = array(
 	        <input type="hidden" name="id" value="{{$model['id']}}">
 		    	{!!FormGenerator::GenerateForm('edit_visualization_form')!!}	 
 	        {{-- <input type="submit" value="Save Visualization" style="margin-left: 1%; margin-top: 1%; margin-bottom: 1%;"> --}}
-	    {!!Form::close()!!}
+	      {!!Form::close()!!}
       @php
         if(session()->has('chartsModel')){
             $chartsModel = session('chartsModel');
@@ -29,7 +29,7 @@ $page_title_data = array(
               <div class="col l8 pr-7">
                   <div class="card-v2">
                       <div class="card-v2-header">
-                          Available Charts
+                          {{ __('organization/visualization.available_charts') }}
                       </div>
                       <div class="card-v2-content" style="padding: 12px">
                           	@if(!empty($chartsModel))
@@ -46,7 +46,7 @@ $page_title_data = array(
               <div class="col l4 pl-7">
                   <div class="card-v2">
                       <div class="card-v2-header">
-                          Select filterable columns
+                          {{ __('organization/visualization.select_filterable_columns') }}
                       </div>
                       <div class="card-v2-content p-8">
                           	<ul class="filters">
@@ -71,7 +71,7 @@ $page_title_data = array(
               </div>
           </div>
           <div class="row">
-              <button class="btn blue" style="float: right;">Submit</button>
+              <button class="btn blue" style="float: right;">{{ __('organization/visualization.select_filterable_columns') }}Submit</button>
           </div>
         {!!Form::close()!!}
 

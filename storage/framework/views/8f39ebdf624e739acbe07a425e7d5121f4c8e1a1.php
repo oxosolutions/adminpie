@@ -4,7 +4,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Collaborate <span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>',
+  'page_title' => __('organization/visualization.visualization_collaborate_page_title_text').'<span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>',
   'add_new' => ''
 ); 
  ?>
@@ -17,7 +17,8 @@ $page_title_data = array(
         <div class="share-wrapper">
       <div class="share-link">
         <div class="title">
-          Share Link
+            <?php echo e(__('organization/visualization.share_link')); ?>
+
         </div>
         <div class="body-wrapper">
           <div class="link-field">
@@ -25,7 +26,7 @@ $page_title_data = array(
 
           </div>
           <div class="copy-button">
-            <button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> Copy link</button>
+            <button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> <?php echo e(__('organization/visualization.copy_link')); ?>Copy link</button>
           </div>
         </div>
         <div class="clear"></div>
@@ -33,7 +34,8 @@ $page_title_data = array(
 
       <div class="share-link">
             <div class="title">
-                Embed Code
+                <?php echo e(__('organization/visualization.embed_code')); ?>
+
             </div>
             <div class="body-wrapper">
                 <div class="link-field">
@@ -53,22 +55,23 @@ $page_title_data = array(
     <div class="share-user">
       
       <div class="title">
-        How would you like to Collaborate this Visualization
+        <?php echo e(__('organization/visualization.share_user')); ?>
+
       </div>
       
       <div class="body-wrapper">
         <div class="ar share_status" style="margin-bottom: 20px">
           <div class="ac l33">
               <input type="radio" id="only_me" name="group1" <?php echo e((@$share_type_value == 'only_me')?'checked="checked"':''); ?>>
-              <label for="only_me">Private</label>
+              <label for="only_me"><?php echo e(__('organization/visualization.private')); ?></label>
             </div>
             <div class="ac l33">
               <input type="radio" id="public" name="group1" <?php echo e((@$share_type_value == 'public')?'checked="checked"':''); ?>>
-              <label for="public">Public</label>
+              <label for="public"><?php echo e(__('organization/visualization.public')); ?></label>
             </div>
             <div class="ac l33">
               <input type="radio" id="specific" name="group1" <?php echo e((@$share_type_value == 'specific')?'checked="checked"':''); ?>>
-              <label for="specific">Specific</label>
+              <label for="specific"><?php echo e(__('organization/visualization.specific')); ?></label>
             </div>
             <input type="hidden" name="visualization_id" value="<?php echo e(request()->route()->parameters()['id']); ?>">
           
@@ -82,7 +85,7 @@ $page_title_data = array(
 			</div>
 			<div class="share-button">
 				<div><?php echo FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]); ?></div>
-				<div><button>Add User</button></div>
+				<div><button><?php echo e(__('organization/visualization.add_user_button_text')); ?></button></div>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -92,9 +95,9 @@ $page_title_data = array(
         <table class="striped">
               <thead>
             <tr>
-              <th>Email</th>
-              <th>Rights</th>
-              <th>Remove</th>
+              <th><?php echo e(__('organization/visualization.email')); ?></th>
+              <th><?php echo e(__('organization/visualization.right')); ?></th>
+              <th><?php echo e(__('organization/visualization.remove')); ?></th>
             </tr>
               </thead>
 

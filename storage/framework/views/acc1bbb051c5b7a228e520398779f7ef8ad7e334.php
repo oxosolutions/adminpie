@@ -4,8 +4,8 @@ $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'yes',
     'show_navigation' => 'no',
-    'page_title' => "Add Survey",
-    'add_new' => 'All Surveys',
+    'page_title' => __('survey.create_survey_page_title_text'),
+    'add_new' => __('survey.all_surveys_button_text'),
     'route' => 'list.survey'
 ); 
  ?>

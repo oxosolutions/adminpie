@@ -5,7 +5,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Collaborate <span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>',
+  'page_title' => __('organization/visualization.visualization_collaborate_page_title_text').'<span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>',
   'add_new' => ''
 ); 
 @endphp
@@ -14,212 +14,18 @@ $page_title_data = array(
 @include('common.pagecontentstart')
     @include('common.page_content_primary_start')
     @include('organization.visualization._tabs')
-    	{{--  <div class="card-v2" style="margin-bottom: 0px">
-            <div class="card-v2-header">
-                Users who can see this visualization
-            </div>
-            <div class="card-v2-content">
-                <div class="row" style="margin-bottom: 0px">
-                    <ul style="max-height:350px;min-height: 350px;height: 350px;overflow-y: scroll">
-                        <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                        <div class="divider"></div>
-                         <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                        <div class="divider"></div>
-                         <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                        <div class="divider"></div>
-                         <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                        <div class="divider"></div>
-                         <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                        <div class="divider"></div>
-                         <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                        <div class="divider"></div>
-                         <li>
-                            <div class="row valign-wrapper" style="margin-bottom: 0px;padding:8px">
-                                <div class="col l6">
-                                      <div style="width: 50px;line-height: 50px;background-color: #a8a8a8;color: #a8a8a8;display: inline-block;">image</div>
-                                      <soan>
-                                        
-                                          Name
-                                        
-                                      </span>
-                                </div>
-                                <div class="col l6">
-                                    <div style="float:right;display: inline-block;">
-                                        X
-                                    </div>
-                                    <div style="float:right;margin-right: 50px;display: inline-block;">
-                                        Can edit
-                                    </div>    
-                                </div>
-                                  
-                                
-                                
-                            </div>    
-                        </li>
-                       
-                       
-                    </ul>
-            	 </div>
-        	  </div>
-       </div>
-		<div class="row valign-wrapper" style="margin-bottom: 0px;background-color: #e8e8e8;padding:15px">
-    		<div class="col l8">
-      			
-      					<div class="col s12 m2 l12 aione-field-wrapper">
-                   {!!Form::text('name',null,['class'=>'no-margin-bottom aione-field','placeholder'=>'Enter User'])!!}
-                </div>
-      					
-    		</div>
-    		<div class="col l4 center-align" >
-      
-              <a href="" class="btn blue" style="width: 80%">Add user</a>
-    
-    			   
-    		</div>
-    </div> --}}
+    	
         <div class="share-wrapper">
       <div class="share-link">
         <div class="title">
-          Share Link
+            {{ __('organization/visualization.share_link') }}
         </div>
         <div class="body-wrapper">
           <div class="link-field">
             {!! FormGenerator::GenerateField('shareable_link',['default_value'=>route('public.view.visualization',$model->embed_token)]) !!}
           </div>
           <div class="copy-button">
-            <button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> Copy link</button>
+            <button id="copy_button" onclick="copyToClipboard('#input_shareable_link')"> {{ __('organization/visualization.copy_link') }}</button>
           </div>
         </div>
         <div class="clear"></div>
@@ -227,7 +33,7 @@ $page_title_data = array(
 
       <div class="share-link">
             <div class="title">
-                Embed Code
+                {{ __('organization/visualization.embed_code') }}
             </div>
             <div class="body-wrapper">
                 <div class="link-field">
@@ -246,22 +52,22 @@ $page_title_data = array(
     <div class="share-user">
       
       <div class="title">
-        How would you like to Collaborate this Visualization
+        {{ __('organization/visualization.share_user') }}
       </div>
       
       <div class="body-wrapper">
         <div class="ar share_status" style="margin-bottom: 20px">
           <div class="ac l33">
               <input type="radio" id="only_me" name="group1" {{ (@$share_type_value == 'only_me')?'checked="checked"':'' }}>
-              <label for="only_me">Private</label>
+              <label for="only_me">{{ __('organization/visualization.private') }}</label>
             </div>
             <div class="ac l33">
               <input type="radio" id="public" name="group1" {{ (@$share_type_value == 'public')?'checked="checked"':'' }}>
-              <label for="public">Public</label>
+              <label for="public">{{ __('organization/visualization.public') }}</label>
             </div>
             <div class="ac l33">
               <input type="radio" id="specific" name="group1" {{ (@$share_type_value == 'specific')?'checked="checked"':'' }}>
-              <label for="specific">Specific</label>
+              <label for="specific">{{ __('organization/visualization.specific') }}</label>
             </div>
             <input type="hidden" name="visualization_id" value="{{ request()->route()->parameters()['id'] }}">
           
@@ -274,7 +80,7 @@ $page_title_data = array(
 			</div>
 			<div class="share-button">
 				<div>{!! FormGenerator::GenerateField('user-share-edit-view',['default_value'=>['read_write'=>'Can Read/Write','read_only'=>'Can Read Only']]) !!}</div>
-				<div><button>Add User</button></div>
+				<div><button>{{ __('organization/visualization.add_user_button_text') }}</button></div>
 			</div>
 		</div>
 		<div class="clear"></div>
@@ -284,9 +90,9 @@ $page_title_data = array(
         <table class="striped">
               <thead>
             <tr>
-              <th>Email</th>
-              <th>Rights</th>
-              <th>Remove</th>
+              <th>{{ __('organization/visualization.email') }}</th>
+              <th>{{ __('organization/visualization.right') }}</th>
+              <th>{{ __('organization/visualization.remove') }}</th>
             </tr>
               </thead>
 

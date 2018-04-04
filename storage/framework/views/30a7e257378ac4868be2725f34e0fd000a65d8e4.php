@@ -4,7 +4,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Visualization Settings <span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
+  'page_title' => __('organization/visualization.visualization_settings_page_title_text').'<span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
   'add_new' => ''
 ); 
  ?>

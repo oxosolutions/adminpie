@@ -18,7 +18,8 @@
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
-    <script src="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></script>
+    
+    <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.css">
 	
 	
 	

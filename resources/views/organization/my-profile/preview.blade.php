@@ -10,7 +10,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'View Profile',
+	'page_title' => __('organization/profile.profile_view_page_title_text'),
 	'add_new' => ''
 ); 
 @endphp
@@ -29,8 +29,9 @@ $page_title_data = array(
 				<table class="wide">
 					 <thead>
 			            <tr>
-			                <th>Field</th>
-			                <th>Value</th>
+			                <th>{{__('organization/profile.field')}}</th>
+			                <th>{{__('organization/profile.value')}}</th>
+			                
 			                
 			            </tr>
 			          </thead>

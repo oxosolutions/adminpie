@@ -12,15 +12,15 @@
 @extends($layout)
 @section('content')
 @php
-$title = (@$title != '')?$title:'Forms';
+$title = (@$title != '')?$title:__('forms.form_page_title_text');
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => $title,
-	'add_new' => ($title == 'Survey')?'+ Add Survey':'+ Add Form',
+	'add_new' => ($title == 'Survey')?__('forms.add_survey_button_text'):__('forms.add_form_button_text'),
 	'route' => ($title == 'Survey')?'create.survey':$route,
-	'second_button_title' => ($title == 'Survey')?'Import Survey':'Import Form',
+	'second_button_title' => ($title == 'Survey')?__('forms.import_survey_button_text'):__('forms.import_form_button_text'),
 	'second_button_route' => 'import.survey'
 ); 
 @endphp

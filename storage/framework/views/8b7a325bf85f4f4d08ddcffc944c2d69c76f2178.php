@@ -6,7 +6,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset Edit <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => __('organization/datasets.dataset_structure_page_title_text').' <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
  ?>
@@ -20,7 +20,7 @@
     	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
 			
-	            Create Column
+	           <?php echo e(__('organization/datasets.craete_column')); ?> 
 	        </div>
 	        <div class="aione-item-content">
 	            <?php echo Form::open(['route'=>['create.column',request()->route()->parameters()['id']]]); ?>
@@ -40,7 +40,7 @@
                             </span>(<span class="repeater_div "></span>)
 	                	<a class="aione-button aione-float-right add_column" href="javascript:;">+</a>
 	                </div>
-	                <button>Create Column</button>
+	                <button><?php echo e(__('organization/datasets.craete_column_button_text')); ?></button>
 	            
 	            <?php echo Form::close(); ?>      
 	        </div>
@@ -49,17 +49,18 @@
 		
 	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
-                Define Dataset
+                <?php echo e(__('organization/datasets.define_dataset')); ?>
+
             </div>
             <div class="">
                 <div class="aione-table">
                     <table class="compact">
                         <thead>
                             <tr>
-                                <td>Column name</td>
-                                <td>Edit header</td>
-                                <td>Column type</td>
-                                <td>Action</td>
+                                <td><?php echo e(__('organization/datasets.column_name')); ?></td>
+                                <td><?php echo e(__('organization/datasets.edit_header')); ?></td>
+                                <td><?php echo e(__('organization/datasets.column_type')); ?></td>
+                                <td><?php echo e(__('organization/datasets.action')); ?></td>
                                 
                             </tr>
                         </thead>
@@ -90,7 +91,7 @@
                                     </td>
                                     <td>
                                     	<a href="<?php echo e(route('delete.column',[request()->route()->id ,$key])); ?>"><i class="fa fa-trash" style="color: red"></i></a>
-                                    	<a href="#" class="go-to-form">Add column here</a>
+                                    	<a href="#" class="go-to-form"><?php echo e(__('organization/datasets.add_column_here')); ?></a>
                                     </td>
                                 </tr>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>       
@@ -121,7 +122,19 @@
         	width: 10% !important
         }
         .column_span{
-            
+            position: relative;
+            /*margin-bottom: 20px;*/
+            padding: 20px 10px;
+        }
+        .column_span .delete-icon{
+            position: absolute;
+                top: 0px;
+    right: 10px;
+    display: none;
+    cursor: pointer;
+        }
+        .column_span:hover .delete-icon{
+            display: block
         }
  	</style>
 	<script type="text/javascript">
@@ -164,6 +177,7 @@
                                                 `+columnsOptions+`
                                             </select>
                                             <div class="comma display-inline"></div>
+                                            <span class="delete-icon"><i class="fa fa-trash"></i></span>
                                         </span>`;
             }
             $('.repeater_div').html(htmlContent);

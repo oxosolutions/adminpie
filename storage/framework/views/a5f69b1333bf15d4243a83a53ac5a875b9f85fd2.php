@@ -28,8 +28,8 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
-  'page_title' => 'Form <span>'.@$title.'</span>',
-  'add_new' => 'Export survey',
+  'page_title' => __('forms.form_page_title_text').'<span>'.@$title.'</span>',
+  'add_new' => __('forms.export_survey_button_text'),
   'route' => ['export.survey',$form->id],
  
 ); 
@@ -128,8 +128,8 @@ $page_title_data = array(
 
 <?php elseif(!@$permission): ?>
         <div>
-            <div class="access-denied">Access Denied</div>
-            <div class="permission">You do not have permission!</div>
+            <div class="access-denied"><?php echo e(__('forms.access_denied')); ?></div>
+            <div class="permission"><?php echo e(__('forms.permission')); ?></div>
         </div>
 <?php else: ?>
     
@@ -144,7 +144,7 @@ $page_title_data = array(
     	</div>
     	<div class="display-inline-block aione-breadcumb">
     		<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-	    		<b>Form:</b><a href=""> <?php echo e(@$title); ?> </a>
+	    		<b><?php echo e(__('forms.form_page_title_text')); ?>:</b><a href=""> <?php echo e(@$title); ?> </a>
 	    		<button class="aione-button  edit-form-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
 	    	</div>
 
@@ -159,7 +159,7 @@ $page_title_data = array(
                     $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
                  ?>
     	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-    	    		<b>Field:</b> <?php echo e($sectionFields->where('id',request()->field)->first()->field_title); ?>  
+    	    		<b><?php echo e(__('forms.field')); ?>:</b> <?php echo e($sectionFields->where('id',request()->field)->first()->field_title); ?>  
     	    		
     	    	</div>
             <?php endif; ?>
@@ -193,7 +193,8 @@ $page_title_data = array(
                             <a href="<?php echo e(Request::url()); ?>?sections=all" id="all_list">
                                 <span class="nav-item-icon"><i class="fa fa-bars"></i></span>
                                 <span class="nav-item-text">
-                                    All Sections
+                                    <?php echo e(__('forms.all_sections')); ?>
+
                                 </span>
                             </a>
                         </li>
@@ -311,11 +312,11 @@ $page_title_data = array(
                         <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
                             <div id="aione_form_section_header" class="aione-form-section-header">
                                 <div class="aione-row aione-float-left">
-                                    <h3 class="aione-form-section-title aione-align-left">Sections</h3>
-                                    <h4 class="aione-form-section-description aione-align-left">List of all sections in this form.</h4>
+                                    <h3 class="aione-form-section-title aione-align-left"><?php echo e(__('forms.sections')); ?></h3>
+                                    <h4 class="aione-form-section-description aione-align-left"><?php echo e(__('forms.section_description')); ?></h4>
 
                                 </div> <!-- .aione-row -->
-                        		<button class="add-section-button aione-float-right aione-button pv-10">+ Add New Section</button>
+                        		<button class="add-section-button aione-float-right aione-button pv-10"><?php echo e(__('forms.add_new_section_button_text')); ?></button>
                         		<div class="clear"></div>
                             </div>
                             <?php if($sections->count() > 0): ?>
@@ -348,7 +349,7 @@ $page_title_data = array(
                                        
                                         <div id="list-forms" class="modal modal-fixed-footer" style="overflow-y: hidden;">
                                             <div class="modal-header">
-                                                <h5>Select form where you want to move this section</h5>  
+                                                <h5><?php echo e(__('forms.copy_or_move_model_text')); ?></h5>  
                                                 <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
                                             </div>
                                              <?php echo Form::open([ 'method' => 'POST', 'route' =>$route_slug.'section.move' ,'class' => 'form-horizontal']); ?>
@@ -363,7 +364,8 @@ $page_title_data = array(
                                             </div>
                                             <div class="modal-footer">
                                                
-                                                <button class="btn blue " type="submit" name="action">Proceed
+                                                <button class="btn blue " type="submit" name="action"><?php echo e(__('forms.proceed')); ?>
+
                                                 </button>
                                             </div>
                                             <?php echo Form::close(); ?>  
@@ -386,10 +388,10 @@ $page_title_data = array(
                         <?php if(Request::has('sections') && Request::input('sections') != 'all'): ?>
                             <div id="aione_form_section_header" class="aione-form-section-header">
                                 <div class="aione-row aione-float-left">
-                                    <h3 class="aione-form-section-title aione-align-left ">Fields</h3>
-                                    <h4 class="aione-form-section-description aione-align-left">List of all fields in this section</h4>
+                                    <h3 class="aione-form-section-title aione-align-left "><?php echo e(__('forms.fields')); ?></h3>
+                                    <h4 class="aione-form-section-description aione-align-left"><?php echo e(__('forms.field_description')); ?></h4>
                                 </div> <!-- .aione-row -->
-                                <button class="add-field-button aione-float-right aione-button pv-10">+ Add New Field</button>
+                                <button class="add-field-button aione-float-right aione-button pv-10"><?php echo e(__('forms.add_new_field_button_text')); ?></button>
                         		<div class="clear"></div>
                             </div>
                             <?php 
@@ -452,7 +454,7 @@ $page_title_data = array(
                                         </div>
                                         <div id="sections-list" class="modal modal-fixed-footer" style="overflow-y: hidden;">
                                             <div class="modal-header">
-                                                <h5>Destination</h5>  
+                                                <h5><?php echo e(__('forms.destination')); ?></h5>  
                                                 <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
                                             </div>
                                             <?php if(Auth::guard('admin')->check()): ?>
@@ -470,15 +472,17 @@ $page_title_data = array(
                                              <?php echo Form::open([ 'method' => 'POST', 'route' =>[$route,$field->id] ,'class' => 'form-horizontal']); ?>
 
                                             <div class="modal-content">
-                                                    Select Form
+                                                    <?php echo e(__('forms.select_form')); ?>
+
                                                 <?php echo Form::select('move_to_form',listForms(),null,['class'=>' browser-default form-list','id'=>'input_','placeholder'=>'Select form']); ?>
 
-                                                    Select Section
+                                                    <?php echo e(__('forms.select_section')); ?>
+
                                                     
                                                 
                                                 <input type="hidden" name="field_id">
                                                 <select name="move_to_section" class="browser-default section-list">
-                                                    <option>Select Section</option>
+                                                    <option><?php echo e(__('forms.select_section')); ?></option>
                                                 </select>
                                                  <?php echo FormGenerator::GenerateField('want_to'); ?>
 
@@ -508,7 +512,8 @@ $page_title_data = array(
                                                 });
                                             </script>
                                             <div class="modal-footer">
-                                                <button class="btn blue " type="submit" name="action">Proceed
+                                                <button class="btn blue " type="submit" name="action"><?php echo e(__('forms.proceed')); ?>
+
                                                 </button>
                                             </div>
                                             <?php echo Form::close(); ?>  
@@ -538,11 +543,8 @@ $page_title_data = array(
                 <?php endif; ?>
                 <?php if(Request::has('field') && Request::input('field') != ''): ?>
                     
-                    <?php if($form->type == 'survey'): ?>
-                        <?php echo $__env->make('admin.formbuilder._fields_survey', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                    <?php else: ?>
-                        <?php echo $__env->make('admin.formbuilder._field',['sections'=>$sections], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                    <?php endif; ?>
+                    <?php echo $__env->make('admin.formbuilder._field',['sections'=>$sections], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+                    
                 <?php endif; ?>
             </div>
 
@@ -724,17 +726,17 @@ $page_title_data = array(
             e.preventDefault();
             var href = $(this).attr("href");
             swal({   
-                title: "Are you sure?",   
-                text: "You will not be able to recover this!",   
+                title: '<?php echo e(__('forms.delete_swal_title')); ?>',   
+                text: '<?php echo e(__('forms.delete_swal_text')); ?>',   
                 type: "warning",   
                 showCancelButton: true,   
                 confirmButtonColor: "#DD6B55",   
-                confirmButtonText: "Yes, delete it!",   
+                confirmButtonText: '<?php echo e(__('forms.delete_swal_confirm_button_text')); ?>',   
                 closeOnConfirm: false 
             }, 
             function(){
                 window.location = href;
-               swal("Deleted!", "Your Section/field has been deleted.", "success"); 
+               swal('<?php echo e(__('forms.deleted')); ?>', '<?php echo e(__('forms.delete_swal_success_text')); ?>', '<?php echo e(__('forms.success')); ?>'); 
            });
         })
 
@@ -752,7 +754,7 @@ $page_title_data = array(
                         type : 'post',
                         data : {id : ids , _token : $('input[name=_token]').val() },
                         success : function(){
-                            Materialize.toast('sorted successfully',4000);
+                            Materialize.toast('<?php echo e(__('forms.sorted_successfully')); ?>',4000);
                         }
                     });
                }else{
@@ -767,7 +769,7 @@ $page_title_data = array(
                         type : 'get',
                         data : {data : field_order , _token : $('input[name=_token]').val() },
                         success : function(){
-                            Materialize.toast('sorted successfully',4000);
+                            Materialize.toast('<?php echo e(__('forms.sorted_successfully')); ?>',4000);
                         }
                     });
                }

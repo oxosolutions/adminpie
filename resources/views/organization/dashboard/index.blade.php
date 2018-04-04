@@ -5,8 +5,8 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'no',
-	'page_title' => 'Dashboard',
-	'add_new' => '+ Add Dashboard'
+	'page_title' => __('organization/dashboard.dashboard_page_title_text'),
+	'add_new' => ''
 	); 
 @endphp
 <style type="text/css">

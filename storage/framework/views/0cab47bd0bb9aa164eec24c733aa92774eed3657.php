@@ -13,7 +13,6 @@
         }
     }
  ?>
-
 <?php echo Form::model($model,['route'=>[$route_slug.'update.field',request()->form_id,request()->input('sections'),request()->input('field')]]); ?>
 
 
@@ -23,65 +22,114 @@
 <?php echo Form::close(); ?>
 
 
-<style type="text/css">
-    
-</style>
+
+
+
 <script type="text/javascript">
-    /*$(document).ready(function() {
-        $('#field_prefix').hide();
-        $('#field_postfix').hide();
-        $('body').on('change','#field_field_type .field_type',function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            if($(this).val() == 'select'  || $(this).val() == 'multi_select' || $(this).val() == 'checkbox' || $(this).val() == 'radio'){
-                $('.main-option-row').show();
-            }else{
-                $('.main-option-row').hide();
-            }
-            if($(this).val() == 'auto-generator'){
-                $('#field_prefix').show();
-                $('#field_postfix').show();
-            }else{
-                $('.prefix').hide();
-                $('.postfix').hide();
+    //Fields to Hide
+
+    var field_type = $('#field_397 select').val();
+
+    $('#field_397 select').change(function(){
+        var selected_field = $(this).val();
+        if($.inArray(selected_field,['select','multi_select']) !== -1){
+            $('#field_409').show();
+            $('#field_3270 input[value="model"]').attr('checked',true);
+        }else{
+            $('#field_409').hide();
+            $('#field_3270 input[value="model"]').attr('checked',false);
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        var selectedFill = '<?php echo e(@$model["prefilled_with"]); ?>';
+        console.log(selectedFill);
+        var toHide = '';
+        switch(selectedFill){
+            case'static':
+                toHide = '#field_3258, #field_409, #field_3259, #field_3257';
+            break;
+
+            case'model':
+                toHide = '#field_3258, #field_3259, #field_3257, #field_406, .field_options';
+            break;
+
+            case'dataset':
+                toHide = '#field_3257, #field_406, .field_options';
+            break;
+
+            case'survey':
+                toHide = '#field_3258, #field_406, .field_options';
+            break;
+            default:
+                toHide = '#field_3258, #field_409, #field_3259, #field_3257, #field_406, .field_options';
+
+        }
+        $(toHide).hide();
+
+        $('#field_3270 input').click(function(){
+            if($(this).val() == 'model'){
+                $('#field_409').show();
+                $('#field_3258').hide();
+                $('#field_3259').hide();
+                $('#field_3257').hide();
+                $('#field_406').hide();
+                $('.field_options').hide();
+                // $('#field_3259 select').html('');
+            }else if($(this).val() == 'dataset'){
+                $('#field_3258').show();
+                $('#field_409').show();
+                $('#field_3259').show();
+                $('#field_3257').hide();
+                $('#field_406').hide();
+                $('.field_options').hide();
+                
+                // $('#field_3259 select').html('');
+            }else if($(this).val() == 'survey'){
+                $('#field_3257').show();
+                $('#field_3259').show();
+                $('#field_409').show();
+                $('#field_3258').hide();
+                $('#field_406').hide();
+                $('.field_options').hide();
+                // $('#field_3259 select').html('');
+            }else if($(this).val() == 'static'){
+                // $('.field_options').show();
+                $('#field_406').show();
+                $('#field_3257').hide();
+                $('#field_3259').hide();
+                $('#field_409').hide();
+                $('#field_3258').hide();
+                $('.field_options').show();
+                // $('#field_3259 select').html('');
             }
         });
 
-    });*/
-    /*$('.add_message').unbind('click').bind('click' ,function(e){
-        e.preventDefault();
-        var count = $(this).attr('data-count');
-        var appended_row = '<div class="appended_error"><input type="text" class="form-control" name="field_error_message['+count+'][]"><a href="javascript:;" style="float:right;" class="delete_message"><span class=" fa fa-trash"></span></a></div>';
-        $(this).parents('.field_row').find('.messages').append(appended_row);
-        $(this).parents('.field_row').find('.delete_message').show();
-    });*/
-    /*$('body').on('click','.delete_message',function(){
-        $(this).parents('.appended_error').remove();
-        // if($(this).parents('.form-group').find('div').length == 2){
-        //     alert($(this).parents('.messages').find('.delete_message').length);
-        // }
-    });*/
-    /*$('body').on('click','.delete_validation',function(){
-        $(this).parents('.appended_vallidation').remove();
+        $('#field_3258 select').change(function(){
+            var datasetId = $(this).val();
+            $.ajax({
+               type:'GET',
+               url: route()+'/dataset/columns/',
+               data: {dataset: datasetId,status:true},
+               success: function(result){
+                    $('#field_3259 select').html(result);
+                    $('#field_3259 select').val('<?php echo e(@$model['select_column']); ?>');
+               }
+            });
+        });
+        $('#field_3257 select').change(function(){
+            var surveyId = $(this).val();
+            $.ajax({
+               type:'GET',
+               url: route()+'/survey/columns' ,
+               data: {survey_id: surveyId},
+               success: function(result){
+                    $('#field_3259 select').html(result);
+                    $('#field_3259 select').val('<?php echo e(@$model['select_column']); ?>');
+               }
+            });
+        });
     });
-    $('body').on('click','.delete_option',function(){
-        $(this).parents('.main-option-div').remove();
-    });
-
-    $('body').on('click','.del_option',function(){
-        $(this).parents('.del_opt').remove();
-    });*/
-
-    /*$('.add_validation').unbind('click').bind('click' ,function(){
-        var count = $(this).attr('data-count');
-        var appended_row = '<div class="appended_validation"><input type="text" name="field_validation['+count+'][]" class="form-control field-label-input"><a href="javascript:;" style="float:right;" class="delete_validation"><span class=" fa fa-trash"></span></a></div>';
-        $(this).parents('.field_row').find('.validations').append(appended_row);
-    });*/
-
-    /*$('.add_options').unbind('click').bind('click' ,function(){
-        var count = $('.key-counts').length;
-       
-        var appended_row = '<div class="col l12 form-group del_opt key-counts" style="padding:5px"><div class="row"><div class="col l5"><input type="text" id="test4" name="field_options[key][]"/><label for="test4">Key</label></div><div class="col l5"><input type="text" id="test5" name="field_options[value][]" /><label for="test4">Value</label></div><div class="col l2"><a href="javascript:;" class="add_options"><i class="fa fa-trash del_option"></i></a></div></div></div>';
-        $(this).parents('.field_row').find('.appended_options').append(appended_row);
-    });*/
 </script>

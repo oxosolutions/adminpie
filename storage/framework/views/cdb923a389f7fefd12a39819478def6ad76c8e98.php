@@ -4,7 +4,7 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'no',
   'show_navigation' => 'yes',
-  'page_title' => 'Chart Settings  <span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
+  'page_title' => __('organization/visualization.visualization_edit_page_title_text').'<span>' .get_visualization_title(request()->route()->parameters()['id']). '</span>' ,
   'add_new' => ''
 ); 
  ?>
@@ -18,7 +18,7 @@ $page_title_data = array(
 	        <input type="hidden" name="id" value="<?php echo e($model['id']); ?>">
 		    	<?php echo FormGenerator::GenerateForm('edit_visualization_form'); ?>	 
 	        
-	    <?php echo Form::close(); ?>
+	      <?php echo Form::close(); ?>
 
       <?php 
         if(session()->has('chartsModel')){
@@ -31,7 +31,8 @@ $page_title_data = array(
               <div class="col l8 pr-7">
                   <div class="card-v2">
                       <div class="card-v2-header">
-                          Available Charts
+                          <?php echo e(__('organization/visualization.available_charts')); ?>
+
                       </div>
                       <div class="card-v2-content" style="padding: 12px">
                           	<?php if(!empty($chartsModel)): ?>
@@ -50,7 +51,8 @@ $page_title_data = array(
               <div class="col l4 pl-7">
                   <div class="card-v2">
                       <div class="card-v2-header">
-                          Select filterable columns
+                          <?php echo e(__('organization/visualization.select_filterable_columns')); ?>
+
                       </div>
                       <div class="card-v2-content p-8">
                           	<ul class="filters">
@@ -76,7 +78,7 @@ $page_title_data = array(
               </div>
           </div>
           <div class="row">
-              <button class="btn blue" style="float: right;">Submit</button>
+              <button class="btn blue" style="float: right;"><?php echo e(__('organization/visualization.select_filterable_columns')); ?>Submit</button>
           </div>
         <?php echo Form::close(); ?>
 

@@ -77,7 +77,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset View <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => __('organization/datasets.dataset_view_page_title_text').'<span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	);
     if($dataset_type != null && $dataset_type == 'continues'){
         $page_title_data['add_new'] = 'Refresh List';
@@ -118,7 +118,7 @@
         <div id="example2" style="width: 100%; font-size: 14px;">
             
         </div>
-        <a href="javascript:;" class="btn blue save_dataset" style="margin-top: 3%; display: none;">Update Dataset</a> 
+        <a href="javascript:;" class="btn blue save_dataset" style="margin-top: 3%; display: none;">{{__('organization/datasets.update_dataset')}}</a> 
 
 
         
@@ -201,8 +201,8 @@
                 <table class="compact">
                     <thead>
                         <tr>
-                            <td>Key</td>
-                            <td>Value</td>
+                            <td>{{__('organization/datasets.key')}}</td>
+                            <td>{{__('organization/datasets.value')}}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -226,8 +226,8 @@
                 <table class="compact">
                     <thead>
                         <tr>
-                            <td>Key</td>
-                            <td>Value</td>
+                            <td>{{__('organization/datasets.key')}}</td>
+                            <td>{{__('organization/datasets.value')}}</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -251,15 +251,15 @@
 
                     </tbody>
                 </table>
-                <input type="submit" name="update_data" value="Update Record" />
+                <input type="submit" name="update_data" value="{{__('organization/datasets.update_record')}}" />
             </form>
         @endif
         <div>
             <table class="compact">
                 <thead class="hidden header-row">
                     <tr>
-                        <td>Key</td>
-                        <td>Value</td>
+                        <td>{{__('organization/datasets.key')}}</td>
+                        <td>{{__('organization/datasets.value')}}</td>
                     </tr>
                 </thead>
                 <tbody class="addNewDatasetRow">
@@ -267,18 +267,18 @@
                 </tbody>
 
             </table>
-                    <button class="AddNewDatasetRowButton hidden " >Update Dataset</button>
+                    <button class="AddNewDatasetRowButton hidden " >{{__('organization/datasets.update_dataset')}}</button>
 
         </div>
-        <button class="addRow aione-button aione-float-right mv-10" >Add Row</button>
+        <button class="addRow aione-button aione-float-right mv-10" >{{__('organization/datasets.add_row')}}Add Row</button>
         @if(!empty($tableheaders))
-            <div class="mv-10 line-height-32">Showing {{ $records->firstItem() }} to {{ $records->lastItem() }} of total {{ $records->total() }} records</div>
+            <div class="mv-10 line-height-32">{{__('organization/datasets.view_dataset_pagination_text',['count'=>$records->firstItem(),'last'=>$records->lastItem(),'total'=>$records->total()])}}</div>
             <div style="" class="table-wrapper">
                 <table class="compact dataset-table" >
                     <thead>
                         <tr>
                             <th>
-                                Action
+                                {{__('organization/datasets.action')}}
                             </th>
                             @foreach($tableheaders as $k => $header)
                                 @if(!in_array($k,['id','status','parent']))
@@ -304,17 +304,17 @@
                                                     var href = $(this).attr("href");
 
                                                     swal({   
-                                                        title: "Are you sure?",   
-                                                        text: "You will not be able to recover this row!",   
+                                                        title: "{{__('organization/datasets.delete_row_swal_title')}}",   
+                                                        text: "{{__('organization/datasets.delete_row_swal_text')}}",   
                                                         type: "warning",   
                                                         showCancelButton: true,   
                                                         confirmButtonColor: "#DD6B55",   
-                                                        confirmButtonText: "Yes, delete it!",   
+                                                        confirmButtonText: "{{__('organization/datasets.delete_row_swal_confirm_button_text')}}",   
                                                         closeOnConfirm: false 
                                                     }, 
                                                     function(){
                                                     window.location = href;
-                                                       swal("Deleted!", "Your Row has been deleted.", "success"); 
+                                                       swal("{{__('organization/datasets.deleted')}}", "{{__('organization/datasets.success_text')}}", "{{__('organization/datasets.success')}}"); 
                                                    });
                                                 })
                                             </script>
@@ -337,7 +337,7 @@
             </div>
             
             <div>
-                <button class="update-dataset hidden">Update Dataset</button>
+                <button class="update-dataset hidden">{{__('organization/datasets.update_dataset')}}</button>
             </div>
         @endif
 
@@ -347,7 +347,7 @@
     {{$records->render()}}
     @else
         <div class="aione-message warning">
-            <i class="fa fa-info-circle" style="font-size: 20px;"></i> Dataset table not found!
+            <i class="fa fa-info-circle" style="font-size: 20px;"></i>{{__('organization/datasets.dataset_table_not_found')}} 
         </div>
     @endif
 
@@ -416,7 +416,7 @@
 					type 	: "POST",
 					data 	: { data : data , _token : $('input[name=_token]').val() , dataset_id : $('input[name=dataset_id]').val()},
 					success : function(res){
-						Materialize.toast('Updated Successfully',4000);
+						Materialize.toast('{{__('organization/datasets.update_successfully')}}',4000);
 						window.location.reload();
 					}
 				});
@@ -438,7 +438,7 @@
 					type 	: "POST",
 					data 	: { data : data , _token : $('input[name=_token]').val() , dataset_id : $('input[name=dataset_id]').val()},
 					success : function(res){
-						Materialize.toast('Updated Successfully',4000);
+						Materialize.toast('{{__('organization/datasets.update_successfully')}}',4000);
 					}
 				});
 			// alert('rahul sir is working on dataset controller i will do this later -- sandeep');

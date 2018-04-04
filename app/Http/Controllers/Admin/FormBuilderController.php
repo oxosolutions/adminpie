@@ -86,6 +86,39 @@ class FormBuilderController extends Controller
         $model->fill($request->all());
         $model->save();
 
+        $formMeta = $this->assignModel('FormsMeta');
+        $defaultFormSettings = [
+            "form_border" => "1",
+            "form_theme" => "light",
+            "form_show_title" => "0",
+            "form_show_description" => "0",
+            "form_title_align" => "center",
+            "form_description_align" => "center",
+            "form_section_show_title" => "0",
+            "form_section_show_description" => "0",
+            "form_secion_show_border" => "1",
+            "form_section_title_align" => "left",
+            "form_section_description_align" => "left",
+            "form_field_show_label" => "1",
+            "form_field_show_description" => "1",
+            "form_field_show_tooltip" => "1",
+            "form_field_show_placeholder" => "1",
+            "form_field_show_border" => "1",
+            "form_field_label_position" => "top",
+            "form_show_save_button" => "1",
+            "form_show_reset_button" => "0",
+            "form_save_button_text" => "Save",
+            "form_reset_button_text" => "Cancel"];
+        foreach($defaultFormSettings as $key => $value){
+            $metaModel = $formMeta::firstOrNew(['key'=>$key,'form_id'=>$model->id]);
+            $metaModel->key = $key;
+            $metaModel->value = ($value == null)?'':$value;
+            
+            $metaModel->form_id = $model->id;
+            $metaModel->save();
+        }
+
+
         Session::flash('success','Form created successfully');
         if(Auth::guard('admin')->check()){
             return redirect()->route('list.forms');

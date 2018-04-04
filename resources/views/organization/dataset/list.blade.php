@@ -5,10 +5,10 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Datasets',
-	'add_new' => '+ Add Dataset',
+	'page_title' => __('organization/datasets.list_dataset_page_title_text'),
+	'add_new' => __('organization/datasets.add_dataset_button_text'),
 	'route' => 'create.dataset',
-	'second_button_title' => '+ Import Dataset',
+	'second_button_title' => __('organization/datasets.import_dataset_button_text'),
 	'second_button_route' => 'import.dataset',
 ); 
 @endphp	
@@ -27,7 +27,7 @@ $page_title_data = array(
 					<div class="modal-header white-text  blue darken-1">
 						<div class="row" style="padding:15px 10px;margin: 0px">
 							<div class="col l7 left-align">
-								<h5 style="margin:0px">Create Dataset</h5>	
+								<h5 style="margin:0px">{{__('organization/datasets.create_dataset')}}</h5>	
 							</div>
 							<div class="col l5 right-align">
 								<a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
@@ -41,7 +41,7 @@ $page_title_data = array(
 							
 							<div class="row">
 								<div class="col l12" style="line-height: 30px">
-									Dataset Name
+									{{__('organization/datasets.dataset_name')}}
 								</div>
 								<div class="col l12">
 									<input type="text" name="dataset_name" class="aione-setting-field" style="border:1px solid #a8a8a8;margin-bottom: 0px;height: 30px ">
@@ -54,7 +54,7 @@ $page_title_data = array(
 							</div>
 							<div class="row">
 								<div class="col l12" style="line-height: 30px">
-									Description
+									{{__('organization/datasets.description')}}
 								</div>
 								<div class="col l12">
 									 <textarea id="textarea1" name="dataset_description" class="materialize-textarea" style="border:1px solid #a8a8a8;margin-bottom: 0px;"></textarea>
@@ -73,7 +73,7 @@ $page_title_data = array(
 					
 				    </div>
 				    <div class="modal-footer">
-				      	<button class="btn blue" type="submit">Save
+				      	<button class="btn blue" type="submit">{{__('organization/datasets.save')}}
 						</button>
 				    </div>
 				    {!!Form::close()!!}

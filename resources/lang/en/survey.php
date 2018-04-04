@@ -20,6 +20,9 @@ return [
 	'survey_tab_custom_report_link'			=> "Custom Report",
 	'survey_tab_collaborate_link'			=> "Collaborate",
 	'survey_tab_customize_link'				=> "Customize",
+    'create_survey_page_title_text'         => "Create Survey",
+    'all_surveys_button_text'               => "All Surveys",
+    ''
 
 
 ];

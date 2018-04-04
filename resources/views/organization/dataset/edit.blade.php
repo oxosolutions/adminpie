@@ -40,7 +40,7 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset Edit <span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
+	'page_title' => __('organization/datasets.dataset_edit_page_title_text').'<span>'.get_dataset_title(request()->route()->parameters()['id']).'</span>',
 	'add_new' => '+ Add Role'
 	); 
 @endphp
@@ -51,7 +51,7 @@
     <div class="aione-accordion custom-accordion">
         <div class="aione-border mb-20 aione-item">
             <div class="aione-item-header bg-grey bg-lighten-3 aione-border-bottom  font-size-17  ">
-                Edit Dataset Details
+                {{__('organization/datasets.edit_dataset_details')}}
                 <i class="fa fa-chevron-down aione-float-right"></i>
             </div>
             <div class="aione-item-content">
@@ -124,8 +124,8 @@
         <div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  " style="position: relative;">
             
-                Edit Dataset
-                <button href="javascript:;" class=" aione-float-right  save_dataset" disabled style="margin-top: -8px; position: absolute;right: 5px;padding:5px ">Update Dataset</button> 
+                {{__('organization/datasets.edit_dataset')}}
+                <button href="javascript:;" class=" aione-float-right  save_dataset" disabled style="margin-top: -8px; position: absolute;right: 5px;padding:5px ">{{__('organization/datasets.update_dataset')}}</button> 
 
             </div>
             <div class="custom-scroll" style="overflow: hidden;">
@@ -214,7 +214,7 @@
                                 // $('.save_dataset').fadeOut(200);
                                 $('.save_dataset').prop( "disabled", true );
                                   // M.toast({html: 'I am a toast!'})
-                                  Materialize.toast("Saved Successfully");
+                                  Materialize.toast("{{__('organization/datasets.saved_successfully')}}");
 
                             }
                         });
@@ -319,7 +319,7 @@
 
                 @else
                     <div class="aione-message warning">
-                        <i class="fa fa-info-circle" style="font-size: 20px;"></i> Dataset table not found!
+                        <i class="fa fa-info-circle" style="font-size: 20px;"></i>{{__('organization/datasets.dataset_table_not_found')}} 
                     </div>
                 @endif
             </div>

@@ -5,7 +5,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Dataset API',
+	'page_title' => __('organization/datasets.dataset_filter_page_title_text'),
 	'add_new' => 'All Ticket',
 	'route' => 'add.ticket'
 );
@@ -124,7 +124,8 @@ $page_title_data = array(
             <div class="ac l25 p-10 fbox columns-box" id="origin" >
                 <div class="aione-border">
                     <div class="bg-grey bg-lighten-3 p-15 font-size-18 aione-border-bottom">
-                        Select Dataset Columns
+                        <?php echo e(__('organization/datasets.select_dataset_column')); ?>
+
                     </div>
                     <div class="p-10">
                         <?php $__currentLoopData = $data['columns']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -136,7 +137,8 @@ $page_title_data = array(
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         <div class="p-10 aione-border mb-10 display-inline-block blank-click" style="cursor: pointer">
                             <input type="hidden" name="blank" value="blank">
-                            Blank
+                        <?php echo e(__('organization/datasets.blank')); ?>
+
                         </div>
                     </div>
                 </div>
@@ -145,7 +147,8 @@ $page_title_data = array(
 			<div class="ac l75  p-10 pr-10 " >
                 <div class="aione-border">
                     <div class="bg-grey bg-lighten-3 p-15 font-size-18 aione-border-bottom">
-                        Design API Structure
+                        <?php echo e(__('organization/datasets.design_api_structure')); ?>
+
                     </div>
                     <div class="p-10">
                         <?php if(isset($data['meta_fields'])): ?>
@@ -211,7 +214,8 @@ $page_title_data = array(
 	
 	<div class="m-10 mb-20 aione-border link">
         <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
-            Api Link
+             <?php echo e(__('organization/datasets.api_link')); ?>
+
         </div>
         <div class="p-10">
             <?php if(!empty($data['link'])): ?>
@@ -225,7 +229,9 @@ $page_title_data = array(
         <div class="ac l100">
             <div class="aione-border">
                 <div class="bg-grey bg-lighten-3 p-15 font-size-16 aione-border-bottom">
-                    Output ( Pretty )
+                    <?php echo e(__('organization/datasets.output_pretty')); ?>
+
+                    
                 </div>
                 <div class="p-10" style="position: relative;min-height: 300px;max-height: auto">
                     <pre id="editor" class="editor data-view" >
@@ -255,7 +261,7 @@ $page_title_data = array(
             </div>
         </div>
         
-        <button type="submit" class="add-blank" style="width: 100%;">Add New</button>
+        <button type="submit" class="add-blank" style="width: 100%;"><?php echo e(__('organization/datasets.add_new_botton_text')); ?></button>
     </div>
     <script src="<?php echo e(asset('js/jquery.nestable.js')); ?>"></script>
 

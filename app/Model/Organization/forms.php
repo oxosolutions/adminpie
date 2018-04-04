@@ -44,7 +44,6 @@ class forms extends Model
     }
 
     public static function surveyList(){
-
         return self::where('type','survey')->pluck('form_title','id');
     }
 

@@ -5,8 +5,8 @@ $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'yes',
   'show_navigation' => 'yes',
-  'page_title' => 'Visualizations',
-  'add_new' => '+ Add Visualization',
+  'page_title' => __('organization/visualization.visualization_list_page_title_text'),
+  'add_new' => __('organization/visualization.visualization_add_button_text'),
   'route' => 'create.visual'
 ); 
 @endphp

@@ -10,7 +10,7 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Profile Picture',
+	'page_title' =>  __('organization/profile.profile_picture_page_title_text'),
 	'add_new' => ''
 ); 
 @endphp
@@ -86,19 +86,19 @@ $page_title_data = array(
 
 	        	</div>
 	         	<div class="ac s100 m33 l100  bg-red darken-1 aione-align-center p-0">
-	            	<a class="white p-14 display-block" href="{{ route('profile.picture.delete',$id) }}">Remove Image</a>
+	            	<a class="white p-14 display-block" href="{{ route('profile.picture.delete',$id) }}">{{ __('organization/profile.remove_image')}}</a>
 	         	</div>
 			</div>
 			<div class="ac l70 m70 s100  ">
 				<div class="aione-border  aione-align-center" style="min-height: 350px;max-height: 350px">
 					<div class="aione-border-bottom">
-						<h5 class="line-height-30">Change profile picture</h5>
+						<h5 class="line-height-30">{{ route('profile.picture.delete',$id) }}">{{ __('organization/profile.change_profile_picture')}}</h5>
 					</div>
 					{!! Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1'])!!}
 						<div class="abc ph-100 pt-100" >
 						   	<input type="hidden" name="user_id" value="{{$id}}">
 							<input style="" type="file" name="aione-dp" class="image_file_input">
-							<input style="" type="submit" name="submit" value="Add Profile Picture" class="submit display-none">
+							<input style="" type="submit" name="submit" value="{{ __('organization/profile.add_profile_picture')}}" class="submit display-none">
 						</div>
 					{!!Form::close()!!}
 				</div>
