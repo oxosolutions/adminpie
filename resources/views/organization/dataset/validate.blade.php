@@ -81,7 +81,7 @@
                             <div class="aione-message error">
                                 <strong>Column:</strong>{{$columns}}, &nbsp;&nbsp;&nbsp;&nbsp;<strong>Row:</strong>{{$key}}<br>    
                             </div>
-                            
+                            @break
                         @endforeach
                         
                     </div>

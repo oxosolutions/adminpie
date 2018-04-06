@@ -80,7 +80,7 @@
                             <div class="aione-message error">
                                 <strong>Column:</strong><?php echo e($columns); ?>, &nbsp;&nbsp;&nbsp;&nbsp;<strong>Row:</strong><?php echo e($key); ?><br>    
                             </div>
-                            
+                            <?php break; ?>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         
                     </div>

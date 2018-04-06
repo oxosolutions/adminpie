@@ -1331,7 +1331,8 @@ class DatasetController extends Controller
         }
         return view('organization.dataset.edit',['columns'=>$columns,'dataset'=>$dataset]);
     }
-     public function defineDataset(Request $request, $id){
+
+    public function defineDataset(Request $request, $id){
      	if(!$this->validateUser($id)){
         	return redirect()->route('list.dataset');
         }
@@ -1352,7 +1353,8 @@ class DatasetController extends Controller
             $columns = [];
             $dataset = [];
         }
-        return view('organization.dataset.define',['columns'=>$columns,'dataset'=>$dataset]);
+        return back();
+        // return view('organization.dataset.define',['columns'=>$columns,'dataset'=>$dataset]);
     }
     public function filterDataset(Request $request, $id){
     	if(!$this->validateUser($id)){
@@ -1821,7 +1823,12 @@ class DatasetController extends Controller
         }
         $dataset = Dataset::find($id);
         $dataset->dataset_description = $dataset->description;
-        $datasetTable = Dataset::find($id)->dataset_table;
+        $datasetModel = Dataset::find($id);
+        $datasetTable = $datasetModel->dataset_table;
+        $definedColumns = [];
+        if($datasetModel->defined_columns != '' && $datasetModel->defined_columns != null){
+            $definedColumns = json_decode($datasetModel->defined_columns, true);
+        }
         try{
             $headers = DB::table(str_replace('ocrm_','',$datasetTable))->first();
             $columns = collect($headers)->except(['id','status','parent']);
@@ -1829,7 +1836,7 @@ class DatasetController extends Controller
             $columns = [];
             $dataset = [];
         }
-        return view("organization.dataset.structure",['columns'=>$columns,'dataset'=>$dataset]);
+        return view("organization.dataset.structure",['columns'=>$columns,'dataset'=>$dataset,'defined'=>$definedColumns]);
     }
    
 }

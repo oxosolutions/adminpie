@@ -46,8 +46,9 @@
 	        </div>
 		</div>
     </div>
-		
-	<div class="aione-border">
+	<?php echo Form::open(['route'=>['define.dataset',request()->id]]); ?>
+
+    	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
                 <?php echo e(__('organization/datasets.define_dataset')); ?>
 
@@ -76,16 +77,18 @@
                                     <td>
                                    
                                     <?php echo Form::select($key,
-                                            [   "/^[\s\S]*$/" =>   'Text',
-                                                "/^[a-zA-Z ]*$/" =>   'String(Only Alphabets)',
-                                                '/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26]php)00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/' =>  'Date',
+                                            [   
+                                            "/^[\s\S]*$/" =>   'Text',
+                                            "/^[a-zA-Z ]*$/" =>   'String(Only Alphabets)',
+                                            '/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26]php)00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/' =>  'Date',
                                             '/^[0-9]*$/'                    =>  'Number',
                                             '/^[0-9]+(\.[0-9]{1,5})?$/'     =>  'Integer',
                                             '/^\d*[02468]$/'                =>  'Even Number',
                                             '/^\d*[13579]$/'                =>  'Odd Number',
                                             '/^\d{10}$/'                    =>  'Mobile Number(10 Digit Only)',
+                                            '/([A-Z0-9])/'                  =>  'AlphaNumeric'
                                             //'area_code'                    =>  'Area Code'
-                                            ],null,['class'=>'browser-default']); ?>     
+                                            ],$defined[$key],['class'=>'browser-default']); ?>     
                                     <!--  Code BY : Amrit END-->    
 
                                     </td>
@@ -99,7 +102,10 @@
                     </table>
                 </div>
             </div>
+            <button class="mt-20" type="submit">Save</button>
         </div>
+    <?php echo Form::close(); ?>
+
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<style type="text/css">

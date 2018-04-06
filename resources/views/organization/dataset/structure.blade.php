@@ -43,8 +43,8 @@
 	        </div>
 		</div>
     </div>
-		
-	<div class="aione-border">
+	{!! Form::open(['route'=>['define.dataset',request()->id]]) !!}
+    	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
                 {{ __('organization/datasets.define_dataset') }}
             </div>
@@ -83,7 +83,7 @@
                                             '/^\d{10}$/'                    =>  'Mobile Number(10 Digit Only)',
                                             '/([A-Z0-9])/'                  =>  'AlphaNumeric'
                                             //'area_code'                    =>  'Area Code'
-                                            ],null,['class'=>'browser-default'])!!}     
+                                            ],$defined[$key],['class'=>'browser-default'])!!}     
                                     <!--  Code BY : Amrit END-->    
 
                                     </td>
@@ -97,7 +97,9 @@
                     </table>
                 </div>
             </div>
+            <button class="mt-20" type="submit">Save</button>
         </div>
+    {!! Form::close() !!}
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 	<style type="text/css">
