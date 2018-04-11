@@ -298,55 +298,50 @@ class EmployeeController extends Controller
         ];
         $this->validate($request , $valid_fields);
     }
-    
+
     /**
     * Save Employee
     * @param  Request $request having all the posted data
     * @return [type] will return back to employee list route
+    * @author Rahul 
     */
     public function save(Request $request){
-        if(is_default_role_selected_for_employee('employee_role')){
+        if(!is_default_role_selected_for_employee('employee_role')){
             Session::flash('error','Need to set Role Id for employee in setting.');
-            return back();
+            return back()->withInput($request->all());
         }
         $request['date_of_joining'] = date("Y-m-d");
         $tbl = Session::get('group_id');
         $this->validateAddEmployee($request);
         if($this->is_employee_id_exists($request['employee_id'])) {
             Session::flash('error', 'Employee Id already in use.');
-            return back();
+            return back()->withInput($request->all());
         }
-        $manadatory_field = ['designation','department','user_shift','employee_id']; 
-        if(count(array_intersect(array_keys($request->all()) , $manadatory_field))== count($manadatory_field)){
-            $user =  new GroupUsers();
-            $user->fill($request->except('password'));
-            $user->password =  Hash::make($request['password']);
-            $user->app_password =  $request['password'];
-            $user->status = 1;
-            $user->save();
-            $user_id = $user->id;
-            $userTable = new User();
-            $userTable->user_id = $user_id;
-            $userTable->user_type = 'employee';
-            $userTable->save();
-            $u_id = $userTable->id;
-            $assign_role = new UserRoleMapping();
-            $assign_role->user_id = $user_id;
-            $assign_role->role_id = setting_val_by_key('employee_role');
-            $assign_role->status = 1;
-            $assign_role->save();
-            foreach($request->all() as $key => $value){
-                if(in_array($key,['designation','department','user_shift','employee_id','date_of_joining'])){
-                    $userMeta = new UsersMeta;
-                    $userMeta->user_id = $user_id;
-                    $userMeta->key = $key;
-                    $userMeta->value = $value;
-                    $userMeta->save();
-                }
+        $user =  new GroupUsers();
+        $user->fill($request->except('password'));
+        $user->password =  Hash::make($request['password']);
+        $user->app_password =  $request['password'];
+        $user->status = 1;
+        $user->save();
+        $user_id = $user->id;
+        $userTable = new User();
+        $userTable->user_id = $user_id;
+        $userTable->user_type = 'employee';
+        $userTable->save();
+        $u_id = $userTable->id;
+        $assign_role = new UserRoleMapping();
+        $assign_role->user_id = $user_id;
+        $assign_role->role_id = setting_val_by_key('employee_role');
+        $assign_role->status = 1;
+        $assign_role->save();
+        foreach($request->all() as $key => $value){
+            if(in_array($key,['designation','department','user_shift','employee_id','date_of_joining'])){
+                $userMeta = new UsersMeta;
+                $userMeta->user_id = $user_id;
+                $userMeta->key = $key;
+                $userMeta->value = $value;
+                $userMeta->save();
             }
-        }else{
-            Session::flash('error','Need to fill all fields.');
-            return back();
         }
         return redirect()->route('list.employee');
     }

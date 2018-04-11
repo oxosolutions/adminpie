@@ -1805,9 +1805,9 @@ function get_survey_meta($sid){
 	{
 		$setting = org_setting::where('key',$key);
 		if($setting->exists()){
-		 if(Role::where('id',$setting->first()->value)->exists()){
-		 	return $setting->first()->value;
-		 }
+            if(Role::where('id',$setting->first()->value)->exists()){
+                return $setting->first()->value;
+            }
 		}
 		 return Null;
 	}
@@ -1871,7 +1871,8 @@ function get_survey_meta($sid){
      * @return boolean will return true or false
      */
     function is_default_role_selected_for_employee($role_name){
-        if(empty(setting_val_by_key($role_name))){
+        $role_value = setting_val_by_key($role_name);        
+        if(empty($role_value) || $role_value == null){
             return false;
         }else{
             return true;

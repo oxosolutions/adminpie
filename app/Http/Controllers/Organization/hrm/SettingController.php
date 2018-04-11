@@ -187,7 +187,7 @@ class SettingController extends Controller
     	return view('organization.settings.basic',['model'=>$settingsModel]);
     }
 
-    public function saveOrganizationSettings(Request $request){
+    public function saveOrganizationSettings(Request $request){       
     	$organizationId = Session::get('organization_id');
     	if($request->has('employee_role')){
     		update_organization_metas($request->all());
