@@ -1867,6 +1867,19 @@ function get_survey_meta($sid){
 	}
 
     /**
+     * Check if default role selected for employee
+     * @return boolean will return true or false
+     */
+    function is_default_role_selected_for_employee($role_name){
+        if(empty(setting_val_by_key($role_name))){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+
+    /**
      * [createDefaultRoles will create new default roles if there is no any slug for specific role]
      * @param  [type] $details [having all the role related data]
      * @return [type]          [array]

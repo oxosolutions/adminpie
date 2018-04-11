@@ -42,6 +42,7 @@ class RedirectIfOrganizationAuthenticated
                 }
                 Session::put('organization_id',$model->id);
                 $auth = Auth::guard('org');
+
                 $prefix = DB::getTablePrefix();
                 //if(Schema::hasTable($prefix.'group_'.$group_id.'_users')){
                     if($auth->check()) {
@@ -58,7 +59,6 @@ class RedirectIfOrganizationAuthenticated
                     }
                     Session::put('organization_id',$model->id);
                 }*/
-               
             }else{
                 Session::put('organization_id',$secondary_domain->id);
                 $auth = Auth::guard('org');
