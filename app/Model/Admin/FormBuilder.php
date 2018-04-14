@@ -67,7 +67,8 @@ class FormBuilder extends Model
                     'message' => 'Message',
                     'switch' => 'Switch',
                     'color' => 'Color',
-                    'icon' => 'Icon'
+                    'icon' => 'Icon',
+                    'media' => 'Media'
                 ];
         return $types;
     }

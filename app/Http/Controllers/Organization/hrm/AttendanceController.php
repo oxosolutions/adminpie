@@ -795,7 +795,8 @@ class AttendanceController extends Controller
  		}
 		return view('organization.attendance.attendence-list',compact('data'));
 	}
-/** attendance_check  use in attendanceList
+    
+    /** attendance_check  use in attendanceList
      * 
      * @param - 
      * @return to list attendance

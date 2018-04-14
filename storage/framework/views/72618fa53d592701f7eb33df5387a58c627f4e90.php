@@ -72,7 +72,7 @@ $page_title_data = array(
                 <thead>
                     <tr>
                         <th>Months</th>
-                        <th>Lock/Unlock</th>
+                        
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -91,27 +91,7 @@ $page_title_data = array(
                     <?php endif; ?>
                     <tr>
                         <td><?php echo e($month[$i]); ?></td>
-                        <td>
-                            <?php if(isset($data[$j])): ?>
-                             <?php echo Form::open(['route'=>'ajax.lock.attendance']); ?>
-
-                                <input type="hidden" name="year" value="<?php echo e($data['year']); ?>">
-                                <input type="hidden" name="month" value="<?php echo e($j); ?>">
-                                    <?php if($data[$j]['lock_status']==0): ?>
-                                        
-                                        <?php echo Form::submit('Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']); ?>
-
-
-                                    <?php else: ?> 
-                                        <?php echo Form::submit('Lock',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']); ?>
-
-                                    <?php endif; ?>
-                                    
-                              <?php echo Form::close(); ?>
-
-                                <?php else: ?>
-                                    <span class="red">-</span>
-                            <?php endif; ?>
+                       
                         </td>
                         <td>
                             <?php if(isset($data[$j])): ?>
@@ -130,35 +110,20 @@ $page_title_data = array(
                             Not Mark
                             <?php endif; ?>
                         </td>
-                        <td style="width: 25%">
-                            <?php echo Form::open(['route'=>'list.attendance','class'=>'display-inline']); ?>
-
-                                <input type="hidden" name="year" value="<?php echo e($data['year']); ?>">
-                                <input type="hidden" name="month" value="<?php echo e($j); ?>">
-                                <?php echo Form::submit('view',['class'=>'special-btn']); ?>
-
-                            <?php echo Form::close(); ?>
-
-                            <?php if(isset($data[$j])): ?>
-                            <a href="">
-                                 
-                                <?php echo Form::open(['route'=>'hr.attendance' ,'class'=>'display-inline']); ?>
-
-                                <input type="hidden" name="year" value="<?php echo e($data['year']); ?>">
-                                <input type="hidden" name="month" value="<?php echo e($j); ?>">
-                                <input type="hidden" name="date" value="1">
-                                <?php echo Form::submit('edit',['class'=>'special-btn']); ?>
-
-                            <?php echo Form::close(); ?>
-
+                        
+                        <td>
+                            <a href="" class="aione-button bg-orange circle aione-shadow">
+                                <i class="fa fa-tv white line-height-36"></i>
                             </a>
-                           
-                            <?php else: ?>
-                                -
-                            <?php endif; ?>
-                            |
-                             <a href="<?php echo e(route('import.form.attendance',['year'=>$data['year'],'month'=>$j])); ?>">import</a>
-                             |
+                            <a href="" class="aione-button bg-red circle aione-shadow">
+                                <i class="fa fa-pencil white line-height-36"></i>
+                            </a>
+                            <a href="" class="aione-button bg-green circle aione-shadow">
+                                <i class="fa fa-sign-in white line-height-36"></i>
+                            </a>
+                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button bg-light-blue circle aione-shadow">
+                                <i class="fa fa-table white line-height-36"></i>
+                            </a>
                             <?php echo Form::open(['route'=>'hr.attendance','class'=>'display-inline']); ?>
 
                                 <input type="hidden" name="year" value="<?php echo e($data['year']); ?>">
@@ -168,7 +133,11 @@ $page_title_data = array(
 
                             <?php echo Form::close(); ?>
 
+                            <a href="" class="aione-button bg-light-blue circle aione-shadow ">
+                                <i class="fa fa-unlock white line-height-36"></i>
+                            </a>
                         </td>
+
                     </tr>
                     <?php endfor; ?>
                 </tbody>

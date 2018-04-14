@@ -32,12 +32,7 @@
       <li class="aione-tab <?php echo e((Request::route()->action['as'] == $route_slug.'form.custom')?'nav-item-current':''); ?>">
         <a href="<?php echo e(route($route_slug.'form.custom',$id)); ?>"><span class="nav-item-text">Customize</span></a>
       </li>
-
-
-
       <?php if(Auth::guard('org')->check()): ?>
-       
-
       <?php endif; ?>
 
       <div class="clear"></div>

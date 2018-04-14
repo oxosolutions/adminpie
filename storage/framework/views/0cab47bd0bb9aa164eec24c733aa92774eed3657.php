@@ -23,9 +23,42 @@
 
 
 
-
+<style type="text/css">
+    .hide_field_message h4{
+        color: #039be5;
+        cursor: pointer;
+    }
+    .ar .ac.hide_field{
+        display: none;
+    }
+    #field_407{
+        display: none;
+    }
+</style>
 
 <script type="text/javascript">
+
+
+    $('#field_3279').click(function(){
+        $('#field_407').toggle();
+    });
+
+    $('#field_3280').click(function(){
+        $('#field_404').toggle();
+    });
+
+    $('#field_3281').click(function(){
+        $('#field_403').toggle();
+    });
+
+    $('#field_3282').click(function(){
+        $('#field_405').toggle();
+    });
+
+    $('#field_3283').click(function(){
+        $('#field_3256').toggle(); 
+    });
+
     //Fields to Hide
 
     var field_type = $('#field_397 select').val();
@@ -77,7 +110,6 @@
                 $('#field_3257').hide();
                 $('#field_406').hide();
                 $('.field_options').hide();
-                // $('#field_3259 select').html('');
             }else if($(this).val() == 'dataset'){
                 $('#field_3258').show();
                 $('#field_409').show();
@@ -85,8 +117,6 @@
                 $('#field_3257').hide();
                 $('#field_406').hide();
                 $('.field_options').hide();
-                
-                // $('#field_3259 select').html('');
             }else if($(this).val() == 'survey'){
                 $('#field_3257').show();
                 $('#field_3259').show();

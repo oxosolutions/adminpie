@@ -57,13 +57,13 @@ $page_title_data = array(
 		position: absolute;
 		right: 5px;
 		top: 5px;
-		display: none;
-
-	}
-	.aione-breadcumb > div:hover > button{
 		display: block;
 
 	}
+	/*.aione-breadcumb > div:hover > button{
+		display: block;
+
+	}*/
 	.aione-breadcumb > div:after{
 		    content: '';
     border-left: 15px solid #ffffff;
@@ -95,10 +95,53 @@ $page_title_data = array(
 		border: none;
 	}
 	.aione-breadcumb > div:first-child{
-		padding-left: 20px;
+		/*padding-left: 20px;*/
 	}
     .aione-tooltip:hover:before{
         z-index: 9
+    }
+    .edit-icon-button{
+        background-color: #f5f5f5;width: 30px;border-radius: 50%
+    }
+    .toggle-sidenav .show{
+        display: inline-block;
+    }
+    .toggle-sidenav .hidden{
+        display:none;
+    }
+    .toggle-sidenav.active .show{
+        display: none;
+    }
+    .toggle-sidenav.active .hidden{
+        display:inline-block;
+    }
+    .aione-bars{
+        display: inline-block;
+        position: relative;
+        text-align: center;
+        width: 20px;
+        height: 20px;
+      
+    }
+    .aione-bars:before{
+        content: "";
+        position: absolute;
+        width: 100%;
+        top: 2px;
+        bottom: 2px;
+        display: block;
+        border-top: 2px solid #454545;
+        border-bottom: 2px solid #454545;
+    }
+    .aione-bars:after{
+        content: "";
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        bottom: 0;
+        display: block;
+        margin: -1px 0 0 0;
+        border-top: 2px solid #454545;
     }
 </style>
 <script type="text/javascript">
@@ -116,20 +159,22 @@ $page_title_data = array(
 		$('.add-field').toggle();
 	});
 	$('body').on('click','.toggle-sidenav',function(){
-		$('.module-wrapper').toggleClass('sidebar-active');
+        $('.module-wrapper').toggleClass('sidebar-active');
+		$(this).toggleClass('active');
+
 	});
 </script>
 @if(!empty($error))
  @include('organization.survey._tabs')
     <div class="aione-message warning">
         {{$error}}
-     </div>
+    </div>
 
 @elseif(!@$permission)
-        <div>
-            <div class="access-denied">{{__('forms.access_denied')}}</div>
-            <div class="permission">{{__('forms.permission')}}</div>
-        </div>
+    <div>
+        <div class="access-denied">{{__('forms.access_denied')}}</div>
+        <div class="permission">{{__('forms.permission')}}</div>
+    </div>
 @else
     
     @if($form->type == 'survey')
@@ -138,19 +183,26 @@ $page_title_data = array(
         @include('admin.formbuilder._tabs')
     @endif
     <div class="aione-border  mb-20 bg-grey bg-lighten-3 p-5">
-    	<div class="display-inline-block p-10 toggle-sidenav">
-    		<i class="fa fa-bars"></i>
+    	<div class="display-inline-block p-10 toggle-sidenav aione-tooltip"  title="Show Sidebar" style="    vertical-align: middle;">
+            {{-- <a class="aione-tooltip show"  title="Show Sidebar">
+                <i class="fa fa-bars"></i>                
+            </a>
+            <a class="aione-tooltip hidden"  title="Hide Sidebar">
+                <i class="fa fa-close"></i>      
+            </a> --}}
+            <a class="aione-bars " >
+                   
+            </a>
     	</div>
     	<div class="display-inline-block aione-breadcumb">
-    		<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-	    		<b>{{__('forms.form_page_title_text')}}:</b><a href=""> {{@$title}} </a>
-	    		<button class="aione-button  edit-form-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+    		<div class="p-5  display-inline-block ml-20 bg-white line-height-32">
+	    		<b>{{__('forms.form_page_title_text')}}:</b><a href=""> {{@ strip_tags($title)}} </a>
+	    		<span class="ml-6 edit-form-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil line-height-30 aione-align-center edit-icon-button" style=""></i></span>
 	    	</div>
-
 	    	@if(Request::has('sections'))
-    	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-    	    		<b>Section:</b><a href=""> {{ $sections->where('id',request()->sections)->first()->section_name }} </a>
-    	    		<button class="aione-button edit-section-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
+    	    	<div class="p-5  display-inline-block ml-20 bg-white line-height-32">
+    	    		<b>Section:</b><a href=""> {{ $sections->where('id',request()->sections)->first()->section_name }}</a>
+    	    		<span class=" ml-6  edit-section-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil line-height-30 aione-align-center edit-icon-button" style=""></i></span>
     	    	</div>
             @endif
             @if(Request::has('field'))
@@ -158,7 +210,7 @@ $page_title_data = array(
                     $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
                 @endphp
     	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-    	    		<b>{{__('forms.field')}}:</b> {{ $sectionFields->where('id',request()->field)->first()->field_title }}  
+    	    		<b>{{__('forms.field')}}:</b> {{ strip_tags($sectionFields->where('id',request()->field)->first()->field_title) }}  
     	    		{{-- <button class="aione-button edit-section-detail-button" title="Edit Form Details"><i class="fa fa-pencil"></i></button> --}}
     	    	</div>
             @endif

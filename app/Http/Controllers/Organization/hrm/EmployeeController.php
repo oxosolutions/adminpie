@@ -163,12 +163,6 @@ class EmployeeController extends Controller
 
 
     public function employeeListDatatable(){
-        // Get employee list on the behalf of role
-        /*$model = User::with(['metas','user_role_rel'])->whereHas('user_role_rel', function($query){
-        $query->with(['roles'])->whereHas('roles', function($query){
-        $query->where('slug','employee');
-        });
-        })->get();*/
         $model = User::with(['belong_group.metas'])->where(['user_type'=>'employee'])->get();//->toArray();
         foreach($model as $key => $val){
             if(!empty($val['belong_group'])){

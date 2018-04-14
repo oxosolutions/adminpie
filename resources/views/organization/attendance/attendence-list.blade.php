@@ -73,7 +73,7 @@ $page_title_data = array(
                 <thead>
                     <tr>
                         <th>Months</th>
-                        <th>Lock/Unlock</th>
+                        {{-- <th>Lock/Unlock</th> --}}
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -92,23 +92,23 @@ $page_title_data = array(
                     @endif
                     <tr>
                         <td>{{$month[$i]}}</td>
-                        <td>
+                       {{--  <td>
                             @if(isset($data[$j]))
                              {!! Form::open(['route'=>'ajax.lock.attendance']) !!}
                                 <input type="hidden" name="year" value="{{$data['year']}}">
                                 <input type="hidden" name="month" value="{{$j}}">
                                     @if($data[$j]['lock_status']==0)
                                         
-                                        {!! Form::submit('Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']) !!}
+                                        {!! Form::submit('Click to Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']) !!}
 
                                     @else 
-                                        {!! Form::submit('Lock',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
+                                        {!! Form::submit('Click to Lock',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
                                     @endif
                                     
                               {!! Form::close() !!}
                                 @else
                                     <span class="red">-</span>
-                            @endif
+                            @endif --}}
                         </td>
                         <td>
                             @if(isset($data[$j]))
@@ -126,36 +126,25 @@ $page_title_data = array(
                             Not Mark
                             @endif
                         </td>
-                        <td style="width: 25%">
-                            {!! Form::open(['route'=>'list.attendance','class'=>'display-inline']) !!}
-                                <input type="hidden" name="year" value="{{$data['year']}}">
-                                <input type="hidden" name="month" value="{{$j}}">
-                                {!! Form::submit('view',['class'=>'special-btn']) !!}
-                            {!! Form::close() !!}
-                            @if(isset($data[$j]))
-                            <a href="">
-                                 
-                                {!! Form::open(['route'=>'hr.attendance' ,'class'=>'display-inline']) !!}
-                                <input type="hidden" name="year" value="{{$data['year']}}">
-                                <input type="hidden" name="month" value="{{$j}}">
-                                <input type="hidden" name="date" value="1">
-                                {!! Form::submit('edit',['class'=>'special-btn']) !!}
-                            {!! Form::close() !!}
+                        
+                        <td>
+                            <a href="" class="aione-button bg-orange circle aione-shadow">
+                                <i class="fa fa-tv white line-height-36"></i>
                             </a>
-                           
-                            @else
-                                -
-                            @endif
-                            |
-                             <a href="{{route('import.form.attendance',['year'=>$data['year'],'month'=>$j])}}">import</a>
-                             |
-                            {!! Form::open(['route'=>'hr.attendance','class'=>'display-inline']) !!}
-                                <input type="hidden" name="year" value="{{$data['year']}}">
-                                <input type="hidden" name="month" value="{{$j}}">
-                                <input type="hidden" name="date" value="1">
-                                {!! Form::submit('Mark attendace',['class'=>'special-btn']) !!}
-                            {!! Form::close() !!}
+                            <a href="" class="aione-button bg-red circle aione-shadow">
+                                <i class="fa fa-pencil white line-height-36"></i>
+                            </a>
+                            <a href="" class="aione-button bg-green circle aione-shadow">
+                                <i class="fa fa-sign-in white line-height-36"></i>
+                            </a>
+                            <a href="{{ route('hr.attendance',['year'=>$data['year'],'month'=>$j]) }}" class="aione-button bg-light-blue circle aione-shadow">
+                                <i class="fa fa-table white line-height-36"></i>
+                            </a>
+                            <a href="" class="aione-button bg-light-blue circle aione-shadow ">
+                                <i class="fa fa-unlock white line-height-36"></i>
+                            </a>
                         </td>
+
                     </tr>
                     @endfor
                 </tbody>

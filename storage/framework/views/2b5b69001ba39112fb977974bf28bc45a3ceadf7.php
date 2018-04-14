@@ -218,6 +218,9 @@
 min-width: 220px;
 max-width: 400px;
 }
+.field-wrapper.hidden.active{
+	display:none;
+}
 </style>
 <!-- load emmet code and snippets compiled for browser -->
 <script src="https://cloud9ide.github.io/emmet-core/emmet.js"></script>
@@ -228,6 +231,15 @@ max-width: 400px;
 			$('.aione-main').removeClass('sidebar-small');
 		}
 	$(document).ready(function() {
+
+        $( ".aione-target" ).click(function(e) {
+            e.preventDefault();
+            $(this).toggleClass('active');
+            var target = $(this).attr("data-target");
+            if(target  != undefined){
+                $( "#"+ target).toggleClass("active");
+            }
+        });
 
 		/*****************************************************
 		/*  Aione Slider
