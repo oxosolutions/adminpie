@@ -1,7 +1,7 @@
 @extends('layouts.main')
 @section('content')
 <style type="text/css">
-        .special-btn{
+    .special-btn{
     color: #039be5 !important;
     background: none !important;
     padding: 0 !important;
@@ -11,6 +11,9 @@
     .aione-tooltip:before{
         width: auto !important;
         white-space: pre !important;
+    }
+    .aione-button:hover i{
+        color: #454545 !important;
     }
 </style>
 @php
@@ -42,7 +45,7 @@ $page_title_data = array(
                 <div id="field_group_id" class="field field-type-select">
                     {!! Form::open(['route'=>'lists.attendance']) !!}
                         <div class="ar">
-                            <div class="ac l80">
+                            <div class="ac l100">
                                 {!! Form::selectRange('year', 2015,2030, @$data['year'], ['id'=>'input_group_id', 'class'=>'browser-default select-year']) !!}        
                             </div>
                             <div class="loading display-none line-height-40 font-weight-800 font-size-18">
@@ -52,8 +55,6 @@ $page_title_data = array(
                                 {!! Form::submit('Submit',['style'=>'width:100%']) !!}        
                             </div> --}}
                         </div>
-                        
-                        
                     {!! Form::close() !!}
                     <script type="text/javascript">
                         $(document).on('change','.select-year',function(){
@@ -75,7 +76,7 @@ $page_title_data = array(
                         <th>Months</th>
                         {{-- <th>Lock/Unlock</th> --}}
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th style="width: 400px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,7 +92,7 @@ $page_title_data = array(
 
                     @endif
                     <tr>
-                        <td>{{$month[$i]}}</td>
+                        <td>{{$month[$i]}}</td>g
                        {{--  <td>
                             @if(isset($data[$j]))
                              {!! Form::open(['route'=>'ajax.lock.attendance']) !!}
@@ -128,19 +129,19 @@ $page_title_data = array(
                         </td>
                         
                         <td>
-                            <a href="" class="aione-button bg-orange circle aione-shadow">
+                            <a href="" class="aione-button bg-orange circle aione-shadow aione-tooltip" title="View Attendance">
                                 <i class="fa fa-tv white line-height-36"></i>
                             </a>
-                            <a href="" class="aione-button bg-red circle aione-shadow">
+                            <a href="" class="aione-button bg-red circle aione-shadow aione-tooltip" title="Edit Attendance">
                                 <i class="fa fa-pencil white line-height-36"></i>
                             </a>
-                            <a href="" class="aione-button bg-green circle aione-shadow">
+                            <a href="" class="aione-button bg-green circle aione-shadow aione-tooltip" title="Import Attendance">
                                 <i class="fa fa-sign-in white line-height-36"></i>
                             </a>
-                            <a href="{{ route('hr.attendance',['year'=>$data['year'],'month'=>$j]) }}" class="aione-button bg-light-blue circle aione-shadow">
+                            <a href="{{ route('hr.attendance',['year'=>$data['year'],'month'=>$j]) }}" class="aione-button bg-light-blue circle aione-shadow aione-tooltip" title="Mark Attendance">
                                 <i class="fa fa-table white line-height-36"></i>
                             </a>
-                            <a href="" class="aione-button bg-light-blue circle aione-shadow ">
+                            <a href="" class="aione-button bg-light-blue circle aione-shadow aione-tooltip" title="Lock Attendance">
                                 <i class="fa fa-unlock white line-height-36"></i>
                             </a>
                         </td>
@@ -284,6 +285,4 @@ $page_title_data = array(
 </script>	
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
-
-
 @endsection
