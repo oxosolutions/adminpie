@@ -78,7 +78,7 @@ $page_title_data = array(
               </div>
           </div>
           <div class="row">
-              <button class="btn blue" style="float: right;"><?php echo e(__('organization/visualization.select_filterable_columns')); ?>Submit</button>
+              <button class="btn blue" style="float: right;"><?php echo e(__('organization/visualization.select_filterable_columns')); ?></button>
           </div>
         <?php echo Form::close(); ?>
 

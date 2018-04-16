@@ -500,7 +500,7 @@ class AttendanceController extends Controller
 	************************************************************/
 	public function hrm_attendance_view(Request $request, $year=null, $month=null){
 		$data['year'] = $data['month'] = null;
-		if($request->isMethod('post')){
+		if($request->has('year') && $request->has('month')){
 			$data['year'] = $request['year'];
 			$data['month'] = $request['month'];
 		}
@@ -605,6 +605,33 @@ class AttendanceController extends Controller
 					}])->where('status',1)->get();	
 		return $data;
 	}
+
+	protected function handleDateRequest($request, $type = null){
+        $current_dates = $this->current_date_data;
+        $year = $request->year;
+        $month = $request->month;
+        if($request->has('day')){
+            dd($request->day);
+            $day = $request->day;
+        }else{
+            $day = Date('d');
+        }
+        $fullDate = $year.'-'.$month.'-'.$day;
+        if($type == 'post'){
+            $time = aione_format_date($request['mark-attendance-date']);
+        }else{
+            $time = aione_format_date($fullDate);
+        }
+
+        $time = strtotime($time);
+        $current_dates['year'] =  date('Y', $time);
+        $current_dates['month'] = intval(date('m', $time));
+        $current_dates['date'] = intval(date('d', $time));
+        unset($current_dates['month_week_no']);
+        unset($current_dates['day']);
+
+        return $current_dates;
+    }
 	/**
      * The attendance_by_hr use in Mark attendance, edit
      * @param -
@@ -613,16 +640,14 @@ class AttendanceController extends Controller
      */
 	public function attendance_by_hr(Request $request){
  		$attendance_data = null;
-		$current_dates = $this->current_date_data;
-		if($request->isMethod('post')){
-			$time = aione_format_date($request['mark-attendance-date']); 
-			$time = strtotime($time); 
-			$current_dates['year'] =  date('Y', $time);
-			$current_dates['month'] = intval(date('m', $time));
-			$current_dates['date'] = intval(date('d', $time));
-			unset($current_dates['month_week_no']);
-			unset($current_dates['day']);
+        $current_dates = $this->current_date_data;
+		if($request->has('year') && $request->has('month')){
+            $current_dates = $this->handleDateRequest($request);
 		}
+		if($request->isMethod('post')){
+            $current_dates = $this->handleDateRequest($request,'post');
+        }
+
 		$employee_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
 		$mark_attendance_date = $current_dates['year'].'-'.$current_dates['month'].'-'.$current_dates['date'];

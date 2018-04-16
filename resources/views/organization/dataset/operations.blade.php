@@ -62,52 +62,69 @@
         <div class="clear"></div>
     </nav>
     <div class="ar mt-100">
-        <div class="ac l50">
-            <div class="aione-border p-15 pb-30">
-                <div class="">
-                    <h4>You're about to download Dataset</h4>
-                </div>
-                <div class=" ">
-                    What's your preferred file format
-                </div>
-            </div>
-            <div>
-                 <div id="field_2" data-conditions="0" data-field-type="radio" class="field-wrapper ac field-wrapper-layout field-wrapper-type-radio horizontal">
-                    <div id="field_layout" class="field field-type-radio custom-radio-field">
-                        <div id="field_option_layout " class="">
-                            <input class="layout m-8" id="option_layout0" data-validation=" " name="slum_zone" type="radio" value="north"  checked="checked">
-                            <label for="option_layout0" class="field-option-label active">
-                                <div>
-                                    CSV File
-                                </div>
-                                <div class="desc">
-                                    Works with google sheet and other tools
-                                </div>
-                                    
-                            </label>
-                        </div>
-                        <div id="field_option_layout" class="">
-                            <input class="layout m-8" id="option_layout1" data-validation=" "  name="slum_zone" type="radio" value="east" checked="checked">
-                            <label for="option_layout1" class="field-option-label">
-                                <div>
-                                    XLSX File
-                                </div>
-                                <div class="desc">
-                                    Works with all versions of excel 
-                                </div>
-                            </label>
-                        </div>
-                        <div class="clear"></div>
+        <div class="ac l50 ">
+            <div class="aione-border">
+                <div class=" p-15 pb-30">
+                    <div class="">
+                        <h4>You're about to download Dataset</h4>
                     </div>
-                    <div class="clear"></div>
-                    <!-- field -->
+                    <div class=" ">
+                        What's your preferred file format
+                    </div>
                 </div>
                 <div>
-                    <button class="aione-float-right">Download</button>
+                    <div id="field_2" data-conditions="0" data-field-type="radio" class="field-wrapper ac field-wrapper-layout field-wrapper-type-radio horizontal">
+                        <div id="field_layout" class="field field-type-radio custom-radio-field">
+                            <div id="field_option_layout " class="">
+                                <input class="layout m-8" id="option_layout0" data-validation=" " name="slum_zone" type="radio" value="north"  checked="checked">
+                                <label for="option_layout0" class="field-option-label active">
+                                    <div>
+                                        CSV File
+                                    </div>
+                                    <div class="desc">
+                                        Works with google sheet and other tools
+                                    </div>         
+                                </label>
+                            </div>
+                            <div id="field_option_layout" class="">
+                                <input class="layout m-8" id="option_layout1" data-validation=" "  name="slum_zone" type="radio" value="east" checked="checked">
+                                <label for="option_layout1" class="field-option-label">
+                                    <div>
+                                        XLSX File
+                                    </div>
+                                    <div class="desc">
+                                        Works with all versions of excel 
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="clear"></div>
+                        <!-- field -->
+                    </div>
+                    <div>
+                        <button class="aione-float-right">Download</button>
+                    </div>
                 </div>
             </div>
+                
         </div>
-        <div class="ac l50"></div>
+        <div class="ac l50">
+            <div class="aione-border">
+                <div class=" p-15 pb-30">
+                    <div class="">
+                        <h4>Lorem ipsum dolor sit amet.</h4>
+                    </div>
+                    <div class=" ">
+                        In congue mauris vel vehicula laoreet.
+                    </div>
+                </div>
+                <div class="aione-align-center p-40">
+                    <button>Click here to make clone</button>
+                </div>
+            </div>
+                
+        </div>
     </div>
 
 @include('common.page_content_primary_end')

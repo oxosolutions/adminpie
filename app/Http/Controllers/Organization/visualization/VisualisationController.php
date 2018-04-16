@@ -565,7 +565,7 @@ class VisualisationController extends Controller
         	return [];
         }
         $resultArray = [];
-        $model = DB::table($table)->select($columns)->get()->toArray();
+        $model = DB::table($table)->select($columns)->whereIn('status',['status',1])->orWhereIn('parent',['parent',0])->get()->toArray();
         if(!empty($model)){
             unset($model[0]);
         }
