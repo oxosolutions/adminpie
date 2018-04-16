@@ -270,7 +270,7 @@
                     <button class="AddNewDatasetRowButton hidden " >{{__('organization/datasets.update_dataset')}}</button>
 
         </div>
-        <button class="addRow aione-button aione-float-right mv-10" >{{__('organization/datasets.add_row')}}Add Row</button>
+        <button class="addRow aione-button aione-float-right mv-10" >{{__('organization/datasets.add_row')}}</button>
         @if(!empty($tableheaders))
             <div class="mv-10 line-height-32">{{__('organization/datasets.view_dataset_pagination_text',['count'=>$records->firstItem(),'last'=>$records->lastItem(),'total'=>$records->total()])}}</div>
             <div style="" class="table-wrapper">

@@ -68,34 +68,29 @@ $page_title_data = array(
         </div>
        
 
-        <div class=" aione-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Months</th>
-                        
-                        <th>Status</th>
-                        <th style="width: 400px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php for($i=1; $i<=12; $i++): ?>
-                    <?php if(strlen($i)==1): ?>
-                        <?php 
+        
+        
+    </div>
+    <div>
+    	<div class="ar mb-100">
+    		<?php for($i=1; $i<=12; $i++): ?>
+                <?php if(strlen($i)==1): ?>
+                    <?php 
                         $j = '0'.$i;
-                         ?>
-                        <?php else: ?>
-                         <?php 
+                     ?>
+                <?php else: ?>
+                    <?php 
                         $j = $i;
-                         ?>
+                     ?>
+                <?php endif; ?>
+        		<div class="ac l25 aione-align-center mb-20" style="position: relative;">
+        			<div class="bg-grey bg-darken-3 font-size-18  white p-15">
+        				<i class="ion-calendar mr-10"></i><?php echo e($month[$i]); ?>, <?php echo e($data['year']); ?>
 
-                    <?php endif; ?>
-                    <tr>
-                        <td><?php echo e($month[$i]); ?></td>g
-                       
-                        </td>
-                        <td>
-                            <?php if(isset($data[$j])): ?>
+        			</div>
+        			<div class="aione-border-left aione-border-right aione-border-bottom pv-10  border-grey border-lighten-2 bg-grey bg-lighten-4">
+        				<div class="font-size-20 pv-20 line-height-60 font-weight-300 green ar">
+    	    				<?php if(isset($data[$j])): ?>
                                     <?php if($data[$j]['attendance_status']==0): ?>
                                         <?php 
                                            $attendance_status ='Partially';
@@ -105,40 +100,85 @@ $page_title_data = array(
                                            $attendance_status ='Complete';
                                          ?>
                                     <?php endif; ?>
-                                    <?php echo e($attendance_status); ?>
-
+                                <div class="ac l50">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        STATUS
+                                    </div>
+                                    <div class="">
+                                        <span class="display-inline pv-5 ph-10 white bg-orange  font-size-14" style="border-radius: 10px;">
+                                            <?php echo e($attendance_status); ?></span>
+                                    </div>
+                                                                        
+                                </div>
                             <?php else: ?>
-                            Not Mark
+                                <div class="ac l50">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        STATUS
+                                    </div>
+                                    <div class="">
+                                        <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                            Not Mark
+                                        </span>
+                                    </div>                                    
+                                </div>
                             <?php endif; ?>
-                        </td>
-                        
-                        <td>
-                            <a href="" class="aione-button bg-orange circle aione-shadow aione-tooltip" title="View Attendance">
-                                <i class="fa fa-tv white line-height-36"></i>
+                            <?php if(isset($data[$j])): ?>
+                                <div class="ac l50 aione-border-left border-grey border-lighten-2">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        LOCK STATUS
+                                    </div>
+                                    <div class="">
+                                        <?php if($data[$j]['lock_status']==0): ?>
+                                            <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                                Locked
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                                Un-Locked
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="ac l50 aione-border-left border-grey border-lighten-2">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        LOCK STATUS
+                                    </div>
+                                    <div class="">
+                                        <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                            Un-Locked
+                                        </span>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+        				</div>
+        				<div>
+        					<a href="" class="aione-button  circle aione-shadow " title="View Attendance">
+                                <i class="fa fa-tv grey lighten-1 line-height-36"></i>
                             </a>
-                            <a href="" class="aione-button bg-red circle aione-shadow aione-tooltip" title="Edit Attendance">
-                                <i class="fa fa-pencil white line-height-36"></i>
+                            <a href="" class="aione-button  circle aione-shadow " title="Edit Attendance" >
+                                <i class="fa fa-pencil grey lighten-1  line-height-36"></i>
                             </a>
-                            <a href="" class="aione-button bg-green circle aione-shadow aione-tooltip" title="Import Attendance">
-                                <i class="fa fa-sign-in white line-height-36"></i>
+                            <a href="" class="aione-button  circle aione-shadow " title="Import Attendance" >
+                                <i class="fa fa-sign-in grey lighten-1  line-height-36"></i>
                             </a>
-                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button bg-light-blue circle aione-shadow aione-tooltip" title="Mark Attendance">
-                                <i class="fa fa-table white line-height-36"></i>
+                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow " title="Mark Attendance" >
+                                <i class="fa fa-table grey lighten-1 line-height-36"></i>
                             </a>
-                            <a href="" class="aione-button bg-light-blue circle aione-shadow aione-tooltip" title="Lock Attendance">
-                                <i class="fa fa-unlock white line-height-36"></i>
-                            </a>
-                        </td>
-
-                    </tr>
-                    <?php endfor; ?>
-                </tbody>
-            </table>
-             
-        </div>
-        <div id="main">
-
-        </div>
+                            <?php if(@$data[$j]['lock_status'] == 0 &&  @$data[$j]['lock_status'] == null): ?>
+                                <a href="" class="aione-button  circle aione-shadow " title="Lock Attendance">
+                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
+                                </a>
+                            <?php else: ?>
+                                <a href="" class="aione-button bg-red circle aione-shadow " title="Lock Attendance">
+                                    <i class="fa fa-lock white lighten-1 line-height-36"></i>
+                                </a>
+                            <?php endif; ?>
+        				</div>
+        			</div>
+        		</div>    
+            <?php endfor; ?>
+    	</div>
     </div>
 
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

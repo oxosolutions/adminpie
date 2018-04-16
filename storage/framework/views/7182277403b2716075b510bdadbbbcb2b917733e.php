@@ -245,7 +245,7 @@
                     <button class="AddNewDatasetRowButton hidden " ><?php echo e(__('organization/datasets.update_dataset')); ?></button>
 
         </div>
-        <button class="addRow aione-button aione-float-right mv-10" ><?php echo e(__('organization/datasets.add_row')); ?>Add Row</button>
+        <button class="addRow aione-button aione-float-right mv-10" ><?php echo e(__('organization/datasets.add_row')); ?></button>
         <?php if(!empty($tableheaders)): ?>
             <div class="mv-10 line-height-32"><?php echo e(__('organization/datasets.view_dataset_pagination_text',['count'=>$records->firstItem(),'last'=>$records->lastItem(),'total'=>$records->total()])); ?></div>
             <div style="" class="table-wrapper">

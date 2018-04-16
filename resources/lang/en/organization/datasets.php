@@ -72,9 +72,9 @@ return [
     'api_link' => 'Api Link',
     'output_pretty' => 'Output ( Pretty )',
     'add_new_botton_text' => 'Add New',
-    '' => '',
-    '' => '',
-    '' => '',
-    '' => '',
+    'create_column_button_text' => 'Submit',
+    'create_column' => 'Create Column',
+    'dataset_validate_page_title_text' => 'Validate Dataset',
+    'dataset_column_not_define' => 'Dataset columns not defined',
     '' => '',
 ];

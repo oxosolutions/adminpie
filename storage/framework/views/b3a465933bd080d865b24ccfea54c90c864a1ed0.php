@@ -38,7 +38,7 @@
     
     <?php if($dataset->defined_columns == '' || $dataset->defined_columns == null): ?>
         <div class="aione-message warning" style="padding: 20px; text-align: center;font-size: 18px;">
-            <i class="fa fa-info-circle" style="font-size: 20px;"></i><?php echo e(__('organization/datasets.dataset_column_not_define')); ?> Dataset columns not defined!
+            <i class="fa fa-info-circle" style="font-size: 20px;"></i><?php echo e(__('organization/datasets.dataset_column_not_define')); ?> 
         </div>
     <?php else: ?>
         <?php if(@$records != 'error'): ?>

@@ -20,7 +20,7 @@
     	<div class="aione-border">
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
 			
-	           <?php echo e(__('organization/datasets.craete_column')); ?> 
+	           <?php echo e(__('organization/datasets.create_column')); ?> 
 	        </div>
 	        <div class="aione-item-content">
 	            <?php echo Form::open(['route'=>['create.column',request()->route()->parameters()['id']]]); ?>
@@ -40,7 +40,7 @@
                             </span>(<span class="repeater_div "></span>)
 	                	<a class="aione-button aione-float-right add_column" href="javascript:;">+</a>
 	                </div>
-	                <button><?php echo e(__('organization/datasets.craete_column_button_text')); ?></button>
+	                <button><?php echo e(__('organization/datasets.create_column_button_text')); ?></button>
 	            
 	            <?php echo Form::close(); ?>      
 	        </div>
@@ -75,7 +75,6 @@
                                         </div>
                                     </td>
                                     <td>
-                                   
                                     <?php echo Form::select($key,
                                             [   
                                             "/^[\s\S]*$/" =>   'Text',
@@ -88,7 +87,7 @@
                                             '/^\d{10}$/'                    =>  'Mobile Number(10 Digit Only)',
                                             '/([A-Z0-9])/'                  =>  'AlphaNumeric'
                                             //'area_code'                    =>  'Area Code'
-                                            ],$defined[$key],['class'=>'browser-default']); ?>     
+                                            ],@$defined[$key],['class'=>'browser-default']); ?>     
                                     <!--  Code BY : Amrit END-->    
 
                                     </td>

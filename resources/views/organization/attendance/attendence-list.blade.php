@@ -69,12 +69,12 @@ $page_title_data = array(
         </div>
        
 
-        <div class=" aione-table">
+        {{-- <div class=" aione-table">
             <table>
                 <thead>
                     <tr>
                         <th>Months</th>
-                        {{-- <th>Lock/Unlock</th> --}}
+                        
                         <th>Status</th>
                         <th style="width: 400px;">Actions</th>
                     </tr>
@@ -92,27 +92,12 @@ $page_title_data = array(
 
                     @endif
                     <tr>
-                        <td>{{$month[$i]}}</td>g
-                       {{--  <td>
-                            @if(isset($data[$j]))
-                             {!! Form::open(['route'=>'ajax.lock.attendance']) !!}
-                                <input type="hidden" name="year" value="{{$data['year']}}">
-                                <input type="hidden" name="month" value="{{$j}}">
-                                    @if($data[$j]['lock_status']==0)
-                                        
-                                        {!! Form::submit('Click to Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']) !!}
-
-                                    @else 
-                                        {!! Form::submit('Click to Lock',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
-                                    @endif
-                                    
-                              {!! Form::close() !!}
-                                @else
-                                    <span class="red">-</span>
-                            @endif --}}
+                        <td>{{$month[$i]}}</td>
+                       
                         </td>
                         <td>
                             @if(isset($data[$j]))
+
                                     @if($data[$j]['attendance_status']==0)
                                         @php
                                            $attendance_status ='Partially';
@@ -145,128 +130,121 @@ $page_title_data = array(
                                 <i class="fa fa-unlock white line-height-36"></i>
                             </a>
                         </td>
-
                     </tr>
                     @endfor
                 </tbody>
             </table>
-           {{--  <ul>
-                <li class="p-10 ar bg-grey bg-lighten-3 font-size-16 aione-border-bottom">
-                    <div class="ac l14 font-weight-600">
-                        Months
-                    </div>
-                    <div class="ac l14 font-weight-600">
-                        lock/Unlock
-                    </div> 
-                    <div class="ac l14 font-weight-600">
-                        Status
-                    </div>
-                    <div class="ac l14">
-                        
-                    </div>
-                    <div class="ac l14">
-                        
-                    </div>
-                    
-                </li>
-                    @for($i=1; $i<=12; $i++)
-                        @if(strlen($i)==1)
-                            @php
-                            $j = '0'.$i;
-                            @endphp
+           
+        </div> --}}
+        
+    </div>
+    <div>
+    	<div class="ar mb-100">
+    		@for($i=1; $i<=12; $i++)
+                @if(strlen($i)==1)
+                    @php
+                        $j = '0'.$i;
+                    @endphp
+                @else
+                    @php
+                        $j = $i;
+                    @endphp
+                @endif
+        		<div class="ac l25 aione-align-center mb-20" style="position: relative;">
+        			<div class="bg-grey bg-darken-3 font-size-18  white p-15">
+        				<i class="ion-calendar mr-10"></i>{{ $month[$i] }}, {{ $data['year'] }}
+        			</div>
+        			<div class="aione-border-left aione-border-right aione-border-bottom pv-10  border-grey border-lighten-2 bg-grey bg-lighten-4">
+        				<div class="font-size-20 pv-20 line-height-60 font-weight-300 green ar">
+    	    				@if(isset($data[$j]))
+                                    @if($data[$j]['attendance_status']==0)
+                                        @php
+                                           $attendance_status ='Partially';
+                                        @endphp
+                                    @else
+                                        @php
+                                           $attendance_status ='Complete';
+                                        @endphp
+                                    @endif
+                                <div class="ac l50">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        STATUS
+                                    </div>
+                                    <div class="">
+                                        <span class="display-inline pv-5 ph-10 white bg-orange  font-size-14" style="border-radius: 10px;">
+                                            {{$attendance_status}}</span>
+                                    </div>
+                                                                        
+                                </div>
                             @else
-                             @php
-                            $j = $i;
-                            @endphp
-
-                        @endif
-                        
-                        <li class="aione-border p-10 mb-10 ar">
-                                <div class="ac l14">
-                                    <strong>{{$month[$i]}}</strong>    
+                                <div class="ac l50">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        STATUS
+                                    </div>
+                                    <div class="">
+                                        <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                            Not Mark
+                                        </span>
+                                    </div>                                    
                                 </div>
-                                <div class="ac l14">
-                                        @if(isset($data[$j]))
-                                         {!! Form::open(['route'=>'ajax.lock.attendance']) !!}
-                                         	<input type="hidden" name="year" value="{{$data['year']}}">
-                                			<input type="hidden" name="month" value="{{$j}}">
-                                                @if($data[$j]['lock_status']==0)
-                                                	
-                                                    {!! Form::submit('Unlock',['name'=>'unlock','class'=>'special-btn','style'=>'color:orange !important']) !!}
-
-                                                @else 
-                                                    {!! Form::submit('Locked',['name'=>'lock','class'=>'special-btn','style'=>'color:green !important']) !!}
-                                                @endif
-                                                
-                                          {!! Form::close() !!}
-                                            @else
-                                                <span class="red">-</span>
+                            @endif
+                            @if(isset($data[$j]))
+                                <div class="ac l50 aione-border-left border-grey border-lighten-2">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        LOCK STATUS
+                                    </div>
+                                    <div class="">
+                                        @if($data[$j]['lock_status']==0)
+                                            <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                                Locked
+                                            </span>
+                                        @else
+                                            <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                                Un-Locked
+                                            </span>
                                         @endif
+                                    </div>
                                 </div>
-                                <div class="ac l14">
-                                     @if(isset($data[$j]))
-                                            @if($data[$j]['attendance_status']==0)
-                                                @php
-                                                   $attendance_status ='Partially';
-                                                @endphp
-                                            @else
-                                                @php
-                                                   $attendance_status ='Complete';
-                                                @endphp
-                                            @endif
-                                            {{$attendance_status}}
-                                    @else
-                                    Not Mark
-                                    @endif
-
+                            @else
+                                <div class="ac l50 aione-border-left border-grey border-lighten-2">
+                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
+                                        LOCK STATUS
+                                    </div>
+                                    <div class="">
+                                        <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                            Un-Locked
+                                        </span>
+                                    </div>
                                 </div>
-                                <div class="ac l14">
-                                   
-                                    {!! Form::open(['route'=>'list.attendance']) !!}
-                                		<input type="hidden" name="year" value="{{$data['year']}}">
-                                		<input type="hidden" name="month" value="{{$j}}">
-                                        {!! Form::submit('view',['class'=>'special-btn']) !!}
-                                    {!! Form::close() !!}
-                                </div>
-                                <div class="ac l14">
-                                	 @if(isset($data[$j]))
-                                    <a href="">
-                                         
-                                        {!! Form::open(['route'=>'hr.attendance']) !!}
-                                		<input type="hidden" name="year" value="{{$data['year']}}">
-                                		<input type="hidden" name="month" value="{{$j}}">
-                                		<input type="hidden" name="date" value="1">
-                                        {!! Form::submit('edit',['class'=>'special-btn']) !!}
-                                    {!! Form::close() !!}
-                                    </a>
-                                    @else
-                                    	-
-                                    @endif
-                                </div>
-
-                                <div class="ac l14">
-                                    <a href="{{route('import.form.attendance',['year'=>$data['year'],'month'=>$j])}}">import</a>
-                                </div>
-                                <div class="ac l14">
-                                    
-                                    {!! Form::open(['route'=>'hr.attendance']) !!}
-                                		<input type="hidden" name="year" value="{{$data['year']}}">
-                                		<input type="hidden" name="month" value="{{$j}}">
-                                		<input type="hidden" name="date" value="1">
-                                        {!! Form::submit('Mark attendace',['class'=>'special-btn']) !!}
-                                    {!! Form::close() !!}
-                                    
-                                </div>
-                                <div class="ac l14">
-                                    
-                                </div>
-                        </li>
-                    @endfor
-            </ul>  --}}  
-        </div>
-        <div id="main">
-
-        </div>
+                            @endif
+        				</div>
+        				<div>
+        					<a href="" class="aione-button  circle aione-shadow " title="View Attendance">
+                                <i class="fa fa-tv grey lighten-1 line-height-36"></i>
+                            </a>
+                            <a href="" class="aione-button  circle aione-shadow " title="Edit Attendance" >
+                                <i class="fa fa-pencil grey lighten-1  line-height-36"></i>
+                            </a>
+                            <a href="" class="aione-button  circle aione-shadow " title="Import Attendance" >
+                                <i class="fa fa-sign-in grey lighten-1  line-height-36"></i>
+                            </a>
+                            <a href="{{ route('hr.attendance',['year'=>$data['year'],'month'=>$j]) }}" class="aione-button  circle aione-shadow " title="Mark Attendance" >
+                                <i class="fa fa-table grey lighten-1 line-height-36"></i>
+                            </a>
+                            @if(@$data[$j]['lock_status'] == 0 &&  @$data[$j]['lock_status'] == null)
+                                <a href="" class="aione-button  circle aione-shadow " title="Lock Attendance">
+                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
+                                </a>
+                            @else
+                                <a href="" class="aione-button bg-red circle aione-shadow " title="Lock Attendance">
+                                    <i class="fa fa-lock white lighten-1 line-height-36"></i>
+                                </a>
+                            @endif
+        				</div>
+        			</div>
+        		</div>    
+            @endfor
+    	</div>
     </div>
 
 @include('common.page_content_primary_end')
