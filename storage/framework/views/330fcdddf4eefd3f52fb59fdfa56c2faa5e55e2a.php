@@ -5,8 +5,8 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
 	'show_navigation' => 'yes',
-	'page_title' => 'Import Employees',
-	'add_new' => '+ Add Employee',
+	'page_title' => __('organization/hrm.employee_import_page_title'),
+	'add_new' => '',
 
 	
 ); 

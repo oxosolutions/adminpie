@@ -8,19 +8,18 @@
 		</script>
 	@endif
 @php
-	$page_title_data = array(
+$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Employees',
-	'add_new' => '+ Add Employee',
+	'page_title' => __('organization/hrm.employee_list_page_title'),
+	'add_new' => __('organization/hrm.employee_list_page_add_employee_button'),
   'route' => 'add.employee',
-	'second_button_title' => 'Export Employees',
+	'second_button_title' =>  __('organization/hrm.employee_list_page_export_employee_button'),
 	'second_button_route' => 'export.employee',
-	'third_button_title' => 'Import Employees',
+	'third_button_title' => __('organization/hrm.employee_list_page_import_employee_button'),
 	'third_button_route' => 'import.employee'
-); 
-
+);
 	 if(check_route_permisson('hrm/employee/save')==false){
 	 	$page_title_data['show_add_new_button'] ='no';
 	 }
@@ -106,14 +105,14 @@
     <table id="example" class="display" cellspacing="0" width="100%">
         <thead>
             <tr>
-                <th>User</th>
-                <th>Employe ID</th>
-                <th>Name</th>
-                <th>Departments</th>
-                <th>Designation</th>
-                <th>Email ID</th>
-                <th>Created</th>
-                <th>Status</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_user')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_employe_id')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_name')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_departments')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_designation')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_email_id')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_created')}}</th>
+                <th>{{__('organization/hrm.employee_list_datatable_header_title_status')}}</th>
             </tr>
         </thead>
         <!-- <tfoot>
@@ -163,35 +162,12 @@
   display: inline-block;
   margin-top: 6px;
 }
-/*.dataTable td > div > ul > li:before{
-    font-family: FontAwesome;
-    content: "\f040";
-    color:#0095ff;
-    padding: 3px 3px;
-    border-radius: 3px;
-    font-size: 18px;
-    margin-left: 10px;
-} 
-.dataTable td > div > ul > li:after{
-    font-family: FontAwesome;
-    content: "\f014";
-    color: #ff4700;
-    padding: 3px 5px;
-    border-radius: 3px;
-    font-size: 18px;
-    margin-left: 5px;
-} 
-*/
-/*.delete-datalist-item{
-  display: none;
-} */
 .dataTable tr{
   position: relative;
 }
 .dataTable tr:hover td > div > ul{
   display: block !important
 }
-
 table{
     width: 100%;
     word-wrap: break-word;
@@ -208,16 +184,16 @@ table{
   margin-top: 30px;
 }
 .current{
-  background: #2e73aa !important;
+    background: #2e73aa !important;
     color: white !important;
     border: 1px solid #2e73aa !important;
 }
 .dataTables_paginate .previous, .dataTables_paginate .next {
-  border: 1px solid #e8e8e8;
+    border: 1px solid #e8e8e8;
     padding: 8px 15px;
 }
 .dataTables_paginate .paginate_button{
-  border: 1px solid #e8e8e8;
+    border: 1px solid #e8e8e8;
     padding: 8px 15px;
     margin: 2px;
     color: #6e6e6e;

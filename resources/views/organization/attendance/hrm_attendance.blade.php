@@ -60,7 +60,7 @@
 	{!! Form::hidden('dates[month_week_no]',$mark_attendance_date->weekOfMonth,['class' => 'form-control']) !!}
 <div class="aione-table">
 <table class="">
-	<thead>
+	<thead class="bg-grey bg-darken-3 grey lighten-2">
 		<tr class="table-tr">
 			<th>Status</th>
 			<th>Employee</th>
@@ -82,8 +82,8 @@
 	</thead>
 	<tbody>
 	@foreach($employee_data as $keys => $vals)
-	@php 
-		$lock_status = 1;
+	@php
+		$lock_status=1;
 		$warning=Null;
  		$attendance_status_class = 'bg-red';
 		$user_meta  = $vals->metas_for_attendance->mapwithKeys(function($item){
@@ -145,7 +145,7 @@
 
 				@if($lock_status)
 					@if($attendance_mode_manual)
-						<td> 
+						<td>
 							{!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
 							{!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' ],@$attendance_status	,['class' => 'browser-default', ]) !!} 
 						</td>
@@ -181,8 +181,8 @@
 								 @foreach($in_out_data as $key =>$val)
 								 <div>
 								 	<div class="field-wrapper ">
-									<div class="field field-type-text mb-10">
-									 {!! Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  
+									<div class="field field-type-text">
+									 {!! Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => 'mb-10','id'=>$key.'in_out_data'.$emp_id]) !!}  
 									 <a class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
 										right: 10px;"><i class="fa fa-trash"></i> </a>
 									</div>
@@ -278,6 +278,13 @@
 			position: absolute;
 			right: 10px;
 			top: 12px;
+			color: red;
+		}
+		.timepicker{
+			margin-bottom: 10px !important;
+		}
+		.field{
+			padding: 0;
 		}
 	</style>
 	<script type="text/javascript">
@@ -293,7 +300,7 @@
 	});
 	$(document).on('click','.add_more_in_out', function(){
 		emp_id = $(this).attr('emp_id');
-		$('.in_out'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text field-wrap"><input class="timepicker remove_in_out'+emp_id+'"  name="'+emp_id +'[in_out_data][]" type="text"><a class="del_check delete-btn del_in_out'+emp_id+'" emp_id="'+emp_id+'"><i class="fa fa-close red></i>" </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
+		$('.in_out'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text field-wrap mt-10"><input class="timepicker remove_in_out '+emp_id+'"  name="'+emp_id +'[in_out_data][]" type="text"><a class="del_check delete-btn del_in_out'+emp_id+'" emp_id="'+emp_id+'"><i class="fa fa-close red></i>" </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
 	});
 
 	$(document).on('click','.show_punch_in_out',function(e){
@@ -303,9 +310,9 @@
 	$(document).on('click','.del_check',function(e){
 		e.preventDefault();
 		emp_id = $(this).attr('emp_id');
-		alert(emp_id);
-		$('.remove_punch'+emp_id).remove();
-		$('.del_punch'+emp_id).remove();
+//		alert(emp_id);
+		$(this).parents('.field-wrapper ').remove();
+//		$('.del_punch'+emp_id).remove();
 	});
 		$(document).ready(function(){
 			$('.timepicker').pickatime({

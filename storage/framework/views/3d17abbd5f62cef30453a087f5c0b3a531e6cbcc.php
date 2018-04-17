@@ -16,7 +16,7 @@
                     </i></span><span class="nav-item-text"><?php echo e(__('organization/datasets.dataset_tab_edit_link')); ?></span></a>
       </li>
        <li class="aione-tab aione-tooltip dataset-structure-tab  <?php echo e((Request::route()->action['as'] == 'structure.dataset')?'nav-item-current':''); ?>" title="Define Dataset Structure">
-        <a href="<?php echo e(route('structure.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-grid ionic-icon">
+        <a href="<?php echo e(route('structure.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-ios-list-outline ionic-icon">
                     </i></span><span class="nav-item-text"><?php echo e(__('organization/datasets.dataset_tab_structure_link')); ?></span></a>
       </li>
      
@@ -30,12 +30,12 @@
                     </i></span><span class="nav-item-text"><?php echo e(__('organization/datasets.dataset_tab_api_link')); ?></span></a>
       </li>
         <li class="aione-tab aione-tooltip dataset-validate-tab  <?php echo e((Request::route()->action['as'] == 'validate.dataset')?'nav-item-current':''); ?>" title="Validate Dataset">
-        <a href="<?php echo e(route('validate.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-ios-checkmark ionic-icon">
+        <a href="<?php echo e(route('validate.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class=" ion-ios-checkmark-outline ionic-icon">
                     </i></span><span class="nav-item-text"><?php echo e(__('organization/datasets.dataset_tab_validate_link')); ?></span></a>
       </li>
     
       <li class="aione-tab aione-tooltip dataset-operation-tab  <?php echo e((Request::route()->action['as'] == 'options.dataset')?'nav-item-current':''); ?>" title="Datsaet Operations">
-        <a href="<?php echo e(route('options.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-calculator ionic-icon">
+        <a href="<?php echo e(route('options.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-ios-browsers-outline ionic-icon">
                     </i></span><span class="nav-item-text"><?php echo e(__('organization/datasets.dataset_tab_operations_link')); ?></span></a>
       </li>
       <?php 
@@ -50,7 +50,7 @@
 
       <?php if($dataset_user_id == $auth_user_id): ?>
           <li class="aione-tab aione-tooltip dataset-collaborate-tab  <?php echo e((Request::route()->action['as'] == 'collaborate.dataset')?'nav-item-current':''); ?>" title="Share Dataset & Define Access">
-            <a href="<?php echo e(route('collaborate.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-share ionic-icon">
+            <a href="<?php echo e(route('collaborate.dataset',$id)); ?>"> <span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-android-share-alt ionic-icon">
                     </i></span><span class="nav-item-text"><?php echo e(__('organization/datasets.dataset_tab_collaborate_link')); ?></span></a>
           </li>
       <?php endif; ?>

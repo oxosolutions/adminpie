@@ -38,7 +38,7 @@
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
     @include('organization.dataset._tabs')
-    <nav id="aione_nav" class="aione-nav horizontal light custom-option-menu">
+    {{-- <nav id="aione_nav" class="aione-nav horizontal light custom-option-menu">
         <div class="aione-nav-background"></div>
         <ul id="aione_menu" class="aione-menu custom-aione-menu">
             <li class="aione-nav-item level0 bg-light-blue bg-darken-3 " style="margin-right: 15px"> 
@@ -60,10 +60,10 @@
             <a href="#" class="nav-toggle "></a>
         </div>
         <div class="clear"></div>
-    </nav>
-    <div class="ar mt-100">
-        <div class="ac l50 ">
-            <div class="aione-border">
+    </nav> --}}
+    <div class="ar ">
+        <div class="ac l50 aione-border">
+            <div class="">
                 <div class=" p-15 pb-30">
                     <div class="">
                         <h4>You're about to download Dataset</h4>
@@ -76,7 +76,7 @@
                     <div id="field_2" data-conditions="0" data-field-type="radio" class="field-wrapper ac field-wrapper-layout field-wrapper-type-radio horizontal">
                         <div id="field_layout" class="field field-type-radio custom-radio-field">
                             <div id="field_option_layout " class="">
-                                <input class="layout m-8" id="option_layout0" data-validation=" " name="slum_zone" type="radio" value="north"  checked="checked">
+                                <input class="layout m-8" id="option_layout0" data-validation=" " name="export_file" type="radio" value="csv"  checked="checked">
                                 <label for="option_layout0" class="field-option-label active">
                                     <div>
                                         CSV File
@@ -87,7 +87,7 @@
                                 </label>
                             </div>
                             <div id="field_option_layout" class="">
-                                <input class="layout m-8" id="option_layout1" data-validation=" "  name="slum_zone" type="radio" value="east" checked="checked">
+                                <input class="layout m-8" id="option_layout1" data-validation=" "  name="export_file" type="radio" value="xls" checked="checked">
                                 <label for="option_layout1" class="field-option-label">
                                     <div>
                                         XLSX File
@@ -103,7 +103,7 @@
                         <!-- field -->
                     </div>
                     <div>
-                        <button class="aione-float-right">Download</button>
+                        <button class="aione-float-right downloadExport">Download</button>
                     </div>
                 </div>
             </div>
@@ -113,14 +113,14 @@
             <div class="aione-border">
                 <div class=" p-15 pb-30">
                     <div class="">
-                        <h4>Lorem ipsum dolor sit amet.</h4>
+                        <h4>To create your existing dataset clone.</h4>
                     </div>
                     <div class=" ">
-                        In congue mauris vel vehicula laoreet.
+                        Click to create yor dataset clone.
                     </div>
                 </div>
                 <div class="aione-align-center p-40">
-                    <button>Click here to make clone</button>
+                    <button class="createClone">Click To Create Clone</button>
                 </div>
             </div>
                 
@@ -132,4 +132,20 @@
 
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.downloadExport').click(function(){
+            var type = $('input[name=export_file]:checked').val();
+            if(type == 'xls'){
+                window.location.href='{{route('export.dataset',['id'=>request()->route()->parameters()['id'],'type'=>'xls'])}}';
+            }else{
+                window.location.href='{{route('export.dataset',['id'=>request()->route()->parameters()['id'],'type'=>'csv'])}}';
+            }
+        });
+        $('.createClone').click(function(){
+            window.location.href='{{route('clone.dataset',request()->route()->parameters()['id'])}}'; 
+        });
+    });
+</script>
 @endsection
