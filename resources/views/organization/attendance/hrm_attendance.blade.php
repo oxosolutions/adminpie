@@ -68,10 +68,10 @@
 			<th>Designation</th>
 			<th>Department</th>
 			@if($attendance_mode_manual)
-				<th>Attendance Status</th>
+			<th>Attendance Status</th>
 			@endif
 			@if($attendance_mode_machine)
-			<th>Punch In Out</th>		
+			<th>Punch In Out</th>
 			@endif
 			@if($attendance_mode_system)
 			<th>Check In Out</th>
@@ -87,15 +87,15 @@
 		$warning=Null;
  		$attendance_status_class = 'bg-red';
 		$user_meta  = $vals->metas_for_attendance->mapwithKeys(function($item){
-	 						return [$item['key'] => $item['value'] ];
-						});
+			return [$item['key'] => $item['value'] ];
+		});
 		$emp_id = $user_meta['employee_id'];
 		if(empty($user_meta['date_of_joining'])){
 			continue;
 		}
-if(empty($user_meta['employee_id'])){
-	$warning ="Invalid Employee Id"; 
-}else{
+		if(empty($user_meta['employee_id'])){
+			$warning ="Invalid Employee Id"; 
+		}else{
 		
 		if(date('Y-m-d', strtotime($user_meta['date_of_joining'])) > date('Y-m-d', strtotime($dateformat)) || ( !empty($user_meta['date_of_leaving']) && date('Y-m-d', strtotime($user_meta['date_of_leaving'])) < date('Y-m-d', strtotime($dateformat)))) {
 				continue;
@@ -120,20 +120,20 @@ if(empty($user_meta['employee_id'])){
  		if(!empty($user_meta['department'])){
  			$department =	EmployeeHelper::get_department($user_meta['department']);
  		}
- 			$in_out_data = $punch_in_out = $attendance_status = null; 
- 			if(!empty($attValue[$emp_id]['attendance_status'])){
-				$attendance_status = $attValue[$emp_id]['attendance_status'];
-			}
-			if(!empty($attValue[$emp_id]['punch_in_out'])){
-				$punch_in_out = array_filter(json_decode($attValue[$emp_id]['punch_in_out'],true));
-			}
-			if(!empty($attValue[$emp_id]['in_out_data'])){
-				$in_out_data = array_filter(json_decode($attValue[$emp_id]['in_out_data'],true));
-			}
-			if(isset($attValue[$emp_id]['lock_status']) && $attValue[$emp_id]['lock_status'] ==0 ){
-				$lock_status = 0;
-			}
-}
+ 		$in_out_data = $punch_in_out = $attendance_status = null; 
+		if(!empty($attValue[$emp_id]['attendance_status'])){
+			$attendance_status = $attValue[$emp_id]['attendance_status'];
+		}
+		if(!empty($attValue[$emp_id]['punch_in_out'])){
+			$punch_in_out = array_filter(json_decode($attValue[$emp_id]['punch_in_out'],true));
+		}
+		if(!empty($attValue[$emp_id]['in_out_data'])){
+			$in_out_data = array_filter(json_decode($attValue[$emp_id]['in_out_data'],true));
+		}
+		if(isset($attValue[$emp_id]['lock_status']) && $attValue[$emp_id]['lock_status'] ==0 ){
+			$lock_status = 0;
+		}
+	}
 	@endphp
 		<tr class="table-tr">
 			<td><span class="mark-attendance-status {{@$attendance_status_class}}"></span></td>
@@ -141,118 +141,120 @@ if(empty($user_meta['employee_id'])){
 			<td>{{@$vals['name']}}</td>
 			<td>{{@$designation}}</td>
 			<td>{{@$department}}</td>
-	@if(empty($warning))
+			@if(empty($warning))
 
-		@if($lock_status)
-			@if($attendance_mode_manual)
-				<td> {!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
-					 {!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' ],@$attendance_status	,['class' => 'browser-default', ]) !!} </td>
-			@endif
-			@if($attendance_mode_machine)
-				<td>
-				 @if(!empty($punch_in_out) )
-					@foreach($punch_in_out as $key =>$val)
-						<div class="field-wrapper position-relative" style="position: relative;">
-							<div class="field field-type-text">
-							{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' =>'remove_punch aione-float-left'.$emp_id,'id'=>$key.'punch_in_out'.$emp_id]) !!} 	 
-								<a emp_id="{{$emp_id}}"  class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
-								right: 10px;"><i class="fa fa-trash"></i> </a>	
-							</div>
-							 
-						</div>
-					@endforeach
-						<span class="{{$emp_id}}"> </span>
-							<a emp_id="{{$emp_id}}" class="add_more_punch aione-button m-0" style="width: 100%">+ Add</a>
-					@else
-					<div class="field-wrapper " style="position: relative;">
-						<div class="field field-type-text">
-							{!! Form::time($emp_id."[punch_in_out][]",null,['class' => 'timepicker remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]) !!}
-						</div>
-					</div>
-					<span class="{{$emp_id}}"> </span>
-					<a emp_id="{{$emp_id}}" class="add_more_punch aione-button m-0" style="width: 100%">+ Add</a>
+				@if($lock_status)
+					@if($attendance_mode_manual)
+						<td> 
+							{!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
+							{!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' ],@$attendance_status	,['class' => 'browser-default', ]) !!} 
+						</td>
 					@endif
-				</td>
-			@endif
-			@if($attendance_mode_system)
-					<td>
-						@if(!empty($in_out_data))
-						 @foreach($in_out_data as $key =>$val)
-						 <div>
-						 	<div class="field-wrapper ">
-							<div class="field field-type-text">
-							 {!! Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  
-							 <a class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
-								right: 10px;"><i class="fa fa-trash"></i> </a>
+					@if($attendance_mode_machine)
+						<td style="width: 130px;">
+						@if(!empty($punch_in_out) )
+							@foreach($punch_in_out as $key =>$val)
+								<div class="field-wrapper position-relative" style="position: relative;">
+									<div class="field field-type-text">
+									{!! Form::text($emp_id."[punch_in_out][]",($val == null) ? '--' : $val,['class' =>'remove_punch aione-float-left'.$emp_id,'id'=>$key.'punch_in_out'.$emp_id]) !!} 	 
+										<a emp_id="{{$emp_id}}"  class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
+										right: 10px;"><i class="fa fa-trash"></i> </a>	
+									</div> 
+								</div>
+							@endforeach
+								<span class="{{$emp_id}}"> </span>
+									<a emp_id="{{$emp_id}}" class="add_more_punch aione-button m-0" style="width: 100%">+ Add</a>
+							@else
+							<div class="field-wrapper " style="position: relative;">
+								<div class="field field-type-text">
+									{!! Form::text($emp_id."[punch_in_out][]",null,['class' => 'timepicker remove_in_out'.$emp_id ,'id'=>'punch_in_out'.$emp_id]) !!}
+								</div>
 							</div>
-						</div>
-						</div>
-						@endforeach
-						<span class="in_out{{$emp_id}}"> </span>
-						<a emp_id="{{$emp_id}}" class="add_more_in_out">Add</a> 
-						@else
-						<div><div class="field-wrapper ">
-							<div class="field field-type-text">
-							 {!! Form::time($emp_id."[in_out_data][]",null,['class' => 'timepicker', 'id'=>'in_out_data'.$emp_id]) !!} 
-							 <span class="in_out{{$emp_id}}"> </span>
-							</div>
-						</div>
-
-						</div>
-
-						<a emp_id="{{$emp_id}}" class="add_more_in_out">Add</a> 
-
-						@endif
-					</td>
-				@endif
-		@else
-			@if($attendance_mode_manual)
-				<td>{{@$attendance_status}}</td>
-			@endif
-			@if($attendance_mode_machine)
-				@if($punch_in_out)
-					<td>
-					@foreach($punch_in_out as $key =>$val)
-					<div>
-							{{($val == null) ? '--' : $val}}
-					</div>
-					@endforeach
-					</td>
-				@else
-					<td>--</td>
-				@endif
-			@endif
-			@if($attendance_mode_system)
-				@if($in_out_data)
-					<td>
-						@foreach($in_out_data as $key =>$val)
-						{{$loop->iteration}}
-							@foreach($val as $ip =>$times)
+							<span class="{{$emp_id}}"> </span>
+							<a emp_id="{{$emp_id}}" class="add_more_punch aione-button m-0" style="width: 100%">+ Add</a>
+							@endif
+						</td>
+					@endif
+					@if($attendance_mode_system)
+							<td style="width: 130px;">
+								@if(!empty($in_out_data))
+								 @foreach($in_out_data as $key =>$val)
+								 <div>
+								 	<div class="field-wrapper ">
+									<div class="field field-type-text mb-10">
+									 {!! Form::text($emp_id."[in_out_data][]",($val == null) ? '--' : $val,['class' => '','id'=>$key.'in_out_data'.$emp_id]) !!}  
+									 <a class="del_check position-absolute grey darken-2" style="position:absolute;top:10px;
+										right: 10px;"><i class="fa fa-trash"></i> </a>
+									</div>
+								</div>
+								</div>
+								@endforeach
+								<span class="in_out{{$emp_id}}"> </span>
+								<a emp_id="{{$emp_id}}" class="add_more_in_out aione-button">+ Add</a> 
+								@else
 								<div>
-									{{$ip}}{{($times == null) ? '--' : $times}}
+									<div class="field-wrapper ">
+										<div class="field field-type-text">
+										 {!! Form::text($emp_id."[in_out_data][]",null,['class' => 'timepicker', 'id'=>'in_out_data'.$emp_id]) !!} 
+										 	<span class="in_out{{$emp_id}}"> </span>
+										</div>
+									</div>
+
 								</div>
 
-							@endforeach
-						@endforeach
-					</td>
-						@else
-						<td>--</td>
+								<a emp_id="{{$emp_id}}" class="add_more_in_out aione-button" style="width: 84%">+ Add</a> 
+
+								@endif
+							</td>
+						@endif
+				@else
+					@if($attendance_mode_manual)
+						<td>{{@$attendance_status}}</td>
 					@endif
+					@if($attendance_mode_machine)
+						@if($punch_in_out)
+							<td>
+							@foreach($punch_in_out as $key =>$val)
+							<div>
+									{{($val == null) ? '--' : $val}}
+							</div>
+							@endforeach
+							</td>
+						@else
+							<td>--</td>
+						@endif
+					@endif
+					@if($attendance_mode_system)
+						@if($in_out_data)
+							<td>
+								@foreach($in_out_data as $key =>$val)
+								{{$loop->iteration}}
+									@foreach($val as $ip =>$times)
+										<div>
+											{{$ip}}{{($times == null) ? '--' : $times}}
+										</div>
+
+									@endforeach
+								@endforeach
+							</td>
+								@else
+								<td>--</td>
+							@endif
+					@endif
+				@endif
+			@else
+				@if($attendance_mode_system)
+					<td> </td>
+				@endif
+				@if($attendance_mode_manual)
+					<td></td>
+				@endif
+				@if($attendance_mode_machine)
+					<td></td>
+				@endif
 			@endif
-		@endif
-	@else
-		@if($attendance_mode_system)
-			<td> </td>
-		@endif
-		@if($attendance_mode_manual)
-			<td></td>
-		@endif
-		@if($attendance_mode_machine)
-			<td></td>
-		@endif
-	@endif
-		<td>{{($lock_status)?'Unlocked':'Locked'}}</td>
-		<td>{{@$warning}}</td>
+				<td>{{($lock_status)?'Unlocked':'Locked'}}</td>
+				<td>{{@$warning}}</td>
 		</tr>
 	@endforeach
 	</tbody>
@@ -267,82 +269,17 @@ if(empty($user_meta['employee_id'])){
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
 @include('common.page_content_secondry_end')
-@include('common.pagecontentend')
-<style type="text/css">
-
-/*	body{
-		background-color: #ffffff;
-	}
-	.main-container{
-		padding:17px;
-	}
-	.form_group{
-		margin:30px;
-	    font-size: 16px;
-	    font-weight: 400;
-	    color: #5d5c5c;
-	    font-family: 'Open Sans', sans-serif;
-	}
-	.form-control{
-		background: #f8f8f8;
-	}
-	.btn {
-	    background: #2196F3;
-	    margin-top: 30px;
-	}
-	.input-group{
-		margin-left: 54px;
-	   
-	}
-	
-	.pager li > a{
-		    background-color: #006694;
-		    color: #ffffff;
-	}
-	.design-style{
-		
-	    text-align: center;
-	   
-	}
-	.design-bg{
-		background: #ececec;
-	    padding: 24px 14px 15px 14px;
-	    border-radius: 3px;
-	    border: 1px solid #ddd;
-	    margin-bottom: 10px;
-	}
-	.present-bg-color{
-		background: #6aa84f;
-	    color: #fff;
-	}
-	.absent-bg-color{
-		background:#e53935;
-		color: #fff;
-	}
-	.pager li > a:hover{
-		background-color: #006694;
-	}
-	.table-tr{
-		text-align: center;
-	}
-	
-	.mark-attendance-status{
-		display: block;
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		margin: 0 auto;
-	}
-	#mark_attendance_date{
-		text-indent: 100px;
-	}
-	#mark_attendance_date:before{
-		content: "\f073";
-		font-family: 'font-awesome';
-	}
-*/
-	
-</style>
+@include('common.pagecontentend')	
+	<style type="text/css">
+		.field-wrap{
+			position: relative;
+		}
+		.field-wrap .delete-btn{
+			position: absolute;
+			right: 10px;
+			top: 12px;
+		}
+	</style>
 	<script type="text/javascript">
 	$(document).on('change', 'input[id="mark_attendance_date"]',function(){
 		this.form.submit();
@@ -352,11 +289,11 @@ if(empty($user_meta['employee_id'])){
 		
 
 		emp_id = $(this).attr('emp_id');
-		$('.'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text"><input class="timepicker remove_punch'+emp_id+'"  name="'+emp_id +'[punch_in_out][]" type="time"> <a class="del_check del_punch'+emp_id+'"" emp_id="'+emp_id+'"><i class="fa fa-trash red></i>" </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
+		$('.'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text field-wrap"><input class="timepicker remove_punch'+emp_id+'"  name="'+emp_id +'[punch_in_out][]" type="text"> <a class="del_check delete-btn del_punch'+emp_id+'"" emp_id="'+emp_id+'"><i class="fa fa-close red></i>" </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
 	});
 	$(document).on('click','.add_more_in_out', function(){
 		emp_id = $(this).attr('emp_id');
-		$('.in_out'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text"><input class="timepicker remove_in_out'+emp_id+'"  name="'+emp_id +'[in_out_data][]" type="time"><a class="del_check del_in_out'+emp_id+'" emp_id="'+emp_id+'">del </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
+		$('.in_out'+emp_id).append('<div class="field-wrapper "> <div class="field field-type-text field-wrap"><input class="timepicker remove_in_out'+emp_id+'"  name="'+emp_id +'[in_out_data][]" type="text"><a class="del_check delete-btn del_in_out'+emp_id+'" emp_id="'+emp_id+'"><i class="fa fa-close red></i>" </a></div><script type="text/javascript"> $(".timepicker").pickatime({ default: "now", twelvehour: false, donetext: "OK", autoclose: false, vibrate: true })</sc'+'ript></div>')
 	});
 
 	$(document).on('click','.show_punch_in_out',function(e){
@@ -364,11 +301,11 @@ if(empty($user_meta['employee_id'])){
 		$(this).siblings('.add_punch_in_out').toggle();
 	});
 	$(document).on('click','.del_check',function(e){
-			e.preventDefault();
-			emp_id = $(this).attr('emp_id');
-			alert(emp_id);
-			$('.remove_punch'+emp_id).remove();
-			$('.del_punch'+emp_id).remove();
+		e.preventDefault();
+		emp_id = $(this).attr('emp_id');
+		alert(emp_id);
+		$('.remove_punch'+emp_id).remove();
+		$('.del_punch'+emp_id).remove();
 	});
 		$(document).ready(function(){
 			$('.timepicker').pickatime({
@@ -395,26 +332,26 @@ if(empty($user_meta['employee_id'])){
 
 		function add(id)
 		{
-		valuestop =	$("#"+id).val();
-		valuestart = 	$("#in_"+id).val();
-		// console.log(out+''+inTime);
+			valuestop =	$("#"+id).val();
+			valuestart = 	$("#in_"+id).val();
+			// console.log(out+''+inTime);
 
-//create date format          
-var timeStart 	= 	new Date("01/05/2017 " + valuestart).getHours();
-var timeEnd 	=	 new Date("01/05/2017 " + valuestop).getHours();
+			//create date format          
+			var timeStart 	= 	new Date("01/05/2017 " + valuestart).getHours();
+			var timeEnd 	=	 new Date("01/05/2017 " + valuestop).getHours();
 
-var hourDiff =timeStart - timeEnd;
-console.log('difference  '+hourDiff);
+			var hourDiff =timeStart - timeEnd;
+			console.log('difference  '+hourDiff);
 
 
 
-// 		var startTime=moment("12:16:59 am", "HH:mm:ss a");
-// var endTime=moment("06:12:07 pm", "HH:mm:ss a");
-// var duration = moment.duration(endTime.diff(startTime));
-// var hours = parseInt(duration.asHours());
-// var minutes = parseInt(duration.asMinutes())-hours*60;
+			// 		var startTime=moment("12:16:59 am", "HH:mm:ss a");
+			// var endTime=moment("06:12:07 pm", "HH:mm:ss a");
+			// var duration = moment.duration(endTime.diff(startTime));
+			// var hours = parseInt(duration.asHours());
+			// var minutes = parseInt(duration.asMinutes())-hours*60;
 
-// alert (hours + ' hour and '+ minutes+' minutes');
+			// alert (hours + ' hour and '+ minutes+' minutes');
 		}
 	</script>
 @endsection()

@@ -14,6 +14,11 @@
     .aione-button:hover i{
         color: #454545 !important;
     }
+    .circle-btn{
+    	padding: 0;
+    	width: 36px;
+    	height: 36px;
+    }
 </style>
 <?php 
 $page_title_data = array(
@@ -153,24 +158,24 @@ $page_title_data = array(
                             <?php endif; ?>
         				</div>
         				<div>
-        					<a href="<?php echo e(route('list.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow " title="View Attendance">
+        					<a href="<?php echo e(route('list.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="View Attendance">
                                 <i class="fa fa-tv grey lighten-1 line-height-36"></i>
                             </a>
-                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow " title="Edit Attendance" >
+                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Edit Attendance" >
                                 <i class="fa fa-pencil grey lighten-1  line-height-36"></i>
                             </a>
-                            <a href="<?php echo e(route('import.form.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow " title="Import Attendance" >
+                            <a href="<?php echo e(route('import.form.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Import Attendance" >
                                 <i class="fa fa-sign-in grey lighten-1  line-height-36"></i>
                             </a>
-                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow " title="Mark Attendance" >
+                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Mark Attendance" >
                                 <i class="fa fa-table grey lighten-1 line-height-36"></i>
                             </a>
                             <?php if(@$data[$j]['lock_status'] == 0 &&  @$data[$j]['lock_status'] == null): ?>
-                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false'])); ?>" class="aione-button  circle aione-shadow " title="Lock Attendance">
+                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false'])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
                                     <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
                                 </a>
                             <?php else: ?>
-                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button bg-red circle aione-shadow " title="Lock Attendance">
+                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button bg-red circle aione-shadow circle-btn" title="Lock Attendance">
                                     <i class="fa fa-lock white lighten-1 line-height-36"></i>
                                 </a>
                             <?php endif; ?>
