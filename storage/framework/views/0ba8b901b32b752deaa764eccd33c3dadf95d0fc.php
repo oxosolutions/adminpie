@@ -4,8 +4,8 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Add Employee',
-	'add_new' => 'List Employees',
+	'page_title' => __('organization/hrm.employee_add_page_title'),
+	'add_new' => __('organization/hrm.employee_add_page_list_employee_button'),
 	'route' => 'list.employee'
 
 ); 

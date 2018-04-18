@@ -5,8 +5,8 @@
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Departments',
-	'add_new' => '+ Add Department'
+	'page_title' => __('organization/hrm.departments_list_page_title'),
+	'add_new' => __('organization/hrm.designation_list_page_add_department_button')
 ); 
  ?>
 	<?php if(@$errors->has()): ?>

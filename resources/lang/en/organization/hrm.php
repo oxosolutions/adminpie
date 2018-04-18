@@ -26,6 +26,26 @@ return [
 *	HRM (Attendance Page)
 ************************************************************/
 
-'attendance_page_title' =>'Attendance'
+'attendance_page_title' =>'Attendance',
 
+
+
+/************************************************************
+*	HRM (Designation Page)
+************************************************************/
+'designation_list_page_title'=>'Designations',
+'designation_list_page_add_designation_button' =>'+ Add Designation',
+'updated_successfully'=>'updated Successfully',
+
+
+
+/************************************************************
+*	HRM (Department Page)
+************************************************************/
+'departments_list_page_title' => 'Departments',
+'department_list_page_add_department_button' => '+ Add Department',
+'model_title_add_department' => 'Add Department',
+'model_title_edit_department' => 'Edit Department',
+'save_department_btn' => 'Save Department',
+'update_department_btn' => 'update Department',
 ];
