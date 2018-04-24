@@ -20,6 +20,7 @@
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
 			
 	           <?php echo e(__('organization/datasets.create_column')); ?> 
+               
 	        </div>
 	        <div class="aione-item-content">
 	            <?php echo Form::open(['route'=>['create.column',request()->route()->parameters()['id']]]); ?>
@@ -51,6 +52,7 @@
             <div class="bg-grey bg-lighten-3 aione-border-bottom p-15 font-size-17  ">
                 <?php echo e(__('organization/datasets.define_dataset')); ?>
 
+                <button class="aione-button aione-float-right go-to-form" style="margin-top: -5px">+ Add Column</button>
             </div>
             <div class="">
                 <div class="aione-table">
@@ -211,8 +213,8 @@
             $('.completed_formula').val(completedFormula);
         });
 
-        $(".go-to-form").on("click", function() {
-
+        $(".go-to-form").on("click", function(e) {
+            e.preventDefault();
         	$('.add-column').show();
 		   
 		});

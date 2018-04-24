@@ -133,7 +133,7 @@ $page_title_data = array(
                                         LOCK STATUS
                                     </div>
                                     <div class="">
-                                        <?php if($data[$j]['lock_status']==1): ?>
+                                        <?php if($data[$j]['lock_status']==0): ?>
                                             <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
                                                 Locked
                                             </span>
@@ -170,13 +170,20 @@ $page_title_data = array(
                             <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Mark Attendance" >
                                 <i class="fa fa-table grey lighten-1 line-height-36"></i>
                             </a>
-                            <?php if(@$data[$j]['lock_status'] == 0 &&  @$data[$j]['lock_status'] == null): ?>
-                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false'])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
-                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
-                                </a>
+
+                            <?php if(array_key_exists($j,$data['lock']) ): ?>
+                                <?php if($data['lock'][$j] == 1): ?>
+                                    <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
+                                        <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false'])); ?>" class="aione-button bg-red circle aione-shadow circle-btn" title="Lock Attendance">
+                                        <i class="fa fa-lock white lighten-1 line-height-36"></i>
+                                    </a>
+                                <?php endif; ?>
                             <?php else: ?>
-                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button bg-red circle aione-shadow circle-btn" title="Lock Attendance">
-                                    <i class="fa fa-lock white lighten-1 line-height-36"></i>
+                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
+                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
                                 </a>
                             <?php endif; ?>
         				</div>

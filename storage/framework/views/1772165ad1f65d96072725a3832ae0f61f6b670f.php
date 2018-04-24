@@ -5,8 +5,8 @@ $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
-	'page_title' => 'Designations',
-	'add_new' => '+ Add Designation'
+	'page_title' => __('organization/hrm.designation_list_page_title'),
+	'add_new' => __('organization/hrm.designation_list_page_add_designation_button') 
 ); 
 	$id = "";
   
@@ -59,7 +59,7 @@ $page_title_data = array(
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php if(Session::has('success-update')): ?>
-    <script type="text/javascript">Materialize.toast('updated Successfully' , 4000)</script>
+    <script type="text/javascript">Materialize.toast('<?php echo e(__('organization/hrm.updated_successfully')); ?>updated Successfully' , 4000)</script>
 <?php endif; ?>
 <style type="text/css">
   	.modal-footer a{

@@ -10,6 +10,9 @@
 	<?php echo @$design_settings['custom_content_head']; ?>
 
 	<style type="text/css">
+		.my-class{
+			display: none;
+		}
 		<?php echo @$meta['css_code']; ?>
 
 	</style>

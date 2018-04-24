@@ -199,7 +199,7 @@ $page_title_data = array(
                                         LOCK STATUS
                                     </div>
                                     <div class="">
-                                        @if($data[$j]['lock_status']==1)
+                                        @if($data[$j]['lock_status']==0)
                                             <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
                                                 Locked
                                             </span>
@@ -236,13 +236,20 @@ $page_title_data = array(
                             <a href="{{ route('hr.attendance',['year'=>$data['year'],'month'=>$j]) }}" class="aione-button  circle aione-shadow circle-btn" title="Mark Attendance" >
                                 <i class="fa fa-table grey lighten-1 line-height-36"></i>
                             </a>
-                            @if(@$data[$j]['lock_status'] == 0 &&  @$data[$j]['lock_status'] == null)
-                                <a href="{{ route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false']) }}" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
-                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
-                                </a>
+
+                            @if(array_key_exists($j,$data['lock']) )
+                                @if($data['lock'][$j] == 1)
+                                    <a href="{{ route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true']) }}" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
+                                        <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
+                                    </a>
+                                @else
+                                    <a href="{{ route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false']) }}" class="aione-button bg-red circle aione-shadow circle-btn" title="Lock Attendance">
+                                        <i class="fa fa-lock white lighten-1 line-height-36"></i>
+                                    </a>
+                                @endif
                             @else
-                                <a href="{{ route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true']) }}" class="aione-button bg-red circle aione-shadow circle-btn" title="Lock Attendance">
-                                    <i class="fa fa-lock white lighten-1 line-height-36"></i>
+                                <a href="{{ route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true']) }}" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
+                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
                                 </a>
                             @endif
         				</div>

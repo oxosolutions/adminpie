@@ -56,12 +56,14 @@ if($is_visualization){
 				}
 			}
 		}
+		$meta = $survey_meta;
 	}
 @endphp
+
 @include('layouts.front._head')
 
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane ">
 		<div class="aione-row">
 
 			@if(@$design_settings['show_header'] == 1)

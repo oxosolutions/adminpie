@@ -124,10 +124,10 @@
 							<?php echo $__env->make('organization.hrm.attendance.data-display.hrm-attendence-status', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 						<?php endfor; ?>
 							
-								<div class='attendance-details'> 
-									<?php echo $__env->make('organization.hrm.attendance.attendance_stats', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
- 								</div>
- 								<br>
+						<div class='attendance-details'> 
+							<?php echo $__env->make('organization.hrm.attendance.attendance_stats', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+						</div>
+						<br>
 							
 				
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -9,6 +9,9 @@
 	@endif
 	{!! @$design_settings['custom_content_head']!!}
 	<style type="text/css">
+		.my-class{
+			display: none;
+		}
 		{!! @$meta['css_code']!!}
 	</style>
 	<style type="text/css">

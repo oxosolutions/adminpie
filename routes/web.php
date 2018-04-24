@@ -389,8 +389,8 @@
 						//widget permission
 							Route::post('widget_permission_save',	['as' => 'save.widget_permission' , 'uses' => 'UserRoleController@widget_permission_save']);
 
-							Route::get('/attendance/list/ajax', ['as' => 'ajax.list.attendance' , 'uses' =>'AttendanceController@ajax']);
-							Route::post('/attendance/list/ajax',	['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
+							Route::match(['get','post'],'/attendance/list/ajax', ['as' => 'ajax.list.attendance' , 'uses' =>'AttendanceController@ajax']);
+							// Route::post('/attendance/list/ajax',	['as' => 'ajax.list.attendance' , 'uses' => 'AttendanceController@ajax']);
 							Route::get('/attendance/lock',				['as' => 'ajax.lock.attendance' , 'uses' => 'AttendanceController@lock_status']);
 							Route::get('/attendance/files',				['as' => 'attendance.files' , 'uses' => 'AttendanceController@attendance_file']);
 
@@ -543,8 +543,8 @@
 
 
 
-Route::get('/myattendance',function(){
-	return view('organization.account.ash-attendance');
+Route::get('/myattendance1',function(){
+	return view('organization.attendance.new-design');
 });
 
 Route::get('survey-design',function(){

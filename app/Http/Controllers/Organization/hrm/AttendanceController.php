@@ -818,6 +818,7 @@ class AttendanceController extends Controller
 				$data[$key]['attendance_status'] = $results;
 		 	}
  		}
+// 		dd($data);
 		return view('organization.attendance.attendence-list',compact('data'));
 	}
     

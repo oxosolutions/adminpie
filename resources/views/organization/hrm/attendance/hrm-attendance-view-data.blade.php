@@ -124,10 +124,10 @@
 							@include('organization.hrm.attendance.data-display.hrm-attendence-status')
 						@endfor
 							
-								<div class='attendance-details'> 
-									@include('organization.hrm.attendance.attendance_stats')
- 								</div>
- 								<br>
+						<div class='attendance-details'> 
+							@include('organization.hrm.attendance.attendance_stats')
+						</div>
+						<br>
 							
 				
 			@endforeach

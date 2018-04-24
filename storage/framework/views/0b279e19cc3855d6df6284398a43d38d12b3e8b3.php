@@ -6,7 +6,7 @@
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => __('organization/hrm.departments_list_page_title'),
-	'add_new' => __('organization/hrm.designation_list_page_add_department_button')
+	'add_new' => __('organization/hrm.department_list_page_add_department_button')
 ); 
  ?>
 	<?php if(@$errors->has()): ?>
@@ -45,7 +45,7 @@
 
 			
 
-		<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Department','button_title'=>'Save Department','section'=>'adddepartment']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>__('organization/hrm.model_title_add_department'),'button_title'=>__('organization/hrm.save_department_btn'),'section'=>'adddepartment']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo Form::close(); ?>
 
 		<?php if(@$model): ?>
@@ -53,7 +53,7 @@
 
 			<input type="hidden" name="id" value="<?php echo e($data[0]['id']); ?>">
 			
-			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Department','button_title'=>'update Department','section'=>'adddepartment']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>__('organization/hrm.model_title_edit_department'),'button_title'=>__('organization/hrm.update_department_btn'),'section'=>'adddepartment']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo Form::close(); ?>
 
 		<?php endif; ?>

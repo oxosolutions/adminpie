@@ -1084,7 +1084,7 @@ class SurveyController extends Controller
             'survey_submitted_from' => 'web',
             'device_detail' => $request->header('User-Agent')
         ];
-        foreach ($request->except(['_token','section']) as $key => $value) {
+        foreach ($request->except(['_token','section','number_of_fields','prefilled_count','prefilled_names']) as $key => $value) {
             if(is_array($value)){
                 $dataToInsert[$key] = json_encode($value);
             }else{
@@ -1255,11 +1255,34 @@ class SurveyController extends Controller
                     return redirect()->route('embed.survey',['token'=>$token,'section'=>$result['next_section'],'question'=>$result['next_question']]);
                 }elseif(array_key_exists('next_section',$result) && $result['next_section'] != false){
                     if($result['next_section'] == 'finish'){
+                        $redirectAfterCopmpleted = $this->checkSurveyCompletedSettingss($token);
+                        if($redirectAfterCopmpleted['action'] == 'print_message'){
+                            Session::flash('success',$redirectAfterCopmpleted['message']);
+                            Session::put('record_id');
+                            return redirect()->route('embed.survey',['token'=>$token]);
+                        }
+                        if($redirectAfterCopmpleted['action'] == 'go_to_page'){
+                            Session::put('record_id');
+                            return redirect()->route('view.pages',['slug'=>$redirectAfterCopmpleted['page']]);
+                        }
+                        Session::put('record_id');
                         return redirect()->route('survey.completed',['token'=>$token]);
                     }else{
+                        Session::put('record_id');
                         return redirect()->route('embed.survey',['token'=>$token,'section'=>$result['next_section']]);
                     }
                 }else{
+                    $redirectAfterCopmpleted = $this->checkSurveyCompletedSettingss($token);
+                    if($redirectAfterCopmpleted['action'] == 'print_message'){
+                        Session::flash('success',$redirectAfterCopmpleted['message']);
+                        Session::put('record_id');
+                        return redirect()->route('embed.survey',['token'=>$token]);
+                    }
+                    if($redirectAfterCopmpleted['action'] == 'go_to_page'){
+                        Session::put('record_id');
+                        return redirect()->route('view.pages',['slug'=>$redirectAfterCopmpleted['page']]);
+                    }
+                    Session::put('record_id');
                     return redirect()->route('survey.completed',['token'=>$token]);
                 }
             }
@@ -1297,6 +1320,24 @@ class SurveyController extends Controller
             return view('organization.survey.public.survey_draw',['error'=>$errorStatus,'data'=>$questionsData,'prefill'=>$prefilled]);
         }
 
+    }
+
+    /**
+     * [checkSurveyCompletedSettingss description]
+     * @param  [type] $token [description]
+     * @return [type]        [description]
+     */
+    protected function checkSurveyCompletedSettingss($token){
+        $surveyRecord = forms::select(['form_slug','id'])->with(['formsMeta','section.fields'])->where('embed_token',$token)->first();
+        $meta = get_form_meta($surveyRecord->id,null,true,false);
+        if(@$meta['on_survey_completion'] == 'print_message'){
+            return ['action'=>$meta['on_survey_completion'],'message'=>$meta['message']];
+        }
+        if(@$meta['on_survey_completion'] == 'go_to_page'){
+            return ['action'=>$meta['on_survey_completion'],'page'=>$meta['select_page']];
+        }
+
+        return ['action'=>'print_message','message'=>'Survey completed successfully!'];
     }
     
 
@@ -1523,7 +1564,12 @@ class SurveyController extends Controller
             $query->with(['fields'=>function($query){
                 $query->with(['fieldMeta']);
             },'sectionMeta']);
-        },'formsMeta'])->first()->toArray();
+        },'formsMeta'])->first();
+        if($model != null){
+            $model = $model->toArray();
+        }else{
+            $model = [];
+        }
         $fileName = time() . '_form(survey)_'.$id.'.json';
         File::put(public_path('/tmp/json/'.$fileName),json_encode($model));
         return Response::download(public_path('/tmp/json/'.$fileName));
@@ -1646,7 +1692,7 @@ class SurveyController extends Controller
 
     public function SurveyCompleted(){
         Session::put('record_id');
-        return view('organization.survey.survey_completed');
+        return view('organization.survey.public.survey_completed');
     }
 
 }

@@ -1,7 +1,7 @@
 @extends('layouts.front')
 @section('content')
 <section>
-	<style>
+	{{-- <style>
 		button, input[type=button], input[type=reset], input[type=submit]
 		 {
             border-radius: 30px;
@@ -42,8 +42,8 @@
           {
            overflow: auto;
           }
-        </style>
-	<div class="ar pv-20 pt-20">
+        </style> --}}
+	{{-- <div class="ar pv-20 pt-20">
 		<div class="ac l20"></div>
 		<div class="ac l60 pt-25 aione-shadow pb-25 bg-grey bg-lighten-5">
 			<div class="Wrapper aione-align-center">
@@ -63,9 +63,9 @@
 			</div>
 		</div>
 		<div class="ac l20"></div>
-	</div>
+	</div> --}}
 </section>
-<script type="text/javascript">
+{{-- <script type="text/javascript">
     $('.close_window').on('click', function(){
       window.open('','_parent','');
         window.close();
@@ -76,5 +76,11 @@
         window.open('','_parent','');
         window.close();
     }
-</script> 
+</script> --}} 
+<div class="aione-align-center mh-100 mv-50 aione-border  ph-100 pv-50 border-width-3" style="border-style: dashed;">
+	<h2 class="font-weight-300 grey">Congratulations.</h2>
+	<p class="font-size-24 line-height-40 mb-10 grey">Survey Completed Successfully.</p>
+	<p class="font-size-17 line-height-28">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis bibendum arcu quis tellus scelerisque volutpat. Integer vitae odio ac tortor rhoncus sagittis sed sit amet sem.</p>
+	<button class="m-10">Finish</button>
+</div>
 @endsection

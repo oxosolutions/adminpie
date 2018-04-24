@@ -46,43 +46,7 @@ class DatasetController extends Controller
             }
         } 
         return $columns;
-        // static $columns = [];
-        // foreach($data as $fieldKey => $field){
-        //     if(!array_key_exists('blank',$field)){
-        //         if(array_key_exists('children',$field)){
-        //             $columns[] = $field['id'];
-        //             $columns = $this->get_columns($field['children']);
-        //         }else{
-        //             $columns[] = $field['id'];
-        //         }
-        //     }else{
-        //         if(array_key_exists('children',$field)){
-        //             $columns = $this->get_columns($field['children']);
-        //         }
-        //     }
-        // }
-        // return $columns;
      }
-
-     /*
-     $columns =null;
-        foreach ($data as $key => $value) {
-            if(isset($value['children'])){
-                if(!empty($this->get_columns($value['children']))){
-                    $another  = $this->get_columns($value['children']);
-                    for($i =0; $i < count($another); $i++){
-                        $columns[] = $another[$i];
-                    }
-                }
-            }else{
-                if(isset($value['blank'])){
-                }else{
-                    $columns[] = $value['id'];
-                }
-            }
-        } 
-         return $columns;
-      */
 
      protected function dataset_table_column($dataset_table){
         $check_columns =   DB::table($dataset_table);
@@ -139,8 +103,6 @@ class DatasetController extends Controller
                     }
                     $sel_fields =  $this->get_columns($fields);
                     http_response_code(500);
-                    // dd($fields);
-                     // dd($fields , $sel_fields);
                    
                     if(!$token){
                         update_meta('App\Model\Organization\DatasetMeta', ['token'=>str_random(25)], ['dataset_id'=>$id], false);
@@ -227,87 +189,48 @@ class DatasetController extends Controller
                     }
                     $data[$new_key][$col_name] =  $query_data[$nextValue['id']];
 
-                    // foreach($nextValue as $key => $value){
-                    //     if(!empty($new_key)){
-                    //         $data[$new_key][$columns[$value['id']]] = $query_data[$value['id']];
-                    //     }
-                    // }
-
                    }
                 }
             }
-            // else{
-            //     foreach($fields as $key => $value){
-            //         if(!empty($new_key)){
-            //             $data[$new_key][$columns[$value['id']]] = $query_data[$value['id']];
-            //         }
-            //     }
-            // }
-            
             return $data;
     } 
     protected function manipulation_data($query_data, $fields, $data){
         http_response_code(500);
-       
-        foreach (json_decode($query_data, true) as $rKey => $rValue) {
-            foreach ($fields as $fKey => $fValue) {
-                // $res[$rKey] = $set_data = $this->api_data_set($rValue, $fValue, $data['columns']);
-               
-                
-                if(empty($fValue['children']) && empty($fValue['blank'])) {
-                    $col_val = $data['columns'][$fValue['id']];
-                    $res[$rKey][$col_val] =  $rValue[$fValue['id']];
-                }elseif(!empty($fValue['children']) ) {
-                   $col = $fValue['id'];
-                    if(!empty($data['columns'][$fValue['id']])){
-                       $col = $data['columns'][$fValue['id']];
-                    }
-
-                   foreach ($fValue['children'] as $cKey =>$cValue) {
-                        if($this->check_child($cValue)) {
-                            $children = $cValue['id'];
-                            if(!empty($data['columns'][$cValue['id']])){
-                                $children = $data['columns'][$cValue['id']];
-                            }
-                            $res[$rKey][$col] = $d = $this->set_datas($rValue, $cValue, $data['columns'] , $children);
-                           // dd($d);
-                        }else{
-                            $child_col = @$data['columns'][$cValue['id']];
-                           $res[$rKey][$col][$child_col] = @$rValue[$cValue['id']];
+        if($query_data != null){
+            foreach (json_decode($query_data, true) as $rKey => $rValue) {
+                foreach ($fields as $fKey => $fValue) {
+                    // $res[$rKey] = $set_data = $this->api_data_set($rValue, $fValue, $data['columns']);
+                   
+                    
+                    if(empty($fValue['children']) && empty($fValue['blank'])) {
+                        $col_val = $data['columns'][$fValue['id']];
+                        $res[$rKey][$col_val] =  $rValue[$fValue['id']];
+                    }elseif(!empty($fValue['children']) ) {
+                       $col = $fValue['id'];
+                        if(!empty($data['columns'][$fValue['id']])){
+                           $col = $data['columns'][$fValue['id']];
                         }
-                        // if($this->check_child($cValue)){
-                        //     @$child_col = $data['columns'][$cValue['id']];
-                        //        $res[$rKey][$col][@$child_col] =  $this->set_datas($rValue, $cValue ,$data['columns'] , @$child_col );
-                        // // if(isset($cValue['children']) && !isset($cValue['blank'])) {
-                        // //         foreach ($cValue['children'] as $nextKey =>$nextValue) {
-                        // //             $next_child_col = $data['columns'][$nextValue['id']];
-                        // //             $res[$rKey][$col][$child_col][$next_child_col] = $rValue[$nextValue['id']];
-                        // //         }
-                        // }else{
-                        //     $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
-                        // }
+
+                       foreach ($fValue['children'] as $cKey =>$cValue) {
+                            if($this->check_child($cValue)) {
+                                $children = $cValue['id'];
+                                if(!empty($data['columns'][$cValue['id']])){
+                                    $children = $data['columns'][$cValue['id']];
+                                }
+                                $res[$rKey][$col] = $d = $this->set_datas($rValue, $cValue, $data['columns'] , $children);
+                               // dd($d);
+                            }else{
+                                $child_col = @$data['columns'][$cValue['id']];
+                               $res[$rKey][$col][$child_col] = @$rValue[$cValue['id']];
+                            }
+                           
+                        }
                     }
                 }
-                // elseif(isset($fValue['children']) && isset($fValue['blank'])){
-                //    $col = $fValue['id'];
-                //    foreach ($fValue['children'] as $cKey =>$cValue) {
-                //         $child_col = $data['columns'][$cValue['id']];
-                //         $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
-                //     }
-                // }
+               
             }
-           
+            return @$res;
         }
-       
-    return $res; 
-
-        // $preparedData = [];
-        // foreach (json_decode($query_data, true) as $rKey => $datasetData) {
-        //     foreach ($fields as $fieldKey => $field) {
-        //         $preparedData[] = $this->recursiveData($datasetData,$field);
-        //     }
-        // }
-        // return $preparedData;
     }
 
     protected function recursiveData($datasetData,$field, $prepareField = []){
@@ -337,30 +260,6 @@ class DatasetController extends Controller
         }
         return $prepareField;
     }
-    /*
-    foreach (json_decode($query_data, true) as $rKey => $rValue) {
-        foreach ($fields as $fKey => $fValue) {
-            if(!isset($fValue['children']) && !isset($fValue['blank'])) {
-                $col_val = $data['columns'][$fValue['id']];
-                $res[$rKey][$col_val] =  $rValue[$fValue['id']];
-            }elseif(isset($fValue['children']) && !isset($fValue['blank'])){
-               $col = $data['columns'][$fValue['id']];
-              
-               foreach ($fValue['children'] as $cKey =>$cValue) {
-                    $child_col = $data['columns'][$cValue['id']];
-                    $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
-                }
-            }elseif(isset($fValue['children']) && isset($fValue['blank'])){
-               $col = $fValue['id'];
-               foreach ($fValue['children'] as $cKey =>$cValue) {
-                    $child_col = $data['columns'][$cValue['id']];
-                    $res[$rKey][$col][$child_col] = $rValue[$cValue['id']];
-                }
-            }
-        }
-    }
-    return $res; 
-     */
 
      protected function api_data_result($fields , $dataset_table){
         $data =  DB::table($dataset_table)->select($fields)->where('status',1);
@@ -1304,6 +1203,7 @@ class DatasetController extends Controller
         if(!empty($model['dataset_table'])){
             if(Schema::hasTable(str_replace('ocrm_','', $model['dataset_table']))){
                 $datsetTable = $model->dataset_table;
+                // DB::select('RENAME TABLE')
                 DB::select('DROP TABLE IF EXISTS '.$datsetTable);
             }
         }
@@ -1428,6 +1328,9 @@ class DatasetController extends Controller
             }else{
                 DB::select('INSERT INTO '.$tableName.' ('.implode(',',$filterDara['select_column']).', status, parent) SELECT '.implode(',',$filterDara['select_column']).', status, parent FROM '.$datasetTable.' WHERE status = 1');
             }
+            $nextId = $statement = DB::select("show table status like '".DB::getTablePrefix().get_organization_id()."_datasets'"); // To get next auto increment
+            $oldTableName = $tableName;
+            $tableName = DB::getTablePrefix().get_organization_id().'_data_table_'.$nextId[0]->Auto_increment;
             $model = new Dataset;
             $model->dataset_table = $tableName;
             $model->dataset_name = $request->name;
@@ -1436,6 +1339,7 @@ class DatasetController extends Controller
             $model->user_id = Auth::guard('org')->user()->id;
             $model->uploaded_by = Auth::guard('org')->user()->name;
             $model->save();
+            DB::select('RENAME TABLE '.$oldTableName.' TO '.$tableName);
             Session::flash('success','Subset created successfully!!');
             DB::commit();
         }catch(\Exception $e){

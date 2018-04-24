@@ -48,4 +48,8 @@ return [
 'model_title_edit_department' => 'Edit Department',
 'save_department_btn' => 'Save Department',
 'update_department_btn' => 'update Department',
+/************************************************************
+*	HRM (Leave Page)
+************************************************************/
+''=>'',
 ];

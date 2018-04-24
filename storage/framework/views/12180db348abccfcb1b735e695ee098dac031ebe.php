@@ -24,7 +24,7 @@
         
                     <?php if(@$widget_settings[@$widget_id]['selected_chart'] != null): ?>
 
-                        <?php echo $model->embedVisualization($request,@$widget_settings[@$widget_id]['selected_chart']['visualization'],false,@$widget_settings[@$widget_id]['selected_chart']['chart']); ?> <!-- Real Code -->
+                        
 
                     <?php else: ?>
                         <?php echo Form::open(['route'=>'save.chart']); ?>

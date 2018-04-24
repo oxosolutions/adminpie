@@ -17,10 +17,13 @@
 		<?php elseif(!empty($attendanceVal[$d]) && !empty($attendanceVal[$d]['shift_hours'])): ?>
 
 			<?php if(!empty($holiday_data[$d])): ?>
+				
  				<?php if(!empty($attendanceVal[$d]) && !empty($attendanceVal[$d]['punch_in_out'])): ?>
 					<div class="attendance-sheet column attendance-status-holiday attendance-status-present">H</div>
+				<?php elseif(!empty($attendanceVal[$d]) && $attendanceVal[$d]['attendance_status'] == 'present'): ?>
+					<div class="attendance-sheet column attendance-status-holiday attendance-status-present">H</div>
 				<?php else: ?>
-					<div class="attendance-sheet column attendance-status-holiday">H</div>
+					<div class="attendance-sheet column attendance-status-holiday ">H</div>
 				<?php endif; ?>
 
 			<?php elseif($attendanceVal[$d]['attendance_status']=='first_half'): ?>

@@ -73,5 +73,14 @@ class forms extends Model
         return [];
     }
 
+    public static function get_id_from_token_of_survey($token){
+        $model = self::where(['embed_token'=>$token,'type'=>'survey'])->first();
+        if($model != null){
+            return $model;
+        }else{
+            return false;
+        }
+    }
+
 }
 
