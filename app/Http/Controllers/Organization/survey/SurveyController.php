@@ -1160,7 +1160,7 @@ class SurveyController extends Controller
             $difference = array_diff($fieldSlugs, $existingColumnsArray);
             foreach($difference as $key => $column){
                 $createAfter = $fieldSlugs[$key-1];
-                DB::select("ALTER TABLE `".$prefix.$tableName."` ADD `{$column}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field' AFTER ".$createAfter);
+                DB::select("ALTER TABLE `".$prefix.$tableName."` ADD `{$column}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field' AFTER `".$createAfter."`");
             }
             if(!empty($lookingForExtraField)){
                 $this->lookingForExtraField($lookingForExtraField, $tableName, $prefix);
