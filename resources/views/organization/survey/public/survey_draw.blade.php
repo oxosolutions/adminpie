@@ -91,7 +91,7 @@
             top: 64px;
             bottom: 48px;
             left: 0;
-            width: 280px;
+           
             background-color: white;
             z-index: 99;
             min-height: 100px;
@@ -270,11 +270,9 @@
                     $sectionIndex = (request()->section)?request()->section:0;
                     $questionIndex = (request()->question)?request()->question:0;
                 @endphp
-                <div class="screen-wrapper position-relative" style="position: relative;">
-                    <div class="header position-absolute aione-align-center" style="position: absolute;">
-                        <h3 class="white font-weight-300">Aioneframework Survey Collecter</h3>
-                    </div>
-                    <div class="survey-sidebar sections-wrap" >
+                <div class="ar">
+                   
+                    <div class="ac l25" >
                         @foreach($data['sections'] as $key => $section)
                             <div class="item mb-10 {{ ($sectionIndex == $key)?'active':'' }}" onclick="" style="cursor: pointer;">
                                 <div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
@@ -305,8 +303,8 @@
                             </div>
                         @endforeach
                     </div>
-                    <div class="content p-10 l-pv-10 l-ph-100 m-pv-10 m-ph-50 position-absolute" style="position: absolute;">
-                        <div class="page aione-shadow p-20" style="position: relative;">
+                    <div class="ac l75 bg-white">
+                        <div>
                             @if(isset($data['field_record']['field']))
                                 @php
                                     $prev = $route.'?section='.$sectionIndex.'&question='.($data['field_record']['index']-1);
@@ -322,7 +320,7 @@
                                     {!! Form::hidden('prev_next_section',null,['class'=>'prev_next_section']) !!}
                                     {!! Form::hidden('prev_next_question',null,['class'=>'prev_next_question']) !!}
                                     {!! FormGenerator::GenerateField($data['field_record']['field'], ['form_id'=>$data['form_id']], null, 'org') !!}
-                                    <div class="actions" style="position: absolute;bottom: 0;left: 0;right: 0;padding: 0 5px;">
+                                    <div class="actions" >
                                         @if($data['field_record']['index'] >= 1)
                                             <button class="aione-float-left prev" data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']-1) }}">Previous</button>
                                         @elseif($sectionIndex != 0)
@@ -331,7 +329,7 @@
                                         @if($data['field_record']['index'] != $totalFields)
                                             <button class="aione-float-right next" data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']+1) }}">Next</button>
                                         @else
-                                            <button class="aione-float-right next_section" data-section="{{ ($sectionIndex+1) }}" data-question="0">Next Section</button>
+                                            <button class=" next_section" data-section="{{ ($sectionIndex+1) }}" data-question="0">Next Section</button>
                                         @endif
                                         <div style="clear: both">
                                           
@@ -350,11 +348,9 @@
                                     $('#question_form').submit();
                                 });
                             </script>
-                         </div>
+                        </div>
                     </div>
-                    <div style="position: absolute;" class="footer font-size-18 aione-border-top position-absolute p-15 aione-align-center">
-                     &copy; All rights reserved by OXO solutions
-                    </div>
+                    
                 </div>
             @endif
             {{-- Endif Survey by question --}}

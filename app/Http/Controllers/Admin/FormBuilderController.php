@@ -355,7 +355,8 @@ class FormBuilderController extends Controller
 
     protected function validateCreateField($request){
         $rules = [
-            'field_title' => 'required'       
+            'field_title' => 'required',
+            'field_slug' => 'required'   
         ];
 
         $this->validate($request,$rules);
@@ -379,6 +380,7 @@ class FormBuilderController extends Controller
         }else{
             $newOrder = $lastOrder->order+1;
         }
+        $this->validateCreateField($request);
         $model = new $modelName;
         $model->form_id = $form_id;
         $model->section_id = $section_id;
