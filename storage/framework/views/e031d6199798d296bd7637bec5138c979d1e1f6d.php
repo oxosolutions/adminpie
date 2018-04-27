@@ -188,7 +188,17 @@
                                         </div>
                                         <div class="indicater-wrapper" >
                                             <div class="bg-light-blue bg-lighten-4 indicater">
-                                                <div class="bg-light-blue bg-darken-2 percentage" style="width:50%">
+                                                <?php 
+                                                    $compledtedSections = session()->get('completed_sections');
+                                                    if($compledtedSections != null && in_array($key,$compledtedSections)){
+                                                        $progressPercentage = 100;
+                                                        $completedClass = 'completed';
+                                                    }else{
+                                                        $progressPercentage = 0;
+                                                        $completedClass = '';
+                                                    }
+                                                 ?>
+                                                <div class="bg-light-blue bg-darken-2 percentage <?php echo e($completedClass); ?>" style="width:<?php echo e($progressPercentage); ?>%">
                                                 </div>
                                                 <div class="grey aione-align-center line-height-15 percentage-text">
                                                     30% completed

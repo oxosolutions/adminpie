@@ -1102,6 +1102,15 @@ class SurveyController extends Controller
         $nextSection = false;
         if($sectionIndex < $surveyDetails->section->count()-1){
             $nextSection = $sectionIndex + 1;
+            $completedSections = Session::get('completed_sections');
+            if($completedSections == null){
+                $completedSections = [];
+                $completedSections[] = $sectionIndex;
+                Session::put('completed_sections',$completedSections);
+            }else{
+                $completedSections[] = $sectionIndex;
+                Session::put('completed_sections',$completedSections);
+            }
         }else{
             $nextSection = 'finish';
         }
@@ -1186,7 +1195,6 @@ class SurveyController extends Controller
      * @author Rahul
      */
     protected function createSurveyResultsTable($fieldSlugs, $tableName, $surveyDetails){
-
         $prepearedColumnsForQuery = [];
         $extraFields = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status','survey_submitted_by','survey_submitted_from','mac_address','imei','device_detail','created_by', 'created_at', 'deleted_at'];
         $tableColumns = array_merge($fieldSlugs,$extraFields);
@@ -1268,7 +1276,6 @@ class SurveyController extends Controller
                         Session::put('record_id');
                         return redirect()->route('survey.completed',['token'=>$token]);
                     }else{
-                        Session::put('record_id');
                         return redirect()->route('embed.survey',['token'=>$token,'section'=>$result['next_section']]);
                     }
                 }else{

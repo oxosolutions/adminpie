@@ -352,7 +352,7 @@ class UsersController extends Controller
             $newSelectedRoles = array_map('intval',$request->role);
             $this->deleteFromRelatedTables($currentStoredRoles, $newSelectedRoles, $id);
             foreach($request->role as $key => $role){
-                $model = UsersRole::find($role);
+                $model = UsersRole::where('slug',$role)->first();
                 if($model->slug == 'employee'){
                     $usersMeta = new GroupUserMeta;
                     $usersMeta->key = 'joining_date';
@@ -370,7 +370,7 @@ class UsersController extends Controller
                 $notToDeleteIds[] = $mappingModel->id;
             }
             foreach($request->role as $key => $role){
-                $model = UsersRole::find($role);
+                $model = UsersRole::where('slug',$role)->first();
                 if($model->slug == 'employee'){
                     $usersMeta = new GroupUserMeta;
                     $usersMeta->key = 'joining_date';
