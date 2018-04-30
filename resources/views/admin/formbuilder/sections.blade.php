@@ -199,7 +199,7 @@ $page_title_data = array(
 	    		<b>{{__('forms.form_page_title_text')}}:</b><a href=""> {{@ strip_tags($title)}} </a>
 	    		<span class="ml-6 edit-form-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil line-height-30 aione-align-center edit-icon-button" style=""></i></span>
 	    	</div>
-	    	@if(Request::has('sections'))
+	    	@if(Request::has('sections') && request()->sections != 'all')
     	    	<div class="p-5  display-inline-block ml-20 bg-white line-height-32">
     	    		<b>Section:</b><a href=""> {{ $sections->where('id',request()->sections)->first()->section_name }}</a>
     	    		<span class=" ml-6  edit-section-detail-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil line-height-30 aione-align-center edit-icon-button" style=""></i></span>

@@ -82,5 +82,9 @@ class forms extends Model
         }
     }
 
+    public function fields(){
+        return $this->hasMany('App\Model\Organization\FormBuilder','form_id','id');
+    }
+
 }
 

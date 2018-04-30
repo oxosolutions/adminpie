@@ -44,12 +44,22 @@
                     return $fieldOptionsArray;
                 }
             }
+            if(isset($settings['field_variable']) && $settings['field_variable'] == 'slug'){
+                $name = $collection->field_slug;
+            }else{
+                $name = str_replace(' ','_',strtolower($collection->field_slug));
+            }
+            if(@$options['from'] == 'repeater'){
+                $name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
+            }else{
+                $name = str_replace(' ','_',strtolower($collection->field_slug));
+            }
 		@endphp
 		@if($status == false)
 			@foreach($optionValues['key'] as $key => $value)
 				<div id="field_option_{{$collection->field_slug}}" class="field-option">
-					{!!Form::radio(str_replace(' ','_',strtolower($collection->field_slug)),$optionValues['key'][$loop->index],null,javaScriptValidations($loop,$collection,$field_validations,$class_name))!!}
-			    	<label for="option_{{str_replace(' ','_',strtolower($collection->field_slug)).$loop->index}}" class="field-option-label">{!!$optionValues['value'][$loop->index]!!}</label>    
+					{!!Form::radio($name,$optionValues['key'][$loop->index],null,javaScriptValidations($loop,$collection,$field_validations,$class_name))!!}
+			    	<label for="option_{{$name.$loop->index}}" class="field-option-label">{!!$optionValues['value'][$loop->index]!!}</label>    
 				</div>
 
 			@endforeach
@@ -58,8 +68,8 @@
 		
 				@foreach($arrayOptions as $key => $value)
 					<div id="field_option_{{$collection->field_slug}}" class="field-option">
-						{!!Form::radio(str_replace(' ','_',strtolower($collection->field_slug)),$key,null,javaScriptValidations($loop,$collection,$field_validations,$class_name))!!}
-				    	<label for="option_{{str_replace(' ','_',strtolower($collection->field_slug)).$loop->index}}" class="field-option-label">{!!@$value!!}</label>    
+						{!!Form::radio($name,$key,null,javaScriptValidations($loop,$collection,$field_validations,$class_name))!!}
+				    	<label for="option_{{$name.$loop->index}}" class="field-option-label">{!!@$value!!}</label>    
 					</div>
 				@endforeach
 

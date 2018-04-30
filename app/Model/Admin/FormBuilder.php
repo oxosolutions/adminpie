@@ -5,7 +5,7 @@ namespace App\Model\Admin;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
 use Session;
-
+use App\Model\Organization\FormBuilder as OrgFormBuilder;
 class FormBuilder extends Model
 {
 
@@ -41,8 +41,11 @@ class FormBuilder extends Model
         }else{
             $requestParameter = request()->route()->parameters()['form_id'];
         }
-
-        $list = $this->where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->orderBy('order','ASC')->pluck('field_title','id');
+        if(Auth::guard('org')->check()){
+            $list = OrgFormBuilder::where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->orderBy('order','ASC')->pluck('field_title','id');
+        }else{
+            $list = $this->where(['form_id' => $requestParameter , 'section_id' => $_GET['sections']])->orderBy('order','ASC')->pluck('field_title','id');
+        }
         return $list;
     }
 
@@ -68,7 +71,8 @@ class FormBuilder extends Model
                     'switch' => 'Switch',
                     'color' => 'Color',
                     'icon' => 'Icon',
-                    'media' => 'Media'
+                    'media' => 'Media',
+                    'range' => 'Range'
                 ];
         return $types;
     }

@@ -22,7 +22,8 @@
 
 	<!-- Global stylesheets --> 
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
-	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/login.css?ref='.rand(544,44)) }}"> 
+	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/login.css?ref='.rand(544,44)) }}">
+	{{-- <link rel="stylesheet" type="text/css" href="https://cdn.aioneframework.com/assets/css/aione.min.css"> --}}
 
 	@if(@$bg_image)	
 		<style type="text/css">
@@ -31,6 +32,7 @@
 			}
 		</style>
 	@endif
+	
 </head>
 <body>
 	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme->value}} login-style-{{@$login_style->value}}">
@@ -41,13 +43,42 @@
 						<div class="aione-row">
 							<div class="login-background">
 							</div>
-
 							<div class="login-wrapper" >
 								<div class="aione-row" >
-									@include('common.auth-header')
-									@yield('content')
-								</div> 
-							</div> 
+									<div class="login-desc">
+										<div class="" style="padding: 30px;">
+                                            {{-- <div class="font-size-20 mb-10 mt-10 line-height-30 aione-align-center">
+                                                Welcome to Lorem ipsum<br><spam class="font-size-16"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In blandit sollicitudin condimentum.</spam>
+                                            </div>
+                                            
+                                            <div class="aione-border-top border-grey border-lighten-2 mv-15">
+                                                
+                                            </div>
+                                            <div class="aione-align-center">
+                                                <p class="line-height-22 font-size-17 aione-align-left">Do not have an account yet?</p>
+                                                <button class="m-20 " >Register Now</button>
+                                            </div>
+                                            <div class="border-grey border-lighten-2 aione-border-top mb-15">
+                                                
+                                            </div>
+                                            <div class="aione-align-center">
+                                                <p class="line-height-22 font-size-17 aione-align-left">Click on the following button to go back to the website.</p>
+                                                <button class="m-20 aione-button"><i class="fa fa-arrow-left mr-10"></i>Go to Website</button>
+                                            </div> --}}
+                                            <div class="login-site-title">
+                                            	Welcome to Lorem ipsum
+                                            </div>
+                                            <div class="site-description">
+                                            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis, leo vel porta placerat, augue nisi sodales enim, dapibus sollicitudin nisl lacus et nulla. Quisque ullamcorper libero nec sagittis accumsan.
+                                            </div>
+                                        </div>
+									</div>
+									<div class="login-form">
+										@include('common.auth-header')
+										@yield('content')	
+									</div>
+								</div>
+							</div>
 							<div class="login-footer" >
 								<div class="aione-row" >
 									{!! @$login_footer_content->value !!}
@@ -61,6 +92,7 @@
 			<div class="clear"></div><!-- .clear -->
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->
+
 </body>
 </html>
 

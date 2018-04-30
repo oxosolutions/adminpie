@@ -296,7 +296,6 @@ class SurveyController extends Controller
     }
 
     public function save_app_survey_filled_data(Request $request){
-        
         $app_version =   $request['app_version'];
          $organization = GO::where('active_code',$request['activation_code']);
          if($organization->exists()){

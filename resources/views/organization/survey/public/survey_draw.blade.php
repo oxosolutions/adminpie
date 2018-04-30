@@ -136,7 +136,6 @@
     if(@$survey_form_settings->form_field_show_border){
         $aione_form_field_border = "aione-form-field-border";
     }
-    
 @endphp
 <div class="" style="max-width: 1120px;margin: 0 auto;">
 
@@ -176,9 +175,19 @@
                         <div class="sections-wrap">
                             <!-- Survey Section -->
                             @foreach($data['sections'] as $key => $section)
-                                <div class="item mb-10 {{ ($sectionIndex == $key)?'active':'' }}" onclick="window.location.href='{{ route('embed.survey',['token'=>request()->token]).'?section='.$key }}'" style="cursor: pointer;">
+                                @php
+                                    $completedSections = session()->get('completed_sections');
+                                    if($completedSections != null && in_array($key,$completedSections)){
+                                        $progressPercentage = 100;
+                                        $completedClass = 'completed';
+                                    }else{
+                                        $progressPercentage = 0;
+                                        $completedClass = '';
+                                    }
+                                @endphp
+                                <div class="item mb-10 {{ ($sectionIndex == $key)?'active':'' }} {{$completedClass}}" onclick="window.location.href='{{ route('embed.survey',['token'=>request()->token]).'?section='.$key }}'" style="cursor: pointer;">
                                     <div class="pv-15 pl-16 pr-10 aione-border  bg-white " style="position:relative;">
-                                        <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">
+                                        <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " >
                                             {{ $section['title'] }}
                                         </div>
                                         <div class="font-size-13 line-height-20">
@@ -186,16 +195,7 @@
                                         </div>
                                         <div class="indicater-wrapper" >
                                             <div class="bg-light-blue bg-lighten-4 indicater">
-                                                @php
-                                                    $compledtedSections = session()->get('completed_sections');
-                                                    if($compledtedSections != null && in_array($key,$compledtedSections)){
-                                                        $progressPercentage = 100;
-                                                        $completedClass = 'completed';
-                                                    }else{
-                                                        $progressPercentage = 0;
-                                                        $completedClass = '';
-                                                    }
-                                                @endphp
+
                                                 <div class="bg-light-blue bg-darken-2 percentage {{$completedClass}}" style="width:{{$progressPercentage}}%">
                                                 </div>
                                                 <div class="grey aione-align-center line-height-15 percentage-text">
@@ -213,7 +213,7 @@
                         {{-- {{ Session::put('record_id',null) }} --}}
                         <div class="aione-float-left " style="width: calc( 100% - 360px )">
                             <div class="aione-border  bg-white mb-20">
-                                <div class="aione-border-bottom p-10 light-blue darken-2 font-size-18 bg-white">
+                                <div class="aione-border-bottom pv-20 ph-30 light-blue darken-2 font-size-18 bg-white">
                                     {{ @$data['sections'][$sectionIndex]['title'] }}
                                 </div>
                                 {!! Form::model(@$prefill) !!}
@@ -222,17 +222,31 @@
                                     @php
                                         $preFillCount = 0;
                                         $prefilledSlug = [];
+                                        $OptionsArray = [];
+                                        $OptionsArray['form_id'] = $data['form_id'];
+                                        $OptionsArray['from'] = @$data['sections'][$sectionIndex]['section_type'];
+                                        $OptionsArray['loop_index'] = 0;
                                     @endphp
-                                    @foreach($data['fields'] as $key => $fieldSlug)
-                                        {!! FormGenerator::GenerateField($fieldSlug, ['form_id'=>$data['form_id']], null, 'org') !!}
-                                     
-                                        @php
-                                            if(@$prefill[$fieldSlug] != null){
-                                                $prefilledSlug[] = $fieldSlug;
-                                                $preFillCount++;
-                                            }
-                                        @endphp
-                                    @endforeach
+                                    <div class="div-for-section">
+                                        <div class="parent_div_for_append">
+                                            <div class="mb-30 persist-area single-section">
+                                                @foreach($data['fields'] as $key => $fieldSlug)
+                                                    {!! FormGenerator::GenerateField($fieldSlug, $OptionsArray, null, 'org') !!}
+                                                 
+                                                    @php
+                                                        if(@$prefill[$fieldSlug] != null){
+                                                            $prefilledSlug[] = $fieldSlug;
+                                                            $preFillCount++;
+                                                        }
+                                                    @endphp
+                                                @endforeach
+                                            </div>
+                                            
+                                        </div>
+                                        @if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater')
+                                            <input type="button" class="aione-button add_more" value="Add More" />
+                                        @endif
+                                    </div>
                                     {!! Form::hidden('prefilled_count',$preFillCount) !!}
                                     {!! Form::hidden('prefilled_names',json_encode($prefilledSlug)) !!}
                                     {!! Form::submit('Submit',['class'=>'m-0 bg-light-blue bg-darken-3 ']) !!}
@@ -249,24 +263,36 @@
 
             {{-- If Survey by survey (full form) --}}
             @if($data['displayBy'] == 'survey' && $error['status'] == true)
-                <div class="m-20 aione-border p-15 bg-white" style="position: relative;">
+                <div class="m-20 aione-border p-15 bg-white surveyDiv" style="position: relative;">
                     {!! Form::model(@$prefill) !!}
                     @foreach($data['sections'] as $key => $section)
-                        <div class="mb-30 persist-area">
-                            <div class="p-10 font-size-20 light-blue darken-2 aione-border-bottom persist-header" >
-                                {{ $section['section_title'] }}
-                            </div>
-                            <div class="p-10 ar">
-                                @foreach($section['fields'] as $field_key => $field)
-                                    {!! FormGenerator::GenerateField($field, ['form_id'=>$data['form_id']], null, 'org') !!}
-                                @endforeach
-                            </div>
+                        @php
+                            $OptionsArray = [];
+                            $OptionsArray['form_id'] = $data['form_id'];
+                            $OptionsArray['from'] = $section['section_type'];
+                            $OptionsArray['loop_index'] = $loop->index;
+                        @endphp
+                        <div class="div-for-section">
+                            <div class="parent_div_for_append">
+                                <div class="mb-30 persist-area single-section">
+                                    <div class="p-10 font-size-20 light-blue darken-2 aione-border-bottom persist-header" >
+                                        {{ $section['section_title'] }}
+                                    </div>
+                                    <div class="p-10 ar">
+                                        @foreach($section['fields'] as $field_key => $field)
+                                            {!! FormGenerator::GenerateField($field, $OptionsArray, null, 'org') !!}
+                                        @endforeach
+                                    </div>
 
-                        </div> 
+                                </div>
+                            </div>
+                            @if($section['section_type'] == 'repeater')
+                                <input type="button" class="aione-button add_more" value="Add More" />
+                            @endif
+                        </div>
                     @endforeach
                     <div class="bg-white p-10 aione-border-top " style="">
                         {!! Form::submit('Submit',['style'=>'','class'=>' m-0 bg-light-blue bg-darken-3 aione-button']) !!}
-                                        
                     </div>
                     {!! Form::close() !!}
                 </div>
@@ -281,7 +307,6 @@
                     $questionIndex = (request()->question)?request()->question:0;
                 @endphp
                 <div class="ar">
-                   
                     <div class="ac l25" >
                         @foreach($data['sections'] as $key => $section)
                             <div class="item mb-10 {{ ($sectionIndex == $key)?'active':'' }}" onclick="" style="cursor: pointer;">
@@ -329,17 +354,41 @@
                                 {!! Form::model(@$prefill,['route'=>['embed.survey',request()->token,'section='.$sectionIndex,'question='.$questionIndex],'id'=>'question_form']) !!}
                                     {!! Form::hidden('prev_next_section',null,['class'=>'prev_next_section']) !!}
                                     {!! Form::hidden('prev_next_question',null,['class'=>'prev_next_question']) !!}
-                                    {!! FormGenerator::GenerateField($data['field_record']['field'], ['form_id'=>$data['form_id']], null, 'org') !!}
+                                    @if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater')
+                                        <div class="div-for-section">
+                                            <div class="parent_div_for_append">
+                                                <div class="mb-30 persist-area single-section">
+                                                    @php
+                                                        $OptionsArray = [];
+                                                        $OptionsArray['form_id'] = $data['form_id'];
+                                                        $OptionsArray['from'] = $data['sections'][$sectionIndex]['section_type'];
+                                                        $OptionsArray['loop_index'] = 0;
+                                                    @endphp
+                                                    @foreach($data['sections'][$sectionIndex]['fields'] as $key => $fieldSlug)
+                                                        {!! FormGenerator::GenerateField($fieldSlug, $OptionsArray, null, 'org') !!}
+                                                    @endforeach
+                                                    <hr/>
+                                                </div>
+                                            </div>
+                                            <input type="button" class="aione-button add_more" value="Add More" />
+                                        </div>
+                                    @else
+                                        {!! FormGenerator::GenerateField($data['field_record']['field'], ['form_id'=>$data['form_id']], null, 'org') !!}
+                                    @endif
                                     <div class="actions" >
-                                        @if($data['field_record']['index'] >= 1)
-                                            <button class="aione-float-left prev" data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']-1) }}">Previous</button>
-                                        @elseif($sectionIndex != 0)
-                                            <button class="aione-float-left prev_section" data-section="{{ ($sectionIndex-1) }}" data-question="{{ $prevSectionLastQuest }}">Prev Section</button>
-                                        @endif
-                                        @if($data['field_record']['index'] != $totalFields)
-                                            <button class="aione-float-right next" data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']+1) }}">Next</button>
-                                        @else
+                                        @if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater')
                                             <button class=" next_section" data-section="{{ ($sectionIndex+1) }}" data-question="0">Next Section</button>
+                                        @else
+                                            @if($data['field_record']['index'] >= 1)
+                                                <button class="aione-float-left prev" data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']-1) }}">Previous</button>
+                                            @elseif($sectionIndex != 0)
+                                                <button class="aione-float-left prev_section" data-section="{{ ($sectionIndex-1) }}" data-question="{{ $prevSectionLastQuest }}">Prev Section</button>
+                                            @endif
+                                            @if($data['field_record']['index'] != $totalFields)
+                                                <button class="aione-float-right next" data-section="{{ $sectionIndex }}" data-question="{{ ($data['field_record']['index']+1) }}">Next</button>
+                                            @else
+                                                <button class=" next_section" data-section="{{ ($sectionIndex+1) }}" data-question="0">Next Section</button>
+                                            @endif
                                         @endif
                                         <div style="clear: both">
                                           
@@ -403,6 +452,18 @@
                 initialPercent = initialPercent-onePercentCount;
                 $('.active').find('.percentage').css('width',initialPercent+'%');
             }
+        });
+
+        $('.add_more').click(function(){
+            var htmlForRepeat = '<div class="mb-30 persist-area single-section section-repeater">'+$(this).parent('.div-for-section').find('.single-section:first').html()+'</div>';
+            var repeaterLength = $(this).parent('.div-for-section').find('.single-section').length;
+            console.log(repeaterLength);
+            $(this).parents('.div-for-section').find('.parent_div_for_append').append(htmlForRepeat);
+            $(this).parents('.div-for-section').find('.single-section:last').find('input,select,textarea').each(function(index){
+                if($(this).attr('name') != undefined){
+                    $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
+                }
+            });
         });
     })
 </script>

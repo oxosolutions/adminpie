@@ -135,7 +135,6 @@
     if(@$survey_form_settings->form_field_show_border){
         $aione_form_field_border = "aione-form-field-border";
     }
-    
  ?>
 <div class="" style="max-width: 1120px;margin: 0 auto;">
 
@@ -176,9 +175,19 @@
                         <div class="sections-wrap">
                             <!-- Survey Section -->
                             <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?>" onclick="window.location.href='<?php echo e(route('embed.survey',['token'=>request()->token]).'?section='.$key); ?>'" style="cursor: pointer;">
+                                <?php 
+                                    $completedSections = session()->get('completed_sections');
+                                    if($completedSections != null && in_array($key,$completedSections)){
+                                        $progressPercentage = 100;
+                                        $completedClass = 'completed';
+                                    }else{
+                                        $progressPercentage = 0;
+                                        $completedClass = '';
+                                    }
+                                 ?>
+                                <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?> <?php echo e($completedClass); ?>" onclick="window.location.href='<?php echo e(route('embed.survey',['token'=>request()->token]).'?section='.$key); ?>'" style="cursor: pointer;">
                                     <div class="pv-15 pl-16 pr-10 aione-border  bg-white " style="position:relative;">
-                                        <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">
+                                        <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " >
                                             <?php echo e($section['title']); ?>
 
                                         </div>
@@ -188,16 +197,7 @@
                                         </div>
                                         <div class="indicater-wrapper" >
                                             <div class="bg-light-blue bg-lighten-4 indicater">
-                                                <?php 
-                                                    $compledtedSections = session()->get('completed_sections');
-                                                    if($compledtedSections != null && in_array($key,$compledtedSections)){
-                                                        $progressPercentage = 100;
-                                                        $completedClass = 'completed';
-                                                    }else{
-                                                        $progressPercentage = 0;
-                                                        $completedClass = '';
-                                                    }
-                                                 ?>
+
                                                 <div class="bg-light-blue bg-darken-2 percentage <?php echo e($completedClass); ?>" style="width:<?php echo e($progressPercentage); ?>%">
                                                 </div>
                                                 <div class="grey aione-align-center line-height-15 percentage-text">
@@ -215,7 +215,7 @@
                         
                         <div class="aione-float-left " style="width: calc( 100% - 360px )">
                             <div class="aione-border  bg-white mb-20">
-                                <div class="aione-border-bottom p-10 light-blue darken-2 font-size-18 bg-white">
+                                <div class="aione-border-bottom pv-20 ph-30 light-blue darken-2 font-size-18 bg-white">
                                     <?php echo e(@$data['sections'][$sectionIndex]['title']); ?>
 
                                 </div>
@@ -228,18 +228,32 @@
                                     <?php 
                                         $preFillCount = 0;
                                         $prefilledSlug = [];
+                                        $OptionsArray = [];
+                                        $OptionsArray['form_id'] = $data['form_id'];
+                                        $OptionsArray['from'] = @$data['sections'][$sectionIndex]['section_type'];
+                                        $OptionsArray['loop_index'] = 0;
                                      ?>
-                                    <?php $__currentLoopData = $data['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $fieldSlug): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <?php echo FormGenerator::GenerateField($fieldSlug, ['form_id'=>$data['form_id']], null, 'org'); ?>
+                                    <div class="div-for-section">
+                                        <div class="parent_div_for_append">
+                                            <div class="mb-30 persist-area single-section">
+                                                <?php $__currentLoopData = $data['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $fieldSlug): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <?php echo FormGenerator::GenerateField($fieldSlug, $OptionsArray, null, 'org'); ?>
 
-                                     
-                                        <?php 
-                                            if(@$prefill[$fieldSlug] != null){
-                                                $prefilledSlug[] = $fieldSlug;
-                                                $preFillCount++;
-                                            }
-                                         ?>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                 
+                                                    <?php 
+                                                        if(@$prefill[$fieldSlug] != null){
+                                                            $prefilledSlug[] = $fieldSlug;
+                                                            $preFillCount++;
+                                                        }
+                                                     ?>
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            </div>
+                                            
+                                        </div>
+                                        <?php if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater'): ?>
+                                            <input type="button" class="aione-button add_more" value="Add More" />
+                                        <?php endif; ?>
+                                    </div>
                                     <?php echo Form::hidden('prefilled_count',$preFillCount); ?>
 
                                     <?php echo Form::hidden('prefilled_names',json_encode($prefilledSlug)); ?>
@@ -260,28 +274,40 @@
 
             
             <?php if($data['displayBy'] == 'survey' && $error['status'] == true): ?>
-                <div class="m-20 aione-border p-15 bg-white" style="position: relative;">
+                <div class="m-20 aione-border p-15 bg-white surveyDiv" style="position: relative;">
                     <?php echo Form::model(@$prefill); ?>
 
                     <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <div class="mb-30 persist-area">
-                            <div class="p-10 font-size-20 light-blue darken-2 aione-border-bottom persist-header" >
-                                <?php echo e($section['section_title']); ?>
+                        <?php 
+                            $OptionsArray = [];
+                            $OptionsArray['form_id'] = $data['form_id'];
+                            $OptionsArray['from'] = $section['section_type'];
+                            $OptionsArray['loop_index'] = $loop->index;
+                         ?>
+                        <div class="div-for-section">
+                            <div class="parent_div_for_append">
+                                <div class="mb-30 persist-area single-section">
+                                    <div class="p-10 font-size-20 light-blue darken-2 aione-border-bottom persist-header" >
+                                        <?php echo e($section['section_title']); ?>
 
+                                    </div>
+                                    <div class="p-10 ar">
+                                        <?php $__currentLoopData = $section['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field_key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <?php echo FormGenerator::GenerateField($field, $OptionsArray, null, 'org'); ?>
+
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    </div>
+
+                                </div>
                             </div>
-                            <div class="p-10 ar">
-                                <?php $__currentLoopData = $section['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $field_key => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php echo FormGenerator::GenerateField($field, ['form_id'=>$data['form_id']], null, 'org'); ?>
-
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                            </div>
-
-                        </div> 
+                            <?php if($section['section_type'] == 'repeater'): ?>
+                                <input type="button" class="aione-button add_more" value="Add More" />
+                            <?php endif; ?>
+                        </div>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <div class="bg-white p-10 aione-border-top " style="">
                         <?php echo Form::submit('Submit',['style'=>'','class'=>' m-0 bg-light-blue bg-darken-3 aione-button']); ?>
 
-                                        
                     </div>
                     <?php echo Form::close(); ?>
 
@@ -297,7 +323,6 @@
                     $questionIndex = (request()->question)?request()->question:0;
                  ?>
                 <div class="ar">
-                   
                     <div class="ac l25" >
                         <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?>" onclick="" style="cursor: pointer;">
@@ -350,18 +375,43 @@
 
                                     <?php echo Form::hidden('prev_next_question',null,['class'=>'prev_next_question']); ?>
 
-                                    <?php echo FormGenerator::GenerateField($data['field_record']['field'], ['form_id'=>$data['form_id']], null, 'org'); ?>
+                                    <?php if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater'): ?>
+                                        <div class="div-for-section">
+                                            <div class="parent_div_for_append">
+                                                <div class="mb-30 persist-area single-section">
+                                                    <?php 
+                                                        $OptionsArray = [];
+                                                        $OptionsArray['form_id'] = $data['form_id'];
+                                                        $OptionsArray['from'] = $data['sections'][$sectionIndex]['section_type'];
+                                                        $OptionsArray['loop_index'] = 0;
+                                                     ?>
+                                                    <?php $__currentLoopData = $data['sections'][$sectionIndex]['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $fieldSlug): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <?php echo FormGenerator::GenerateField($fieldSlug, $OptionsArray, null, 'org'); ?>
 
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                    <hr/>
+                                                </div>
+                                            </div>
+                                            <input type="button" class="aione-button add_more" value="Add More" />
+                                        </div>
+                                    <?php else: ?>
+                                        <?php echo FormGenerator::GenerateField($data['field_record']['field'], ['form_id'=>$data['form_id']], null, 'org'); ?>
+
+                                    <?php endif; ?>
                                     <div class="actions" >
-                                        <?php if($data['field_record']['index'] >= 1): ?>
-                                            <button class="aione-float-left prev" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']-1)); ?>">Previous</button>
-                                        <?php elseif($sectionIndex != 0): ?>
-                                            <button class="aione-float-left prev_section" data-section="<?php echo e(($sectionIndex-1)); ?>" data-question="<?php echo e($prevSectionLastQuest); ?>">Prev Section</button>
-                                        <?php endif; ?>
-                                        <?php if($data['field_record']['index'] != $totalFields): ?>
-                                            <button class="aione-float-right next" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']+1)); ?>">Next</button>
-                                        <?php else: ?>
+                                        <?php if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater'): ?>
                                             <button class=" next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
+                                        <?php else: ?>
+                                            <?php if($data['field_record']['index'] >= 1): ?>
+                                                <button class="aione-float-left prev" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']-1)); ?>">Previous</button>
+                                            <?php elseif($sectionIndex != 0): ?>
+                                                <button class="aione-float-left prev_section" data-section="<?php echo e(($sectionIndex-1)); ?>" data-question="<?php echo e($prevSectionLastQuest); ?>">Prev Section</button>
+                                            <?php endif; ?>
+                                            <?php if($data['field_record']['index'] != $totalFields): ?>
+                                                <button class="aione-float-right next" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']+1)); ?>">Next</button>
+                                            <?php else: ?>
+                                                <button class=" next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
+                                            <?php endif; ?>
                                         <?php endif; ?>
                                         <div style="clear: both">
                                           
@@ -426,6 +476,18 @@
                 initialPercent = initialPercent-onePercentCount;
                 $('.active').find('.percentage').css('width',initialPercent+'%');
             }
+        });
+
+        $('.add_more').click(function(){
+            var htmlForRepeat = '<div class="mb-30 persist-area single-section section-repeater">'+$(this).parent('.div-for-section').find('.single-section:first').html()+'</div>';
+            var repeaterLength = $(this).parent('.div-for-section').find('.single-section').length;
+            console.log(repeaterLength);
+            $(this).parents('.div-for-section').find('.parent_div_for_append').append(htmlForRepeat);
+            $(this).parents('.div-for-section').find('.single-section:last').find('input,select,textarea').each(function(index){
+                if($(this).attr('name') != undefined){
+                    $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
+                }
+            });
         });
     })
 </script>

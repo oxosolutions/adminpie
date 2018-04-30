@@ -85,8 +85,6 @@ class DatasetController extends Controller
                 $data['meta_fields']   =  json_decode($meta_fields,true);
                 
                 $select_fields = $this->get_columns($data['meta_fields']);
-
-
                 $result =  $this->api_data_result($select_fields, $dataset_table);
                 $res = $this->manipulation_data($result, $data['meta_fields'], $data);
                 $data['response'] = response()->json($res);
@@ -588,7 +586,8 @@ class DatasetController extends Controller
         $spreadsheet_data = [];
         if (($handle = fopen($link, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000000, ",")) !== FALSE) {
-                if(empty($data) || $data[0] == null){ // in case if there is no data or un-published sheet
+//                if(empty($data) || $data[0] == null){ // in case if there is no data or un-published sheet
+                if(empty($data)){ // in case if there is no data or un-published sheet
                     Session::flash('error','Unable to access google sheet!');
                     return false;
                 }
