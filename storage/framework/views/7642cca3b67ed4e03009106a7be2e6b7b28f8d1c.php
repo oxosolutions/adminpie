@@ -76,7 +76,7 @@
 
         </div>
     <?php else: ?>
-        <?php echo Form::open(['route'=>['survey.reports',@$id],'method' => 'post' ]); ?>
+        <?php echo Form::open(['route'=>['survey.reports',@request()->id],'method' => 'post' ]); ?>
 
         <div class="ar">
             <div class="ac l50 m100 a100">
@@ -121,8 +121,11 @@
                             </style>
                             <div class="repeater-group">
                                 <div class="repeater-wrapper">
-                                    <?php if(!empty(@$filter_fields)): ?>
-                                        <?php $__currentLoopData = $filter_fields; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $filledKey => $filledVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if(!empty(request()->all())): ?>
+                                        <?php 
+                                            $request = request()->all();
+                                         ?>
+                                        <?php $__currentLoopData = $request['condition_field']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $filledKey => $filledVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="repeater-row ar">
                                                 <i class="material-icons dp48 repeater-row-delete">close</i>
                                                 <div id="aione_form_section_527" class="aione-form-section">
@@ -131,21 +134,26 @@
                                                             <div class="aione-row ar">
                                                                 <div id="field_2477" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-column field-wrapper-type-select l33 m33 s100">
                                                                     <div id="field_column" class="field field-type-select">
-                                                                        <?php echo Form::select("condition_field[".$filledKey."]",$condition_fields, $filledVal['condition_field'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select']); ?>
+                                                                        <?php echo Form::select("condition_field["
+                                                                        .$filledKey."]",$condition_fields,
+                                                                        $request['condition_field'][$filledKey] ,['placeholder'=>'Select field' , 'class'=>'browser-default select']); ?>
 
                                                                     </div><!-- field -->
                                                                 </div><!-- field wrapper -->
                                                                 <div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
                                                                     <div id="field_operation" class="field field-type-select">
-                                                                        <?php echo Form::select('operator['.$filledKey.']',$operator_options, $filledVal['operator'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select']); ?>
+                                                                        <?php echo Form::select('operator['.$filledKey.']',
+                                                                        $operator_options, $request['operator'][$filledKey] ,
+                                                                        ['placeholder'=>'Select field' , 'class'=>'browser-default select']); ?>
 
 
-                                                                        
                                                                     </div><!-- field -->
                                                                 </div><!-- field wrapper -->
                                                                 <div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
                                                                     <div id="field_value" class="field field-type-text">
-                                                                        <input class="input-value" id="input_value" placeholder="" data-validation="" name="condition_field_value[<?php echo e($filledKey); ?>]" type="text" value="<?php echo e($filledVal['condition_field_value']); ?>">
+                                                                        <input class="input-value" id="input_value"
+                                                                                placeholder="" data-validation=""
+                                                                                name="condition_field_value[<?php echo e($filledKey); ?>]" type="text" value="<?php echo e($request['condition_field_value'][$filledKey]); ?>">
                                                                     </div><!-- field -->
                                                                 </div><!-- field wrapper -->
                                                             </div> <!-- .aione-row -->
@@ -171,7 +179,6 @@
                                                                 <div id="field_operation" class="field field-type-select">
                                                                     <?php echo Form::select('operator[]',$operator_options, null ,['placeholder'=>'Select field' , 'class'=>'browser-default select']); ?>
 
-                                                                    
                                                                 </div><!-- field -->
                                                             </div><!-- field wrapper -->
                                                             <div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
@@ -200,7 +207,7 @@
             <div id='parent'>
             </div>
             <div class="aione-row search-options aione-align-right mv-10">
-                <button type="submit" class="aione-button" name="export">
+                <button type="submit" class="aione-button" name="export" value="export">
                     <i class="fa fa-sign-out mr-5"></i>Export Records
                 </button>
                 <button type="submit" class="aione-button" name="Search"><i class="fa fa-search mr-5"></i>Search
@@ -235,44 +242,56 @@
                 </div>
             <?php endif; ?>
 
-            <div id="table-structure" class="aione-table scrollx">
-                <div class="ac l80" style="line-height: 48px">Showing <?php echo e(@$firstItem); ?> to <?php echo e(@$lastItem); ?> of <?php echo e(@$total); ?> records</div>
-                <table class="compact">
-                    <thead>
-                        <tr>
-                            <?php 
-                                $columnsInOrderWithHeaders = [];
-                             ?>
-                            <?php $__currentLoopData = $model[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php 
-                                    $columnsInOrderWithHeaders[] = $key;
-                                 ?>
-                                <th>
-                                    <span class="aione-tooltip truncate" tooltip-data="">
-                                    <?php echo e(@$key); ?> 
-                                    </span>
-                                </th>
-
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $__currentLoopData = $model; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys => $vals): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php if(!$model->isEmpty()): ?>
+                <div id="table-structure" class="aione-table scrollx">
+                    <div class="ac l80" style="line-height: 48px">Showing <?php echo e(@$firstItem); ?> to <?php echo e(@$lastItem); ?> of <?php echo e(@$total); ?> records</div>
+                    <table class="compact">
+                        <thead>
                             <tr>
-                                <?php $__currentLoopData = $columnsInOrderWithHeaders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <span class="aione-tooltip truncate" tooltip-data="<?php echo e($vals[$column]); ?>">
-                                        <td><?php echo e($vals[$column]); ?> </td>
-                                    </span>
+                                <?php 
+                                    $columnsInOrderWithHeaders = [];
+                                 ?>
+                                <?php $__currentLoopData = $model[0]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php 
+                                        $columnsInOrderWithHeaders[] = $key;
+                                     ?>
+                                    <th>
+                                        <span class="aione-tooltip truncate" tooltip-data="">
+                                        <?php echo e(@$key); ?>
+
+                                        </span>
+                                    </th>
+
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <?php $__currentLoopData = $model; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys => $vals): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <?php 
+                                    $vals = (array)$vals;
+                                 ?>
+                                <tr>
+                                    <?php $__currentLoopData = $columnsInOrderWithHeaders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <span class="aione-tooltip truncate" tooltip-data="<?php echo e($vals[$column]); ?>">
+                                            <td><?php echo e($vals[$column]); ?> </td>
+                                        </span>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="aione-message warning">
+                    No matching records found!
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     <?php endif; ?>
-    <?php echo e(@$model->render()); ?>
+    <?php if(@$model != null): ?>
+        <?php echo e(@$model->render()); ?>
 
+    <?php endif; ?>
 
     <style>
         .disappear {

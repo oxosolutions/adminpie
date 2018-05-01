@@ -270,7 +270,7 @@
                             $OptionsArray = [];
                             $OptionsArray['form_id'] = $data['form_id'];
                             $OptionsArray['from'] = $section['section_type'];
-                            $OptionsArray['loop_index'] = $loop->index;
+                            $OptionsArray['loop_index'] = 0;
                         @endphp
                         <div class="div-for-section">
                             <div class="parent_div_for_append">

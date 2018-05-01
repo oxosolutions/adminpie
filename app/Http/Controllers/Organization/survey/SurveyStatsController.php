@@ -314,15 +314,17 @@ true, $append_if_not_found = false ) {
      * @return mixed
      */
     protected function reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel){
-        $model = $this->reArrangeModelOrder($model, $surveyModel);
+//        $model = $this->reArrangeModelOrder($model, $surveyModel);
         foreach($model as $key => $value) {
-            foreach ($columnsModel[$key] as $slug => $columns) {
-                unset($model[$key]->{$slug});
-                unset($model[$key]->id);
-                foreach (array_diff($maximumColumnsKeys, array_keys($columns)) as $difKey => $difValue) {
-                    $columns[$difValue] = null;
+            if(!empty($columnsModel)){
+                foreach ($columnsModel[$key] as $slug => $columns) {
+                    unset($model[$key]->{$slug});
+                    unset($model[$key]->id);
+                    foreach (array_diff($maximumColumnsKeys, array_keys($columns)) as $difKey => $difValue) {
+                        $columns[$difValue] = null;
+                    }
+                    $model[$key] = (array)array_merge($columns, (array)$model[$key]);
                 }
-                $model[$key] = array_merge($columns, (array)$model[$key]);
             }
         }
         return $model;
@@ -361,7 +363,7 @@ true, $append_if_not_found = false ) {
         static $tableColumns;
         $surveyResultTable = get_organization_id().'_survey_results_'.$id;
         if(!Schema::hasTable($surveyResultTable)){
-            return view('organization.survey.survey_report',['error'=>'Survey result table not found!']);
+            return view('organization.survey.survey_reports',['error'=>'Survey result table not found!']);
         }
         $surveyModel = forms::with(['section'=>function($query){
                 $query->with(['fields'])->orderBy('order','asc');
@@ -369,36 +371,83 @@ true, $append_if_not_found = false ) {
             $query->orderBy('order','asc');
         }])->find($id);
         $repeaterSlugs = $this->getRepeaterSectionsSlug($surveyModel);
-        $model = DB::table($surveyResultTable)->paginate(50);
+        $model = $this->getDataForReport($request, $surveyResultTable);
+        $columns = $model['table_columns'];
+        $model = $model['result'];
         $columnsModel = [];
         $maximumColumnsKeys = [];
+        $repeaterStatus = false;
         if(!empty($repeaterSlugs)){
             foreach($model as $key => $value){
                 $tableColumns = collect($model[$key])->except(['id'])->keys();
                 foreach($repeaterSlugs as $k => $slug){
-                    $jsonDecodedData = json_decode($value->{$slug});
-                    //to manage questions order accroding to FormBuilder.order (Fields order)
-                    $jsonDecodedData = $this->reArrangeRepeaterOrder($jsonDecodedData,$surveyModel);
-                    //Re-arrange data
-                    $jsonColumnsArray = [];
-                    $index = 1;
-                    foreach($jsonDecodedData as $dataKey => $dataValue){
-                        foreach($dataValue as $columnKey => $columnValue){
-                            $repeaterKey = $slug.'_'.$columnKey.'_'.$index;
-                            $jsonColumnsArray[$repeaterKey] = $columnValue;
-                            if(!in_array($repeaterKey,$maximumColumnsKeys)){
-                                $maximumColumnsKeys[] = $repeaterKey;
+                    if(@$value->{$slug} != null){
+                        $repeaterStatus = true;
+                        $jsonDecodedData = json_decode($value->{$slug});
+                        //to manage questions order accroding to FormBuilder.order (Fields order)
+                        $jsonDecodedData = $this->reArrangeRepeaterOrder($jsonDecodedData,$surveyModel);
+                        //Re-arrange data
+                        $jsonColumnsArray = [];
+                        $index = 1;
+                        foreach($jsonDecodedData as $dataKey => $dataValue){
+                            foreach($dataValue as $columnKey => $columnValue){
+                                $repeaterKey = $slug.'_'.$columnKey.'_'.$index;
+                                $jsonColumnsArray[$repeaterKey] = $columnValue;
+                                if(!in_array($repeaterKey,$maximumColumnsKeys)){
+                                    $maximumColumnsKeys[] = $repeaterKey;
+                                }
                             }
+                            $index++;
                         }
-                        $index++;
+                        $columnsModel[$key][$slug] = $jsonColumnsArray;
                     }
-                    $columnsModel[$key][$slug] = $jsonColumnsArray;
                 }
             }
         }
-        //For add columns in model which one not exists
-        $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel);
-        return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$tableColumns, 'condition_fields'=>$tableColumns]);
+        if($repeaterStatus == true){
+            //For add columns in model which one not exists
+            $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel);
+        }
+        if($request->has('export')){
+            $model = json_decode(json_encode($model->toArray()),true);
+            Excel::create('survey_report_'.time(), function($excel) use ($model) {
+
+                // Set the spreadsheet title, creator, and description
+                $excel->setTitle('Survey Report');
+
+                // Build the spreadsheet, passing in the payments array
+                $excel->sheet('sheet1', function($sheet) use ($model) {
+                    $sheet->fromArray($model, null, 'A1', false, false);
+                });
+
+            })->download('xlsx');
+        }
+        return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$columns,
+                'condition_fields'=>$columns]);
+    }
+
+    protected function getDataForReport($request, $surveyResultTable){
+        $Query = DB::table($surveyResultTable);
+        if($request->isMethod('post')){
+            if($request->has('fields')){
+                $Query->select($request->fields);
+            }
+            if($request->condition_field[0] != null){
+                foreach($request->condition_field as $key => $column){
+                    $Query->Where($column,$request->operator[$key],$request->condition_field_value[$key]);
+                }
+            }
+        }
+        if($request->has('export')){
+            $result = $Query->get();
+        }else{
+            $result = $Query->paginate(50);
+        }
+        $getTableColumns = DB::table($surveyResultTable)->first();
+        unset($getTableColumns->id);
+        $keys = array_keys((array)$getTableColumns);
+
+        return ['result'=>$result, 'table_columns'=>array_combine($keys,$keys)];
     }
 
     protected function set_repeater_options_data($data, $repeater_data = Null, $options_val = Null)

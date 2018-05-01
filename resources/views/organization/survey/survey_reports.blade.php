@@ -76,7 +76,7 @@
             {{ __("survey.survey_results_table_missing") }}
         </div>
     @else
-        {!! Form::open(['route'=>['survey.reports',@$id],'method' => 'post' ]) !!}
+        {!! Form::open(['route'=>['survey.reports',@request()->id],'method' => 'post' ]) !!}
         <div class="ar">
             <div class="ac l50 m100 a100">
                 <div class="aione-border">
@@ -119,8 +119,11 @@
                             </style>
                             <div class="repeater-group">
                                 <div class="repeater-wrapper">
-                                    @if(!empty(@$filter_fields))
-                                        @foreach($filter_fields as $filledKey => $filledVal)
+                                    @if(!empty(request()->all()))
+                                        @php
+                                            $request = request()->all();
+                                        @endphp
+                                        @foreach($request['condition_field'] as $filledKey => $filledVal)
                                             <div class="repeater-row ar">
                                                 <i class="material-icons dp48 repeater-row-delete">close</i>
                                                 <div id="aione_form_section_527" class="aione-form-section">
@@ -129,27 +132,24 @@
                                                             <div class="aione-row ar">
                                                                 <div id="field_2477" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-column field-wrapper-type-select l33 m33 s100">
                                                                     <div id="field_column" class="field field-type-select">
-                                                                        {!! Form::select("condition_field[".$filledKey."]",$condition_fields, $filledVal['condition_field'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+                                                                        {!! Form::select("condition_field["
+                                                                        .$filledKey."]",$condition_fields,
+                                                                        $request['condition_field'][$filledKey] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
                                                                     </div><!-- field -->
                                                                 </div><!-- field wrapper -->
                                                                 <div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
                                                                     <div id="field_operation" class="field field-type-select">
-                                                                        {!! Form::select('operator['.$filledKey.']',$operator_options, $filledVal['operator'] ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
+                                                                        {!! Form::select('operator['.$filledKey.']',
+                                                                        $operator_options, $request['operator'][$filledKey] ,
+                                                                        ['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
 
-                                                                        {{-- <select class="input_operation browser-default " id="input_operation" name="operator[]">
-                                                                            <option selected="selected" value=""></option>
-                                                                            <option value="=">Equal to</option>
-                                                                            <option value=">">Greater then</option>
-                                                                            <option value="<">Less then</option>
-                                                                            <option value=">=">Greater then and equal to</option>
-                                                                            <option value="<=">Less then and equal to</option>
-                                                                            <option value="like"> match with </option>
-                                                                        </select>	 --}}
                                                                     </div><!-- field -->
                                                                 </div><!-- field wrapper -->
                                                                 <div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
                                                                     <div id="field_value" class="field field-type-text">
-                                                                        <input class="input-value" id="input_value" placeholder="" data-validation="" name="condition_field_value[{{$filledKey}}]" type="text" value="{{ $filledVal['condition_field_value'] }}">
+                                                                        <input class="input-value" id="input_value"
+                                                                                placeholder="" data-validation=""
+                                                                                name="condition_field_value[{{$filledKey}}]" type="text" value="{{ $request['condition_field_value'][$filledKey] }}">
                                                                     </div><!-- field -->
                                                                 </div><!-- field wrapper -->
                                                             </div> <!-- .aione-row -->
@@ -173,15 +173,6 @@
                                                             <div id="field_2478" data-conditions="0" data-field-type="select" class="field-wrapper ac field-wrapper-operation field-wrapper-type-select l33 m33 s100">
                                                                 <div id="field_operation" class="field field-type-select">
                                                                     {!! Form::select('operator[]',$operator_options, null ,['placeholder'=>'Select field' , 'class'=>'browser-default select'])  !!}
-                                                                    {{-- <select class="input_operation browser-default " id="input_operation" name="operator[]">
-                                                                        <option selected="selected" value=""></option>
-                                                                        <option value="=">Equal to</option>
-                                                                        <option value=">">Greater then</option>
-                                                                        <option value="<">Less then</option>
-                                                                        <option value=">=">Greater then and equal to</option>
-                                                                        <option value="<=">Less then and equal to</option>
-                                                                        <option value="like"> match with </option>
-                                                                    </select>		 --}}
                                                                 </div><!-- field -->
                                                             </div><!-- field wrapper -->
                                                             <div id="field_2479" data-conditions="0" data-field-type="text" class="field-wrapper ac field-wrapper-value field-wrapper-type-text l33 m33 s100">
@@ -210,7 +201,7 @@
             <div id='parent'>
             </div>
             <div class="aione-row search-options aione-align-right mv-10">
-                <button type="submit" class="aione-button" name="export">
+                <button type="submit" class="aione-button" name="export" value="export">
                     <i class="fa fa-sign-out mr-5"></i>Export Records
                 </button>
                 <button type="submit" class="aione-button" name="Search"><i class="fa fa-search mr-5"></i>Search
@@ -242,43 +233,54 @@
                 </div>
             @endif
 
-            <div id="table-structure" class="aione-table scrollx">
-                <div class="ac l80" style="line-height: 48px">Showing {{@$firstItem}} to {{@$lastItem}} of {{@$total}} records</div>
-                <table class="compact">
-                    <thead>
-                        <tr>
-                            @php
-                                $columnsInOrderWithHeaders = [];
-                            @endphp
-                            @foreach($model[0] as $key =>$val)
-                                @php
-                                    $columnsInOrderWithHeaders[] = $key;
-                                @endphp
-                                <th>
-                                    <span class="aione-tooltip truncate" tooltip-data="">
-                                    {{ @$key }} 
-                                    </span>
-                                </th>
-
-                            @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($model as $keys => $vals )
+            @if(!$model->isEmpty())
+                <div id="table-structure" class="aione-table scrollx">
+                    <div class="ac l80" style="line-height: 48px">Showing {{@$firstItem}} to {{@$lastItem}} of {{@$total}} records</div>
+                    <table class="compact">
+                        <thead>
                             <tr>
-                                @foreach($columnsInOrderWithHeaders as $key => $column)
-                                    <span class="aione-tooltip truncate" tooltip-data="{{$vals[$column]}}">
-                                        <td>{{$vals[$column]}} </td>
-                                    </span>
+                                @php
+                                    $columnsInOrderWithHeaders = [];
+                                @endphp
+                                @foreach($model[0] as $key =>$val)
+                                    @php
+                                        $columnsInOrderWithHeaders[] = $key;
+                                    @endphp
+                                    <th>
+                                        <span class="aione-tooltip truncate" tooltip-data="">
+                                        {{ @$key }}
+                                        </span>
+                                    </th>
+
                                 @endforeach
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach($model as $keys => $vals )
+                                @php
+                                    $vals = (array)$vals;
+                                @endphp
+                                <tr>
+                                    @foreach($columnsInOrderWithHeaders as $key => $column)
+                                        <span class="aione-tooltip truncate" tooltip-data="{{$vals[$column]}}">
+                                            <td>{{$vals[$column]}} </td>
+                                        </span>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="aione-message warning">
+                    No matching records found!
+                </div>
+            @endif
         @endif
     @endif
-    {{ @$model->render()}}
+    @if(@$model != null)
+        {{ @$model->render()}}
+    @endif
 
     <style>
         .disappear {
