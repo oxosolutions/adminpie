@@ -411,15 +411,10 @@ true, $append_if_not_found = false ) {
         if($request->has('export')){
             $model = json_decode(json_encode($model->toArray()),true);
             Excel::create('survey_report_'.time(), function($excel) use ($model) {
-
-                // Set the spreadsheet title, creator, and description
                 $excel->setTitle('Survey Report');
-
-                // Build the spreadsheet, passing in the payments array
                 $excel->sheet('sheet1', function($sheet) use ($model) {
                     $sheet->fromArray($model, null, 'A1', false, false);
                 });
-
             })->download('xlsx');
         }
         return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$columns,
