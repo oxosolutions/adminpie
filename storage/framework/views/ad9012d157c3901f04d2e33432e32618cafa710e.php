@@ -46,7 +46,6 @@
 								<div class="aione-row" >
 									<div class="login-desc">
 										<div class="" style="padding: 30px;">
-                                            
                                             <div class="login-site-title">
                                             	Welcome to <?php echo e(@$Site_title->value); ?>
 

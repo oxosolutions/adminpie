@@ -46,24 +46,6 @@
 								<div class="aione-row" >
 									<div class="login-desc">
 										<div class="" style="padding: 30px;">
-                                            {{-- <div class="font-size-20 mb-10 mt-10 line-height-30 aione-align-center">
-                                                Welcome to Lorem ipsum<br><spam class="font-size-16"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. In blandit sollicitudin condimentum.</spam>
-                                            </div>
-                                            
-                                            <div class="aione-border-top border-grey border-lighten-2 mv-15">
-                                                
-                                            </div>
-                                            <div class="aione-align-center">
-                                                <p class="line-height-22 font-size-17 aione-align-left">Do not have an account yet?</p>
-                                                <button class="m-20 " >Register Now</button>
-                                            </div>
-                                            <div class="border-grey border-lighten-2 aione-border-top mb-15">
-                                                
-                                            </div>
-                                            <div class="aione-align-center">
-                                                <p class="line-height-22 font-size-17 aione-align-left">Click on the following button to go back to the website.</p>
-                                                <button class="m-20 aione-button"><i class="fa fa-arrow-left mr-10"></i>Go to Website</button>
-                                            </div> --}}
                                             <div class="login-site-title">
                                             	Welcome to {{@$Site_title->value}}
                                             </div>
