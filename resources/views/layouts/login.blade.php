@@ -4,12 +4,11 @@
 		$login_theme = @$settings->where('key' , 'login_theme')->first();
 		$login_style = @$settings->where('key' , 'login_style')->first();
 		$Site_title = @$settings->where('key' , 'title')->first();
+		$Site_tagline = @$settings->where('key' , 'tagline')->first();
 		$bg_image = @$settings->where('key' , 'bg_image')->first();
-		
 		$login_footer_content = @$settings->where('key' , 'login_footer_content')->first();
 	}
 @endphp
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,10 +65,10 @@
                                                 <button class="m-20 aione-button"><i class="fa fa-arrow-left mr-10"></i>Go to Website</button>
                                             </div> --}}
                                             <div class="login-site-title">
-                                            	Welcome to Lorem ipsum
+                                            	Welcome to {{@$Site_title->value}}
                                             </div>
                                             <div class="site-description">
-                                            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis, leo vel porta placerat, augue nisi sodales enim, dapibus sollicitudin nisl lacus et nulla. Quisque ullamcorper libero nec sagittis accumsan.
+                                            	{{@$Site_tagline->value}}
                                             </div>
                                         </div>
 									</div>

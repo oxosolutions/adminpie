@@ -4,12 +4,11 @@
 		$login_theme = @$settings->where('key' , 'login_theme')->first();
 		$login_style = @$settings->where('key' , 'login_style')->first();
 		$Site_title = @$settings->where('key' , 'title')->first();
+		$Site_tagline = @$settings->where('key' , 'tagline')->first();
 		$bg_image = @$settings->where('key' , 'bg_image')->first();
-		
 		$login_footer_content = @$settings->where('key' , 'login_footer_content')->first();
 	}
  ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,10 +48,12 @@
 										<div class="" style="padding: 30px;">
                                             
                                             <div class="login-site-title">
-                                            	Welcome to Lorem ipsum
+                                            	Welcome to <?php echo e(@$Site_title->value); ?>
+
                                             </div>
                                             <div class="site-description">
-                                            	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam convallis, leo vel porta placerat, augue nisi sodales enim, dapibus sollicitudin nisl lacus et nulla. Quisque ullamcorper libero nec sagittis accumsan.
+                                            	<?php echo e(@$Site_tagline->value); ?>
+
                                             </div>
                                         </div>
 									</div>
