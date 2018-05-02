@@ -314,7 +314,7 @@ true, $append_if_not_found = false ) {
      * @return mixed
      */
     protected function reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel){
-//        $model = $this->reArrangeModelOrder($model, $surveyModel);
+        $model = $this->reArrangeModelOrder($model, $surveyModel);
         foreach($model as $key => $value) {
             if(!empty($columnsModel)){
                 foreach ($columnsModel[$key] as $slug => $columns) {
