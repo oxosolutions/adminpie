@@ -137,6 +137,14 @@ class AppServiceProvider extends ServiceProvider
             }
         });
 
+        Shortcode::add('login-link', function($optionsArray = null){
+            if(Auth::guard('org')->check()){
+                return '';
+            }else{
+                return '<a href="'.route('org.login').'">Login</a>|<a href="'.route('register').'">Register</a>';
+            }
+        });        
+
 
     }
 }

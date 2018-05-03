@@ -2,6 +2,26 @@
 <html lang="en">
 <?php 
 
+
+
+$user = @get_user_detail(false,true);
+if($user !== null){
+	$user_id = $user['id'];
+	$user_roles_array = get_user_roles(); 
+
+	$user_role_classes = array();
+	foreach($user_roles_array as $user_role){
+		$user_roles[] = $user_role;
+	}
+	$user_roles = implode(" ",$user_roles);
+
+
+	$login_status = 'user-logged-in';
+} else {
+	$login_status = 'user-not-logged-in';
+}
+
+
 $is_page = $is_post = $is_survey = $is_visualization = 0; 
 
 if(request()->route()->uri == "page/{slug}"){
@@ -63,7 +83,7 @@ if($is_visualization){
 <?php echo $__env->make('layouts.front._head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-<?php echo e(@$design_settings['layout']); ?> aione-theme-arcane 111">
+	<div id="aione_wrapper" data-user-id="<?php echo e(@$user_id); ?>" data-user-role="<?php echo e(@$user_roles); ?>" class="<?php echo e(@$login_status); ?> aione-wrapper aione-layout-<?php echo e(@$design_settings['layout']); ?> aione-theme-arcane">
 		<div class="aione-row">
 
 			<?php if(@$design_settings['show_header'] == 1): ?>

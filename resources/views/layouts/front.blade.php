@@ -2,6 +2,26 @@
 <html lang="en">
 @php
 
+
+
+$user = @get_user_detail(false,true);
+if($user !== null){
+	$user_id = $user['id'];
+	$user_roles_array = get_user_roles(); 
+
+	$user_role_classes = array();
+	foreach($user_roles_array as $user_role){
+		$user_roles[] = $user_role;
+	}
+	$user_roles = implode(" ",$user_roles);
+
+
+	$login_status = 'user-logged-in';
+} else {
+	$login_status = 'user-not-logged-in';
+}
+
+
 $is_page = $is_post = $is_survey = $is_visualization = 0; 
 
 if(request()->route()->uri == "page/{slug}"){
@@ -63,7 +83,7 @@ if($is_visualization){
 @include('layouts.front._head')
 
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane 111">
+	<div id="aione_wrapper" data-user-id="{{@$user_id}}" data-user-role="{{@$user_roles}}" class="{{@$login_status}} aione-wrapper aione-layout-{{@$design_settings['layout']}} aione-theme-arcane">
 		<div class="aione-row">
 
 			@if(@$design_settings['show_header'] == 1)

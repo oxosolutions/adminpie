@@ -1,10 +1,10 @@
 <?php 
     $design_settings = get_design_settings();
 
-    if(@$design_settings->theme !== null && $design_settings->theme != ''){
-	    $layout = 'layouts.themes.'.$design_settings->theme.'.layout';
-    } else {
+    if(@$design_settings->theme == null || $design_settings->theme == ''){
 	    $layout = 'layouts.front';
+    } else {
+	    $layout = 'layouts.themes.'.$design_settings->theme.'.layout';
     }
  ?>
 
