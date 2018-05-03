@@ -7,11 +7,13 @@
 $user = @get_user_detail(false,true);
 if($user !== null){
 	$user_id = $user['id'];
-	$user_roles_array = get_user_roles(); 
+	$user_roles_array = @get_user_roles(); 
 
 	$user_role_classes = array();
-	foreach($user_roles_array as $user_role){
-		$user_roles[] = $user_role;
+	if(!empty($user_roles_array)){
+		foreach($user_roles_array as $user_role){
+			$user_roles[] = $user_role;
+		}
 	}
 	$user_roles = implode(" ",$user_roles);
 
