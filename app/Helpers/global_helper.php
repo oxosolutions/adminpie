@@ -196,6 +196,8 @@ function check_widget_permission($widget_slug){
 }
 
 
+
+
 /************************************************************
 *	@function get_current_user
 *	@access	public
