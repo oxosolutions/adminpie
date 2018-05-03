@@ -31,7 +31,7 @@
 	@endif
 </head>
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme->value}} login-style-{{@$login_style->value}}">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme->value}} login-style-{{@$login_style->value}} 00">
 		<div class="wrapper">
 			<div id="aione_main" class="aione-main">
 				<div class="wrapper">

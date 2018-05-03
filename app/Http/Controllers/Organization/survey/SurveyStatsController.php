@@ -315,7 +315,6 @@ true, $append_if_not_found = false ) {
      */
     protected function reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel){
         $model = $this->reArrangeModelOrder($model, $surveyModel);
-//        dd($columnsModel);
         foreach($model as $key => $value) {
             if(!empty($columnsModel)){
                 if(@$columnsModel[$key] != null){
@@ -344,7 +343,14 @@ true, $append_if_not_found = false ) {
             $index = 1;
             foreach($jsonRepeater as $key => $columns){
                 $records = $surveyModel->fields->whereIn('field_slug',array_keys((array)$columns));
-                $orderdRecords = $records->groupBy('field_slug')->keys()->toArray();
+                if($records->isEmpty()){
+                    $records = $surveyModel->fieldMeta->where('key','question_id')->whereIn('value',
+                        array_keys((array)
+                    $columns));
+                    $orderdRecords = $records->groupBy('value')->keys()->toArray();
+                }else{
+                    $orderdRecords = $records->groupBy('field_slug')->keys()->toArray();
+                }
                 $tempArray = [];
                 foreach($orderdRecords as $recKey => $recValue){
                     $tempArray[$recValue] = $columns->{$recValue};
@@ -371,8 +377,8 @@ true, $append_if_not_found = false ) {
         $surveyModel = forms::with(['section'=>function($query){
                 $query->with(['fields'])->orderBy('order','asc');
         },'fields'=>function($query){
-            $query->orderBy('order','asc');
-        }])->find($id);
+            $query->with('fieldMeta')->orderBy('order','asc');
+        },'fieldMeta'])->find($id);
         $repeaterSlugs = $this->getRepeaterSectionsSlug($surveyModel);
         $model = $this->getDataForReport($request, $surveyResultTable);
         $columns = $model['table_columns'];
@@ -412,13 +418,11 @@ true, $append_if_not_found = false ) {
             $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel);
         }
         if($request->has('export')){
-            ini_set('memory_limit', '2048M');
-            ini_set('max_execution_time', '3000000');
             $model = json_decode(json_encode($model->toArray()),true);
             Excel::create('survey_report_'.time(), function($excel) use ($model) {
                 $excel->setTitle('Survey Report');
                 $excel->sheet('sheet1', function($sheet) use ($model) {
-                    $sheet->fromArray($model, null, 'A1', false, false);
+                    $sheet->fromArray($model, null, 'A1', false, true);
                 });
             })->download('xlsx');
         }
@@ -439,7 +443,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->get();
+            $result = $Query->take(1000)->get();
         }else{
             $result = $Query->paginate(50);
         }

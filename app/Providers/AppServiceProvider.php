@@ -10,6 +10,7 @@ use Auth;
 use Session;
 use App\Model\Group\GroupUsers;
 use Laravel\Dusk\DuskServiceProvider;
+use DB;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -123,6 +124,16 @@ class AppServiceProvider extends ServiceProvider
                 return $userEmail;
             }else{
                 return $userEmail;
+            }
+        });
+
+        Shortcode::add('survey-data', function($optionsArray = null){
+            try{
+                $tableName = get_organization_id().'_survey_results_'.$optionsArray['id'];
+                $data = DB::table($tableName)->get()->toArray();
+                echo json_encode($data);
+            }catch(\Exception $e){
+                echo json_encode([]);
             }
         });
 

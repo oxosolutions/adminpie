@@ -86,5 +86,9 @@ class forms extends Model
         return $this->hasMany('App\Model\Organization\FormBuilder','form_id','id');
     }
 
+    public function fieldMeta(){
+        return $this->hasMany('App\Model\Organization\FieldMeta','form_id','id');
+    }
+
 }
 

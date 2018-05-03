@@ -1,8 +1,12 @@
+
+
 @if(@$settings != null)
 	@php
 		$check_login_logo = $settings->where('key' , 'login-form-show-logo')->first();
 		$check_form_show_title = $settings->where('key' , 'login-form-show-title')->first();
 		$check_form_show_tagline = $settings->where('key' , 'login-form-show-tagline')->first();
+
+
 	@endphp
 	@if($check_login_logo != null)
 		@if($check_login_logo->value == '1')
@@ -38,3 +42,17 @@
 	@endif
 	
 @endif
+
+
+@php
+$check_login_logo = get_organization_meta('login-form-show-logo');
+$check_form_show_title = get_organization_meta('login-form-show-title');
+$check_form_show_tagline = get_organization_meta('login-form-show-tagline');
+@endphp
+
+<div>
+	<div></div>
+	<div class="aione-align-center m-20 font-size-25 line-height-40 blue darken-4" style="color: #168dc5;">Demo org</div>
+	<div class="aione-align-center m-20" style="color: #888">tagline</div>
+	
+</div>
