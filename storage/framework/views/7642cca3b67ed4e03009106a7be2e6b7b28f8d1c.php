@@ -272,8 +272,8 @@
                                  ?>
                                 <tr>
                                     <?php $__currentLoopData = $columnsInOrderWithHeaders; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <span class="aione-tooltip truncate" tooltip-data="<?php echo e($vals[$column]); ?>">
-                                            <td><?php echo e($vals[$column]); ?> </td>
+                                        <span class="aione-tooltip truncate" tooltip-data="<?php echo e(@$vals[$column]); ?>">
+                                            <td><?php echo e(@$vals[$column]); ?> </td>
                                         </span>
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </tr>

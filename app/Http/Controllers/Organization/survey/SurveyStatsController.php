@@ -315,15 +315,18 @@ true, $append_if_not_found = false ) {
      */
     protected function reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel){
         $model = $this->reArrangeModelOrder($model, $surveyModel);
+//        dd($columnsModel);
         foreach($model as $key => $value) {
             if(!empty($columnsModel)){
-                foreach ($columnsModel[$key] as $slug => $columns) {
-                    unset($model[$key]->{$slug});
-                    unset($model[$key]->id);
-                    foreach (array_diff($maximumColumnsKeys, array_keys($columns)) as $difKey => $difValue) {
-                        $columns[$difValue] = null;
+                if(@$columnsModel[$key] != null){
+                    foreach ($columnsModel[$key] as $slug => $columns) {
+                        unset($model[$key]->{$slug});
+                        unset($model[$key]->id);
+                        foreach (array_diff($maximumColumnsKeys, array_keys($columns)) as $difKey => $difValue) {
+                            $columns[$difValue] = null;
+                        }
+                        $model[$key] = (array)array_merge($columns, (array)$model[$key]);
                     }
-                    $model[$key] = (array)array_merge($columns, (array)$model[$key]);
                 }
             }
         }
@@ -409,6 +412,8 @@ true, $append_if_not_found = false ) {
             $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel);
         }
         if($request->has('export')){
+            ini_set('memory_limit', '2048M');
+            ini_set('max_execution_time', '3000000');
             $model = json_decode(json_encode($model->toArray()),true);
             Excel::create('survey_report_'.time(), function($excel) use ($model) {
                 $excel->setTitle('Survey Report');

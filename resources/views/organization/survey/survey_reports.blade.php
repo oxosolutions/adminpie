@@ -262,8 +262,8 @@
                                 @endphp
                                 <tr>
                                     @foreach($columnsInOrderWithHeaders as $key => $column)
-                                        <span class="aione-tooltip truncate" tooltip-data="{{$vals[$column]}}">
-                                            <td>{{$vals[$column]}} </td>
+                                        <span class="aione-tooltip truncate" tooltip-data="{{@$vals[$column]}}">
+                                            <td>{{@$vals[$column]}} </td>
                                         </span>
                                     @endforeach
                                 </tr>
