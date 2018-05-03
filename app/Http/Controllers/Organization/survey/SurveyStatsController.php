@@ -380,6 +380,7 @@ true, $append_if_not_found = false ) {
             $query->with('fieldMeta')->orderBy('order','asc');
         },'fieldMeta'])->find($id);
         $repeaterSlugs = $this->getRepeaterSectionsSlug($surveyModel);
+        $checkBoxSlugs = $this->getCheckBoxesFieldsSlug($surveyModel);
         $model = $this->getDataForReport($request, $surveyResultTable);
         $columns = $model['table_columns'];
         $model = $model['result'];
@@ -413,6 +414,7 @@ true, $append_if_not_found = false ) {
                 }
             }
         }
+        $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
         if($repeaterStatus == true){
             //For add columns in model which one not exists
             $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel);
@@ -428,6 +430,44 @@ true, $append_if_not_found = false ) {
         }
         return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$columns,
                 'condition_fields'=>$columns]);
+    }
+
+    protected function putCheckboxFieldsInmodel($model, $checkBoxSlugs){
+        foreach($model as $key => $value){
+            $dataValue = [];
+            foreach($value as $modelKey => $modelValue){
+                if(array_key_exists($modelKey, $checkBoxSlugs)){
+                    foreach($checkBoxSlugs[$modelKey] as $k => $slug){
+                        $filledValue = json_decode($modelValue);
+                        if(is_array($filleValue)){
+                            dd($filledValue);
+                            foreach($filledValue as $fKey => $fValue){
+                                dd($fValue);
+                            }
+                        }else{
+                            $dataValue[$modelKey.'_'.$k] = 'yes';
+                        }
+                    }
+                }else{
+                    $dataValue[$modelKey] = $modelValue;
+                }
+            }
+        }
+    }
+
+    protected function getCheckBoxesFieldsSlug($surveyModel){
+        $fields = $surveyModel->fields->where('field_type','checkbox');
+        $fieldSlugs = [];
+        foreach($fields as $key => $value){
+            $fieldOptions = $value->fieldMeta->where('key','field_options')->first();
+            if($fieldOptions != null){
+                $options = json_decode($fieldOptions->value, true);
+                $keys = collect($options)->groupBy('key')->keys()->toArray();
+                $optionValues = collect($options)->groupBy('value')->keys()->toArray();
+                $fieldSlugs[$value->field_slug] = array_combine($keys, $optionValues);
+            }
+        }
+        return $fieldSlugs;
     }
 
     protected function getDataForReport($request, $surveyResultTable){

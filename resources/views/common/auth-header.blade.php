@@ -1,5 +1,5 @@
-
-
+{{--  --}}
+{{-- 
 @if(@$settings != null)
 	@php
 		$check_login_logo = $settings->where('key' , 'login-form-show-logo')->first();
@@ -41,18 +41,49 @@
 		@endif
 	@endif
 	
-@endif
+@endif --}}
 
 
-@php
-$check_login_logo = get_organization_meta('login-form-show-logo');
-$check_form_show_title = get_organization_meta('login-form-show-title');
-$check_form_show_tagline = get_organization_meta('login-form-show-tagline');
-@endphp
+ @if(@$settings != null)
+	@php
+		$check_login_logo = get_organization_meta('login-form-show-logo');
+		$check_form_show_title = get_organization_meta('login-form-show-title');
+		$check_form_show_tagline = get_organization_meta('login-form-show-tagline');
 
-<div>
-	<div></div>
-	<div class="aione-align-center m-20 font-size-25 line-height-40 blue darken-4" style="color: #168dc5;">Demo org</div>
-	<div class="aione-align-center m-20" style="color: #888">tagline</div>
+
+	@endphp
+	@if($check_login_logo != null)
+		@if($check_login_logo == '1')
+			@php
+				$logo = get_organization_meta('logo');
+
+			@endphp
+				<div style="margin: 0 auto;border-radius: 50%;overflow: hidden;height: 120px;width: 120px;position: relative;">
+					<img src="{{asset($logo)}}" style="height: 120px;width: auto;position: absolute;left: 50%;top: 50%;    -webkit-transform: translateY(-50%) translateX(-50%);">
+				</div>
+		@endif
+	@endif
+
+	@if($check_form_show_title != null)
+		@if($check_form_show_title == '1')
+			@php
+				$title = get_organization_meta('title');
+			@endphp
+				<div style="text-align: center;margin: 20px;color: #168dc5;font-size: 25px; line-height: 1.4;">
+					{{$title}}
+				</div>
+		@endif
+	@endif
+
+	@if($check_form_show_tagline != null)
+		@if($check_form_show_tagline == '1')
+			@php
+				$tagline = get_organization_meta('tagline');
+			@endphp
+				<div style="text-align: center;margin: 20px;color: #888">
+					{{$tagline}}
+				</div>
+		@endif
+	@endif
 	
-</div>
+@endif

@@ -42,7 +42,7 @@
 
 							<div class="login-wrapper" >
 								<div class="aione-row" >
-									@include('common.auth-header')
+									{{-- @include('common.auth-header') --}}
 									@yield('content')
 								</div> 
 							</div> 

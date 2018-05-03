@@ -42,7 +42,7 @@
 
 							<div class="login-wrapper" >
 								<div class="aione-row" >
-									<?php echo $__env->make('common.auth-header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+									
 									<?php echo $__env->yieldContent('content'); ?>
 								</div> 
 							</div> 
