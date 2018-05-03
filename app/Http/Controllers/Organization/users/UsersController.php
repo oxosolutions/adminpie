@@ -279,7 +279,8 @@ class UsersController extends Controller
             //For User Relations
             $relationsArray = [];
             foreach ($model->user_role_rel as $rel_key => $rel_value) {
-                $relationsArray[] = $rel_value->role_id;
+                $userRoleModel = UsersRole::find($rel_value->role_id);
+                $relationsArray[] = $userRoleModel->slug;
             }
             $model['role'] = $relationsArray;
         }else{
@@ -348,7 +349,7 @@ class UsersController extends Controller
         $model->save();
         $notToDeleteIds = [];
         $currentStoredRoles = UserRoleMapping::where(['user_id'=>$id])->pluck('role_id')->toArray();
-        if($request->has('role') != ''){
+        if($request->has('role')){
             $newSelectedRoles = array_map('intval',$request->role);
             $this->deleteFromRelatedTables($currentStoredRoles, $newSelectedRoles, $id);
             foreach($request->role as $key => $role){
@@ -382,7 +383,7 @@ class UsersController extends Controller
                 }
                 $mappingModel = UserRoleMapping::firstOrNew(['user_id'=>$id,'role_id'=>$role]);
                 $mappingModel->user_id = $id;
-                $mappingModel->role_id = $role;
+                $mappingModel->role_id = $model->id;
                 $mappingModel->status = 1;
                 $mappingModel->save();
                 $notToDeleteIds[] = $mappingModel->id;

@@ -1362,8 +1362,15 @@ class SurveyController extends Controller
                 $recordDetails = [];
             }
         }
-        // dd($recordDetails);
-        return $recordDetails;
+        $dataArray = [];
+        foreach($recordDetails as $key => $value){
+            if(is_array(json_decode($value))){
+                $dataArray[$key] = json_decode($value);
+            }else{
+                $dataArray[$key] = $value;
+            }
+        }
+        return $dataArray;
     }
 
     public function changeShareStatus(Request $request)
