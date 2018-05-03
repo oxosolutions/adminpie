@@ -168,6 +168,9 @@ class LoginController extends Controller
                     if(Auth::guard('org')->attempt($credentials)) {
                         $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
                         @Session::put('user_role',@$putRole->role_id);
+                        if($request->has('back_to')){
+                            return redirect($request->back_to);
+                        }
                         return redirect('/'); 
                     }else{
                         Session::flash('error' , 'wrong user credientals.');

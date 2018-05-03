@@ -119,6 +119,13 @@
             position: fixed;
             font-size: 20px;
          }
+         .custom-effect{
+            padding: 10px 20px;
+            margin: 20px auto
+         }
+         .custom-effect:hover{
+            background: #cfd8dc
+         }
 </style>
 
 
@@ -137,12 +144,17 @@
     }
  ?>
 <div class="" style="max-width: 1120px;margin: 0 auto;">
-
     <?php if($error['status'] == false): ?>
         <div class="aione-border aione-align-center border-width-3 p-50 font-size-30 grey lighten-2 mt-30" style="border-style: dashed;">
             <i class="fa fa-exclamation-triangle mr-20"></i><?php echo e($error['message']); ?>
 
         </div>
+        <?php if($error['type'] == 'auth'): ?>
+        <div class="aione-align-center">
+            <a href="<?php echo e(route('org.login')); ?>?backto=<?php echo e(request()->url()); ?>" class="aione-button custom-effect bg-blue-grey bg-darken-4 white">Login Now</a>
+        </div>
+            
+        <?php endif; ?>
     <?php endif; ?>
 
 

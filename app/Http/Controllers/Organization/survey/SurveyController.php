@@ -918,14 +918,14 @@ class SurveyController extends Controller
         $surveyStatus = ['status' => true];
         //Check Survey Enabled
         if (!@$metaArray['enable_survey'] == 1) {
-            $surveyStatus = ['status' => false, 'message' => 'Survey not enabled!'];
+            $surveyStatus = ['status' => false, 'message' => 'Survey not enabled!','type'=>'enable_disable'];
             return $surveyStatus;
         }
 
         //Check if Authentication Required
         if (@$metaArray['authentication_required'] == 1) {
             if (!Auth::guard('org')->check()) {
-                $surveyStatus = ['status' => false, 'message' => 'You are not loggedin!'];
+                $surveyStatus = ['status' => false, 'message' => 'You are not loggedin!','type'=>'auth'];
                 return $surveyStatus;
             } else {
                 if (@$metaArray['authentication_type'] != null) {
@@ -934,7 +934,7 @@ class SurveyController extends Controller
                         if ($usersList != '' && $usersList != null) {
                             $usersList = json_decode($metaArray['individual_list'], true);
                             if (!in_array(Auth::guard('org')->user()->id, $usersList)) {
-                                return ['status' => false, 'message' => 'Admin did not allow you to fill this survey!'];
+                                return ['status' => false, 'message' => 'Admin did not allow you to fill this survey!','type'=>'not_allowed_to_user'];
                             }
                         }
                     } elseif ($metaArray['authentication_type'] == 'role') {
@@ -947,7 +947,7 @@ class SurveyController extends Controller
                                 }
                             }
                             if ($roleStatus == false) {
-                                return ['status' => false, 'message' => 'Survey not allowed to your role!'];
+                                return ['status' => false, 'message' => 'Survey not allowed to your role!','type'=>'not_allowed_to_role'];
                             }
                         }
                     }

@@ -120,6 +120,13 @@
             position: fixed;
             font-size: 20px;
          }
+         .custom-effect{
+            padding: 10px 20px;
+            margin: 20px auto
+         }
+         .custom-effect:hover{
+            background: #cfd8dc
+         }
 </style>
 
 
@@ -138,11 +145,16 @@
     }
 @endphp
 <div class="" style="max-width: 1120px;margin: 0 auto;">
-
     @if($error['status'] == false)
         <div class="aione-border aione-align-center border-width-3 p-50 font-size-30 grey lighten-2 mt-30" style="border-style: dashed;">
             <i class="fa fa-exclamation-triangle mr-20"></i>{{ $error['message'] }}
         </div>
+        @if($error['type'] == 'auth')
+        <div class="aione-align-center">
+            <a href="{{route('org.login')}}?backto={{request()->url()}}" class="aione-button custom-effect bg-blue-grey bg-darken-4 white">Login Now</a>
+        </div>
+            
+        @endif
     @endif
 
 

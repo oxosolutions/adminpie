@@ -63,7 +63,7 @@ if($is_visualization){
 <?php echo $__env->make('layouts.front._head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-<?php echo e(@$design_settings['layout']); ?> aione-theme-arcane ">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-<?php echo e(@$design_settings['layout']); ?> aione-theme-arcane 111">
 		<div class="aione-row">
 
 			<?php if(@$design_settings['show_header'] == 1): ?>

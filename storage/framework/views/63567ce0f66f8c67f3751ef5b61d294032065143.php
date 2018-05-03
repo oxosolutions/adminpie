@@ -19,7 +19,8 @@
 	<?php endif; ?>
 	<?php echo Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']); ?>
 
-		
+			<?php echo Form::hidden('back_to',@request()->backto); ?>
+
 			<?php echo FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset']); ?>
 
             <?php if($forgetPassword == 1): ?>
