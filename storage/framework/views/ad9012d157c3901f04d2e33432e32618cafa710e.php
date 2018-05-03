@@ -44,7 +44,7 @@ $login_theme = get_organization_meta('login_theme');
 	
 </head>
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-<?php echo e(@$login_theme); ?> login-style-<?php echo e(@$login_style); ?> ">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-<?php echo e(@$login_theme); ?> login-style-<?php echo e(@$login_style); ?> 11">
 		<div class="aione-row">
 			<div id="aione_main" class="aione-main">
 				<div class="aione-row">
@@ -57,6 +57,7 @@ $login_theme = get_organization_meta('login_theme');
 									<div class="login-desc">
 										<div class="" style="padding: 30px;">
                                             <div class="login-site-title">
+
                                             	Welcome to <?php echo e(@$Site_title); ?>
 
 

@@ -44,7 +44,7 @@
 @endif --}}
 
 
- @if(@$settings != null)
+
 	@php
 		$check_login_logo = get_organization_meta('login-form-show-logo');
 		$check_form_show_title = get_organization_meta('login-form-show-title');
@@ -86,4 +86,3 @@
 		@endif
 	@endif
 	
-@endif

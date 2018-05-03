@@ -2,7 +2,6 @@
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-    
     @php
         if($from == 'create_password'){
             $route = 'save.create.password';
@@ -10,18 +9,14 @@
             $route = 'update.pass';
         }
     @endphp
-	
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => $route]) !!}
         @if($from == 'create_password')
-            <h4>Create Password</h4>
+            <h5 class="aione-align-center">Create Password</h5>
         @else
-            <h4>Reset Password</h4>
+            <h5 class="aione-align-center">Reset Password</h5>
         @endif
 		{!! FormGenerator::GenerateForm('organization_user_reset_password_form',['type'=>'inset'])!!}
         {!! Form::hidden('reset_create_token',request()->token) !!}
 	{!! Form::close() !!}	
-
-@include('common.page_content_primary_end')
-
-	
+@include('common.page_content_primary_end')	
 @endsection

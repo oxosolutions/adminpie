@@ -131,9 +131,9 @@ class AppServiceProvider extends ServiceProvider
             try{
                 $tableName = get_organization_id().'_survey_results_'.$optionsArray['id'];
                 $data = DB::table($tableName)->get()->toArray();
-                echo json_encode($data);
+                return json_encode($data);
             }catch(\Exception $e){
-                echo json_encode([]);
+                return json_encode([]);
             }
         });
 

@@ -313,7 +313,8 @@ true, $append_if_not_found = false ) {
      * @param $surveyModel
      * @return mixed
      */
-    protected function reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel){
+    protected function reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel, $checkBoxSlugs){
+        dd($model);
         $model = $this->reArrangeModelOrder($model, $surveyModel);
         foreach($model as $key => $value) {
             if(!empty($columnsModel)){
@@ -415,9 +416,10 @@ true, $append_if_not_found = false ) {
             }
         }
         $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
+
         if($repeaterStatus == true){
             //For add columns in model which one not exists
-            $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel);
+            $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel, $checkBoxSlugs);
         }
         if($request->has('export')){
             $model = json_decode(json_encode($model->toArray()),true);
@@ -433,26 +435,30 @@ true, $append_if_not_found = false ) {
     }
 
     protected function putCheckboxFieldsInmodel($model, $checkBoxSlugs){
+        // dd($checkBoxSlugs);
         foreach($model as $key => $value){
             $dataValue = [];
             foreach($value as $modelKey => $modelValue){
                 if(array_key_exists($modelKey, $checkBoxSlugs)){
                     foreach($checkBoxSlugs[$modelKey] as $k => $slug){
-                        $filledValue = json_decode($modelValue);
-                        if(is_array($filleValue)){
-                            dd($filledValue);
-                            foreach($filledValue as $fKey => $fValue){
-                                dd($fValue);
+                        $filledValue = json_decode($modelValue,true);
+                        if(is_array($filledValue)){
+                            if(@$filledValue[$k] == true){
+                                $dataValue[$modelKey.'_'.$k] = 'Yes';
+                            }else{
+                                $dataValue[$modelKey.'_'.$k] = 'No';
                             }
                         }else{
-                            $dataValue[$modelKey.'_'.$k] = 'yes';
+                            $dataValue[$modelKey.'_'.$k] = ($modelValue == $k)?'Yes':'No';
                         }
                     }
                 }else{
                     $dataValue[$modelKey] = $modelValue;
                 }
             }
+            $model[$key] = $dataValue;
         }
+        return $model;
     }
 
     protected function getCheckBoxesFieldsSlug($surveyModel){
