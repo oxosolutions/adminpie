@@ -24,4 +24,8 @@ class FieldMeta extends Model
 		return $metaValue;
 	}
 
+    public function field(){
+        return $this->belongsTo('App\Model\Organization\FormBuilder','field_id','id');
+    }
+
 }

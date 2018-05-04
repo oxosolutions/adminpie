@@ -147,7 +147,7 @@ class DatasetOperationController extends Controller
 		$fst_intersect = array_intersect($tablefst_row, array_values($first_intersect));
         try{ 
             // DB::select("REPLACE INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
-                DB::select("insert INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
+                DB::select("INSERT INTO ".$table_name." ( ".implode(', ', array_keys($first_intersect)).") SELECT  ".implode(', ', array_keys($fst_intersect))." FROM ocrm_".$first_table." where id !=1");
             return true;
         }catch(\Exception $e){
             return false;

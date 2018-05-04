@@ -483,4 +483,23 @@ class UsersController extends Controller
         $model->value = $request->layout_sidebar_small;
         $model->save();
     }
+
+
+    protected function validateProfileUpdateRequest($request){
+        
+        if($request->has('name') && $request->has('email') && $request->has('userid') && $request->has('activation_code')){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function updateAppProfile(Request $request){
+        $validate = $this->validateProfileUpdateRequest($request);
+        if($validate){
+            
+        }else{
+            return response()->json(['status'=>'error','message'=>'Required fields are missing!']);
+        }
+    }
 }
