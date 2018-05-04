@@ -1484,7 +1484,7 @@ class SurveyController extends Controller
      */
     public function exportSurvey($id)
     {
-        $model = forms::where(['type' => 'survey', 'id' => $id])->with(['section' => function ($query) {
+        $model = forms::where(['id' => $id])->whereIn('type',['survey','form'])->with(['section' => function ($query) {
             $query->with(['fields' => function ($query) {
                 $query->with(['fieldMeta']);
             }, 'sectionMeta']);

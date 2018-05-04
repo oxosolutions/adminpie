@@ -121,11 +121,11 @@
                             </style>
                             <div class="repeater-group">
                                 <div class="repeater-wrapper">
-                                    <?php if(!empty(request()->all())): ?>
+                                    <?php if(!empty(request()->except(['page']))): ?>
                                         <?php 
                                             $request = request()->all();
                                          ?>
-                                        <?php $__currentLoopData = $request['condition_field']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $filledKey => $filledVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php $__currentLoopData = @$request['condition_field']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $filledKey => $filledVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <div class="repeater-row ar">
                                                 <i class="material-icons dp48 repeater-row-delete">close</i>
                                                 <div id="aione_form_section_527" class="aione-form-section">

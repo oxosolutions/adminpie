@@ -16,6 +16,7 @@ use Carbon\carbon;
 use Auth;
 use App\Model\Organization\section;
 use Illuminate\Pagination\Paginator;
+use File;
 
 /**
  * @author [Paljinder Singh ] SurveyStatsController all work done by Paljnder Singh
@@ -337,6 +338,13 @@ true, $append_if_not_found = false ) {
                             $columns[$difValue] = null;
                         }
                         $model[$key] = (array)array_merge($columns, (array)$model[$key]);
+                    }                    
+                }else{
+                    try{
+                        $maxColumnKeys = array_map(create_function('$n', 'return null;'), array_flip($maximumColumnsKeys));
+                        $model[$key] = (array)array_merge($maxColumnKeys, (array)$model[$key]);
+                    }catch(\Exception $e){
+                        
                     }
                 }
             }
@@ -381,6 +389,22 @@ true, $append_if_not_found = false ) {
      */
     public function reports(Request $request, $id)
     {
+        ini_set('memory_limit', '-1');
+        /*if($request->has('export')){
+            $reportsPath = public_path('reports/');
+            $files = File::allFiles($reportsPath);
+            $completeData = [];
+            $index = 0;
+            foreach($files as $key => $file){
+                if($index <= 5){
+                    Excel::load($reportsPath.$file->getFilename(), function($reader) use (&$completeData){
+                        $completeData = array_merge($completeData,$reader->toArray());
+                    });
+                }
+                $index++;
+            }
+            dd($completeData);
+        }*/
         static $tableColumns;
         $surveyResultTable = get_organization_id().'_survey_results_'.$id;
         if(!Schema::hasTable($surveyResultTable)){
@@ -431,12 +455,10 @@ true, $append_if_not_found = false ) {
                 }
             }
         }
-
         if($repeaterStatus == true){
             //For add columns in model which one not exists
             $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel, $checkBoxSlugs);
         }
-
         $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
         if($request->has('export')){
             $model = json_decode(json_encode($model->toArray()),true);
@@ -527,7 +549,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->where('center_code','3')->take(300)->get();
+            $result = $Query->skip(5600)->take(200)->get();
         }else{
             $result = $Query->paginate(50);
         }

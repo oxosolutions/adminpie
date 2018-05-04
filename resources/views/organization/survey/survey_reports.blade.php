@@ -119,11 +119,11 @@
                             </style>
                             <div class="repeater-group">
                                 <div class="repeater-wrapper">
-                                    @if(!empty(request()->all()))
+                                    @if(!empty(request()->except(['page'])))
                                         @php
                                             $request = request()->all();
                                         @endphp
-                                        @foreach($request['condition_field'] as $filledKey => $filledVal)
+                                        @foreach(@$request['condition_field'] as $filledKey => $filledVal)
                                             <div class="repeater-row ar">
                                                 <i class="material-icons dp48 repeater-row-delete">close</i>
                                                 <div id="aione_form_section_527" class="aione-form-section">
