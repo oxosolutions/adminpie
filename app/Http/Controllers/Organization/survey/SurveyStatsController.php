@@ -402,22 +402,7 @@ true, $append_if_not_found = false ) {
      */
     public function reports(Request $request, $id)
     {
-        ini_set('memory_limit', '-1');
-        /*if($request->has('export')){
-            $reportsPath = public_path('reports/');
-            $files = File::allFiles($reportsPath);
-            $completeData = [];
-            $index = 0;
-            foreach($files as $key => $file){
-                if($index <= 5){
-                    Excel::load($reportsPath.$file->getFilename(), function($reader) use (&$completeData){
-                        $completeData = array_merge($completeData,$reader->toArray());
-                    });
-                }
-                $index++;
-            }
-            dd($completeData);
-        }*/
+        // ini_set('memory_limit', '-1');
         static $tableColumns;
         $surveyResultTable = get_organization_id().'_survey_results_'.$id;
         if(!Schema::hasTable($surveyResultTable)){
@@ -437,90 +422,108 @@ true, $append_if_not_found = false ) {
         $model = $model['result'];
         $columnsModel = [];
         $maximumColumnsKeys = [];
-        $repeaterStatus = false;
-        /*if(!empty($repeaterSlugs)){
-            foreach($model as $key => $value){
-                $tableColumns = collect($model[$key])->except(['id'])->keys();
-                foreach($repeaterSlugs as $k => $slug){
-                    if(@$value->{$slug} != null){
-                        $repeaterStatus = true;
-                        $jsonDecodedData = json_decode($value->{$slug});
-                        //to manage questions order accroding to FormBuilder.order (Fields order)
-                        $jsonDecodedData = $this->reArrangeRepeaterOrder($jsonDecodedData,$surveyModel);
-                        //Re-arrange data
-                        $jsonColumnsArray = [];
-                        $index = 1;
-                        $jsonDecodedData = $this->convertQuestionIdToSlug($jsonDecodedData, $surveyModel);
-                        foreach($jsonDecodedData as $dataKey => $dataValue){
-                            foreach($dataValue as $columnKey => $columnValue){
-                                $repeaterKey = $slug.'_'.$columnKey.'_'.$index;
-                                if($columnValue == '? undefined:undefined ?'){
-                                    $jsonColumnsArray[$repeaterKey] = '';
-                                }else{
-                                    $jsonColumnsArray[$repeaterKey] = $columnValue;
-                                }
-                                if(!in_array($repeaterKey,$maximumColumnsKeys)){
-                                    $maximumColumnsKeys[] = $repeaterKey;
-                                }
-                            }
-                            $index++;
-                        }
-                        $columnsModel[$key][$slug] = $jsonColumnsArray;
-                    }
-                }
-            }
-        }*/
 
         $result = $this->reArrangeModelOrder($model, $surveyModel, $checkBoxSlugs);
         $model = $result['model'];
         $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
+
+        $maximumColumnsKeys = $this->getMaximumCountForRepeaters($surveyResultTable,$repeaterSlugs);
         $maximumRepeaterCollection = collect($result['maximum_repeaters']);
-        if(!$maximumRepeaterCollection->isEmpty()){
-            $maxCount = count($maximumRepeaterCollection->max());
-        }
-        // dd($result['maximum_repeaters']);
+        //Code For Repeater
         foreach($model as $key => $value){
             foreach($repeaterSlugs as $k => $slug){
-                $repeaterData = $this->convertQuestionIdToSlug(json_decode($value[$slug],true), $surveyModel,$maximumRepeaterCollection);
-                if(count($repeaterData) < $maxCount){
-                    for($i = count($repeaterData); $i < $maxCount; $i++){
-                        $slugs = array_flip(preg_replace('/([0-9])/', $i+1, array_keys($repeaterData[0])));
-                        $slugsToRepeat = array_map(create_function('$n', 'return null;'), $slugs);
-                        $repeaterData[] = $slugsToRepeat;
+                $maxCount = $maximumColumnsKeys[$slug];
+                if(isset($value[$slug])){
+                    $repeaterData = $this->convertQuestionIdToSlug(json_decode($value[$slug],true), $surveyModel,$maximumRepeaterCollection, $slug);
+                    if(count($repeaterData) < $maxCount){
+                        for($i = count($repeaterData); $i < $maxCount; $i++){
+                            $slugs = array_flip(preg_replace('/([0-9])/', $i+1, array_keys($repeaterData[0])));
+                            $slugsToRepeat = array_map(create_function('$n', 'return null;'), $slugs);
+                            $repeaterData[] = $slugsToRepeat;
+                        }
                     }
-                }
-                $newValues = [];
-                foreach($value as $k => $val){
-                    if($k == $slug){
-                        $newValues = array_merge($newValues,call_user_func_array('array_merge',$repeaterData));
-                    }else{
-                        $newValues[$k] = $val;
+                    /*$newValues = [];
+                    foreach($value as $k => $val){
+                        if($k == $slug){
+                            $repeaterData = preg_replace('/([? undefined:undefined ?]\w+)/','',call_user_func_array('array_merge',$repeaterData));
+                            $repeaterData = preg_replace('/[-?]\s+[-?]/','',$repeaterData);
+                            $newValues = array_merge($newValues,$repeaterData);
+                        }else{
+                            $newValues[$k] = $val;
+                        }
                     }
+                    $model[$key] = $newValues;*/
+
+                    $repeaterData = preg_replace('/([? undefined:undefined ?]\w+)/','',call_user_func_array('array_merge',$repeaterData));
+                    $repeaterData = preg_replace('/[-?]\s+[-?]/','',$repeaterData);
+                    $data = $model[$key];
+                    $indexToReplace = array_search($slug,array_keys($data));
+                    $tempKeys = array_keys($data);
+                    $data = array_values($data);
+                    array_splice($data, $indexToReplace, 0, $repeaterData);
+                    $keysToAdd = array_keys($repeaterData);
+                    array_splice($tempKeys, $indexToReplace, 0, $keysToAdd);
+                    $data = array_combine($tempKeys,$data);
+                    unset($data[$slug]);
+                    $model[$key] = $data;
                 }
-                $model[$key] = $newValues;
             }
         }
-
-        if($repeaterStatus == true){
-            //For add columns in model which one not exists
-            $model = $this->reArrangeRepeaterColumnsData($model, $maximumColumnsKeys, $columnsModel, $surveyModel, $checkBoxSlugs);
-        }
-        
-        
+        //Code for export data
         if($request->has('export')){
-            $model = json_decode(json_encode($model->toArray()),true);
+            $this->outputCsv('survey_report_data'.time().'.csv',$model->toArray());
+            /*$model = json_decode(json_encode($model->toArray()),true);
             Excel::create('survey_report_'.time(), function($excel) use ($model) {
                 $excel->setTitle('Survey Report');
                 $excel->sheet('sheet1', function($sheet) use ($model) {
                     $sheet->fromArray($model, null, 'A1', false, true);
                 });
-            })->download('xlsx');
+            })->download('xlsx');*/
         }
         return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$columns,
                 'condition_fields'=>$columns]);
     }
 
-    protected function convertQuestionIdToSlug($jsonDecodedData, $surveyModel, $maximumRepeaterCollection){
+    public function outputCsv($fileName, $assocDataArray){
+        ob_clean();
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment;filename=' . $fileName);    
+        if(isset($assocDataArray['0'])){
+            $fp = fopen('php://output', 'w');
+            fputcsv($fp, array_keys($assocDataArray['0']));
+            foreach($assocDataArray AS $values){
+                fputcsv($fp, $values);
+            }
+            fclose($fp);
+        }
+        ob_flush();
+    }
+
+    protected function getMaximumCountForRepeaters($table,$repeaterSlugs){
+        $model = DB::table($table)->select($repeaterSlugs)->get();
+        $maximumCountRepeater = [];
+        foreach($model as $key => $value){
+            foreach($repeaterSlugs as $k => $slug){
+                if($value->{$slug} != null && $value->{$slug} != ''){
+                    $jsonDecodedData = json_decode($value->{$slug});
+                    if(@$maximumCountRepeater[$slug] == null){
+                        $maximumCountRepeater[$slug] = count($jsonDecodedData);
+                    }else{
+                        if(count($jsonDecodedData) > $maximumCountRepeater[$slug]){
+                            $maximumCountRepeater[$slug] = count($jsonDecodedData);
+                        }
+                    }
+                }
+            }
+        }
+        return $maximumCountRepeater;
+    }
+
+    protected function convertQuestionIdToSlug($jsonDecodedData, $surveyModel, $maximumRepeaterCollection, $sectionName){
         $objectArray = [];
         $index = 0;
         if($jsonDecodedData == null){
@@ -533,9 +536,9 @@ true, $append_if_not_found = false ) {
                 if(!empty($matches)){
                     $metaValue = $surveyModel->fieldMeta->where('key','question_id')->where('value',$key)->first();
                     $slug = @$surveyModel->fields->find($metaValue->field_id)->field_slug;
-                    $tempArray[$slug.'_'.($index+1)] = $val;
+                    $tempArray[$sectionName.'_'.$slug.'_'.($index+1)] = $val;
                 }else{
-                    $objectArray[$key.'_'.($index+1)] = $value;
+                    $objectArray[$sectionName.'_'.$key.'_'.($index+1)] = $value;
                 }
             }
             $objectArray[$index] = $tempArray;
@@ -599,7 +602,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->take(1500)->get();
+            $result = $Query->skip(1600)->take(200)->get();
         }else{
             $result = $Query->paginate(50);
         }
@@ -609,6 +612,8 @@ true, $append_if_not_found = false ) {
 
         return ['result'=>$result, 'table_columns'=>array_combine($keys,$keys)];
     }
+
+    
 
     protected function set_repeater_options_data($data, $repeater_data = Null, $options_val = Null)
     {
