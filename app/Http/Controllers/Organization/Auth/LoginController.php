@@ -264,7 +264,7 @@ class LoginController extends Controller
                     $this->registerShortcodes($token);
                     $rawData = view('organization.login.signup-email-template',['emailTemplate' => $templateAndLayout['template'] , 'emailLayout' => $templateAndLayout['layout']])->compileShortcodes()->render();
                     Mail::send([],[], function($message) use ($rawData, $to_email){
-                        $message->from(env('MAIL_EMAIL'),env('MAIL_FROM'));
+                        $message->from('oxosolutions@gmail.com','OXO Solutions');
                         $message->setBody($rawData,'text/html');
                         $message->subject('Reset Password');
                         $message->to($to_email);
