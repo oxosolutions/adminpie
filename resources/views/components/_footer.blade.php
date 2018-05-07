@@ -3,7 +3,7 @@
 		@if(@$admin_footer_content)
 		{!!@$admin_footer_content!!}
 		@else
-			&copy;{{ date("Y") }} <a href="http://oxosolutions.com/" target="_blank">OXO Solutions</a>.All rights reserved. 
+			&copy;{{ date("Y") }}.All rights reserved. 
 		@endif
 		
 	</div><!-- .aione-row -->
