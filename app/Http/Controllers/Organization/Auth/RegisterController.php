@@ -172,7 +172,7 @@ class RegisterController extends Controller
 
             Mail::send([],[], function($message) use ($rawData, $request, $templateAndLayout){
                 $message->subject($templateAndLayout['template']['subject']);
-                $message->from('oxosolutionsindia@gmail.com','Oxo Solutions');
+                $message->from(env('MAIL_EMAIL'),env('MAIL_FROM'));
                 $message->setBody($rawData,'text/html');
                 $message->to($request->email);
             });
@@ -187,7 +187,7 @@ class RegisterController extends Controller
             )->compileShortcodes()->render();
             Mail::send([],[], function($message) use ($rawData, $request, $templateAndLayout){
                 $message->subject($templateAndLayout['template']['subject']);
-                $message->from('oxosolutionsindia@gmail.com','Oxo Solutions');
+                $message->from(env('MAIL_EMAIL'),env('MAIL_FROM'));
                 $message->setBody($rawData,'text/html');
                 $message->to($request->email);
             });
@@ -225,7 +225,7 @@ class RegisterController extends Controller
         $gropUserModel->email;
         Mail::send([],[],function($message) use ($gropUserModel, $request){
             $message->to($gropUserModel->email)->subject('New user Registered!')
-            ->from('oxosolutionsindia@gmail.com','Oxo Solutions')
+            ->from(env('MAIL_EMAIL'),env('MAIL_FROM'))
             ->setBody('<h5>New User Registered with Email: '.$request->email.'</h5>','text/html');
         });
     }
