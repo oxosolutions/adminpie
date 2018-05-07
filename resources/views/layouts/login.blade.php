@@ -10,13 +10,13 @@
 	// 	$login_theme = get_organization_meta('login_theme');
 	// }
 
-$login_theme = get_organization_meta('login_theme');
-$login_style = get_organization_meta('login_style');
-$Site_title = get_organization_meta('title');
-$Site_tagline = get_organization_meta('tagline');
-$bg_image = get_organization_meta('bg_image');
-$login_footer_content = get_organization_meta('login_footer_content');
-$login_theme = get_organization_meta('login_theme');
+$login_theme = @get_organization_meta('login_theme');
+$login_style = @get_organization_meta('login_style');
+$Site_title = @get_organization_meta('title');
+$Site_tagline = @get_organization_meta('tagline');
+$bg_image = @get_organization_meta('bg_image');
+$login_footer_content = @get_organization_meta('login_footer_content');
+$login_theme = @get_organization_meta('login_theme');
 
 @endphp
 <!DOCTYPE html>
