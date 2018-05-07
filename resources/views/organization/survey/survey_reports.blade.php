@@ -235,7 +235,7 @@
 
             @if(!$model->isEmpty())
                 <div id="table-structure" class="aione-table scrollx">
-                    <div class="ac l80" style="line-height: 48px">Showing {{@$firstItem}} to {{@$lastItem}} of {{@$total}} records</div>
+                    <div class="ac l80" style="line-height: 48px">Showing {{@$model->firstItem()}} to {{@$model->lastItem()}} of {{@$model->total()}} records</div>
                     <table class="compact">
                         <thead>
                             <tr>

@@ -428,13 +428,12 @@ true, $append_if_not_found = false ) {
         $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
 
         $maximumColumnsKeys = $this->getMaximumCountForRepeaters($surveyResultTable,$repeaterSlugs);
-        $maximumRepeaterCollection = collect($result['maximum_repeaters']);
         //Code For Repeater
         foreach($model as $key => $value){
             foreach($repeaterSlugs as $k => $slug){
-                $maxCount = $maximumColumnsKeys[$slug];
-                if(isset($value[$slug])){
-                    $repeaterData = $this->convertQuestionIdToSlug(json_decode($value[$slug],true), $surveyModel,$maximumRepeaterCollection, $slug);
+                $maxCount = $maximumColumnsKeys[$slug]['count'];
+                if(array_key_exists($slug,$value)){
+                    $repeaterData = $this->convertQuestionIdToSlug(json_decode($value[$slug],true), $surveyModel,$maximumColumnsKeys[$slug]['max_columns'], $slug);
                     if(count($repeaterData) < $maxCount){
                         for($i = count($repeaterData); $i < $maxCount; $i++){
                             $slugs = array_flip(preg_replace('/([0-9])/', $i+1, array_keys($repeaterData[0])));
@@ -442,17 +441,7 @@ true, $append_if_not_found = false ) {
                             $repeaterData[] = $slugsToRepeat;
                         }
                     }
-                    /*$newValues = [];
-                    foreach($value as $k => $val){
-                        if($k == $slug){
-                            $repeaterData = preg_replace('/([? undefined:undefined ?]\w+)/','',call_user_func_array('array_merge',$repeaterData));
-                            $repeaterData = preg_replace('/[-?]\s+[-?]/','',$repeaterData);
-                            $newValues = array_merge($newValues,$repeaterData);
-                        }else{
-                            $newValues[$k] = $val;
-                        }
-                    }
-                    $model[$key] = $newValues;*/
+                    
 
                     $repeaterData = preg_replace('/([? undefined:undefined ?]\w+)/','',call_user_func_array('array_merge',$repeaterData));
                     $repeaterData = preg_replace('/[-?]\s+[-?]/','',$repeaterData);
@@ -472,13 +461,6 @@ true, $append_if_not_found = false ) {
         //Code for export data
         if($request->has('export')){
             $this->outputCsv('survey_report_data'.time().'.csv',$model->toArray());
-            /*$model = json_decode(json_encode($model->toArray()),true);
-            Excel::create('survey_report_'.time(), function($excel) use ($model) {
-                $excel->setTitle('Survey Report');
-                $excel->sheet('sheet1', function($sheet) use ($model) {
-                    $sheet->fromArray($model, null, 'A1', false, true);
-                });
-            })->download('xlsx');*/
         }
         return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$columns,
                 'condition_fields'=>$columns]);
@@ -501,6 +483,7 @@ true, $append_if_not_found = false ) {
             fclose($fp);
         }
         ob_flush();
+        exit;
     }
 
     protected function getMaximumCountForRepeaters($table,$repeaterSlugs){
@@ -509,13 +492,18 @@ true, $append_if_not_found = false ) {
         foreach($model as $key => $value){
             foreach($repeaterSlugs as $k => $slug){
                 if($value->{$slug} != null && $value->{$slug} != ''){
-                    $jsonDecodedData = json_decode($value->{$slug});
+                    $jsonDecodedData = json_decode($value->{$slug}, true);
                     if(@$maximumCountRepeater[$slug] == null){
-                        $maximumCountRepeater[$slug] = count($jsonDecodedData);
+                        $maximumCountRepeater[$slug]['count'] = count($jsonDecodedData);
+                        $maximumCountRepeater[$slug]['max_columns'] = collect($jsonDecodedData)->max();
                     }else{
-                        if(count($jsonDecodedData) > $maximumCountRepeater[$slug]){
-                            $maximumCountRepeater[$slug] = count($jsonDecodedData);
+                        if(count($jsonDecodedData) > $maximumCountRepeater[$slug]['count']){
+                            $maximumCountRepeater[$slug]['count'] = count($jsonDecodedData);
                         }
+                        if(count(collect($jsonDecodedData)->max()) >= count($maximumCountRepeater[$slug]['max_columns'])){
+                            $maximumCountRepeater[$slug]['max_columns'] = collect($jsonDecodedData)->max();
+                        }
+
                     }
                 }
             }
@@ -526,19 +514,23 @@ true, $append_if_not_found = false ) {
     protected function convertQuestionIdToSlug($jsonDecodedData, $surveyModel, $maximumRepeaterCollection, $sectionName){
         $objectArray = [];
         $index = 0;
+        $maximumRepeaterCollection = array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection);
         if($jsonDecodedData == null){
-            $jsonDecodedData = [array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection->max()[0])];
+            $jsonDecodedData = [array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection)];
         }
         foreach($jsonDecodedData as $k => $value){
+            $value = array_merge($maximumRepeaterCollection,$value);
             $tempArray = [];
             foreach($value as $key => $val){
                 preg_match('/(SID)\w+/', $key,$matches);
                 if(!empty($matches)){
                     $metaValue = $surveyModel->fieldMeta->where('key','question_id')->where('value',$key)->first();
                     $slug = @$surveyModel->fields->find($metaValue->field_id)->field_slug;
-                    $tempArray[$sectionName.'_'.$slug.'_'.($index+1)] = $val;
+                    if($slug != null){
+                        $tempArray[$sectionName.'_'.$slug.'_'.($index+1)] = $val;
+                    }
                 }else{
-                    $objectArray[$sectionName.'_'.$key.'_'.($index+1)] = $value;
+                    $tempArray[$sectionName.'_'.$key.'_'.($index+1)] = $val;
                 }
             }
             $objectArray[$index] = $tempArray;
@@ -602,7 +594,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->skip(1600)->take(200)->get();
+            $result = $Query->skip(5600)->take(200)->get();
         }else{
             $result = $Query->paginate(50);
         }

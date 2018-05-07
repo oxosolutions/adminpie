@@ -244,7 +244,7 @@
 
             <?php if(!$model->isEmpty()): ?>
                 <div id="table-structure" class="aione-table scrollx">
-                    <div class="ac l80" style="line-height: 48px">Showing <?php echo e(@$firstItem); ?> to <?php echo e(@$lastItem); ?> of <?php echo e(@$total); ?> records</div>
+                    <div class="ac l80" style="line-height: 48px">Showing <?php echo e(@$model->firstItem()); ?> to <?php echo e(@$model->lastItem()); ?> of <?php echo e(@$model->total()); ?> records</div>
                     <table class="compact">
                         <thead>
                             <tr>
