@@ -24,21 +24,9 @@ $page_title_data = array(
     <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo $__env->make('organization.my-profile._profile_tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<div class="ar">
-		
-		
-			
-					
-				
-				
-			
-			
 			<div class="ac l30 m30 s100">
 				<div>
-					
-					
-	          			<img class="aione-border border-grey-lighten-4 p-10" src="<?php echo e(asset(@get_profile_picture($id,'medium'))); ?>" >
-					
-
+	          		<img class="aione-border border-grey-lighten-4 p-10" src="<?php echo e(asset(@get_profile_picture($id,'medium'))); ?>" >
 	        	</div>
 	         	<div class="ac s100 m33 l100  bg-red darken-1 aione-align-center p-0">
 	            	<a class="white p-14 display-block" href="<?php echo e(route('profile.picture.delete',$id)); ?>"><?php echo e(__('organization/profile.remove_image')); ?></a>
@@ -47,7 +35,7 @@ $page_title_data = array(
 			<div class="ac l70 m70 s100  ">
 				<div class="aione-border  aione-align-center" style="min-height: 350px;max-height: 350px">
 					<div class="aione-border-bottom">
-						<h5 class="line-height-30"><?php echo e(route('profile.picture.delete',$id)); ?>"><?php echo e(__('organization/profile.change_profile_picture')); ?></h5>
+						<h5 class="line-height-30"><?php echo e(__('organization/profile.change_profile_picture')); ?></h5>
 					</div>
 					<?php echo Form::open(['route'=>'profile.picture' , 'class'=> 'form-horizontal','method' => 'post', 'files' => true,'id'=>'form1']); ?>
 

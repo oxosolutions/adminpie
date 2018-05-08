@@ -7,7 +7,6 @@ $bg_image = @get_organization_meta('bg_image');
 $login_footer_content = @get_organization_meta('login_footer_content');
 $login_theme = @get_organization_meta('login_theme');
 
-echo "==".$site_title;
 if(empty(@$site_title)){
 	$site_title = @strip_tags ( @env('GROUP_LOGIN_TITLE') );
 }

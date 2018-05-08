@@ -32,7 +32,7 @@ class userApprove extends Mailable
      */
     public function build()
     {
-        $template_id = json_decode(get_organization_meta('user_notification_template',true));
+        $template_id = json_decode(get_organization_meta('user_approve_template',true));
         $emailTemplate = '';
         $emailLayout = '';
         if($template_id != null || !empty($template_id)){
@@ -52,7 +52,7 @@ class userApprove extends Mailable
         $email = Session::get('approveUser');
         $userEmail = GroupUsers::where('email',$email)->first()['email'];
 
-        $sendFrom = get_organization_meta('from_email');
+        $sendFrom = env('MAIL_EMAIL');
         
             if($sendFrom != null){
                 $from = $sendFrom;

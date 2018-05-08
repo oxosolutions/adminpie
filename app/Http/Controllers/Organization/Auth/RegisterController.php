@@ -304,13 +304,18 @@ class RegisterController extends Controller
         Shortcode::add('registered_email', function ($atts, $content, $name) use ($registeredEmail) {
             return $registeredEmail;
         });
-        Shortcode::add('password_status', function ($atts, $content, $name) use ($existing, $token) {
+
+        Shortcode::add('existing_user_warning', function ($atts, $content, $name) use ($existing, $token){
             if ($existing) {
                 return '<p>Note: You have already registered with this organization, you can use the same password here.</p>';
             } else {
-                return 'Create Password: <a href="' . route('create.password', $token) . '">Click To Create Password</a>';
+                return '';
             }
-            return $registeredEmail;
+        });
+
+        Shortcode::add('password_status', function ($atts, $content, $name) use ($existing, $token) {
+            return route('create.password', $token);
+            // return $registeredEmail;
         });
 
     }
