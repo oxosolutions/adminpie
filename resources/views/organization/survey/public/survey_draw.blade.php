@@ -165,10 +165,10 @@
                 <div id="aione_form_header" class="aione-form-header">
                     <div class="aione-row">
                         @if(@$survey_form_settings->form_show_title && !empty($survey_model->form_title))
-                            <h1 class="aione-form-title aione-align-{{@$survey_form_settings->form_title_align}}">{{$survey_model->form_title}}</h1>
+                            <h1 class="aione-form-title aione-align-{{@$survey_form_settings->form_title_align}}">{!! @$survey_model->form_title !!}</h1>
                         @endif
                         @if(@$survey_form_settings->form_show_description && !empty($survey_model->form_description))
-                            <h2 class="aione-form-description aione-align-{{@$survey_form_settings->form_description_align}}">{{$survey_model->form_description}}</h2>
+                            <h2 class="aione-form-description aione-align-{{@$survey_form_settings->form_description_align}}">{!! @$survey_model->form_description !!}</h2>
                         @endif
                     </div> <!-- .aione-row -->
                 </div> <!-- .aione-form-header -->
