@@ -1,14 +1,16 @@
 <?php 
-
 $login_theme = @get_organization_meta('login_theme');
 $login_style = @get_organization_meta('login_style');
-$Site_title = @get_organization_meta('title');
-$Site_tagline = @get_organization_meta('tagline');
+$site_title = @get_organization_meta('title');
+$site_tagline = @get_organization_meta('tagline');
 $bg_image = @get_organization_meta('bg_image');
 $login_footer_content = @get_organization_meta('login_footer_content');
 $login_theme = @get_organization_meta('login_theme');
 
-
+echo "==".$site_title;
+if(empty(@$site_title)){
+	$site_title = @strip_tags ( @env('GROUP_LOGIN_TITLE') );
+}
 
  ?>
 <!DOCTYPE html>
@@ -19,7 +21,7 @@ $login_theme = @get_organization_meta('login_theme');
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	
-	<title><?php echo e(@$Site_title); ?></title>
+	<title><?php echo @$site_title; ?></title>
 
 	<!-- Global stylesheets --> 
 	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">

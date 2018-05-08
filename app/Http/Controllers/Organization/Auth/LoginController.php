@@ -211,6 +211,9 @@ class LoginController extends Controller
     protected function getEmailTemplateAndLayout(){
         $check_notification_status = get_organization_meta('key' , 'enable_forgot_password');
         $template_id = get_organization_meta('forgot_password_template');
+        if($template_id == null || $template_id == false){
+            return false;
+        }
         $emailTemplate = '';
         $emailLayout = '';
 
@@ -256,19 +259,21 @@ class LoginController extends Controller
             if($check_forgot_status != null && $check_forgot_status->value != '' && $check_forgot_status->value != 0){
                 if($check_forgot_status->value == 1){
                     $templateAndLayout = $this->getEmailTemplateAndLayout();
-                    $token = str_random(64);
-                    $passwordReset = new PasswordReset;
-                    $passwordReset->email = $request->email;
-                    $passwordReset->token = $token;
-                    $passwordReset->save();
-                    $this->registerShortcodes($token);
-                    $rawData = view('organization.login.signup-email-template',['emailTemplate' => $templateAndLayout['template'] , 'emailLayout' => $templateAndLayout['layout']])->compileShortcodes()->render();
-                    Mail::send([],[], function($message) use ($rawData, $to_email){
-                        $message->from(env('MAIL_EMAIL'),env('MAIL_FROM'));
-                        $message->setBody($rawData,'text/html');
-                        $message->subject('Reset Password');
-                        $message->to($to_email);
-                    });
+                    if($templateAndLayout != false){
+                        $token = str_random(64);
+                        $passwordReset = new PasswordReset;
+                        $passwordReset->email = $request->email;
+                        $passwordReset->token = $token;
+                        $passwordReset->save();
+                        $this->registerShortcodes($token);
+                        $rawData = view('organization.login.signup-email-template',['emailTemplate' => $templateAndLayout['template'] , 'emailLayout' => $templateAndLayout['layout']])->compileShortcodes()->render();
+                        Mail::send([],[], function($message) use ($rawData, $to_email){
+                            $message->from(env('MAIL_EMAIL'),env('MAIL_FROM'));
+                            $message->setBody($rawData,'text/html');
+                            $message->subject('Reset Password');
+                            $message->to($to_email);
+                        });
+                    }
                 }
             }else{
                 Session::flash('error','Forget password not enable by Organization Admin!');

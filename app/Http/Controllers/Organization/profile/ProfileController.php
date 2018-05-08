@@ -72,8 +72,9 @@ class ProfileController extends Controller
     	$model = Auth::guard('org')->user()->toArray();
     	$processMeta = UsersMeta::where(['user_id'=>Auth::guard('org')->user()->id])->get();
         foreach($processMeta as $key => $value){
-            if()
-            $model[$value->key] = $value->value;
+            if($value->key != 'email'){
+                $model[$value->key] = $value->value;
+            }
     	}
     	$additionalForm = OrganizationSetting::where(['key'=>'user_profile_form'])->first();
         if($additionalForm != null){
@@ -82,7 +83,6 @@ class ProfileController extends Controller
                 $form_slug = $additionalForm->form_slug;
             }
         }
-        dd($model);
     	return view('organization.my-profile.edit',['model'=>$model,'additional_form'=>$form_slug]);
     }
 
