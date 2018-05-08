@@ -1,5 +1,5 @@
 @php
-    $layout = 'layouts.front';
+    $layout = 'layouts.login';
     $design_settings = @get_design_settings();
     if(@$design_settings != null && !empty($design_settings)){
 	    $layout = 'layouts.front';

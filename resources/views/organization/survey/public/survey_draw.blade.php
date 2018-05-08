@@ -227,6 +227,10 @@
                             <div class="aione-border  bg-white mb-20">
                                 <div class="aione-border-bottom pv-20 ph-30 light-blue darken-2 font-size-18 bg-white">
                                     {{ @$data['sections'][$sectionIndex]['title'] }}
+                                    <div class="grey darken-1">
+                                        
+                                     {{ $section['description'] }}
+                                    </div>
                                 </div>
                                 {!! Form::model(@$prefill) !!}
                                     {!! Form::hidden('section',request()->section) !!}
