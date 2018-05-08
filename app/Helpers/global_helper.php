@@ -887,6 +887,7 @@ function resize_image($size = 'thumbnail', $filename, $source_path = null, $dest
 ************************************************************/
 
 function get_meta($model, $uid = null, $key = null, $column = null, $array = false){	
+
 	$whereArray = [];
 	if($uid != null && $column != null){
 		$whereArray[$column] = $uid;
@@ -1127,6 +1128,11 @@ if(!function_exists('get_user_role')){
 }
 
 function get_organization_meta($key = null, $array = false){
+	$organization_id = get_organization_id();
+	if($organization_id == null){
+		return null;
+	}
+	
 	$model = 'Organization\OrganizationSetting';
 	$meta = get_meta($model,null,$key,null,$array);
 	return $meta;

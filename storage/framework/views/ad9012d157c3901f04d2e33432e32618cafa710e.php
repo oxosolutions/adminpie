@@ -1,22 +1,15 @@
 <?php 
 
-	// if(@$settings != null){
-	// 	$login_theme = @$settings->where('key' , 'login_theme')->first();
-	// 	$login_style = @$settings->where('key' , 'login_style')->first();
-	// 	$Site_title = @$settings->where('key' , 'title')->first();
-	// 	$Site_tagline = @$settings->where('key' , 'tagline')->first();
-	// 	$bg_image = @$settings->where('key' , 'bg_image')->first();
-	// 	$login_footer_content = @$settings->where('key' , 'login_footer_content')->first();
-	// 	$login_theme = get_organization_meta('login_theme');
-	// }
-
-/*$login_theme = @get_organization_meta('login_theme');
+$login_theme = @get_organization_meta('login_theme');
 $login_style = @get_organization_meta('login_style');
 $Site_title = @get_organization_meta('title');
 $Site_tagline = @get_organization_meta('tagline');
 $bg_image = @get_organization_meta('bg_image');
 $login_footer_content = @get_organization_meta('login_footer_content');
-$login_theme = @get_organization_meta('login_theme');*/
+$login_theme = @get_organization_meta('login_theme');
+
+
+
 
  ?>
 <!DOCTYPE html>
@@ -55,21 +48,9 @@ $login_theme = @get_organization_meta('login_theme');*/
 							<div class="login-wrapper" >
 								<div class="aione-row" >
 									<div class="login-desc">
-										<div class="" style="padding: 30px;">
-                                            <div class="login-site-title">
-
-                                            	Welcome to <?php echo e(@$Site_title); ?>
-
-
-                                            </div>
-                                            <div class="site-description">
-                                            	<?php echo e(@$Site_tagline); ?>
-
-                                            </div>
-                                        </div>
+										<?php echo $__env->make('common.auth-header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 									</div>
 									<div class="login-form">
-										<?php echo $__env->make('common.auth-header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 										<?php echo $__env->yieldContent('content'); ?>	
 									</div>
 								</div>

@@ -21,7 +21,7 @@
 	<?php endif; ?>
 	<?php echo Form::open(['method' => 'POST','class' => 'modal-body','route' => 'group.post']); ?>
 
-	<?php echo FormGenerator::GenerateForm('group_login_form',['type'=>'inset']); ?>
+	<?php echo FormGenerator::GenerateForm('organization_user_login_form'); ?>
 
 	<?php if(session()->has('csrf_error')): ?>
 		<div style="text-align: center; color: red;"><?php echo e(session('csrf_error')); ?></div>

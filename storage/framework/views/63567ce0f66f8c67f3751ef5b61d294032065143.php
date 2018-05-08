@@ -21,7 +21,7 @@
 
 			<?php echo Form::hidden('back_to',@request()->backto); ?>
 
-			<?php echo FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset']); ?>
+			<?php echo FormGenerator::GenerateForm('organization_user_login_form'); ?>
 
             <?php if($forgetPassword == 1): ?>
     			<div class="aione-align-center" style="margin: 10px 0 20px 0">

@@ -19,7 +19,7 @@
 		</div>
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'group.post']) !!}
-	{!! FormGenerator::GenerateForm('group_login_form',['type'=>'inset'])!!}
+	{!! FormGenerator::GenerateForm('organization_user_login_form')!!}
 	@if(session()->has('csrf_error'))
 		<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
 	@endif

@@ -12,7 +12,7 @@
     Route::get('email/layout/delete/{id}', ['as'=>'email.layout.delete' , 'uses'=>'email\EmailController@deleteLayout']);
     Route::get('email/edit-layout/{id}',    ['as'=>'edit.layout' , 'uses'=>'email\EmailController@getInfolayout']);
     Route::POST('email/update-layout',  ['as'=>'update.layout' , 'uses'=>'email\EmailController@updatelayout']);
-    Route::get('email/template/delete/{id}', ['as'=>'templates.delete' , 'uses'=>'document\DocumentController@deleteTemplates']);
+    Route::get('email/template/delete/{id}', ['as'=>'templates.delete' , 'uses'=>'email\EmailController@deleteTemplates']);
     Route::get('email/create-layouts',  ['as'=>'create.layouts' , 'uses'=>'email\EmailController@createLayouts']);
     Route::post('layout/save',          ['as'=>'save.layout' , 'uses'=>'email\EmailController@saveLayout']);
     Route::post('template/save',            ['as'=>'save.template' , 'uses'=>'email\EmailController@saveTemplate']);

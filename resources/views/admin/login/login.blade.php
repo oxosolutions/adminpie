@@ -1,4 +1,4 @@
-@extends('layouts.login-v2')
+@extends('layouts.login')
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -20,7 +20,7 @@
 	</div>
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
-	{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
+	{!! FormGenerator::GenerateForm('organization_user_login_form')!!}
 	@if(session()->has('csrf_error'))
 		<div style="text-align: center; color: red;">{{session('csrf_error')}}</div>
 	@endif

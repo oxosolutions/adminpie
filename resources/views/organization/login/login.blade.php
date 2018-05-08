@@ -20,7 +20,7 @@
 	@endif
 	{!! Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']) !!}
 			{!! Form::hidden('back_to',@request()->backto) !!}
-			{!! FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset'])!!}
+			{!! FormGenerator::GenerateForm('organization_user_login_form')!!}
             @if($forgetPassword == 1)
     			<div class="aione-align-center" style="margin: 10px 0 20px 0">
     				Have you forgotten your password? <br>

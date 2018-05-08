@@ -50,7 +50,7 @@ if(@$form_settings->form_field_show_border){
 
 			</div> <!-- .aione-row -->
 		</div> <!-- .aione-form-content -->
-
+        
 		@if(@$form_settings->form_show_save_button || @$form_settings->form_show_reset_button )
 		<div id="aione_form_footer" class="aione-form-footer">
 			<div class="aione-row">
@@ -64,7 +64,6 @@ if(@$form_settings->form_field_show_border){
 					$cancel_button_text = $form_settings->form_reset_button_text;
 				}
 			@endphp
-
 			@if(@$form_settings->form_show_save_button)
 				<input type="submit" class="aione-button" value="{{$save_button_text}}" />
 			@endif

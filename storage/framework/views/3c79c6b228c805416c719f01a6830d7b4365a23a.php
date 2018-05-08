@@ -22,7 +22,7 @@
 	<?php endif; ?>
 	<?php echo Form::open(['method' => 'POST','class' => 'modal-body','route' => 'org.login.post']); ?>
 
-	<?php echo FormGenerator::GenerateForm('organization_user_login_form',['type'=>'inset']); ?>
+	<?php echo FormGenerator::GenerateForm('organization_user_login_form'); ?>
 
 	<?php if(session()->has('csrf_error')): ?>
 		<div style="text-align: center; color: red;"><?php echo e(session('csrf_error')); ?></div>
@@ -50,4 +50,4 @@
 </div> 
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.login-v2', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('layouts.login', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

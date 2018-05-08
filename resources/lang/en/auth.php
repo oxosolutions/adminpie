@@ -12,8 +12,12 @@ return [
     | these language lines according to your application's requirements.
     |
     */
-
+    /* Default Laravel message */
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
+
+
+    /* developer defined message */
+    'registration_disabled' => 'Registration form is disabled',
 
 ];

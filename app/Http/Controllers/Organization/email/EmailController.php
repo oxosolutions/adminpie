@@ -99,7 +99,7 @@ class EmailController extends Controller
                       'showColumns' => ['name'=>'Name','slug'=>'Slug','created_at'=>'Created'],
                       'actions' => [
                                       'edit' => ['title'=>'Edit','route'=>'edit.template' , 'class' => 'edit'],
-                                      'delete'=>['title'=>'Delete','route'=>'edit.template']
+                                      'delete'=>['title'=>'Delete','route'=>'templates.delete']
                                    ],
                       
                     ];
