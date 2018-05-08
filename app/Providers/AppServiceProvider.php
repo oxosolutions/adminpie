@@ -130,7 +130,7 @@ class AppServiceProvider extends ServiceProvider
         Shortcode::add('survey-data', function($optionsArray = null){
             try{
                 $tableName = get_organization_id().'_survey_results_'.$optionsArray['id'];
-                $data = DB::table($tableName)->get()->toArray();
+                $data = DB::table($tableName)->where('survey_submitted_by',Auth::guard('org')->user()->id)->get()->toArray();
                 return json_encode($data);
             }catch(\Exception $e){
                 return json_encode([]);
