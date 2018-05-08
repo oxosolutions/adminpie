@@ -1,14 +1,10 @@
 @php
     $layout = 'layouts.login';
-    $design_settings = @get_design_settings();
-    if(@$design_settings != null && !empty($design_settings)){
+    $login_theme = @get_organization_meta('login_theme');
+    if(@$login_theme == 'front'){
 	    $layout = 'layouts.front';
-
-	    dump($design_settings);
     }
-
 @endphp
-
 
 @extends($layout)
 @section('content')

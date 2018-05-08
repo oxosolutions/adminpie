@@ -1,5 +1,5 @@
 <?php 
-    $layout = 'layouts.front';
+    $layout = 'layouts.login';
     $login_theme = @get_organization_meta('login_theme');
     if(@$login_theme == 'front'){
 	    $layout = 'layouts.front';
