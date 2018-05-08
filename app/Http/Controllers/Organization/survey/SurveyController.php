@@ -940,6 +940,7 @@ class SurveyController extends Controller
                     } elseif ($metaArray['authentication_type'] == 'role') {
                         $userRoles = get_user_roles();
                         if (@$metaArray['role_list'] != null && @$metaArray['role_list'] != '') {
+                            $metaArray['role_list'] = json_decode($metaArray['role_list'], true);
                             $roleStatus = false;
                             foreach ($metaArray['role_list'] as $key => $role) {
                                 if (in_array($role, $userRoles)) {

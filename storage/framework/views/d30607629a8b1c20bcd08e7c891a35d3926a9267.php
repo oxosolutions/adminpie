@@ -4,7 +4,7 @@
 		<?php echo @$admin_footer_content; ?>
 
 		<?php else: ?>
-			&copy;<?php echo e(date("Y")); ?> <a href="http://oxosolutions.com/" target="_blank">OXO Solutions</a>.All rights reserved. 
+			&copy;<?php echo e(date("Y")); ?>.All rights reserved. 
 		<?php endif; ?>
 		
 	</div><!-- .aione-row -->

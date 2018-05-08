@@ -1,0 +1,642 @@
+[
+  {
+    "id": "1",
+    "key": "employee_role",
+    "value": "2",
+    "type": "web",
+    "created_at": null,
+    "updated_at": "2017-08-10 12:41:48"
+  },
+  {
+    "id": "2",
+    "key": "client_role",
+    "value": "3",
+    "type": "web",
+    "created_at": null,
+    "updated_at": "2017-08-10 12:42:05"
+  },
+  {
+    "id": "3",
+    "key": "title",
+    "value": "OXO Solutions",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-12-14 17:34:33"
+  },
+  {
+    "id": "4",
+    "key": "tagline",
+    "value": "Developing the .com Trend...",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-08-02 10:18:54"
+  },
+  {
+    "id": "5",
+    "key": "email",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-07-19 11:26:04"
+  },
+  {
+    "id": "6",
+    "key": "theme",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-10-11 16:19:05"
+  },
+  {
+    "id": "7",
+    "key": "show_title",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-09-19 08:57:18"
+  },
+  {
+    "id": "8",
+    "key": "show_tagline",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-09-19 08:57:18"
+  },
+  {
+    "id": "9",
+    "key": "show_logo",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-07-19 11:26:04",
+    "updated_at": "2017-09-19 08:57:18"
+  },
+  {
+    "id": "10",
+    "key": "super_admin_role",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-07-29 11:27:24",
+    "updated_at": "2017-07-29 11:29:27"
+  },
+  {
+    "id": "11",
+    "key": "applicant_role",
+    "value": "4",
+    "type": "web",
+    "created_at": "2017-07-29 11:27:24",
+    "updated_at": "2017-07-29 11:29:27"
+  },
+  {
+    "id": "13",
+    "key": "show_login_logo",
+    "value": "yes",
+    "type": "web",
+    "created_at": "2017-08-04 10:50:43",
+    "updated_at": "2017-08-04 10:51:00"
+  },
+  {
+    "id": "14",
+    "key": "delete-logo",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-08-05 11:31:27",
+    "updated_at": "2017-08-05 11:31:27"
+  },
+  {
+    "id": "15",
+    "key": "deleteLogo",
+    "value": "submit",
+    "type": "web",
+    "created_at": "2017-08-05 11:45:19",
+    "updated_at": "2017-08-05 12:19:11"
+  },
+  {
+    "id": "16",
+    "key": "logo",
+    "value": "files\/organization_175\/assets\/images\/20171218030049.png",
+    "type": "web",
+    "created_at": "2017-08-05 12:21:24",
+    "updated_at": "2017-12-18 15:00:49"
+  },
+  {
+    "id": "17",
+    "key": "record_attendance_by",
+    "value": "present_absent",
+    "type": "web",
+    "created_at": "2017-08-09 11:18:24",
+    "updated_at": "2017-08-09 11:18:24"
+  },
+  {
+    "id": "18",
+    "key": "enable_user_registration",
+    "value": "no",
+    "type": "web",
+    "created_at": "2017-08-09 11:23:11",
+    "updated_at": "2017-08-09 11:23:22"
+  },
+  {
+    "id": "19",
+    "key": "orgsetsec1f1",
+    "value": "test",
+    "type": "web",
+    "created_at": "2017-09-07 07:23:38",
+    "updated_at": "2017-09-07 07:23:38"
+  },
+  {
+    "id": "20",
+    "key": "orgsetsec1f3",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-09-07 07:23:38",
+    "updated_at": "2017-09-07 07:23:38"
+  },
+  {
+    "id": "21",
+    "key": "site_url",
+    "value": "test",
+    "type": "web",
+    "created_at": "2017-09-07 07:23:38",
+    "updated_at": "2017-09-07 07:23:38"
+  },
+  {
+    "id": "22",
+    "key": "login-form-show-logo",
+    "value": "0",
+    "type": "web",
+    "created_at": "2017-09-07 07:23:38",
+    "updated_at": "2017-09-08 04:16:38"
+  },
+  {
+    "id": "23",
+    "key": "login-form-show-title",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-09-07 07:23:38",
+    "updated_at": "2017-09-07 12:38:38"
+  },
+  {
+    "id": "24",
+    "key": "login-form-show-tagline",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-09-07 07:23:38",
+    "updated_at": "2017-09-07 11:17:02"
+  },
+  {
+    "id": "25",
+    "key": "orgsetsec1f6",
+    "value": "yes",
+    "type": "web",
+    "created_at": "2017-09-07 19:27:46",
+    "updated_at": "2017-09-07 19:27:46"
+  },
+  {
+    "id": "26",
+    "key": "orgsetsec1f7",
+    "value": "yes",
+    "type": "web",
+    "created_at": "2017-09-07 19:27:46",
+    "updated_at": "2017-09-07 19:27:46"
+  },
+  {
+    "id": "27",
+    "key": "orgsetsec1f8",
+    "value": "no",
+    "type": "web",
+    "created_at": "2017-09-07 19:27:46",
+    "updated_at": "2017-09-07 19:27:46"
+  },
+  {
+    "id": "28",
+    "key": "admin_custom_css",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-09-19 08:57:18",
+    "updated_at": "2017-09-19 08:57:18"
+  },
+  {
+    "id": "29",
+    "key": "admin_custom_js",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-09-19 08:57:18",
+    "updated_at": "2017-09-19 08:57:18"
+  },
+  {
+    "id": "30",
+    "key": "admin_dashboard_welcome_message",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-09-19 08:57:18",
+    "updated_at": "2017-09-19 08:57:18"
+  },
+  {
+    "id": "31",
+    "key": "login_theme",
+    "value": "darlic",
+    "type": "web",
+    "created_at": "2017-09-19 08:57:18",
+    "updated_at": "2018-05-03 16:43:30"
+  },
+  {
+    "id": "32",
+    "key": "login_style",
+    "value": "solo",
+    "type": "web",
+    "created_at": "2017-09-19 08:57:18",
+    "updated_at": "2018-05-03 16:43:30"
+  },
+  {
+    "id": "34",
+    "key": "android_application_title",
+    "value": "IRIS Application",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "35",
+    "key": "android_application_description",
+    "value": "Integrated Road Traffic Injuries Surveillance System - INDIA",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "36",
+    "key": "android_application_logo",
+    "value": "http:\/\/master.adminpie.com\/media\/2017-10-03-16-03-15_logo.png",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:03:15"
+  },
+  {
+    "id": "37",
+    "key": "android_application_footer_text",
+    "value": "Designed and Developed by <a target=\"_blank\" href=\"javascript:void(0)\" style=\"color: white\" onclick=\"window.open('http:\/\/fhts.ac.in\/','_system')\">FHTS<\/a>. Version 4.2.1",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "38",
+    "key": "android_application_activation_guidelines",
+    "value": "Activation guidelines",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "39",
+    "key": "android_application_activate_button_text",
+    "value": "Activate Now",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 12:57:16"
+  },
+  {
+    "id": "40",
+    "key": "login_page_title_text",
+    "value": "IRIS Application",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "41",
+    "key": "login_page_description_text",
+    "value": "Integrated Road Traffic Injuries Surveillance System - INDIA",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "42",
+    "key": "login_button_text",
+    "value": "Login Now",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 12:57:16"
+  },
+  {
+    "id": "43",
+    "key": "link_to_register_page",
+    "value": "http:\/\/iris.fhts.ac.in\/register",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "44",
+    "key": "start_survey_button_text",
+    "value": "Enter Records",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 18:09:08"
+  },
+  {
+    "id": "45",
+    "key": "manage_survey_button_text",
+    "value": "Review Records",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "46",
+    "key": "sync_survey_button_text",
+    "value": "Sync Now",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 12:57:16"
+  },
+  {
+    "id": "47",
+    "key": "update_application_button_text",
+    "value": "Synchronize Records",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "48",
+    "key": "sidenav_header_text",
+    "value": "Menu",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:55"
+  },
+  {
+    "id": "49",
+    "key": "link_to_dashboard",
+    "value": "Dashboard",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 15:44:35"
+  },
+  {
+    "id": "50",
+    "key": "link_to_start_survey_text",
+    "value": "Enter Records",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 18:11:50"
+  },
+  {
+    "id": "51",
+    "key": "link_to_manage_survey_text",
+    "value": "Review Records",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:56"
+  },
+  {
+    "id": "52",
+    "key": "link_to_sync_survey_text",
+    "value": "Synchronize Records",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:56"
+  },
+  {
+    "id": "53",
+    "key": "link_to_update_app_text",
+    "value": "Update Application",
+    "type": "app",
+    "created_at": "2017-10-03 12:54:01",
+    "updated_at": "2017-10-03 16:09:56"
+  },
+  {
+    "id": "54",
+    "key": "help_page_content",
+    "value": "<div class=\"row\">\r\n    <div class=\"col-md-4\">\r\n      <h2>Base64 Image<\/h2>\r\n      <p>Great for web conversion.<\/p>\r\n      <p><img class=\"img-circle\" src=\"data:image\/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==\" alt=\"Generic placeholder image\" width=\"140\" height=\"140\" \/><\/p>\r\n    <\/div>\r\n    <div class=\"col-md-4\">\r\n      <h2>Image from placehold.it<\/h2>\r\n      <p>Quick and dirty.<\/p>\r\n      <p><img class=\"img-circle\" src=\"http:\/\/placehold.it\/140x140\" alt=\"Generic placeholder image\" width=\"140\" height=\"140\" \/><\/p>\r\n   <\/div>\r\n    <div class=\"col-md-4\">\r\n      <h2>Image from Holder<\/h2>\r\n      <p>Simplicity with more control.<\/p>\r\n      <p><img class=\"img-circle\" src=\"\" data-src=\"holder.js\/140x140?text=placeholder&theme=industrial\" alt=\"Generic placeholderimage\" width=\"140\" height=\"140\" \/><\/p>\r\n    <\/div>\r\n  <\/div>\r\n<\/div>",
+    "type": "app",
+    "created_at": "2017-10-03 12:57:16",
+    "updated_at": "2017-10-03 15:55:57"
+  },
+  {
+    "id": "55",
+    "key": "about_page_content",
+    "value": "<div class=\"row\">\r\n    <div class=\"col-md-4\">\r\n      <h2>Base64 Image<\/h2>\r\n      <p>Great for web conversion.<\/p>\r\n      <p><img class=\"img-circle\" src=\"data:image\/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==\" alt=\"Generic placeholder image\" width=\"140\" height=\"140\" \/><\/p>\r\n    <\/div>\r\n    <div class=\"col-md-4\">\r\n      <h2>Image from placehold.it<\/h2>\r\n      <p>Quick and dirty.<\/p>\r\n      <p><img class=\"img-circle\" src=\"http:\/\/placehold.it\/140x140\" alt=\"Generic placeholder image\" width=\"140\" height=\"140\" \/><\/p>\r\n   <\/div>\r\n    <div class=\"col-md-4\">\r\n      <h2>Image from Holder<\/h2>\r\n      <p>Simplicity with more control.<\/p>\r\n      <p><img class=\"img-circle\" src=\"\" data-src=\"holder.js\/140x140?text=placeholder&theme=industrial\" alt=\"Generic placeholderimage\" width=\"140\" height=\"140\" \/><\/p>\r\n    <\/div>\r\n  <\/div>\r\n<\/div>",
+    "type": "app",
+    "created_at": "2017-10-03 12:57:16",
+    "updated_at": "2017-10-03 15:55:57"
+  },
+  {
+    "id": "56",
+    "key": "admin_footer_content",
+    "value": "",
+    "type": "",
+    "created_at": "2017-10-11 16:19:05",
+    "updated_at": "2017-10-11 16:19:05"
+  },
+  {
+    "id": "57",
+    "key": "bg_image_status",
+    "value": "1",
+    "type": "",
+    "created_at": "2017-10-11 16:19:05",
+    "updated_at": "2017-10-12 21:00:09"
+  },
+  {
+    "id": "58",
+    "key": "enableuserregisteration",
+    "value": "yes",
+    "type": "web",
+    "created_at": "2017-10-20 17:55:53",
+    "updated_at": "2017-10-20 17:55:53"
+  },
+  {
+    "id": "59",
+    "key": "user_profile_form",
+    "value": "129",
+    "type": "web",
+    "created_at": "2017-10-20 17:55:53",
+    "updated_at": "2017-10-20 17:55:53"
+  },
+  {
+    "id": "60",
+    "key": "user_role_default",
+    "value": "2",
+    "type": "web",
+    "created_at": "2017-10-20 17:55:53",
+    "updated_at": "2017-10-20 17:55:53"
+  },
+  {
+    "id": "61",
+    "key": "app_path",
+    "value": "urban.apk",
+    "type": "",
+    "created_at": "2017-10-21 14:37:45",
+    "updated_at": "2018-01-18 12:06:52"
+  },
+  {
+    "id": "62",
+    "key": "default_page",
+    "value": "",
+    "type": "",
+    "created_at": "2017-10-21 14:37:45",
+    "updated_at": "2017-10-21 14:37:45"
+  },
+  {
+    "id": "63",
+    "key": "perpagelist",
+    "value": "13",
+    "type": "",
+    "created_at": "2017-10-21 14:37:45",
+    "updated_at": "2017-12-14 17:34:33"
+  },
+  {
+    "id": "64",
+    "key": "design_settings",
+    "value": "{\"layout\":\"boxed\",\"site_width\":\"100%\",\"content_width\":\"100%\",\"sidebar_1_width\":\"25%\",\"sidebar_2_width\":\"25%\",\"show_header\":\"1\",\"show_slider\":\"1\",\"show_page_title\":\"1\",\"show_footer_widgets\":\"1\",\"show_copyright\":\"1\",\"theme\":null,\"footer_theme\":\"dark\",\"header_show_topbar\":\"0\",\"header_show_logo\":\"1\",\"header_show_site_title\":\"0\",\"header_show_site_description\":\"0\",\"header_show_banner\":\"0\",\"header_show_menu\":\"1\",\"header_select_menu\":\"1\",\"menu_animation\":\"slide-up\",\"menu_position\":null,\"header_banner_content\":null,\"pagetitle_show_title\":\"1\",\"pagetitle_show_description\":\"1\",\"pagetitle_content_alignment\":\"center\",\"slider_show_slider\":\"1\",\"slider_select_slider\":\"9\",\"copyright_content\":\"\\u00a92017 <a href=\\\"http:\\\/\\\/oxoitsolutions.com\\\" target=\\\"_blank\\\">OXO IT SOLUTIONS PVT. LTD.<\\\/a> All rights reserved. Built with <a href=\\\"https:\\\/\\\/aioneframework.com\\\" target=\\\"_blank\\\">Aione Framework<\\\/a>.\",\"copyright_theme\":\"dark\",\"custom_content_head\":null,\"custom_css\":null,\"custom_js\":null,\"widget_enabled\":\"0\",\"footer_widgets\":[{\"widget_title\":\"About\",\"widget_content\":\"<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"index.html\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Home\\\">Home\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"about.html\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"About\\\">About\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/aioneframework.com\\\/docs\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Docs\\\">Docs<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/aioneframework.com\\\/play\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Play\\\">Play<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/aioneframework.com\\\/builder\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Builder\\\">Builder\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\"},{\"widget_title\":\"Ventures\",\"widget_content\":\"<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/oxosolutions.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"OXO Solutions\\\">OXO Solutions<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/makemyfolio.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"MakeMyFolio\\\">MakeMyFolio\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/darlic.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Darlic\\\">Darlic<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/adminpie.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"AdminPie\\\">AdminPie\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/populaa.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Populaa\\\">Populaa\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\"},{\"widget_title\":\"Initiatives\",\"widget_content\":\"<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/dkranti.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Dkranti\\\">Dkranti<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/darlic.org\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Darlic.org\\\">Darlic.org\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/punjabimaaboli.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Punjabi Maa Boli\\\">Punjabi Maa Boli<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/sikhvichardhara.com\\\/\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Sikh Vichardhara\\\">Sikh Vichardhara\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\"},{\"widget_title\":\"Tools\",\"widget_content\":\"<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"http:\\\/\\\/aioneframework.com\\\/resources\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"Resources\\\">Resources<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"\\\">\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"\\\"><\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\\r\\n\\t\\t\\t\\t\\t<li class=\\\"aione-nav-item level0\\\">\\r\\n\\t\\t\\t\\t\\t\\t<a href=\\\"\\\" target=\\\"_blank\\\">\\r\\n\\t\\t\\t\\t\\t\\t<span class=\\\"nav-item-text\\\" data-hover=\\\"\\\">\\r\\n\\t\\t\\t\\t\\t\\t<\\\/span>\\r\\n\\t\\t\\t\\t\\t\\t<\\\/a>\\r\\n\\t\\t\\t\\t\\t<\\\/li>\"}],\"enable_widget\":\"0\",\"topbar_left_widgets\":[{\"widget_content\":\"OXO SOLUTIONS\"}],\"topbar_right_widgets\":[{\"widget_content\":\"<i class=\\\"fa fa-facebook mr-5 aione-float-right\\\"><\\\/i><i class=\\\"fa fa-google mr-5 aione-float-right\\\"><\\\/i>\"}]}",
+    "type": "web",
+    "created_at": "2017-10-26 17:22:17",
+    "updated_at": "2018-05-03 22:27:50"
+  },
+  {
+    "id": "65",
+    "key": "user_registration_admin_notification_status",
+    "value": "0",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "66",
+    "key": "user_registration_admin_notification_roles",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "67",
+    "key": "user_registration_admin_notification_users",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "68",
+    "key": "user_registration_admin_notification_template",
+    "value": "5",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2018-02-09 15:35:59"
+  },
+  {
+    "id": "69",
+    "key": "from_email",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "70",
+    "key": "enable_forgot_password",
+    "value": "0",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "71",
+    "key": "forgot_password_template",
+    "value": "",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "72",
+    "key": "user_notification_status",
+    "value": "1",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "73",
+    "key": "user_notification_template",
+    "value": "5",
+    "type": "web",
+    "created_at": "2017-11-13 11:04:19",
+    "updated_at": "2017-11-13 11:04:19"
+  },
+  {
+    "id": "77",
+    "key": "role_to_show_in_behalf_of",
+    "value": "[\"1\",\"2\"]",
+    "type": "",
+    "created_at": "2017-12-27 16:10:52",
+    "updated_at": "2017-12-27 16:10:52"
+  },
+  {
+    "id": "78",
+    "key": "who_can_view_behalf_of",
+    "value": "[\"1\",\"2\"]",
+    "type": "",
+    "created_at": "2017-12-27 16:10:52",
+    "updated_at": "2017-12-27 16:10:52"
+  },
+  {
+    "id": "79",
+    "key": "survey_update_date",
+    "value": "2018-01-26",
+    "type": "app",
+    "created_at": "2018-01-11 16:42:31",
+    "updated_at": "2018-01-11 16:42:31"
+  },
+  {
+    "id": "80",
+    "key": "app_version",
+    "value": "4.2.3",
+    "type": "app",
+    "created_at": "2018-01-11 16:42:31",
+    "updated_at": "2018-01-11 16:42:31"
+  },
+  {
+    "id": "82",
+    "key": "attendance",
+    "value": "0",
+    "type": "",
+    "created_at": "2018-01-18 12:06:52",
+    "updated_at": "2018-01-18 12:06:52"
+  },
+  {
+    "id": "83",
+    "key": "dashboard_widget",
+    "value": "18",
+    "type": "",
+    "created_at": "2018-01-18 12:06:52",
+    "updated_at": "2018-01-18 13:47:02"
+  },
+  {
+    "id": "90",
+    "key": "widget_settings",
+    "value": "{\"33\":{\"size\":\"1-1\"},\"32\":{\"size\":\"1-1\"},\"48\":{\"size\":\"1-1\"},\"80\":{\"size\":\"1-2\"},\"85\":{\"size\":\"1-1\",\"selected_chart\":{\"visualization\":null,\"chart\":null}}}",
+    "type": "web",
+    "created_at": "2018-01-18 17:30:36",
+    "updated_at": "2018-04-23 10:00:45"
+  },
+  {
+    "id": "91",
+    "key": "attendance_sources",
+    "value": "[\"manual\",\"machine\",\"system\"]",
+    "type": "web",
+    "created_at": "2018-02-03 13:50:50",
+    "updated_at": "2018-02-06 10:09:50"
+  },
+  {
+    "id": "122",
+    "key": "bg_image",
+    "value": "",
+    "type": "",
+    "created_at": "2018-05-03 16:43:30",
+    "updated_at": "2018-05-03 16:43:30"
+  }
+]

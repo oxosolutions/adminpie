@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use stdClass;
 use Session;
 use Artisan;
+use File;
 use Hash;
 use Auth;
 use DB;
@@ -189,8 +190,16 @@ class OrganizationController extends Controller
         return view('admin.organization.edit', ['org_data' => $org_data, 'modules' => $modules]);
     }
 
-    protected function putDefaultOrganizationData(){
-
+    protected function putDefaultOrganizationData($organizationid){
+        $path = storage_path().'/seeder/';
+        $files = File::allFiles($path);
+        foreach($files as $key => $file){
+            $name = explode('.',$file->getFilename())[0];
+            $file = $path.$file->getFilename();
+            $content = File::get($file);
+            DB::table($organizationid.'_'.$name)->delete();
+            DB::table($organizationid.'_'.$name)->insert(json_decode($content, true));
+        }
     }
 
 
@@ -201,8 +210,8 @@ class OrganizationController extends Controller
         ];
         $this->validate($request, $rule);
         Session::put('group_id', $request->group_id);
-        $this->global_create_organization($request);
-        $this->putDefaultOrganizationData();
+        $oragnizationID = $this->global_create_organization($request);
+        $this->putDefaultOrganizationData($oragnizationID);   
         return redirect()->route('list.organizations');
     }
 
@@ -226,11 +235,13 @@ class OrganizationController extends Controller
             $request['modules'] = json_encode($request['modules']);
         }
         try {
-            DB::transaction(function () use ($request, $checkUserExist) {
+            $orgID = null;
+            DB::transaction(function () use ($request, $checkUserExist, &$orgID) {
                 $org = new ORG();
                 $org->fill($request->all());
                 $org->save();
                 $org_id = $org->id;
+                $orgID = $org_id;
                 $active_code = $org_id * 576;
                 ORG::where('id', $org_id)->update(['active_code' => $active_code]);
                 Session::put('organization_id', $org->id);
@@ -270,6 +281,7 @@ class OrganizationController extends Controller
                 }
                 Session::flash('success', lang('admin.organization_create_success'));
             });
+            return $orgID;
             // return $org_id.' has beenn created';
         } catch (Exception $e) {
             Session::flash('error', lang('admin.organization_create_error'));

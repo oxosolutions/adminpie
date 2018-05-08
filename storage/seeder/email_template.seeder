@@ -1,0 +1,68 @@
+[
+  {
+    "id": "1",
+    "name": "tjasgdfhags",
+    "content": "hhjadsgfhjag",
+    "subject": "hhjsagdhg",
+    "slug": "gshdg",
+    "status": "0",
+    "order": "0",
+    "created_at": "2017-08-04 12:19:51",
+    "updated_at": "2017-08-04 12:19:51"
+  },
+  {
+    "id": "2",
+    "name": "sansgah",
+    "content": "jhsdhahd",
+    "subject": "hgdhsdh",
+    "slug": "hgshdh",
+    "status": "0",
+    "order": "0",
+    "created_at": "2017-08-04 12:20:02",
+    "updated_at": "2017-08-04 12:20:02"
+  },
+  {
+    "id": "3",
+    "name": "ssdnfshd",
+    "content": "hhdsfh",
+    "subject": "qhhsdhdfh",
+    "slug": "qhhdfhd",
+    "status": "0",
+    "order": "0",
+    "created_at": "2017-08-04 12:20:12",
+    "updated_at": "2017-08-04 12:20:12"
+  },
+  {
+    "id": "4",
+    "name": "First Template",
+    "content": "<div>\r\n          This is content\r\n    <\/div>",
+    "subject": "Register User Email",
+    "slug": "registeremail",
+    "status": "0",
+    "order": "0",
+    "created_at": "2017-08-09 06:13:52",
+    "updated_at": "2017-08-09 06:13:52"
+  },
+  {
+    "id": "5",
+    "name": "Welcome to OXO Solutions",
+    "content": "<table width=\"600\" cellpadding=\"0\" cellspacing=\"0\" class=\"wrap\">\r\n       <tr>\r\n            <td align=\"center\">\r\n\r\n           <table cellpadding=\"0\" cellspacing=\"0\">\r\n         <tr>\r\n                <td align=\"left\" valign=\"middle\">\r\n                   <table cellpadding=\"0\" cellspacing=\"0\">\r\n                 <tr>\r\n                        <td align=\"center\">\r\n                           <h1><single label=\"Headline\">Welcome To [organization_name]<\/single><\/h1>\r\n                           <p>You have successfully registerd with [organization_name]<\/p>\r\n                         <h4><single label=\"Intro Sentence\">\r\n                             Email: [registered_email]\r\n                             Password: [password_status]\r\n                         <\/single><\/h4>\r\n                     <\/td>\r\n                   <\/tr>\r\n                   <\/table>\r\n                <\/td>\r\n           <\/tr>\r\n           <\/table>\r\n            <\/td>\r\n       <\/tr>\r\n       <\/table>",
+    "subject": "Welcome to OXO Solutions",
+    "slug": "welcome_to_oxo_solutions",
+    "status": "0",
+    "order": "0",
+    "created_at": "2018-05-03 16:35:56",
+    "updated_at": "2018-05-03 16:35:56"
+  },
+  {
+    "id": "6",
+    "name": "Invoice",
+    "content": "<html>\r\n\t<head>\r\n\t\t<meta charset=\"utf-8\">\r\n\t\t<title>Invoice<\/title>\r\n\t\t<link rel=\"stylesheet\" href=\"style.css\">\r\n\t\t<link rel=\"license\" href=\"https:\/\/www.opensource.org\/licenses\/mit-license\/\">\r\n\t\t<script src=\"script.js\"><\/script>\r\n\t\t<style>\r\n\t\t    \r\n\t\t<\/style>\r\n\t<\/head>\r\n\t<body>\r\n\t\t<header>\r\n\t\t\t<h1>Invoice<\/h1>\r\n\t\t\t<address contenteditable>\r\n\t\t\t\t<p>Jonathan Neal<\/p>\r\n\t\t\t\t<p>101 E. Chapman Ave<br>Orange, CA 92866<\/p>\r\n\t\t\t\t<p>(800) 555-1234<\/p>\r\n\t\t\t<\/address>\r\n\t\t\t<span><img alt=\"\" src=\"http:\/\/www.jonathantneal.com\/examples\/invoice\/logo.png\"><input type=\"file\" accept=\"image\/*\"><\/span>\r\n\t\t<\/header>\r\n\t\t<article>\r\n\t\t\t<h1>Recipient<\/h1>\r\n\t\t\t<address contenteditable>\r\n\t\t\t\t<p>Some Company<br>c\/o Some Guy<\/p>\r\n\t\t\t<\/address>\r\n\t\t\t<table class=\"meta\">\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th><span contenteditable>Invoice #<\/span><\/th>\r\n\t\t\t\t\t<td><span contenteditable>101138<\/span><\/td>\r\n\t\t\t\t<\/tr>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th><span contenteditable>Date<\/span><\/th>\r\n\t\t\t\t\t<td><span contenteditable>January 1, 2012<\/span><\/td>\r\n\t\t\t\t<\/tr>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th><span contenteditable>Amount Due<\/span><\/th>\r\n\t\t\t\t\t<td><span id=\"prefix\" contenteditable>$<\/span><span>600.00<\/span><\/td>\r\n\t\t\t\t<\/tr>\r\n\t\t\t<\/table>\r\n\t\t\t<table class=\"inventory\">\r\n\t\t\t\t<thead>\r\n\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t<th><span contenteditable>Item<\/span><\/th>\r\n\t\t\t\t\t\t<th><span contenteditable>Description<\/span><\/th>\r\n\t\t\t\t\t\t<th><span contenteditable>Rate<\/span><\/th>\r\n\t\t\t\t\t\t<th><span contenteditable>Quantity<\/span><\/th>\r\n\t\t\t\t\t\t<th><span contenteditable>Price<\/span><\/th>\r\n\t\t\t\t\t<\/tr>\r\n\t\t\t\t<\/thead>\r\n\t\t\t\t<tbody>\r\n\t\t\t\t\t<tr>\r\n\t\t\t\t\t\t<td><a class=\"cut\">-<\/a><span contenteditable>Front End Consultation<\/span><\/td>\r\n\t\t\t\t\t\t<td><span contenteditable>Experience Review<\/span><\/td>\r\n\t\t\t\t\t\t<td><span data-prefix>$<\/span><span contenteditable>150.00<\/span><\/td>\r\n\t\t\t\t\t\t<td><span contenteditable>4<\/span><\/td>\r\n\t\t\t\t\t\t<td><span data-prefix>$<\/span><span>600.00<\/span><\/td>\r\n\t\t\t\t\t<\/tr>\r\n\t\t\t\t<\/tbody>\r\n\t\t\t<\/table>\r\n\t\t\t<a class=\"add\">+<\/a>\r\n\t\t\t<table class=\"balance\">\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th><span contenteditable>Total<\/span><\/th>\r\n\t\t\t\t\t<td><span data-prefix>$<\/span><span>600.00<\/span><\/td>\r\n\t\t\t\t<\/tr>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th><span contenteditable>Amount Paid<\/span><\/th>\r\n\t\t\t\t\t<td><span data-prefix>$<\/span><span contenteditable>0.00<\/span><\/td>\r\n\t\t\t\t<\/tr>\r\n\t\t\t\t<tr>\r\n\t\t\t\t\t<th><span contenteditable>Balance Due<\/span><\/th>\r\n\t\t\t\t\t<td><span data-prefix>$<\/span><span>600.00<\/span><\/td>\r\n\t\t\t\t<\/tr>\r\n\t\t\t<\/table>\r\n\t\t<\/article>\r\n\t\t<aside>\r\n\t\t\t<h1><span contenteditable>Additional Notes<\/span><\/h1>\r\n\t\t\t<div contenteditable>\r\n\t\t\t\t<p>A finance charge of 1.5% will be made on unpaid balances after 30 days.<\/p>\r\n\t\t\t<\/div>\r\n\t\t<\/aside>\r\n\t<\/body>\r\n<\/html>",
+    "subject": "invoice",
+    "slug": "invoice",
+    "status": "0",
+    "order": "0",
+    "created_at": "2018-01-13 15:41:15",
+    "updated_at": "2018-01-13 15:41:15"
+  }
+]
