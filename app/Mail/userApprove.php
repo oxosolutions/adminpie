@@ -60,7 +60,7 @@ class userApprove extends Mailable
                 $from = 'oxosolutionsindia@gmail.com';
             }
 
-        return $this->from($from)
+        return $this->from(env('MAIL_EMAIL'),env('MAIL_NAME'))
                 ->subject($emailTemplate['subject']) 
                 ->view('organization.login.signup-email-template')
                 ->with(['emailTemplate' => $emailTemplate,'emailLayout' => $emailLayout ,'userEmail' => $userEmail]);
