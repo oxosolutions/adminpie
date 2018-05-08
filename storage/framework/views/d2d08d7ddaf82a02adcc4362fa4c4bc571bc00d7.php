@@ -34,7 +34,7 @@
 					<?php endif; ?>
 				<?php endif; ?>
 
-			<button type="submit">Register1</button>
+			<button type="submit">Register</button>
 			<?php echo Form::close(); ?>
 
 		<?php else: ?>

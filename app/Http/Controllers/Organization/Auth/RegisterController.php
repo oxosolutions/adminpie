@@ -241,11 +241,12 @@ class RegisterController extends Controller
             $rawData = view('organization.login.signup-email-template')->with([
                         'emailTemplate' => $templateAndLayout['template'],
                         'emailLayout' => $templateAndLayout['layout']]
-                )->render();
-            Mail::send([], [], function ($message) use ($gropUserModel, $request) {
-                $message->to($gropUserModel->email)->subject('New user Registered!')
+                )->compileShortcodes()->render();
+            $this->registerShorcodes($request->email, false, '123');
+            Mail::send([], [], function ($message) use ($gropUserModel, $request, $templateAndLayout, $rawData) {
+                $message->to($gropUserModel->email)->subject($templateAndLayout['template']['subject'])
                     ->from(env('MAIL_EMAIL'), env('MAIL_FROM'))
-                    ->setBody('<h5>New User Registered with Email: ' . $request->email . '</h5>', 'text/html');
+                    ->setBody($rawData, 'text/html');
             });
         }
     }

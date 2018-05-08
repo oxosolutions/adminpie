@@ -10,7 +10,6 @@ $login_theme = @get_organization_meta('login_theme');
 
 
 
-
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,14 +29,14 @@ $login_theme = @get_organization_meta('login_theme');
 	<?php if(@$bg_image): ?>	
 		<style type="text/css">
 			.login-background, .login-theme-darlic .login-background{
-				background: url( <?php echo e(asset($bg_image)); ?> );
+				background: url( <?php echo e(asset(@$bg_image)); ?> );
 			}
 		</style>
 	<?php endif; ?>
 	
 </head>
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-<?php echo e(@$login_theme); ?> login-style-<?php echo e(@$login_style); ?> 11">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-<?php echo e(@$login_theme); ?> login-style-<?php echo e(@$login_style); ?>">
 		<div class="aione-row">
 			<div id="aione_main" class="aione-main">
 				<div class="aione-row">
@@ -47,10 +46,8 @@ $login_theme = @get_organization_meta('login_theme');
 							</div>
 							<div class="login-wrapper" >
 								<div class="aione-row" >
-									<div class="login-desc">
-										<?php echo $__env->make('common.auth-header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-									</div>
 									<div class="login-form">
+										<?php echo $__env->make('common.auth-header', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 										<?php echo $__env->yieldContent('content'); ?>	
 									</div>
 								</div>

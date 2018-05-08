@@ -39,7 +39,7 @@
 					@endif
 				@endif
 
-			<button type="submit">Register1</button>
+			<button type="submit">Register</button>
 			{!! Form::close() !!}
 		@else
 			<div class="aione-border font-size-20 aione-align-center mv-100" style="padding: 20px;">

@@ -10,7 +10,6 @@ $login_theme = @get_organization_meta('login_theme');
 
 
 
-
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -30,14 +29,14 @@ $login_theme = @get_organization_meta('login_theme');
 	@if(@$bg_image)	
 		<style type="text/css">
 			.login-background, .login-theme-darlic .login-background{
-				background: url( {{ asset($bg_image) }} );
+				background: url( {{ asset(@$bg_image) }} );
 			}
 		</style>
 	@endif
 	
 </head>
 <body>
-	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme}} login-style-{{@$login_style}} 11">
+	<div id="aione_wrapper" class="aione-wrapper aione-layout-wide no-header no-sidebar login-theme-{{@$login_theme}} login-style-{{@$login_style}}">
 		<div class="aione-row">
 			<div id="aione_main" class="aione-main">
 				<div class="aione-row">
@@ -47,10 +46,8 @@ $login_theme = @get_organization_meta('login_theme');
 							</div>
 							<div class="login-wrapper" >
 								<div class="aione-row" >
-									<div class="login-desc">
-										@include('common.auth-header')
-									</div>
 									<div class="login-form">
+										@include('common.auth-header')
 										@yield('content')	
 									</div>
 								</div>
