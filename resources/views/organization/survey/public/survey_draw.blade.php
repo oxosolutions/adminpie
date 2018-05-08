@@ -203,7 +203,7 @@
                                             {{ $section['title'] }}
                                         </div>
                                         <div class="font-size-13 line-height-20">
-                                            {{ $section['title'] }}
+                                            {!! $section['description'] !!}
                                         </div>
                                         <div class="indicater-wrapper" >
                                             <div class="bg-light-blue bg-lighten-4 indicater">
@@ -229,7 +229,7 @@
                                     {{ @$data['sections'][$sectionIndex]['title'] }}
                                     <div class="grey darken-1">
                                         
-                                     {{ $section['description'] }}
+                                     {!! @$data['sections'][$sectionIndex]['description'] !!}
                                     </div>
                                 </div>
                                 {!! Form::model(@$prefill) !!}

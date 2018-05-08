@@ -2,7 +2,6 @@
 <html lang="en">
 <?php 
 
-
 $user_id = @get_user_id();
 if(@$user_id !== null){
 	$user_roles_array = @get_user_roles();
@@ -20,7 +19,18 @@ if(@$user_id !== null){
 }
 
 
-$is_page = $is_post = $is_survey = $is_visualization = 0; 
+$is_login = $is_page = $is_post = $is_survey = $is_visualization = 0; 
+$login_page_class='';
+if(
+	request()->route()->uri == "login"
+	|| request()->route()->uri == "register"
+	|| request()->route()->uri == "forgot-password"
+	|| request()->route()->uri == "create/password/{token}"
+	){
+	$is_login = 1;
+	$login_style = @get_organization_meta('login_style');
+	$login_page_class = 'login-page';
+}
 
 if(request()->route()->uri == "page/{slug}"){
 	$is_page = 1;
@@ -98,7 +108,7 @@ if(@$is_visualization){
 			<?php endif; ?>
 
 
-			<div id="aione_main" class="aione-main ">
+			<div id="aione_main" class="aione-main <?php echo e(@$login_page_class); ?> <?php echo e(@$login_style); ?>">
 				<div class="aione-row">
 					<div id="aione_content" class="aione-content" >
 						<div class="aione-row">
