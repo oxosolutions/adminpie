@@ -1,4 +1,16 @@
-@extends('layouts.login')
+@php
+    $layout = 'layouts.front';
+    $design_settings = @get_design_settings();
+    if(@$design_settings != null && !empty($design_settings)){
+	    $layout = 'layouts.front';
+
+	    dump($design_settings);
+    }
+
+@endphp
+
+
+@extends($layout)
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')

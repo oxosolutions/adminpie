@@ -1,3 +1,12 @@
+<?php 
+    $layout = 'layouts.front';
+    $login_theme = @get_organization_meta('login_theme');
+    if(@$login_theme == 'front'){
+	    $layout = 'layouts.front';
+    }
+ ?>
+
+
 <?php $__env->startSection('content'); ?>
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -50,4 +59,4 @@
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.login', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make($layout, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

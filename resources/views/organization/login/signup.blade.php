@@ -1,5 +1,13 @@
+@php
+    $layout = 'layouts.front';
+    $login_theme = @get_organization_meta('login_theme');
+    if(@$login_theme == 'front'){
+	    $layout = 'layouts.front';
+    }
+@endphp
 
-@extends('layouts.login')
+@extends($layout)
+
 @section('content')
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')

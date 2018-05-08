@@ -7,7 +7,7 @@ $user_id = @get_user_id();
 if(@$user_id !== null){
 	$user_roles_array = @get_user_roles();
 	$user_roles = array();
-	if(!empty($user_roles_array)){
+	if(!empty(@$user_roles_array)){
 		foreach($user_roles_array as $user_role){
 			$user_roles[] = $user_role;
 		}
@@ -31,10 +31,10 @@ if(request()->route()->uri == "survey/{token}"){
 if(request()->route()->uri == "visualization/view/{id}"){
 	$is_visualization = 1;
 }
-if($is_visualization){
+if(@$is_visualization){
 	$current_id = request()->route()->parameters()['id'];
 	$settings = App\Model\Organization\VisualizationMeta::where('visualization_id',$current_id)->get()->toArray();
-	if($settings != null){
+	if(@$settings != null){
 		$visual_settings = [];
 		foreach ($settings as $key => $value) {
 			$visual_settings[$value['key']] = $value['value'];

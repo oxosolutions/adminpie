@@ -727,6 +727,15 @@ class SurveyController extends Controller
                 Session::put('completed_sections', $completedSections);
             }
         } else {
+            $completedSections = Session::get('completed_sections');
+            if ($completedSections == null) {
+                $completedSections = [];
+                $completedSections[] = $sectionIndex;
+                Session::put('completed_sections', $completedSections);
+            } else {
+                $completedSections[] = $sectionIndex;
+                Session::put('completed_sections', $completedSections);
+            }
             $nextSection = 'finish';
         }
         return ['status' => true, 'errors' => [], 'next_section' => $nextSection];
