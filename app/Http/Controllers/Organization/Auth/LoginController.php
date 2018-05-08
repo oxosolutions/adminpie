@@ -273,6 +273,9 @@ class LoginController extends Controller
                             $message->subject('Reset Password');
                             $message->to($to_email);
                         });
+                    }else{
+                        Session::flash('error','Forget password template not found!');
+                        return back();
                     }
                 }
             }else{
