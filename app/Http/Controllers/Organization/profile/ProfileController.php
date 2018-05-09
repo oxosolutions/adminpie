@@ -145,12 +145,12 @@ class ProfileController extends Controller
     protected function validateUpdatePassword($request){
 
     	$rules = [
-    			'old_password' => 'required',
-    			'new_password' => 'required',
-    			'confirm_password' => 'required|same:new_password'
-    	];
+                'old_password' => 'required',
+                'new_password' => 'required|string|min:8|max:30|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+                'confirm_password' => 'required|same:new_password'
+        ];
 
-    	$this->validate($request, $rules);
+        $this->validate($request , $rules,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
     }
 
     /**

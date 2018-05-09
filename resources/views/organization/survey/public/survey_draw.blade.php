@@ -163,7 +163,7 @@
             {{-- All Form Header Settings --}}
             @if( (@$survey_form_settings->form_show_title && !empty($form_title)) || (@$survey_form_settings->form_show_description && !empty($survey_model->form_description)))
                 <div id="aione_form_header" class="aione-form-header">
-                    <div class="aione-row">
+                    <div class="aione-row p-10 m-10 bg-white">
                         @if(@$survey_form_settings->form_show_title && !empty($survey_model->form_title))
                             <h1 class="aione-form-title aione-align-{{@$survey_form_settings->form_title_align}}">{!! @$survey_model->form_title !!}</h1>
                         @endif

@@ -307,11 +307,11 @@ class LoginController extends Controller
 
     protected function validateResetPassword($request){
         $rules = [
-            'password' => 'required|min:8|confirmed',
+            'password' => 'required|string|min:8|max:30|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
             'password_confirmation' => 'required'
         ];
 
-        $this->validate($request,$rules);
+        $this->validate($request , $rules,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
     }
 
     protected function setGroupId(){

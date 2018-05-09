@@ -45,24 +45,33 @@ class UsersController extends Controller
     **/
     public function store(Request $request)
     {
+
         $emailValidate = [
             'email'      => 'required|email',
+            'role' => 'required',
+            'password' => 'required|string|min:8|max:30|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
         ];
-        $this->validate($request , $emailValidate);
+        $this->validate($request , $emailValidate,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
         $model = org_user::where(['email'=>$request->email])->first();
         if($model != null){
             foreach($request->role as $key => $role){
-                $userSlug = UsersRole::find($role)->slug;
-                $org_user =  new User();
-                $org_user->user_id =  $model->id;
-                $org_user->user_type = $userSlug;
-                $org_user->status = 1;
-                $org_user->save();
+                $userRoleMapping = UserRoleMapping::where('user_id',$model->id)->where('role_id',$role)->first();
+                if($userRoleMapping == null){
+                    $userRole = UsersRole::find($role);
+                    $userSlug = $userRole->slug;
+                    $org_user =  new User();
+                    $org_user->user_id =  $model->id;
+                    $org_user->user_type = $userSlug;
+                    $org_user->status = 1;
+                    $org_user->save();
+                }else{
+                    Session::flash('error','User with same role already exists!');
+                    return back();
+                }
             }
             $user_id = $model->id;
         }else{
             $rules = ['name' => 'required', 'email' =>  'required|email', 'password' => 'required|min:8', 'confirm_password'=>'required|same:password'];
-            $this->validate($request,$rules);
             $user = org_user::createUser($request->toArray());
             $user_id = $user->id;
             $org_user =  new User();
@@ -315,10 +324,10 @@ class UsersController extends Controller
         $model = org_user::where('id',$request->user_id)->first();
         $check = Hash::check( Hash::make($request->password) , $model->password);
         $validate = [
-            'new_password'      => 'required|min:6',
-            'confirm_password'  => 'required|same:new_password|min:6'
+            'new_password'      => 'required|string|min:8|max:30|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+            'confirm_password'  => 'required|same:new_password|min:8'
         ];
-        $this->validate($request , $validate);
+        $this->validate($request , $validate,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
         $model = org_user::where('id',$request->user_id)->update(['password' => Hash::make($request->new_password) , 'app_password' => $request->new_password]);
         if($model){
             Session::flash('success','Password Change Successfully');
