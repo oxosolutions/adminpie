@@ -197,10 +197,10 @@ class UsersController extends Controller
           public function changePassword(Request $request)
           {
             $validate = [
-                            'new_password'      => 'required|min:6',
-                            'confirm_password'  => 'required|same:new_password|min:6'
+                            'new_password'      => 'required|string|min:8|max:30|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
+                            'confirm_password'  => 'required|same:new_password|min:8'
                         ];
-            $this->validate($request , $validate);
+            $this->validate($request , $validate,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
             $new_pass = Hash::make($request->new_password);
 
             $model = GroupUsers::where('id',$request->user_id)->update(['password' => $new_pass , 'app_password' => $request->new_password]);

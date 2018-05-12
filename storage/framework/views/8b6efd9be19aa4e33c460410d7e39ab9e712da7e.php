@@ -133,6 +133,7 @@ fill:#5ca56a;
 /***************************************
 CUSTOM MAP THEME GREEN
 ***************************************/
+
 .aione-wrapper.aione-theme-ggreen .aione-map-wrapper .group {
     fill: #cdcac5; 
 }
@@ -480,6 +481,7 @@ AIONE LOADER
 		$.each(map_data, function(key, value){
       if(value != undefined && value != ''){
         var path = value.split('=');
+		console.log(" PATH = "+path);
         $('.aione-map-wrapper').find('#'+path[0]).addClass('active').attr('data-tooltip',path[1]).attr('fill',path[2]);
       }
 		});

@@ -72,10 +72,10 @@ class GroupController extends Controller
         $rules = [
 
             'email' => 'required|unique:group_admins|email',
-            'password' => 'required'
+            'password' => 'required|string|min:8|max:30|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
         ];
 
-        $this->validate($request,$rules);
+        $this->validate($request , $rules,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
     }
     public function store(Request $request)
     {

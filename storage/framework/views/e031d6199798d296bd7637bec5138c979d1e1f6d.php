@@ -163,12 +163,12 @@
             
             <?php if( (@$survey_form_settings->form_show_title && !empty($form_title)) || (@$survey_form_settings->form_show_description && !empty($survey_model->form_description))): ?>
                 <div id="aione_form_header" class="aione-form-header">
-                    <div class="aione-row">
+                    <div class="aione-row p-10 m-10 bg-white">
                         <?php if(@$survey_form_settings->form_show_title && !empty($survey_model->form_title)): ?>
-                            <h1 class="aione-form-title aione-align-<?php echo e(@$survey_form_settings->form_title_align); ?>"><?php echo e($survey_model->form_title); ?></h1>
+                            <h1 class="aione-form-title aione-align-<?php echo e(@$survey_form_settings->form_title_align); ?>"><?php echo @$survey_model->form_title; ?></h1>
                         <?php endif; ?>
                         <?php if(@$survey_form_settings->form_show_description && !empty($survey_model->form_description)): ?>
-                            <h2 class="aione-form-description aione-align-<?php echo e(@$survey_form_settings->form_description_align); ?>"><?php echo e($survey_model->form_description); ?></h2>
+                            <h2 class="aione-form-description aione-align-<?php echo e(@$survey_form_settings->form_description_align); ?>"><?php echo @$survey_model->form_description; ?></h2>
                         <?php endif; ?>
                     </div> <!-- .aione-row -->
                 </div> <!-- .aione-form-header -->
@@ -204,7 +204,7 @@
 
                                         </div>
                                         <div class="font-size-13 line-height-20">
-                                            <?php echo e($section['title']); ?>
+                                            <?php echo $section['description']; ?>
 
                                         </div>
                                         <div class="indicater-wrapper" >
@@ -230,6 +230,11 @@
                                 <div class="aione-border-bottom pv-20 ph-30 light-blue darken-2 font-size-18 bg-white">
                                     <?php echo e(@$data['sections'][$sectionIndex]['title']); ?>
 
+                                    <div class="grey darken-1">
+                                        
+                                     <?php echo @$data['sections'][$sectionIndex]['description']; ?>
+
+                                    </div>
                                 </div>
                                 <?php echo Form::model(@$prefill); ?>
 

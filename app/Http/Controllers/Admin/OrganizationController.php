@@ -34,7 +34,7 @@ class OrganizationController extends Controller
         'slug' => 'bail|required|unique:global_organizations|regex:/^[a-z0-9-]+$/|min:3|max:300',
         'primary_domain' => 'unique:global_organizations',//pendinggg
         'name' => 'required|unique:global_organizations|max:300',
-        'password' => 'required|min:8',
+        'password' => 'required|string|min:8|max:30|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
         'confirm_password' => 'required|same:password',
         'group_id' => 'required'
     ];
@@ -230,7 +230,7 @@ class OrganizationController extends Controller
             unset($validateFields['password']);
             unset($validateFields['confirm_password']);
         }
-        $this->validate($request, $validateFields);
+        $this->validate($request , $validateFields,['password.regex'=>'Password contain at least one number, one special character and one upper case character!']);
         if (!empty($request['modules'])) {
             $request['modules'] = json_encode($request['modules']);
         }

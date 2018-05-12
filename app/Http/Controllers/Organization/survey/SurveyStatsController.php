@@ -594,7 +594,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->skip(5600)->take(200)->get();
+            $result = $Query->skip(2000)->take(200)->get();
         }else{
             $result = $Query->paginate(50);
         }

@@ -32,4 +32,8 @@ Route::get('/dataset/{active_code}/{token}' , [ 'uses' =>'Organization\dataset\D
 
 Route::group(['prefix'=>'v2'], function(){
     Route::post('/survey_api',['uses'=>'Api\SurveyController@listAllSurveys']); 
+
+    Route::post('/update/password',['uses'=>'Api\UserController@updatePassword']);
+    Route::post('/update/profile',['uses'=>'Api\UserController@updateProfile']);
+
 });

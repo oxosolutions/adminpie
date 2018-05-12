@@ -201,7 +201,7 @@ class LoginController extends Controller
     public function forgotPassword()
     {
         $settings = OrganizationSetting::all();
-        return view('organization.login.forgot-password',compact('settings'));
+        return view('organization.login.forgot-password',compact('settings'))->compileShortcodes();
     }
      public function forgotPasswordv1()
     {
@@ -307,7 +307,7 @@ class LoginController extends Controller
 
     protected function validateResetPassword($request){
         $rules = [
-            'password' => 'required|string|min:8|max:30|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/'
+            'password' => 'required|string|min:8|max:30|confirmed|regex:/^(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             'password_confirmation' => 'required'
         ];
 

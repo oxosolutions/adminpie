@@ -235,7 +235,9 @@ class RegisterController extends Controller
         if($templateAndLayout != false){
             $userModel = User::with(['user_role_map' => function ($query) {
                 $query->where('role_id', 1);
-            }])->has('user_role_map')->first();
+            }])->Wherehas('user_role_map',function($query){
+                $query->where('role_id',1);
+            })->first();
             $gropUserModel = GroupUsers::find($userModel->user_id);
             $gropUserModel->email;
             $rawData = view('organization.login.signup-email-template')->with([
