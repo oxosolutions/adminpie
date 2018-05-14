@@ -263,7 +263,6 @@ class SurveyStatsController extends Controller
     }
 
     protected function reArrangeModelOrder($model, $surveyModel, $checkBoxSlugs){
-
         $fields = [];
         $fields[0] = 'id';
         $repeaterSlugs = [];
@@ -292,6 +291,9 @@ class SurveyStatsController extends Controller
                     continue;
                 }
             }
+            $modelData[$key] = array_map(function($v){
+                return (is_null($v)) ? 994 : $v;
+            },$modelData[$key]);
             $model[$key] = (object)$modelData[$key];
         }
         return ['model'=>$model,'maximum_repeaters'=>$collectRepeatermaximums];
@@ -515,9 +517,9 @@ true, $append_if_not_found = false ) {
         $objectArray = [];
         $index = 0;
         $maximumRepeaterCollection = array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection);
-        if($jsonDecodedData == null){
+        if($jsonDecodedData == null || $jsonDecodedData == 994){
             $jsonDecodedData = [array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection)];
-        }
+        }        
         foreach($jsonDecodedData as $k => $value){
             $value = array_merge($maximumRepeaterCollection,$value);
             $tempArray = [];
@@ -545,22 +547,39 @@ true, $append_if_not_found = false ) {
             $dataValue = [];
             foreach($value as $modelKey => $modelValue){
                 if(array_key_exists($modelKey, $checkBoxSlugs)){
+                    $checkForAllNo = [];
                     foreach($checkBoxSlugs[$modelKey] as $k => $slug){
-                        $filledValue = json_decode($modelValue,true);
+                        $filledValue = json_decode($modelValue,true);     
                         if(is_array($filledValue)){
                             if(@$filledValue[$k] == true){
                                 $dataValue[$modelKey.'_'.$k] = 'Yes';
                             }else{
                                 $dataValue[$modelKey.'_'.$k] = 'No';
+                                $checkForAllNo[] = 'No';
                             }
-                        }else{
-                            $dataValue[$modelKey.'_'.$k] = ($modelValue == $k)?'Yes':'No';
+                        }elseif($filledValue == null){
+                            $dataValue[$modelKey.'_'.$k] = 994;
+                        }else{        
+                            
+                            if($modelValue == $k){
+                                $dataValue[$modelKey.'_'.$k] = 'Yes';
+                            }elseif($modelValue == 994){
+                                $dataValue[$modelKey.'_'.$k] = 994;
+                            }else{
+                                $dataValue[$modelKey.'_'.$k] = 'No';
+                            }
                         }
                     }
+                    if(count($checkForAllNo) == count($checkBoxSlugs[$modelKey])){
+                        foreach($checkBoxSlugs[$modelKey] as $k => $v){
+                            $dataValue[$modelKey.'_'.$k] = 994;
+                        }
+                    }
+
                 }else{
                     $dataValue[$modelKey] = $modelValue;
                 }
-            }
+            }            
             $model[$key] = $dataValue;
         }
         return $model;
@@ -594,7 +613,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->skip(2000)->take(200)->get();
+            $result = $Query->skip(6200)->take(200)->get();
         }else{
             $result = $Query->paginate(50);
         }
