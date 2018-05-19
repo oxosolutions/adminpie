@@ -6,6 +6,8 @@
     Route::get('remove-specific-directory',  ['as'=>'remove.specific.directory','uses'=>'ControlPanelController@removeSpecificDirectory']);
     Route::post('bulk-delete-directories',   ['as'=>'bulk.delete.directories','uses'=>'ControlPanelController@bulkDeleteDirs']);
 
+    Route::post('bulk-delete-tables',        ['as'=>'bulk.delete.tables','uses'=>'ControlPanelController@bulkDeleteTables']);
+
     Route::get('drop-specific-table',        ['as'=>'remove.specific.table','uses'=>'ControlPanelController@removeSpecificTable']);
 
     Route::get('method/testing',             ['as'=>'method.testing','uses'=>'ControlPanelController@methodsTesting']);

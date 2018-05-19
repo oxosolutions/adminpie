@@ -8,6 +8,7 @@ Login Page CSS
     color:#168dc5;
     line-height: 1.8;
 }
+/*
 .login-background ,
 .login-theme-darlic .login-background {
     background-image: linear-gradient(to right,rgba(76, 175, 80, 0.4),rgba(123, 67, 151, 0.6)),url(../images/bg-pattern.png),linear-gradient(to right,rgba(0,0,0,0.2),rgba(0,0,0,0.2)),url(../images/login-background-darlic.jpg);
@@ -20,7 +21,7 @@ Login Page CSS
     left: 0;
     right: 0;
 	height:100%;
-}
+}*/
 .login-theme-clean .login-background {
     background-image: url(../images/login-background-clean.svg);
     background-size: auto;

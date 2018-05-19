@@ -256,6 +256,7 @@
                                                         }
                                                     @endphp
                                                 @endforeach
+                                                <textarea class="form_conditions" style="display: none;">{{ json_encode(FormGenerator::GetCurrentFormConditions()) }}</textarea>
                                             </div>
                                             
                                         </div>

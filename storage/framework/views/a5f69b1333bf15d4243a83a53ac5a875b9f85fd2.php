@@ -206,31 +206,21 @@ $page_title_data = array(
                     $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
                  ?>
     	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-    	    		<b><?php echo e(__('forms.field')); ?>:</b> <?php echo e(strip_tags($sectionFields->where('id',request()->field)->first()->field_title)); ?>  
-    	    		
+    	    		<b><?php echo e(__('forms.field')); ?>:</b> <?php echo e(substr(strip_tags($sectionFields->where('id',request()->field)->first()->field_title),0,35)); ?>...
     	    	</div>
             <?php endif; ?>
     	</div>
-	    	
-    	
     </div>
     <input type="hidden" name="_token" value="<?php echo e(csrf_token()); ?>">
-
-    
-
         <div class="module-wrapper ">
             <div class=" mb-10 edit-form-detail">
-                  
-                        <?php echo Form::model($form,['class' => 'form' ,'route' => 'org.update.form']); ?>
+                <?php echo Form::model($form,['class' => 'form' ,'route' => 'org.update.form']); ?>
 
-                            <input type="hidden" name="id" value="<?php echo e($form->id); ?>">
-                            <?php echo FormGenerator::GenerateForm('edit_form_form'); ?>
+                    <input type="hidden" name="id" value="<?php echo e($form->id); ?>">
+                    <?php echo FormGenerator::GenerateForm('edit_form_form'); ?>
 
-                        <?php echo Form::close(); ?>
+                <?php echo Form::close(); ?>
 
-
-                        
-                    
             </div>
             <div class="list-container">
                 <nav id="aione_nav" class="aione-nav light vertical">
@@ -269,7 +259,6 @@ $page_title_data = array(
                                 </li>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
-                            
                         </li>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
@@ -314,22 +303,11 @@ $page_title_data = array(
                                 <div style="color: red"><?php echo e($err); ?></div>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         <?php endif; ?>
-
-                      
-
                     </div>
                 <?php echo Form::close(); ?>
 
-
-
                 <?php if(!Request::has('field')): ?>
-
-                    
-                        
-                    
-
                     <?php if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())): ?>
-                       
                         <?php echo Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
                             <div class="add-section">

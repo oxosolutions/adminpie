@@ -9,6 +9,9 @@ $login_footer_content = @get_organization_meta('login_footer_content');
 if(empty(@$site_title)){
 	$site_title = @strip_tags ( @env('GROUP_LOGIN_TITLE') );
 }
+if(empty(@$login_theme)){
+	$login_theme = 'clean';
+}
 
  ?>
 <!DOCTYPE html>

@@ -108,7 +108,7 @@ class ControlPanelController extends Controller
      * @return [array] [return array of filtered tables]
      * @author Rahul
      */
-    protected function consistantOrganizationTables(){
+    protected function consistantOrganizationTables(){        
         $model = GlobalOrganization::select('id')->get()->keyBy('id')->keys()->toArray();
         $prefix = DB::getTablePrefix();
         $unusedTables = [];
@@ -124,6 +124,16 @@ class ControlPanelController extends Controller
             }
         }
         return $unusedTables;
+    }
+
+
+    public function bulkDeleteTables(Request $request){
+        foreach($request->tables as $key => $table){
+            DB::select("DROP TABLE ".$table);
+        }
+        Session::flash('success','Tables deleted successfully!');
+        $tablesList = $this->consistantOrganizationTables();
+        return redirect()->back()->with(['list_tables'=>$tablesList]);
     }
 
 

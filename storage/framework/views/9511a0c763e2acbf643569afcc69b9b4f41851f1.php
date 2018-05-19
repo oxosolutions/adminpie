@@ -48,10 +48,6 @@ $page_title_data = array(
 
 				</div>
 			</div>
-			
-
-
-				
 		</div>
 	<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

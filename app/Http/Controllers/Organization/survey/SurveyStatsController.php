@@ -489,28 +489,30 @@ true, $append_if_not_found = false ) {
     }
 
     protected function getMaximumCountForRepeaters($table,$repeaterSlugs){
-        $model = DB::table($table)->select($repeaterSlugs)->get();
-        $maximumCountRepeater = [];
-        foreach($model as $key => $value){
-            foreach($repeaterSlugs as $k => $slug){
-                if($value->{$slug} != null && $value->{$slug} != ''){
-                    $jsonDecodedData = json_decode($value->{$slug}, true);
-                    if(@$maximumCountRepeater[$slug] == null){
-                        $maximumCountRepeater[$slug]['count'] = count($jsonDecodedData);
-                        $maximumCountRepeater[$slug]['max_columns'] = collect($jsonDecodedData)->max();
-                    }else{
-                        if(count($jsonDecodedData) > $maximumCountRepeater[$slug]['count']){
+        if(!empty($repeaterSlugs)){
+            $model = DB::table($table)->select($repeaterSlugs)->get();
+            $maximumCountRepeater = [];
+            foreach($model as $key => $value){
+                foreach($repeaterSlugs as $k => $slug){
+                    if($value->{$slug} != null && $value->{$slug} != ''){
+                        $jsonDecodedData = json_decode($value->{$slug}, true);
+                        if(@$maximumCountRepeater[$slug] == null){
                             $maximumCountRepeater[$slug]['count'] = count($jsonDecodedData);
-                        }
-                        if(count(collect($jsonDecodedData)->max()) >= count($maximumCountRepeater[$slug]['max_columns'])){
                             $maximumCountRepeater[$slug]['max_columns'] = collect($jsonDecodedData)->max();
-                        }
+                        }else{
+                            if(count($jsonDecodedData) > $maximumCountRepeater[$slug]['count']){
+                                $maximumCountRepeater[$slug]['count'] = count($jsonDecodedData);
+                            }
+                            if(count(collect($jsonDecodedData)->max()) >= count($maximumCountRepeater[$slug]['max_columns'])){
+                                $maximumCountRepeater[$slug]['max_columns'] = collect($jsonDecodedData)->max();
+                            }
 
+                        }
                     }
                 }
             }
+            return $maximumCountRepeater;
         }
-        return $maximumCountRepeater;
     }
 
     protected function convertQuestionIdToSlug($jsonDecodedData, $surveyModel, $maximumRepeaterCollection, $sectionName){
@@ -542,7 +544,6 @@ true, $append_if_not_found = false ) {
     }
 
     protected function putCheckboxFieldsInmodel($model, $checkBoxSlugs){
-        // dd($checkBoxSlugs);
         foreach($model as $key => $value){
             $dataValue = [];
             foreach($value as $modelKey => $modelValue){

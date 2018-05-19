@@ -81,37 +81,39 @@ $page_title_data = array(
 				<div class="pv-20">Result:-</div>
 				<div class="aione-border" style="min-height: 300px;max-height: 300px;overflow: auto">
 					<div class="aione-table">
-						<table>
-							<thead>
-								<tr>
-									<th>
-										<input type="checkbox" name="" id="checkbox_all">
-										<label for="checkbox_all" class="ph-10">Select All</label>
-									</th>
-									<th>Database List</th>
-									<th>Actions <a href=""><i class="fa fa-trash ph-5"></i>Delete Selected</a></th>
-									
-									
-								</tr>
-							</thead>
-							<tbody>
-                                @php
-                                    if(session()->has('list_tables')){
-                                        $list_tables = session('list_tables');
-                                    }
-                                @endphp
-                                @foreach($list_tables as $key => $table)
+                        {!! Form::open(['route'=>'bulk.delete.tables','id'=>'bulk_delete_tables_form']) !!}
+    						<table>
+    							<thead>
     								<tr>
-    									<td>
-    										<input type="checkbox" name="select_all" id="checkbox_1">
-    										<label for="checkbox_1" class="ph-10">Select</label>
-    									</td>
-    									<td class="font-weight-700"> <i class="fa fa-database blue"></i> {{ $table }}</td>
-    									<td><a href="{{ route('remove.specific.table',['token'=>session('remove_token'),'table'=>$table]) }}" onclick="return confirm('Are you sure to delete this table?')"><i class="fa fa-trash ph-5"></i>Delete</a></td>
+    									<th>
+    										<input type="checkbox" name="" id="check_all" class="check_all">
+    										<label for="check_all" class="ph-10">Select All</label>
+    									</th>
+    									<th>Database List</th>
+    									<th>Actions <a href="javascript:;" class="delete_selected"><i class="fa fa-trash ph-5"></i>Delete Selected</a></th>
+    									
+    									
     								</tr>
-                                @endforeach
-							</tbody>
-						</table>
+    							</thead>
+    							<tbody>
+                                    @php
+                                        if(session()->has('list_tables')){
+                                            $list_tables = session('list_tables');
+                                        }
+                                    @endphp
+                                    @foreach($list_tables as $key => $table)
+        								<tr>
+        									<td>
+        										<input type="checkbox" name="tables[]" id="checkbox_{{ $loop->index }}" class="table_check" value="{{ $table }}">
+        										<label for="checkbox_{{ $loop->index }}" class="ph-10">Select</label>
+        									</td>
+        									<td class="font-weight-700"> <i class="fa fa-database blue"></i> {{ $table }}</td>
+        									<td><a href="{{ route('remove.specific.table',['token'=>session('remove_token'),'table'=>$table]) }}" onclick="return confirm('Are you sure to delete this table?')"><i class="fa fa-trash ph-5"></i>Delete</a></td>
+        								</tr>
+                                    @endforeach
+    							</tbody>
+    						</table>
+                        {!! Form::close() !!}
 					</div>
 				</div>	
 			</div>
@@ -160,6 +162,23 @@ $page_title_data = array(
            }else{
                 $('.delete-all').fadeOut(300);
            }
+        });
+
+        $('.check_all').click(function(){
+            var elem = $(this);
+            $('.table_check').each(function(){
+                if(elem.is(':checked')){
+                    $(this).prop('checked',true);
+                }else{
+                    $(this).prop('checked',false);
+                }
+            });
+        });
+
+        $('.delete_selected').click(function(){
+            if(confirm('Are you sure?')){
+                $('#bulk_delete_tables_form').submit(); 
+            }
         });
     });
 </script>

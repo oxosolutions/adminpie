@@ -716,7 +716,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema', [
             '--model' => false,
             'name' => 'create_' . $org_id . '_form_fields',
-            '--schema' => 'field_slug:string:nullable, form_id:integer, section_id:integer, field_title:string, field_type:string:nullable, field_description:text:nullable, order:integer:nullable, status:string'
+            '--schema' => 'field_slug:string:nullable, form_id:integer, section_id:integer, field_title:text, field_type:string:nullable, field_description:text:nullable, order:integer:nullable, status:string'
         ]);
         Artisan::call('make:migration:schema', [
             '--model' => false,

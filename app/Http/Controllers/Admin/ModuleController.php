@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalModule as Module;
-use App\Model\Admin\GlobalModuleRoute as Route;
+use App\Model\Admin\GlobalModuleRoute;
 use App\Model\Admin\GlobalSubModule;
 use DB;
+use Session;
 class ModuleController extends Controller
 {
     
@@ -28,7 +29,6 @@ class ModuleController extends Controller
 
         $tables =  collect(json_decode(json_encode($table_list),true))->pluck('TABLE_NAME')->all();
         $tables =  array_combine($tables, $tables);
-    
     	return view('admin.module.index',['listModule'=>$model,'moduleData'=>$moduleData,'subModuleData' => $subModuleData, 'tables'=>$tables]);
     }
     public function create()
@@ -178,7 +178,6 @@ class ModuleController extends Controller
     
     public function editsubModule(Request $request)
     {
-        // $route_existed =  Route::where('sub_module_id',$request['subModule_id'])->pluck('id')->toArray(); 
         $route_name = [];
         $routes = [];
         foreach($request->permission as $k => $value){
@@ -192,27 +191,26 @@ class ModuleController extends Controller
                 }
             }
         }
-        $newArray = array_combine($routes, $route_name);
+        $newArray = array_combine($routes, $route_name);        
         foreach($newArray as $key => $routesData){
-            $save = Route::firstOrNew(['sub_module_id'=>$request->subModule_id,'route'=>$key]);
+            $save = GlobalModuleRoute::firstOrNew(['sub_module_id'=>$request->subModule_id,'route'=>$key]);
             $save->sub_module_id = $request->subModule_id;
-            // $save->route = $key;
             $save->route_name = $routesData;
             $save->save();
             $ids[] =  $save->id;
         }
-
-        // dd($ids, $route_existed,  $request->all());
+        $deleteRoutes = GlobalModuleRoute::where('sub_module_id',$request->subModule_id)->whereNotin('id',$ids)->delete();
+        Session::flash('success','Permissions updated successfully!');
         return back();
     }
     public function deletesubModulePermission($id,$route_name)
     {
-        $model = Route::where(['sub_module_id' => $id , 'route_name' => $route_name])->delete();
+        $model = GlobalModuleRoute::where(['sub_module_id' => $id , 'route_name' => $route_name])->delete();
         return back();
     }
     public function delete_route($id)
     {
-       $model = Route::find($id);
+       $model = GlobalModuleRoute::find($id);
        $model->delete();
        return back();
     }

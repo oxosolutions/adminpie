@@ -309,10 +309,24 @@ max-width: 400px;
                             switch(field_elem.attr('data-field-type')){
                                 case'checkbox':
                                 case'switch':
-                                    if(field_elem.find('input').is(':checked')){
-                                        show.push('true');
+                                    if(value.condition_operator == 'have'){
+                                        var checkedArray = [];
+                                        field_elem.find('input').each(function () {
+                                            if($(this).is(':checked')){
+                                                checkedArray.push($(this).val());
+                                            }
+                                        });
+                                        if($.inArray(value.condition_value,checkedArray) !== -1){
+                                            show.push('true');
+                                        }else{
+                                            show.push('false');
+                                        }
                                     }else{
-                                        show.push('false');
+                                        if(field_elem.find('input').is(':checked')){
+                                            show.push('true');
+                                        }else{
+                                            show.push('false');
+                                        }
                                     }
                                 break;
 

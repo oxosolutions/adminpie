@@ -210,30 +210,18 @@ $page_title_data = array(
                     $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
                 @endphp
     	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
-    	    		<b>{{__('forms.field')}}:</b> {{ strip_tags($sectionFields->where('id',request()->field)->first()->field_title) }}  
-    	    		{{-- <button class="aione-button edit-section-detail-button" title="Edit Form Details"><i class="fa fa-pencil"></i></button> --}}
+    	    		<b>{{__('forms.field')}}:</b> {{ substr(strip_tags($sectionFields->where('id',request()->field)->first()->field_title),0,35) }}...
     	    	</div>
             @endif
     	</div>
-	    	
-    	{{-- <div class="pv-10 display-inline-block ml-20">
-    		Field: basic details <button class="aione-button aione-tooltip" title="Edit Form Details"><i class="fa fa-pencil"></i></button>
-    	</div> --}}
     </div>
     <input type="hidden" name="_token" value="{{csrf_token() }}">
-
-    
-
         <div class="module-wrapper ">
             <div class=" mb-10 edit-form-detail">
-                  {{-- @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input())) --}}
-                        {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
-                            <input type="hidden" name="id" value="{{$form->id}}">
-                            {!! FormGenerator::GenerateForm('edit_form_form') !!}
-                        {!! Form::close() !!}
-
-                        
-                    {{-- @endif --}}
+                {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
+                    <input type="hidden" name="id" value="{{$form->id}}">
+                    {!! FormGenerator::GenerateForm('edit_form_form') !!}
+                {!! Form::close() !!}
             </div>
             <div class="list-container">
                 <nav id="aione_nav" class="aione-nav light vertical">
@@ -270,7 +258,6 @@ $page_title_data = array(
                                 </li>
                             @endforeach
                             </ul>
-                            
                         </li>
                     @endforeach
                     </ul>
@@ -313,24 +300,10 @@ $page_title_data = array(
                                 <div style="color: red">{{$err}}</div>
                             @endforeach
                         @endif
-
-                      
-
                     </div>
                 {!!Form::close()!!}
-
-
                 @if(!Request::has('field'))
-
-                    {{-- @if(Request::has('sections') && Request::input('sections') != 'all') --}}
-                        
-                    {{-- @endif --}}
-
                     @if((Request::has('sections') && Request::input('sections') == 'all') || empty(Request::input()))
-                       {{--  {!! Form::model($form,['class' => 'form' ,'route' => 'org.update.form']) !!}
-                            <input type="hidden" name="id" value="{{$form->id}}">
-                            {!! FormGenerator::GenerateForm('edit_form_form') !!}
-                        {!! Form::close() !!} --}}
                         {!! Form::open(['route'=>[$route , request()->form_id] , 'class'=> 'form-horizontal','method' => 'post'])!!}
                             <div class="add-section">
                                

@@ -264,6 +264,7 @@
                                                         }
                                                      ?>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                <textarea class="form_conditions" style="display: none;"><?php echo e(json_encode(FormGenerator::GetCurrentFormConditions())); ?></textarea>
                                             </div>
                                             
                                         </div>
