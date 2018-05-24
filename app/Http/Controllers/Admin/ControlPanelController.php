@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalOrganization;
 use App\Model\Admin\GlobalSetting;
 use Ixudra\Curl\Facades\Curl;
+use GuzzleHttp\Client;
 use File;
 use Session;
 use DB;
@@ -233,12 +234,28 @@ class ControlPanelController extends Controller
 
 
     public function versionControlling(){
-
-        return view('admin.control-panel.version-control');
+        $model = GlobalSetting::where(['key'=>'db_version'])->first();
+        if($model != null){
+            $model = $model->toArray();
+        }else{
+            $model = [];
+        }
+        return view('admin.control-panel.version-control',['model'=>$model]);
     }
 
     public function updateVersion(Request $request){
-        $model = GlobalSetting::firstOrNew(['key'=>'software_version']);
+        $model = GlobalSetting::firstOrNew(['key'=>'db_version']);
+        if($model->exists()){
+            $current_version = $model->value;
+            if($current_version == $request->db_version){
+                Session::flash('error','Unable to update same version!');
+                return back();
+            }
+            if($request->db_version < $current_version){
+                Session::flash('error','Unable to update in reverse version!');
+                return back();   
+            }
+        }
         $checkForPrimaryOrganization = GlobalSetting::where(['key'=>'primary_organization'])->first();
         if($checkForPrimaryOrganization != null){
             if($checkForPrimaryOrganization->value != '' && $checkForPrimaryOrganization->value != null){
@@ -247,16 +264,52 @@ class ControlPanelController extends Controller
                       WHERE t.table_schema = '" . env('DB_DATABASE', 'forge') . "'
                       AND t.table_name LIKE '".$prefix.$checkForPrimaryOrganization->value . "%' 
                       ORDER BY t.table_name");
+                $stableStructures = [];
                 foreach($tablesList as $key => $table){
-                    $columns = DB::getSchemaBuilder()->getColumnListing($table);;
-                    dd($table->TABLE_NAME);
+                    $table = str_replace('ocrm_', '', $table->TABLE_NAME);
+                    $columns = DB::getSchemaBuilder()->getColumnListing($table);
+                    $table = str_replace($checkForPrimaryOrganization->value.'_','',$table);
+                    preg_match('/(data_table_)\w+/',$table,$matches);
+                    if(empty($matches)){
+                        preg_match('/(survey_results_)\w+/',$table,$matches);
+                        if(empty($matches)){
+                            preg_match('/(form_data_)\w+/',$table,$matches);
+                            if(empty($matches)){
+                                $stableStructures[$table] = $columns;
+                            }
+                        }
+                    }
                 }
+                $columnsJson = json_encode($stableStructures);
+                $fileName = date('Y-m-d H-i-s') . '_db_version_' . $request->db_version. '.json';
+                File::makeDirectory(public_path('/version/db/'.$request->db_version.'/'),0777, true, true);
+                File::put(public_path('/version/db/'.$request->db_version.'/' . $fileName), $columnsJson);
+                $model->key = 'db_version';
+                $model->value = $request->db_version;
+                $model->save();
+                Session::flash('success','Database version updated successfully!');
+                return back();
             }else{
-                Session::put('error','Unable to update database version! (Primary Organization is not seleted)');
+                Session::flash('error','Unable to update database version! (Primary Organization is not seleted)');
                 return back();
             }
         }
-        dump($model);
-        dd($request->all());
+    }
+
+    public function getFileReleaseLatestVersion(Request $request){
+        $client = new Client;
+        $result = $client->get('https://api.github.com/repos/oxosolutions/adminpie/releases/latest');
+        $model = GlobalSetting::where(['key'=>'ui_ux_version'])->first();
+        $release = json_decode($result->getBody()->getContents(),true);
+        if($model == null){
+            dd('New Version Found!',$release['tag_name']);
+        }else{
+            $current_version = $model->value;
+            if($release['tag_name'] > $current_version){
+                dd('New Version Found!');
+            }else{
+                dd('No new updates found!');
+            }
+        }
     }
 }

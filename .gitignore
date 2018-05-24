@@ -7,7 +7,7 @@ Homestead.yaml
 .env
 /htaccess
 /bak
-
+/public/version
 # Gulp build
 /public/aione-tools
 

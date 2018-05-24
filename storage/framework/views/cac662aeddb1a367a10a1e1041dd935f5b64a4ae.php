@@ -10,6 +10,7 @@ $page_title_data = array(
  ?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+
     <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
         <div class="ar">
             <div class="ac l50">
@@ -17,7 +18,7 @@ $page_title_data = array(
                     <div class="bg-grey bg-lighten-4 p-15 font-size-20">
                         Database Version 
                         <span class="aione-float-right">
-                            9.5.5.0 Stable
+                            <?php echo e(@$model['value']); ?> Stable
                         </span>
                     </div>
                     <?php echo Form::open(['route'=>'update.database.version']); ?>
@@ -25,7 +26,7 @@ $page_title_data = array(
                         <div class="p-30 aione-align-center line-height-28">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et metus eu neque vestibulum convallis. Mauris vestibulum arcu vel magna egestas, quis vehicula diam accumsan. 
                             <br/>
-                            Current Version: <?php echo Form::text('db_version',null,['class'=>'form-controle']); ?>
+                            Current Version: <?php echo Form::text('db_version',@$model['value'],['class'=>'form-controle']); ?>
 
                             <br/>                            
                             <button class="mt-20">Update Now</button>
@@ -35,20 +36,24 @@ $page_title_data = array(
                 </div>
             </div>
             <div class="ac l50">
-                <div class="aione-border">
-                    <div class="bg-grey bg-lighten-4 p-15 font-size-20">
-                        UI/UX and Features Version 
-                        <span class="aione-float-right">
-                            66.0.3 Alpha
-                        </span>
-                    </div>
-                    <div class="p-30 aione-align-center line-height-28" >
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et metus eu neque vestibulum convallis. Mauris vestibulum arcu vel magna egestas, quis vehicula diam accumsan.
-                        <button class="mt-20">Check for new update</button>
-                        <button class="mt-20">Update Now</button>
+                <?php echo Form::open(['route'=>'latest.release']); ?>
 
+                    <div class="aione-border">
+                        <div class="bg-grey bg-lighten-4 p-15 font-size-20">
+                            UI/UX and Features Version 
+                            <span class="aione-float-right">
+                                66.0.3 Alpha
+                            </span>
+                        </div>
+                        <div class="p-30 aione-align-center line-height-28" >
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et metus eu neque vestibulum convallis. Mauris vestibulum arcu vel magna egestas, quis vehicula diam accumsan.
+                            <button class="mt-20">Check for new update</button>
+                            <button class="mt-20">Update Now</button>
+
+                        </div>
                     </div>
-                </div>
+                <?php echo Form::close(); ?>
+
             </div>
         </div>
     <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

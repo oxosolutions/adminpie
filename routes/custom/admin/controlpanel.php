@@ -16,4 +16,6 @@
     Route::get('/control-panel/version',                   ['as'=>'version.control','uses'=>'ControlPanelController@versionControlling']);
 
     Route::post('/update/database/version',  ['as'=>'update.database.version', 'uses' => 'ControlPanelController@updateVersion']);
+
+    Route::post('/latest/release',          ['as'=>'latest.release','uses'=>'ControlPanelController@getFileReleaseLatestVersion']);
 ?>
