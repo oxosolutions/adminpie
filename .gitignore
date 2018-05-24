@@ -8,6 +8,17 @@ Homestead.yaml
 /htaccess
 /bak
 /public/version
+/public/application
+/public/bower_components
+/public/comment
+/public/downloaded_datasets
+/public/export
+/public/files/*
+/public/html
+/public/media
+/public/reports
+/public/sample_data
+/public/themes
 # Gulp build
 /public/aione-tools
 
