@@ -9,7 +9,7 @@ use FormGenerator;
 use Auth;
 use Session;
 use App\Model\Group\GroupUsers;
-use Laravel\Dusk\DuskServiceProvider;
+// use Laravel\Dusk\DuskServiceProvider;
 use DB;
 class AppServiceProvider extends ServiceProvider
 {
@@ -29,8 +29,8 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    {
-        $this->app->register(DuskServiceProvider::class);
+    {        
+        // $this->app->register(DuskServiceProvider::class);
         Shortcode::add('example', function($atts, $content, $name){
           $a = Shortcode::atts(array(
             'foo' => 'something',
@@ -169,6 +169,9 @@ class AppServiceProvider extends ServiceProvider
             }
         });        
 
+        Shortcode::add('version', function($optionsArray = null){
+            return config('version')['version'];
+        });
 
     }
 }

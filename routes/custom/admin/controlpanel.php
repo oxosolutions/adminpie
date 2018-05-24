@@ -12,4 +12,6 @@
 
     Route::get('method/testing',             ['as'=>'method.testing','uses'=>'ControlPanelController@methodsTesting']);
     Route::post('/method/serve',             ['as'=>'method.serve','uses'=>'ControlPanelController@methodServe']);
+
+    Route::get('/control-panel/version',                   ['as'=>'version.control','uses'=>'ControlPanelController@versionControlling']);
 ?>

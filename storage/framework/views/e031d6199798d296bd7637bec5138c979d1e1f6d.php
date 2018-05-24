@@ -1,5 +1,4 @@
 <?php $__env->startSection('content'); ?>
-
 <?php if(Session::get('success')): ?>
     <section class="container">
         <div class="ar">
@@ -48,84 +47,104 @@
         opacity: 1;
     }
      body{
-            padding: 0;
-            margin: 0;
-            background-color: #f5f5f5;
-         }
-         .screen-wrapper{
-            height: 100vh;
-         } 
-         .screen-wrapper > .header{
-            right: 0;
-            left: 0;
-            top: 0;
-            background: #168dc5;
-            z-index: 999;
-         }
-         .screen-wrapper > .footer{
-            
-            bottom: 0;
-            right: 0;
-            left: 0;
-            background: #e4e4e4;
-         }
-         .screen-wrapper > .content{
-            top: 64px;
-            right: 0;
-            left: 280px;
-            background-color: #f5f5f5;
-            bottom: 50px;
-            overflow: auto;
-         }
-         .screen-wrapper > .content > .page{
-            background-color: white;
-            min-height: 100%;
+        padding: 0;
+        margin: 0;
+        background-color: #f5f5f5;
+     }
+     .screen-wrapper{
+        height: 100vh;
+     } 
+     .screen-wrapper > .header{
+        right: 0;
+        left: 0;
+        top: 0;
+        background: #168dc5;
+        z-index: 999;
+     }
+     .screen-wrapper > .footer{
+        
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background: #e4e4e4;
+     }
+     .screen-wrapper > .content{
+        top: 64px;
+        right: 0;
+        left: 280px;
+        background-color: #f5f5f5;
+        bottom: 50px;
+        overflow: auto;
+     }
+     .screen-wrapper > .content > .page{
+        background-color: white;
+        min-height: 100%;
 
-         }
-         .screen-wrapper > .content > .page > .answer{
-            min-height: 50vh
-         }
-         .survey-sidebar{
-            position: absolute;
-            top: 64px;
-            bottom: 48px;
-            left: 0;
-           
-            background-color: white;
-            z-index: 99;
-            min-height: 100px;
-            max-height: calc( 100vh - 100px );
-            overflow: scroll;
-         }
-         .clock-wrap
-         {
-            right: 0px;
-            top: 0px;
-            padding-right:3px;
-            margin-top: 28px;
-            width: 131px;
-            height: 133px;
-           padding-left: 15px;
-           position: absolute;
-          position: fixed;
-         }
-         .time-wrap
-         {
-            position: absolute;
-            right: 0px;
-            top: 145px;
-            padding-right: 13px;
-            padding-top: 22px;
-            position: fixed;
-            font-size: 20px;
-         }
-         .custom-effect{
-            padding: 10px 20px;
-            margin: 20px auto
-         }
-         .custom-effect:hover{
-            background: #cfd8dc
-         }
+     }
+     .screen-wrapper > .content > .page > .answer{
+        min-height: 50vh
+     }
+     .survey-sidebar{
+        position: absolute;
+        top: 64px;
+        bottom: 48px;
+        left: 0;
+        background-color: white;
+        z-index: 99;
+        min-height: 100px;
+        max-height: calc( 100vh - 100px );
+        overflow: scroll;
+     }
+     .clock-wrap
+     {
+        right: 0px;
+        top: 0px;
+        padding-right:3px;
+        margin-top: 28px;
+        width: 131px;
+        height: 133px;
+        padding-left: 15px;
+        position: absolute;
+        position: fixed;
+     }
+     .time-wrap
+     {
+        position: absolute;
+        right: 0px;
+        top: 145px;
+        padding-right: 13px;
+        padding-top: 22px;
+        position: fixed;
+        font-size: 20px;
+     }
+     .custom-effect{
+        padding: 10px 20px;
+        margin: 20px auto
+     }
+     .custom-effect:hover{
+        background: #cfd8dc
+     }
+     .view-by-question .item.active > div{
+        background: #0288d1;
+     }
+     .view-by-question .item.active > div .section-title{
+        color: white;
+        margin-bottom: 12px;
+     }
+     .view-by-question .item.active > div .indicater-wrapper{
+        display: block;
+        padding: 10px;
+     }
+     .view-by-question .item > div .indicater-wrapper{
+        display: none;
+     }
+     .view-by-question .indicater-wrapper .indicater{
+        height: 8px;
+     }
+     .view-by-question .indicater-wrapper .percentage{
+        min-height: 8px;
+        background: grey
+     }
 </style>
 
 
@@ -142,7 +161,14 @@
     if(@$survey_form_settings->form_field_show_border){
         $aione_form_field_border = "aione-form-field-border";
     }
+    $survey_start_time = session()->get('survey_started_time');
+    if($survey_start_time == null){
+        $survey_start_time = \Carbon\Carbon::now();
+        session()->put('survey_started_time',$survey_start_time);
+    }
+    // session()->put('survey_started_time');
  ?>
+<input type="hidden" name="meta_value" value="<?php echo e(json_encode($meta)); ?>" />
 <div class="" style="max-width: 1120px;margin: 0 auto;">
     <?php if($error['status'] == false): ?>
         <div class="aione-border aione-align-center border-width-3 p-50 font-size-30 grey lighten-2 mt-30" style="border-style: dashed;">
@@ -189,6 +215,7 @@
                             <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <?php 
                                     $completedSections = session()->get('completed_sections');
+                                    $partiallySections = session()->get('partial_sections');
                                     if($completedSections != null && in_array($key,$completedSections)){
                                         $progressPercentage = 100;
                                         $completedClass = 'completed';
@@ -196,8 +223,14 @@
                                         $progressPercentage = 0;
                                         $completedClass = '';
                                     }
+                                    if($partiallySections != null && in_array($key,$partiallySections)){
+                                        $partiallClass = 'partially-completed';
+                                    }else{
+                                        $progressPercentage = 0;
+                                        $partiallClass = '';
+                                    }
                                  ?>
-                                <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?> <?php echo e($completedClass); ?>" onclick="window.location.href='<?php echo e(route('embed.survey',['token'=>request()->token]).'?section='.$key); ?>'" style="cursor: pointer;">
+                                <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?> <?php echo e($completedClass); ?> <?php echo e($partiallClass); ?>" onclick="window.location.href='<?php echo e(route('embed.survey',['token'=>request()->token]).'?section='.$key); ?>'" style="cursor: pointer;">
                                     <div class="pv-15 pl-16 pr-10 aione-border  bg-white " style="position:relative;">
                                         <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " >
                                             <?php echo e($section['title']); ?>
@@ -340,12 +373,30 @@
                     $sectionIndex = (request()->section)?request()->section:0;
                     $questionIndex = (request()->question)?request()->question:0;
                  ?>
-                <div class="ar">
+
+                <div class="ar view-by-question">
                     <div class="ac l25" >
                         <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?>" onclick="" style="cursor: pointer;">
+                            <?php 
+                                $completedSections = session()->get('completed_sections');
+                                $partiallySections = session()->get('partial_sections');
+                                if($completedSections != null && in_array($key,$completedSections)){
+                                    $progressPercentage = 100;
+                                    $completedClass = 'completed';
+                                }else{
+                                    $progressPercentage = 0;
+                                    $completedClass = '';
+                                }
+                                if($partiallySections != null && in_array($key,$partiallySections)){
+                                    $partiallClass = 'partially-completed';
+                                }else{
+                                    $progressPercentage = 0;
+                                    $partiallClass = '';
+                                }
+                             ?>
+                            <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?> <?php echo e($completedClass); ?>" onclick="" style="cursor: pointer;">
                                 <div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
-                                    <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " title="Basic detail section for personal information">
+                                    <div class="font-size-20  truncate section-title" title="Basic detail section for personal information">
                                         <?php echo e($section['title']); ?>
 
                                     </div>
@@ -354,7 +405,7 @@
 
                                     </div>
                                     <div class="indicater-wrapper" >
-                                        <div class="bg-light-blue bg-lighten-4 indicater">
+                                        <div class="bg-white indicater">
                                             <?php 
                                                 $onePercent = 100/count($data['fields']);
                                                 if($sectionIndex == $key){
@@ -418,7 +469,7 @@
                                     <?php endif; ?>
                                     <div class="actions" >
                                         <?php if(@$data['sections'][$sectionIndex]['section_type'] == 'repeater'): ?>
-                                            <button class=" next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
+                                            <button class="next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
                                         <?php else: ?>
                                             <?php if($data['field_record']['index'] >= 1): ?>
                                                 <button class="aione-float-left prev" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']-1)); ?>">Previous</button>
@@ -428,7 +479,7 @@
                                             <?php if($data['field_record']['index'] != $totalFields): ?>
                                                 <button class="aione-float-right next" data-section="<?php echo e($sectionIndex); ?>" data-question="<?php echo e(($data['field_record']['index']+1)); ?>">Next</button>
                                             <?php else: ?>
-                                                <button class=" next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
+                                                <button class="next_section" data-section="<?php echo e(($sectionIndex+1)); ?>" data-question="0">Next Section</button>
                                             <?php endif; ?>
                                         <?php endif; ?>
                                         <div style="clear: both">
@@ -459,6 +510,10 @@
         </div>
     </div>
 </div>
+<div style="position: fixed; top: 0; right: 5%; z-index: 999;">
+    <h4>Remaining:  <span id="day">(0 Day's)</span> <span id="time">00:00:00</span></h4>
+</div>
+<script type="text/javascript" src="<?php echo e(asset('js/moment.js')); ?>"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $('.indicater-wrapper').click(function(){
@@ -474,6 +529,7 @@
         }catch(e){
             var filledArray = [];
         }
+
         $('input,select,textarea').on('blur change',function(){
             if($(this).val().trim() != '' && $.inArray($(this).attr('name'),filledArray) === -1){
                 filledArray.push($(this).attr('name'));
@@ -495,6 +551,51 @@
                 $('.active').find('.percentage').css('width',initialPercent+'%');
             }
         });
+        var survey_meta = $('input[name=meta_value]').val();
+
+        var timerInterval = setInterval(function(){
+            $.ajax({
+                type: 'GET',
+                url: route()+'/timer',
+                data: {data:survey_meta},
+                success: function(result){
+                    $('#day').text('('+result.days+' Day\'s)');
+                    $('#time').text(result.hours+':'+result.minutes+':'+result.seconds);
+                }
+            });
+        },1000);
+
+        /*if(survey_start_time != null && survey_start_time != ''){
+            
+            var date = moment().format('DD-MM-YYYY');
+            var minutes = $('input[name=time]').val();
+            var eventTime = moment(date+' '+survey_start_time, 'DD-MM-YYYY HH:mm').add(parseInt(minutes),'minutes').unix(),
+            currentTime = moment().unix(),
+            diffTime = eventTime - currentTime,
+            duration = moment.duration(diffTime * 1000, 'milliseconds'),
+            interval = 1000;           
+            if(diffTime > 0) {
+                setInterval(function(){
+                    duration = moment.duration(duration.asMilliseconds() - interval, 'milliseconds');
+                    var d = moment.duration(duration).days(),
+                        h = moment.duration(duration).hours(),
+                        m = moment.duration(duration).minutes(),
+                        s = moment.duration(duration).seconds();
+
+                    d = $.trim(d).length === 1 ? '0' + d : d;
+                    h = $.trim(h).length === 1 ? '0' + h : h;
+                    m = $.trim(m).length === 1 ? '0' + m : m;
+                    s = $.trim(s).length === 1 ? '0' + s : s;
+                    if(h == 0 && m == 0 && s == 0){
+                        $('.next, .next_section').trigger('click');
+                    }else{
+                        $('#time').text(h+':'+m+':'+s);
+                    }
+                }, interval);
+            }else{
+                console.log(diffTime);
+            }
+        }*/
 
         $('.add_more').click(function(){
             var htmlForRepeat = '<div class="mb-30 persist-area single-section section-repeater">'+$(this).parent('.div-for-section').find('.single-section:first').html()+'</div>';

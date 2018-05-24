@@ -12,6 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
+
     'name' => 'Laravel',
 
     /*
@@ -174,7 +175,7 @@ return [
         Gornymedia\Shortcodes\ShortcodesServiceProvider::class,
         Netinternet\Logicboxes\LogicboxesServiceProvider::class,
         OxoSolutions\DomainManagement\DomainManagementProvider::class,
-        Laravel\Dusk\DuskServiceProvider::class,
+        // Laravel\Dusk\DuskServiceProvider::class,
         Ixudra\Curl\CurlServiceProvider::class,
         GrahamCampbell\GitHub\GitHubServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,

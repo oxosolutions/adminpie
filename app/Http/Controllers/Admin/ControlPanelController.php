@@ -51,18 +51,23 @@ class ControlPanelController extends Controller
      */
     protected function fileConsistancy($request){
         $model = GlobalOrganization::select('id')->get()->keyBy('id')->keys()->toArray();
-        $directories = File::directories('files');
-        $listToRemove = [];
-        foreach($directories as $key => $dir){
-            $explodeDirName = explode('_',$dir);
-            try{
-                if(!in_array((int)$explodeDirName[1],$model)){
-                    $listToRemove[] = $dir;
+        try{
+            $directories = File::directories('files');
+            $listToRemove = [];
+            foreach($directories as $key => $dir){
+                $explodeDirName = explode('_',$dir);
+                try{
+                    if(!in_array((int)$explodeDirName[1],$model)){
+                        $listToRemove[] = $dir;
+                    }
+                }catch(\Exception $e){
+                    continue;
                 }
-            }catch(\Exception $e){
-                continue;
             }
+        }catch(\Exception $e){
+            $listToRemove = [];
         }
+        
         return $listToRemove;
     }
 
@@ -223,5 +228,10 @@ class ControlPanelController extends Controller
         }
      
         return $return;
+    }
+
+
+    public function versionControlling(){
+        return view('admin.control-panel.version-control');
     }
 }

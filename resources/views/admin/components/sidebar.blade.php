@@ -468,6 +468,16 @@
                         </span>
                         </a>
                     </li>
+                    <li class="aione-nav-item level1 {{Request::is('control')?'active-state':''}}">
+                        {{-- <a href="{{Route('list.settings')}}"> --}}
+                        <a href="{{Route('version.control')}}">
+                        <span class="nav-item-icon side-bar-icon fa fa-pencil darken-1 center-align side-bar-icon-bg">
+                        </span>
+                        <span class="side-bar-text">
+                            Version
+                        </span>
+                        </a>
+                    </li>
                 </ul>
             </li>
             

@@ -55,4 +55,13 @@ class Page extends Model
         return $themesArray;
     }
 
+    public static function get_page_slug($id){
+        $model = self::find($id);
+        if($model != null){
+            return $model->slug;
+        }else{
+            return $id;
+        }
+    }
+
 }

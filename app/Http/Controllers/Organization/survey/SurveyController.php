@@ -13,6 +13,7 @@ use App\Model\Organization\section;
 use App\Model\Organization\FieldMeta;
 use App\Model\Organization\FormBuilder;
 use App\Model\Organization\SectionMeta;
+use App\Model\Organization\Page;
 use Auth;
 use DB;
 use App\Http\Controllers\Api\SurveyController as apisurvey;
@@ -507,7 +508,8 @@ class SurveyController extends Controller
                         }
                         if ($redirectAfterCopmpleted['action'] == 'go_to_page') {
                             Session::put('record_id');
-                            return redirect()->route('view.pages', ['slug' => $redirectAfterCopmpleted['page']]);
+                            $page_slug = Page::get_page_slug($redirectAfterCopmpleted['page']);
+                            return redirect()->route('view.pages', ['slug' => $page_slug]);
                         }
                         Session::put('record_id');
                         return redirect()->route('survey.completed', ['token' => $token]);
@@ -523,7 +525,8 @@ class SurveyController extends Controller
                     }
                     if ($redirectAfterCopmpleted['action'] == 'go_to_page') {
                         Session::put('record_id');
-                        return redirect()->route('view.pages', ['slug' => $redirectAfterCopmpleted['page']]);
+                        $page_slug = Page::get_page_slug($redirectAfterCopmpleted['page']);
+                        return redirect()->route('view.pages', ['slug' => $page_slug]);
                     }
                     Session::put('record_id');
                     return redirect()->route('survey.completed', ['token' => $token]);
@@ -554,13 +557,28 @@ class SurveyController extends Controller
             }
         }
         $questionsData['form_id'] = $surveyRecord['id'];
+        $timerSerrtings = $this->getSurveyTimerSettings($token);
         $prefilled = $this->preFillSurveyAnswer($surveyRecord);
         if ($from_status) {
             $prefilled = array_merge($request->all(), $prefilled);
-            return view('organization.survey.public.shared_survey_without_layout', ['error' => $errorStatus, 'data' => $questionsData, 'prefill' => $prefilled])->render();
+            return view('organization.survey.public.shared_survey_without_layout', [
+                                    'error' => $errorStatus, 
+                                    'data' => $questionsData, 
+                                    'prefill' => $prefilled,
+                                    'time'=>$timerSerrtings,
+                                    'meta' => $metaValues
+                                ]
+                        )->render();
         } else {
             $prefilled = array_merge($request->all(), $prefilled);
-            return view('organization.survey.public.survey_draw', ['error' => $errorStatus, 'data' => $questionsData, 'prefill' => $prefilled]);
+            return view('organization.survey.public.survey_draw', [
+                            'error' => $errorStatus, 
+                            'data' => $questionsData, 
+                            'prefill' => $prefilled,
+                            'timer'=>$timerSerrtings,
+                            'meta' => $metaValues
+                            ]
+                        );
         }
 
     }
@@ -677,76 +695,6 @@ class SurveyController extends Controller
         return true;
     }
 
-    protected function saveSurveyAccordingTo_SectionView($request, $tableNameWithoutPrefix, $prefix, $surveyDetails)
-    {
-        $sectionIndex = 0;
-        if ($request->has('section') && $request->section != null) {
-            $sectionIndex = (int)$request->section;
-        }
-        $fieldsArray = [];
-        foreach ($surveyDetails->section[$sectionIndex]->fields as $key => $field) {
-            $validation = $field->fieldMeta->where('key', 'field_validations')->first();
-            if ($validation != null) {
-                $fieldsArray[$field->field_slug] = json_decode($validation->value, true);
-            }
-        }
-        $result = $this->validateFilledSurveyDetails($request, $fieldsArray);
-        if ($result['status'] == false) {
-            return ['status' => false, 'errors' => $result['errors']];
-        }
-        $Query = DB::table($tableNameWithoutPrefix);
-        $dataToInsert = [];
-        $putExtraFields = [
-            'ip_address' => request()->ip(),
-            'survey_started_on' => Session::get('started_on'),
-            'survey_completed_on' => Carbon::now()->format('Y-m-d'),
-            'survey_status' => 'Completed',
-            'survey_submitted_by' => (Auth::guard('org')->user() == null) ? 'Guest' : Auth::guard('org')->user()->id,
-            'survey_submitted_from' => 'web',
-            'device_detail' => $request->header('User-Agent')
-        ];
-        foreach ($request->except(['_token', 'section', 'number_of_fields', 'prefilled_count', 'prefilled_names']) as $key => $value) {
-            if (is_array($value)) {
-                $dataToInsert[$key] = json_encode($value);
-            } else {
-                $dataToInsert[$key] = $value;
-            }
-        }
-        $dataToInsert = array_merge($dataToInsert, $putExtraFields);
-        $record_id = Session::get('record_id');
-        if ($record_id != null) {
-            $Query->where('id', $record_id)->update($dataToInsert);
-        } else {
-            $insertedId = $Query->insertGetId($dataToInsert);
-            Session::put('record_id', $insertedId);
-        }
-        $nextSection = false;
-        if ($sectionIndex < $surveyDetails->section->count() - 1) {
-            $nextSection = $sectionIndex + 1;
-            $completedSections = Session::get('completed_sections');
-            if ($completedSections == null) {
-                $completedSections = [];
-                $completedSections[] = $sectionIndex;
-                Session::put('completed_sections', $completedSections);
-            } else {
-                $completedSections[] = $sectionIndex;
-                Session::put('completed_sections', $completedSections);
-            }
-        } else {
-            $completedSections = Session::get('completed_sections');
-            if ($completedSections == null) {
-                $completedSections = [];
-                $completedSections[] = $sectionIndex;
-                Session::put('completed_sections', $completedSections);
-            } else {
-                $completedSections[] = $sectionIndex;
-                Session::put('completed_sections', $completedSections);
-            }
-            $nextSection = 'finish';
-        }
-        return ['status' => true, 'errors' => [], 'next_section' => $nextSection];
-    }
-
     protected function validateFilledSurveyDetails($request, $validations)
     {
 
@@ -755,7 +703,7 @@ class SurveyController extends Controller
             if (array_key_exists($key, $validations)) {
                 $validation = $validations[$key];
                 foreach ($validation as $valKey => $singleValidation) {
-                    switch ($singleValidation['field_validation']) {
+                    switch (@$singleValidation['field_validation']) {
                         case'required':
                             if (is_array($field)) {
                                 if (empty($field)) {
@@ -850,6 +798,103 @@ class SurveyController extends Controller
         return ['status' => true, 'errors' => []];
     }
 
+
+    protected function saveSurveyAccordingTo_SectionView($request, $tableNameWithoutPrefix, $prefix, $surveyDetails)
+    {
+        $sectionIndex = 0;
+        if ($request->has('section') && $request->section != null) {
+            $sectionIndex = (int)$request->section;
+        }
+        $fieldsArray = [];
+        $fieldsArrayForPartialCheck = [];
+        foreach ($surveyDetails->section[$sectionIndex]->fields as $key => $field) {
+            $validation = $field->fieldMeta->where('key', 'field_validations')->first();
+            if ($validation != null) {
+                $fieldsArray[$field->field_slug] = json_decode($validation->value, true);
+            }
+            if($field->field_type != 'message'){
+                $fieldsArrayForPartialCheck[$field->field_slug] = '';
+            }
+        }
+        $result = $this->validateFilledSurveyDetails($request, $fieldsArray);
+        if ($result['status'] == false) {
+            return ['status' => false, 'errors' => $result['errors']];
+        }
+        $Query = DB::table($tableNameWithoutPrefix);
+        $dataToInsert = [];
+        $putExtraFields = [
+            'ip_address' => request()->ip(),
+            'survey_started_on' => Session::get('started_on'),
+            'survey_completed_on' => Carbon::now()->format('Y-m-d'),
+            'survey_status' => 'Completed',
+            'survey_submitted_by' => (Auth::guard('org')->user() == null) ? 'Guest' : Auth::guard('org')->user()->id,
+            'survey_submitted_from' => 'web',
+            'device_detail' => $request->header('User-Agent')
+        ];
+        foreach ($request->except(['_token', 'section', 'number_of_fields', 'prefilled_count', 'prefilled_names']) as $key => $value) {
+            if (is_array($value)) {
+                $dataToInsert[$key] = json_encode($value);
+            } else {
+                $dataToInsert[$key] = $value;
+            }
+        }
+        $dataToInsert = array_merge($dataToInsert, $putExtraFields);
+        $record_id = Session::get('record_id');
+        $statusPartially = false;
+        if ($record_id != null) {
+            $valuesForPartialCheck = array_intersect(array_keys($fieldsArrayForPartialCheck),array_keys(array_filter($request->all())));            
+            if($valuesForPartialCheck !== array_keys($fieldsArrayForPartialCheck)){
+                $statusPartially = true;
+            }
+            $Query->where('id', $record_id)->update($dataToInsert);
+        } else {
+            $valuesForPartialCheck = array_intersect(array_keys($fieldsArrayForPartialCheck),array_keys(array_filter($request->all())));
+            if($valuesForPartialCheck !== array_keys($fieldsArrayForPartialCheck)){
+                $statusPartially = true;
+            }
+            $insertedId = $Query->insertGetId($dataToInsert);
+            Session::put('record_id', $insertedId);
+        }
+        $nextSection = false;
+        if($statusPartially){
+            $sessionKey = 'partial_sections';
+        }else{
+            $partialSession = @array_unique(Session::get('partial_sections'));
+            if($partialSession != null){
+                if (($key = array_search($sectionIndex, $partialSession)) !== false) {
+                    unset($partialSession[$key]);
+                }
+                Session::put('partial_sections',array_values($partialSession));
+            }
+            $sessionKey = 'completed_sections';
+        }
+        if ($sectionIndex < $surveyDetails->section->count() - 1) {
+            $nextSection = $sectionIndex + 1;
+            $completedSections = Session::get($sessionKey);
+            if ($completedSections == null) {
+                $completedSections = [];
+                $completedSections[] = $sectionIndex;
+                Session::put($sessionKey, $completedSections);
+            } else {
+                $completedSections[] = $sectionIndex;
+                Session::put($sessionKey, $completedSections);
+            }
+        } else {
+            $completedSections = Session::get($sessionKey);
+            if ($completedSections == null) {
+                $completedSections = [];
+                $completedSections[] = $sectionIndex;
+                Session::put($sessionKey, $completedSections);
+            } else {
+                $completedSections[] = $sectionIndex;
+                Session::put($sessionKey, $completedSections);
+            }
+            $nextSection = 'finish';
+        }
+        return ['status' => true, 'errors' => [], 'next_section' => $nextSection];
+    }
+
+
     protected function saveSurveyAccordingTo_QuestionView($request, $tableNameWithoutPrefix, $prefix, $surveyDetails)
     {
         $currentSectionIndex = $request->section;
@@ -903,6 +948,17 @@ class SurveyController extends Controller
             $nextSection = $next_prev_sectionIndex;
             $nextQuestion = $next_prev_questionIndex;
         }
+        if($next_prev_sectionIndex != $currentSectionIndex){
+            $completedSections = Session::get('completed_sections');
+            if ($completedSections == null) {
+                $completedSections = [];
+                $completedSections[] = $currentSectionIndex;
+                Session::put('completed_sections', $completedSections);
+            } else {
+                $completedSections[] = $currentSectionIndex;
+                Session::put('completed_sections', $completedSections);
+            }
+        }
 
         return ['status' => true, 'errors' => [], 'next_section' => $nextSection, 'next_question' => $nextQuestion];
 
@@ -927,10 +983,28 @@ class SurveyController extends Controller
         return ['action' => 'print_message', 'message' => 'Survey completed successfully!'];
     }
 
+    protected function getSurveyTimerSettings($token){
+        $surveyRecord = forms::select(['form_slug', 'id'])->with(['formsMeta', 'section.fields'])->where('embed_token', $token)->first();
+        $meta = get_form_meta($surveyRecord->id, null, true, false);
+        if(array_key_exists('timer_type', $meta)){
+            switch($meta['timer_type']){
+                case'survey_duration':
+                    if(array_key_exists('survey_duration', $meta)){
+                        $duration = $meta['survey_duration'];
+                        return ['type'=>'duration','time'=>$duration];
+                    }
+                break;
+
+                case'survey_expire_time':
+                break;
+            }
+        }
+    }
+
     protected function validateSurveyConditions($metaArray)
     {
         $errorsArray = [];
-        $surveyStatus = ['status' => true];
+        $surveyStatus = ['status' => true,'type'=>null];
         //Check Survey Enabled
         if (!@$metaArray['enable_survey'] == 1) {
             $surveyStatus = ['status' => false, 'message' => 'Survey not enabled!','type'=>'enable_disable'];
@@ -979,9 +1053,117 @@ class SurveyController extends Controller
             $expireTime = @$metaArray['survey_expire_time'];
             $surveyStatus = $this->findScheduleCases($startDate, $expireDate, $startTime, $expireTime);
         }
+
+        //Check Survey Timer Enabled or Not
+        if(array_key_exists('survey_timer', $metaArray)){
+            if($metaArray['survey_timer'] == 1){
+                $timer_type = $metaArray['timer_type'];
+                switch($timer_type){
+                    case'survey_duration':
+                        $survey_started_time = Session::get('survey_started_time');
+                        if($survey_started_time != null){
+                            $parsed_time = Carbon::parse($survey_started_time);
+                            $current_time = Carbon::now();
+                            $difference = $parsed_time->diffInMinutes($current_time);                            
+                            if(array_key_exists('survey_duration', $metaArray) && $metaArray['survey_duration'] != null && $metaArray['survey_duration'] != ''){
+                                if($difference >= $metaArray['survey_duration']){
+                                    return ['status'=>false, 'message'=>'Survey Timer has been expired. You can start new survey!','type'=>'timer_expired'];
+                                }
+                            }
+                        }
+                    break;
+
+                    case'survey_expire_time':
+                        $survey_expiry_date = @$metaArray['expire_date'];
+                        $survey_expiry_time = @$metaArray['survey_expire_time'];
+                        if($survey_expiry_date != null && $survey_expiry_time != null){
+                            $currentDateTime = Carbon::now();
+                            $expirayTimestamp = Carbon::parse($survey_expiry_date.' '.$survey_expiry_time);
+                            $totalSeconds = $expirayTimestamp->diffInSeconds($currentDateTime);
+                            $days = $expirayTimestamp->diff($currentDateTime)->format('%D');
+                            $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
+                            $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
+                            $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
+                            if($days <= 0 && $hours <= 0 && $minutes <= 0 && $seconds <= 0){
+                                return ['status'=>false, 'message'=>'Survey Timer has been expired. You can start new survey!','type'=>'timer_expired'];
+                            }
+
+                        }
+                        if($survey_expiry_date != null && $survey_expiry_time == null){
+
+                        }
+                        if($survey_expiry_date == null && $survey_expiry_time != null){
+
+                        }
+                        if($survey_expiry_date == null && $survey_expiry_time == null){
+                            return ['status'=>true];
+                        }
+                    break;
+                }
+            }
+        }
         return $surveyStatus;
     }
 
+    public function getTimeDifference(Request $request){
+        $metaArray = json_decode($request->data,true);
+        $timer_type = $metaArray['timer_type'];
+        switch($timer_type){
+            case'survey_duration':
+                $survey_started_time = Session::get('survey_started_time');
+                $surveyDuration = @$metaArray['survey_duration'];
+                if($surveyDuration != null){
+                    $currentDateTime = Carbon::now();
+                    $expiryTime = $survey_started_time->addMinutes($surveyDuration);
+                    $d = $expiryTime->diff($currentDateTime)->format('%D');
+                    $h = $expiryTime->diff($currentDateTime)->format('%H');
+                    $m = $expiryTime->diff($currentDateTime)->format('%I');
+                    $s = $expiryTime->diff($currentDateTime)->format('%S');
+                    // dd($expiryTime->diff($currentDateTime)->format('%D %H %I %S'));
+                    return response()->json(['days'=>$d,'hours'=>$h,'minutes'=>$m,'seconds'=>$s]);
+
+                }
+                dd($survey_started_time);
+            break;
+
+            case'survey_expire_time':
+                $survey_expiry_date = @$metaArray['expire_date'];
+                $survey_expiry_time = @$metaArray['survey_expire_time'];
+                if($survey_expiry_date != null && $survey_expiry_time != null){
+                    $currentDateTime = Carbon::now();
+                    $expirayTimestamp = Carbon::parse($survey_expiry_date.' '.$survey_expiry_time);
+                    $totalSeconds = $expirayTimestamp->diffInSeconds($currentDateTime);
+                    $days = $expirayTimestamp->diff($currentDateTime)->format('%D');
+                    $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
+                    $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
+                    $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
+                    return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+
+                }
+                if($survey_expiry_date != null && $survey_expiry_time == null){
+                    $currentDateTime = Carbon::now();
+                    $expirayTimestamp = Carbon::parse($survey_expiry_date);
+                    $totalSeconds = $expirayTimestamp->diffInSeconds($currentDateTime);
+                    $days = $expirayTimestamp->diff($currentDateTime)->format('%D');
+                    $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
+                    $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
+                    $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
+                    return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                }
+                if($survey_expiry_date == null && $survey_expiry_time != null){
+                    $currentDateTime = Carbon::now();
+                    $expirayTimestamp = Carbon::parse($survey_expiry_time);
+                    $totalSeconds = $expirayTimestamp->diffInSeconds($currentDateTime);
+                    $days = $expirayTimestamp->diff($currentDateTime)->format('%D');
+                    $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
+                    $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
+                    $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
+                    return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                }
+            break;
+        }
+    }
+ 
     protected function findScheduleCases($startDate, $expireDate, $startTime, $expireTime)
     {
 
@@ -1032,7 +1214,6 @@ class SurveyController extends Controller
         if ($startDate != "" && $expireDate == "" && $startTime != "" && $expireTime == "") {
             $scheduleCase = "O";  //expiredate ,starttime expiretime
         }
-
         return $this->validateSurveyDateTime($scheduleCase, $startDate, $expireDate, $startTime, $expireTime);
     }
 
@@ -1210,12 +1391,15 @@ class SurveyController extends Controller
                 } else {
                     return ['status' => false, 'message' => 'Survey Expired before ' . Carbon::parse($expireDate)->diffInDays($today) . ' day\'s'];
                 }
-                $now = Carbon::now()->format('H:i:s');
-                if ($now <= Carbon::parse($expireTime)->format('H:i:s')) {
-                    //Start time ok
-                } else {
-                    return ['status' => false, 'message' => 'Survey Time Expired'];
+                if ($today == Carbon::parse($expireDate)) {
+                    $now = Carbon::now()->format('H:i:s');
+                    if ($now <= Carbon::parse($expireTime)->format('H:i:s')) {
+                        //Start time ok
+                    } else {
+                        return ['status' => false, 'message' => 'Survey Time Expired','type'=>'expire'];
+                    }
                 }
+                
                 return ['status' => true];
                 break;
 

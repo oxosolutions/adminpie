@@ -15,7 +15,7 @@
 				if(!empty($collect->toArray())){
 					
 					$arrayOptions = $collect->mapwithKeys(function($items){
-						if(!empty(@$items['value'])){
+						if($items['value'] != '' && $items['value'] != null){
 							return [@$items['key']=>$items['value']];
 						}
 					});

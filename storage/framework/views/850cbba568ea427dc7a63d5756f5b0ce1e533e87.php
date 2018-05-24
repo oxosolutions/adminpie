@@ -22,16 +22,15 @@
 	$arrayOptions = [];
 	if($model == false || $model == '' || $model == null){
 		$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
+
 		if(isset($optionValues['key'])){
 			$arrayOptions = array_combine($optionValues['key'], $optionValues['value']);
 		}else{
 			$collect = collect($optionValues);
-			
 			$arrayOptions =null;
 			if(!empty($collect->toArray())){
-				
 				$arrayOptions = $collect->mapwithKeys(function($items){
-					if(!empty($items['value'])){
+					if($items['value'] != '' && $items['value'] != null){
 						return [$items['key']=>$items['value']];
 					}
 				});
@@ -45,7 +44,6 @@
 		}
 	}
  ?>
-
 <?php 
 	if(isset($settings['form_show_field_placeholder']) && $settings['form_show_field_placeholder'] != '' && $settings['form_show_field_placeholder'] == 'yes'){
 		$placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
@@ -67,6 +65,7 @@
     $validationString = '';
     if($field_validations != null){
         $javaScriptValidations = json_decode(@$field_validations);
+
         if(!empty($javaScriptValidations)){
             foreach($javaScriptValidations as $key => $validation){
                 if(@$validation->field_validation == 'length'){
