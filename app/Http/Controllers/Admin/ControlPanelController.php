@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Admin\GlobalOrganization;
+use App\Model\Admin\GlobalSetting;
 use Ixudra\Curl\Facades\Curl;
 use File;
 use Session;
@@ -199,7 +200,7 @@ class ControlPanelController extends Controller
     protected function permutations(array $array, $inb=false){
         switch (count($array)) {
             case 1:
-                // Return the array as-is; returning the first item
+                // Return the array as-it-is; returning the first item
                 // of the array was confusing and unnecessary
                 return $array[0];
                 break;
@@ -232,6 +233,30 @@ class ControlPanelController extends Controller
 
 
     public function versionControlling(){
+
         return view('admin.control-panel.version-control');
+    }
+
+    public function updateVersion(Request $request){
+        $model = GlobalSetting::firstOrNew(['key'=>'software_version']);
+        $checkForPrimaryOrganization = GlobalSetting::where(['key'=>'primary_organization'])->first();
+        if($checkForPrimaryOrganization != null){
+            if($checkForPrimaryOrganization->value != '' && $checkForPrimaryOrganization->value != null){
+                $prefix = DB::getTablePrefix();
+                $tablesList = DB::select("select t.TABLE_NAME FROM information_schema.tables t
+                      WHERE t.table_schema = '" . env('DB_DATABASE', 'forge') . "'
+                      AND t.table_name LIKE '".$prefix.$checkForPrimaryOrganization->value . "%' 
+                      ORDER BY t.table_name");
+                foreach($tablesList as $key => $table){
+                    $columns = DB::getSchemaBuilder()->getColumnListing($table);;
+                    dd($table->TABLE_NAME);
+                }
+            }else{
+                Session::put('error','Unable to update database version! (Primary Organization is not seleted)');
+                return back();
+            }
+        }
+        dump($model);
+        dd($request->all());
     }
 }

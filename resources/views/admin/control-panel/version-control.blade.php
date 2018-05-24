@@ -21,11 +21,15 @@ $page_title_data = array(
                             9.5.5.0 Stable
                         </span>
                     </div>
-                    <div class="p-30 aione-align-center line-height-28">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et metus eu neque vestibulum convallis. Mauris vestibulum arcu vel magna egestas, quis vehicula diam accumsan. 
-                        <button class="mt-20">Check for new update</button>
-                        <button class="mt-20">Update Now</button>
-                    </div>
+                    {!! Form::open(['route'=>'update.database.version']) !!}
+                        <div class="p-30 aione-align-center line-height-28">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed et metus eu neque vestibulum convallis. Mauris vestibulum arcu vel magna egestas, quis vehicula diam accumsan. 
+                            <br/>
+                            Current Version: {!! Form::text('db_version',null,['class'=>'form-controle']) !!}
+                            <br/>                            
+                            <button class="mt-20">Update Now</button>
+                        </div>
+                    {!! Form::close() !!}
                 </div>
             </div>
             <div class="ac l50">

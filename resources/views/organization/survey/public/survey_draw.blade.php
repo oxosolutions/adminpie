@@ -170,6 +170,7 @@
     // session()->put('survey_started_time');
 @endphp
 <input type="hidden" name="meta_value" value="{{ json_encode($meta) }}" />
+<input type="hidden" name="started_time" value="{{ $survey_start_time->format('Y-m-d H:i:s') }}" />
 <div class="" style="max-width: 1120px;margin: 0 auto;">
     @if($error['status'] == false)
         <div class="aione-border aione-align-center border-width-3 p-50 font-size-30 grey lighten-2 mt-30" style="border-style: dashed;">
@@ -486,7 +487,7 @@
     </div>
 </div>
 <div style="position: fixed; top: 0; right: 5%; z-index: 999;">
-    <h4>Remaining:  <span id="day">(0 Day's)</span> <span id="time">00:00:00</span></h4>
+    <h4>Remaining:  <span id="day">(00 Day's)</span> <span id="time">00:00:00</span></h4>
 </div>
 <script type="text/javascript" src="{{ asset('js/moment.js') }}"></script>
 <script type="text/javascript">
@@ -527,50 +528,33 @@
             }
         });
         var survey_meta = $('input[name=meta_value]').val();
-
+        var started_time = $('input[name=started_time]').val();
+        var even_odd = 0;
         var timerInterval = setInterval(function(){
             $.ajax({
                 type: 'GET',
                 url: route()+'/timer',
-                data: {data:survey_meta},
+                data: {data:survey_meta, start_time:started_time},
                 success: function(result){
-                    $('#day').text('('+result.days+' Day\'s)');
-                    $('#time').text(result.hours+':'+result.minutes+':'+result.seconds);
+                    if(parseInt(result.days) <= 0 && parseInt(result.hours) <= 0 && parseInt(result.minutes) <= 0 && parseInt(result.seconds) <= 0){
+                        clearInterval(timerInterval);
+                        $('#day').text('(00 Day\'s)');
+                        $('#time').text('00:00:00');
+                        $('.next, .next_section').trigger('click');
+                    }else{
+                        if(even_odd == 0){
+                            $('#day').text('('+result.days+' Day\'s)');
+                            $('#time').text(result.hours+':'+result.minutes+':'+result.seconds);
+                            even_odd = 1;
+                        }else{
+                            $('#day').text('('+result.days+' Day\'s)');
+                            $('#time').text(result.hours+' '+result.minutes+' '+result.seconds);
+                            even_odd = 0;
+                        }
+                    }
                 }
             });
         },1000);
-
-        /*if(survey_start_time != null && survey_start_time != ''){
-            
-            var date = moment().format('DD-MM-YYYY');
-            var minutes = $('input[name=time]').val();
-            var eventTime = moment(date+' '+survey_start_time, 'DD-MM-YYYY HH:mm').add(parseInt(minutes),'minutes').unix(),
-            currentTime = moment().unix(),
-            diffTime = eventTime - currentTime,
-            duration = moment.duration(diffTime * 1000, 'milliseconds'),
-            interval = 1000;           
-            if(diffTime > 0) {
-                setInterval(function(){
-                    duration = moment.duration(duration.asMilliseconds() - interval, 'milliseconds');
-                    var d = moment.duration(duration).days(),
-                        h = moment.duration(duration).hours(),
-                        m = moment.duration(duration).minutes(),
-                        s = moment.duration(duration).seconds();
-
-                    d = $.trim(d).length === 1 ? '0' + d : d;
-                    h = $.trim(h).length === 1 ? '0' + h : h;
-                    m = $.trim(m).length === 1 ? '0' + m : m;
-                    s = $.trim(s).length === 1 ? '0' + s : s;
-                    if(h == 0 && m == 0 && s == 0){
-                        $('.next, .next_section').trigger('click');
-                    }else{
-                        $('#time').text(h+':'+m+':'+s);
-                    }
-                }, interval);
-            }else{
-                console.log(diffTime);
-            }
-        }*/
 
         $('.add_more').click(function(){
             var htmlForRepeat = '<div class="mb-30 persist-area single-section section-repeater">'+$(this).parent('.div-for-section').find('.single-section:first').html()+'</div>';

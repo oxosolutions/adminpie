@@ -1110,20 +1110,22 @@ class SurveyController extends Controller
         $timer_type = $metaArray['timer_type'];
         switch($timer_type){
             case'survey_duration':
-                $survey_started_time = Session::get('survey_started_time');
+                $survey_started_time = Carbon::parse($request->start_time);
                 $surveyDuration = @$metaArray['survey_duration'];
                 if($surveyDuration != null){
                     $currentDateTime = Carbon::now();
                     $expiryTime = $survey_started_time->addMinutes($surveyDuration);
+                    $totalSeconds = $expiryTime->diffInSeconds($currentDateTime);
                     $d = $expiryTime->diff($currentDateTime)->format('%D');
                     $h = $expiryTime->diff($currentDateTime)->format('%H');
                     $m = $expiryTime->diff($currentDateTime)->format('%I');
                     $s = $expiryTime->diff($currentDateTime)->format('%S');
-                    // dd($expiryTime->diff($currentDateTime)->format('%D %H %I %S'));
-                    return response()->json(['days'=>$d,'hours'=>$h,'minutes'=>$m,'seconds'=>$s]);
-
+                    if($currentDateTime > $expiryTime){
+                        return response()->json(['days'=>00,'hours'=>00,'minutes'=>00,'seconds'=>00]);
+                    }else{
+                        return response()->json(['days'=>$d,'hours'=>$h,'minutes'=>$m,'seconds'=>$s]);
+                    }
                 }
-                dd($survey_started_time);
             break;
 
             case'survey_expire_time':
@@ -1132,12 +1134,16 @@ class SurveyController extends Controller
                 if($survey_expiry_date != null && $survey_expiry_time != null){
                     $currentDateTime = Carbon::now();
                     $expirayTimestamp = Carbon::parse($survey_expiry_date.' '.$survey_expiry_time);
-                    $totalSeconds = $expirayTimestamp->diffInSeconds($currentDateTime);
+                    $totalSeconds = $expirayTimestamp->diffInSeconds($currentDateTime);                    
                     $days = $expirayTimestamp->diff($currentDateTime)->format('%D');
                     $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
                     $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
                     $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
-                    return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                    if($currentDateTime > $expirayTimestamp){
+                        return response()->json(['days'=>00,'hours'=>00,'minutes'=>00,'seconds'=>00]);
+                    }else{
+                        return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                    }
 
                 }
                 if($survey_expiry_date != null && $survey_expiry_time == null){
@@ -1148,7 +1154,11 @@ class SurveyController extends Controller
                     $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
                     $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
                     $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
-                    return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                    if($currentDateTime > $expirayTimestamp){
+                        return response()->json(['days'=>00,'hours'=>00,'minutes'=>00,'seconds'=>00]);
+                    }else{
+                        return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                    }
                 }
                 if($survey_expiry_date == null && $survey_expiry_time != null){
                     $currentDateTime = Carbon::now();
@@ -1158,7 +1168,11 @@ class SurveyController extends Controller
                     $hours = $expirayTimestamp->diff($currentDateTime)->format('%H');
                     $minutes = $expirayTimestamp->diff($currentDateTime)->format('%I');
                     $seconds = $expirayTimestamp->diff($currentDateTime)->format('%S');
-                    return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                    if($currentDateTime > $expirayTimestamp){
+                        return response()->json(['days'=>00,'hours'=>00,'minutes'=>00,'seconds'=>00]);
+                    }else{
+                        return response()->json(['days'=>$days,'hours'=>$hours,'minutes'=>$minutes,'seconds'=>$seconds]);
+                    }
                 }
             break;
         }

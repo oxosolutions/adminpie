@@ -14,4 +14,6 @@
     Route::post('/method/serve',             ['as'=>'method.serve','uses'=>'ControlPanelController@methodServe']);
 
     Route::get('/control-panel/version',                   ['as'=>'version.control','uses'=>'ControlPanelController@versionControlling']);
+
+    Route::post('/update/database/version',  ['as'=>'update.database.version', 'uses' => 'ControlPanelController@updateVersion']);
 ?>
