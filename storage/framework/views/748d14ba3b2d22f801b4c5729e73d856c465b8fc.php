@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('content'); ?>
-	<?php if(@$errors->has()): ?>
+	<?php if(@!empty($errors)): ?>
 		<script type="text/javascript">
 			window.onload = function(){
                 $('#add_new_model').modal('open');
