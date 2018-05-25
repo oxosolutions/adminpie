@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('content')
-	@if(@$errors->has() || Session::has('date_error'))
+	@if(!$errors->isEmpty() || Session::has('date_error'))
 		<script type="text/javascript">
 			window.onload = function(){
 				$('#add_new_model').modal('open');

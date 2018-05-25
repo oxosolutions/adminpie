@@ -295,7 +295,7 @@ $page_title_data = array(
                     <div class="row no-margin-bottom edit-section-detail">
                         
                         {!! FormGenerator::GenerateForm('form_generator_section_edit') !!}
-                        @if(@$errors->has())
+                        @if(!$errors->isEmpty())
                             @foreach($errors->all() as $kay => $err)
                                 <div style="color: red">{{$err}}</div>
                             @endforeach

@@ -2,14 +2,14 @@
 <?php $__env->startSection('content'); ?>
 	<?php if(@$data): ?>
 		<?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-			<?php 
+			<?php
 				$model = [
 						'name' 	=>	$value->name ,
 						'from' 	=>	$value->from ,
 						'to'	=>	$value->to,
 						'working_days' => json_decode($value->working_days)
 					];
-			 ?>
+			?>
 		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 		<script type="text/javascript">
 			window.onload = function(){
@@ -18,7 +18,7 @@
 		</script>
 	<?php endif; ?>
 
-<?php if(@$errors->has()): ?>
+<?php if(!$errors->isEmpty()): ?>
 	<script type="text/javascript">
 		window.onload = function(){
 				$('#add_new_model').modal('open');
@@ -26,7 +26,7 @@
 	</script>
 <?php endif; ?>
 
-<?php 
+<?php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -34,7 +34,7 @@
 	'page_title' => 'Shifts',
 	'add_new' => '+ Add Shift'
 ); 
- ?>
+?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -2,7 +2,7 @@
 
 
 @section('content')
-	@if(@$errors->has())
+	@if(!$errors->isEmpty())
 	<script type="text/javascript">
 		$(window).load(function(){
 			document.getElementById('add_new').click();

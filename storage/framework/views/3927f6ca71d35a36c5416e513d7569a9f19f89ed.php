@@ -1,5 +1,5 @@
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -7,8 +7,8 @@
 	'page_title' => 'Applications',
 	
 ); 
- ?>
-	<?php if(@$errors->has()): ?>
+?>
+	<?php if(!$errors->isEmpty()): ?>
 		<script type="text/javascript">
 			$(window).load(function(){
 				$('.modal').modal('open');
@@ -20,9 +20,9 @@
 	<?php endif; ?>
 	<?php if(@$data): ?>
 		<?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-			<?php 
+			<?php
 				$model = ['name' => $value['name']];
-			 ?>
+			?>
 		<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 		<script type="text/javascript">
 			$(window).load(function(){

@@ -263,6 +263,7 @@ return [
         'Curl'          => Ixudra\Curl\Facades\Curl::class,
         'GitHub' => GrahamCampbell\GitHub\Facades\GitHub::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Datatables' => Yajra\Datatables\Datatables::class,
     ],
 
 ];

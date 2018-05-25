@@ -9,7 +9,7 @@
 	
 ); 
 @endphp
-	@if(@$errors->has())
+	@if(!$errors->isEmpty())
 		<script type="text/javascript">
 			$(window).load(function(){
 				$('.modal').modal('open');

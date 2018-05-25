@@ -40,7 +40,7 @@ class Logsystem
                     $this->createLog($current_url , $ip ,$user_id , $user->email, $user->name,$action);                                
                 }else if($current_url !=  $text['route'])
                     {
-                        $this->createLog($current_url, $ip,$user_id);
+                        $this->createLog($current_url, $ip,$user_id, $user->email, $user->name,$action);
                     }   
             }catch(\Exception $e)
             {

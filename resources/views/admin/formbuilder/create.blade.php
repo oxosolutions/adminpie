@@ -68,7 +68,7 @@ $page_title_data = array(
            </div>
         </div> --}}
         <input type="hidden" name="type" value="{{@$type}}">
-         @if(@$errors->has())
+         @if(!$errors->isEmpty())
           @foreach($errors->all() as $kay => $err)
             <div style="color: red">{{$err}}</div>
           @endforeach

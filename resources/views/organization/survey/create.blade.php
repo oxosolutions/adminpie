@@ -18,7 +18,7 @@ $page_title_data = array(
     {!! Form::open([ 'method' => 'POST', 'route' => 'save.survey' ,'class' => 'form-horizontal']) !!}
     {!! FormGenerator::GenerateForm('add_survey_form') !!}
         <input type="hidden" name="type" value="{{@$type}}">
-         @if(@$errors->has())
+         @if(!$errors->isEmpty())
           @foreach($errors->all() as $kay => $err)
             <div style="color: red">{{$err}}</div>
           @endforeach

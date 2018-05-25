@@ -1,29 +1,29 @@
 <?php if(Auth::guard('admin')->check() == true): ?>
-	<?php 
+	<?php
         $route_slug = '';
 		$layout = 'admin.layouts.main';
 		$route = 'create.sections';
 		$routeDelSec = 'del.section';
 		$routeListField = 'list.field';
-	 ?>
+	?>
 <?php else: ?>
-	<?php 
+	<?php
         $route_slug = 'org.';
 		$layout = 'layouts.main';
 		$route = 'org.create.sections';
 		$routeDelSec = 'org.del.section';
 		$routeListField = 'org.list.field';
-	 ?>
+	?>
 <?php endif; ?>
-<?php 
+<?php
 	$section_id = ""; 
- ?>
+?>
 
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
     @$title = $form->form_title;
- ?>
-<?php 
+?>
+<?php
 $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'yes',
@@ -33,7 +33,7 @@ $page_title_data = array(
   'route' => ['export.survey',$form->id],
  
 ); 
- ?>
+?>
 
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -202,9 +202,9 @@ $page_title_data = array(
     	    	</div>
             <?php endif; ?>
             <?php if(Request::has('field')): ?>
-                <?php 
+                <?php
                     $sectionFields = $sections->where('id',Request::input('sections'))->first()->fields;
-                 ?>
+                ?>
     	    	<div class="p-5 pr-50 display-inline-block ml-20 bg-white line-height-32">
     	    		<b><?php echo e(__('forms.field')); ?>:</b> <?php echo e(substr(strip_tags($sectionFields->where('id',request()->field)->first()->field_title),0,35)); ?>...
     	    	</div>
@@ -235,11 +235,11 @@ $page_title_data = array(
                                 </span>
                             </a>
                         </li>
-                    <?php  $index = 1; ?>
+                    <?php $index = 1;?>
     				<?php $__currentLoopData = $sections; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-    					<?php 
+    					<?php
     						$section_id = $section->id;	
-    					 ?>
+    					?>
                         <li class="aione-nav-item level0 has-children <?php echo e((Request::input('sections') == $section->id)?'nav-item-current':''); ?>" section-id=<?php echo e($section->id); ?>>
                             <a href="<?php echo e(Request::url()); ?>?sections=<?php echo e($section->id); ?>">
                                 <span class="nav-item-icon"><i class="fa fa-terminal"></i></span>
@@ -265,29 +265,29 @@ $page_title_data = array(
                 </nav>
             </div>
             <div class="Detail-container">
-                <?php 
+                <?php
                     $section_id = request()->input('sections');
                     $sectionFormData = [];
                     $data = [];
-                 ?>
+                ?>
                 <?php $__currentLoopData = $sections; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php if($value->id == $section_id): ?>
-                        <?php 
+                        <?php
                             $sectionFormData[$key] = $value;   
-                         ?>
+                        ?>
                     <?php endif; ?>    
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 <?php $__currentLoopData = $sectionFormData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <?php $__currentLoopData = $value->sectionMeta; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php 
+                        <?php
                             $data[$v->key] = $v->value;
-                         ?>
+                        ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    <?php 
+                    <?php
                         $data['section_name'] = $value->section_name;
                         $data['section_slug'] = $value->section_slug;
                         $data['section_description'] = $value->section_description;
-                     ?>
+                    ?>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 
 
@@ -298,7 +298,7 @@ $page_title_data = array(
                         
                         <?php echo FormGenerator::GenerateForm('form_generator_section_edit'); ?>
 
-                        <?php if(@$errors->has()): ?>
+                        <?php if(!$errors->isEmpty()): ?>
                             <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $kay => $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div style="color: red"><?php echo e($err); ?></div>
                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -419,22 +419,22 @@ $page_title_data = array(
                                 <button class="add-field-button aione-float-right aione-button pv-10"><?php echo e(__('forms.add_new_field_button_text')); ?></button>
                         		<div class="clear"></div>
                             </div>
-                            <?php 
+                            <?php
                                 $fields = $sections->where('id',Request::input('sections'))->first()->fields;
                                 $firstField = @$fields->toArray()[0]['id'];
-                             ?>
+                            ?>
 
                             <?php if($fields->count() > 0): ?>
                                 <?php $__currentLoopData = $sections->where('id',Request::input('sections'))->first()->fields; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $field): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <li class="collection-item field_id" field_id="<?php echo e($field->id); ?>">
                                         <?php if($form->type == 'survey'): ?>
-                                            <?php 
+                                            <?php
                                                 $question_id = '';
                                                 $questionID = $field->fieldMeta->where('key','question_id')->first();
                                                 if($questionID != null){
                                                     $question_id = $questionID->value;
                                                 }
-                                             ?>
+                                            ?>
                                             <span class="question-id"><?php echo e($question_id); ?></span>
                                         <?php endif; ?>
                                        
@@ -454,15 +454,15 @@ $page_title_data = array(
 
                                           
                                             <?php if(Auth::guard('admin')->check()): ?>                                                
-                                                <?php 
+                                                <?php
                                                     $down = 'field.down.sort';
                                                     $up = 'field.up.sort';
-                                                 ?>
+                                                ?>
                                             <?php else: ?>   
-                                                <?php 
+                                                <?php
                                                     $down = 'org.field.down.sort';
                                                     $up = 'org.field.up.sort';
-                                                 ?>
+                                                ?>
                                             <?php endif; ?>
                                                 <?php if($field->id != $firstField): ?>
                                                     <a href="<?php echo e(route($up,$field->id)); ?>" class="arrow-upward">
@@ -483,17 +483,17 @@ $page_title_data = array(
                                                 <a href="javascript:;" name="closeModel" onclick="close()" id="closemodal" class="closeDialog close-model-button" style="color: white"><i class="fa fa-close"></i></a>
                                             </div>
                                             <?php if(Auth::guard('admin')->check()): ?>
-                                                <?php 
+                                                <?php
                                                     $route = 'field.move';
-                                                 ?>
+                                                ?>
                                             <?php else: ?>   
-                                                <?php 
+                                                <?php
                                                     $route = 'org.field.move';
-                                                 ?>
+                                                ?>
                                             <?php endif; ?>
-                                            <?php 
+                                            <?php
                                                 $sectionData = '';
-                                             ?>
+                                            ?>
                                              <?php echo Form::open([ 'method' => 'POST', 'route' =>[$route,$field->id] ,'class' => 'form-horizontal']); ?>
 
                                             <div class="modal-content">

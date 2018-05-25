@@ -18,7 +18,7 @@
 		</script>
 	@endif
 
-@if(@$errors->has())
+@if(!$errors->isEmpty())
 	<script type="text/javascript">
 		window.onload = function(){
 				$('#add_new_model').modal('open');

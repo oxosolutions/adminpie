@@ -1,5 +1,5 @@
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
 $page_title_data = array(
   'show_page_title' => 'yes',
   'show_add_new_button' => 'yes',
@@ -7,8 +7,8 @@ $page_title_data = array(
   'page_title' => 'Roles',
   'add_new' => '+ Add Role'
 ); 
- ?>
-  <?php if(@$errors->has()): ?>
+?>
+  <?php if(!$errors->isEmpty()): ?>
     <script type="text/javascript">
       window.onload = function(){
         $('#add_new_model').modal('open');

@@ -33,32 +33,38 @@ $page_title_data = array(
 @include('admin.formbuilder._tabs')
     <div class="aione-table">
         <table class="stripped">
-            @if(!$model->isEmpty())
-                <tr>
-                    @foreach($model[0]->toArray() as $key => $value)
-                        @if(!in_array($key,['updated_at']))
-                            <th><b>{{ ucwords(str_replace('_',' ',$key)) }}</b></th>
-                        @endif
-                    @endforeach
-                </tr>
-            @endif
-            @if(!$model->isEmpty())
-                @foreach($model as $key => $value)
+            @if(!is_array($model))
+                @if(!$model->isEmpty())
                     <tr>
-                        @foreach($value->toArray() as $column_key => $column_value)
-                            @if(!in_array($column_key,['updated_at']))
-                                @if($column_key == 'created_at')
-                                    <td>{{ \Carbon\Carbon::parse($column_value)->diffForHumans() }}</td>
-                                @else
-                                    <td>{{ $column_value }}</td>
-                                @endif
+                        @foreach($model[0]->toArray() as $key => $value)
+                            @if(!in_array($key,['updated_at']))
+                                <th><b>{{ ucwords(str_replace('_',' ',$key)) }}</b></th>
                             @endif
                         @endforeach
                     </tr>
-                @endforeach
+                @endif
+            @endif
+            @if(!is_array($model))
+                @if(!$model->isEmpty())
+                    @foreach($model as $key => $value)
+                        <tr>
+                            @foreach($value->toArray() as $column_key => $column_value)
+                                @if(!in_array($column_key,['updated_at']))
+                                    @if($column_key == 'created_at')
+                                        <td>{{ \Carbon\Carbon::parse($column_value)->diffForHumans() }}</td>
+                                    @else
+                                        <td>{{ $column_value }}</td>
+                                    @endif
+                                @endif
+                            @endforeach
+                        </tr>
+                    @endforeach
+                @endif
             @endif
         </table>
-        {!! $model->render() !!}
+        @if(!is_array($model))
+            {!! $model->render() !!}
+        @endif
     </div>
 @include('common.page_content_secondry_end')
 @include('common.pagecontentend')

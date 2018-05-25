@@ -9,7 +9,7 @@
 	'add_new' => __('organization/hrm.department_list_page_add_department_button')
 ); 
 @endphp
-	@if(@$errors->has())
+	@if(!$errors->isEmpty())
 		<script type="text/javascript">
 			window.onload = function(){
 				$('#add_new_model').modal('open');
