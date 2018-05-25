@@ -1,2 +1,0 @@
-iris id 14 show only
-go to dashboard not asking for survey name (completed survey name)
