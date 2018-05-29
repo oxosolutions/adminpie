@@ -793,7 +793,7 @@ $page_title_data = array(
 		});
 
 	</script>
-		@if(@$errors->has())
+		@if(!$errors->isEmpty())
 			<script type="text/javascript">
 				$(window).load(function(){
 				$('#modal1').modal('open');

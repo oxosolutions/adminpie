@@ -108,23 +108,25 @@ class FormGenerator{
 		$SectionCollection = $model::where('section_slug',$section_slug)->with(['sectionMeta','fields'=>function($query){
 			$query->where('status',1)->orderBy('order');
 		},'formsMeta'])->orderBy('order','ASC');
+
 		if(isset($Options['form_id'])){
 			$SectionCollection = $SectionCollection->where('form_id',$Options['form_id'])->first();
 		}else{
 			$SectionCollection = $SectionCollection->first();
 		}
 
-		if($SectionCollection == null){
+		if($SectionCollection != null){
+            $sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
+            if($sectionType == 'repeater'){
+                $Options['field_type'] = 'array';
+                $SectionCollection->fields = $SectionCollection->fields->unique('field_slug')->values();
+                $HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $datamodel, $formFrom);
+            }else{
+                $HTMLContent = self::GetHTMLSection($SectionCollection, $Options, $datamodel, $formFrom);
+            }
+            return $HTMLContent;
 		}
-		$sectionType = self::GetMetaValue($SectionCollection->sectionMeta,'section_type');
-		if($sectionType == 'repeater'){
-			$Options['field_type'] = 'array';
-			$SectionCollection->fields = $SectionCollection->fields->unique('field_slug')->values();
-			$HTMLContent = self::GetHTMLGroup($SectionCollection, $Options, $datamodel, $formFrom);
-		}else{
-			$HTMLContent = self::GetHTMLSection($SectionCollection, $Options, $datamodel, $formFrom);
-		}
-		return $HTMLContent;
+		
 	}
 
 	/**

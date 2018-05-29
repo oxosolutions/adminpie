@@ -144,7 +144,7 @@ class LoginController extends Controller
 
     public function login(Request $request){
         $model = GroupUsers::where('email',$request->email)->first();
-        if(count(@$model) > 0){
+        if($model != null){
             if($model->status == 0){
                 Session::flash('error','Your account is deactivated from group admin!');
                 return back();

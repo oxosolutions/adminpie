@@ -38,6 +38,7 @@
 		$('#{{$data['modal_id']}}').modal({
 			 dismissible: true
 		});
+
 		$('.close-model-button').click(function(){
 			$("#{{$data['modal_id']}}").modal('close');
 		});
@@ -61,5 +62,4 @@
 	function close(){
 		alert('hello');
 	}
-
 </script>

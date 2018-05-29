@@ -1,13 +1,13 @@
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
 	// $isEmployee = App\Model\Organization\Employee::where('user_id' , $model->id)->first();
 	$isEmployee = is_employee(@request()->route()->parameters()['id']);
 	$isAdmin = is_admin();
 
 	$user_id = $model->id;
- ?>
+?>
 
-<?php 
+<?php
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
@@ -15,7 +15,7 @@ $page_title_data = array(
 	'page_title' => 'Profile',
 	'add_new' => ''
 ); 
- ?>
+?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -78,7 +78,7 @@ $page_title_data = array(
 								</table>
 								<div class=" right-align" id="modal-wrapper">
 									
-										<?php 
+										<?php
 											$meta_data = array_column(json_decode($model['metas'],true), 'value','key');
 											$shift = null;
 											if(isset($meta_data['user_shift'])){
@@ -89,7 +89,7 @@ $page_title_data = array(
 											$userData['shift'] = $shift;
 											$userData['email'] = $model->email;
 											$userData['name'] = $model->name;
-										 ?>
+										?>
 									<div id="modal1" class="modal modal-fixed-footer" style="overflow-y: hidden;">
 									<?php echo Form::model(@$userData,['route'=>'update.profile','method'=>'post']); ?>
 
@@ -229,10 +229,10 @@ $page_title_data = array(
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>
-				<?php 
+				<?php
 					$roles = array_keys(@$model->user_role_rel->groupBy('role_id')->toArray());
 					//if role has permission to this widget
-				 ?>
+				?>
                 <?php if($isEmployee && request()->id != null): ?>
                     <?php if(check_widget_permission('employee_details')): ?>
                         <div class="aione-border mb-25" >
@@ -259,9 +259,9 @@ $page_title_data = array(
                                                 <?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;
                                             </td>
                                             <td>                                        
-                                                <?php 
+                                                <?php
                                                     $fieldData = str_replace(' ', '_', strtolower($field));
-                                                 ?>
+                                                ?>
                                                 <?php if($fieldData == 'designation'): ?>
                                                     <?php echo e(@App\Model\Organization\Designation::find($model->designation)->name); ?>
 
@@ -310,13 +310,13 @@ $page_title_data = array(
                             </div>
                             
                             <div class="aione-table p-10" >
-                                <?php 
+                                <?php
                                     $data = [];
-                                 ?>
+                                ?>
                                 <?php $__currentLoopData = str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php 
+                                    <?php
                                         array_push($data , strtolower($v));
-                                     ?>
+                                    ?>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 <table>
                                     <tbody> 
@@ -367,9 +367,9 @@ $page_title_data = array(
                                                 <?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;
                                             </td>
                                             <td>                                        
-                                                <?php 
+                                                <?php
                                                     $fieldData = str_replace(' ', '_', strtolower($field));
-                                                 ?>
+                                                ?>
                                                 <?php if($fieldData == 'designation'): ?>
                                                     <?php echo e(@App\Model\Organization\Designation::find($model->designation)->name); ?>
 
@@ -415,13 +415,13 @@ $page_title_data = array(
                             </div>
                             
                             <div class="aione-table p-10" >
-                                <?php 
+                                <?php
                                     $data = [];
-                                 ?>
+                                ?>
                                 <?php $__currentLoopData = str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                    <?php 
+                                    <?php
                                         array_push($data , strtolower($v));
-                                     ?>
+                                    ?>
                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 <table>
                                     <tbody> 
@@ -471,9 +471,9 @@ $page_title_data = array(
 											<?php echo e(ucfirst(str_replace('_', ' ',$field))); ?>: &nbsp;
 										</td>
 										<td>										
-											<?php 
+											<?php
 												$fieldData = str_replace(' ', '_', strtolower($field));
-											 ?>
+											?>
 											<?php if($fieldData == 'designation'): ?>
 												<?php echo e(@App\Model\Organization\Designation::find($model->designation)->name); ?>
 
@@ -519,13 +519,13 @@ $page_title_data = array(
 						</div>
 						
 						<div class="aione-table p-10" >
-							<?php 
+							<?php
 								$data = [];
-							 ?>
+							?>
 							<?php $__currentLoopData = str_replace(' ','_',FormGenerator::GetSectionFieldsName('empsec6')); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $k => $v): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-								<?php 
+								<?php
 									array_push($data , strtolower($v));
-								 ?>
+								?>
 							<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 							<table>
 								<tbody>	
@@ -593,7 +593,7 @@ $page_title_data = array(
 		});
 
 	</script>
-		<?php if(@$errors->has()): ?>
+		<?php if(!$errors->isEmpty()): ?>
 			<script type="text/javascript">
 				$(window).load(function(){
 				$('#modal1').modal('open');

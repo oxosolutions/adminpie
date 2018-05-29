@@ -1,11 +1,11 @@
-<?php 
+<?php
 	$id = Request::fullUrl();
 	$array = explode('/', $id);
 	end($array);
 	$key = key($array);
 	unset($array[$key]);
 	$url = implode('/',$array);
- ?>
+?>
 <div id="<?php echo e($data['modal_id']); ?>" class="modal modal-fixed-footer" style="overflow-y: hidden;">
 	<div class="modal-header">
 		<h5><?php echo e(@$data['heading']); ?></h5>	
@@ -42,6 +42,7 @@
 		$('#<?php echo e($data['modal_id']); ?>').modal({
 			 dismissible: true
 		});
+
 		$('.close-model-button').click(function(){
 			$("#<?php echo e($data['modal_id']); ?>").modal('close');
 		});
@@ -65,5 +66,4 @@
 	function close(){
 		alert('hello');
 	}
-
 </script>

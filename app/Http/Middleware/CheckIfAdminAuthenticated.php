@@ -16,7 +16,7 @@ class CheckIfAdminAuthenticated
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
-    {
+    {        
         $auth = Auth::guard('admin');
         if (!$auth->check()) {
             return redirect('/login');
