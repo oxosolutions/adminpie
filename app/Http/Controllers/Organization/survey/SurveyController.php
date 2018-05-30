@@ -986,17 +986,19 @@ class SurveyController extends Controller
     protected function getSurveyTimerSettings($token){
         $surveyRecord = forms::select(['form_slug', 'id'])->with(['formsMeta', 'section.fields'])->where('embed_token', $token)->first();
         $meta = get_form_meta($surveyRecord->id, null, true, false);
-        if(array_key_exists('timer_type', $meta)){
-            switch($meta['timer_type']){
-                case'survey_duration':
-                    if(array_key_exists('survey_duration', $meta)){
-                        $duration = $meta['survey_duration'];
-                        return ['type'=>'duration','time'=>$duration];
-                    }
-                break;
+        if($meta != false){
+            if(array_key_exists('timer_type', $meta)){
+                switch($meta['timer_type']){
+                    case'survey_duration':
+                        if(array_key_exists('survey_duration', $meta)){
+                            $duration = $meta['survey_duration'];
+                            return ['type'=>'duration','time'=>$duration];
+                        }
+                    break;
 
-                case'survey_expire_time':
-                break;
+                    case'survey_expire_time':
+                    break;
+                }
             }
         }
     }

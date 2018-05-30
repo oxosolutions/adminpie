@@ -57,7 +57,7 @@
 		@endphp
 		@if($status == false)
 			@foreach($optionValues['key'] as $key => $value)
-				<div id="field_option_{{$collection->field_slug}}" class="field-option">
+				<div id="field_option_{{$collection->field_slug.$loop->index}}" class="field-option">
 					{!!Form::radio($name,$optionValues['key'][$loop->index],null,javaScriptValidations($loop,$collection,$field_validations,$class_name))!!}
 			    	<label for="option_{{$name.$loop->index}}" class="field-option-label">{!!$optionValues['value'][$loop->index]!!}</label>    
 				</div>
@@ -67,7 +67,7 @@
 			@if(!empty($arrayOptions))
 		
 				@foreach($arrayOptions as $key => $value)
-					<div id="field_option_{{$collection->field_slug}}" class="field-option">
+					<div id="field_option_{{$collection->field_slug.$loop->index}}" class="field-option">
 						{!!Form::radio($name,$key,null,javaScriptValidations($loop,$collection,$field_validations,$class_name))!!}
 				    	<label for="option_{{$name.$loop->index}}" class="field-option-label">{!!@$value!!}</label>    
 					</div>

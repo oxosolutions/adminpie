@@ -1,4 +1,4 @@
-<?php 
+<?php
 $post_id = 9;
 $get_slider = get_slider();
 
@@ -18,11 +18,11 @@ if(isset($post_meta['post_slider_slug'])){
 if(!isset($slides)){
 	$slides = [];
 }
- ?>
+?>
 <div id="aione_slider" class="aione-slider">
 	<div class="aione-row">
 
-		<div id="aione_slider_<?php echo e(rand(111111,999999)); ?>" class="aione-slider-wrapper owl-carousel " <?php echo e(@slider_attributes); ?>>
+		<div id="aione_slider_<?php echo e(rand(111111,999999)); ?>" class="aione-slider-wrapper owl-carousel " <?php echo e(@$slider_attributes); ?>>
 			<?php $__currentLoopData = @$slides; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $slide): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 			<div class="aione-slider-item">
 				<div class="aione-slider-image">

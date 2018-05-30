@@ -21,13 +21,13 @@ $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeho
    }
 @endphp
 
-{!!Form::date(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray)!!}
+{!!Form::text(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray)!!}
 
 @if(Session::has('date_error'))
 <script type='text/javascript'>Materialize.toast('Date is already in use', 5000)</script>
 @endif
 
-<script type="text/javascript">
+<script >
  $('.datepicker').pickadate({
            format: 'yyyy/mm/dd',
    selectMonths: true, // Creates a dropdown to control month

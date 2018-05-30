@@ -10,7 +10,7 @@
         </div>
     </section>
 <?php endif; ?>
-<style type="text/css">
+<style >
 	.indicater-wrapper{
 		position: absolute;right: 0;bottom:0;left:0;font-size: 9px;cursor: pointer
 	}
@@ -148,7 +148,7 @@
 </style>
 
 
-<?php 
+<?php
     $route = route('embed.survey',['token'=>request()->token]);
     $survey_model = App\Model\Organization\forms::get_id_from_token_of_survey(request()->token);
     $survey_form_settings = (object) get_form_meta($survey_model->id,null,true,false);
@@ -167,7 +167,7 @@
         session()->put('survey_started_time',$survey_start_time);
     }
     // session()->put('survey_started_time');
- ?>
+?>
 <input type="hidden" name="meta_value" value="<?php echo e(json_encode($meta)); ?>" />
 <input type="hidden" name="started_time" value="<?php echo e($survey_start_time->format('Y-m-d H:i:s')); ?>" />
 <div class="" style="max-width: 1120px;margin: 0 auto;">
@@ -206,15 +206,15 @@
             
             <?php if($data['displayBy'] == 'section' && $error['status'] == true): ?>
                 
-                <?php 
+                <?php
                     $sectionIndex = (request()->section)?request()->section:0;
-                 ?>
+                ?>
                 <div class=" p-10" style="max-width: 1120px;margin: 0 auto;">
                     <div class="aione-float-left pr-15  " style="width: 360px">
                         <div class="sections-wrap">
                             <!-- Survey Section -->
                             <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php 
+                                <?php
                                     $completedSections = session()->get('completed_sections');
                                     $partiallySections = session()->get('partial_sections');
                                     if($completedSections != null && in_array($key,$completedSections)){
@@ -230,7 +230,7 @@
                                         $progressPercentage = 0;
                                         $partiallClass = '';
                                     }
-                                 ?>
+                                ?>
                                 <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?> <?php echo e($completedClass); ?> <?php echo e($partiallClass); ?>" onclick="window.location.href='<?php echo e(route('embed.survey',['token'=>request()->token]).'?section='.$key); ?>'" style="cursor: pointer;">
                                     <div class="pv-15 pl-16 pr-10 aione-border  bg-white " style="position:relative;">
                                         <div class="font-size-20 light-blue darken-2 font-weight-600 truncate " >
@@ -276,14 +276,14 @@
 
                                     <?php echo Form::hidden('number_of_fields',count($data['fields'])); ?>
 
-                                    <?php 
+                                    <?php
                                         $preFillCount = 0;
                                         $prefilledSlug = [];
                                         $OptionsArray = [];
                                         $OptionsArray['form_id'] = $data['form_id'];
                                         $OptionsArray['from'] = @$data['sections'][$sectionIndex]['section_type'];
                                         $OptionsArray['loop_index'] = 0;
-                                     ?>
+                                    ?>
                                     <div class="div-for-section">
                                         <div class="parent_div_for_append">
                                             <div class="mb-30 persist-area single-section">
@@ -291,12 +291,12 @@
                                                     <?php echo FormGenerator::GenerateField($fieldSlug, $OptionsArray, null, 'org'); ?>
 
                                                  
-                                                    <?php 
+                                                    <?php
                                                         if(@$prefill[$fieldSlug] != null){
                                                             $prefilledSlug[] = $fieldSlug;
                                                             $preFillCount++;
                                                         }
-                                                     ?>
+                                                    ?>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 <textarea class="form_conditions" style="display: none;"><?php echo e(json_encode(FormGenerator::GetCurrentFormConditions())); ?></textarea>
                                             </div>
@@ -330,12 +330,12 @@
                     <?php echo Form::model(@$prefill); ?>
 
                     <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php 
+                        <?php
                             $OptionsArray = [];
                             $OptionsArray['form_id'] = $data['form_id'];
                             $OptionsArray['from'] = $section['section_type'];
                             $OptionsArray['loop_index'] = 0;
-                         ?>
+                        ?>
                         <div class="div-for-section">
                             <div class="parent_div_for_append">
                                 <div class="mb-30 persist-area single-section">
@@ -370,15 +370,15 @@
 
             
             <?php if($data['displayBy'] == 'question' && $error['status'] == true): ?>
-                <?php 
+                <?php
                     $sectionIndex = (request()->section)?request()->section:0;
                     $questionIndex = (request()->question)?request()->question:0;
-                 ?>
+                ?>
 
                 <div class="ar view-by-question">
                     <div class="ac l25" >
                         <?php $__currentLoopData = $data['sections']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $section): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <?php 
+                            <?php
                                 $completedSections = session()->get('completed_sections');
                                 $partiallySections = session()->get('partial_sections');
                                 if($completedSections != null && in_array($key,$completedSections)){
@@ -394,7 +394,7 @@
                                     $progressPercentage = 0;
                                     $partiallClass = '';
                                 }
-                             ?>
+                            ?>
                             <div class="item mb-10 <?php echo e(($sectionIndex == $key)?'active':''); ?> <?php echo e($completedClass); ?>" onclick="" style="cursor: pointer;">
                                 <div class="pv-15 ph-10 aione-border  bg-white " style="position:relative;">
                                     <div class="font-size-20  truncate section-title" title="Basic detail section for personal information">
@@ -407,14 +407,14 @@
                                     </div>
                                     <div class="indicater-wrapper" >
                                         <div class="bg-white indicater">
-                                            <?php 
+                                            <?php
                                                 $onePercent = 100/count($data['fields']);
                                                 if($sectionIndex == $key){
                                                     $percent = ($data['field_record']['index'])*$onePercent;
                                                 }else{
                                                     $percent = 0;
                                                 }
-                                             ?>
+                                            ?>
                                             <div class="bg-light-blue bg-darken-2 percentage" style="width:<?php echo e($percent); ?>%">
                                             </div>
                                             <div class="grey aione-align-center line-height-15 percentage-text">
@@ -429,7 +429,7 @@
                     <div class="ac l75 bg-white">
                         <div>
                             <?php if(isset($data['field_record']['field'])): ?>
-                                <?php 
+                                <?php
                                     $prev = $route.'?section='.$sectionIndex.'&question='.($data['field_record']['index']-1);
                                     $next = $route.'?section='.$sectionIndex.'&question='.($data['field_record']['index']+1);
                                     $totalFields = count($data['fields']) - 1;
@@ -438,7 +438,7 @@
                                     if($sectionIndex != 0){
                                         $prevSectionLastQuest  = count($data['sections'][$sectionIndex-1]['fields'])-1;
                                     }
-                                 ?>
+                                ?>
                                 <?php echo Form::model(@$prefill,['route'=>['embed.survey',request()->token,'section='.$sectionIndex,'question='.$questionIndex],'id'=>'question_form']); ?>
 
                                     <?php echo Form::hidden('prev_next_section',null,['class'=>'prev_next_section']); ?>
@@ -449,12 +449,12 @@
                                         <div class="div-for-section">
                                             <div class="parent_div_for_append">
                                                 <div class="mb-30 persist-area single-section">
-                                                    <?php 
+                                                    <?php
                                                         $OptionsArray = [];
                                                         $OptionsArray['form_id'] = $data['form_id'];
                                                         $OptionsArray['from'] = $data['sections'][$sectionIndex]['section_type'];
                                                         $OptionsArray['loop_index'] = 0;
-                                                     ?>
+                                                    ?>
                                                     <?php $__currentLoopData = $data['sections'][$sectionIndex]['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $fieldSlug): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                         <?php echo FormGenerator::GenerateField($fieldSlug, $OptionsArray, null, 'org'); ?>
 
@@ -514,8 +514,8 @@
 <div style="position: fixed; top: 0; right: 5%; z-index: 999;">
     <h4>Remaining:  <span id="day">(00 Day's)</span> <span id="time">00:00:00</span></h4>
 </div>
-<script type="text/javascript" src="<?php echo e(asset('js/moment.js')); ?>"></script>
-<script type="text/javascript">
+<script src="<?php echo e(asset('js/moment.js')); ?>"></script>
+<script>
     $(document).ready(function(){
         $('.indicater-wrapper').click(function(){
             $(this).toggleClass('active');

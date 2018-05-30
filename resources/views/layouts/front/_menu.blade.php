@@ -5,7 +5,7 @@
         $nav_item_current_parent = '';
         $nav_item_current_child = '';
     @endphp
-    <style type="text/css">
+    <style >
        /* .nav-item-current{
             background: #ededed !important;
         }*/
@@ -82,7 +82,7 @@
         </div>
         <div class="clear"></div>
     </nav>
-    <script type="text/javascript">
+    <script >
         $(document).ready(function(){
             if($('.level1').hasClass('nav-item-current')){
                 $(this).parents('li').addClass('nav-item-current-parent');

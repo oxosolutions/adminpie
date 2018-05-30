@@ -1,8 +1,8 @@
-<?php 
+<?php
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
- ?>
+?>
 
-		<?php 
+		<?php
 
 			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'),true);
 			if(isset($optionValues['key'])){
@@ -49,11 +49,11 @@
                 }
             }
 
-		 ?>
+		?>
 		<?php if($status == false): ?>
 			
 			<?php $__currentLoopData = $arrayOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<div id="field_option_<?php echo e($collection->field_slug); ?>" class="field-option">
+				<div id="field_option_<?php echo e($collection->field_slug.$loop->index); ?>" class="field-option">
 					<?php echo Form::checkbox(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$key,null,javascriptCheckBoxValidations($loop,$collection,$field_validations,$class_name)); ?>
 
 			    	<label for="option_<?php echo e(str_replace(' ','_',strtolower($collection->field_slug)).$loop->index); ?>" class="field-option-label"><?php echo $value; ?></label>    
@@ -61,7 +61,7 @@
 			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 		<?php else: ?>
 			<?php $__currentLoopData = $arrayOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<div id="field_option_<?php echo e($collection->field_slug); ?>" class="field-option">
+				<div id="field_option_<?php echo e($collection->field_slug.$loop->index); ?>" class="field-option">
 					<?php echo Form::checkbox(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$key,null,javascriptCheckBoxValidations($loop,$collection,$field_validations,$class_name)); ?>
 
 			    	<label for="option_<?php echo e(str_replace(' ','_',strtolower($collection->field_slug)).$loop->index); ?>" class="field-option-label"><?php echo $value; ?></label>    

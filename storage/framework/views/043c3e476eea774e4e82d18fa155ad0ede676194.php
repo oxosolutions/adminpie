@@ -1,4 +1,4 @@
-<?php 
+<?php
     $fieldOptionsArray = [];
     $fieldOptionsArray['class'] = 'timepicker '.$collection->field_slug;
     $fieldOptionsArray['id'] = 'input_'.$collection->field_slug;
@@ -16,15 +16,15 @@
             $fieldOptionsArray['data-validation'] = $validationString;
         }
     }
- ?>
+?>
 
-<?php echo Form::time(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray); ?>
+<?php echo Form::text(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray); ?>
 
 		
 	
 
 
-<script type="text/javascript">
+<script>
 	   $('.timepicker').pickatime({
 		   default: 'now',
 		   twelvehour: false, // change to 12 hour AM/PM clock from 24 hour

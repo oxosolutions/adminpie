@@ -1,4 +1,4 @@
-<style type="text/css">
+<style>
 .aione-main {
     padding-top: 0px;
 }

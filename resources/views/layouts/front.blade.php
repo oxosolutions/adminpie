@@ -134,7 +134,7 @@ if(@$is_visualization){
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->
 	@include('components._footerscripts')
-	<script type="text/javascript">
+	<script >
 		{!! @$meta['js_code']!!}
 	</script>
 	{{-- <script type="text/javascript">

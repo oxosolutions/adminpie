@@ -1,11 +1,11 @@
 <?php if(@$design_settings['header_select_menu'] > 0): ?>
-    <?php 
+    <?php
         $menu = Menu::wlist($design_settings['header_select_menu']);
         $current_page = Request::url();
         $nav_item_current_parent = '';
         $nav_item_current_child = '';
-     ?>
-    <style type="text/css">
+    ?>
+    <style >
        /* .nav-item-current{
             background: #ededed !important;
         }*/
@@ -21,7 +21,7 @@
         <ul id="aione_menu" class="aione-menu">
             <?php if(@$menu): ?>
                 <?php $__currentLoopData = $menu; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $menu_item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php 
+                <?php
                     if(substr($menu_item['link'], -1) == '/'){
                         $new_menu_item = substr($menu_item['link'] , 0, -1);
 
@@ -60,7 +60,7 @@
                             }
                         }
                     }
-                 ?>
+                ?>
                     <li class="aione-nav-item level0 <?php echo e($nav_item_current); ?> <?php echo e($nav_item_current_parent); ?>"> 
                         <a href="<?php echo e($menu_item['link']); ?>"><?php echo e($menu_item['label']); ?></a>
                         <?php if(!empty($menu_item['child'])): ?>
@@ -82,7 +82,7 @@
         </div>
         <div class="clear"></div>
     </nav>
-    <script type="text/javascript">
+    <script >
         $(document).ready(function(){
             if($('.level1').hasClass('nav-item-current')){
                 $(this).parents('li').addClass('nav-item-current-parent');

@@ -2,7 +2,7 @@
 	<div class="ar grey">
 		@if( @$design_settings['header_show_logo'] == 1)
 			<div id="aione_header_logo" class="aione-header-item">
-				<img src="/{!! @get_organization_meta('logo') !!}" class="aione-topbar-logo-item"> 
+				<img src="/{!! @get_organization_meta('logo') !!}" class="aione-topbar-logo-item" alt="Organization's Logo"> 
 			</div><!-- .aione-topbar-item -->
 		@endif
 		@if( @$design_settings['header_show_site_title'] == 1 || @$design_settings['header_show_site_description'] == 1)

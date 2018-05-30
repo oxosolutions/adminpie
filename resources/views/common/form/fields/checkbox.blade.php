@@ -53,14 +53,14 @@
 		@if($status == false)
 			
 			@foreach($arrayOptions as $key => $value)
-				<div id="field_option_{{$collection->field_slug}}" class="field-option">
+				<div id="field_option_{{$collection->field_slug.$loop->index}}" class="field-option">
 					{!!Form::checkbox(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$key,null,javascriptCheckBoxValidations($loop,$collection,$field_validations,$class_name))!!}
 			    	<label for="option_{{str_replace(' ','_',strtolower($collection->field_slug)).$loop->index}}" class="field-option-label">{!!$value!!}</label>    
 				</div>
 			@endforeach
 		@else
 			@foreach($arrayOptions as $key => $value)
-				<div id="field_option_{{$collection->field_slug}}" class="field-option">
+				<div id="field_option_{{$collection->field_slug.$loop->index}}" class="field-option">
 					{!!Form::checkbox(str_replace(' ','_',strtolower($collection->field_slug)).'[]',$key,null,javascriptCheckBoxValidations($loop,$collection,$field_validations,$class_name))!!}
 			    	<label for="option_{{str_replace(' ','_',strtolower($collection->field_slug)).$loop->index}}" class="field-option-label">{!!$value!!}</label>    
 				</div>

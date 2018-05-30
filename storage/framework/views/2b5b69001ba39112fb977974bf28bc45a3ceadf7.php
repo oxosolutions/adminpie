@@ -224,7 +224,7 @@ max-width: 400px;
 </style>
 <!-- load emmet code and snippets compiled for browser -->
 <script src="https://cloud9ide.github.io/emmet-core/emmet.js"></script>
-<script type="text/javascript">
+<script >
 		
        
 

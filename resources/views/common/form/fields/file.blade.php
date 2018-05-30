@@ -28,6 +28,7 @@
             $fieldOptionsArray['data-validation'] = $validationString;
         }
     }
+    // dd($fieldOptionsArray);
 @endphp
 {!! Form::hidden($name,null,[]) !!}
-{!!Form::file($name,null,$fieldOptionsArray)!!}
+{!!Form::file($name,$fieldOptionsArray)!!}

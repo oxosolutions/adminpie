@@ -1,4 +1,4 @@
-<?php 
+<?php
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
 	$field_input_class = "input-".$collection->field_slug;
 	$field_input_id = "input_".$collection->field_slug;
@@ -38,7 +38,7 @@
 		}
 	}
 
- ?>
+?>
 <div id="field_<?php echo e($collection->id); ?>" data-conditions="<?php echo e(@$has_conditions); ?>" data-field-type="<?php echo e($collection->field_type); ?>" class="field-wrapper ac field-wrapper-<?php echo e($collection->field_slug); ?> field-wrapper-type-<?php echo e($collection->field_type); ?> <?php echo e($class_name); ?>">
 	<?php if(@$settings['form_field_show_label'] || @$settings['form_field_show_description']): ?>
 		<?php if(!empty(@$collection->field_title) || !empty(@$collection->field_description)): ?>
@@ -46,7 +46,7 @@
 
 				<label for="input_<?php echo e($collection->field_slug); ?>">
 					<?php if(!empty(@$collection->field_title) && @$settings['form_field_show_label']): ?>
-						<h4 class="field-title" id="<?php echo e($collection->field_title); ?>">
+						<span class="field-title" id="<?php echo e($collection->field_slug); ?>">
 						<?php echo $collection->field_title; ?>
 
 						<?php if($requiredStatus): ?>
@@ -57,7 +57,7 @@
 						  <span class="aione-tooltip field-tooltip" title="<?php echo @$field_tooltip; ?>"><i class="fa fa-question-circle"></i></span>
 						<?php endif; ?>
 
-						</h4>
+						</span>
 					<?php endif; ?>
 					<?php if(!empty(@$collection->field_description) && @$settings['form_field_show_description']): ?>
 						<p class="field-description"><?php echo $collection->field_description; ?></p>
@@ -80,7 +80,7 @@
 
 			</div>
 		<?php endif; ?>
-		<?php 
+		<?php
 			if(isset($settings['field_variable']) && $settings['field_variable'] == 'slug'){
 				$name = $collection->field_slug;
 			}else{
@@ -89,7 +89,7 @@
 			if(@$options['from'] == 'repeater'){
 				$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
 			}
-		 ?>
+		?>
 		<?php if(@$errors->has($name)): ?>
 			<span class="aione-field-error">
 			<?php echo e($errors->first($name)); ?>
@@ -97,9 +97,9 @@
 			</span>
 		<?php endif; ?>
 	</div><!-- field -->
-    <?php 
+    <?php
         $question_repeater = @FormGenerator::GetMetaValue($collection->fieldMeta,'question_repeater');
-     ?>
+    ?>
     <?php if($question_repeater == 'yes'): ?>
         <?php echo Form::button('Add More',['class'=>'add_more_text']); ?>
 

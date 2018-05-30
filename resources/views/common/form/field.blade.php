@@ -46,7 +46,7 @@
 
 				<label for="input_{{$collection->field_slug}}">
 					@if(!empty(@$collection->field_title) && @$settings['form_field_show_label'])
-						<h4 class="field-title" id="{{$collection->field_title}}">
+						<span class="field-title" id="{{$collection->field_slug}}">
 						{!!$collection->field_title!!}
 						@if($requiredStatus)
 						  <span class="red">*</span>
@@ -56,7 +56,7 @@
 						  <span class="aione-tooltip field-tooltip" title="{!! @$field_tooltip !!}"><i class="fa fa-question-circle"></i></span>
 						@endif
 
-						</h4>
+						</span>
 					@endif
 					@if(!empty(@$collection->field_description) && @$settings['form_field_show_description'])
 						<p class="field-description">{!!$collection->field_description!!}</p>

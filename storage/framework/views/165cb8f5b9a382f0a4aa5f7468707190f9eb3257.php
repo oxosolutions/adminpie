@@ -9,14 +9,14 @@
 	<?php endif; ?>
 	<?php echo @$design_settings['custom_content_head']; ?>
 
-	<style type="text/css">
+	<style>
 		.my-class{
 			display: none;
 		}
 		<?php echo @$meta['css_code']; ?>
 
 	</style>
-	<style type="text/css">
+	<style>
 		<?php echo @$design_settings['custom_css']; ?>
 
 	</style>

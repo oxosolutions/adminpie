@@ -1,4 +1,4 @@
-<?php 
+<?php
 	$modelRelated = FormGenerator::GetMetaValue($collection->fieldMeta,'choice_model');
 	if($modelRelated != false && $modelRelated != '' && $modelRelated != null){
 		$exploded = explode('@',$modelRelated);
@@ -14,12 +14,12 @@
 		$name = strtolower($collection->section->section_slug).'['.$options['loop_index'].']['.$name.']';
 	}
     $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
- ?>
+?>
 
 	<input type="hidden" name="<?php echo e($name); ?>">
 
 <?php if($modelRelated != false && $modelRelated != '' && $modelRelated != null): ?>
-				<?php 
+				<?php
 					try{
 						$arrayOptions = $result->$exploded[1]($collection);
 					}catch(\Exception $e){
@@ -44,13 +44,13 @@
                             $fieldOptionsArray['data-validation'] = $validationString;
                         }
                     }
-				 ?>
+				?>
 			<?php echo Form::select($name.'[]',$arrayOptions,null,$fieldOptionsArray); ?>
 
 		
 
 <?php else: ?>
-	<?php 
+	<?php
 		$arrayOptions = [];
 		$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'), true);
 		if(isset($optionValues['key'])){
@@ -82,13 +82,13 @@
             }
         }
 		
-	 ?>
+	?>
             
 			<?php echo Form::select($name.'[]',$arrayOptions,null,$fieldOptionsArray); ?>
 
 
 <?php endif; ?>
 <div class="field-actions">
-	<a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a> / 
-	<a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a> 
+	<a class="aione-form-multiselect-all aione-action-link">Select All</a> / 
+	<a class="aione-form-multiselect-none aione-action-link">Select None</a> 
 </div>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
+<?php
 
 $user_id = @get_user_id();
 if(@$user_id !== null){
@@ -86,7 +86,7 @@ if(@$is_visualization){
 		}
 		$meta = $survey_meta;
 	}
- ?>
+?>
 
 <?php echo $__env->make('layouts.front._head', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 
@@ -134,7 +134,7 @@ if(@$is_visualization){
 		</div><!-- .aione-row -->
 	</div><!-- #aione_wrapper -->
 	<?php echo $__env->make('components._footerscripts', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<script type="text/javascript">
+	<script >
 		<?php echo @$meta['js_code']; ?>
 
 	</script>

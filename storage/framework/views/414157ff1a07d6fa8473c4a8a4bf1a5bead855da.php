@@ -1,8 +1,8 @@
-<?php 
+<?php
 	$class_name = FormGenerator::GetMetaValue($collection->fieldMeta,'field_class');
- ?>
+?>
 
-		<?php 
+		<?php
 
 			$optionValues = json_decode(FormGenerator::GetMetaValue($collection->fieldMeta,'field_options'),true);
 			if(isset($optionValues['key'])){
@@ -54,10 +54,10 @@
             }else{
                 $name = str_replace(' ','_',strtolower($collection->field_slug));
             }
-		 ?>
+		?>
 		<?php if($status == false): ?>
 			<?php $__currentLoopData = $optionValues['key']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<div id="field_option_<?php echo e($collection->field_slug); ?>" class="field-option">
+				<div id="field_option_<?php echo e($collection->field_slug.$loop->index); ?>" class="field-option">
 					<?php echo Form::radio($name,$optionValues['key'][$loop->index],null,javaScriptValidations($loop,$collection,$field_validations,$class_name)); ?>
 
 			    	<label for="option_<?php echo e($name.$loop->index); ?>" class="field-option-label"><?php echo $optionValues['value'][$loop->index]; ?></label>    
@@ -68,7 +68,7 @@
 			<?php if(!empty($arrayOptions)): ?>
 		
 				<?php $__currentLoopData = $arrayOptions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-					<div id="field_option_<?php echo e($collection->field_slug); ?>" class="field-option">
+					<div id="field_option_<?php echo e($collection->field_slug.$loop->index); ?>" class="field-option">
 						<?php echo Form::radio($name,$key,null,javaScriptValidations($loop,$collection,$field_validations,$class_name)); ?>
 
 				    	<label for="option_<?php echo e($name.$loop->index); ?>" class="field-option-label"><?php echo @$value; ?></label>    

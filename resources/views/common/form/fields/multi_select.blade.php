@@ -87,6 +87,6 @@
 
 @endif
 <div class="field-actions">
-	<a hraf="#" class="aione-form-multiselect-all aione-action-link">Select All</a> / 
-	<a href="#" class="aione-form-multiselect-none aione-action-link">Select None</a> 
+	<a class="aione-form-multiselect-all aione-action-link">Select All</a> / 
+	<a class="aione-form-multiselect-none aione-action-link">Select None</a> 
 </div>

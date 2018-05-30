@@ -1,4 +1,4 @@
-<?php 
+<?php
 $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeholder');
    $fieldOptionsArray = [];
    $fieldOptionsArray['class'] = 'datepicker '.$collection->field_slug;
@@ -19,16 +19,16 @@ $placeholder = FormGenerator::GetMetaValue($collection->fieldMeta,'field_placeho
            $fieldOptionsArray['data-validation'] = $validationString;
        }
    }
- ?>
+?>
 
-<?php echo Form::date(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray); ?>
+<?php echo Form::text(str_replace(' ','_',strtolower($collection->field_slug)), null,$fieldOptionsArray); ?>
 
 
 <?php if(Session::has('date_error')): ?>
 <script type='text/javascript'>Materialize.toast('Date is already in use', 5000)</script>
 <?php endif; ?>
 
-<script type="text/javascript">
+<script >
  $('.datepicker').pickadate({
            format: 'yyyy/mm/dd',
    selectMonths: true, // Creates a dropdown to control month

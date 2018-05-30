@@ -1,5 +1,5 @@
 
-<?php 
+<?php
 	if(isset($settings['field_variable']) && $settings['field_variable'] == 'slug'){
 		$name = $collection->field_slug;
 	}else{
@@ -28,7 +28,8 @@
             $fieldOptionsArray['data-validation'] = $validationString;
         }
     }
- ?>
+    // dd($fieldOptionsArray);
+?>
 <?php echo Form::hidden($name,null,[]); ?>
 
-<?php echo Form::file($name,null,$fieldOptionsArray); ?>
+<?php echo Form::file($name,$fieldOptionsArray); ?>

@@ -8,13 +8,13 @@
 		<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/visualizations.css?ref='.rand(1111,9999)) }}">
 	@endif
 	{!! @$design_settings['custom_content_head']!!}
-	<style type="text/css">
+	<style>
 		.my-class{
 			display: none;
 		}
 		{!! @$meta['css_code']!!}
 	</style>
-	<style type="text/css">
+	<style>
 		{!! @$design_settings['custom_css']!!}
 	</style>
 </head>
