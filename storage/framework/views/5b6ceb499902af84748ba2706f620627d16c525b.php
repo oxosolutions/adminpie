@@ -38,15 +38,22 @@
 		}
 	}
 
+	$label_for = 'for="input_'.$collection->field_slug.'" ';
+	$field_type = @$collection->field_type;
+	if($field_type == 'message' || $field_type == 'radio' || $field_type == 'checkbox' ){
+		$label_for = '';
+
+	}
+
 ?>
 <div id="field_<?php echo e($collection->id); ?>" data-conditions="<?php echo e(@$has_conditions); ?>" data-field-type="<?php echo e($collection->field_type); ?>" class="field-wrapper ac field-wrapper-<?php echo e($collection->field_slug); ?> field-wrapper-type-<?php echo e($collection->field_type); ?> <?php echo e($class_name); ?>">
 	<?php if(@$settings['form_field_show_label'] || @$settings['form_field_show_description']): ?>
 		<?php if(!empty(@$collection->field_title) || !empty(@$collection->field_description)): ?>
 			<div id="field_label_<?php echo e($collection->field_slug); ?>" class="field-label">
 
-				<label for="input_<?php echo e($collection->field_slug); ?>">
+				<label <?php echo @$label_for; ?>>
 					<?php if(!empty(@$collection->field_title) && @$settings['form_field_show_label']): ?>
-						<span class="field-title" id="<?php echo e($collection->field_slug); ?>">
+						<span class="field-title" >
 						<?php echo $collection->field_title; ?>
 
 						<?php if($requiredStatus): ?>
@@ -60,7 +67,7 @@
 						</span>
 					<?php endif; ?>
 					<?php if(!empty(@$collection->field_description) && @$settings['form_field_show_description']): ?>
-						<p class="field-description"><?php echo $collection->field_description; ?></p>
+						<span class="field-description"><?php echo $collection->field_description; ?></span>
 					<?php endif; ?>
 				</label>
 

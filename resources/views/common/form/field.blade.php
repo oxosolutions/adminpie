@@ -38,15 +38,22 @@
 		}
 	}
 
+	$label_for = 'for="input_'.$collection->field_slug.'" ';
+	$field_type = @$collection->field_type;
+	if($field_type == 'message' || $field_type == 'radio' || $field_type == 'checkbox' ){
+		$label_for = '';
+
+	}
+
 @endphp
 <div id="field_{{$collection->id}}" data-conditions="{{@$has_conditions}}" data-field-type="{{$collection->field_type}}" class="field-wrapper ac field-wrapper-{{$collection->field_slug}} field-wrapper-type-{{$collection->field_type}} {{$class_name}}">
 	@if(@$settings['form_field_show_label'] || @$settings['form_field_show_description'])
 		@if(!empty(@$collection->field_title) || !empty(@$collection->field_description))
 			<div id="field_label_{{$collection->field_slug}}" class="field-label">
 
-				<label for="input_{{$collection->field_slug}}">
+				<label {!! @$label_for !!}>
 					@if(!empty(@$collection->field_title) && @$settings['form_field_show_label'])
-						<span class="field-title" id="{{$collection->field_slug}}">
+						<span class="field-title" >
 						{!!$collection->field_title!!}
 						@if($requiredStatus)
 						  <span class="red">*</span>
@@ -59,7 +66,7 @@
 						</span>
 					@endif
 					@if(!empty(@$collection->field_description) && @$settings['form_field_show_description'])
-						<p class="field-description">{!!$collection->field_description!!}</p>
+						<span class="field-description">{!!$collection->field_description!!}</span>
 					@endif
 				</label>
 
