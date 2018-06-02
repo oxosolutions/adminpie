@@ -21,7 +21,7 @@
 <?php if($modelRelated != false && $modelRelated != '' && $modelRelated != null): ?>
 				<?php
 					try{
-						$arrayOptions = $result->$exploded[1]($collection);
+						$arrayOptions = $result->{$exploded[1]}($collection);
 					}catch(\Exception $e){
 						$arrayOptions = [];
 					}
