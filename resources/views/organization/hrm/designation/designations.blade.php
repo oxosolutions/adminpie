@@ -35,21 +35,24 @@ $page_title_data = array(
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
-	@include('common.list.datalist')
+@include('common.list.datalist')
 	
 @include('common.page_content_primary_end')
 @include('common.page_content_secondry_start')
-	@if(@$newData == 'undefined' || @$newData == '' || @$newData == null)
-		{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
+    @if(@$newData == 'undefined' || @$newData == '' || @$newData == null)
+    	{!! Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
 
-	@endif
-	@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Designation','button_title'=>'Save Designation','section'=>'titlesection']])
-	 {!!Form::close()!!}
+    @endif
+            @include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Designation','button_title'=>'Save Designation','section'=>'titlesection']])
+    @if(@$newData == 'undefined' || @$newData == '' || @$newData == null)
+	   {!!Form::close()!!}
+    @endif
 	@if(@$model)
+        
 		{!! Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']) !!}
-			<input type="hidden" name="id" value="{{$data["data"]->id}}">
+			<input type="hidden" name="id" value="{{$model['id']}}">
 			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
-			@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit designation','button_title'=>'update Designation','section'=>'titlesection']])
+			@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit designation','button_title'=>'Update Designation','section'=>'titlesection']])
 		{!!Form::close()!!}
 	@endif
 @include('common.page_content_secondry_end')

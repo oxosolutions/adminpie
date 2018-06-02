@@ -42,11 +42,11 @@
 		{!! Form::open(['route'=>'store.holiday' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 			@include('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','form'=>'holiday-add-edit']])
 		{!!Form::close()!!}
-		@if(@$data)
+		@if(@$data)            
 			{!! Form::model($model , ['route'=>'edit.holiday' , 'class'=> 'form-horizontal','method' => 'post'])!!}
 				<input type="hidden" name="id" value="{{@$data[0]->id}}">
 				<a href="#modal_edit" style="display: none" id="modal-edit"></a>
-				@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Holiday','button_title'=>'update Holiday','section'=>'holidayadd']])
+				@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Holiday','button_title'=>'update Holiday','form'=>'holiday-add-edit']])
 			{!!Form::close()!!}
 		@endif
 	@include('common.page_content_secondry_end')

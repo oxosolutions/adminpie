@@ -43,12 +43,12 @@
 			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add New Holiday','button_title'=>'Save Holiday','form'=>'holiday-add-edit']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo Form::close(); ?>
 
-		<?php if(@$data): ?>
+		<?php if(@$data): ?>            
 			<?php echo Form::model($model , ['route'=>'edit.holiday' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 				<input type="hidden" name="id" value="<?php echo e(@$data[0]->id); ?>">
 				<a href="#modal_edit" style="display: none" id="modal-edit"></a>
-				<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Holiday','button_title'=>'update Holiday','section'=>'holidayadd']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+				<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit Holiday','button_title'=>'update Holiday','form'=>'holiday-add-edit']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 			<?php echo Form::close(); ?>
 
 		<?php endif; ?>

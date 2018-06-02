@@ -1,6 +1,6 @@
 
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -10,7 +10,7 @@ $page_title_data = array(
 ); 
 	$id = "";
   
-	 ?>	
+	?>	
 
   <?php if($errors->any()): ?>
     <script type="text/javascript">
@@ -21,9 +21,9 @@ $page_title_data = array(
   <?php endif; ?>
   <?php if(@$data): ?>
     <?php $__currentLoopData = @$data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <?php 
+      <?php
         $model = ['name' => $value['name'],'id' => $value['id']];
-       ?>
+      ?>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
     <script type="text/javascript">
@@ -35,24 +35,27 @@ $page_title_data = array(
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('common.list.datalist', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<?php if(@$newData == 'undefined' || @$newData == '' || @$newData == null): ?>
-		<?php echo Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']); ?>
+    <?php if(@$newData == 'undefined' || @$newData == '' || @$newData == null): ?>
+    	<?php echo Form::open(['route'=>'store.designation' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 
-	<?php endif; ?>
-	<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Designation','button_title'=>'Save Designation','section'=>'titlesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	 <?php echo Form::close(); ?>
+    <?php endif; ?>
+            <?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'add_new_model','heading'=>'Add Designation','button_title'=>'Save Designation','section'=>'titlesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <?php if(@$newData == 'undefined' || @$newData == '' || @$newData == null): ?>
+	   <?php echo Form::close(); ?>
 
+    <?php endif; ?>
 	<?php if(@$model): ?>
+        
 		<?php echo Form::model(@$model,['route'=>'edit.designation' , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
-			<input type="hidden" name="id" value="<?php echo e($data["data"]->id); ?>">
+			<input type="hidden" name="id" value="<?php echo e($model['id']); ?>">
 			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
-			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit designation','button_title'=>'update Designation','section'=>'titlesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit designation','button_title'=>'Update Designation','section'=>'titlesection']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 		<?php echo Form::close(); ?>
 
 	<?php endif; ?>
