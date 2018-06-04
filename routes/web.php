@@ -309,8 +309,9 @@
 					
 					Route::post('ajax_user_drop_down',['as'=>'user.drop-downs', 'uses'=>'LeaveCategoryController@get_user_by_designation']);
 					Route::get('drop-downs',['as'=>'drop-downs', 'uses'=>'SalaryController@drop_downs']);
-					Route::get('payscale/{id?}', ['as'=> 'list.payscale' , 'uses' => 'PayscaleController@index']);
-					Route::post('payscale/store', ['as'=> 'store.payscale' , 'uses' => 'PayscaleController@store']);
+					Route::get('payscale', 			['as'=> 'list.payscale' , 'uses' => 'PayscaleController@index']);
+					Route::get('payscale/add', 		['as'=> 'add.payscale' , 'uses' => 'PayscaleController@add']);
+					Route::post('payscale/store', 	['as'=> 'store.payscale' , 'uses' => 'PayscaleController@store']);
 					Route::get('payscale/delete/{id}', ['as'=> 'delete.payscale' , 'uses' => 'PayscaleController@delete']);
 					Route::match(['post','get'],'payscale/edit/{id}', ['as'=> 'edit.payscale' , 'uses' => 'PayscaleController@edit']);
 

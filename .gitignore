@@ -9,7 +9,6 @@ Homestead.yaml
 /bak
 /public/version
 /public/application
-/public/bower_components
 /public/comment
 /public/downloaded_datasets
 /public/export

@@ -6,27 +6,14 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Pay Scale',
-	'add_new' => '+ Add Pay Scale'
+	'add_new' => '+ Add Pay Scale',
+  'route' => 'add.payscale',
 ); 
 	$id = "";
   
 	?>	
 
-  <?php if(!$errors->isEmpty()): ?>
-    <script type="text/javascript">
-      $(window).load(function(){
-        $('.modal').modal('open');
-      });
-    </script>
-  <?php endif; ?>
-  <?php if(@$data): ?>
-    
-    <script type="text/javascript">
-      window.onload = function(){
-      $('#modal_edit').modal('open');
-    }
-    </script>
-  <?php endif; ?>
+ 
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -49,7 +36,7 @@ $page_title_data = array(
 			
 			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
 
-			<?php echo $__env->make('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit PaySlip','button_title'=>'update Pay Slip','section'=>'paysec1']], array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+		
 		<?php echo Form::close(); ?>
 
 	<?php endif; ?>

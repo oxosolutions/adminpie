@@ -6,13 +6,14 @@ $page_title_data = array(
 	'show_add_new_button' => 'yes',
 	'show_navigation' => 'yes',
 	'page_title' => 'Pay Scale',
-	'add_new' => '+ Add Pay Scale'
+	'add_new' => '+ Add Pay Scale',
+  'route' => 'add.payscale',
 ); 
 	$id = "";
   
 	@endphp	
 
-  @if(!$errors->isEmpty())
+ {{--  @if(!$errors->isEmpty())
     <script type="text/javascript">
       $(window).load(function(){
         $('.modal').modal('open');
@@ -26,7 +27,7 @@ $page_title_data = array(
       $('#modal_edit').modal('open');
     }
     </script>
-  @endif
+  @endif --}}
 @include('common.pageheader',$page_title_data) 
 @include('common.pagecontentstart')
 @include('common.page_content_primary_start')
@@ -46,7 +47,7 @@ $page_title_data = array(
 			{{-- <input type="hidden" name="id" value="{{$data["data"]-><i></i>d}}"> --}}
 			<a href="#modal_edit" style="display: none" id="modal-edit"></a>
 
-			@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit PaySlip','button_title'=>'update Pay Slip','section'=>'paysec1']])
+		{{-- 	@include('common.modal-onclick',['data'=>['modal_id'=>'modal_edit','heading'=>'Edit PaySlip','button_title'=>'update Pay Slip','section'=>'paysec1']]) --}}
 		{!!Form::close()!!}
 	@endif
 @include('common.page_content_secondry_end')
