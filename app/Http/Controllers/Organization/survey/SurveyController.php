@@ -14,8 +14,15 @@ use App\Model\Organization\FieldMeta;
 use App\Model\Organization\FormBuilder;
 use App\Model\Organization\SectionMeta;
 use App\Model\Organization\Page;
+use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\UsersRole;
+use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
+use App\Model\Organization\UserRoleMapping;
+use Shortcode;
 use Auth;
 use DB;
+use Mail;
 use App\Http\Controllers\Api\SurveyController as apisurvey;
 use Session;
 use Carbon\Carbon;
@@ -153,6 +160,30 @@ class SurveyController extends Controller
         $form = forms::find($survey_id);
 
         return view('organization.survey.survey_settings', ['model' => $modelData, 'permission' => $permission, 'form' => $form]);
+    }
+
+    public function surveyNotifications($survey_id){
+        $permission = $this->collaboratorAccesses($survey_id, 'notifications');
+        $model = FormsMeta::where('form_id', $survey_id)->where('type','survey')->where('key','survey_notification_details')->first();
+        $modelArray = [];
+        if($model != null){
+            $modelArray[$model->key] = json_decode($model->value,true);
+        }
+        
+        return view('organization.survey.survey_notifications',['permission' => $permission,'model'=>$modelArray]);
+    }
+
+    public function saveSurveyNotifications(Request $request, $survey_id){
+        foreach($request->except(['_token']) as $key => $value){
+             $meta = FormsMeta::firstOrNew(['form_id' => $survey_id, 'key' => $key, 'type' => 'survey']);
+             $meta->key = $key;
+             $meta->value = json_encode($value);
+             $meta->type = 'survey';
+             $meta->form_id = $survey_id;
+             $meta->save();            
+        }
+        Session::flash('success','Settings saved successfully!');
+        return back();
     }
 
     // public function reset_setting($survey_id){
@@ -486,6 +517,8 @@ class SurveyController extends Controller
      */
     public function embededSurvey(Request $request, $token, $from_status = false)
     {
+        $surveyRecord = forms::select(['form_slug', 'id'])->with(['formsMeta', 'section.fields', 'section.sectionMeta'])->where('embed_token', $token)->first();
+
         if ($request->isMethod('post')) {
             $result = $this->saveSurveyRecord($request);
             if ($result['status'] == false) {
@@ -511,6 +544,7 @@ class SurveyController extends Controller
                             $page_slug = Page::get_page_slug($redirectAfterCopmpleted['page']);
                             return redirect()->route('view.pages', ['slug' => $page_slug]);
                         }
+                        $this->surveyCompletedNotification($surveyRecord->id, $result['record_id']);
                         Session::put('record_id');
                         return redirect()->route('survey.completed', ['token' => $token]);
                     } else {
@@ -520,6 +554,7 @@ class SurveyController extends Controller
                     $redirectAfterCopmpleted = $this->checkSurveyCompletedSettingss($token);
                     if ($redirectAfterCopmpleted['action'] == 'print_message') {
                         Session::flash('success', $redirectAfterCopmpleted['message']);
+                        $this->surveyCompletedNotification($surveyRecord->id, $result['record_id']);
                         Session::put('record_id');
                         return redirect()->route('embed.survey', ['token' => $token]);
                     }
@@ -528,13 +563,13 @@ class SurveyController extends Controller
                         $page_slug = Page::get_page_slug($redirectAfterCopmpleted['page']);
                         return redirect()->route('view.pages', ['slug' => $page_slug]);
                     }
+                    $this->surveyCompletedNotification($surveyRecord->id, $result['record_id']);
                     Session::put('record_id');
                     return redirect()->route('survey.completed', ['token' => $token]);
                 }
             }
         }
 
-        $surveyRecord = forms::select(['form_slug', 'id'])->with(['formsMeta', 'section.fields', 'section.sectionMeta'])->where('embed_token', $token)->first();
         if ($surveyRecord != null) {
             $metaValues = get_meta_array($surveyRecord->formsMeta);
             $errorStatus = $this->validateSurveyConditions($metaValues);
@@ -581,6 +616,72 @@ class SurveyController extends Controller
                         );
         }
 
+    }
+
+    protected function surveyCompletedNotification($survey_id, $record_id){
+        $metaData = FormsMeta::where('form_id',$survey_id)->where('type','survey')->where('key','survey_notification_details')->first();
+        if($metaData == null){
+            return false;
+        }
+        foreach(json_decode($metaData->value,true) as $key => $notification){
+            $sendTo = $notification['send_notification_to'];
+            if($sendTo != null && $sendTo != ''){
+                if($sendTo == 'email'){
+                    $sendToEmail = $notification['send_notification_to_text'];
+                    if($sendToEmail != null && $sendToEmail != ''){
+                        $notificationTemplate = $notification['notification_email_template'];
+                        if($notificationTemplate != null && $notificationTemplate != ''){
+                            $emailData = EmailTemplate::find($notificationTemplate);
+                            $this->registerSurveyShortcodes($survey_id, $record_id);
+                            $rawHTML = view('organization.survey.notification_email.notification_template',['content'=>$emailData->content])->compileShortcodes()->render();
+                            Mail::send([], [], function ($message) use ($rawHTML, $emailData, $sendToEmail) {
+                                $message->subject($emailData->subject);
+                                $message->from(env('MAIL_EMAIL'), env('MAIL_FROM'));
+                                $message->setBody($rawHTML, 'text/html');
+                                $message->to($sendToEmail);
+                            });
+                        }
+                    }
+                }else{
+                    if($notification['send_to_role'] != '' && $notification['send_to_role'] != null){
+                        $userModel = UsersRole::where('slug',$notification['send_to_role'])->first();
+                        if($userModel != null){
+                            $notificationTemplate = $notification['notification_email_template'];
+                            if($notificationTemplate != null && $notificationTemplate != ''){
+                                $emailData = EmailTemplate::find($notificationTemplate);
+                                $this->registerSurveyShortcodes($survey_id, $record_id);
+                                $userEmails = UserRoleMapping::where('role_id',$userModel->id)->with(['group_user'])->wherehas('group_user')->get();
+                                $rawHTML = view('organization.survey.notification_email.notification_template',['content'=>$emailData->content])->compileShortcodes()->render();
+                                foreach($userEmails as $key => $user){
+                                    $sendEmailTo = $user->group_user->email;
+                                    Mail::send([], [], function ($message) use ($rawHTML, $emailData, $sendEmailTo) {
+                                        $message->subject($emailData->subject);
+                                        $message->from(env('MAIL_EMAIL'), env('MAIL_FROM'));
+                                        $message->setBody($rawHTML, 'text/html');
+                                        $message->to($sendEmailTo);
+                                    });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    protected function registerSurveyShortcodes($survey_id, $record_id){
+        $table = get_organization_id().'_survey_results_'.$survey_id;
+        Shortcode::add('all_fields', function ($atts, $content, $name) use ($table, $record_id) {
+            $model = DB::table($table)->find($record_id);
+            $htmlData = view('organization.survey.notification_email.render_all_fields',['model'=>$model])->render();
+            return $htmlData;
+        });
+
+        Shortcode::add('survey_field', function ($atts, $content, $name) use ($table, $record_id) {
+            $model = DB::table($table)->find($record_id);
+            return $model->{$atts['field']};
+        });
     }
 
     protected function saveSurveyRecord($request)
@@ -639,14 +740,15 @@ class SurveyController extends Controller
     protected function createSurveyResultsTable($fieldSlugs, $tableName, $surveyDetails)
     {
         $prepearedColumnsForQuery = [];
-        $extraFields = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status', 'survey_submitted_by', 'survey_submitted_from', 'mac_address', 'imei', 'device_detail', 'created_by', 'created_at', 'deleted_at'];
+        /*$extraFields = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status', 'survey_submitted_by', 'survey_submitted_from', 'mac_address', 'imei', 'device_detail', 'created_by', 'created_at', 'deleted_at'];*/
+        $extraFields = ['record_type', 'survey_sync_status', 'incomplete_name', 'survey_status', 'completed_groups', 'last_group_id', 'last_field_id', 'created_at', 'created_by', 'device_detail', 'unique_id', 'imei', 'mac_address', 'survey_submitted_from', 'survey_submitted_by', 'survey_completed_on', 'survey_started_on', 'ip_address'];
         $tableColumns = array_merge($fieldSlugs, $extraFields);
         foreach ($tableColumns as $key => $column) {
             $prepearedColumnsForQuery[] = '`' . $column . '` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL';
         }
         $QueryForCreateTable = 'CREATE TABLE `' . $tableName . '` ( ' . implode(', ', $prepearedColumnsForQuery) . ' ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
-        DB::SELECT($QueryForCreateTable);
-        DB::select("ALTER TABLE `{$tableName}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+        DB::statement($QueryForCreateTable);
+        DB::statement("ALTER TABLE `{$tableName}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
         $model = FormsMeta::firstOrNew(['key' => 'survey_data_table', 'form_id' => $surveyDetails->id]);
         $model->value = $tableName;
         $model->key = 'survey_data_table';
@@ -657,7 +759,8 @@ class SurveyController extends Controller
 
     protected function checkForAlterTable($fieldSlugs, $tableName, $prefix)
     {
-        $arrayForInterSect = ['id', 'ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status', 'survey_submitted_by', 'survey_submitted_from', 'mac_address', 'imei', 'device_detail', 'created_by', 'created_at', 'deleted_at'];
+        /*$arrayForInterSect = ['id', 'ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status', 'survey_submitted_by', 'survey_submitted_from', 'mac_address', 'imei', 'device_detail', 'created_by', 'created_at', 'deleted_at'];*/
+        $arrayForInterSect = ['id','record_type', 'survey_sync_status', 'incomplete_name', 'survey_status', 'completed_groups', 'last_group_id', 'last_field_id', 'created_at', 'created_by', 'device_detail', 'unique_id', 'imei', 'mac_address', 'survey_submitted_from', 'survey_submitted_by', 'survey_completed_on', 'survey_started_on', 'ip_address'];
         $existingTableColumns = Schema::getColumnListing($tableName);
         $existingColumnsArray = array_values(array_diff($existingTableColumns, $arrayForInterSect));
 
@@ -672,10 +775,10 @@ class SurveyController extends Controller
             foreach ($difference as $key => $column) {
                 if($key != 0){
                     $createAfter = $fieldSlugs[$key-1];
-                     DB::select("ALTER TABLE `" . $prefix . $tableName . "` ADD `{$column}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field' AFTER `" . $createAfter . "`");
+                     DB::statement("ALTER TABLE `" . $prefix . $tableName . "` ADD `{$column}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field' AFTER `" . $createAfter . "`");
                 }elseif($key == 0){
                     $createAfter = $fieldSlugs[0];
-                     DB::select("ALTER TABLE `" . $prefix . $tableName . "` ADD `{$column}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field' FIRST");
+                     DB::statement("ALTER TABLE `" . $prefix . $tableName . "` ADD `{$column}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field' FIRST");
                 }
                
             }
@@ -794,8 +897,9 @@ class SurveyController extends Controller
             }
         }
         $dataToInsert = array_merge($dataToInsert, $putExtraFields);
-        $Query->insert($dataToInsert);
-        return ['status' => true, 'errors' => []];
+        $Query->insertGetId($dataToInsert);
+        $record_id = $Query->get()->last()->id;
+        return ['status' => true, 'errors' => [],'record_id'=>$record_id];
     }
 
 
@@ -822,14 +926,18 @@ class SurveyController extends Controller
         }
         $Query = DB::table($tableNameWithoutPrefix);
         $dataToInsert = [];
+        $record_id = Session::get('record_id');
+        if($record_id == null){
+            $survey_started_on = Carbon::now()->format('Y-m-d H:i:s');
+        }
         $putExtraFields = [
             'ip_address' => request()->ip(),
-            'survey_started_on' => Session::get('started_on'),
-            'survey_completed_on' => Carbon::now()->format('Y-m-d'),
-            'survey_status' => 'Completed',
+            'survey_started_on' => $survey_started_on,
             'survey_submitted_by' => (Auth::guard('org')->user() == null) ? 'Guest' : Auth::guard('org')->user()->id,
             'survey_submitted_from' => 'web',
-            'device_detail' => $request->header('User-Agent')
+            'survey_status' => 'In-complete',
+            'device_detail' => $request->header('User-Agent'),
+            'unique_id' => generate_filename(30),
         ];
         foreach ($request->except(['_token', 'section', 'number_of_fields', 'prefilled_count', 'prefilled_names']) as $key => $value) {
             if (is_array($value)) {
@@ -839,13 +947,14 @@ class SurveyController extends Controller
             }
         }
         $dataToInsert = array_merge($dataToInsert, $putExtraFields);
-        $record_id = Session::get('record_id');
         $statusPartially = false;
-        if ($record_id != null) {
+        if ($record_id != null || $record_id != 0) {
             $valuesForPartialCheck = array_intersect(array_keys($fieldsArrayForPartialCheck),array_keys(array_filter($request->all())));            
             if($valuesForPartialCheck !== array_keys($fieldsArrayForPartialCheck)){
                 $statusPartially = true;
             }
+            unset($dataToInsert['unique_id']);
+            unset($dataToInsert['survey_started_on']);
             $Query->where('id', $record_id)->update($dataToInsert);
         } else {
             $valuesForPartialCheck = array_intersect(array_keys($fieldsArrayForPartialCheck),array_keys(array_filter($request->all())));
@@ -889,6 +998,12 @@ class SurveyController extends Controller
                 $completedSections[] = $sectionIndex;
                 Session::put($sessionKey, $completedSections);
             }
+            $completedUpdate = [
+                'survey_completed_on' => Carbon::now()->format('Y-m-d'),
+                'survey_status' => 'Completed',
+            ];
+            $recordid = Session::get('record_id');
+            $Query = DB::table($tableNameWithoutPrefix)->where('id',$recordid)->update($completedUpdate);
             $nextSection = 'finish';
         }
         return ['status' => true, 'errors' => [], 'next_section' => $nextSection];

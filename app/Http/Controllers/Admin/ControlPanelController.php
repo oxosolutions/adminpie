@@ -10,6 +10,7 @@ use Ixudra\Curl\Facades\Curl;
 use GuzzleHttp\Client;
 use File;
 use Session;
+use Schema;
 use DB;
 class ControlPanelController extends Controller
 {
@@ -136,7 +137,7 @@ class ControlPanelController extends Controller
 
     public function bulkDeleteTables(Request $request){
         foreach($request->tables as $key => $table){
-            DB::select("DROP TABLE ".$table);
+            Schema::drop(str_replace('ocrm_','',$table));
         }
         Session::flash('success','Tables deleted successfully!');
         $tablesList = $this->consistantOrganizationTables();

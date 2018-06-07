@@ -453,12 +453,12 @@ class EmployeeController extends Controller
             foreach ($data->toArray() as $key => $value) {
                 $index++;
                 if(!empty($value['name']) && !empty($value['email']) && !empty($value['password']) && !empty($value['employee_id'])){
-                    if(!empty($value['date_of_joining'])){
+                    /*if(!empty($value['date_of_joining'])){
                         if($this->validateDate($value['date_of_joining'])==false){
                             $in_valid_date_format[$value['employee_id']] = $value['email'];
                             continue;
                         }
-                    }
+                    }*/
                     $alreadyExists = GroupUsers::where(['email'=>$value['email']]); 
                     if($alreadyExists->exists()){
                         $users_data = $alreadyExists->first();
@@ -658,12 +658,7 @@ class EmployeeController extends Controller
     protected function add_user_meta($user_id , $key , $value, $import_record_options){
         $meta = UsersMeta::where(['key'=>$key ,'user_id'=>$user_id]);
         if($key=="date_of_joining"){
-            if(str_contains($value, '/')){
-                $date_data = explode('/' , $value);
-                $value = $date_data[1].'-'.$date_data[0].'-'.$date_data[2];
-            }
-            // str_replace('', replace, subject)
-            $value = date('Y-m-d',strtotime($value));
+            $value = Carbon::parse($value)->format('Y-m-d');
         }
         if($meta->exists()){
             if($import_record_options !='new_insert'){

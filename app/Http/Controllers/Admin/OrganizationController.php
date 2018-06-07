@@ -18,6 +18,7 @@ use Illuminate\Http\Request;
 use stdClass;
 use Session;
 use Artisan;
+use Schema;
 use File;
 use Hash;
 use Auth;
@@ -125,13 +126,21 @@ class OrganizationController extends Controller
             $model = ORG::findOrFail($id);
             $model->delete();
 
-            $data = DB::select("select CONCAT('DROP TABLE `',t.table_schema,'`.`',t.table_name,'`;') AS dropTable
+            $data = DB::select("select *
                       FROM information_schema.tables t
                       WHERE t.table_schema = '" . env('DB_DATABASE', 'forge') . "'
                       AND t.table_name LIKE 'ocrm_" . $id . "%' 
                       ORDER BY t.table_name");
+
+            /*$data = DB::select("select CONCAT('DROP TABLE `',t.table_schema,'`.`',t.table_name,'`;') AS dropTable
+                      FROM information_schema.tables t
+                      WHERE t.table_schema = '" . env('DB_DATABASE', 'forge') . "'
+                      AND t.table_name LIKE 'ocrm_" . $id . "%' 
+                      ORDER BY t.table_name");
+            dd($data);*/
             foreach ($data as $key => $value) {
-                DB::select($value->dropTable);
+                Schema::drop(str_replace('ocrm_','',$value->TABLE_NAME));
+                // DB::select($value->dropTable);
             }
             DB::commit();
 

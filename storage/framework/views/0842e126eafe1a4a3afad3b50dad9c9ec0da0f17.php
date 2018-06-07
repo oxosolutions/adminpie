@@ -1,11 +1,11 @@
-<?php 
+<?php
 if(@request()->route()->parameters()['id'] != ''){
 @$id = @request()->route()->parameters()['id'];
 }else{
 @$id = @request()->route()->parameters()['form_id'];
 }
 // dump(Request::route()->action['as']);
- ?>
+?>
 <nav id="aione_survey_tabs" class="aione-account-tabs aione-nav aione-nav-horizontal"  >
 
     <ul class="aione-tabs">
@@ -34,6 +34,12 @@ if(@request()->route()->parameters()['id'] != ''){
             <a href="<?php echo e(route('survey.settings',$id)); ?>"><span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-gear-b ionic-icon">
                 </i></span><span class="nav-item-text"><?php echo e(__('survey.survey_tab_settings_link')); ?></span></a>
         </li>
+
+        <li class="aione-tab survey-settings-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'survey.notifications')?'nav-item-current':''); ?>" title="Settings">
+            <a href="<?php echo e(route('survey.notifications',$id)); ?>"><span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-gear-b ionic-icon">
+                </i></span><span class="nav-item-text">Notifications</span></a>
+        </li>
+
         <li class="aione-tab survey-stats-tab aione-tooltip <?php echo e((Request::route()->action['as'] == 'stats.survey')?'nav-item-current':''); ?>" title="Statistics">
             <a href="<?php echo e(route('stats.survey',$id)); ?>"><span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-connection-bars ionic-icon">
                 </i></span><span class="nav-item-text"><?php echo e(__('survey.survey_tab_statistics_link')); ?></span></a>

@@ -11,7 +11,7 @@ $(document).ready(function(){
               $(this).attr('name',$(this).attr('name').replace(/\[[0-9]+\]/,'['+repeaterLength+']'));
             }
         });
-        $(this).parents('.repeater-group').find('.repeater-row:last').find('input,textarea,select').each(function(index){
+        $(this).parents('.repeater-group').find('.repeater-row:last').find('input[type=text],textarea,select, input[type=number]').each(function(index){
           $(this).val('');
         });
 
