@@ -1,4 +1,4 @@
-<?php 
+<?php
 	//$userMeta = 'App\\Model\\Organization\\UsersMeta';
 	//$queryString = explode('?',request()->fullUrl());
 	
@@ -58,7 +58,7 @@ foreach($columns as $column){
 	
 }
 
- ?>
+?>
 <div id="aione_datalist" class="aione-datalist">
 	<div class="aione-row">
 		<form action="" method="GET" name="form1">
@@ -111,12 +111,12 @@ foreach($columns as $column){
 							<?php if(isset($showColumns)): ?>
 
 								<?php $__currentLoopData = $showColumns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $column): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-									<?php 
+									<?php
 										$explodedKey = explode('.',$key);
 										if(count($explodedKey)>=2){
 											$key = $explodedKey[count($explodedKey)-1];
 										}
-									 ?>
+									?>
 									<option value="<?php echo e($key); ?>" <?php echo e((Request::get('orderby') && Request::get('orderby') == $key)?'selected':''); ?>>
 										<?php if(is_array($column)): ?>
 											<?php echo e($column['title']); ?>
@@ -153,12 +153,12 @@ foreach($columns as $column){
     						<?php endif; ?>
     					<i class="fa fa-sort<?php echo e((Request::get('order') != '' && Request::get('orderby') == $k )?'-'.Request::get('order'):''); ?>" aria-hidden="true" style="margin-left: 10px"></i></span></div>
     				<?php else: ?>
-    					<?php 
+    					<?php
     						$explodedKey = explode('.',$k);
     						if(count($explodedKey)>=2){
     							$k = $explodedKey[count($explodedKey)-1];
     						}
-    					 ?>
+    					?>
     					<div class="<?php echo e($column_classes); ?> <?php echo e($class_list[$loop->index]); ?>">
     						<span class="column-order " column-key="<?php echo e($k); ?>" >
     							<?php if(is_array($column)): ?>
@@ -200,7 +200,7 @@ foreach($columns as $column){
     													<?php if($action_key == 'download'): ?>
     														<a href="<?php echo e(asset($action_value['destinationPath'].'/'.$dataset->file)); ?>" style="padding-right:10px" target="_blank" class="<?php echo e(@$action_value['class']); ?> action-<?php echo e($action_key); ?>"><?php echo e($action_value['title']); ?></a>
     													<?php elseif($action_key == 'delete'): ?>
-    														<?php 
+    														<?php
     															if(is_array($action_value['route'])){
     																$explodedRoute = explode('.',$action_value['route']['id']);
     																$route = $action_value['route']['route'];
@@ -210,7 +210,7 @@ foreach($columns as $column){
     																$route = $action_value['route'];
     																$routeId = $dataset->id;
     															}
-    														 ?>
+    														?>
     														
     														<a href="javascript:;" data-value="<?php echo e(route($route,$routeId)); ?>" style="padding-right:10px" id="delete" class="<?php echo e(@$action_value['class']); ?> delete-datalist-item red action-<?php echo e($action_key); ?>"><?php echo e($action_value['title']); ?></a>
     													<?php elseif($action_key == 'model'): ?>
@@ -232,7 +232,7 @@ foreach($columns as $column){
     															<a href="<?php echo e(route($action_value['route'],$dataset->id)); ?>" class="<?php echo e($action_value['class']); ?>" style="padding-right:10px">Reject</a>
     														<?php endif; ?>
     													<?php else: ?>
-    														<?php 
+    														<?php
 
     															if(is_array($action_value['route'])){
     																if(!isset($action_value['route']['id'])){
@@ -247,7 +247,7 @@ foreach($columns as $column){
     																$route = $action_value['route'];
     																$routeId = $dataset->id;
     															}
-    															 ?>
+    															?>
     															<a href="<?php echo e(route($route,$routeId)); ?>" style="padding-right:10px" class="<?php echo e(@$action_value['class']); ?> action-<?php echo e($action_key); ?>"><?php echo e($action_value['title']); ?></a>
     													<?php endif; ?>
     												<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -262,15 +262,15 @@ foreach($columns as $column){
 
     						<?php else: ?>
     							<div  class="<?php echo e($column_classes); ?> <?php echo e($class_list[$loop->index]); ?> truncate">
-    								<?php 
+    								<?php
     									$relations = explode('.',$k);
     									$getRelations = $dataset;
     									$multipleValues = [];
     									$multipleValuesForLoop = [];
-    								 ?>
+    								?>
     									<?php if(count($relations)>1): ?>
     										<?php $__currentLoopData = $relations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $relKey => $relation): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-    											<?php 
+    											<?php
     												try{
     													@$getRelations = $getRelations[$relation];
     													/*if($getRelations instanceof Illuminate\Database\Eloquent\Collection){
@@ -289,7 +289,7 @@ foreach($columns as $column){
     														$getRelations = 'Unable to get value';
     													}
     												}
-    											 ?>
+    											?>
     										<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     										<?php if(($getRelations == null || $getRelations == "") && empty($multipleValues)): ?>
     											<div>&nbsp;</div>
@@ -304,7 +304,7 @@ foreach($columns as $column){
     											<?php echo e($dataset->{$k}->diffForHumans()); ?>
 
     									<?php else: ?>
-    										<?php 
+    										<?php
     											$options = explode(':',$k);
     											$colType = [];
     											if(@$options[1] != null){
@@ -355,7 +355,7 @@ foreach($columns as $column){
     											}else{
     												echo $dataset->{$k};
     											}
-    										 ?>
+    										?>
     									<?php endif; ?>
 
     							</div>	

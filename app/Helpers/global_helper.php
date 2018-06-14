@@ -96,8 +96,8 @@ function convert_sec_to_hour($sec, $format = '%02d:%02d') {
 }
 
 function difference_secs($time_1 , $time_2){
-		$start_shift = new Carbon\Carbon($time_1);
-			$come_at = new Carbon\Carbon($time_2);
+		$start_shift = new Carbon($time_1);
+			$come_at = new Carbon($time_2);
 			$diff = $start_shift->diffInSeconds($come_at);
 			$secs = convert_sec_to_hour($diff);
 		return $secs;

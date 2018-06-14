@@ -108,7 +108,7 @@ if(@$is_visualization){
 			<?php endif; ?>
 
 
-			<div id="aione_main" class="aione-main <?php echo e(@$login_page_class); ?> <?php echo e(@$login_style); ?>">
+			<main id="aione_main" class="aione-main <?php echo e(@$login_page_class); ?> <?php echo e(@$login_style); ?>">
 				<div class="aione-row">
 					<div id="aione_content" class="aione-content" >
 						<div class="aione-row">
@@ -118,7 +118,7 @@ if(@$is_visualization){
 					</div><!-- #aione_content -->
 					<div class="clear"></div><!-- .clear -->
 				</div><!-- .aione-row -->
-			</div><!-- #aione_main -->
+			</main><!-- #aione_main --> 
 
 
 			<?php if(@$design_settings['show_footer_widgets'] == 1): ?>

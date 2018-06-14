@@ -145,9 +145,14 @@
 
 				@if($lock_status)
 					@if($attendance_mode_manual)
-						<td>
+						<td style="text-align: center;">
 							{!! Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']) !!}
+                            @if($attendance_status != 'leave')
 							{!! Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' ],@$attendance_status	,['class' => 'browser-default', ]) !!} 
+                            @else
+                                Leave
+                                {!! Form::hidden($emp_id."[attendance_status]", 'leave',['class' => '']) !!}
+                            @endif
 						</td>
 					@endif
 					@if($attendance_mode_machine)
@@ -175,7 +180,7 @@
 							@endif
 						</td>
 					@endif
-					@if($attendance_mode_system)
+					@if($attendance_mode_system)                           
 							<td style="width: 130px;">
 								@if(!empty($in_out_data))
 								 @foreach($in_out_data as $key =>$val)

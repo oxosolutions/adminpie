@@ -650,8 +650,7 @@ class AttendanceController extends Controller
 
 		$employee_data = GroupUsers::with(['organization_employee_user', 'metas_for_attendance'])->whereHas('organization_employee_user')->whereHas('metas_for_attendance')->get();
 		$attendance_data = Attendance::where($current_dates)->get()->keyBy('employee_id');
-		$mark_attendance_date = $current_dates['year'].'-'.$current_dates['month'].'-'.$current_dates['date'];
-		
+		$mark_attendance_date = $current_dates['year'].'-'.$current_dates['month'].'-'.$current_dates['date'];        
 		return view('organization.attendance.hrm_attendance',['employee_data'=>$employee_data, 'attendance_data'=> $attendance_data, 'mark_attendance_date'=>$mark_attendance_date]);
 	}
 	/**

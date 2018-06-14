@@ -14,6 +14,10 @@
 	Route::post('/page/save',	['as'=>'store.page' , 'uses'=>'PagesController@save' ]);
 	Route::post('/page/update',	['as'=>'update.page', 'uses'=>'PagesController@update' ]);
 	Route::get('/page/delete/{id}',	['as'=>'delete.page', 'uses'=>'PagesController@delete' ]);
+    Route::get('/page/revisions/{id}',['as'=>'page.revisions','uses'=>'PagesController@revisions']);
+    Route::get('/preview/revisions/{id}',['as'=>'preview.revisions','uses'=>'PagesController@previewRevision']);
+    Route::get('/page/revision/delete/{id}',['as'=>'delete.revision','uses'=>'PagesController@deleteRevision']);
+    Route::get('/page/restore/{id}/{restore_id}',['as'=>'restore.page','uses'=>'PagesController@restorePageRevisions']);
 	
 	//change status with ajax
 	Route::post('/pages/status/update',['as'=>'update.status','uses'=>'PagesController@updateStatus']);

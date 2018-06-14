@@ -17,7 +17,7 @@
 				@if(1)
 					<div class="ac {{@$column_class}}">
 						<div class="footer-widget-title">
-							<h5>{!!@$widget['widget_title']!!}</h5>
+							<h4>{!!@$widget['widget_title']!!}</h4>
 						</div>
 						<div class="footer-widget-content">
 							{!!@$widget['widget_content']!!}

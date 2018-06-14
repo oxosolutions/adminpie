@@ -43,6 +43,7 @@ class ControlPanelController extends Controller
      */
     public function runRouteTest(Request $request){
         $response = Curl::to('http://master.scolm.com/'.$request->route.'?curl_token=tAGcsNcdEaLGXcUcvmIbYkPySI8ojOLg')->returnResponseObject()->setCookieFile('COOKIE_FILE')->setCookieJar('COOKIE_FILE')->get();
+        // dd($response);
         return response()->json($response);
     }
     

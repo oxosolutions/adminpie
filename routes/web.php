@@ -4,7 +4,7 @@
         //Public route
         Route::group(['middleware'=>'web'], function(){
             Route::get('page/{slug}',   ['as'=>'view.pages' , 'uses'=>'Organization\cms\PagesController@viewPage' ]);
-            Route::get('demo/{slug}',   ['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
+            // Route::get('demo/{slug}',   ['as'=>'demo.pages' , 'uses'=>'Organization\cms\PagesController@demoviewPage' ]);
             Route::post('comment/save', ['as'=>'save.comment' , 'uses'=>'Organization\cms\PagesController@save_comment' ]);
             Route::post('comment/update', ['as'=>'update.comment' , 'uses'=>'Organization\cms\PagesController@update_comment' ]);
             Route::get('like/{type}/{c_id}/{expression?}',  ['as'=>'like.comment' , 'uses'=>'Organization\cms\PagesController@likedislike' ]);

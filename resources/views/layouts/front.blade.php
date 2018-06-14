@@ -108,7 +108,7 @@ if(@$is_visualization){
 			@endif
 
 
-			<div id="aione_main" class="aione-main {{@$login_page_class}} {{@$login_style}}">
+			<main id="aione_main" class="aione-main {{@$login_page_class}} {{@$login_style}}">
 				<div class="aione-row">
 					<div id="aione_content" class="aione-content" >
 						<div class="aione-row">
@@ -118,7 +118,7 @@ if(@$is_visualization){
 					</div><!-- #aione_content -->
 					<div class="clear"></div><!-- .clear -->
 				</div><!-- .aione-row -->
-			</div><!-- #aione_main -->
+			</main><!-- #aione_main --> 
 
 
 			@if(@$design_settings['show_footer_widgets'] == 1)

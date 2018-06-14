@@ -1,5 +1,5 @@
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
 	$page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
@@ -7,7 +7,7 @@
 	'page_title' => 'Attendence',
 	'add_new' => '+ Import Attendence'
 ); 
- ?>
+?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -89,7 +89,7 @@
 	</thead>
 	<tbody>
 	<?php $__currentLoopData = $employee_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $keys => $vals): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-	<?php 
+	<?php
 		$lock_status=1;
 		$warning=Null;
  		$attendance_status_class = 'bg-red';
@@ -141,7 +141,7 @@
 			$lock_status = 0;
 		}
 	}
-	 ?>
+	?>
 		<tr class="table-tr">
 			<td><span class="mark-attendance-status <?php echo e(@$attendance_status_class); ?>"></span></td>
 			<td><?php echo e(@$user_meta['employee_id']); ?> </td>
@@ -152,10 +152,16 @@
 
 				<?php if($lock_status): ?>
 					<?php if($attendance_mode_manual): ?>
-						<td>
+						<td style="text-align: center;">
 							<?php echo Form::hidden($emp_id."[shift_id]", @$user_meta['user_shift'],['class' => '']); ?>
 
+                            <?php if($attendance_status != 'leave'): ?>
 							<?php echo Form::select($emp_id."[attendance_status]",['present'=>'Present','absent'=>'Absent' ],@$attendance_status	,['class' => 'browser-default', ]); ?> 
+                            <?php else: ?>
+                                Leave
+                                <?php echo Form::hidden($emp_id."[attendance_status]", 'leave',['class' => '']); ?>
+
+                            <?php endif; ?>
 						</td>
 					<?php endif; ?>
 					<?php if($attendance_mode_machine): ?>
@@ -184,7 +190,7 @@
 							<?php endif; ?>
 						</td>
 					<?php endif; ?>
-					<?php if($attendance_mode_system): ?>
+					<?php if($attendance_mode_system): ?>                           
 							<td style="width: 130px;">
 								<?php if(!empty($in_out_data)): ?>
 								 <?php $__currentLoopData = $in_out_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key =>$val): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

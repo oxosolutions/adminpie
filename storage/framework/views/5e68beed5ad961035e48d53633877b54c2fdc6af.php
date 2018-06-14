@@ -1,4 +1,4 @@
-<?php 
+<?php
 	$footer_widgets = $design_settings['footer_widgets'];
 	$count = 0;
 	foreach ($footer_widgets as $key => $widget) {
@@ -8,7 +8,7 @@
 	}
 	$column_class = "s100 m".round(100/$count)." l".round(100/$count);
 	
- ?>
+?>
 <?php if($count > 0): ?>
 <div id="aione_footer" class="aione-footer">
 	<div class="row-wrapper">
@@ -17,7 +17,7 @@
 				<?php if(1): ?>
 					<div class="ac <?php echo e(@$column_class); ?>">
 						<div class="footer-widget-title">
-							<h5><?php echo @$widget['widget_title']; ?></h5>
+							<h4><?php echo @$widget['widget_title']; ?></h4>
 						</div>
 						<div class="footer-widget-content">
 							<?php echo @$widget['widget_content']; ?>

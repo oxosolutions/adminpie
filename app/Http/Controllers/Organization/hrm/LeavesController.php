@@ -22,63 +22,6 @@ class LeavesController extends Controller
     }
     public function index(Request $request , $id = null){
 
-        // $search = $this->saveSearch($request);
-        // if($search != false && is_array($search)){
-        //     $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
-        // }
-        // if($id){
-        //     $data = $this->getById($id);
-        // }else{
-        //   $data = "";
-        // }
-        //   if($request->has('items')){
-        //     $perPage = $request->items;
-        //     if($perPage == 'all'){
-        //       $perPage = 999999999999999;
-        //     }
-        //   }else{
-        //     $perPage = get_items_per_page();;
-        //   }
-        //   $orgId = Session::get('organization_id');
-        //   $sortedBy = @$request->orderby;
-        //   if($request->has('search')){
-        //       if($sortedBy != ''){
-        //           $model = LV::with(['employee_info'=>function($query){
-        //               $query->with('employ_info');
-        //           },'categories_rel'])->where('reason_of_leave','like','%'.$request->search.'%')->orderBy($sortedBy,$request->order)->paginate($perPage);
-        //       }else{
-        //           $model = LV::with(['employee_info'=>function($query){
-        //               $query->with('employ_info');
-        //           },'categories_rel'])->where('reason_of_leave','like','%'.$request->search.'%')->paginate($perPage);
-        //       }
-        //   }else{
-        //       if($sortedBy != ''){
-        //           $model = LV::with(['employee_info'=>function($query){
-        //               $query->with('employ_info');
-        //           }])
-        //           ->select([
-        //                       $orgId.'_categories.name as category_name',
-        //                       $orgId.'_leaves.*'
-        //                    ])
-        //           ->join($orgId.'_categories',$orgId.'_leaves.leave_category_id','=',$orgId.'_categories.id','left')
-        //           ->orderBy($sortedBy,$request->order)->paginate($perPage);
-        //       }else{
-        //            $model = LV::with(['employee_info'=>function($query){
-        //               $query->with('employ_info');
-        //           },'categories_rel'])->paginate($perPage);
-        //       }
-        //   }
-        //   $datalist =  [
-        //                   'datalist'=>$model,
-        //                   'showColumns' => ['employee_id' => 'Employee Id'  , 'reason_of_leave'=>'Reason of Leave','category_name'=>'Category','from'=>'From','to'=>'To','created_at'=>'Created','status'=>'Status'],
-        //                   'actions' => [
-        //                                   'edit' => ['title'=>'Edit','route'=>'leaves','class' => 'edit'],
-        //                                   'delete'=>['title'=>'Delete','route'=>'delete.leave'],
-        //                                   'approve_status'=>['title'=>'Approve','class'=>'aione_approved_status','route'=>'approve.leave']
-        //                                ]
-        //
-        //
-        //new
         $search = $this->saveSearch($request);
         if($search != false && is_array($search)){
             $request->request->add(['items'=>@$search['items'],'orderby'=>@$search['orderby'],'order'=>@$search['order']]);
@@ -122,19 +65,11 @@ class LeavesController extends Controller
             'js'  =>  ['custom'=>['list-designation']],
             'css'=> ['custom'=>['list-designation']]
         ];
-        // if(!empty($id) || $id != null || $id != ''){
-        //     $data = LV::where('id',$id)->first();
-        //     $meta =  UsersMeta::select('user_id')->where(['key'=>'employee_id', 'value'=>$data->employee_id])->first();
-        //     if(!empty($meta)){
-        //         $user_id = User::find($meta->user_id)->user_id;
-        //         $data = $data->toArray();
-        //         $data['employee_id'] = $user_id;
-        //     }
-        // }else{
-        //     $data = "";
-        // }      
+        
         return view('organization.hrm.leave.list_leave',$datalist)->with(['data'=>$data]);
     }
+
+
     public function save(Request $request)
     {
         if($request['from'] > $request['to']){
@@ -186,11 +121,17 @@ class LeavesController extends Controller
         $sh->fill($request->all());
         $sh->save();
     }
+    
     public function delete($id)
     {
-        $model = LV::find($id)->delete();
-        if($model){
-            return back();
+        $model = LV::find($id);
+        if($model != null){
+            if($model->status == 0){
+                $model->delete();        
+            }else{
+                Session::flash('error','Cannot delete the approved leave!');
+                return back();
+            }
         }
     } 
     public function getById($id)
@@ -222,6 +163,7 @@ class LeavesController extends Controller
         Session::flash('success','Successfully updated!');
         return redirect()->route('leaves');
     }
+
     public function editLeave($id)
     {
         $model = LV::where('id',$id)->first();
@@ -229,6 +171,7 @@ class LeavesController extends Controller
         $model['employee_id'] = $userMeta->user_id;
         return view('organization.hrm.leave.edit',['model'=>$model]);
     }
+
     protected function leave_insertion($start_to_date , $up_to_date , $year_month , $emp_id, $status){
         $start_to_date = str_replace('0', '', $start_to_date);
         for($i  = $start_to_date; $i <=$up_to_date; $i++ ){
@@ -260,6 +203,7 @@ class LeavesController extends Controller
                 Attendance::where($detail)->delete();
              }  
     }
+
     public function reject_leave($id){
         $model = LV::find($id);
         if($model['status']==1){
@@ -316,6 +260,7 @@ class LeavesController extends Controller
     //         }
     //     return back();
     // }
+
     protected function leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status, $submited_by){
         $start_to_date = str_replace_first('0', '', $date);
         if(strlen($month)==1){
@@ -334,10 +279,12 @@ class LeavesController extends Controller
             $attendance->save();
         }
     }
+
     protected function set_dates($dates){
         $set =  Carbon::parse($dates);
         return ['year'=>$set->year, 'month'=>$set->month, 'date'=>$set->day, 'day'=>$set->format('l'), 'month_week_no'=>$set->weekOfMonth, 'day_in_month'=>$set->daysInMonth];
     }
+
     public function approve_leave($id)
     {               
         $attendance_status = 'leave';
@@ -356,16 +303,9 @@ class LeavesController extends Controller
             if($model->to != "0000-00-00"){
                 $to = $this->set_dates($model->to);
             }
-            // if($model->type = 'first_half'){
-            //     extract($from);
-            //     dd($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
-            //     dump($model->type);
-            //     $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status);
-
-            // }
-             // dd($from , $model);
+           
             if(!empty($model['type']) && $model['type'] == "first_half"){
-                 extract($from);
+                extract($from);
                 $attendance_status = 'first_half';
                 $this->leave_insert($month_week_no, $day , $date , $month , $year , $emp_id, $status, $attendance_status, $submited_by);
             }elseif(!empty($model['type']) && $model['type'] == "second_half"){
@@ -409,57 +349,8 @@ class LeavesController extends Controller
             Session::flash('error','There is no data.');
             return back();
         }
-        // $from = strtotime($model->from);
-        // $to = strtotime($model->to);
-        // $from_year_mo = date('Y-m', $from);
-        // $to_year_mo = date('Y-m', $to);
-        // $from_year   = date('Y',$from);
-        // $from_month  = date('m',$from);
-        // $from_date  =  date('d', $from);
-        // $to_date    = date('d', $to);
-        // $to_year = date('Y',$to);
-        // $to_month = date('m',$to);
-        // if($model->status == 1){
-        //   LV::where('id',$id)->update(['status'=> 0]);
-        //    if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
-        //         if($from_year_mo == $to_year_mo){
-        //           if(strlen($from_month)==1){
-        //             $from_month = '0'.$from_month;
-        //           }
-        //           $this->leave_insertion($from_date, $to_date, $from_year_mo, $model->employee_id,'reject');
-        //         }elseif($from_year_mo != $to_year_mo){
-        //             if($from_year == $to_year){
-        //                   if($from_month != $to_month){
-        //                     $carbon_from = Carbon::parse($model->from);
-        //                     $carbon_from->daysInMonth;
-        //                     $this->leave_insertion($from_date, $carbon_from->daysInMonth, $from_year_mo, $model->employee_id, 'reject');
-        //                     $this->leave_insertion(1, $to_date, $to_year_mo, $model->employee_id,'reject');
-        //                 }
-        //               }             
-        //        }
-        //     }
-        // }else
-        // 
-        //   LV::where('id',$id)->update(['status'=> 1]);
-        //   if(!empty($model->from) && !empty($model->to) && !empty($model->employee_id)){
-        //         if($from_year_mo == $to_year_mo){
-        //           if(strlen($from_month)==1){
-        //             $from_month = '0'.$from_month;
-        //           }
-        //           $this->leave_insertion($from_date, $to_date, $from_year_mo, $model->employee_id,'approve');
-        //         }elseif($from_year_mo != $to_year_mo){
-        //             if($from_year == $to_year){
-        //                   if($from_month != $to_month){
-        //                     $carbon_from = Carbon::parse($model->from);
-        //                     $carbon_from->daysInMonth;
-        //                     $this->leave_insertion($from_date, $carbon_from->daysInMonth, $from_year_mo, $model->employee_id, 'approve');
-        //                     $this->leave_insertion(1, $to_date, $to_year_mo, $model->employee_id,'approve');
-        //                 }
-        //               }             
-        //        }
-        //     }
-        // return back();
     }
+
     protected function saveSearch($request){
         $search = $request->except(['page']);
         $model = UsersMeta::where(['key'=>$request->route()->uri,'user_id'=>Auth::guard('org')->user()->id])->first();

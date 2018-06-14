@@ -16,42 +16,7 @@
 <?php $__env->startSection('content'); ?>
 
 	
- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 	
-	<style type="text/css">
-		.page-widgets > .boxed{
-			border:1px solid #e8e8e8;
-			margin-bottom: 15px;
-		}
-		.hidden{
-			display: none;
-		}
-		#field_1141{
-			top:50px;
-		}
-		.page-widgets > .boxed > .header{
-			background-color: #e8e8e8;
-			padding:10px;
-		}
-		.page-widgets > .boxed > .header > i{
-			float: right;
-			color: #757575
-		}
-		.page-widgets > .boxed > .content{
-			padding: 10px
-		} 
-		.page-widgets > .boxed > .content > .tags > span{
-			background-color: #e8e8e8;
-			padding: 5px;
-			color:#676767;
-			border-radius: 2px;
-			display: inline-block;
-			margin: 0 5px 5px 0;
-		}
-		.page-widgets > .boxed > .content > .tags > span > i{
-			margin-left: 5px
-		}
-	</style>
 	
 	<?php
 	if(empty($page)){
@@ -81,43 +46,36 @@
 	
 	<?php if(!Session::has('error')): ?>
 		<?php echo $__env->make('organization.pages._tabs', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-		<?php echo Form::model($page,['route' => $route , 'method' => 'post']); ?>
-
-			<div class="aione-row" style="position: relative;">
-				<div style="position: absolute;right: 0;top: -60px">
-					
-					<?php
-						if(Auth::guard('admin')->check()){
-							$route = 'view.pages';
-						}else{
-							$route = 'view.pages';
-						}
-					?>
-					<a href="<?php echo e(route($route ,$page->slug )); ?>" class="aione-button aione-button-small aione-button-light aione-button-square add-new-button" style="line-height: 40px">Preview</a>
-					<button type="submit" style="display: inline-block;line-height: 18px;margin-left: 10px">Update</button>
-				</div>
-				<div class="l6" style="width: 75%;float: left;padding-right:15px ">
-					
-					<?php echo FormGenerator::GenerateForm('edit_page_form'); ?>
-
-					<div class="visual hidden">
-						
-						<h3>Working on visual builder</h3>
-					</div>
-
-				</div>
-				<?php
-					$uri = explode('/',request()->route()->uri);
-				?>
-				<div class="l6 page-widgets" style="width: 25%;float: left">
-					<input type="hidden" name="id" value="<?php echo e(request()->route()->parameters()['id']); ?>">
-					<?php echo FormGenerator::GenerateForm('page_options_form'); ?>
-
-				</div>
-			</div>
-			
-		<?php echo Form::close(); ?>
-
+		<div class="aione-row" style="position: relative;">
+            <div class="ac">
+                <div class="aione-table">
+                    <table class="compact">
+                        <tr>
+                            <th>Page Title</th>
+                            <th>Slug</th>
+                            <th>Version</th>
+                            <th>Created At</th>
+                            <th>Action</th>
+                        </tr>
+                        <?php $__currentLoopData = $revisions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $revision): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <tr>
+                                <td><?php echo e($revision->title); ?></td>
+                                <td><?php echo e($revision->slug); ?></td>
+                                <td><?php echo e($revision->version); ?></td>
+                                <td><?php echo e($revision->created_at->diffForhumans()); ?></td>
+                                <td>
+                                    <a href="<?php echo e(route('preview.revisions',$revision->id)); ?>" target="_blank">Preview </a>
+                                    |
+                                    <a href="<?php echo e(route('restore.page',['id'=>request()->id, 'restore_id'=>$revision->id])); ?>" onclick="return confirm('Are you sure to restore?')">Restore </a>
+                                    |
+                                    <a href="<?php echo e(route('delete.revision',$revision->id)); ?>" onclick="return confirm('Are you sure to delete this revision?')">Delete </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </table>
+                </div>
+            </div>
+        </div>
 <?php endif; ?>
 	<?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 	<?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
