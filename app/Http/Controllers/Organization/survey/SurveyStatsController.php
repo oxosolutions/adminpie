@@ -439,7 +439,7 @@ true, $append_if_not_found = false ) {
                     if(count($repeaterData) < $maxCount){
                         for($i = count($repeaterData); $i < $maxCount; $i++){
                             $slugs = array_flip(preg_replace('/([0-9])/', $i+1, array_keys($repeaterData[0])));
-                            $slugsToRepeat = array_map(create_function('$n', 'return null;'), $slugs);
+                            $slugsToRepeat = array_fill_keys(array_keys($slugs), null);
                             $repeaterData[] = $slugsToRepeat;
                         }
                     }
@@ -469,7 +469,7 @@ true, $append_if_not_found = false ) {
     }
 
     public function outputCsv($fileName, $assocDataArray){
-        ob_clean();
+        // ob_clean();
         header('Pragma: public');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -484,7 +484,7 @@ true, $append_if_not_found = false ) {
             }
             fclose($fp);
         }
-        ob_flush();
+        // ob_flush();
         exit;
     }
 
@@ -518,9 +518,10 @@ true, $append_if_not_found = false ) {
     protected function convertQuestionIdToSlug($jsonDecodedData, $surveyModel, $maximumRepeaterCollection, $sectionName){
         $objectArray = [];
         $index = 0;
-        $maximumRepeaterCollection = array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection);
+        // $maximumRepeaterCollection = array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection);
+        $maximumRepeaterCollection = array_fill_keys(array_keys($maximumRepeaterCollection), null);
         if($jsonDecodedData == null || $jsonDecodedData == 994){
-            $jsonDecodedData = [array_map(create_function('$n', 'return null;'), $maximumRepeaterCollection)];
+            $jsonDecodedData = [array_fill_keys(array_keys($maximumRepeaterCollection), null)];
         }        
         foreach($jsonDecodedData as $k => $value){
             $value = array_merge($maximumRepeaterCollection,$value);
@@ -614,7 +615,7 @@ true, $append_if_not_found = false ) {
             }
         }
         if($request->has('export')){
-            $result = $Query->skip(6200)->take(200)->get();
+            $result = $Query->skip(8000)->take(500)->get();
         }else{
             $result = $Query->paginate(50);
         }

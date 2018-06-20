@@ -20,7 +20,7 @@ class CampaignEmail extends Mailable
      * @return void
      */
     public function __construct($layout,$template)
-    {
+    {        
         $this->layout = $layout;
         $this->template = $template;
     }

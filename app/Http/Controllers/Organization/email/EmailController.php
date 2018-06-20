@@ -184,13 +184,13 @@ class EmailController extends Controller
 
     public function saveCampaign(Request $request){
     	$userEmails = [];
-        $userIds = [];
+        $userIds = [];        
     	foreach($request->users as $key => $values){
     		if($key == 'users'){
-    			$users = User::whereIn('id',$values)->get();
+    			$users = User::with('groupUser')->whereIn('id',$values)->get();
     			foreach($users as $k => $value){
-    				$userEmails[] = $value->email;
-                    $userIds[] = $value->id;
+    				$userEmails[] = $value->groupUser->email;
+                    $userIds[] = $value->user_id;
     			}
     		}else{
     			$userMeta = UsersMeta::with(['user'])->where('key',$key)->whereIn('value',$values)->get();
