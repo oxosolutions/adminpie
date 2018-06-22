@@ -56,6 +56,7 @@ class LoginController extends Controller
     }
 
     public function showLoginForm(Request $request, $id = null, $social_token = null){
+
         if($id != null && $id != 'null'){
             $organizationToken = GlobalOrganization::where('auth_login_token',$id)->first();
             if($organizationToken != null){
@@ -133,6 +134,7 @@ class LoginController extends Controller
     }
 
     public function login(Request $request){
+
         $model = GroupUsers::where('email',$request->email)->first();
         if($model != null){
             if($model->status == 0){
@@ -155,11 +157,21 @@ class LoginController extends Controller
                         'password' => $request->input('password'),
                         'status' => 1
                     ];
+                    /**
+                     * Attempt to login user account
+                     */
                     if(Auth::guard('org')->attempt($credentials)) {
                         $putRole = UserRoleMapping::where(['user_id'=>Auth::guard('org')->user()->id])->first();
-                        @Session::put('user_role',@$putRole->role_id);
-                        if($request->has('back_to')){
-                            return redirect($request->back_to);
+                        @Session::put('user_role',@$putRole->role_id); //put the user role in session
+                        $organizationSettings = get_organization_settings(); // get organization settings from global_helper
+                        $default_page = $organizationSettings->where('key','default_page')->first(); // getting default page meta value from collection
+                        if($default_page != null){
+                            $page_slug = get_page_from_page_id($default_page->value);
+                            
+                        }else{
+                            if($request->has('back_to')){
+                                return redirect($request->back_to);
+                            }
                         }
                         return redirect('/'); 
                     }else{

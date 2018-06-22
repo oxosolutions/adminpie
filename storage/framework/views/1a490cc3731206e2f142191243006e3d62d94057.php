@@ -23,6 +23,23 @@ $page_title_data = array(
 		<div class="ac l50">
 			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_earnings_form'); ?>
 
+			<div class="aione-table">
+				<table>
+					<thead>
+						<tr>
+							<th>Allowances</th>
+							<th>Amount</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>DA</td>
+							<td>12000</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+				
 		</div>
 		<div class="ac l50">
 			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_deductions_form'); ?>
@@ -34,7 +51,10 @@ $page_title_data = array(
 	<script type="text/javascript">
 		$(document).ready(function(){
 			var basic = $('.field-wrapper-basic_pay').find('input').val();
-			console.log(basic);
+			$(document).on('keyup','.field-wrapper-percentage input',function(){
+				console.log($(this).val());
+				$(this).parent('.field-wrapper-percentage').next('.field-wrapper-amount').find('input').val('10');
+			})
 		})
 	</script>
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

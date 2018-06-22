@@ -32,7 +32,9 @@ use App\Model\Organization\Cms\Slider\Slider;
 use App\Model\Organization\Cms\Slider\SliderMeta;
 use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalSubModule;
+use App\Model\Organization\OrganizationSetting;
 use Carbon\Carbon;
+use App\Model\Organization\Page;
 /************************************************************
 *	@function get_module
 *	@access	public
@@ -2037,6 +2039,29 @@ function get_survey_meta($sid){
     	$column = 'name';
     	$visualization_name = get_title($model,$id,$column);
     	return $visualization_name;
+    }
+
+
+    /**
+     * Gets the page from page identifier.
+     *
+     * @param      string  $page_id  The page identifier
+     *
+     * @return     string  The page from page identifier.
+     */
+    function get_page_from_page_id($page_id){
+        if($page_id == null || $page_id == ''){
+            return $page_id
+        }
+        return Page::get_page_slug($page_id);
+    }
+
+    /**
+     * Gets the organization settings.
+     */
+    function get_organization_settings(){
+        $settings = OrganizationSetting::get();
+        return $settings;
     }
 
 
