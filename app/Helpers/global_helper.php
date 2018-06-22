@@ -34,7 +34,6 @@ use App\Model\Admin\GlobalModule;
 use App\Model\Admin\GlobalSubModule;
 use App\Model\Organization\OrganizationSetting;
 use Carbon\Carbon;
-use App\Model\Organization\Page;
 /************************************************************
 *	@function get_module
 *	@access	public
@@ -2051,7 +2050,7 @@ function get_survey_meta($sid){
      */
     function get_page_from_page_id($page_id){
         if($page_id == null || $page_id == ''){
-            return $page_id
+            return $page_id;
         }
         return Page::get_page_slug($page_id);
     }

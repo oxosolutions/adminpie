@@ -166,8 +166,8 @@ class LoginController extends Controller
                         $organizationSettings = get_organization_settings(); // get organization settings from global_helper
                         $default_page = $organizationSettings->where('key','default_page')->first(); // getting default page meta value from collection
                         if($default_page != null){
-                            $page_slug = get_page_from_page_id($default_page->value);
-                            
+                            $page_slug = get_page_from_page_id($default_page->value); // global+helper function convert page id to page slug
+                            return redirect()->route('view.pages',$page_slug);
                         }else{
                             if($request->has('back_to')){
                                 return redirect($request->back_to);
