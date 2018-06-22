@@ -297,16 +297,16 @@ class OrganizationController extends Controller
         }
     }
 
-    protected function create_organization_database($existed_id, $new_id)
+    public function create_organization_database($existed_id, $new_id)
     {
         $organizations = DB::select(" SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='oxo_scolm' and TABLE_NAME like 'ocrm_" . $existed_id . "%' ");
         if (!empty($organizations)) {
             foreach (json_decode(json_encode($organizations), true) as $orgKey => $orgValue) {
                 $existed = $orgValue['TABLE_NAME'];
                 $new = str_replace($existed_id, $new_id, $existed);
-                DB::select("CREATE TABLE " . $new . " LIKE " . $existed);
+                DB::statement("CREATE TABLE " . $new . " LIKE " . $existed);
                 if ($existed != "ocrm_" . $existed_id . "_users") {
-                    DB::select("INSERT " . $new . " SELECT * FROM " . $existed);
+                    DB::statement("INSERT " . $new . " SELECT * FROM " . $existed);
                 }
             }
             return 'table_exist';
@@ -583,7 +583,7 @@ class OrganizationController extends Controller
         Artisan::call('make:migration:schema', [
             '--model' => false,
             'name' => 'create_' . $org_id . '_pay_scale',
-            '--schema' => 'title:string:nullable, description:string:nullable, currency:string:nullable, pay_cycle:string:nullable, pay_scale:decimal(10,2):nullable, basic_pay:decimal(10,2):nullable, grade_pay:decimal(10,2):nullable, ta:decimal(10,2):nullable, da:decimal(10,2):nullable, sa:decimal(10,2):nullable, hra:decimal(10,2):nullable, epf_addiction:decimal(10,2):nullable, epf_deducation:decimal(10,2):nullable, sa_details:string:nullable, total_salary:decimal(10,2):nullable, gross_salary:decimal(10,2):nullable'
+            '--schema' => 'title:string:nullable, description:string:nullable, currency:string:nullable, pay_cycle:string:nullable, basic_pay:double, allowances:text:nullable, deductions:text:nullable, net_salary:double'
         ]);
 
         Artisan::call('make:migration:schema', [

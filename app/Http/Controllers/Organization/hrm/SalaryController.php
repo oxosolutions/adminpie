@@ -13,15 +13,16 @@ use App\Model\Organization\Attendance;
 use App\Model\Organization\Holiday;
 use App\Model\Organization\Leave;
 use App\Model\Organization\Designation;
+use App\Model\Organization\Category;
 use Carbon\carbon;
 use PDF;
+use DB;
 class SalaryController extends Controller
 {
     /**
     * { edit Salary  }
     *
     * @param      <int>   $id     Salaray Id
-    *
     * @return     <type>  ( to view  )
     * @author Paljinder Singh
     */
@@ -148,6 +149,7 @@ class SalaryController extends Controller
             if(strlen($month)==1){
                 $data['month'] = $month = '0'.$month;
             }
+
             if($request->has('generate_salary')){
                 if(!empty($request['user_select'])){
                     $this->generate_salary_slip($year , $month, $request['user_select']);
@@ -174,10 +176,12 @@ class SalaryController extends Controller
         $user = GroupUsers::with(['metas'=>function($query){
             $query->whereIn('key', [ 'date_of_joining' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
         }])->whereIn('id',$user_select)->get();
+
         foreach ($user as $userKey => $userValue) {
             $meta = $userValue['metas']->mapWithKeys(function($item){
                 return [$item['key'] => $item['value']];
             });
+
             if(!isset($meta['employee_id'])){
                 $have_not_employee_id[] =1;
                 continue;
@@ -189,12 +193,13 @@ class SalaryController extends Controller
                 $payScale_error[] = $meta['employee_id'];
                 continue;
             }else{
-                $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('total_salary')->first();
+                $payScale =  Payscale::where('id',$meta['pay_scale'])->whereNotNull('net_salary')->first();
                 if(empty($payScale)){
                     $payScale_error[] = $meta['employee_id'];
                     continue;
                 }
             }
+
             if(!Salary::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->exists()){
                 $attendance_data = Attendance::where(['employee_id'=>$meta['employee_id'], 'year'=>$year, 'month' =>$month])->get();
                 if($attendance_data->count()>0){
@@ -257,8 +262,67 @@ class SalaryController extends Controller
     }
 
 
+    protected function validatePaidUnpaidLeave($employee_id, $date){
+        $prefix = DB::getTablePrefix();
+        $tableName = $prefix.get_organization_id().'_leaves';
+        $model = DB::select('SELECT * FROM '.$tableName.' WHERE "'.$date.'" BETWEEN `from` AND COALESCE(`to`, NOW()) AND `employee_id` = '.$employee_id.' AND status = 1');
+        if(!empty($model)){
+            $model = collect($model[0]);
+            $levaeCategoryId = $model['leave_category_id'];
+            $category = Category::with('meta')->find($levaeCategoryId);
+            $categoryMeta = $category->meta->where('key','leave_category_type')->first();
+            if($categoryMeta != null){
+                $categoryType = $categoryMeta->value;
+                if($categoryType == 'paid'){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }else{
+            return false;
+        }
+    }
+
+    protected function validateHolidayInDay($date){
+        $holidayModel = Holiday::where('date_of_holiday',$date)->first();
+        if($holidayModel != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     protected function set_parm_for_insert_salary($attendance_data, $userKey, $meta, $user_id, $payScale,$year, $month){
+        $overTimeAttendance = $attendance_data->where('shift_hours',null)->where('punch_in_out','!=',null);
+        $absentDays = $attendance_data->where('shift_hours','!=',null)->where('punch_in_out','=',null);
+        $presentDays = $attendance_data->where('shift_hours','!=',null)->where('punch_in_out','!=',null);
+        //Calculate if absent or leave
+        if(!$absentDays->isEmpty()){
+            foreach ($absentDays as $key => $day) {
+                if($day->attendance_status == 'leave'){
+                    $leaveStatus = $this->validatePaidUnpaidLeave($day->employee_id, $day->year.'-'.$day->month.'-'.$day->date);
+                    if($leaveStatus == true){
+                        $presentDays->push($day);
+                        $absentDays->forget($key);
+                    }
+                }else{ // check if there is holiday in that day
+                    $holidayStatus = $this->validateHolidayInDay($day->year.'-'.$day->month.'-'.$day->date);
+                    if($holidayStatus){
+                        $presentDays->push($day);
+                        $absentDays->forget($key);
+                    }
+                }
+            }
+        }
+        dd($overTimeAttendance, $absentDays, $presentDays);
+
+
+
+
+
         $attendant_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->count();
+        dd($attendant_days_in_month);
         if($attendant_days_in_month<1){
             return;
         }
@@ -268,7 +332,7 @@ class SalaryController extends Controller
         $per_min_salary = $per_day/8/60;
         $current_date = Carbon::parse("$year-$month-1");
         $daysInMonth = $current_date->daysInMonth;
-        $holiday = Holiday::WhereYear('date_of_holiday', $year)->whereMonth('date_of_holiday',$month)->count();
+        $holiday = Holiday::WhereYear('date_of_holiday', $year)->whereMonth('date_of_holiday',$month)->count();        
         $working_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->count();
         $loss_of_pay_days = $attendance_data->whereIn('attendance_status',['lop','absent'])->whereNotIn('shift_hours',[null])->count();
         $leaves_in_month = $attendance_data->whereIn('attendance_status',['leave'])->whereNotIn('shift_hours',[null])->count();

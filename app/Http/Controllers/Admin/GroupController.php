@@ -81,7 +81,7 @@ class GroupController extends Controller
     {
         $this->validateGroupRequest($request);
         $model = new Group;
-        $model->fill($request->all('_token','modules','email','password'));
+        $model->fill($request->all());
         $model->modules = json_encode($request['modules']);
         $model->save();
         $groupId = $model->id;
@@ -138,7 +138,7 @@ class GroupController extends Controller
     public function update(Request $request, $id)
     {
         $model = Group::find($id);
-        $model->fill($request->all('_token','modules','email','password'));
+        $model->fill($request->all());
         $model->modules = json_encode($request['modules']);
         $model->save();
         return redirect()->route('list.group');
@@ -158,8 +158,8 @@ class GroupController extends Controller
         if(empty($group_organization)){
             Group::find($id)->delete();
             AdminUsers::where('group_id',$id)->delete();
-            DB::select("DROP TABLE ".$prefix."group_".$id."_users");
-            DB::select("DROP TABLE ".$prefix."group_".$id."_user_meta");
+            DB::statement("DROP TABLE ".$prefix."group_".$id."_users");
+            DB::statement("DROP TABLE ".$prefix."group_".$id."_user_meta");
             Session::flash('success','Successfully deleted!');
             return back();
         }else{

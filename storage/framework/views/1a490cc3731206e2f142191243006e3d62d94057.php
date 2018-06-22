@@ -13,21 +13,20 @@ $page_title_data = array(
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-	<?php echo Form::model(@$data['data'],['route'=>['edit.payscale' , $data["data"]->id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
+	<?php echo Form::model(@$data,['route'=>['edit.payscale' , $data->id] , 'class'=> 'form-horizontal','method' => 'post']); ?>
 
 		<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_form'); ?>
 
 	
 	<div class="ar">
 		<div class="ac l50">
-			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_earnings_form'); ?>
+			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_earnings_form',[],$data->toArray()); ?>
 
 			
 		</div>
 		<div class="ac l50">
-			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_deductions_form'); ?>
+			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_deductions_form',[],$data->toArray()); ?>
 
-			
 		</div>
 
 	</div>
@@ -89,6 +88,7 @@ $page_title_data = array(
 			Nill
 		</div>
 	</div>
+    <input type="hidden" value="" name="net_salary">
 	<button type="submit" class="m-10">Submit</button>
 	<?php echo Form::close(); ?>
 
@@ -98,6 +98,7 @@ $page_title_data = array(
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <script type="text/javascript">
     $(function(){
+        calculateSalary();
         $('body').on('change','input,select', function(){
              calculateSalary();
         });
@@ -142,6 +143,7 @@ $page_title_data = array(
             });
             $('.deduct_total').html(deductCount);
             $('.net_salary').html(totalAmount - deductCount);
+            $('input[name=net_salary]').val(totalAmount - deductCount);
         }
 
         function getValue(num) {
