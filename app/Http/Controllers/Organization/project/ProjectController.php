@@ -75,7 +75,7 @@ class ProjectController extends Controller
     
     public function validation(Request $request)
     {
-        $pro_table = Session::get('organization_id');
+        $pro_table = get_organization_id();
         $validation = [
                                 'name' => 'required|unique:'.$pro_table.'_projects',
                                 'category' => 'required'
@@ -414,7 +414,7 @@ class ProjectController extends Controller
     {
        if($request->file('document'))
        {
-            $org_path =  public_path().'/files/organization_'.Session::get('organization_id');
+            $org_path =  public_path().'/files/organization_'.get_organization_id();
             if(!is_dir($org_path))
             {
                 mkdir($org_path , 0777 ,true);

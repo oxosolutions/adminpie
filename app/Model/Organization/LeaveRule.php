@@ -11,9 +11,9 @@ class LeaveRule extends Model
 	protected $fillable = ['name', 'designation_id', 'user_id', 'leave_category_id', 'number_of_day', 'apply_before', 'status'];
     public function __construct()
 	{
-		if(!empty(Session::get('organization_id')))
+		if(!empty(get_organization_id()))
 		{
-			$this->table = Session::get('organization_id').'_leave_rules';
+			$this->table = get_organization_id().'_leave_rules';
 		}
 	}
 	

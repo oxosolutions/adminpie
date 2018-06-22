@@ -8,9 +8,9 @@ class MenuSetting extends Model
 {
 	protected $fillable =[ 'menu_id', 'key', 'value'];
    public function __construct(){
-   	if(!empty(Session::get('organization_id'))){
+   	if(!empty(get_organization_id())){
 
-   		$this->table = Session::get('organization_id')."_menu_settings"
+   		$this->table = get_organization_id()."_menu_settings"
    	}
    }
 }

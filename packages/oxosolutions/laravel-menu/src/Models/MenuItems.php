@@ -14,8 +14,8 @@ class MenuItems extends Model
     	$this->table = config('menu.table_prefix') . $this->table;
     }*/
     public function __construct( array $attributes = [] ){
-    	// dd(Session::get('organization_id').'_menu_items');
-    	$this->table = Session::get('organization_id').'_menu_items';
+    	// dd(get_organization_id().'_menu_items');
+    	$this->table = get_organization_id().'_menu_items';
     }
 
     public function getsons($id) {

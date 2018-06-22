@@ -35,7 +35,7 @@ class PagesController extends Controller
 		if(Auth::guard('admin')->check() == true){
 			$table = 'global_pages';
 		}else{
-			$tbl = Session::get('organization_id');
+			$tbl = get_organization_id();
 			$table = $tbl.'_pages';
 		}
 		$rules = [
@@ -196,7 +196,7 @@ class PagesController extends Controller
 		if(Auth::guard('admin')->check() == true){
 			$table = 'global_pages';
 		}else{
-			$tbl = Session::get('organization_id');
+			$tbl = get_organization_id();
 			$table = $tbl.'_pages';
 		}
 		$rules = [

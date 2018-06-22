@@ -9,8 +9,8 @@ class Campaign extends Model
     public static $breadCrumbColumn = 'campaign_name';
 	public function __construct()
 	{
-		if(!empty(Session::get('organization_id'))){
-			$this->table = Session::get('organization_id').'_campaigns';
+		if(!empty(get_organization_id())){
+			$this->table = get_organization_id().'_campaigns';
 		}
 	}
 }

@@ -12,9 +12,9 @@ class PageMeta extends Model
 
     public function __construct()
     {
-    	if(!empty(Session::get('organization_id')))
+    	if(!empty(get_organization_id()))
     	{
-    		$this->table = Session::get('organization_id').'_page_metas';
+    		$this->table = get_organization_id().'_page_metas';
     	}
     }
     public function MenuList(){

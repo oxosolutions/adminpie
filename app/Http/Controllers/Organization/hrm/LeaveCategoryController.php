@@ -44,7 +44,7 @@ class LeaveCategoryController extends Controller
       * @return [type]           [back category list]
       */
     public function save(Request $request) {
-      $tbl = Session::get('organization_id');
+      $tbl = get_organization_id();
       $valid_fields = ['name'          => 'required|unique:'.$tbl.'_categories'];
       $this->validate($request , $valid_fields);
       $request->request->add(['type' => 'leave']);

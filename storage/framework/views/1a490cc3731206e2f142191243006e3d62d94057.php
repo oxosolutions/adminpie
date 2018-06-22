@@ -19,9 +19,24 @@ $page_title_data = array(
 
 	<?php echo Form::close(); ?>
 
+	<div class="ar">
+		<div class="ac l50">
+			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_earnings_form'); ?>
+
+		</div>
+		<div class="ac l50">
+			<?php echo FormGenerator::GenerateForm('organization_hrm_payscale_deductions_form'); ?>
+
+		</div>
+	</div>
 <?php echo $__env->make('common.page_content_primary_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_secondry_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var basic = $('.field-wrapper-basic_pay').find('input').val();
+			console.log(basic);
+		})
+	</script>
 <?php echo $__env->make('common.page_content_secondry_end', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.pagecontentend', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php $__env->stopSection(); ?>

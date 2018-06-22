@@ -10,7 +10,7 @@ class FormData extends Model
     public function __construct(){
         if(!empty(get_organization_id())){
             $form_id =  Session::get('form_id');
-            $this->table = Session::get('organization_id').'_form_data_'.$form_id;
+            $this->table = get_organization_id().'_form_data_'.$form_id;
         }
     }
 }

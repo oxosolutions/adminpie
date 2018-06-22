@@ -58,7 +58,7 @@ class ShiftsController extends Controller
   
    public function save(Request $request)
    {
-    $tbl = Session::get('organization_id');
+    $tbl = get_organization_id();
 
     $valid_fields = [
                             'name' => 'required|unique:'.$tbl.'_shifts',
@@ -104,7 +104,7 @@ class ShiftsController extends Controller
     }
     public function editShifts(Request $request , $id = null)
     {
-      $tbl = Session::get('organization_id');
+      $tbl = get_organization_id();
       $model = Shift::where('name',$request->name)->first();
         if(@$model->id == $request->id){
           if(@$model->name == $request->name){
@@ -126,7 +126,7 @@ class ShiftsController extends Controller
       
       $this->validate($request , $valid_fields);
 
-       $tbl = Session::get('organization_id');
+       $tbl = get_organization_id();
 
         
 

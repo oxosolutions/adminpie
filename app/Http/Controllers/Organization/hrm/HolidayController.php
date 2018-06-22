@@ -18,7 +18,7 @@ class HolidayController extends Controller
         $carbon = Carbon::parse($request['date_of_holiday']);
         $request['date_of_holiday'] = $carbon->format('Y-m-d');
         $request['status'] = 1;
-    	$tbl = Session::get('organization_id');
+    	$tbl = get_organization_id();
         $valid_fields = [
                             'title'             => 'required|unique:'.$tbl.'_holidays',
                             'date_of_holiday'   => 'required|unique:'.$tbl.'_holidays',
@@ -115,7 +115,7 @@ class HolidayController extends Controller
     }
     public function editHoliday(Request $request)
     {
-        $tbl = Session::get('organization_id');
+        $tbl = get_organization_id();
         $data = Holiday::where('id',$request->id)->first();
         if($data->id == $request->id){
             if($data->date_of_holiday == $request->date_of_holiday){

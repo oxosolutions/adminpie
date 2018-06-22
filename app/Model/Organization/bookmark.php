@@ -9,9 +9,9 @@ class bookmark extends Model
 {
 	public function __construct()
 	{	
-	   	if(!empty(Session::get('organization_id')))
+	   	if(!empty(get_organization_id()))
 	   	{
-	       $this->table = Session::get('organization_id').'_bookmarks';
+	       $this->table = get_organization_id().'_bookmarks';
 	   	}
 	}
     protected $fillable = ['title','link','target','user_id','categories','tags','order','status'];

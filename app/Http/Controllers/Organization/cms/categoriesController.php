@@ -44,7 +44,7 @@ class categoriesController extends Controller
                   $model = $Associate::where(['type' => 'page'])->paginate($perPage);
               }
           }else{
-              $orgId = Session::get('organization_id');
+              $orgId = get_organization_id();
               if($sortedBy != ''){
                   $model = $Associate::where(['type' => 'page'])->orderBy($sortedBy,$orders)->paginate($perPage);
               }else{

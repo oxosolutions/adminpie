@@ -424,7 +424,7 @@ class AttendanceController extends Controller
      */
 	public function attendance_import(Request $request)
 	{
-		$checkStatus = ''; $orgID = Session::get('organization_id'); $file = $request->file('attendance_file');
+		$checkStatus = ''; $orgID = get_organization_id(); $file = $request->file('attendance_file');
 		if ($this->validate_import_request($request, $file)->fails()) {
         	return back();
     	}

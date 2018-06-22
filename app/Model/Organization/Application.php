@@ -10,8 +10,8 @@ class Application extends Model
     public static $breadCrumbColumn = 'id';
    protected $fillable = [ 'applicant_id', 'opening_id', 'status'];
    public function __construct(){	
-	   	if(!empty(Session::get('organization_id'))){
-	       $this->table = Session::get('organization_id').'_applications';
+	   	if(!empty(get_organization_id())){
+	       $this->table = get_organization_id().'_applications';
 	   	}
    }
 	public function jobs(){

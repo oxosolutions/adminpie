@@ -10,9 +10,9 @@ class ProjectMeta extends Model
 	public static $breadCrumbColumn = 'id';
    public function __construct()
    {	
-	   	if(!empty(Session::get('organization_id')))
+	   	if(!empty(get_organization_id()))
 	   	{
-	       $this->table = Session::get('organization_id').'_project_metas';
+	       $this->table = get_organization_id().'_project_metas';
 	   	}
    }
    protected $fillable = [ 'key', 'value', 'type', 'project_id','teams'];

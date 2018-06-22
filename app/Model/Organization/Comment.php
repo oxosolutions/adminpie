@@ -11,9 +11,9 @@ class Comment extends Model
     protected $fillable = ['target_id','user_id','reply_id','comment','type','status'];
 
  public function __construct(){
- 	if(!empty(Session::get('organization_id')))
+ 	if(!empty(get_organization_id()))
    		{
-   			$this->table = Session::get('organization_id').'_comments';
+   			$this->table = get_organization_id().'_comments';
    		}
  }
  // public function commentable(){

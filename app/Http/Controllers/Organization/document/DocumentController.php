@@ -122,7 +122,7 @@ class DocumentController extends Controller
               $perPage = get_items_per_page();;
             }
         $sortedBy = @$request->orderby;
-        $orgId = Session::get('organization_id');
+        $orgId = get_organization_id();
         if($request->has('search')){
             if($sortedBy != ''){
                 $model = DocumentLayout::where('name','like','%'.$request->search.'%')->paginate($perPage);
@@ -170,7 +170,7 @@ class DocumentController extends Controller
               $perPage = get_items_per_page();;
             }
         $sortedBy = @$request->orderby;
-        $orgId = Session::get('organization_id');
+        $orgId = get_organization_id();
         if($request->has('search')){
             if($sortedBy != ''){
                 $model = DocumentTemplate::where('name','like','%'.$request->search.'%')->paginate($perPage);

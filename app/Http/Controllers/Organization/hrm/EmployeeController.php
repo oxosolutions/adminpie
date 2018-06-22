@@ -441,7 +441,7 @@ class EmployeeController extends Controller
         $index = 1;
         $in_valid_date_format = $emptyRow = $newInsertAlreadyEmployeeId = $alreadyInGroupNotOrg = $update_password = $newRecord = $updateRecord = $alreadyInGroup = [];
         if($request->hasFile('import_employee')){
-            $organizationId = Session::get('organization_id');
+            $organizationId = get_organization_id();
             $filename = date('YmdHis').'_employee_list.'.$request->file('import_employee')->getClientOriginalExtension();
             $path = env('USER_FILES_PATH').'_'.$organizationId.'/hrm_employee_import_files';
             $request->file('import_employee')->move($path,$filename);

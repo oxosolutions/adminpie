@@ -55,7 +55,7 @@ class UserRoleController extends Controller{
     }
     public function save(Request $request)
     {
-        $org_id = Session::get('organization_id');
+        $org_id = get_organization_id();
         
         $output = parse_slug($request->slug);
         $request['slug'] = $output;

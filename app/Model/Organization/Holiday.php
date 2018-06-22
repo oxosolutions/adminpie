@@ -12,9 +12,9 @@ class Holiday extends Model
 	public static $breadCrumbColumn = 'title';
 	public function __construct()
 	{
-		if(!empty(Session::get('organization_id')))
+		if(!empty(get_organization_id()))
 		{
-			$this->table = Session::get('organization_id').'_holidays';
+			$this->table = get_organization_id().'_holidays';
 		}
 
 					//$this->table = '32_holidays';

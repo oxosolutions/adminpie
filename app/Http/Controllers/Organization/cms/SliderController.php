@@ -63,7 +63,7 @@ class SliderController extends Controller
         //     $uploadFile = $v['file']->move($destination_path, $new_filename);
         //     $sliderData['slider'][$k]['file'] = $new_filename;             
         // }
-        $table = Session::get('organization_id').'_sliders';
+        $table = get_organization_id().'_sliders';
         $rules = [
                     'slug' => 'required|unique:'.$table,
                     'name' => 'required'
@@ -95,7 +95,7 @@ class SliderController extends Controller
         //     $uploadFile = $v['file']->move($destination_path, $new_filename);
         //     $sliderData['slider'][$k]['file'] = $new_filename;             
         // }
-        $table = Session::get('organization_id').'_sliders';
+        $table = get_organization_id().'_sliders';
         $rules = [
                     'slug' => 'required|unique:'.$table,
                     'title' => 'required'

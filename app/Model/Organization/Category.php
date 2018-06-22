@@ -12,9 +12,9 @@ class Category extends Model
 	public static $breadCrumbColumn = 'name';
     public function __construct()
 	{
-	    if(!empty(Session::get('organization_id')))
+	    if(!empty(get_organization_id()))
 	    {
-	    	$this->table = Session::get('organization_id').'_categories';
+	    	$this->table = get_organization_id().'_categories';
 	    }
 	}
 	protected $fillable = ['name', 'description', 'type', 'status'];

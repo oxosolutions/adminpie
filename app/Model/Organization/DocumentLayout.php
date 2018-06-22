@@ -11,9 +11,9 @@ class DocumentLayout extends Model
     public static $breadCrumbColumn = 'name';
     public function __construct()
 	{
-	    if(!empty(Session::get('organization_id')))
+	    if(!empty(get_organization_id()))
 	    {
-	    	$this->table = Session::get('organization_id').'_document_layout';
+	    	$this->table = get_organization_id().'_document_layout';
 	    }
 	}
     protected $fillable = [ 'name','header','footer','slug','order'];

@@ -905,7 +905,7 @@ class DatasetController extends Controller
 
         $this->validateStoreRequest($request);
         try{
-            $org_id =  Session::get('organization_id');
+            $org_id =  get_organization_id();
             $nextId = @Dataset::orderBy('id','desc')->first()->id + 1;
             $tableName = DB::getTablePrefix().$org_id.'_data_table_'.$nextId;
             $model = new Dataset;

@@ -2028,7 +2028,7 @@ class SurveyController extends Controller
         // survey_response_limit  response_limit response_limit_type
         if (isset($setting['survey_response_limit']) && ($setting['survey_response_limit'] == true)) {
             if (isset($setting['response_limit_type']) && ($setting['response_limit_type'] == "per_ip")) {
-                $organization_id = Session::get('organization_id');
+                $organization_id = get_organization_id();
                 $table = $organization_id . '_survey_results_' . $survey_id;
                 $ip = \Request::ip();
                 if (Schema::hasTable($table)) {
@@ -2041,7 +2041,7 @@ class SurveyController extends Controller
             if (!empty($setting['authentication_required']) && ($setting['authentication_required'] == true)) {
                 $user_id = Auth::guard('org')->user()->id;
                 if (!empty($setting['response_limit_type'] == "per_user")) {
-                    $organization_id = Session::get('organization_id');
+                    $organization_id = get_organization_id();
                     $table = $organization_id . '_survey_results_' . $survey_id;
                     $ip = \Request::ip();
                     if (Schema::hasTable($table)) {

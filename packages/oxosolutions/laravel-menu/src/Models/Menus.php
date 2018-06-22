@@ -12,6 +12,6 @@ class Menus extends Model
     public function __construct( array $attributes = [] ){
     	//parent::construct( $attributes );
     	// $this->table = config('menu.table_prefix') . $this->table;
-    	$this->table = Session::get('organization_id').$this->table;
+    	$this->table = get_organization_id().$this->table;
     }
 }

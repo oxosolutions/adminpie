@@ -10,9 +10,9 @@ class Project extends Model
    public static $breadCrumbColumn = 'name';
    public function __construct()
    {	
-	   	if(!empty(Session::get('organization_id')))
+	   	if(!empty(get_organization_id()))
 	   	{
-	       $this->table = Session::get('organization_id').'_projects';
+	       $this->table = get_organization_id().'_projects';
 	   	}
    }
    protected $fillable = [ 'name', 'description','category','tags','teams'];

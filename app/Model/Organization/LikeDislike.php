@@ -9,9 +9,9 @@ class LikeDislike extends Model
 {
  
  public function __construct(){
- 	if(!empty(Session::get('organization_id')))
+ 	if(!empty(get_organization_id()))
    		{
-   			$this->table = Session::get('organization_id').'_like_dislikes';
+   			$this->table = get_organization_id().'_like_dislikes';
    		}
  }
  // public function commentable(){

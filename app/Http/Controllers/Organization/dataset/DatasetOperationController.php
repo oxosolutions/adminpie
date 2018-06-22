@@ -37,7 +37,7 @@ class DatasetOperationController extends Controller
     		// ,['new_dataset_name.required'=>'The New dataset name field is required.','first_datasets.required' => 'The First Dataset field is required.', 'second_datasets.required' => 'The second datasets field is required.']
     		$first_datasets = $request["first_datasets"];
     		$second_datasets = $request["second_datasets"];
-    		$org_id = Session::get('organization_id');
+    		$org_id = get_organization_id();
     		$first_table = $this->check_table_existence($first_datasets);
     		if(!$first_table){
                 Session::flash('error','First table not found!'); 

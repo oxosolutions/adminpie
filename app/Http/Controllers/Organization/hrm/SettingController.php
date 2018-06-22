@@ -188,7 +188,7 @@ class SettingController extends Controller
     }
 
     public function saveOrganizationSettings(Request $request){       
-    	$organizationId = Session::get('organization_id');
+    	$organizationId = get_organization_id();
     	if($request->has('employee_role')){
     		update_organization_metas($request->all());
     		return back();
@@ -307,7 +307,7 @@ class SettingController extends Controller
 	              $perPage = get_items_per_page();;
 	            }
 	        $sortedBy = @$request->orderby;
-	        $orgId = Session::get('organization_id');
+	        $orgId = get_organization_id();
 	        $datalist['datalist'] = [];
 	        $model = [];
 	        if($request->has('search')){

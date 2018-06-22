@@ -34,7 +34,7 @@ class ApplicantController extends Controller
     public function apply(Request $request, $id=null)
     {
       if($request->isMethod('post')){
-        $tbl = Session::get('organization_id');
+        $tbl = get_organization_id();
         $valid_fields = [   'name'          => 'required',
                             'email'         => 'required|email|unique:'.$tbl.'_users',
                             'password'      => 'required|regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/|min:8'

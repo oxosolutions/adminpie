@@ -10,8 +10,8 @@ class Document extends Model
 	public static $breadCrumbColumn = 'id';
 	protected $fillable = ['title','description','layout','template','status','order'];
     public function __construct(){
-    	if(!empty(Session::get('organization_id'))){
-	    	$this->table = Session::get('organization_id').'_document';
+    	if(!empty(get_organization_id())){
+	    	$this->table = get_organization_id().'_document';
 	    }
     }
     public function DocumentLayout()

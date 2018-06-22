@@ -24,7 +24,7 @@ class FormBuilderController extends Controller
 {
     public function formTable()
     {
-        $org_id = Session::get('organization_id');
+        $org_id = get_organization_id();
         if(Auth::guard('admin')->check()){
             $formTable = 'global_forms';
         }else{
@@ -257,7 +257,7 @@ class FormBuilderController extends Controller
     }
 
     protected function validateSection($request){
-        $org_id = Session::get('organization_id');
+        $org_id = get_organization_id();
         if(Auth::guard('admin')->check()){
             $sectionTable = 'global_form_sections';
         }else{
@@ -550,7 +550,7 @@ class FormBuilderController extends Controller
     }
 
     protected function validateUpdateFields($request){
-        $org_id = Session::get('organization_id');
+        $org_id = get_organization_id();
         if(Auth::guard('admin')->check()){
             $fieldTable = 'global_form_fields';
         }else{

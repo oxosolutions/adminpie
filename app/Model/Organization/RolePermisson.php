@@ -15,9 +15,9 @@ class RolePermisson extends Model
 	public function __construct()
 	   {	
 	   
-		   	if(!empty(Session::get('organization_id')))
+		   	if(!empty(get_organization_id()))
 		   	{
-		       $this->table = Session::get('organization_id').'_role_permissons';
+		       $this->table = get_organization_id().'_role_permissons';
 		   	}
 	   }
 	public function permisson_module()

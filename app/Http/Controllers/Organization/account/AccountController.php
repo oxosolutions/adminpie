@@ -178,7 +178,7 @@ class AccountController extends Controller
      * @return back function to go back the previous page
      */
     public function update(Request $request, $id){
-        $tbl = Session::get('organization_id');
+        $tbl = get_organization_id();
         $data = User::where('id',$id)->first();
         if($data->id == $id){
             if($data->email == $request->email){
@@ -231,7 +231,7 @@ class AccountController extends Controller
         }
         if($request_data['meta_table'] == 'employeemeta'){
             unset($request_data['meta_table']);
-            $tbl = Session::get('organization_id');
+            $tbl = get_organization_id();
 
             /*$data = Employee::where(['user_id' => $id])->first();
             if(!array_key_exists('empId', $request->all())){

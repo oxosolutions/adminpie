@@ -10,9 +10,9 @@ class Leave extends Model
     public static $breadCrumbColumn = 'reason_of_leave';
 	public function __construct()
 	{
-		if(!empty(Session::get('organization_id')))
+		if(!empty(get_organization_id()))
 		{
-			$this->table = Session::get('organization_id').'_leaves';
+			$this->table = get_organization_id().'_leaves';
 		}
 
 					//$this->table = '32_holidays';

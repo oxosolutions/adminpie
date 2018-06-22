@@ -80,7 +80,7 @@ class EmailController extends Controller
               $perPage = get_items_per_page();;
             }
         $sortedBy = @$request->orderby;
-        $orgId = Session::get('organization_id');
+        $orgId = get_organization_id();
         if($request->has('search')){
             if($sortedBy != ''){
                 $model = EmailTemplate::where('name','like','%'.$request->search.'%')->paginate($perPage);
@@ -118,7 +118,7 @@ class EmailController extends Controller
               $perPage = get_items_per_page();;
             }
         $sortedBy = @$request->orderby;
-        $orgId = Session::get('organization_id');
+        $orgId = get_organization_id();
         if($request->has('search')){
             if($sortedBy != ''){
                 $model = EmailLayout::where('name','like','%'.$request->search.'%')->paginate($perPage);
@@ -254,7 +254,7 @@ class EmailController extends Controller
     {
         $output = parse_slug($request->slug);
         $request['slug'] = $output;
-        $table = Session::get('organization_id').'_email_template';
+        $table = get_organization_id().'_email_template';
         $rules = [
                 'name' => 'required',
                 'content' => 'required',

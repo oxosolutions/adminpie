@@ -11,6 +11,6 @@ class EmployeeLeave extends Model
 	protected $fillable =['employee_id', 'reason_of_leave', 'description', 'total_day_of_leave', 'from', 'to', 'approved_status', 'approved_by'];
     public function __construct()
     {
-    	$this->table = Session::get('organization_id')."_employee_leaves";
+    	$this->table = get_organization_id()."_employee_leaves";
     }
 }

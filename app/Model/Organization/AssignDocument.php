@@ -10,8 +10,8 @@ class AssignDocument extends Model
 	public static $breadCrumbColumn = 'id';
 	protected $fillable = ['user_id','document_id'];
     public function __construct(){
-    	if(!empty(Session::get('organization_id'))){
-	    	$this->table = Session::get('organization_id').'_assign_documents';
+    	if(!empty(get_organization_id())){
+	    	$this->table = get_organization_id().'_assign_documents';
 	    }
     }
     

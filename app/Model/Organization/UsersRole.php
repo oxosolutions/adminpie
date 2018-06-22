@@ -12,9 +12,9 @@ class UsersRole extends Model
 
    public function __construct()
    {	
-	   	if(!empty(Session::get('organization_id')))
+	   	if(!empty(get_organization_id()))
 	   	{
-	       $this->table = Session::get('organization_id').'_users_roles';
+	       $this->table = get_organization_id().'_users_roles';
 	   	}
    }
    public function permisson()

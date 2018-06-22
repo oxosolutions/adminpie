@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Organization\Auth;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use App\Model\Admin\GlobalOrganization;
-use Auth;
-use Session;
-use Route;
-use Mail;
-use Hash;
-use App\Model\Organization\User;
-use App\Mail\forgetPassword;
-use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\OrganizationSetting;
-use App\Model\Group\GroupUsers;
+use App\Model\Organization\UserRoleMapping;
 use App\Model\Organization\forms as Forms;
-use App\Model\Organization\PasswordReset;
 use App\Model\Organization\EmailTemplate;
+use App\Model\Organization\PasswordReset;
+use App\Model\Admin\GlobalOrganization;
 use App\Model\Organization\EmailLayout;
+use App\Http\Controllers\Controller;
+use App\Model\Group\GroupUserMeta;
+use App\Model\Organization\User;
+use App\Model\Group\GroupUsers;
+use App\Mail\forgetPassword;
+use Illuminate\Http\Request;
 use Shortcode;
 use Socialite;
-use App\Model\Group\GroupUserMeta;
+use Session;
+use Route;
+use Auth;
+use Mail;
+use Hash;
 class LoginController extends Controller
 {
     /*
@@ -118,16 +118,6 @@ class LoginController extends Controller
             return view('organization.login.login',compact('settings'));
         }
 
-
-        /*$domain = explode('.', request()->getHost());
-        $subdomain = $domain[0];
-        $model = GlobalOrganization::where('slug',$subdomain)->first();
-        if($model == null){
-            return redirect()->route('demo5');
-            //return view('organization.demo.demo5');
-        }
-        Session::put('organization_id',$model->id);
-        return view('organization.login.login');*/
     }
     public function showLoginFormv1()
     {

@@ -19,8 +19,8 @@ class GlobalOrganization extends Model
 
   	public static function organization_module()
   	{
-  		if(!empty(Session::get('organization_id'))){
-			$modules = self::where('id',Session::get('organization_id'))->first()->modules;
+  		if(!empty(get_organization_id())){
+			$modules = self::where('id',get_organization_id())->first()->modules;
       if($modules != null){
         return $moduleData = array_map('intval',json_decode($modules,true));
       }else{

@@ -56,7 +56,7 @@ class DepartmentsController extends Controller
   
    public function save(Request $request)
    {
-      $tbl = Session::get('organization_id');
+      $tbl = get_organization_id();
 
       $valid_fields = [
                             'name' => 'required|unique:'.$tbl.'_departments'
@@ -95,7 +95,7 @@ class DepartmentsController extends Controller
         DEP::find($request->id)->update(['name' => $request->name]);
         return redirect()->route('departments');
       }else{
-        $tbl = Session::get('organization_id');
+        $tbl = get_organization_id();
         $valid_fields = [
                               'name' => 'required|unique:'.$tbl.'_departments'
                           ];

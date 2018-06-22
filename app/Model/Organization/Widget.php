@@ -10,9 +10,9 @@ class Widget extends Model
     
     public function __construct(){
 
-	   	if(!empty(Session::get('organization_id'))){
+	   	if(!empty(get_organization_id())){
 
-	      return $this->table = Session::get('organization_id').'_widgets';
+	      return $this->table = get_organization_id().'_widgets';
 	   	}
    	}
 }
