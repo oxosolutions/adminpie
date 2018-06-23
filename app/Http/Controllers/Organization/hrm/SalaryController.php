@@ -315,9 +315,78 @@ class SalaryController extends Controller
                 }
             }
         }
-        dd($overTimeAttendance, $absentDays, $presentDays);
+        $netSalary = (int)$payScale->net_salary;
+        $allowances = json_decode($payScale->allowances, true);
+        $deductions = json_decode($payScale->deductions, true);
 
 
+        //Check for lose of pay
+        $lessTime = collect($deductions)->where('components','lt');
+        $lessTimeInMinutes = 0;
+        $overTime = collect($allowances)->where('salary-component','ta');
+        $overTimeinMinutes = 0;
+        if(!$lessTime->isEmpty()){
+            foreach($presentDays as $key => $attendance){
+                $shiftHour = json_decode($attendance->shift_hours,true);
+                $punchTime = json_decode($attendance->punch_in_out,true);
+                $shiftStartTime = Carbon::parse($shiftHour[0]);
+                $punchStartTime = Carbon::parse(@$punchTime[0]);
+                if($shiftStartTime < $punchStartTime){
+                    $lessTimeInMinutes = $lessTimeInMinutes + $shiftStartTime->diffInMinutes($punchStartTime);
+                }
+            }
+            $lessHours = (int)floor($lessTimeInMinutes / 60);
+        }
+
+        if(!$overTime->isEmpty()){
+            foreach($presentDays as $key => $attendance){
+                $shiftHour = json_decode($attendance->shift_hours,true);
+                $punchTime = json_decode($attendance->punch_in_out,true);
+                $shiftEndTime = Carbon::parse($shiftHour[1]);
+                $punchEndTime = Carbon::parse(@$punchTime[1]);
+                if($punchEndTime > $shiftEndTime){
+                    $overTimeinMinutes = $overTimeinMinutes + $punchEndTime->diffInMinutes($shiftEndTime);
+                }
+            }
+            $overTimeHours = (int)floor($overTimeinMinutes / 60);
+        }
+        if($lessHours != 0){
+            if($overTimeHours != 0){
+                if($overTimeHours > $lessHours){
+                    $overTimeHours = $overTimeHours - $lessHours;
+                }elseif($overTimeHours < $lessHours){
+                    $lessHours = $lessHours - $overTimeHours;
+                    $overTimeHours = 0;
+                }else{
+                    $lessHours = 0;
+                    $overTimeHours = 0;
+                }
+            }
+        }
+
+        $perDaySalary = round($netSalary/30);
+        $halfdaySalary = $perDaySalary/2;
+        $salaryToMinus = 0;
+        if($lessHours != 0){
+            $numberOfHalfDays = floor($lessHours/16);
+            if($numberOfHalfDays > 0){
+                $salaryToMinus = $halfdaySalary*$numberOfHalfDays;
+            }
+        }
+        $salaryToPlus = 0;
+        if($overTimeHours != 0){
+            $numberOfHalfDays = floor($overTimeHours/16);
+            if($numberOfHalfDays > 0){
+                $salaryToPlus = $halfdaySalary*$numberOfHalfDays;
+            }
+        }
+        if($absentDays->count() > 0){
+            $absentDaysCount = $absentDays->count();
+            $salaryToMinus = $salaryToMinus + ($absentDaysCount*$perDaySalary);
+        }
+        
+        dump($salaryToMinus);
+        dd($salaryToPlus);
 
 
 

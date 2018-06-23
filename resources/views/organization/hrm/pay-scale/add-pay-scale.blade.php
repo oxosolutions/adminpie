@@ -101,6 +101,23 @@ $page_title_data = array(
                 $(this).val(amount.match( /\d+/g )[0]);
             }
         });
+
+        $('body').on('change','.input_salary-component', function(){
+            if($(this).val() == 'ta'){
+                $(this).parents('.aione-form-section').find('.input-value').prop('readonly','readonly').val(1);
+            }else{
+                $(this).parents('.aione-form-section').find('.input-value').prop('readonly',false).val('');
+            }
+        });
+
+        $('body').on('change','.input_components', function(){
+            if($(this).val() == 'lt'){
+                $(this).parents('.aione-form-section').find('.input-value').prop('readonly','readonly').val(1);
+            }else{
+                $(this).parents('.aione-form-section').find('.input-value').prop('readonly',false).val('');
+            }
+        });
+        
         function calculateSalary(){
             var basic_pay = $('input[name=basic_pay]').val();
             //Calculate Allowances

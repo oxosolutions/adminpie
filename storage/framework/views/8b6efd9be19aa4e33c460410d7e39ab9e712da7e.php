@@ -393,14 +393,14 @@ AIONE LOADER
 				<div id="aione_main" class="aione-main">
 					<div class="aione-row">
 						<div id="aione_map_wrapper" class="aione-map-wrapper">
-							<?php 
+							<?php
 							if($mapdata !== 'No Data available'){
 								$map = $mapdata['map_data'];	
 								echo $map;
 							} else {
 								echo "NO DATA";
 							}
-							 ?>
+							?>
 
 						</div><!-- #aione_map_wrapper -->
 						<div id="aione_tooltip" class="aione-tooltip"></div><!-- #aione_tooltip -->
