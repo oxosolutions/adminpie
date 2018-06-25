@@ -8,12 +8,13 @@ use App\Model\Organization\UsersMeta;
 use App\Model\Organization\Payscale;
 use App\Model\Organization\Salary;
 use Session;
-// use App\Model\Organization\EmployeeLeave as Leave;
 use App\Model\Organization\Attendance;
 use App\Model\Organization\Holiday;
 use App\Model\Organization\Leave;
 use App\Model\Organization\Designation;
+use App\Model\Organization\Department;
 use App\Model\Organization\Category;
+use App\Model\Organization\Shift;
 use Carbon\carbon;
 use PDF;
 use DB;
@@ -165,12 +166,11 @@ class SalaryController extends Controller
             $q->where(['year'=>$year, 'month'=>$month]);  
         }, 'metas'=>function($query)use($year, $month){
             $query->whereIn('key', [ 'date_of_joining', 'date_of_leaving' ,  'user_shift',   'department',  'designation', 'employee_id' , 'pay_scale']);
-        }] )->whereHas('organization_employee_user')->orWhereHas('metas', function ($query)use($year, $month) {
+        }] )->whereHas('organization_employee_user')->whereHas('salary')->orWhereHas('metas', function ($query)use($year, $month) {
             $query->where('key','date_of_joining')->whereYear('value', '=', $year)->whereMonth('value','<=', $month);
         })->get();
         return view('organization.hrm.salary.generate_salary_slip_view', compact('data'));
     }
-
 
     public function generate_salary_slip($year , $month, $user_select){
         $user = GroupUsers::with(['metas'=>function($query){
@@ -253,7 +253,6 @@ class SalaryController extends Controller
         return back();
     }
 
-
     protected function attendance_lock_check($attendance_data){
         $status = $attendance_data->every(function ($item, $key) {
             return $item->lock_status ==0;
@@ -297,20 +296,26 @@ class SalaryController extends Controller
         $overTimeAttendance = $attendance_data->where('shift_hours',null)->where('punch_in_out','!=',null);
         $absentDays = $attendance_data->where('shift_hours','!=',null)->where('punch_in_out','=',null);
         $presentDays = $attendance_data->where('shift_hours','!=',null)->where('punch_in_out','!=',null);
+        $paidUnPaidLeavesArray = ['paid' => 0,'unpaid' => 0];
         //Calculate if absent or leave
         if(!$absentDays->isEmpty()){
             foreach ($absentDays as $key => $day) {
                 if($day->attendance_status == 'leave'){
                     $leaveStatus = $this->validatePaidUnpaidLeave($day->employee_id, $day->year.'-'.$day->month.'-'.$day->date);
                     if($leaveStatus == true){
+                        $paidUnPaidLeavesArray['paid'] = $paidUnPaidLeavesArray['paid'] + 1;
                         $presentDays->push($day);
                         $absentDays->forget($key);
+                    }else{
+                        $paidUnPaidLeavesArray['unpaid'] = $paidUnPaidLeavesArray['unpaid'] + 1;
                     }
                 }else{ // check if there is holiday in that day
                     $holidayStatus = $this->validateHolidayInDay($day->year.'-'.$day->month.'-'.$day->date);
                     if($holidayStatus){
                         $presentDays->push($day);
                         $absentDays->forget($key);
+                    }else{
+                        $paidUnPaidLeavesArray['unpaid'] = $paidUnPaidLeavesArray['unpaid'] + 1;
                     }
                 }
             }
@@ -385,72 +390,45 @@ class SalaryController extends Controller
             $salaryToMinus = $salaryToMinus + ($absentDaysCount*$perDaySalary);
         }
         
-        dump($salaryToMinus);
-        dd($salaryToPlus);
-
-
-
-        $attendant_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->whereNotIn('punch_in_out',[null])->count();
-        dd($attendant_days_in_month);
-        if($attendant_days_in_month<1){
-            return;
-        }
-        $no_mark_deduction = $no_mark_attendance = $loss_of_pay_days = $due_min = $min = $extra_hours = $due_hours = 0;
-        $total_salary = $payScale['total_salary']; 
-        $per_day =  number_format($total_salary/30, 2,'.', '');
-        $per_min_salary = $per_day/8/60;
-        $current_date = Carbon::parse("$year-$month-1");
-        $daysInMonth = $current_date->daysInMonth;
-        $holiday = Holiday::WhereYear('date_of_holiday', $year)->whereMonth('date_of_holiday',$month)->count();        
-        $working_days_in_month = $attendance_data->whereNotIn('shift_hours',[null])->count();
-        $loss_of_pay_days = $attendance_data->whereIn('attendance_status',['lop','absent'])->whereNotIn('shift_hours',[null])->count();
-        $leaves_in_month = $attendance_data->whereIn('attendance_status',['leave'])->whereNotIn('shift_hours',[null])->count();
-        $due_time = $attendance_data->where('over_time' ,'<', 0)->sum('over_time');
-        $extra_time = $attendance_data->where('over_time' ,'>', 0)->sum('over_time');
-        $total_attendant_days = $attendant_days_in_month  +  $leaves_in_month + $holiday + $loss_of_pay_days;
-        if($working_days_in_month > $total_attendant_days)
-        {
-            $no_mark_attendance = $working_days_in_month - $total_attendant_days;
-            $no_mark_deduction = $no_mark_attendance * $per_day;
-        }
-        // dump('no_mark_attendance',  $no_mark_attendance);
-        if($due_time){
-            $replace_minus = str_replace('-', '',$due_time );
-            $due_min =  $replace_minus/60;
-        } 
-        if($extra_time){
-            $min =  $extra_time/60;
-        }
-        $data[$userKey]['employee_id'] = $meta['employee_id'];
-        $data[$userKey]['user_id'] = $user_id;
-        $data[$userKey]['department'] = $meta['department'];
-        $data[$userKey]['designation'] = $meta['designation'];
-        $data[$userKey]['shift'] = $meta['user_shift'];
-        $data[$userKey]['id'] = $user_id;
-        $data[$userKey]['total_salary'] = $total_salary;
-        $data[$userKey]['per_day_amount'] = $per_day;
-        $data[$userKey]['over_time']    = $min * $per_min_salary;
-        $data[$userKey]['payscale'] = json_encode( $payScale );
-        $data[$userKey]['year'] = $year;
-        $data[$userKey]['month'] = $month;
-        $data[$userKey]['absent'] = $loss_of_pay_days;
-        $data[$userKey]['number_of_attendance'] = $attendant_days_in_month;
-        $data[$userKey]['sundays'] = $sunday = $attendance_data->where('day','Sunday')->count();
-        $data[$userKey]['holiday'] = $holiday;
-        $data[$userKey]['working_days'] =  $working_days_in_month;
-        if($loss_of_pay_days>0){
-            $data[$userKey]['dedicated_amount'] = $loss_of_pay_days *  $per_day; 
+        $netSalary = $netSalary - $salaryToMinus; // Less salary 
+        $netSalary = $netSalary + $salaryToPlus; //Overtime salary
+        $payScaleToSave = json_encode($payScale->toArray());
+        $shiftDetails = Shift::find($meta['user_shift']);
+        $shiftHours = 0;
+        if($shiftDetails != null){
+            $shiftHours = Carbon::parse($shiftDetails->from)->diffInHours(Carbon::parse($shiftDetails->to));
+            $shiftDetails = json_encode($shiftDetails->toArray());
         }else{
-            $data[$userKey]['dedicated_amount'] =0;
+            $shiftDetails = json_encode([]);
         }
-        $data[$userKey]['short_hours']  = $due_min * $per_min_salary + $data[$userKey]['dedicated_amount']+ $no_mark_deduction;
-        $data[$userKey]['total_days'] = $working_days_in_month;
-        if($data[$userKey]['number_of_attendance'] ==0){
-            $data[$userKey]['salary'] = 0;   
-        }else{
-            $data[$userKey]['salary'] = $data[$userKey]['total_salary'] + $data[$userKey]['over_time'] - $data[$userKey]['short_hours'];
-        }
-        return $data;
+
+        $designation = Designation::find($meta['designation']);
+        $department = Department::find($meta['department']);
+        $designation = ($designation == null)?$meta['designation']:$designation->name;
+        $department = ($department == null)?$meta['department']:$department->name;
+        
+
+
+        $dataToReturn = [];
+        $dataToReturn[$userKey]['employee_id'] = $meta['employee_id'];
+        $dataToReturn[$userKey]['user_id'] = $user_id;
+        $dataToReturn[$userKey]['designation'] = $designation;
+        $dataToReturn[$userKey]['department'] = $department;
+        $dataToReturn[$userKey]['payscale'] = $payScaleToSave;
+        $dataToReturn[$userKey]['shift'] = $shiftDetails;
+        $dataToReturn[$userKey]['year'] = $year;
+        $dataToReturn[$userKey]['month'] = $month;
+        $dataToReturn[$userKey]['salary'] = $netSalary;
+        $dataToReturn[$userKey]['no_of_leave'] = json_encode($paidUnPaidLeavesArray);
+        $dataToReturn[$userKey]['monthly_weekly'] = 'monthly';
+        $dataToReturn[$userKey]['number_of_attendance'] = $presentDays->count();
+        $dataToReturn[$userKey]['hours'] = $presentDays->count() * 8;
+        $dataToReturn[$userKey]['over_time'] = $overTimeHours;
+        $dataToReturn[$userKey]['short_hours'] = $shiftHours;
+        $dataToReturn[$userKey]['per_day_amount'] = $perDaySalary;
+        $dataToReturn[$userKey]['total_days'] = 30;
+        $dataToReturn[$userKey]['lock'] = 0;
+        return $dataToReturn;
     }
 
     

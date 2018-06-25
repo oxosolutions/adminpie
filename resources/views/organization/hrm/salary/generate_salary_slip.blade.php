@@ -171,7 +171,7 @@ $page_title_data = array(
             <div class="aione-border mv-10 p-10">
                 <span class="font-weight-700  font-size-18">Gross Salary</span>
                     
-                <span class="aione-float-right font-size-18">{{ number_format(($payscale['total_salary'] + $salary['over_time']) , 2 ,"." ,",") }}</span>
+                <span class="aione-float-right font-size-18">{{ number_format(($salary['salary'] + $salary['over_time']) , 2 ,"." ,",") }}</span>
             </div>
         </div>
         <div class="ac l50">
@@ -211,7 +211,7 @@ $page_title_data = array(
             <ul class="aione-border">
                 <li class="aione-border-bottom p-10">
                     <span class="font-weight-700  ">Gross Salary</span>
-                    <span class="aione-float-right">{{ number_format(($payscale['total_salary'] + $salary['over_time']) , 2 ,"." ,",") }}</span>
+                    <span class="aione-float-right">{{ number_format(($salary['salary'] + $salary['over_time']) , 2 ,"." ,",") }}</span>
                 </li>
                 <li class="p-10">
                     <span class="font-weight-700  ">Net Deduction</span>
