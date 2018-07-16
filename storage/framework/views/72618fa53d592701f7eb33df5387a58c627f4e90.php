@@ -20,7 +20,7 @@
     	height: 36px;
     }
 </style>
-<?php 
+<?php
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'no',
@@ -28,8 +28,8 @@ $page_title_data = array(
 	'page_title' => 'Attendance',
 	'add_new' => '+ Add Designation'
 );
-    $month = [1=>'January', 'February' , 'March' ,'April', 'May', 'June' , 'July', 'August', 'September', 'October', 'November','December'];
- ?> 
+$month = [1=>'January', 'February' , 'March' ,'April', 'May', 'June' , 'July', 'August', 'September', 'October', 'November','December'];
+?> 
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -77,119 +77,86 @@ $page_title_data = array(
         
     </div>
     <div>
-    	<div class="ar mb-100">
-    		<?php for($i=1; $i<=12; $i++): ?>
-                <?php if(strlen($i)==1): ?>
-                    <?php 
-                        $j = '0'.$i;
-                     ?>
-                <?php else: ?>
-                    <?php 
-                        $j = $i;
-                     ?>
-                <?php endif; ?>
-        		<div class="ac l25 aione-align-center mb-20" style="position: relative;">
-        			<div class="bg-grey bg-darken-3 font-size-18  white p-15">
-        				<i class="ion-calendar mr-10"></i><?php echo e($month[$i]); ?>, <?php echo e($data['year']); ?>
-
-        			</div>
-        			<div class="aione-border-left aione-border-right aione-border-bottom pv-10  border-grey border-lighten-2 bg-grey bg-lighten-4">
-        				<div class="font-size-20 pv-20 line-height-60 font-weight-300 green ar">
-    	    				<?php if(isset($data[$j])): ?>
+    	<div class="ar mb-100 aione-table">
+    		
+            <table class="bordered">
+                <thead>
+                    <tr>
+                        <th>Months</th>
+                        <th class="aione-align-center">Status</th>
+                        <th class="aione-align-center">Lock Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php for($i=1; $i<=12; $i++): ?>
+                        <?php if(strlen($i)==1): ?>
+                            <?php
+                                $j = '0'.$i;
+                            ?>
+                        <?php else: ?>
+                            <?php
+                                $j = $i;
+                            ?>
+                        <?php endif; ?>
+                        <tr>
+                            <td><?php echo e($month[$i]); ?>, <?php echo e($data['year']); ?></td>
+                            <td class="aione-align-center">
+                                <?php if(isset($data[$j])): ?>
                                     <?php if($data[$j]['attendance_status']==0): ?>
-                                        <?php 
+                                        <?php
                                            $attendance_status ='Partially';
-                                         ?>
+                                        ?>
                                     <?php else: ?>
-                                        <?php 
+                                        <?php
                                            $attendance_status ='Complete';
-                                         ?>
+                                        ?>
                                     <?php endif; ?>
-                                <div class="ac l50">
-                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
-                                        STATUS
-                                    </div>
-                                    <div class="">
-                                        <span class="display-inline pv-5 ph-10 white bg-orange  font-size-14" style="border-radius: 10px;">
+                                    <span class="display-inline pv-5 ph-10 white bg-orange  font-size-14" style="border-radius: 10px;">
                                             <?php echo e($attendance_status); ?></span>
-                                    </div>
-                                                                        
-                                </div>
-                            <?php else: ?>
-                                <div class="ac l50">
-                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
-                                        STATUS
-                                    </div>
-                                    <div class="">
-                                        <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
-                                            Not Mark
+                                <?php else: ?>
+                                    <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                        Not Mark
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="aione-align-center">
+                                <?php if(isset($data[$j])): ?>
+                                    <?php if($data[$j]['lock_status']==0): ?>
+                                        <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                            Locked
                                         </span>
-                                    </div>                                    
-                                </div>
-                            <?php endif; ?>
-                            <?php if(isset($data[$j])): ?>
-                                <div class="ac l50 aione-border-left border-grey border-lighten-2">
-                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
-                                        LOCK STATUS
-                                    </div>
-                                    <div class="">
-                                        <?php if($data[$j]['lock_status']==0): ?>
-                                            <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
-                                                Locked
-                                            </span>
-                                        <?php else: ?>
-                                            <span class="display-inline pv-5 ph-10 white bg-green bg-lighten-2 font-size-14" style="border-radius: 10px;">
-                                                Un-Locked
-                                            </span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <div class="ac l50 aione-border-left border-grey border-lighten-2">
-                                    <div class="line-height-10 font-size-15 grey darken-1 font-weight-700">
-                                        LOCK STATUS
-                                    </div>
-                                    <div class="">
+                                    <?php else: ?>
                                         <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
                                             Un-Locked
                                         </span>
-                                    </div>
-                                </div>
-                            <?php endif; ?>
-        				</div>
-        				<div>
-        					<a href="<?php echo e(route('list.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="View Attendance">
-                                <i class="fa fa-tv grey lighten-1 line-height-36"></i>
-                            </a>
-                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Edit Attendance" >
-                                <i class="fa fa-pencil grey lighten-1  line-height-36"></i>
-                            </a>
-                            <a href="<?php echo e(route('import.form.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Import Attendance" >
-                                <i class="fa fa-sign-in grey lighten-1  line-height-36"></i>
-                            </a>
-                            <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Mark Attendance" >
-                                <i class="fa fa-table grey lighten-1 line-height-36"></i>
-                            </a>
-
-                            <?php if(array_key_exists($j,$data['lock']) ): ?>
-                                <?php if($data['lock'][$j] == 1): ?>
-                                    <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
-                                        <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
-                                    </a>
+                                    <?php endif; ?>
                                 <?php else: ?>
-                                    <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false'])); ?>" class="aione-button bg-red circle aione-shadow circle-btn" title="Lock Attendance">
-                                        <i class="fa fa-lock white lighten-1 line-height-36"></i>
-                                    </a>
+                                    <span class="display-inline pv-5 ph-10 white bg-red bg-lighten-2 font-size-14" style="border-radius: 10px;">
+                                        Un-Locked
+                                    </span>
                                 <?php endif; ?>
-                            <?php else: ?>
-                                <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button  circle aione-shadow circle-btn" title="Lock Attendance">
-                                    <i class="fa fa-unlock grey lighten-1 line-height-36"></i>
-                                </a>
-                            <?php endif; ?>
-        				</div>
-        			</div>
-        		</div>    
-            <?php endfor; ?>
+                            </td>
+                            <td style="width: 48%">
+                                <a href="<?php echo e(route('list.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button"><i class="fa fa-tv mr-8 line-height-36"></i>View</a>
+                                <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button"><i class="fa fa-pencil mr-8 line-height-36"></i>Edit</a>
+                                <a href="<?php echo e(route('import.form.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button"><i class="fa fa-sign-in mr-8 line-height-36"></i>Import</a>
+                                <a href="<?php echo e(route('hr.attendance',['year'=>$data['year'],'month'=>$j])); ?>" class="aione-button"><i class="fa fa-table mr-8 line-height-36"></i>Mark</a>
+
+                                <?php if(array_key_exists($j,$data['lock']) ): ?>
+                                    <?php if($data['lock'][$j] == 1): ?>
+                                        <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button"><i class="fa fa-lock mr-8 line-height-36"></i>Lock</a>
+                                    <?php else: ?>
+                                        <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'false'])); ?>" class="aione-button"><i class="fa fa-unlock mr-8  line-height-36"></i>Un-lock</a>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <a href="<?php echo e(route('ajax.lock.attendance',['year'=>$data['year'],'month'=>$j,'lock_status'=>'true'])); ?>" class="aione-button"><i class="fa fa-lock mr-8 line-height-36"></i>Lock</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                   <?php endfor; ?>
+                </tbody>
+            </table>
     	</div>
     </div>
 

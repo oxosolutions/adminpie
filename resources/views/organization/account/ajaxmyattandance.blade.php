@@ -13,7 +13,7 @@
 			<div class="font-size-14 ">
 				<div class="font-size-14 display-inline-block line-height-0 aione-align-center" style="width: 50px">Days</div>
 				@for($i=1; $i<=31; $i++)
-				<div class=" display-inline-block box aione-align-center " style="margin-right: -1.7px;">{{$i}}</div>
+					<div class=" display-inline-block box aione-align-center " style="margin-right: -1.7px;">{{$i}}</div>
 				@endfor
 			</div>
 			@for($i=1; $i<=12; $i++ )
@@ -37,13 +37,13 @@
 						@for($j=1; $j<=$dayInMonth; $j++)
 							@if(!empty($data[$j]['attendance_status']))
 								@if($data[$j]['attendance_status']=='present')
-									<div class="attendance-status-present display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-present display-inline-block box ml-2 mt-2">W</div>
 								@elseif($data[$j]['attendance_status']=='absent')
-									<div class="attendance-status-absent display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-absent display-inline-block box ml-2 mt-2">A</div>
 								@elseif($data[$j]['attendance_status']=='Sunday')
-									<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2"></div>
+									<div class="bg-grey bg-lighten-2 display-inline-block box ml-2 mt-2">O</div>
 								@elseif($data[$j]['attendance_status']=='leave')
-									<div class="attendance-status-leave display-inline-block box ml-2 mt-2"></div>
+									<div class="attendance-status-leave display-inline-block box ml-2 mt-2">L</div>
 								@else
 									<div class="light-green display-inline-block box ml-2 mt-2"></div>
 								@endif

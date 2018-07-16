@@ -7,7 +7,7 @@
             }
 		</script>
 	<?php endif; ?>
-<?php 
+<?php
 $page_title_data = array(
 	'show_page_title' => 'yes',
 	'show_add_new_button' => 'yes',
@@ -23,7 +23,7 @@ $page_title_data = array(
 	 if(check_route_permisson('hrm/employee/save')==false){
 	 	$page_title_data['show_add_new_button'] ='no';
 	 }
- ?>
+?>
 
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

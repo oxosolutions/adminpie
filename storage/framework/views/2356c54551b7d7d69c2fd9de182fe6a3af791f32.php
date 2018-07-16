@@ -9,7 +9,7 @@
 				<div class="attendanc-sheet content">Name</div>
 			</div>
 			<div>
-				<?php 
+				<?php
 		 			$td="";
 					$number=1;
 					if(!empty($fweek_no)){
@@ -24,9 +24,9 @@
 							$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 						}
 					}
-				 ?>
+				?>
 					<?php if(!empty($fdate)): ?>
-						<?php 
+						<?php
 							$number = $total_days = $fdate;
 							$getDay = Carbon\Carbon::create($current_year, $current_month, $fdate, 0);
 							if($getDay->format('l')=="Sunday")
@@ -37,13 +37,13 @@
 							$td .="<div class='attendance-sheet column bg-grey bg-lighten-3'></div>";
 						}
 						$fdate;
-						 ?>
+						?>
 						<div class="attendance-sheet column"><?php echo e($fdate); ?><br> 
 							<?php echo e(substr($getDay->format('l'),0,1)); ?> 
-						</div> <div class="attendance-sheet column"> Shift Hours </div><div class="attendance-sheet column">In out Time </div>
+						</div> <div class="attendance-sheet column" style="width: 10%"> Shift Hours </div><div class="attendance-sheet column" style="width: 15%">In out Time </div>
 					<?php else: ?>
 						<?php for($d=$number; $d<=$total_days; $d++): ?>
-						<?php 
+						<?php
 
 						$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
 						if($getDay->format('l')=="Sunday")
@@ -53,7 +53,7 @@
 						{
 							$td .="<div class='attendance-sheet column bg-grey bg-lighten-3'></div>";
 						}
-						 ?>
+						?>
 							<div class="attendance-sheet column"><?php echo e($d); ?><br> 
 							<?php echo e(substr($getDay->format('l'),0,1)); ?> 
 							</div>
@@ -62,12 +62,12 @@
  			</div>
 			<div style="clear:both;"> </div>
 			<?php $__currentLoopData = $user_data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $userKey => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-				<?php 
+				<?php
 					$user_meta  = $value->metas_for_attendance->mapwithKeys(function($item){
 	 					return [$item['key'] => $item['value'] ];
 						 });
-				 ?>
-				<?php 
+				?>
+				<?php
 					$check = check_joining_leaving_employee($user_meta , $current_year,  $current_month);
 					if($check==false){
 						continue;
@@ -85,19 +85,19 @@
 								continue;
 							}
 						}
-						echo "<br>";
+						echo "<div style='clear:both'></div>";
 					}
 						echo '<div class="attendance-sheet">';
 								if( strlen($user_meta['employee_id']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($user_meta['employee_id'], 0,10).'.. </div>';
-									 ?>
+									?>
 									<div class="attendanc-sheet content"><a href="<?php echo e(route('account.attandance',['id'=>$value['id']])); ?>"><?php echo e(substr($user_meta['employee_id'], 0,10)); ?>.. </a></div>
-						 			<?php 
+						 			<?php
 								}else{
-									 ?>
+									?>
 									<div class="attendanc-sheet content"><a href="<?php echo e(route('account.attandance',['id'=>$value['id']])); ?>"><?php echo e($user_meta['employee_id']); ?> </a>
 									</div>
-						 			<?php 
+						 			<?php
 								}
 								if(strlen($value['name']) > 10){
 									echo '<div class="attendanc-sheet content">'.substr($value['name'], 0,10).'.. <a href="#" class="grey aione-float-right ph-10 show-details"><i class="fa fa-ellipsis-v"></i></a></div>';
@@ -115,12 +115,12 @@
  						}
 
  						//$total_days=20;
- 					 ?>
+ 					?>
 						<?php for($d=$number; $d<=$total_days; $d++): ?> 
 							
-							<?php 
+							<?php
 								$getDay = Carbon\Carbon::create($current_year, $current_month, $d, 0);
-							 ?>
+							?>
 							<?php echo $__env->make('organization.hrm.attendance.data-display.hrm-attendence-status', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 						<?php endfor; ?>
 							

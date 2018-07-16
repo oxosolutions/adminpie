@@ -40,7 +40,7 @@
 						@endphp
 						<div class="attendance-sheet column">{{$fdate}}<br> 
 							{{substr($getDay->format('l'),0,1)}} 
-						</div> <div class="attendance-sheet column"> Shift Hours </div><div class="attendance-sheet column">In out Time </div>
+						</div> <div class="attendance-sheet column" style="width: 10%"> Shift Hours </div><div class="attendance-sheet column" style="width: 15%">In out Time </div>
 					@else
 						@for($d=$number; $d<=$total_days; $d++)
 						@php
@@ -85,7 +85,7 @@
 								continue;
 							}
 						}
-						echo "<br>";
+						echo "<div style='clear:both'></div>";
 					}
 						echo '<div class="attendance-sheet">';
 								if( strlen($user_meta['employee_id']) > 10){

@@ -77,7 +77,7 @@ class OrganizationController extends Controller
 
         $datalist = [
             'datalist' => $model,
-            'showColumns' => ['name' => 'Name', 'status' => 'Status', 'group_name' => 'Group', 'created_at' => 'Created'],
+            'showColumns' => ['name' => 'Name', 'status' => 'Status', 'group_name' => 'Group', 'primary_domain' => 'Domain', 'created_at' => 'Created'],
             'actions' => [
                 'edit' => ['title' => 'Edit', 'route' => 'edit.organization', 'class' => 'edit'],
                 'delete' => ['title' => 'Delete', 'route' => 'delete.organization', 'class' => 'red'],
