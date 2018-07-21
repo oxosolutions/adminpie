@@ -422,12 +422,61 @@ true, $append_if_not_found = false ) {
             $query->with('field');
         }])->find($id);
 
-        //dd(json_encode($surveyModel->toArray()));
-
         $repeaterSlugs = $this->getRepeaterSectionsSlug($surveyModel);
         $checkBoxSlugs = $this->getCheckBoxesFieldsSlug($surveyModel); 
 
-        $model = $this->getDataForReport($request, $surveyResultTable);
+        $chunkSize = 500;
+        $chunks = floor(8200 / $chunkSize);
+        $finalData = collect([]);
+        for ($chunk = 0; $chunk <= 1; $chunk++) {
+            $offset = $chunk * $chunkSize;
+            $model = $this->getDataForReport($request, $surveyResultTable,$offset,$chunkSize);
+
+            $columns = $model['table_columns'];
+            $model = $model['result'];
+            $columnsModel = [];
+            $maximumColumnsKeys = [];
+
+            $result = $this->reArrangeModelOrder($model, $surveyModel, $checkBoxSlugs);
+            $model = $result['model'];
+            $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
+
+            $maximumColumnsKeys = $this->getMaximumCountForRepeaters($surveyResultTable,$repeaterSlugs);
+            //Code For Repeater
+            foreach($model as $key => $value){
+                foreach($repeaterSlugs as $k => $slug){
+                    $maxCount = $maximumColumnsKeys[$slug]['count'];
+                    if(array_key_exists($slug,$value)){
+                        $repeaterData = $this->convertQuestionIdToSlug(json_decode($value[$slug],true), $surveyModel,$maximumColumnsKeys[$slug]['max_columns'], $slug);
+                        if(count($repeaterData) < $maxCount){
+                            for($i = count($repeaterData); $i < $maxCount; $i++){
+                                $slugs = array_flip(preg_replace('/([0-9])/', $i+1, array_keys($repeaterData[0])));
+                                $slugsToRepeat = array_fill_keys(array_keys($slugs), null);
+                                $repeaterData[] = $slugsToRepeat;
+                            }
+                        }
+                        
+
+                        $repeaterData = preg_replace('/([? undefined:undefined ?]\w+)/','',call_user_func_array('array_merge',$repeaterData));
+                        $repeaterData = preg_replace('/[-?]\s+[-?]/','',$repeaterData);
+                        $data = $model[$key];
+                        $indexToReplace = array_search($slug,array_keys($data));
+                        $tempKeys = array_keys($data);
+                        $data = array_values($data);
+                        array_splice($data, $indexToReplace, 0, $repeaterData);
+                        $keysToAdd = array_keys($repeaterData);
+                        array_splice($tempKeys, $indexToReplace, 0, $keysToAdd);
+                        $data = array_combine($tempKeys,$data);
+                        unset($data[$slug]);
+                        $model[$key] = $data;
+                    }
+                }
+            }
+            $finalData->push($model);
+        }
+        
+
+        /*$model = $this->getDataForReport($request, $surveyResultTable);
         $columns = $model['table_columns'];
         $model = $model['result'];
         $columnsModel = [];
@@ -467,10 +516,11 @@ true, $append_if_not_found = false ) {
                     $model[$key] = $data;
                 }
             }
-        }
+        }*/
         //Code for export data
         if($request->has('export')){
-            $this->outputCsv('survey_report_data'.time().'.csv',$model->toArray());
+            dd($finalData);
+            //$this->outputCsv('survey_report_data'.time().'.csv',$model->toArray());
         }
         return view('organization.survey.survey_reports',['model'=>$model,'columns'=>$columns,
                 'condition_fields'=>$columns]);
@@ -610,7 +660,7 @@ true, $append_if_not_found = false ) {
         return $fieldSlugs;
     }
 
-    protected function getDataForReport($request, $surveyResultTable){ 
+    protected function getDataForReport($request, $surveyResultTable,$offset,$chunkSize){ 
         $Query = DB::table($surveyResultTable);
         if($request->isMethod('post')){
             if($request->has('fields')){
@@ -631,10 +681,11 @@ true, $append_if_not_found = false ) {
                 $result = $Query->skip($offset)->take($chunkSize)->get();
             }*/
             //$result = $Query->skip(4500)->take(500)->get();
-            $result = $Query->take(500)->get();
+            //$result = $Query->take(500)->get();
             //$result = $Query->where('center_code', '=', 2)->take(500)->get();
             //$result = $Query->where('center_code', '=', 2)->skip(500)->take(500)->get();
             //$result = $Query->get();
+            $result = $Query->skip($offset)->take($chunkSize)->get();
             
         }else{
             $result = $Query->paginate(50);
@@ -642,7 +693,6 @@ true, $append_if_not_found = false ) {
         $getTableColumns = DB::table($surveyResultTable)->first();
         unset($getTableColumns->id);
         $keys = array_keys((array)$getTableColumns);
-
         return ['result'=>$result, 'table_columns'=>array_combine($keys,$keys)];
     }
 
