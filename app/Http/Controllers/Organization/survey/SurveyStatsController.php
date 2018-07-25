@@ -55,7 +55,7 @@ class SurveyStatsController extends Controller
 
                 $table_name = $response_table['table']; 
                 $data['date_by'] = DB::select("select date(created_at) as date , count(id) as total, sum(case when survey_status = 'completed' then 1 else 0 end) as completed, sum(case when survey_status = 'incompleted' then 1 else 0 end) as uncompleted, count(*) as totals from " . $table_name . " group by date(created_at)");
-
+                
                 $data['user_by'] = DB::select("select survey_submitted_by as user_id, count(id) as total, sum(case when survey_status ='completed' then 1 else 0 end) as completed , sum(case when survey_status ='incompleted' then 1 else 0 end ) as uncompleted  FROM `" . $table_name . "` group by survey_submitted_by ");
                 $data['user_submit_from'] = DB::select("select survey_submitted_by as user_id , count(id) as total, sum( case when survey_submitted_from = 'app' then 1 else 0 end) as application , sum(case when survey_submitted_from='web' then 1 else 0 end) as web FROM `" . $table_name . "` group by survey_submitted_by");
 
