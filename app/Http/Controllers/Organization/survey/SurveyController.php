@@ -904,7 +904,7 @@ class SurveyController extends Controller
 
 
     protected function saveSurveyAccordingTo_SectionView($request, $tableNameWithoutPrefix, $prefix, $surveyDetails)
-    {
+    { 
         $sectionIndex = 0;
         if ($request->has('section') && $request->section != null) {
             $sectionIndex = (int)$request->section;
@@ -940,6 +940,7 @@ class SurveyController extends Controller
             'unique_id' => generate_filename(30),
         ];
         foreach ($request->except(['_token', 'section', 'number_of_fields', 'prefilled_count', 'prefilled_names']) as $key => $value) {
+
             if (is_array($value)) {
                 $dataToInsert[$key] = json_encode($value);
             } else {
