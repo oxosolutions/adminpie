@@ -1,5 +1,5 @@
 <?php $__env->startSection('content'); ?>
-<?php 
+<?php
 $page_title_data = array(
     'show_page_title' => 'yes',
     'show_add_new_button' => 'no',
@@ -22,7 +22,7 @@ if(!empty($survey_data)){
 		
 	    $setting = $survey_data['forms_meta'];
 	   	$settings = array_column($setting,'value','key');
-	   	unset($survey_data['section'][6]);
+	   	//unset($survey_data['section'][6]);
 	  	$sections = $survey_data['section'];
 	}
 }
@@ -30,7 +30,7 @@ $index =1;
 $warning = [];
 $total_error_count = 0;
 $total_warning_count = 0;
- ?>
+?>
 <?php echo $__env->make('common.pageheader',$page_title_data, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
 <?php echo $__env->make('common.pagecontentstart', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
 <?php echo $__env->make('common.page_content_primary_start', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -116,25 +116,25 @@ $total_warning_count = 0;
 										      	<tbody >
 										      	<?php if(!empty(@$section['fields'])): ?>
 										      		<?php $__currentLoopData = @$section['fields']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fieldKey => $fieldVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-										      		<?php 
+										      		<?php
 										      			// $field_meta = array_column($fieldVal['field_meta'], 'value','key'));
 										      			$field_slug[] = $fieldVal['field_slug'];
 										      			$field_title[$fieldVal['field_slug']][]	= 	substr($fieldVal['field_title'], 0, 30);
 										      			$field_id[$fieldVal['field_slug']][]	=   $fieldVal['id'];
 										      			$sec_ids[$fieldVal['field_slug']][] 	=   $section['id'];
 										      			
-										      		 ?>
+										      		?>
 										      		<tr class='<?php echo e($fieldVal['field_slug']); ?>'>
 										      			<td><?php echo e(@$fieldVal['field_title']); ?></td>
 										      			<td><?php echo e(@$fieldVal['field_slug']); ?></td>
 											      		<td><?php echo e(@$fieldVal['field_type']); ?></td> 
 											      		
-														<?php 
+														<?php
 										            		$collection = collect($fieldVal['field_meta'])->mapWithKeys(function($item){
 										                		return [$item['key']=>$item['value']];
 										            		});
 															$meta = $collection->toArray();
-									            		 ?>
+									            		?>
 									            		<td>
 									            		<?php if(in_array($fieldVal['field_type'], ['radio','select','checkbox'])): ?>
 									            			 <span class="bg-cyan white p-4 show-details"><?php echo e(@count(json_decode($meta['field_options']))); ?> Options</span>
@@ -142,7 +142,7 @@ $total_warning_count = 0;
 									            			 <div class="option-details" style="min-width: 150px;max-width: 150px">
 									            			 	<?php $__currentLoopData = $meta; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $metaKey=> $metaVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 									            				<?php if($metaKey == 'field_options' && in_array($fieldVal['field_type'], ['radio','select','checkbox'])  ): ?>
-									            				<?php 
+									            				<?php
 									            					if($metaVal==null || count(json_decode($metaVal,true)) ==0 ) {
 									            						$opt_miss_error[] =[$fieldVal['field_type'],$fieldVal['field_slug']]; 
 									            						if(empty($error)){
@@ -153,7 +153,7 @@ $total_warning_count = 0;
 																			 		}
 																			 		$error[$section['section_slug']]['field'][] =['qno'=>$loop->iteration,  'title'=>$fieldVal['field_title'], 'type'=>$fieldVal['field_type'], 'option'=>'Empty options'];
 									            					}
-									            				 ?>
+									            				?>
 									                				<?php $__currentLoopData = json_decode($metaVal,true); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $optKey => $optVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 									                			
 																		<?php echo e($loop->iteration); ?>
@@ -161,13 +161,13 @@ $total_warning_count = 0;
 																			<?php if(!empty($optVal['key']) && !empty($optVal['value'])): ?>
 																		 		<?php echo e($optVal['key']); ?>-<?php echo e($optVal['value']); ?><br>
 																		 		<?php else: ?>
-																		 		<?php 
+																		 		<?php
 																			 		if(!array_key_exists($section['section_slug'], $warning)){
 																			 			$warning[$section['section_slug']][] = $section['section_name'];
 																			 		}
 																			 		$warning[$section['section_slug']]['field'][] =['qno'=>$fieldVal['id'],  'title'=>$fieldVal['field_title'], 'type'=>$fieldVal['field_type'], 'option'=>'Empty option exist.'];
 
-																		 		 ?> 
+																		 		?> 
 																					<span class='entry' > not key -  not val </span>
 																					
 																		 		<?php endif; ?>
@@ -176,12 +176,13 @@ $total_warning_count = 0;
 									            			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?> 
 									            			 </div>
 									            		<?php else: ?>
+		    				}
 			    				
 									            		  <span class="bg-blue-grey white p-4">No Options</span>
 									            		<?php endif; ?>
 								            			</td>
 								            			<td><?php if(!empty($meta['field_conditions'])): ?>
-								            					<?php 
+								            					<?php
 								            					 $meta_field_conditions = json_decode($meta['field_conditions'],true);
 								            					if(!empty($meta_field_conditions)){
 									            					foreach ($meta_field_conditions[0] as $codkey => $codvalue) {
@@ -190,12 +191,12 @@ $total_warning_count = 0;
 									            						}
 									            					}
 								            					}
-								            					 ?>
+								            					?>
 								            				<?php endif; ?> 
 								            			</td>	
 								            			<td>
 								            				<?php if(!empty($meta['field_validations'])): ?>
-								            					<?php 
+								            					<?php
 								            					$meta_validation = json_decode($meta['field_validations'],true);
 								            					if(!empty($meta_validation)){
 									            					foreach ($meta_validation[0] as $key => $value) {
@@ -204,7 +205,7 @@ $total_warning_count = 0;
 									            						}
 									            					}
 								            					}
-								            					 ?>
+								            					?>
 								            				<?php endif; ?>
 								            			</td>
 										      		</tr>
@@ -233,14 +234,21 @@ $total_warning_count = 0;
 					$(this).parent().find('.option-details').toggle();
 				})
 			</script>
-			<?php 
+			<?php
 				// dump($repet_field, $field_slug);
 				$unique = array_unique($field_slug);
 				$repeated_ques_slug = array_diff_assoc($field_slug, $unique);
 
+				$long_slug = [];
+				foreach (@$field_slug as $field_slug_key => $field_slug_value) {
+					if(strlen($field_slug_value) > 62){
+						$long_slug[$field_slug_key] = $field_slug_value;
+					}
+				}
+				
 				// $ids = array_map(function ($ar) {return $ar['field_slug'];}, $repet_field);
 				// dump($ids);
-			 ?>
+			?>
 			
 			<div class="ar">
 				<div class="ac l65">
@@ -254,9 +262,9 @@ $total_warning_count = 0;
 			    				<div class="p-10">
 			    					<div class="aione-border bg-red bg-lighten-4 font-size-16 font-weight-400 p-10">
 				                        Survey slug already in use.
-										<?php 
+										<?php
 											$total_error_count++;
-										 ?>
+										?>
 					                 </div>
 			    				</div>
 			    					
@@ -291,9 +299,9 @@ $total_warning_count = 0;
 						                				<td class="bg-red bg-lighten-4"><?php echo e($seckey); ?></td>
 						                				<td><a href="" class="goToSection" id="<?php echo e($seckey); ?>">Go to section</a></td>
 						                			</tr>
-						                			<?php 
+						                			<?php
 														$total_error_count++;
-													 ?>
+													?>
 						                			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 						                		</tbody>
 						                	</table>	
@@ -304,6 +312,55 @@ $total_warning_count = 0;
 				    			</div>
 			    			</div>
 			    		<?php endif; ?>
+			    		
+			    		<?php if(count($long_slug)> 0): ?>
+			    			<div class="aione-accordion p-10">
+				    			<div class="aione-item">
+			    					<div class="aione-item-header font-size-16 font-weight-400">
+					                    Error Question Slug	Too Long
+					                </div>
+					                <div class="aione-item-content p-0">
+					                	<div class="aione-table">
+					                		<table class="compact font-size-14">
+						                		<thead>
+						                			<tr>
+						                				<th>ID</th>
+						                				<th>Question</th>
+						                				<th>Slug</th>
+						                				<th>Action</th>
+						                			</tr>
+						                		</thead>
+						                		<tbody>
+						                			<?php $__currentLoopData = @$long_slug; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $long_slug_key => $long_slug_value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+						                			<tr>
+						                				<td><?php echo e(implode(', ', $field_id[$long_slug_value])); ?></td>
+						                				<td>
+							                				<?php $__currentLoopData = $field_id[$long_slug_value]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $fieldKeys => $fieldValues): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+							                					<?php echo e($field_title[$long_slug_value][$fieldKeys]); ?>
+
+							                					<a href="<?php echo e(route('survey.sections.list',$id)); ?>?sections=<?php echo e($sec_ids[$long_slug_value][$fieldKeys]); ?>&field=<?php echo e($fieldValues); ?>"><span class="nav-item-text">  Edit</span></a>
+							                				<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+							                			</td>
+						                				
+						                				<td class="bg-red bg-lighten-4"> <?php echo e($long_slug_value); ?></td>
+						                				<td><a href="" class="goToQues" id="<?php echo e($long_slug_value); ?>" > Go to question</a></td>
+						                			</tr>
+						                			<?php
+														$total_error_count++;
+													?>
+
+
+						                			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+						                		</tbody>
+						                	</table>	
+					                	</div>
+					                	
+					                </div>
+					                
+				    			</div>
+			    			</div>
+			    		<?php endif; ?>
+			    		
 						<div class="aione-accordion p-10">
 
 							<?php if(!empty(@$repeated_ques_slug)): ?>
@@ -338,9 +395,9 @@ $total_warning_count = 0;
 						                				<td class="bg-red bg-lighten-4"> <?php echo e($quevalue); ?></td>
 						                				<td><a href="" class="goToQues" id="<?php echo e($quevalue); ?>" > Go to question</a></td>
 						                			</tr>
-						                			<?php 
+						                			<?php
 														$total_error_count++;
-													 ?>
+													?>
 
 
 						                			<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -380,9 +437,9 @@ $total_warning_count = 0;
 										      		<td><?php echo e($fieldVal['type']); ?></td>
 										      		<td><?php echo e($fieldVal['option']); ?></td>
 										      	</tr>
-										      	<?php 
+										      	<?php
 													$total_error_count++;
-												 ?>
+												?>
 
 										      	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 										      	</tbody>
@@ -432,9 +489,9 @@ $total_warning_count = 0;
 											      		<td><?php echo e($fieldVal['type']); ?></td>
 											      		<td><?php echo e($fieldVal['option']); ?></td>
 											      	</tr>
-											      	<?php 
+											      	<?php
 											      	$total_warning_count++;
-											      	 ?>
+											      	?>
 
 											      	<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 											      	</tbody>

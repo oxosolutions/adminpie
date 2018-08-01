@@ -101,8 +101,10 @@ class SurveyStatsController extends Controller
                 $query_field->orderBy('order', 'asc');
             },
             'section.fields.fieldMeta'])->where('id', $id);
+
         if ($survey_data->exists()) {
             $survey_data = $survey_data->first()->toArray();
+            
             $data = $this->count_section_question($survey_data);
             $count_form_slug = forms::where('form_slug', $survey_data['form_slug'])->count();
             $setting_questions = GFB::orderBy('order', 'asc')->whereIn('form_id', [93, 76])->get()->keyBy('field_slug')->toArray(); //pluck('field_title', 'field_slug');

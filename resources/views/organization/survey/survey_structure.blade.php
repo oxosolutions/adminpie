@@ -23,7 +23,7 @@ if(!empty($survey_data)){
 		
 	    $setting = $survey_data['forms_meta'];
 	   	$settings = array_column($setting,'value','key');
-	   	unset($survey_data['section'][6]);
+	   	//unset($survey_data['section'][6]);
 	  	$sections = $survey_data['section'];
 	}
 }
@@ -173,6 +173,7 @@ $total_warning_count = 0;
 									            			@endforeach 
 									            			 </div>
 									            		@else
+		    				}
 			    				
 {{-- 									            		 <span class="bg-cyan white p-4">{{ @count(json_decode($meta['field_options'])) }} Options</span>
  --}}									            		  <span class="bg-blue-grey white p-4">No Options</span>
@@ -236,6 +237,13 @@ $total_warning_count = 0;
 				$unique = array_unique($field_slug);
 				$repeated_ques_slug = array_diff_assoc($field_slug, $unique);
 
+				$long_slug = [];
+				foreach (@$field_slug as $field_slug_key => $field_slug_value) {
+					if(strlen($field_slug_value) > 62){
+						$long_slug[$field_slug_key] = $field_slug_value;
+					}
+				}
+				
 				// $ids = array_map(function ($ar) {return $ar['field_slug'];}, $repet_field);
 				// dump($ids);
 			@endphp
@@ -302,6 +310,54 @@ $total_warning_count = 0;
 				    			</div>
 			    			</div>
 			    		@endif
+			    		{{-- ****** If question slug is too long ******* --}}
+			    		@if(count($long_slug)> 0)
+			    			<div class="aione-accordion p-10">
+				    			<div class="aione-item">
+			    					<div class="aione-item-header font-size-16 font-weight-400">
+					                    Error Question Slug	Too Long
+					                </div>
+					                <div class="aione-item-content p-0">
+					                	<div class="aione-table">
+					                		<table class="compact font-size-14">
+						                		<thead>
+						                			<tr>
+						                				<th>ID</th>
+						                				<th>Question</th>
+						                				<th>Slug</th>
+						                				<th>Action</th>
+						                			</tr>
+						                		</thead>
+						                		<tbody>
+						                			@foreach (@$long_slug as $long_slug_key => $long_slug_value)
+						                			<tr>
+						                				<td>{{implode(', ', $field_id[$long_slug_value])}}</td>
+						                				<td>
+							                				@foreach($field_id[$long_slug_value] as $fieldKeys => $fieldValues)
+							                					{{$field_title[$long_slug_value][$fieldKeys]}}
+							                					<a href="{{route('survey.sections.list',$id)}}?sections={{$sec_ids[$long_slug_value][$fieldKeys]}}&field={{$fieldValues}}"><span class="nav-item-text">  Edit</span></a>
+							                				@endforeach
+							                			</td>
+						                				
+						                				<td class="bg-red bg-lighten-4"> {{$long_slug_value}}</td>
+						                				<td><a href="" class="goToQues" id="{{$long_slug_value}}" > Go to question</a></td>
+						                			</tr>
+						                			@php
+														$total_error_count++;
+													@endphp
+
+
+						                			@endforeach
+						                		</tbody>
+						                	</table>	
+					                	</div>
+					                	
+					                </div>
+					                
+				    			</div>
+			    			</div>
+			    		@endif
+			    		{{-- ******************** --}}
 						<div class="aione-accordion p-10">
 
 							@if(!empty(@$repeated_ques_slug))

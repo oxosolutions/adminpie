@@ -296,6 +296,33 @@ class SurveyController extends Controller
     }
 
     public function save_app_survey_filled_data(Request $request){
+
+        
+        /* -------------TEMP CODE Delete this---------------*/
+        /*$path = public_path().'/files/organization_256/survey-data-export/';
+        $file = $path.'data.txt';
+        if (!file_exists($file)) {
+            $content = "\r\r=====================================\r\r";
+            file_put_contents($file, $content);
+        } 
+
+        //dd($request);
+
+        $content = file_get_contents($file);
+        $content .= "\r\r=====================================\r\r";
+        //$content .= json_encode($request);
+        $content .= json_encode($request['survey_data'],true); 
+
+        file_put_contents($file, $content);
+
+        $result = array();
+        $result['success'] = 'Data Saved';
+
+        return $result;*/
+
+        /* ----------------------------*/
+        
+
         $app_version =   $request['app_version'];
          $organization = GO::where('active_code',$request['activation_code']);
          if($organization->exists()){
@@ -337,6 +364,7 @@ class SurveyController extends Controller
     }
 
     public function create_alter_insert_survey_table($org_id, $form_id,$data){
+        
         $form_id    =   intval($form_id);
         $question   =   FormBuilder::with(['fieldMeta'=>function($query){
                             $query->where('key','question_id');
@@ -358,6 +386,7 @@ class SurveyController extends Controller
         }
         $prefix_field = ['ip_address', 'survey_started_on', 'survey_completed_on', 'survey_status','survey_submitted_by','survey_submitted_from','mac_address','imei','device_detail','created_by', 'created_at', 'deleted_at'];
         // $pr_field = ['record_type', 'survey_sync_status', 'incomplete_name', 'last_group_id', 'last_field_id', 'completed_groups', 'unique_id'];
+
         foreach ($data as $dataKey => $dataValue){
                     if($dataKey !="id" && !in_array($dataKey, $prefix_field)){
                         if(!empty($questionId_slug[$dataKey])) {
@@ -367,7 +396,7 @@ class SurveyController extends Controller
 
                         $dataKey = substr($dataKey, 0,62);
 
-                        $colums[] =   "`$dataKey` text COLLATE utf8_unicode_ci DEFAULT NULL";
+                        $colums[] =   "`$dataKey` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL";
                          if(is_array($dataValue)) {
                             $dataValue = json_encode($dataValue);
                          }
@@ -402,12 +431,13 @@ class SurveyController extends Controller
             
             $colums = array_unique($colums);
             $newTableName = str_replace('ocrm_', '', $table_name);
-         if(Schema::hasTable($newTableName)){
+        if(Schema::hasTable($newTableName)){
             $keys = array_unique($keys);
             $keys = array_map('strtolower', $keys);
             $table_column = Schema::getColumnListing($newTableName);
             $columnsdata  = collect($keys);
             $table_column_lower_case = array_map('strtolower', $table_column);
+            //$table_column_lower_case =  $table_column;
 
             $new_columns   = $columnsdata->diff($table_column_lower_case)->toArray();
          
@@ -419,30 +449,32 @@ class SurveyController extends Controller
                    
 
                     if(!in_array($value, $table_column)){
-                     DB::select("ALTER TABLE `{$table_name}` ADD `{$value}` text COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'alter field'");
+                     DB::statement("ALTER TABLE `{$table_name}` ADD `{$value}` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL ");
                     // echo $value."<br>"; 
                     }
                 }
             }
       }else{ 
-            $colums[] =    "`ip_address` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`survey_started_on` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`survey_completed_on` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`survey_status` text NULL COLLATE utf8_unicode_ci DEFAULT NULL";
-            $colums[] =    "`survey_submitted_by` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`survey_submitted_from` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`mac_address` varchar(255) COLLATE utf8_unicode_ci  NULL DEFAULT  NULL";
-            $colums[] =    "`imei` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+        
+            $colums[] =    "`ip_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_started_on` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_completed_on` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_status` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL";
+            $colums[] =    "`survey_submitted_by` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`survey_submitted_from` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`mac_address` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci  NULL DEFAULT  NULL";
+            $colums[] =    "`imei` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             // if(!in_array('unique_id', $colums)){
                 
             // $colums[] =    "`unique_id` varchar(255) COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
             // }
-            $colums[] =    "`device_detail` text COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
-            $colums[] =    "`created_by` int(11) COLLATE utf8_unicode_ci NULL";
-            $colums[] =    "`created_at` text COLLATE utf8_unicode_ci  NULL DEFAULT NUll";
-            $colums[] =    "`deleted_at` timestamp COLLATE utf8_unicode_ci NULL DEFAULT NULL";
-            DB::select("CREATE TABLE `{$table_name}` ( " . implode(', ', $colums) . " ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
-            DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
+            $colums[] =    "`device_detail` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT  NULL";
+            $colums[] =    "`created_by` INT(100) NOT NULL";
+            $colums[] =    "`created_at` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci  NULL DEFAULT NUll";
+            $colums[] =    "`deleted_at` TIMESTAMP NULL ";
+           
+            DB::statement("CREATE TABLE `{$table_name}` ( `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY, " . implode(', ', $colums) . " ) ");
+            //DB::select("ALTER TABLE `{$table_name}` ADD `id` INT(100) NOT NULL AUTO_INCREMENT PRIMARY KEY COMMENT 'Row ID' FIRST");
         }
        
             if(!empty($values['unique_id'])){

@@ -684,12 +684,14 @@ class SurveyController extends Controller
         });
     }
 
-    protected function saveSurveyRecord($request)
-    {
+    protected function saveSurveyRecord($request){
+
         $surveyDetails = forms::with(['formsMeta', 'section.fields.fieldMeta', 'section.sectionMeta'])->where('embed_token', $request->token)->first();
         $metaValues = get_meta_array($surveyDetails->formsMeta);
         $surveyType = (@$metaValues['save_survey'] == null) ? 'survey' : $metaValues['save_survey'];
+       
         $fieldsSlugs = $this->getAllFieldsSlugs($surveyDetails);
+       // $fieldsSlugs = $this->getAllFieldsID($surveyDetails);
         $prefix = DB::getTablePrefix();
         $organizationID = get_organization_id();
         $resultTable = $organizationID . '_survey_results_' . $surveyDetails->id;
@@ -724,6 +726,35 @@ class SurveyController extends Controller
             } else {
                 foreach ($section->fields as $field_key => $field) {
                     $fieldsSlugForColumns[] = $field->field_slug;
+                }
+            }
+        }
+        return $fieldsSlugForColumns;
+    } 
+
+    protected function getAllFieldsID($surveyDetails)
+    {
+        
+
+        $surveyModel = forms::with(['section'=>function($query){
+                $query->with(['fields'])->orderBy('order','asc');
+        },'fields'=>function($query){
+            $query->with('fieldMeta')->orderBy('order','asc');
+        },'fieldMeta'=>function($query){
+            $query->with('field');
+        }])->find($surveyDetails->id);
+        
+        
+        $fieldsIDForColumns = [];
+        foreach ($surveyDetails->section as $key => $section) {
+            $sectionType = $section->sectionMeta->where('key', 'section_type')->first();
+            if ($sectionType != null && $sectionType->value == 'repeater') {
+                $fieldsSlugForColumns[] = $section->section_slug;
+            } else {
+                foreach ($section->fields as $field_key => $field) {
+                    $metaValue = $surveyModel->fieldMeta->where('form_id',$surveyDetails->id)->where('section_id',$section->id)->where('field_id',$field->id)->where('key','question_id')->first();
+                    $fieldsSlugForColumns[] = $metaValue->value;
+                    //$fieldsSlugForColumns[] = $field->field_slug;
                 }
             }
         }
@@ -948,6 +979,7 @@ class SurveyController extends Controller
             }
         }
         $dataToInsert = array_merge($dataToInsert, $putExtraFields);
+        dd($dataToInsert);
         $statusPartially = false;
         if ($record_id != null || $record_id != 0) {
             $valuesForPartialCheck = array_intersect(array_keys($fieldsArrayForPartialCheck),array_keys(array_filter($request->all())));            
