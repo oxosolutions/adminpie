@@ -272,7 +272,18 @@ class SurveyStatsController extends Controller
         foreach($surveyModel->section as $key => $section){
             $isRepeater = $section->sectionMeta->where('key','section_type')->where('value','repeater')->first();
             if($isRepeater == null){
-                $fields = array_merge($fields,$section->fields->groupBy('field_slug')->keys()->toArray());
+                // Amrit
+                $custom_array = $section->fields->groupBy('field_slug')->keys()->toArray();
+                $custom_fields = [];
+                foreach($custom_array as $custom_arraykey => $custom_arrayvalue){ 
+                    $temdata = substr($custom_arrayvalue,0,62);
+                    $temdata =str_replace("-","_",$temdata);
+                    $custom_fields[] = $temdata;
+                }
+                
+                $fields = array_merge($fields,$custom_fields);
+                // *** //
+                //$fields = array_merge($fields,$section->fields->groupBy('field_slug')->keys()->toArray());
             }else{
                 $repeaterSlugs[] = $section->section_slug;
                 $fields[] = $section->section_slug;
@@ -436,6 +447,7 @@ true, $append_if_not_found = false ) {
         $maximumColumnsKeys = [];
 
         $result = $this->reArrangeModelOrder($model, $surveyModel, $checkBoxSlugs);
+
         $model = $result['model'];
         $model = $this->putCheckboxFieldsInmodel($model, $checkBoxSlugs);
 
