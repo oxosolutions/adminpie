@@ -23,9 +23,11 @@ class CheckIfOrganizationAuthenticated
     {
     
         $organization_settings = OrganizationSetting::getSettings('default_page');
-        if($organization_settings != ''){
+
+        if( !empty( $organization_settings ) ) {
             $page_slug = Page::find($organization_settings)->slug;
         }
+
         $completeDomain = $request->getHost();
         $primary_domain = $this->is_primary_domain_exists($completeDomain);
         $secondary_domain = $this->is_secondary_domain_exists($completeDomain);
