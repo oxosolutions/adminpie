@@ -1,4 +1,3 @@
-	<title>OXO Solutions</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
@@ -16,11 +15,11 @@
     <?php endif; ?>
 
 	
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     
-    <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.css">
+    <link rel="stylesheet"  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.css">
 	
 	
 	
@@ -45,7 +44,7 @@
     <script src="<?php echo e(asset('js/jquery-ui.min.js?')); ?>"></script>
     
  
-	<script src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
+	<script src="https://www.appelsiini.net/download/jquery.jeditable.js"></script>
 
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/handsontable/0.31.2/handsontable.full.min.css" />
@@ -62,11 +61,11 @@
 
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+	<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 
 	<!-- OWL Carausel -->
-	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('bower_components/owl.carousel/dist/assets/owl.carousel.min.css')); ?>">
-	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('bower_components/owl.carousel/dist/assets/owl.theme.default.min.css')); ?>">
+	<link rel="stylesheet"  href="<?php echo e(asset('bower_components/owl.carousel/dist/assets/owl.carousel.min.css')); ?>">
+	<link rel="stylesheet"  href="<?php echo e(asset('bower_components/owl.carousel/dist/assets/owl.theme.default.min.css')); ?>">
 	<script src="<?php echo e(asset('bower_components/owl.carousel/dist/owl.carousel.min.js')); ?>"></script>
 
 	<!-- load emmet code and snippets compiled for browser -->
@@ -77,7 +76,7 @@
 	
 
 	<!-- Global stylesheets -->
-	<link rel="stylesheet" type="text/css" href="<?php echo e(asset('assets/css/aione.css?ref='.rand(1111,9999))); ?>">
+	<link rel="stylesheet"  href="<?php echo e(asset('assets/css/aione.css?ref='.rand(1111,9999))); ?>">
 
 	
 	<script >
@@ -162,7 +161,7 @@
 				<?php $__currentLoopData = @$plugin; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
 				    <?php if(is_array($file) && $key == 'custom'): ?>
 						<?php $__currentLoopData = @$file; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $iKey => $iVal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-							<link href="<?php echo e(asset('css/pages/'.$iVal.'.css')); ?>?ref=<?php echo e(rand(8899,9999)); ?>" rel="stylesheet" type="text/css" >
+							<link href="<?php echo e(asset('css/pages/'.$iVal.'.css')); ?>?ref=<?php echo e(rand(8899,9999)); ?>" rel="stylesheet"  >
 						<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 				    <?php else: ?>
 				        <?php echo $__env->make('components.plugins.css.'.$file, array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

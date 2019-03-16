@@ -1,4 +1,3 @@
-	<title>OXO Solutions</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
@@ -16,17 +15,17 @@
     @endif
 
 	
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet"  href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     {{-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> --}}
-    {{-- <script src="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></script> --}}
-    <link rel="stylesheet" type="text/css" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.css">
+    {{-- <script src="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"></script> --}}
+    <link rel="stylesheet"  href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.css">
 	
 	
-	{{-- <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
+	{{-- <link rel="stylesheet"  href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
 
-    {{-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/dataTables.material.min.css"> --}}
+    {{-- <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.1.0/material.min.css">
+    <link rel="stylesheet"  href="https://cdn.datatables.net/1.10.16/css/dataTables.material.min.css"> --}}
 	
 
 	
@@ -46,7 +45,7 @@
     <script src="{{ asset('js/jquery-ui.min.js?')}}"></script>
     
  
-	<script src="http://www.appelsiini.net/download/jquery.jeditable.js"></script>
+	<script src="https://www.appelsiini.net/download/jquery.jeditable.js"></script>
 
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/handsontable/0.31.2/handsontable.full.min.css" />
@@ -63,11 +62,11 @@
 
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
+	<link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.8.0/spectrum.min.css">
 
 	<!-- OWL Carausel -->
-	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/owl.carousel/dist/assets/owl.carousel.min.css') }}">
-	<link rel="stylesheet" type="text/css" href="{{ asset('bower_components/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
+	<link rel="stylesheet"  href="{{ asset('bower_components/owl.carousel/dist/assets/owl.carousel.min.css') }}">
+	<link rel="stylesheet"  href="{{ asset('bower_components/owl.carousel/dist/assets/owl.theme.default.min.css') }}">
 	<script src="{{ asset('bower_components/owl.carousel/dist/owl.carousel.min.js') }}"></script>
 
 	<!-- load emmet code and snippets compiled for browser -->
@@ -78,7 +77,7 @@
 	
 
 	<!-- Global stylesheets -->
-	<link rel="stylesheet" type="text/css" href="{{ asset('assets/css/aione.css?ref='.rand(1111,9999)) }}">
+	<link rel="stylesheet"  href="{{ asset('assets/css/aione.css?ref='.rand(1111,9999)) }}">
 
 	
 	<script >
@@ -163,7 +162,7 @@
 				@foreach(@$plugin as $key => $file)
 				    @if(is_array($file) && $key == 'custom')
 						@foreach(@$file as $iKey => $iVal)
-							<link href="{{asset('css/pages/'.$iVal.'.css')}}?ref={{rand(8899,9999)}}" rel="stylesheet" type="text/css" >
+							<link href="{{asset('css/pages/'.$iVal.'.css')}}?ref={{rand(8899,9999)}}" rel="stylesheet"  >
 						@endforeach
 				    @else
 				        @include('components.plugins.css.'.$file)
