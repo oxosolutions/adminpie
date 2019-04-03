@@ -779,7 +779,9 @@ function generate_filename($length = 30, $timestamp = true){
 	
 	//Return generated filename
 	return $filename;
-}
+} //end function generate_filename()
+
+
 
 /************************************************************
 *	@function get_timestamp
