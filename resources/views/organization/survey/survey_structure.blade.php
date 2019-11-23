@@ -173,7 +173,7 @@ $total_warning_count = 0;
 									            			@endforeach 
 									            			 </div>
 									            		@else
-		    				}
+		    				
 			    				
 {{-- 									            		 <span class="bg-cyan white p-4">{{ @count(json_decode($meta['field_options'])) }} Options</span>
  --}}									            		  <span class="bg-blue-grey white p-4">No Options</span>

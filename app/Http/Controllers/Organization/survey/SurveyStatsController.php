@@ -138,20 +138,25 @@ class SurveyStatsController extends Controller
 
     }
 
-    public function survey_result(Request $request, $id)
-    {
-        $condition_data = null;
-        $metaTable = FormsMeta::where(['form_id' => $id, 'key' => 'survey_data_table']);
-        $prefix = DB::getTablePrefix();
-        $organization_id = get_organization_id();
-        if (Schema::hasTable($organization_id . '_survey_results_' . $id)) {
-            $table = $prefix . $organization_id . '_survey_results_' . $id;
-            $table_name = str_replace('ocrm_', '', $table);
-            $table_column = Schema::getColumnListing($table_name);
-            $columns = array_combine($table_column, $table_column);
-            if ($request->isMethod('post')) {
+    public function survey_result( Request $request, $id ) {
 
-                if ($request->has('page')) {
+        $condition_data = $table = $filter_field = $formQuestion = $columns = $data = null;
+
+        $metaTable          = FormsMeta::where(['form_id' => $id, 'key' => 'survey_data_table']);
+        $prefix             = DB::getTablePrefix();
+        $organization_id    = get_organization_id();
+
+        if ( Schema::hasTable($organization_id . '_survey_results_' . $id ) ) {
+
+            $table          = $prefix . $organization_id . '_survey_results_' . $id;
+            $table_name     = str_replace( 'ocrm_', '', $table );
+            $table_column   = Schema::getColumnListing( $table_name );
+            $columns        = array_combine( $table_column, $table_column );
+
+
+            if ( $request->isMethod('post') ) {
+
+                if ( $request->has('page') ) {
                     Paginator::currentPageResolver(function () use ($request) {
                         return $request->page;
                     });
@@ -160,11 +165,13 @@ class SurveyStatsController extends Controller
                         return 1;
                     });
                 }
-                if (isset($request['condition_field']) && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value']))) {
+
+                if ( isset($request['condition_field']) && !empty(array_filter($request['condition_field'])) && !empty(array_filter($request['condition_field_value']))) {
                     $filter_field['condition_field'] = $request['condition_field'];
                     $filter_field['condition_field_value'] = $request['condition_field_value'];
                     $filter_field['operator'] = $request['operator'];
                 }
+
                 $this->validations($request);
                 $data = $this->filter_on_suvey_result($request, $table_name, $columns);
                 if (!empty($request['export'])) {
@@ -190,10 +197,10 @@ class SurveyStatsController extends Controller
             $formQuestion = FormBuilder::select('field_slug', 'field_title')->where('form_id', $id)->get()->mapWithKeys(function ($items) {
                 return [$items['field_slug'] => $items['field_title']];
             })->toArray();
-        } else {
-            $formQuestion = $columns = $data = null;
         }
-        return view('organization.survey.survey_result', compact('id', 'columns', 'data', 'formQuestion', 'condition_data', 'table', 'filter_field'));
+
+        return view( 'organization.survey.survey_result', compact('id', 'columns', 'data', 'formQuestion', 'condition_data', 'table', 'filter_field') ) ; 
+
     }
 
     protected function validations($req)
@@ -627,14 +634,29 @@ true, $append_if_not_found = false ) {
     protected function getDataForReport($request, $surveyResultTable){ 
         $Query = DB::table($surveyResultTable);
         if($request->isMethod('post')){
+
+
+
+            if( !empty( $request->fields ) ){
+                $Query->select($request->fields);
+
+            }
+            /*
             if($request->has('fields')){
                 $Query->select($request->fields);
-            }
+            } 
+            */
+
+
+
+            /*
             if($request->condition_field[0] != null){
                 foreach($request->condition_field as $key => $column){
                     $Query->Where($column,$request->operator[$key],$request->condition_field_value[$key]);
                 }
             }
+            */
+
         }
 
         if($request->has('export')){
@@ -644,14 +666,15 @@ true, $append_if_not_found = false ) {
                 $offset = $chunk * $chunkSize;
                 $result = $Query->skip($offset)->take($chunkSize)->get();
             }*/
-            //$result = $Query->skip(4500)->take(500)->get();
-            $result = $Query->take(500)->get();
+            // $result = $Query->skip(0)->take(100)->get();
+            // $result = $Query->whereNull('deleted_at')->skip(100)->take(100)->get();
+            //$result = $Query->where('center_code', '=', 2)->take(500)->get();
             //$result = $Query->where('center_code', '=', 2)->take(500)->get();
             //$result = $Query->where('center_code', '=', 2)->skip(500)->take(500)->get();
-            //$result = $Query->get();
+            $result = $Query->whereNull('deleted_at')->get();
             
         }else{
-            $result = $Query->paginate(50);
+            $result = $Query->whereNull('deleted_at')->paginate(50);
         }
         $getTableColumns = DB::table($surveyResultTable)->first();
         unset($getTableColumns->id);

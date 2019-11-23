@@ -31,7 +31,7 @@ class DatasetOperationController extends Controller
         return view('organization.dataset.duplicate_records',compact('data'));
     }
     public function mergeDataset(Request $request)
-    {
+    { 
     	if($request->isMethod('post')){
     		$this->validate($request, ['first_datasets' => 'required', 'second_datasets' => 'required', 'new_dataset_name'=>'required'],['new_dataset_name.required'=>'The New Dataset Name field is required.','first_datasets.required' => 'The First Dataset field is required.', 'second_datasets.required' => 'The Second Dataset field is required.']);
     		// ,['new_dataset_name.required'=>'The New dataset name field is required.','first_datasets.required' => 'The First Dataset field is required.', 'second_datasets.required' => 'The second datasets field is required.']
@@ -121,14 +121,14 @@ class DatasetOperationController extends Controller
             $insert_val['status'] = 'status';
             $insert_val['parent'] = 'parent';
 			DB::table($table)->insert($insert_val);
-//first dataset insert 
+            //first dataset insert 
 			$status = $this->merge_data_into_table($first_table, $insert_val, $table_name );
             if($status == false){
                 DB::rollback();
                 Session::flash('error','Columns not matched with current dataset');
                 return view('organization.dataset.merge',array('merge_datasets'=>[],'new_dataset_name'=>'', 'data_set_id'=>$data_set_id));
             }
-// second dataset insert
+            // second dataset insert
 			$this->merge_data_into_table($sec_table, $insert_val, $table_name);
 			Session::flash('success','Dataset merge successfully  ');
 			$merge_datasets =  DB::table(str_replace('ocrm_', '', $table_name))->get();
@@ -136,7 +136,9 @@ class DatasetOperationController extends Controller
             DB::commit();
 			return view('organization.dataset.merge',compact('merge_datasets','new_dataset_name', 'data_set_id'));
     	}
-        return view('organization.dataset.merge',compact('dataSets'));
+        //return view('organization.dataset.merge',compact('dataSets'));
+        return view('organization.dataset.merge',array('merge_datasets'=>[],'new_dataset_name'=>''));
+
     }
 
     protected function merge_data_into_table($first_table , $insert_val ,$table_name  ){

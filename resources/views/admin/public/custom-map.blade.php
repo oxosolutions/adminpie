@@ -473,7 +473,7 @@ AIONE LOADER
 		*/
     var source = "{{@$source}}";
 
-    console.log("source== "+source);
+        // console.log("source== "+source);
 
 		var map_data = $('.aione-tooltip-data').text();
 		map_data = map_data.split('+');
@@ -481,7 +481,7 @@ AIONE LOADER
 		$.each(map_data, function(key, value){
       if(value != undefined && value != ''){
         var path = value.split('=');
-		console.log(" PATH = "+path);
+		// console.log(" PATH = "+path);
         $('.aione-map-wrapper').find('#'+path[0]).addClass('active').attr('data-tooltip',path[1]).attr('fill',path[2]);
       }
 		});

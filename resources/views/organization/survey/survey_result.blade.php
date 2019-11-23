@@ -49,7 +49,7 @@ $operators= [
 				<div class="aione-border">
 		            <div class="">
 		                <h5 class="aione-align-center font-weight-400 m-0 pv-10 bg-grey bg-lighten-4 aione-border-bottom">
-		                    Horizontal Filteration11
+		                    Horizontal Filteration
 		                </h5>
 		            </div>
 		           	<div id="aione_form_section_374" class="aione-form-section non-repeater p-5">
@@ -229,7 +229,9 @@ $operators= [
 			
 		</div>	
 		<div class="ac s100 m100 l100 aione-align-right">
+			<!-- 
 			<a href="{{route('delete.table',['table'=>$table])}}" onclick="confirm('Are you sure you want to delete all records?');" class="display-inline-block bg-red white p-10	float-right"><i class="fa fa-trash mr-5"></i> Delete Records</a>
+			 -->
 			<button type="submit" class="aione-button" name="export" value="Export Records" ><i class="fa fa-sign-out mr-5"></i>Export Records</button>
 			<button type="submit" class="aione-button" name="Submit"><i class="fa fa-sign-out mr-5"></i>Filter Records</button>
 			

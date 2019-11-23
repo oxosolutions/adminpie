@@ -486,9 +486,11 @@
         </div>
     </div>
 </div>
+<!--
 <div style="position: fixed; top: 0; right: 5%; z-index: 999;">
     <h4>Remaining:  <span id="day">(00 Day's)</span> <span id="time">00:00:00</span></h4>
 </div>
+-->
 <script src="{{ asset('js/moment.js') }}"></script>
 <script>
     $(document).ready(function(){

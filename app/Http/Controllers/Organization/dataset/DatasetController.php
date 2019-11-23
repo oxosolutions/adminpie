@@ -352,22 +352,24 @@ class DatasetController extends Controller
         }else{
             // where('user_id',$user_id)
             if($sortedBy != ''){
-                $datasetList = Dataset::with(['dataset_meta'])->whereHas('dataset_meta', function($query){
+                /*$datasetList = Dataset::with(['dataset_meta'])->whereHas('dataset_meta', function($query){
                     $query->where('key','share_status')->where('value','=','public')->where('value','!=','only_me');
                 })->orwhereHas('collaborate', function($query){
                     $query->whereHas('dataset_meta', function($query){
                         $query->where('key','share_status')->where('value','=','public')->where('value','!=','only_me')->orWhere('value','specific');
                     });
-                })->orWhere('user_id',$user_id)->orderBy($sortedBy,$order)->paginate($perPage);
+                })->orWhere('user_id',$user_id)->orderBy($sortedBy,$order)->paginate($perPage);*/
+                $datasetList = Dataset::with(['dataset_meta'])->orWhere('user_id',$user_id)->orderBy($sortedBy,$order)->paginate($perPage);
                 
             }else{
-                $datasetList = Dataset::with(['dataset_meta'])->whereHas('dataset_meta', function($query){
+                /*$datasetList = Dataset::with(['dataset_meta'])->whereHas('dataset_meta', function($query){
                         $query->where('key','share_status')->where('value','=','public')->where('value','!=','only_me');
                     })->orwhereHas('collaborate', function($query){
                         $query->whereHas('dataset_meta', function($query){
                             $query->where('key','share_status')->where('value','=','public')->where('value','!=','only_me')->orWhere('value','specific');
                         });
-                    })->orWhere('user_id',$user_id)->orderBy($sortedBy,$order)->paginate($perPage);
+                    })->orWhere('user_id',$user_id)->orderBy($sortedBy,$order)->paginate($perPage);*/
+                $datasetList = Dataset::with(['dataset_meta'])->orWhere('user_id',$user_id)->orderBy($sortedBy,$order)->paginate($perPage);    
             }
 
         }

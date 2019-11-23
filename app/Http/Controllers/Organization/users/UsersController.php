@@ -135,18 +135,20 @@ class UsersController extends Controller
             }
         }else{
             if($sortedBy != '' && $sortedBy != 'role'){
-                $model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['user_role_rel'=>function($query){
+                /*$model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->with(['user_role_rel'=>function($query){
                     $query->with('roles');
-                },'userType','organization_user'])->has('organization_user')->paginate($perPage);
+                },'userType','organization_user'])->has('organization_user')->paginate($perPage);*/
+                $model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->orderBy($sortedBy,$order)->paginate($perPage);
             }else{
-                $model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->with(['user_role_rel'=>function($query){
+                /*$model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->with(['user_role_rel'=>function($query){
                     $query->with('roles');
-                },'userType','organization_user'])->has('organization_user')->paginate($perPage);
+                },'userType','organization_user'])->has('organization_user')->paginate($perPage);*/
+                $model = org_user::where('deleted_at',0)->where('id' , '!=' , Auth::guard('org')->user()->id)->paginate($perPage);
             }
         }
         // dd($model);
         /* by sandeep */
-        foreach($model as $k => &$v){
+        /*foreach($model as $k => &$v){
             $v->status = $v->organization_user->status;
             $roleName = [];
             foreach ($v->user_role_rel->toArray() as $key => $value) {
@@ -155,7 +157,7 @@ class UsersController extends Controller
             $v->role = json_encode($roleName);
             $processRole = str_replace(['["','"]'], '', $v->role);
             $v->role = str_replace(['","'], ',', $processRole);
-        }
+        }*/
         /* by sandeep */
         $datalist =  [
             'datalist'=>$model,

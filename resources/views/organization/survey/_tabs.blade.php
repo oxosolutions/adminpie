@@ -35,7 +35,8 @@ if(@request()->route()->parameters()['id'] != ''){
                 </i></span><span class="nav-item-text">{{ __('survey.survey_tab_settings_link') }}</span></a>
         </li>
 
-        <li class="aione-tab survey-settings-tab aione-tooltip {{(Request::route()->action['as'] == 'survey.notifications')?'nav-item-current':''}}" title="Settings">
+
+        <li class="aione-tab survey-notifications-tab aione-tooltip {{(Request::route()->action['as'] == 'survey.notifications')?'nav-item-current':''}}" title="Settings">
             <a href="{{route('survey.notifications',$id)}}"><span class="nav-item-icon " style="background:rgba(0, 0, 0, 0)"><i class="ion-gear-b ionic-icon">
                 </i></span><span class="nav-item-text">Notifications</span></a>
         </li>

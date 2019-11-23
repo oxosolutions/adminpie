@@ -51,6 +51,10 @@ class SurveyController extends Controller
      */
     public function surveys(Request $request){
         $org = GO::where('active_code',$request['activation_key']);
+
+        
+        dd( $org );
+        
         if(!$org->exists()){
             return ['status'=>'error', 'message'=>'active code not exist'];
         }
@@ -299,26 +303,65 @@ class SurveyController extends Controller
 
         
         /* -------------TEMP CODE Delete this---------------*/
-        /*$path = public_path().'/files/organization_256/survey-data-export/';
-        $file = $path.'data.txt';
+
+
+        
+        $path = public_path().'/files/organization_256/survey-data-export/';
+
+        $activation_code    = $request['activation_code'];
+        $survey_id          = $request['survey_id'];
+        $datetime           = date("YmdHis");
+
+        $file = $path.'survey_data_'.$activation_code.'_'.$survey_id.'_'.$datetime.'.txt';
+        $logfile = $path.'survey_data_synchronization_log.txt';
+
+
         if (!file_exists($file)) {
-            $content = "\r\r=====================================\r\r";
+            $content = "\r\r ".date("M,d,Y h:i:s A")." File Created =====================================\r\r";
             file_put_contents($file, $content);
-        } 
+        }
+        if (!file_exists($logfile)) {
+            $content .= "\r".date("M,d,Y h:i:s A")." Data synchronized for survey ". $survey_id.' of organization '.$activation_code;
+            file_put_contents($logfile, $content);
+        } else{
+            $content = file_get_contents($logfile);
+            $content .= "\r".date("M,d,Y h:i:s A")." Data synchronized for survey ". $survey_id.' of organization '.$activation_code;
+            file_put_contents($logfile, $content);
+
+        }
 
         //dd($request);
 
         $content = file_get_contents($file);
-        $content .= "\r\r=====================================\r\r";
-        //$content .= json_encode($request);
-        $content .= json_encode($request['survey_data'],true); 
+
+        $content .= "\r\r ".date("M,d,Y h:i:s A")." Request =====================================\r\r";
+        $content .= $request; 
+
+        $content .= "\r\r ".date("M,d,Y h:i:s A")." Variables =====================================\r\r";
+        $content .= "\rapp_version" . " \t"       . $request['app_version']; 
+        $content .= "\ractivation_code" . " \t"   . $request['activation_code'];
+        $content .= "\rsurvey_id" . " \t"         . $request['survey_id'];
+        $content .= "\r_token" . " \t"            . $request['_token'];
+        $content .= "\rform_id" . " \t"           . $request['form_id'];
+        $content .= "\rform_slug" . " \t"         . $request['form_slug'];
+        $content .= "\rform_title" . " \t"        . $request['form_title'];
+
+        $content .= "\r\r ".date("M,d,Y h:i:s A")." Survey data =====================================\r\r";
+        $content .= $request['survey_data']; 
+
 
         file_put_contents($file, $content);
+
+
+        /*
 
         $result = array();
         $result['success'] = 'Data Saved';
 
-        return $result;*/
+        return $result;
+
+        */
+        
 
         /* ----------------------------*/
         

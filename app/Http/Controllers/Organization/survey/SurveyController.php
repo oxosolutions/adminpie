@@ -85,6 +85,7 @@ class SurveyController extends Controller
         } else {
             $perPage = get_items_per_page();
         }
+        /*
         $model = forms::where(['type' => 'survey', 'created_by' => Auth::guard('org')->user()->id])->with(['section'])->orWherehas('formsMeta', function ($query) {
             $query->where('key', 'share_type')->where('value', '=', 'public')->where('value', '!=', 'only_me')->orWhereHas('collabrate', function ($query) {
                 $query->whereHas('survey', function ($query) {
@@ -94,6 +95,12 @@ class SurveyController extends Controller
                 });
             });
         })->orderBy('id', 'DESC')->paginate($perPage);
+        */
+
+        $model = forms::where([
+            'type' => 'survey'])->orderBy('id', 'DESC')->paginate($perPage);
+
+
         $deleteRoute = 'org.delete.form';
         $sectionRoute = 'org.list.sections';
         $settingsRoute = 'org.form.settings';
@@ -223,6 +230,7 @@ class SurveyController extends Controller
         $model = section::orderBy('order', 'ASC')->where('form_id', $form_id)->with(['fields' => function ($query) {
             $query->with('fieldMeta')->orderBy('order', 'ASC');
         }, 'sectionMeta', 'form'])->get();
+
         return view('admin.formbuilder.sections')->with(['sections' => $model, 'plugins' => $plugins, 'form' => $form, 'permission' => $permission]);
     }
 
